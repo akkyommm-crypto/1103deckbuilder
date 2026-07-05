@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>1103 デッキビルダー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#241c14;
+    --parchment:#e8dcc0;
+    --parchment-lo:#d8c9a6;
+    --card-brown:#b07a3c;
+    --card-brown-dk:#7a5227;
+    --edge:#c9b48a;
+    --edge-dk:#9a8258;
+    --panel:#f2ead4;
+    --panel-lo:#e3d6b4;
+    --mon:#c8912f;      /* monster amber */
+    --spell:#1f8a70;    /* spell green */
+    --trap:#a4318f;     /* trap magenta */
+    --forbidden:#a02020;
+    --limited:#b8791a;
+    --semi:#2a6ba0;
+    --text-dim:#6b5b45;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; height:100%; }
+  body{
+    background:
+      radial-gradient(ellipse at 50% -10%, #f0e8d2, transparent 60%),
+      repeating-linear-gradient(90deg, rgba(122,82,39,0.03) 0 2px, transparent 2px 5px),
+      var(--parchment);
+    color:var(--ink); font-family:'Noto Sans JP',sans-serif;
+    height:100dvh; width:100vw; overflow:hidden; display:flex; flex-direction:column;
+    touch-action:manipulation;
+  }
+
+  /* Header */
+  .app-header{
+    flex-shrink:0; padding:10px 16px 8px; border-bottom:2px solid var(--edge-dk);
+    background:linear-gradient(180deg, var(--panel), var(--panel-lo));
+    display:flex; align-items:baseline; gap:10px;
+  }
+  .app-title{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:17px; letter-spacing:0.04em; }
+  .app-sub{ font-size:10px; color:var(--text-dim); letter-spacing:0.08em; }
+
+  /* Tabs */
+  .tabs{ flex-shrink:0; display:flex; border-bottom:2px solid var(--edge-dk); background:var(--panel-lo); }
+  .tab{
+    flex:1; background:none; border:none; font-family:'Shippori Mincho',serif; font-weight:700; font-size:13px;
+    color:var(--text-dim); padding:11px 4px; cursor:pointer; border-bottom:3px solid transparent; letter-spacing:0.05em;
+  }
+  .tab.active{ color:var(--ink); border-bottom-color:var(--card-brown); background:var(--panel); }
+
+  .view{ display:none; flex:1; min-height:0; flex-direction:column; overflow:hidden; }
+  .view.active{ display:flex; }
+
+  /* Search bar */
+  .search-bar{ flex-shrink:0; padding:10px 14px; display:flex; flex-direction:column; gap:8px; background:var(--panel); border-bottom:1px solid var(--edge); }
+  .search-row{ display:flex; gap:8px; }
+  .search-input{
+    flex:1; min-width:0; background:#fff; border:1.5px solid var(--edge-dk); border-radius:6px;
+    padding:10px 12px; font-family:inherit; font-size:14px; color:var(--ink); outline:none;
+  }
+  .search-input:focus{ border-color:var(--card-brown); box-shadow:0 0 0 2px rgba(176,122,60,0.2); }
+  .filter-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .fbtn{
+    background:var(--panel-lo); border:1.5px solid var(--edge-dk); border-radius:14px;
+    font-family:inherit; font-size:11px; font-weight:700; padding:5px 12px; cursor:pointer; color:var(--text-dim);
+  }
+  .fbtn.active{ background:var(--card-brown); color:#fff; border-color:var(--card-brown-dk); }
+  .result-count{ font-size:10.5px; color:var(--text-dim); }
+  .sort-row{ display:flex; align-items:center; gap:8px; margin-top:2px; }
+  .sort-label{ font-size:11px; color:var(--text-dim); font-weight:700; }
+  .sort-select{
+    flex:1; background:#fff; border:1.5px solid var(--edge-dk); border-radius:6px;
+    padding:7px 8px; font-family:inherit; font-size:12.5px; color:var(--ink); outline:none;
+  }
+  .sort-select:focus{ border-color:var(--card-brown); }
+
+  /* Filter panel */
+  .filter-toggle{
+    background:var(--panel-lo); border:1.5px solid var(--edge-dk); border-radius:6px;
+    font-family:'Shippori Mincho',serif; font-weight:700; font-size:12px; padding:8px 14px; cursor:pointer;
+    color:var(--ink); display:flex; align-items:center; gap:6px; white-space:nowrap;
+  }
+  .filter-toggle.has-active{ background:var(--card-brown); color:#fff; border-color:var(--card-brown-dk); }
+  .filter-toggle .fcount{ font-size:10px; background:#fff; color:var(--card-brown-dk); border-radius:9px; padding:0 6px; font-weight:800; }
+  .filter-panel-back{ position:fixed; inset:0; z-index:45; background:rgba(36,28,20,0.5); display:none; }
+  .filter-panel-back.show{ display:block; }
+  .filter-panel{
+    position:fixed; top:0; right:0; bottom:0; z-index:46; width:86%; max-width:360px;
+    background:var(--parchment); border-left:3px solid var(--card-brown); transform:translateX(100%);
+    transition:transform 0.22s ease; display:flex; flex-direction:column;
+  }
+  .filter-panel.show{ transform:translateX(0); }
+  .fp-head{ flex-shrink:0; padding:14px 16px; border-bottom:2px solid var(--edge-dk); background:var(--panel);
+    display:flex; align-items:center; justify-content:space-between; }
+  .fp-title{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:16px; }
+  .fp-body{ flex:1; overflow-y:auto; padding:8px 16px 24px; }
+  .fp-foot{ flex-shrink:0; display:flex; gap:8px; padding:12px 16px; border-top:2px solid var(--edge-dk); background:var(--panel); }
+  .fp-foot .btn{ flex:1; }
+  .fp-section{ margin-top:16px; }
+  .fp-label{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:12.5px; margin-bottom:7px; color:var(--card-brown-dk); }
+  .chip-wrap{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{
+    background:var(--panel-lo); border:1.5px solid var(--edge-dk); border-radius:14px;
+    font-family:inherit; font-size:11.5px; font-weight:700; padding:5px 11px; cursor:pointer; color:var(--text-dim);
+  }
+  .chip.active{ background:var(--card-brown); color:#fff; border-color:var(--card-brown-dk); }
+  .chip.attr{ border-radius:6px; }
+  .range-row{ display:flex; align-items:center; gap:8px; }
+  .range-row input{ width:80px; background:#fff; border:1.5px solid var(--edge-dk); border-radius:6px; padding:7px 8px; font-family:inherit; font-size:13px; color:var(--ink); outline:none; }
+  .range-row input:focus{ border-color:var(--card-brown); }
+  .range-sep{ color:var(--text-dim); font-size:12px; }
+  .fp-hint{ font-size:10px; color:var(--text-dim); margin-top:4px; }
+
+  /* Card list */
+  .card-scroll{ flex:1; min-height:0; overflow-y:auto; padding:8px 12px 24px; }
+  .card-row{
+    display:flex; align-items:center; gap:10px; padding:9px 10px; margin-bottom:6px;
+    background:var(--panel); border:1px solid var(--edge); border-left-width:5px; border-radius:6px;
+    cursor:pointer;
+  }
+  .card-row:active{ background:var(--panel-lo); }
+  .card-row.k-m{ border-left-color:var(--mon); }
+  .card-row.k-s{ border-left-color:var(--spell); }
+  .card-row.k-t{ border-left-color:var(--trap); }
+  .card-main{ flex:1; min-width:0; }
+  .card-name{ font-family:'Shippori Mincho',serif; font-weight:700; font-size:13.5px; line-height:1.3; }
+  .card-meta{ font-size:10.5px; color:var(--text-dim); margin-top:2px; display:flex; gap:6px; flex-wrap:wrap; }
+  .kind-chip{ font-weight:700; padding:0 5px; border-radius:3px; color:#fff; font-size:9.5px; line-height:15px; }
+  .kind-chip.k-m{ background:var(--mon); }
+  .kind-chip.k-s{ background:var(--spell); }
+  .kind-chip.k-t{ background:var(--trap); }
+  .limit-tag{ font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:9px; color:#fff; white-space:nowrap; align-self:center; flex-shrink:0; }
+  .limit-tag.l0{ background:var(--forbidden); }
+  .limit-tag.l1{ background:var(--limited); }
+  .limit-tag.l2{ background:var(--semi); }
+  .add-mark{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:20px; color:var(--card-brown); flex-shrink:0; width:24px; text-align:center; }
+  .in-deck-badge{
+    flex-shrink:0; align-self:center; min-width:22px; text-align:center;
+    background:var(--card-brown-dk); color:#fff; font-family:'Shippori Mincho',serif; font-weight:800;
+    font-size:12px; padding:2px 6px; border-radius:11px;
+  }
+
+  /* Deck view */
+  .deck-head{ flex-shrink:0; padding:10px 14px; background:var(--panel); border-bottom:1px solid var(--edge); }
+  .deck-name-row{ display:flex; gap:8px; margin-bottom:8px; }
+  .deck-counts{ display:flex; gap:8px; font-size:11px; }
+  .count-pill{ padding:3px 10px; border-radius:12px; font-weight:700; border:1.5px solid var(--edge-dk); background:var(--panel-lo); }
+  .count-pill.warn{ background:#f3d5d5; border-color:var(--forbidden); color:var(--forbidden); }
+  .deck-group-label{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:12px; margin:14px 0 6px; padding-bottom:3px; border-bottom:2px solid var(--edge-dk); letter-spacing:0.04em; }
+  .deck-card-row{
+    display:flex; align-items:center; gap:8px; padding:7px 10px; margin-bottom:4px;
+    background:var(--panel); border:1px solid var(--edge); border-left-width:4px; border-radius:5px;
+  }
+  .deck-card-row.k-m{ border-left-color:var(--mon); }
+  .deck-card-row.k-s{ border-left-color:var(--spell); }
+  .deck-card-row.k-t{ border-left-color:var(--trap); }
+  .dq{ font-family:'Shippori Mincho',serif; font-weight:800; color:var(--card-brown-dk); min-width:18px; text-align:center; }
+  .dq-btns{ display:flex; gap:4px; }
+  .dqbtn{ width:26px; height:26px; border:1.5px solid var(--edge-dk); background:var(--panel-lo); border-radius:6px; font-size:15px; font-weight:800; color:var(--ink); cursor:pointer; line-height:1; }
+  .dqbtn:active{ background:var(--card-brown); color:#fff; }
+  .deck-empty{ color:var(--text-dim); font-size:12.5px; text-align:center; padding:30px 10px; }
+
+  .deck-tools{ display:flex; gap:8px; margin-top:8px; }
+  .btn.on{ background:var(--card-brown); color:#fff; }
+  .deck-stats{ margin-top:10px; }
+  .stat-block{ margin-bottom:10px; }
+  .stat-h{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:11.5px; color:var(--card-brown-dk); margin-bottom:4px; }
+  .stat-row{ display:flex; align-items:center; gap:6px; margin-bottom:3px; }
+  .stat-label{ font-size:10.5px; width:64px; flex-shrink:0; color:#3a2e1e; }
+  .stat-bar-wrap{ flex:1; height:12px; background:var(--panel-lo); border-radius:6px; overflow:hidden; }
+  .stat-bar{ display:block; height:100%; border-radius:6px; min-width:2px; }
+  .stat-val{ font-size:10.5px; width:24px; text-align:right; flex-shrink:0; font-weight:700; color:#3a2e1e; }
+
+  .hand-sim{ margin-top:10px; }
+  .hand-note{ font-size:10.5px; color:var(--text-dim); margin-bottom:6px; }
+  .hand-cards{ display:flex; flex-direction:column; gap:5px; }
+  .hand-card{
+    display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:6px;
+    background:var(--panel); border:1px solid var(--edge); border-left-width:5px; font-size:12.5px; font-weight:700; cursor:pointer;
+  }
+  .hand-card.k-m{ border-left-color:var(--mon); }
+  .hand-card.k-s{ border-left-color:var(--spell); }
+  .hand-card.k-t{ border-left-color:var(--trap); }
+
+  .btn{
+    background:var(--card-brown); border:1.5px solid var(--card-brown-dk); color:#fff;
+    font-family:'Shippori Mincho',serif; font-weight:700; font-size:13px; padding:9px 16px; border-radius:6px; cursor:pointer;
+  }
+  .btn:active{ transform:scale(0.97); }
+  .btn.ghost{ background:var(--panel-lo); color:var(--ink); }
+  .btn.sm{ font-size:11px; padding:6px 12px; }
+
+  .status-line{ font-size:10.5px; color:var(--text-dim); min-height:14px; margin-top:4px; }
+
+  /* Saved decks */
+  .saved-scroll{ flex:1; overflow-y:auto; padding:12px 14px 30px; }
+  .saved-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px; margin-bottom:8px; background:var(--panel); border:1px solid var(--edge); border-radius:8px; }
+  .saved-name{ font-family:'Shippori Mincho',serif; font-weight:700; font-size:14px; }
+  .saved-meta{ font-size:10.5px; color:var(--text-dim); margin-top:2px; }
+
+  /* Detail modal */
+  .modal-back{ position:fixed; inset:0; z-index:40; background:rgba(36,28,20,0.6); display:none; align-items:flex-end; justify-content:center; }
+  .modal-back.show{ display:flex; }
+  .modal{
+    background:var(--parchment); width:100%; max-width:480px; border-radius:16px 16px 0 0;
+    border-top:3px solid var(--card-brown); padding:18px 18px 26px; max-height:80vh; overflow-y:auto;
+  }
+  .modal-name{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:18px; margin-bottom:6px; }
+  .modal-tags{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+  .modal-stat{ display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--edge-dk); font-size:13px; }
+  .modal-stat .k{ color:var(--text-dim); }
+  .modal-effect{
+    margin-top:14px; padding:12px 14px; background:#fbf6e8; border:1px solid var(--edge-dk); border-radius:8px;
+    font-size:12.5px; line-height:1.7; white-space:normal; color:#2e241a;
+    -webkit-user-select:text; user-select:text;
+  }
+  .modal-effect .kw{
+    color:var(--card-brown-dk); font-weight:700; text-decoration:underline; text-decoration-style:dotted;
+    text-underline-offset:2px; cursor:pointer;
+  }
+  .modal-effect .kw:active{ background:var(--card-brown); color:#fff; }
+  .effect-hint{ font-size:10px; color:var(--text-dim); margin-top:6px; line-height:1.5; }
+  .era-tabs{ display:flex; gap:6px; margin-top:14px; }
+  .era-tab{
+    flex:1; background:var(--panel-lo); border:1.5px solid var(--edge-dk); border-radius:6px;
+    font-family:'Shippori Mincho',serif; font-weight:700; font-size:12px; padding:7px 4px; cursor:pointer; color:var(--text-dim);
+  }
+  .era-tab.active{ background:var(--card-brown); color:#fff; border-color:var(--card-brown-dk); }
+  .era-note{ font-size:10.5px; color:var(--card-brown-dk); margin-top:8px; line-height:1.5; }
+  .era-note + .modal-effect{ margin-top:8px; }
+  .era-badge{
+    flex-shrink:0; align-self:center; font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:9px;
+    background:#efe2c4; color:var(--card-brown-dk); border:1px solid var(--card-brown); white-space:nowrap;
+  }
+  .sel-search-btn{
+    position:fixed; z-index:70; left:50%; bottom:24px; transform:translateX(-50%) translateY(10px);
+    background:var(--ink); color:var(--parchment);
+    border:none; border-radius:22px; font-family:'Noto Sans JP',sans-serif; font-weight:700; font-size:13px;
+    padding:11px 20px; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.4); white-space:nowrap;
+    opacity:0; pointer-events:none; transition:opacity 0.15s, transform 0.15s;
+  }
+  .sel-search-btn.show{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
+  .modal-actions{ display:flex; gap:8px; margin-top:16px; }
+  .modal-actions .btn{ flex:1; }
+
+  /* Toast */
+  .toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(20px); z-index:60;
+    background:var(--ink); color:var(--parchment); font-size:12.5px; font-weight:700; padding:10px 18px; border-radius:20px;
+    opacity:0; transition:opacity 0.2s, transform 0.2s; pointer-events:none; white-space:nowrap; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .version{ position:fixed; bottom:2px; left:5px; font-size:8px; color:var(--edge-dk); font-family:monospace; pointer-events:none; }
+
+  /* Guide view */
+  .view-header{
+    flex-shrink:0; padding:12px 16px; font-family:'Shippori Mincho',serif; font-weight:800; color:var(--ink);
+    font-size:15px; letter-spacing:0.05em; border-bottom:2px solid var(--edge-dk); background:var(--panel-lo);
+  }
+  .guide-scroll{ flex:1; min-height:0; overflow-y:auto; padding:14px 16px 40px; }
+  .guide-lead{ font-size:12.5px; line-height:1.75; color:#3a2e1e; margin-bottom:14px; }
+  .guide-card{
+    background:var(--panel); border:1px solid var(--edge); border-left:5px solid var(--card-brown);
+    border-radius:8px; padding:12px 14px; margin-bottom:12px;
+  }
+  .guide-title{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:14px; margin-bottom:8px; }
+  .guide-card p{ font-size:12px; line-height:1.75; margin:0 0 8px; color:#3a2e1e; }
+  .guide-card p:last-child{ margin-bottom:0; }
+  .guide-card b{ color:var(--card-brown-dk); font-weight:700; }
+  .guide-note{ font-size:10.5px; color:var(--text-dim); line-height:1.6; margin-top:8px; padding:0 2px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-title">1103 デッキビルダー</div>
+  <div class="app-sub">2011.09 以前 / 全5075枚</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-view="search">カード検索</button>
+  <button class="tab" data-view="deck">デッキ</button>
+  <button class="tab" data-view="saved">保存</button>
+  <button class="tab" data-view="guide">環境</button>
+</div>
+
+<!-- Search view -->
+<div class="view active" id="view-search">
+  <div class="search-bar">
+    <div class="search-row">
+      <input type="text" class="search-input" id="searchInput" placeholder="カード名で検索（日本語）">
+    </div>
+    <div class="filter-row" id="kindFilters">
+      <button class="fbtn active" data-k="all">すべて</button>
+      <button class="fbtn" data-k="m">モンスター</button>
+      <button class="fbtn" data-k="s">魔法</button>
+      <button class="fbtn" data-k="t">罠</button>
+      <button class="fbtn" data-limit="banned">禁止/制限のみ</button>
+      <button class="filter-toggle" id="filterToggle">🔍 絞り込み<span class="fcount" id="fcount" style="display:none">0</span></button>
+    </div>
+    <div class="result-count" id="resultCount"></div>
+    <div class="sort-row">
+      <span class="sort-label">並び替え</span>
+      <select class="sort-select" id="sortSelect">
+        <option value="name">名前順</option>
+        <option value="level">レベル順</option>
+        <option value="atk">攻撃力順</option>
+        <option value="def">守備力順</option>
+        <option value="date">発売日順</option>
+      </select>
+    </div>
+  </div>
+  <div class="card-scroll" id="cardScroll"></div>
+</div>
+
+<!-- Deck view -->
+<div class="view" id="view-deck">
+  <div class="deck-head">
+    <div class="deck-name-row">
+      <input type="text" class="search-input" id="deckNameInput" placeholder="デッキ名" style="flex:1;">
+      <button class="btn sm" id="saveDeckBtn">保存</button>
+    </div>
+    <div class="deck-counts">
+      <span class="count-pill" id="mainCount">メイン 0</span>
+      <span class="count-pill" id="extraCount">EX 0</span>
+    </div>
+    <div class="status-line" id="deckStatus"></div>
+    <div class="deck-tools">
+      <button class="btn ghost sm" id="statsBtn">📊 内訳</button>
+      <button class="btn ghost sm" id="handBtn">🎴 初手を引く</button>
+    </div>
+    <div class="deck-stats" id="deckStats" style="display:none;"></div>
+    <div class="hand-sim" id="handSim" style="display:none;"></div>
+  </div>
+  <div class="card-scroll" id="deckScroll"></div>
+</div>
+
+<!-- Saved view -->
+<div class="view" id="view-saved">
+  <div class="search-bar">
+    <div class="result-count">保存したデッキ（この端末のブラウザに保存されます）</div>
+  </div>
+  <div class="saved-scroll" id="savedScroll"></div>
+</div>
+
+<!-- Guide view -->
+<div class="view" id="view-guide">
+  <div class="view-header">1103環境ガイド</div>
+  <div class="view-scroll guide-scroll">
+    <div class="guide-lead">
+      「1103環境」は、2011年3月1日適用のリミットレギュレーションと、2011年8月31日までに発売されたカードプールで遊ぶ非公式フォーマットです。5D's第1期から初期ペンデュラムサモン直前までの、懐かしい環境を再現するファンメイドプロジェクトです。
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-title">🃏 カードプール</div>
+      <p>2011年8月31日までに発売されたカードのみ使用可。目印は「No.16 色の支配者ショックルーラー」が出た頃で、「EXTRA PACK Volume4」発売前まで。エクシーズ自体はまだ実装されていません。</p>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-title">📜 当時ルール（マスタールール2）との違い</div>
+      <p><b>先攻ドローあり。</b>先攻プレイヤーも1ターン目にドローします。初手は実質6枚スタートで、現代（先攻ドローなし）と大きく異なります。</p>
+      <p><b>フィールド魔法は盤面に1枚だけ。</b>現在は「お互い1枚ずつ」ですが、当時は「盤面全体で1枚のみ」。相手のフィールド魔法に自分のフィールド魔法をセットすると、相手のものが破壊されます。</p>
+      <p><b>「戦闘で相手モンスターを破壊した時」系が相打ちでも発動可能。</b>自分のモンスターも戦闘で同時に破壊された場合でも、この手の効果は発動します。</p>
+      <p><b>戦闘ダメージ処理の裁定が当時準拠。</b>処理順の細かい裁定が現在と異なる場合があります。事務局回答とズレることがあるので、当時ルール解説の参照を推奨します。</p>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-title">⚡ 起動効果の「優先権」</div>
+      <p>マスタールール2では、<b>召喚直後にターンプレイヤーが起動効果を先に使う"優先権"は廃止</b>されています（2011年3月19日〜）。召喚成功した瞬間に、チェーン可能な相手の効果が割り込む可能性があります。</p>
+      <p>そのため、召喚したモンスターの起動効果は、奈落の落とし穴・激流葬などの「召喚に反応するカード」を先に撃たれる前に使うことはできません。</p>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-title">🚫 独自の禁止制限（大会ハウスルール）</div>
+      <p>多くの非公式大会では、公式の2011/3/1リストに加えて<b>「血の代償」を準制限（2枚）</b>に調整しています（有名な「寒波亭」ルールなど）。</p>
+      <p>その他、大会ごとにゲームバランスを壊しかねないカードが独自制限に入ることがあります。参加する大会のレギュレーションを必ず確認してください。</p>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-title">🔧 エラッタ前テキストに注意</div>
+      <p>当時と現在でテキスト・性能が変わったカードがあります（ブリューナク、クリッター、未来融合、ライコウ、レダメ、ドゥローレン等）。当時環境では、変更前のテキスト準拠で遊びます。</p>
+    </div>
+
+    <div class="guide-note">
+      ※ ルールや慣習は大会・コミュニティによって差があります。ここでの記載は一般的な1103環境の解説であり、参加する大会の公式レギュレーションが優先します。
+    </div>
+  </div>
+</div>
+
+<!-- Filter panel -->
+<div class="filter-panel-back" id="filterPanelBack"></div>
+<div class="filter-panel" id="filterPanel">
+  <div class="fp-head">
+    <div class="fp-title">絞り込み</div>
+    <button class="btn ghost sm" id="fpClose">閉じる</button>
+  </div>
+  <div class="fp-body" id="fpBody">
+    <div class="fp-section" id="fpEffectSec" style="margin-top:8px;">
+      <div class="fp-label">効果テキストで検索</div>
+      <input type="text" class="search-input" id="effectSearch" placeholder="例：デッキから特殊召喚 / ドロー / 除外" style="width:100%;">
+      <div class="fp-hint">効果の文章に含まれる言葉で絞り込みます。スペース区切りで複数語（すべて含む）を指定できます。</div>
+    </div>
+    <div class="fp-section" id="fpAttrSec">
+      <div class="fp-label">属性</div>
+      <div class="chip-wrap" id="fpAttr"></div>
+    </div>
+    <div class="fp-section" id="fpLevelSec">
+      <div class="fp-label">レベル / ランク</div>
+      <div class="chip-wrap" id="fpLevel"></div>
+    </div>
+    <div class="fp-section" id="fpRaceSec">
+      <div class="fp-label">種族</div>
+      <div class="chip-wrap" id="fpRace"></div>
+    </div>
+    <div class="fp-section" id="fpMTypeSec">
+      <div class="fp-label">モンスターの種類</div>
+      <div class="chip-wrap" id="fpMType"></div>
+    </div>
+    <div class="fp-section" id="fpSTypeSec">
+      <div class="fp-label">魔法・罠の種類</div>
+      <div class="chip-wrap" id="fpSType"></div>
+    </div>
+    <div class="fp-section" id="fpAtkSec">
+      <div class="fp-label">攻撃力</div>
+      <div class="range-row">
+        <input type="number" inputmode="numeric" id="atkMin" placeholder="最小">
+        <span class="range-sep">〜</span>
+        <input type="number" inputmode="numeric" id="atkMax" placeholder="最大">
+      </div>
+    </div>
+    <div class="fp-section" id="fpDefSec">
+      <div class="fp-label">守備力</div>
+      <div class="range-row">
+        <input type="number" inputmode="numeric" id="defMin" placeholder="最小">
+        <span class="range-sep">〜</span>
+        <input type="number" inputmode="numeric" id="defMax" placeholder="最大">
+      </div>
+      <div class="fp-hint">数値で絞るとモンスターのみ表示されます</div>
+    </div>
+  </div>
+  <div class="fp-foot">
+    <button class="btn ghost" id="fpReset">リセット</button>
+    <button class="btn" id="fpApply">結果を見る</button>
+  </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-back" id="modalBack">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="version">v1103-builder-13</div>
+
+<script id="carddata" type="application/json">[{"n":"13人目の埋葬者","k":"m","d":"1999-03-06","atk":1200,"def":900,"lv":3,"ra":"アンデット","at":"闇","st":["通常"],"ex":false,"e":"誰もが知っている13人目の埋葬者。その真実は謎に包まれている。"}]</script>
+
+</body>
+</html>
