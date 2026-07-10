@@ -1782,7 +1782,7 @@
   // ---------- detail modal ----------
   var modalBack=document.getElementById('modalBack');
   var modal=document.getElementById('modal');
-  function openDetail(c){
+  function renderDetail(c){
     var tags='<span class="kind-chip k-'+c.k+frameClass(c)+'">'+KIND_LABEL[c.k]+'</span>';
     if(c.lm!==undefined && c.lm!==3) tags+=' <span class="limit-tag l'+c.lm+'">'+LIMIT_LABEL[c.lm]+'</span>';
     var stats='';
@@ -1882,10 +1882,24 @@
         });
       });
     }
+    modal.scrollTop=0;
+  }
+
+  // detail navigation stack:
+  // 関連カードを辿るたびに履歴を1つ積む → 戻るボタンで1枚前のカードへ、
+  // 最初のカードからさらに戻るとモーダルが閉じる。
+  var detailStack=[];
+  function openDetail(c){
     var wasOpen=modalBack.classList.contains('show');
+    renderDetail(c);
     modalBack.classList.add('show');
     if(!wasOpen){
+      detailStack=[c._i];
+      modalHistFlag=false;
       try{ history.pushState({ygoDetail:1}, ''); modalHistFlag=true; }catch(e){}
+    } else if(modalHistFlag){
+      detailStack.push(c._i);
+      try{ history.pushState({ygoDetail:detailStack.length}, ''); }catch(e){}
     }
   }
 
@@ -2039,17 +2053,30 @@
   }
   function hideSelBtn(){ if(selBtn) selBtn.classList.remove('show'); tapBtnActive=false; }
   function statRow(k,v){ return '<div class="modal-stat"><span class="k">'+k+'</span><span>'+esc(String(v))+'</span></div>'; }
-  // browser back button closes the detail modal:
-  // opening pushes a history entry; back (popstate) closes; the close button
-  // routes through history.back() so the history stack stays consistent.
+  // browser back button / detail stack:
+  // popstateのstate.ygoDetailが「深さ」。1枚前があればそのカードを再描画、
+  // 最初のカードより手前まで戻ったらモーダルを閉じる。
   var modalHistFlag=false;
-  function closeModalNow(){ modalBack.classList.remove('show'); hideSelBtn(); }
+  function closeModalNow(){ modalBack.classList.remove('show'); hideSelBtn(); detailStack=[]; }
   function closeModal(){
-    if(modalHistFlag){ try{ history.back(); return; }catch(e){} }
+    if(modalHistFlag && detailStack.length){
+      try{ history.go(-detailStack.length); return; }catch(e){}
+    }
     closeModalNow();
   }
-  window.addEventListener('popstate', function(){
-    if(modalHistFlag){ modalHistFlag=false; closeModalNow(); }
+  window.addEventListener('popstate', function(ev){
+    if(!modalHistFlag) return;
+    var st=ev.state;
+    if(st && st.ygoDetail){
+      var d=st.ygoDetail;
+      if(d<detailStack.length && d>=1){
+        detailStack.length=d;
+        renderDetail(CARDS[detailStack[d-1]]);
+      }
+    } else {
+      modalHistFlag=false;
+      closeModalNow();
+    }
   });
   modalBack.addEventListener('click', function(e){ if(e.target===modalBack) closeModal(); });
 
