@@ -426,8 +426,8 @@
   .dqbtn.move{ font-size:13px; color:var(--text-dim); }
   .deck-empty{ color:var(--text-dim); font-size:12.5px; text-align:center; padding:30px 10px; }
 
-  .deck-tools{ display:flex; gap:6px; margin-top:8px; }
-  .deck-tools .btn{ flex:1; padding-left:4px; padding-right:4px; white-space:nowrap; }
+  .deck-tools{ display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .deck-tools .btn{ flex:1 1 auto; min-width:calc(33.333% - 4px); padding-left:4px; padding-right:4px; white-space:nowrap; }
   .btn.on{ background:var(--gold); color:var(--gold-ink); border-color:var(--gold); }
   .deck-stats{ margin-top:10px; }
   .stat-block{ margin-bottom:12px; }
@@ -591,7 +591,7 @@
   .rel-more{ font-size:10px; color:var(--text-dim); margin-top:6px; }
   .modal-actions{
     display:flex; gap:8px; margin-top:18px;
-    position:sticky; bottom:-28px; padding:12px 0 4px;
+    position:sticky; bottom:0; padding:12px 0 4px;
     background:linear-gradient(180deg, transparent, var(--bg-2) 30%);
   }
   .modal-actions .btn{ flex:1; }
@@ -610,6 +610,10 @@
     border:1px solid var(--line); background:#0c0906; }
   .deck-image-preview{ display:block; width:100%; height:auto; }
   .deck-image-wrap .img-loading{ padding:40px 0; text-align:center; color:var(--text-dim); font-size:12px; }
+  @media (orientation:landscape) and (max-height:520px){
+    .deck-image-wrap{ max-height:40vh; }
+    .modal{ max-height:94vh; }
+  }
 
   /* hand simulator: card image tiles (5 per row) */
   .hand-cards-img{ display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
@@ -680,6 +684,13 @@
 
   /* detail modal: card image */
   .modal-card-img{ text-align:center; margin:4px 0 12px; }
+  .modal-links{ display:flex; gap:8px; margin:2px 0 12px; }
+  .mlink{
+    flex:1; background:var(--surface-2); border:1px solid var(--line); color:var(--gold-hi);
+    font-family:inherit; font-size:12px; font-weight:700; padding:9px 6px; border-radius:2px;
+    cursor:pointer; white-space:nowrap;
+  }
+  .mlink:active{ background:var(--surface-3); }
 
   /* theme / generic tag chips */
   .modal-theme-row{ display:flex; flex-wrap:wrap; gap:6px; margin:2px 0 10px; }
@@ -2121,6 +2132,10 @@
       '<div class="modal-name">'+esc(c.n)+'</div>'+
       '<div class="modal-tags">'+tags+'</div>'+
       tgHtml+
+      '<div class="modal-links">'+
+        '<button class="mlink" id="mdWiki">📖 遊戯王Wikiで見る</button>'+
+        '<button class="mlink" id="mdRuling">🔍 裁定を検索</button>'+
+      '</div>'+
       imgHtml+
       stats+
       effectHtml+
@@ -2133,6 +2148,12 @@
       '</div>';
     modal.querySelector('#mdClose').addEventListener('click', closeModal);
     modal.querySelector('#mdX').addEventListener('click', closeModal);
+    modal.querySelector('#mdWiki').addEventListener('click', function(){
+      window.open('https://www.google.com/search?q='+encodeURIComponent('site:yugioh-wiki.net '+c.n), '_blank');
+    });
+    modal.querySelector('#mdRuling').addEventListener('click', function(){
+      window.open('https://www.google.com/search?q='+encodeURIComponent('遊戯王 '+c.n+' 裁定'), '_blank');
+    });
     modal.querySelectorAll('.theme-chip').forEach(function(el){
       el.addEventListener('click', function(){ jumpToTag(parseInt(el.dataset.tg,10)); });
     });
