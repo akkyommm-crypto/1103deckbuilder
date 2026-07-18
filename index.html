@@ -9,9 +9,33 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="1103">
 <script>
+  // Service Worker: 新バージョンを見つけたら自動で適用してリロードする。
+  // これで「更新してもアプリが変わらない」問題を防ぐ。
   if('serviceWorker' in navigator){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('sw.js').catch(function(){});
+      navigator.serviceWorker.register('sw.js').then(function(reg){
+        // 起動のたびに更新を確認
+        reg.update();
+        // 新しいSWが待機状態になったら即座に有効化を促す
+        function promote(sw){
+          if(!sw) return;
+          sw.addEventListener('statechange', function(){
+            if(sw.state === 'installed' && navigator.serviceWorker.controller){
+              sw.postMessage('skipWaiting');
+            }
+          });
+        }
+        if(reg.waiting && navigator.serviceWorker.controller){ reg.waiting.postMessage('skipWaiting'); }
+        reg.addEventListener('updatefound', function(){ promote(reg.installing); });
+      }).catch(function(){});
+
+      // 新SWが制御を取ったら一度だけリロードして最新の本体を表示
+      var reloaded=false;
+      navigator.serviceWorker.addEventListener('controllerchange', function(){
+        if(reloaded) return;
+        reloaded=true;
+        window.location.reload();
+      });
     });
   }
 </script>
