@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>DUEL FIELD — 1103 Hot-Seat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#120d08; --bg-2:#161007; --surface:#1e1710; --surface-2:#292015; --surface-3:#352a1b;
+  --line:rgba(201,162,75,0.22); --line-hi:rgba(201,162,75,0.45);
+  --ink:#f0e7d2; --text-dim:#a2937c;
+  --gold:#c9a24b; --gold-hi:#e4c06a; --gold-ink:#14100a;
+  --parchment:#e9e4d6; --card-brown:#c9a24b; --card-brown-dk:#a8863d;
+  --edge:rgba(201,162,75,0.22); --edge-dk:rgba(201,162,75,0.45);
+  --panel:#12141c; --panel-lo:#1a1d28;
+  --mon:#d29a3a; --spell:#35b08e; --trap:#9d6ede;
+  --mon-normal:#d4b158; --mon-effect:#e08544; --mon-ritual:#6f9ff0;
+  --mon-fusion:#a97fe8; --mon-synchro:#ece9e2; --mon-xyz:#8d8d9c;
+  --forbidden:#ef6b5e; --limited:#e3a94f; --semi:#74a8ec;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(201,162,75,0.07), transparent 60%),
+    var(--bg);
+  color:var(--ink);
+  font-family:"Zen Kaku Gothic New",system-ui,sans-serif;
+  font-size:14px; line-height:1.5;
+  display:flex; flex-direction:column; height:100dvh; overflow:hidden;
+}
+h1,h2,h3,.mincho{font-family:"Shippori Mincho",serif}
+button{font-family:inherit;color:inherit;cursor:pointer}
+
+/* ---------- top bar ---------- */
+header{
+  flex:0 0 auto; display:flex; align-items:center; gap:12px;
+  padding:8px 14px; border-bottom:1px solid var(--line);
+  background:linear-gradient(var(--surface),var(--bg-2));
+}
+header .brand{font-family:"Shippori Mincho",serif;font-weight:800;letter-spacing:.14em;font-size:15px;color:var(--gold-hi)}
+header .brand small{display:block;font-size:9px;letter-spacing:.34em;color:var(--text-dim);font-weight:400;font-family:"Zen Kaku Gothic New"}
+header .spacer{flex:1}
+.turn-flag{
+  font-family:"Shippori Mincho",serif;font-weight:700;font-size:13px;
+  padding:5px 14px;border:1px solid var(--line-hi);border-radius:2px;
+  background:var(--surface-2);letter-spacing:.08em;white-space:nowrap;
+}
+.turn-flag b{color:var(--gold-hi)}
+
+/* ---------- phase strip ---------- */
+.phases{
+  flex:0 0 auto; display:flex; align-items:stretch; gap:3px; padding:7px 10px; overflow-x:auto;
+  border-bottom:1px solid var(--line); background:var(--bg-2);
+}
+.phase{
+  flex:0 0 auto; padding:7px 12px; font-size:11px; letter-spacing:.04em;
+  border:1px solid var(--line); border-radius:4px; background:transparent;
+  color:var(--text-dim); white-space:nowrap; display:flex; align-items:center;
+}
+.phase.on{background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi);
+  font-weight:800;font-size:12px;box-shadow:0 0 12px rgba(201,162,75,0.25)}
+.phase.done{color:var(--gold);border-color:var(--edge-dk)}
+.phase-next{
+  flex:0 0 auto;margin-left:auto;padding:7px 14px;font-size:12px;font-weight:700;white-space:nowrap;
+  border:1px solid var(--line-hi);border-radius:4px;background:var(--surface-2);color:var(--gold-hi);
+}
+.phase-next:active{background:var(--surface-3)}
+
+/* ---------- board ---------- */
+.board{flex:1 1 auto; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:8px}
+.side{
+  border:1px solid var(--line); border-radius:4px; padding:8px 8px 10px;
+  background:linear-gradient(var(--surface),var(--bg-2));
+}
+.side.opp{border-color:rgba(157,110,222,0.28)}
+.side.active-side{border-color:var(--gold-hi);box-shadow:0 0 0 1px var(--gold-hi) inset, 0 0 22px rgba(201,162,75,0.08)}
+.side-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.side-name{font-family:"Shippori Mincho",serif;font-weight:700;letter-spacing:.06em}
+.side-tag{font-size:9px;letter-spacing:.24em;color:var(--text-dim)}
+.lp-box{margin-left:auto;display:flex;align-items:center;gap:4px}
+.lp-val{font-family:"Shippori Mincho",serif;font-weight:800;font-size:18px;min-width:66px;text-align:right;letter-spacing:.02em}
+.lp-val.low{color:var(--forbidden)}
+.lp-btn{
+  width:24px;height:24px;line-height:1;border:1px solid var(--line);border-radius:2px;
+  background:var(--surface-2);color:var(--ink);font-size:13px;font-weight:700;
+}
+.lp-btn:active{background:var(--surface-3)}
+
+.zones{display:flex;flex-direction:column;gap:6px}
+.zrow{display:grid;grid-template-columns:26px 1fr;gap:6px;align-items:start}
+.zrow .lab{font-size:9px;letter-spacing:.08em;color:var(--text-dim);text-align:center;
+  writing-mode:vertical-rl;text-orientation:upright;padding-top:6px;justify-self:center}
+.slots{display:grid;gap:5px}
+.slots.mz,.slots.sz{grid-template-columns:repeat(5,1fr)}
+.slots.line5{grid-template-columns:repeat(5,1fr)}
+.pile{display:flex;flex-direction:column;align-items:stretch;gap:3px}
+.pile .slot{width:100%}
+.pile-lab{font-size:8px;letter-spacing:.08em;color:var(--text-dim);text-align:center}
+.pile-n{
+  position:absolute;bottom:2px;right:2px;z-index:4;min-width:16px;text-align:center;
+  font-size:9px;font-weight:800;padding:1px 3px;border-radius:8px;
+  background:var(--gold-ink);color:var(--gold-hi);border:1px solid var(--edge-dk);
+}
+.slot{
+  aspect-ratio:59/86; border:1px dashed var(--line); border-radius:3px;
+  background:rgba(0,0,0,0.18); display:flex;align-items:center;justify-content:center;
+  position:relative; overflow:hidden;
+}
+.slot.field{aspect-ratio:59/86}
+.slot .ph{font-size:8px;color:var(--text-dim);letter-spacing:.1em}
+
+/* ---------- card ---------- */
+.card{
+  width:100%;height:100%;border-radius:3px;position:relative;overflow:hidden;
+  border:1px solid var(--edge-dk); background:var(--surface-3);
+  display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer;
+}
+.card.def{aspect-ratio:auto}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card .nm{
+  position:relative;z-index:2;font-size:8px;line-height:1.15;padding:2px 3px;
+  background:linear-gradient(transparent,rgba(0,0,0,0.82));color:var(--parchment);
+  max-height:50%;overflow:hidden;font-weight:500;
+}
+.card.set-mon{transform:rotate(90deg) scale(.92)} /*守備表示は横向き */
+.card .badge{
+  position:absolute;top:2px;left:2px;z-index:3;font-size:7px;letter-spacing:.06em;
+  padding:1px 4px;border-radius:2px;background:var(--gold);color:var(--gold-ink);font-weight:700;
+}
+.card.k-s .badge{background:var(--spell)}
+.card.k-t .badge{background:var(--trap)}
+.card.facedown{background:#0d0a06}
+.card.facedown img{opacity:.96}
+
+/* ---------- hand ---------- */
+.handbar{
+  flex:0 0 auto; border-top:1px solid var(--line);
+  background:linear-gradient(var(--bg-2),var(--surface));
+}
+.hand-head{display:flex;align-items:center;gap:8px;padding:7px 12px 0}
+.hand-head .who{font-family:"Shippori Mincho",serif;font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--gold-hi)}
+.hand-head .cnt{font-size:11px;color:var(--text-dim)}
+.hand-head .hint{margin-left:auto;font-size:9px;color:var(--text-dim);letter-spacing:.08em}
+.hand{display:flex;gap:7px;overflow-x:auto;padding:9px 12px 13px}
+.hand .hcard{flex:0 0 68px;aspect-ratio:59/86}
+.hand .hcard .nm{font-size:9px}
+
+/* ---------- controls ---------- */
+.controls{
+  flex:0 0 auto; display:flex; gap:6px; padding:8px 12px;
+  border-top:1px solid var(--line); background:var(--bg-2); overflow-x:auto;
+}
+.btn{
+  flex:0 0 auto; padding:9px 14px; border-radius:3px; font-size:12px; font-weight:700;
+  letter-spacing:.04em; border:1px solid var(--line-hi); background:var(--surface-2); color:var(--ink);
+}
+.btn:active{background:var(--surface-3)}
+.btn.gold{background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi)}
+.btn.ghost{background:transparent}
+
+/* ---------- log ---------- */
+.log{
+  flex:0 0 auto; max-height:82px; overflow-y:auto; padding:6px 12px 10px;
+  border-top:1px solid var(--line); background:var(--bg); font-size:10.5px; color:var(--text-dim);
+}
+.log .li{padding:1px 0;border-bottom:1px solid rgba(201,162,75,0.06)}
+.log .li b{color:var(--gold-hi);font-weight:700}
+
+/* ---------- modal (bottom sheet) ---------- */
+.veil{
+  position:fixed;inset:0;background:rgba(6,4,2,0.72);backdrop-filter:blur(3px);
+  display:none;align-items:flex-end;justify-content:center;z-index:50;
+}
+.veil.on{display:flex}
+.sheet{
+  width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;
+  border:1px solid var(--line-hi);border-bottom:none;
+  border-radius:14px 14px 0 0;background:linear-gradient(var(--surface),var(--bg-2));
+  padding:14px 16px calc(16px + env(safe-area-inset-bottom,0));
+  animation:sheetup .18s ease-out;
+}
+@keyframes sheetup{from{transform:translateY(14px);opacity:.4}to{transform:translateY(0);opacity:1}}
+.sheet .grip{width:38px;height:4px;border-radius:2px;background:var(--line-hi);margin:0 auto 12px}
+/* card preview header inside sheet */
+.sheet-card{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.sheet-thumb{flex:0 0 66px;aspect-ratio:59/86;border-radius:5px;overflow:hidden;
+  border:1px solid var(--edge-dk);background:var(--surface-3);position:relative}
+.sheet-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sheet-info{flex:1;min-width:0}
+.sheet h3{margin:0 0 5px;font-size:16px;letter-spacing:.03em;color:var(--gold-hi);line-height:1.25}
+.sheet .meta{font-size:11px;color:var(--text-dim);line-height:1.6}
+.sheet .eff{font-size:11.5px;color:var(--ink);background:rgba(0,0,0,0.22);border:1px solid var(--line);
+  border-radius:4px;padding:9px 11px;margin-bottom:14px;max-height:130px;overflow-y:auto;white-space:pre-wrap;line-height:1.55}
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.act-grid.wide{grid-template-columns:1fr}
+.act-label{font-size:9px;letter-spacing:.18em;color:var(--text-dim);margin:14px 2px 7px;text-transform:none}
+.act-label:first-of-type{margin-top:0}
+.act{padding:13px 10px;border:1px solid var(--line);border-radius:5px;background:var(--surface-2);
+  font-size:13px;text-align:center;font-weight:600;min-height:46px;display:flex;align-items:center;justify-content:center}
+.act:active{background:var(--surface-3)}
+.act.warn{border-color:var(--forbidden);color:var(--forbidden)}
+/* chain */
+.chain-list{display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
+.chain-link{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:5px;
+  border:1px solid var(--line);background:var(--surface-2)}
+.chain-link.top{border-color:var(--gold-hi);box-shadow:0 0 10px rgba(201,162,75,0.18)}
+.chain-link .cl-no{font-family:"Shippori Mincho",serif;font-weight:800;color:var(--gold-hi);min-width:18px}
+.chain-link .cl-nm{flex:1;font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chain-link .cl-ss{font-size:10px;color:var(--spell);font-weight:700}
+.chain-link .cl-who{font-size:9px;color:var(--text-dim);letter-spacing:.06em}
+.chain-badge{display:inline-block;min-width:16px;text-align:center;font-size:10px;font-weight:800;
+  padding:1px 5px;border-radius:8px;background:var(--spell);color:#0d0a06;margin-left:5px}
+.sheet .close{margin-top:14px;width:100%;padding:14px;text-align:center;background:transparent;
+  border:1px solid var(--line);border-radius:6px;color:var(--text-dim);font-size:13px;font-weight:600}
+
+textarea{
+  width:100%;min-height:120px;background:rgba(0,0,0,0.28);border:1px solid var(--line);
+  border-radius:3px;color:var(--ink);font-family:"Zen Kaku Gothic New";font-size:12px;padding:10px;resize:vertical;
+}
+.sub{font-size:10px;color:var(--text-dim);margin:6px 0 2px;letter-spacing:.04em}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tab-title{font-size:10px;letter-spacing:.2em;color:var(--text-dim);margin:2px 0 8px}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">決闘盤<small>DUEL FIELD · 1103</small></div>
+  <div class="spacer"></div>
+  <div class="turn-flag" id="turnFlag">手番 <b>—</b></div>
+</header>
+
+<div class="phases" id="phases"></div>
+
+<div class="board" id="board"></div>
+
+<div class="handbar">
+  <div class="hand-head">
+    <span class="who" id="handWho">手札</span>
+    <span class="cnt" id="handCnt"></span>
+    <span class="hint">タップで操作</span>
+  </div>
+  <div class="hand" id="hand"></div>
+</div>
+
+<div class="controls" id="controls"></div>
+
+<div class="log" id="log"></div>
+
+<!-- action modal -->
+<div class="veil" id="veil"><div class="sheet" id="sheet"></div></div>
+
+<script>
+/* =========================================================================
+   DUEL FIELD — 2人ホットシート対戦アプリ（土台）
+   全状態は gameState に集約。applyAction(gameState, action) だけが状態を変更する。
+   描画は render() が gameState を読むだけ（DOM から状態を書き換えない）。
+   → 将来: action を相手に送り、双方が同じ applyAction を実行すればオンライン対戦化できる。
+   ========================================================================= */
+
+/* ---- ダミーカードデータ（起動時に index.html の完全版へ差し替わる）----
+   実データは boot() が index.html の <script id="carddata"> から読み込む。
+   各カード: {n,k,atk,def,lv,ra,at,st,ex,sub,e,c,lm?}
+*/
+const DUMMY_DB = [
+  {n:"サイバー・ドラゴン", k:"m", atk:2100, def:1600, lv:5, ra:"機械", at:"光", st:["効果"], ex:false, sub:"", e:"相手フィールドにのみモンスターが存在する場合、このカードはリリースなしで召喚できる。", c:"70095154"},
+  {n:"死者蘇生", k:"s", ra:"", at:"", st:[], ex:false, sub:"", e:"自分または相手の墓地のモンスター1体を対象として発動できる。そのモンスターを自分フィールドに特殊召喚する。", c:"83764718"},
+  {n:"聖なるバリア －ミラーフォース－", k:"t", ra:"", at:"", st:[], ex:false, sub:"", e:"相手モンスターの攻撃宣言時に発動できる。相手フィールドの攻撃表示モンスターを全て破壊する。", c:"44095762"},
+  {n:"E・HERO エアーマン", k:"m", atk:1800, def:300, lv:4, ra:"戦士", at:"風", st:["効果"], ex:false, sub:"", e:"このカードが召喚に成功した時、以下の効果から1つを選択して発動できる。①自分フィールドのHEROの数まで相手にダメージ。②デッキからHEROモンスター1体を手札に加える。", c:"22103890"},
+  {n:"増殖するG", k:"m", atk:500, def:200, lv:2, ra:"昆虫", at:"地", st:["効果"], ex:false, sub:"", e:"このカードを手札から捨てて発動できる。このターン、相手が特殊召喚するたびに自分は1枚ドローする。", c:"90953320"},
+  {n:"灰流うらら", k:"m", atk:0, def:1800, lv:3, ra:"アンデット", at:"炎", st:["チューナー","効果"], ex:false, sub:"", e:"デッキから手札・墓地・フィールドに加える効果、特殊召喚する効果を無効にする。", c:"14558127"},
+  {n:"サンダー・ボルト", k:"s", ra:"", at:"", st:[], ex:false, sub:"", e:"相手フィールドのモンスターを全て破壊する。", c:"71413901"},
+  {n:"激流葬", k:"t", ra:"", at:"", st:[], ex:false, sub:"", e:"モンスターが召喚・反転召喚・特殊召喚された時に発動できる。フィールドのモンスターを全て破壊する。", c:"90351981"},
+  {n:"ブラック・ホール", k:"s", ra:"", at:"", st:[], ex:false, sub:"", e:"フィールドのモンスターを全て破壊する。", c:"83764719"},
+  {n:"サイクロン", k:"s", ra:"", at:"", st:[], ex:false, sub:"速攻", e:"フィールドの魔法・罠カード1枚を対象として発動できる。そのカードを破壊する。", c:"05318639"},
+];
+let CARD_DB = DUMMY_DB.slice();
+const IMG_BASE = "images/cards_small/";
+const IMG_BACK = "images/card_back.webp";
+
+/* -------------------- 定数 -------------------- */
+const PHASES = [
+  {id:"draw", jp:"ドロー"}, {id:"standby", jp:"スタンバイ"},
+  {id:"main1", jp:"メイン1"}, {id:"battle", jp:"バトル"},
+  {id:"main2", jp:"メイン2"}, {id:"end", jp:"エンド"},
+];
+const ZONE_LIMITS = { mz:5, sz:5, field:1 };
+const PNAME = ["プレイヤー I", "プレイヤー II"];
+
+/* -------------------- gameState -------------------- */
+/* players[p] = {lp, hand[], deck[], mz[], sz[], field, grave[], banish[], ex[]}
+   各ゾーンは "配置カード" の配列。カード＝{id(DB index), face:'up'|'down', pos:'atk'|'def'} */
+let gameState = null;
+
+function makePlayer(){
+  return { lp:8000, hand:[], deck:[], mz:[], sz:[], field:null, grave:[], banish:[], ex:[] };
+}
+function newGame(){
+  return { turn:1, phase:"main1", activePlayer:0, players:[makePlayer(), makePlayer()], log:[], chain:[] };
+}
+
+/* -------------------- applyAction --------------------
+   全ての状態変化はここを通す。副作用は gameState と log のみ。 */
+function applyAction(gs, a){
+  const P = gs.players[a.player ?? gs.activePlayer];
+  switch(a.type){
+
+    case "SET_PHASE":
+      gs.phase = a.phase;
+      logIt(gs, `${nameOf(gs.activePlayer)}：${phaseJp(a.phase)}へ`);
+      break;
+
+    case "PASS_TURN":
+      gs.activePlayer = gs.activePlayer === 0 ? 1 : 0;
+      gs.turn += 1;
+      gs.phase = "draw";
+      logIt(gs, `<b>ターン ${gs.turn}</b> — ${nameOf(gs.activePlayer)}の手番`);
+      break;
+
+    case "LP":
+      P.lp = Math.max(0, P.lp + a.delta);
+      logIt(gs, `${nameOf(a.player)} LP ${a.delta>0?"+":""}${a.delta} → ${P.lp}`);
+      break;
+
+    case "DRAW": {
+      const n = a.n ?? 1;
+      for(let i=0;i<n;i++){ if(P.deck.length) P.hand.push(P.deck.shift()); }
+      logIt(gs, `${nameOf(a.player)}：${n}枚ドロー`);
+      break;
+    }
+
+    case "LOAD_DECK":
+      P.deck = a.deck;            // [{id,face,pos}...]
+      P.ex   = a.ex || [];
+      logIt(gs, `${nameOf(a.player)}：デッキ ${a.deck.length}枚 / EX ${(a.ex||[]).length}枚 読込`);
+      break;
+
+    case "SHUFFLE":
+      shuffle(P.deck);
+      logIt(gs, `${nameOf(a.player)}：デッキシャッフル`);
+      break;
+
+    case "MOVE": {
+      // from/to は "hand","mz","sz","field","grave","banish","deck","ex"
+      const card = removeFrom(P, a.from, a.fromIndex);
+      if(!card) break;
+      if(a.face) card.face = a.face;
+      if(a.pos)  card.pos  = a.pos;
+      placeInto(P, a.to, card, a.deckPos);
+      logIt(gs, `${nameOf(a.player)}：${cardName(card)} を ${zoneJp(a.from)}→${zoneJp(a.to)}${a.face==='down'?'（裏）':''}${a.pos==='def'?'（守備）':''}`);
+      break;
+    }
+
+    case "FLIP": {
+      const card = zoneCard(P, a.zone, a.index);
+      if(card){ card.face = card.face==='up'?'down':'up'; logIt(gs, `${nameOf(a.player)}：${cardName(card)} を反転`); }
+      break;
+    }
+
+    case "TOGGLE_POS": {
+      const card = zoneCard(P, a.zone, a.index);
+      if(card){ card.pos = card.pos==='atk'?'def':'atk'; logIt(gs, `${nameOf(a.player)}：${cardName(card)} 表示形式変更`); }
+      break;
+    }
+
+    case "ATTACK": {
+      // a: {player, atkIdx, target:'direct'|monsterIdx}
+      const atkCard = P.mz[a.atkIdx];
+      if(!atkCard){ break; }
+      const atkDB = CARD_DB[atkCard.id]||{};
+      const oppP = gs.players[a.player===0?1:0];
+      const aATK = a.atkOverride!=null ? a.atkOverride : (atkDB.atk||0);
+      if(a.target==='direct'){
+        oppP.lp = Math.max(0, oppP.lp - aATK);
+        logIt(gs, `<b>攻撃</b> ${cardName(atkCard)}(${aATK}) が直接攻撃 → ${nameOf(a.player===0?1:0)} に ${aATK} ダメージ（LP ${oppP.lp}）`);
+      } else {
+        const defCard = oppP.mz[a.target];
+        if(!defCard){ break; }
+        const defDB = CARD_DB[defCard.id]||{};
+        const defending = defCard.pos==='def';
+        const dVal = a.defOverride!=null ? a.defOverride : (defending ? (defDB.def||0) : (defDB.atk||0));
+        let msg = `<b>戦闘</b> ${cardName(atkCard)}(攻${aATK}) vs ${cardName(defCard)}(${defending?'守':'攻'}${dVal})：`;
+        if(defending){
+          // 攻撃表示 vs 守備表示
+          if(aATK > dVal){ oppP.mz.splice(a.target,1); oppP.grave.push(reset(defCard)); msg += `守備モンスター破壊`; }
+          else if(aATK < dVal){ const dmg=dVal-aATK; P.lp=Math.max(0,P.lp-dmg); msg += `反射ダメージ ${dmg} → ${nameOf(a.player)}（LP ${P.lp}）`; }
+          else { msg += `相打ちならず（貫通なし）`; }
+        } else {
+          // 攻撃表示同士
+          if(aATK > dVal){ const dmg=aATK-dVal; oppP.mz.splice(a.target,1); oppP.grave.push(reset(defCard)); oppP.lp=Math.max(0,oppP.lp-dmg); msg += `相手モンスター破壊＋${dmg}ダメージ（LP ${oppP.lp}）`; }
+          else if(aATK < dVal){ const dmg=dVal-aATK; const gi=P.mz.indexOf(atkCard); if(gi>=0){P.mz.splice(gi,1);P.grave.push(reset(atkCard));} P.lp=Math.max(0,P.lp-dmg); msg += `自分モンスター破壊＋${dmg}ダメージ（LP ${P.lp}）`; }
+          else { const gi=P.mz.indexOf(atkCard); if(gi>=0){P.mz.splice(gi,1);P.grave.push(reset(atkCard));} oppP.mz.splice(a.target,1); oppP.grave.push(reset(defCard)); msg += `相打ち（両者破壊）`; }
+        }
+        logIt(gs, msg);
+      }
+      break;
+    }
+
+    /* ---- チェーン（手動） ---- */
+    case "CHAIN_ADD": {
+      // a: {player, from:'hand'|'mz'|'sz'|'field', index, ss}
+      gs.chain.push({ player:a.player, cardId:a.cardId, name:a.name, ss:a.ss, from:a.from, index:a.index });
+      logIt(gs, `チェーン${gs.chain.length}：${nameOf(a.player)} が ${a.name}（SS${a.ss}）を発動`);
+      break;
+    }
+    case "CHAIN_RESOLVE_TOP": {
+      // 逆順解決：末尾（最後に積んだ＝一番上）から1つ処理して取り除く
+      if(!gs.chain.length) break;
+      const link = gs.chain.pop();
+      logIt(gs, `解決：チェーン${gs.chain.length+1} ${link.name}（効果は手動で処理してください）`);
+      break;
+    }
+    case "CHAIN_CLEAR": {
+      gs.chain = [];
+      logIt(gs, `チェーンをクリア`);
+      break;
+    }
+
+    case "RESET":
+      Object.assign(gs, newGame());
+      logIt(gs, "盤面をリセット");
+      break;
+  }
+  return gs;
+}
+
+/* -------------------- ゾーン操作ヘルパ -------------------- */
+function removeFrom(P, zone, idx){
+  if(zone==="field"){ const c=P.field; P.field=null; return c; }
+  const arr = P[zone]; if(!arr) return null;
+  return arr.splice(idx,1)[0];
+}
+function placeInto(P, zone, card, deckPos){
+  if(zone==="field"){ P.field = card; return; }
+  const arr = P[zone];
+  if(zone==="deck"){
+    if(deckPos==="bottom") arr.push(card); else arr.unshift(card);
+    return;
+  }
+  arr.push(card);
+}
+function zoneCard(P, zone, idx){ return zone==="field" ? P.field : P[zone]?.[idx]; }
+/* 墓地・除外へ送る際にカードの表示状態を正規化 */
+function reset(card){ return { id:card.id, face:'up', pos:'atk' }; }
+
+/* -------------------- ログ / 名前 -------------------- */
+function logIt(gs, msg){ gs.log.unshift({t:Date.now(), msg}); if(gs.log.length>60) gs.log.pop(); }
+function nameOf(p){ return PNAME[p]; }
+function phaseJp(id){ return (PHASES.find(x=>x.id===id)||{}).jp || id; }
+function zoneJp(z){ return {hand:"手札",mz:"モンスター",sz:"魔法罠",field:"フィールド",grave:"墓地",banish:"除外",deck:"デッキ",ex:"EX"}[z]||z; }
+function cardName(card){ return CARD_DB[card.id]?.n || "カード"; }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
+
+/* =========================================================================
+   RENDER — gameState を読んで描画するだけ
+   ========================================================================= */
+function render(){
+  const gs = gameState;
+  const view = gs.activePlayer;          // 手番プレイヤー視点
+  const opp  = view===0?1:0;
+
+  document.getElementById("turnFlag").innerHTML =
+    `ターン ${gs.turn} · 手番 <b>${nameOf(view)}</b>`;
+
+  // phases: past phases dimmed-gold, current highlighted, plus advance button
+  const curIdx = PHASES.findIndex(x=>x.id===gs.phase);
+  const atEnd = gs.phase === "end";
+  document.getElementById("phases").innerHTML = PHASES.map((ph,idx)=>{
+    const cls = ph.id===gs.phase ? "on" : (idx<curIdx ? "done" : "");
+    return `<button class="phase ${cls}" onclick="doPhase('${ph.id}')">${ph.jp}</button>`;
+  }).join("") +
+  (atEnd
+    ? `<button class="phase-next" onclick="doPass()">ターン終了 ⇄</button>`
+    : `<button class="phase-next" onclick="doPhaseNext()">次へ ▸</button>`);
+
+  // board: 相手を上、手番を下
+  document.getElementById("board").innerHTML =
+    sideHTML(opp, true) + sideHTML(view, false);
+
+  // hand（手番のみ表向き）
+  const P = gs.players[view];
+  document.getElementById("handWho").textContent = `${nameOf(view)} の手札`;
+  document.getElementById("handCnt").textContent = `${P.hand.length}枚 / デッキ${P.deck.length}`;
+  document.getElementById("hand").innerHTML = P.hand.map((c,i)=>
+    cardHTML(c, "hcard", `openHand(${i})`, true)
+  ).join("") || `<div style="color:var(--text-dim);font-size:11px;padding:8px">手札なし — 下の「デッキ読込」から開始</div>`;
+
+  // controls
+  const chN = gs.chain.length;
+  document.getElementById("controls").innerHTML = `
+    <button class="btn gold" onclick="doDraw()">ドロー</button>
+    <button class="btn ${chN?'':'ghost'}" onclick="openChain()">チェーン${chN?`<span class="chain-badge">${chN}</span>`:""}</button>
+    <button class="btn" onclick="openDeckLoad()">デッキ読込</button>
+    <button class="btn ghost" onclick="doShuffle()">シャッフル</button>
+    <button class="btn ghost" onclick="openPile(${view},'deck')">デッキ操作</button>
+  `;
+
+  // log
+  document.getElementById("log").innerHTML = gs.log.map(l=>`<div class="li">${l.msg}</div>`).join("");
+}
+
+function sideHTML(p, isOpp){
+  const gs = gameState;
+  const P  = gs.players[p];
+  const isActive = gs.activePlayer===p;
+  const lpLow = P.lp<=2000;
+  return `
+  <section class="side ${isOpp?'opp':''} ${isActive?'active-side':''}">
+    <div class="side-head">
+      <span class="side-name">${nameOf(p)}</span>
+      <span class="side-tag">${isOpp?'相手':'手番'}</span>
+      <div class="lp-box">
+        <button class="lp-btn" onclick="lpAdj(${p},-500)">−</button>
+        <div class="lp-val ${lpLow?'low':''}">${P.lp}</div>
+        <button class="lp-btn" onclick="lpAdj(${p},500)">＋</button>
+      </div>
+    </div>
+    <div class="zones">
+      ${ isOpp
+        ? zoneRowHTML(p,"魔法罠","sz",5,isOpp) + zoneRowHTML(p,"モンスター","mz",5,isOpp)
+        : zoneRowHTML(p,"モンスター","mz",5,isOpp) + zoneRowHTML(p,"魔法罠","sz",5,isOpp) }
+      <div class="zrow">
+        <div class="lab">場外</div>
+        <div class="slots line5">
+          ${pileSlot(p,"field","フィールド",isOpp)}
+          ${pileSlot(p,"grave","墓地",isOpp)}
+          ${pileSlot(p,"banish","除外",isOpp)}
+          ${pileSlot(p,"deck","デッキ",isOpp)}
+          ${pileSlot(p,"ex","EX",isOpp)}
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function zoneRowHTML(p, label, zone, count, isOpp){
+  const P = gameState.players[p];
+  let cells = "";
+  for(let i=0;i<count;i++){
+    const c = P[zone][i];
+    cells += c
+      ? `<div class="slot">${cardHTML(c,"", `openZone(${p},'${zone}',${i})`, !isOpp || c.face==='up')}</div>`
+      : `<div class="slot"><span class="ph">${label}</span></div>`;
+  }
+  return `<div class="zrow"><div class="lab">${label}</div><div class="slots ${zone}">${cells}</div></div>`;
+}
+function pileSlot(p, zone, label, isOpp){
+  const P = gameState.players[p];
+  if(zone==="field"){
+    const c=P.field;
+    return `<div class="pile"><div class="slot field">${ c ? cardHTML(c,"",`openZone(${p},'field',0)`, !isOpp||c.face==='up') : `<span class="ph">${label}</span>`}</div><span class="pile-lab">${label}</span></div>`;
+  }
+  const n = P[zone].length;
+  const top = P[zone][n-1];
+  return `<div class="pile"><div class="slot" onclick="openPile(${p},'${zone}')">
+    ${ n ? cardHTML(top,"", `openPile(${p},'${zone}')`, zone!=="deck") : `<span class="ph">${label}</span>` }
+    ${ n>0 ? `<span class="pile-n">${n}</span>`:"" }
+  </div><span class="pile-lab">${label}</span></div>`;
+}
+
+/* 1枚のカード描画。faceUp=false なら裏面 */
+function cardHTML(c, extra, onclick, faceUp){
+  const db = CARD_DB[c.id] || {};
+  const kcls = db.k ? `k-${db.k}` : "";
+  const setDown = c.face==='down';
+  const defRot  = (db.k==='m' && c.pos==='def') ? 'set-mon' : '';
+  if(!faceUp || setDown){
+    return `<div class="card facedown ${extra}" onclick="${onclick}">
+      <img src="${IMG_BACK}" onerror="this.style.display='none'">
+    </div>`;
+  }
+  const badge = db.k==='m' ? (db.lv?`Lv${db.lv}`:"M") : db.k==='s' ? "魔" : db.k==='t' ? "罠" : "";
+  return `<div class="card ${kcls} ${extra} ${defRot}" onclick="${onclick}">
+    <img src="${IMG_BASE}${db.c}.webp" onerror="this.style.display='none'">
+    ${badge?`<span class="badge">${badge}</span>`:""}
+    <div class="nm">${db.n||""}</div>
+  </div>`;
+}
+
+/* =========================================================================
+   UI アクション → applyAction → render のラッパ
+   ========================================================================= */
+function act(a){ applyAction(gameState, a); render(); }
+
+function doPhase(id){ act({type:"SET_PHASE", phase:id}); }
+function doPhaseNext(){
+  const i = PHASES.findIndex(x=>x.id===gameState.phase);
+  if(i < PHASES.length-1) act({type:"SET_PHASE", phase:PHASES[i+1].id});
+}
+function doPass(){ act({type:"PASS_TURN"}); }
+function doDraw(){ act({type:"DRAW", n:1}); }
+function doShuffle(){ act({type:"SHUFFLE"}); }
+function doLP(d){ act({type:"LP", player:gameState.activePlayer, delta:d}); }
+function lpAdj(p,d){ act({type:"LP", player:p, delta:d}); }
+
+/* ---- モーダル ---- */
+const veil = document.getElementById("veil");
+const sheet = document.getElementById("sheet");
+function closeSheet(){ veil.classList.remove("on"); }
+veil.addEventListener("click", e=>{ if(e.target===veil) closeSheet(); });
+
+function cardMeta(db){
+  if(db.k==='m'){
+    return `${(db.st||[]).join("・")} / ${db.at}属性 / ${db.ra}族 / Lv${db.lv}<br>ATK ${db.atk} / DEF ${db.def}`;
+  }
+  const sub = db.sub? `（${db.sub}）`:"";
+  return `${db.k==='s'?'魔法':'罠'}カード${sub}`;
+}
+function cardThumb(db){
+  const src = db.c ? `${IMG_BASE}${db.c}.webp` : "";
+  return `<div class="sheet-thumb"><img src="${src}" onerror="this.style.display='none'"></div>`;
+}
+function metaHead(db){
+  return `<div class="grip"></div>
+  <div class="sheet-card">
+    ${cardThumb(db)}
+    <div class="sheet-info">
+      <h3>${db.n||"カード"}</h3>
+      <div class="meta">${cardMeta(db)}</div>
+    </div>
+  </div>
+  ${db.e?`<div class="eff">${db.e}</div>`:""}`;
+}
+
+/* 手札のカードをタップ */
+function openHand(i){
+  const P = gameState.players[gameState.activePlayer];
+  const c = P.hand[i]; const db = CARD_DB[c.id]||{};
+  const p = gameState.activePlayer;
+  let primary = "", secondary = "";
+  if(db.k==='m'){
+    primary = `
+      <div class="act" onclick="fromHand(${i},'mz','up','atk')">召喚（攻撃）</div>
+      <div class="act" onclick="fromHand(${i},'mz','down','def')">セット（裏守備）</div>
+      <div class="act" onclick="fromHand(${i},'mz','up','def')">特殊召喚（守備）</div>`;
+    secondary = `
+      <div class="act" onclick="fromHand(${i},'grave')">墓地へ</div>
+      <div class="act" onclick="fromHand(${i},'banish')">除外</div>`;
+  } else {
+    const toField = db.sub==="フィールド";
+    primary = `
+      <div class="act" onclick="handActivate(${i})">発動（チェーンへ）</div>
+      <div class="act" onclick="fromHand(${i},'${toField?'field':'sz'}','down')">セット（裏）</div>`;
+    secondary = `
+      <div class="act" onclick="fromHand(${i},'grave')">墓地へ</div>
+      <div class="act" onclick="fromHand(${i},'banish')">除外</div>`;
+  }
+  sheet.innerHTML = metaHead(db) +
+    `<div class="act-label">プレイ</div><div class="act-grid">${primary}</div>
+     <div class="act-label">その他へ送る</div><div class="act-grid">${secondary}</div>
+     <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+function fromHand(i, to, face, pos){
+  // ゾーン制限チェック
+  const P = gameState.players[gameState.activePlayer];
+  if(ZONE_LIMITS[to] && P[to].length>=ZONE_LIMITS[to] && to!=="field"){
+    alert(`${zoneJp(to)}ゾーンは${ZONE_LIMITS[to]}枚までです`); return;
+  }
+  if(to==="field" && P.field){ alert("フィールド魔法ゾーンは1枚までです"); return; }
+  act({type:"MOVE", player:gameState.activePlayer, from:"hand", fromIndex:i, to, face:face||"up", pos:pos||"atk"});
+  closeSheet();
+}
+/* 手札から魔法罠を発動：ゾーンへ置いてからチェーンに積む */
+function handActivate(i){
+  const p = gameState.activePlayer;
+  const P = gameState.players[p];
+  const c = P.hand[i]; const db = CARD_DB[c.id]||{};
+  const ss = spellSpeed(db);
+  if(!canChainOnto(ss)){ alert(`スペルスピードが足りません（このカードSS${ss}）`); return; }
+  const to = db.sub==="フィールド" ? "field" : "sz";
+  if(to==="sz" && P.sz.length>=ZONE_LIMITS.sz){ alert("魔法罠ゾーンは5枚までです"); return; }
+  if(to==="field" && P.field){ alert("フィールド魔法ゾーンは1枚までです"); return; }
+  act({type:"MOVE", player:p, from:"hand", fromIndex:i, to, face:"up"});
+  const idx = to==="field" ? 0 : P.sz.length-1;
+  act({type:"CHAIN_ADD", player:p, cardId:c.id, name:db.n, ss, from:to, index:idx});
+  closeSheet();
+  openChain();
+}
+
+/* 場のカードをタップ（一人回し用：両サイドとも操作可） */
+function openZone(p, zone, idx){
+  const P = gameState.players[p];
+  const c = zoneCard(P, zone, idx); if(!c) return;
+  const db = CARD_DB[c.id]||{};
+  const isMon = db.k==='m';
+  const faceUp = c.face==='up';
+  const canAttack = isMon && faceUp && c.pos==='atk';
+
+  // 攻撃（表側攻撃表示モンスターのみ）
+  const attack = canAttack
+    ? `<div class="act" onclick="beginAttack(${p},${idx})">攻撃宣言</div>`
+    : "";
+
+  // 発動（チェーンに乗せる）。表側なら常に、セット状態なら魔法罠のみ相手ターン含め発動可
+  const activate = (!isMon)
+    ? `<div class="act" onclick="chainAddFromZone(${p},'${zone}',${idx})">効果を発動（チェーンへ）</div>`
+    : (faceUp ? `<div class="act" onclick="chainAddFromZone(${p},'${zone}',${idx})">効果を発動（チェーンへ）</div>` : "");
+
+  const state = `
+    ${c.face==='down'?`<div class="act" onclick="zAct('FLIP',${p},'${zone}',${idx})">表にする（反転）</div>`:""}
+    ${isMon?`<div class="act" onclick="zAct('TOGGLE_POS',${p},'${zone}',${idx})">表示形式を変更</div>`:""}`;
+  const move = `
+    <div class="act" onclick="zMove(${p},'${zone}',${idx},'grave')">墓地へ</div>
+    <div class="act" onclick="zMove(${p},'${zone}',${idx},'banish')">除外</div>
+    <div class="act" onclick="zMove(${p},'${zone}',${idx},'hand')">手札へ</div>
+    <div class="act" onclick="zMove(${p},'${zone}',${idx},'deck')">デッキ上へ</div>`;
+
+  const primary = attack + activate;
+  const hasPrimary = primary.trim().length>0;
+  const hasState = state.trim().length>0;
+  sheet.innerHTML = metaHead(db) +
+    (hasPrimary ? `<div class="act-label">アクション</div><div class="act-grid">${primary}</div>` : "") +
+    (hasState ? `<div class="act-label">状態</div><div class="act-grid">${state}</div>` : "") +
+    `<div class="act-label">移動</div><div class="act-grid">${move}</div>
+     <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+function zAct(type,p,zone,index){ act({type, player:p, zone, index}); closeSheet(); }
+function zMove(p,zone,idx,to){
+  const P=gameState.players[p];
+  if(ZONE_LIMITS[to] && to!=="field" && P[to].length>=ZONE_LIMITS[to]){ alert(`${zoneJp(to)}は${ZONE_LIMITS[to]}枚まで`); return; }
+  act({type:"MOVE", player:p, from:zone, fromIndex:idx, to, face:to==="deck"?"down":"up"});
+  closeSheet();
+}
+
+/* ================= 攻撃 ================= */
+function beginAttack(p, atkIdx){
+  const oppP = gameState.players[p===0?1:0];
+  const atkDB = CARD_DB[gameState.players[p].mz[atkIdx].id]||{};
+  // 対象候補：相手モンスター（表側／裏側とも）＋直接攻撃（相手モンスターが0なら）
+  let targets = "";
+  oppP.mz.forEach((c,i)=>{
+    const db=CARD_DB[c.id]||{};
+    const faceUp = c.face==='up';
+    const shown = faceUp ? `${db.n} (${c.pos==='def'?'守'+((db.def)||0):'攻'+((db.atk)||0)})` : "裏側のカード";
+    targets += `<div class="act" onclick="doAttack(${p},${atkIdx},${i})">${shown}</div>`;
+  });
+  const directOK = oppP.mz.length===0;
+  const direct = directOK
+    ? `<div class="act" onclick="doAttack(${p},${atkIdx},'direct')">直接攻撃</div>`
+    : `<div class="act" style="opacity:.4">直接攻撃（相手モンスター有）</div>`;
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">${atkDB.n} の攻撃</h3>
+    <div class="meta" style="margin-bottom:12px">攻撃力 ${atkDB.atk||0} / 対象を選択</div>
+    ${targets? `<div class="act-label">相手モンスターを攻撃</div><div class="act-grid">${targets}</div>`:""}
+    <div class="act-label">プレイヤーへ</div><div class="act-grid">${direct}</div>
+    <button class="close" onclick="closeSheet()">やめる</button>`;
+  veil.classList.add("on");
+}
+function doAttack(p, atkIdx, target){
+  act({type:"ATTACK", player:p, atkIdx, target});
+  closeSheet();
+}
+
+/* ================= チェーン（手動・スペルスピード判定） ================= */
+/* SS判定：カウンター罠=3、速攻魔法/通常罠/永続罠=2、それ以外(通常/永続/装備/フィールド魔法・モンスター効果)=1 */
+function spellSpeed(db){
+  if(db.k==='t'){ return db.sub==='カウンター' ? 3 : 2; }      // 罠は最低SS2、カウンターはSS3
+  if(db.k==='s'){ return db.sub==='速攻' ? 2 : 1; }            // 速攻魔法のみSS2
+  return 1;                                                     // モンスター効果は簡易的にSS1扱い
+}
+/* チェーンに新しく積めるか：既存の一番上のSS以上でなければ乗せられない */
+function canChainOnto(ss){
+  if(!gameState.chain.length) return true;
+  const top = gameState.chain[gameState.chain.length-1];
+  return ss >= top.ss;
+}
+function chainAddFromZone(p, zone, idx){
+  const c = zoneCard(gameState.players[p], zone, idx);
+  const db = CARD_DB[c.id]||{};
+  const ss = spellSpeed(db);
+  if(!canChainOnto(ss)){
+    alert(`スペルスピードが足りません（このカードSS${ss} / 現在チェーン上はSS${gameState.chain[gameState.chain.length-1].ss}）`);
+    return;
+  }
+  // 表側でなければ発動時に表にする（セット→発動）
+  if(c.face==='down'){ c.face='up'; }
+  act({type:"CHAIN_ADD", player:p, cardId:c.id, name:db.n, ss, from:zone, index:idx});
+  closeSheet();
+  openChain();
+}
+function chainAddFromHand(i){
+  const p = gameState.activePlayer;
+  const c = gameState.players[p].hand[i];
+  const db = CARD_DB[c.id]||{};
+  const ss = spellSpeed(db);
+  if(!canChainOnto(ss)){
+    alert(`スペルスピードが足りません（このカードSS${ss}）`);
+    return;
+  }
+  act({type:"CHAIN_ADD", player:p, cardId:c.id, name:db.n, ss, from:"hand", index:i});
+  closeSheet();
+  openChain();
+}
+/* チェーンパネル */
+function openChain(){
+  const ch = gameState.chain;
+  if(!ch.length){
+    sheet.innerHTML = `<div class="grip"></div><h3>チェーン</h3>
+      <div class="act-label">現在チェーンは積まれていません</div>
+      <div class="meta" style="margin-bottom:12px">カードの「効果を発動（チェーンへ）」で積みます</div>
+      <button class="close" onclick="closeSheet()">閉じる</button>`;
+    veil.classList.add("on"); return;
+  }
+  // 上（最後に積んだ）から表示
+  let rows = "";
+  for(let i=ch.length-1;i>=0;i--){
+    const link = ch[i];
+    const isTop = i===ch.length-1;
+    rows += `<div class="chain-link ${isTop?'top':''}">
+      <span class="cl-no">${i+1}</span>
+      <span class="cl-nm">${link.name}</span>
+      <span class="cl-ss">SS${link.ss}</span>
+      <span class="cl-who">${nameOf(link.player)}</span>
+    </div>`;
+  }
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:8px">チェーン（${ch.length}）</h3>
+    <div class="chain-list">${rows}</div>
+    <div class="act-label">解決（上から逆順）</div>
+    <div class="act-grid">
+      <div class="act" onclick="act({type:'CHAIN_RESOLVE_TOP'});openChain()">上を1つ解決</div>
+      <div class="act warn" onclick="act({type:'CHAIN_CLEAR'});closeSheet()">全てクリア</div>
+    </div>
+    <button class="close" onclick="closeSheet()">閉じる（保留）</button>`;
+  veil.classList.add("on");
+}
+
+/* 山札系（デッキ/墓地/除外/EX）を開く */
+function openPile(p, zone){
+  const P = gameState.players[p];
+  const list = P[zone];
+  const canSee = zone!=="deck" || p===gameState.activePlayer; // デッキ中身は本来非公開だが操作台として自分のみ閲覧可
+  let items = list.map((c,i)=>{
+    const db=CARD_DB[c.id]||{};
+    const label = (zone==="deck" && p!==gameState.activePlayer) ? "（裏）" : (db.n||"?");
+    return `<div class="act" onclick="pileAct(${p},'${zone}',${i})">${label}</div>`;
+  }).join("") || `<div class="meta">カードなし</div>`;
+  const head = `<div class="grip"></div><h3 style="margin-bottom:10px">${nameOf(p)} · ${zoneJp(zone)}（${list.length}）</h3>`;
+  const tools = zone==="deck" && p===gameState.activePlayer
+    ? `<div class="act-grid" style="margin-bottom:10px">
+         <div class="act" onclick="act({type:'DRAW',player:${p},n:1});closeSheet()">1枚ドロー</div>
+         <div class="act" onclick="act({type:'SHUFFLE',player:${p}});openPile(${p},'deck')">シャッフル</div>
+       </div>`
+    : "";
+  sheet.innerHTML = head + tools +
+    `<div class="act-label">カードをタップで手札／場へ</div>
+     <div class="act-grid">${items}</div>
+     <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+function pileAct(p, zone, i){
+  const db = CARD_DB[gameState.players[p][zone][i].id]||{};
+  sheet.innerHTML = metaHead(db)+
+    `<div class="act-label">${zoneJp(zone)}から移動</div>
+     <div class="act-grid">
+       <div class="act" onclick="pileMove(${p},'${zone}',${i},'hand')">手札へ</div>
+       <div class="act" onclick="pileMove(${p},'${zone}',${i},'mz','up','atk')">場（攻撃）</div>
+       <div class="act" onclick="pileMove(${p},'${zone}',${i},'mz','up','def')">場（守備）</div>
+       <div class="act" onclick="pileMove(${p},'${zone}',${i},'sz','up')">魔法罠へ</div>
+       <div class="act" onclick="pileMove(${p},'${zone}',${i},'grave')">墓地へ</div>
+       <div class="act" onclick="pileMove(${p},'${zone}',${i},'banish')">除外へ</div>
+     </div>
+     <button class="close" onclick="openPile(${p},'${zone}')">戻る</button>`;
+}
+function pileMove(p,zone,i,to,face,pos){
+  const P=gameState.players[p];
+  if(ZONE_LIMITS[to] && to!=="field" && P[to].length>=ZONE_LIMITS[to]){ alert(`${zoneJp(to)}は${ZONE_LIMITS[to]}枚まで`); return; }
+  act({type:"MOVE", player:p, from:zone, fromIndex:i, to, face:face||"up", pos:pos||"atk"});
+  closeSheet();
+}
+
+/* =========================================================================
+   デッキ読込（「カード名 x3」テキスト）
+   ========================================================================= */
+function openDeckLoad(){
+  const p = gameState.activePlayer;
+  sheet.innerHTML = `
+    <h3>${nameOf(p)} · デッキ読込</h3>
+    <div class="meta">既存デッキビルダーからコピペ。「カード名 x3」または「カード名」を1行ずつ。EXは自動でExtraへ振り分けます。</div>
+    <div class="sub">メイン / EX デッキリスト</div>
+    <textarea id="deckText" placeholder="サイバー・ドラゴン x3&#10;死者蘇生&#10;灰流うらら x3&#10;増殖するG x2"></textarea>
+    <div class="row2" style="margin-top:10px">
+      <button class="act" onclick="loadDeck(${p}, true)">読込＆シャッフル＆5枚ドロー</button>
+      <button class="act" onclick="loadDeck(${p}, false)">読込のみ</button>
+    </div>
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+/* 1103環境での同名カード上限（0/1/2/3枚）
+   carddata.json の各カードが持つ lm キーを使う（lm:0=禁止,1=制限,2=準制限,無指定=無制限）。
+   これによりカード名リストの手管理は不要。 */
+function deckLimit(name){
+  const c = CARD_DB.find(x=>x.n===name);
+  if(c && typeof c.lm === "number") return c.lm;
+  return 3;
+}
+function limitLabel(lim){ return lim===0?"禁止":lim===1?"制限":lim===2?"準制限":""; }
+
+function parseDeckText(text){
+  const main=[], ex=[]; const miss=[];
+  const counts={};                 // name -> 採用枚数（上限適用後）
+  const violations=[];             // {name, requested, limit}
+  text.split(/\r?\n/).forEach(line=>{
+    line=line.trim(); if(!line) return;
+    const m = line.match(/^(.*?)(?:\s*[x×✕*]\s*(\d+))?$/i);
+    let name=(m[1]||"").trim(); let qty=parseInt(m[2]||"1",10);
+    name = name.replace(/\s+\d+$/,'').trim() || name;   // 末尾数字形式にも対応
+    const idx = CARD_DB.findIndex(c=>c.n===name);
+    if(idx<0){ miss.push(name); return; }
+    const lim = deckLimit(name);
+    const already = counts[name]||0;
+    const allowed = Math.max(0, Math.min(qty, lim - already));   // 上限までしか採用しない
+    if(allowed < qty){ violations.push({name, requested:qty+already, limit:lim}); }
+    counts[name] = already + allowed;
+    for(let i=0;i<allowed;i++){
+      const card = {id:idx, face:"down", pos:"atk"};
+      if(CARD_DB[idx].ex) ex.push(card); else main.push(card);
+    }
+  });
+  return {main, ex, miss, violations};
+}
+function loadDeck(p, autostart){
+  const text = document.getElementById("deckText").value;
+  const parsed = parseDeckText(text);
+
+  // 1103 枚数超過があれば、確認モーダルを挟む（強制カット or 無視して全枚数）
+  if(parsed.violations.length){
+    const lines = parsed.violations.map(v=>
+      `・${v.name}（${limitLabel(v.limit)}／上限${v.limit}枚）: 指定${v.requested}枚`
+    ).join("<br>");
+    sheet.innerHTML = `
+      <h3>1103 枚数チェック</h3>
+      <div class="meta">以下は1103環境の上限を超えています。</div>
+      <div class="eff">${lines}</div>
+      <div class="act-grid">
+        <div class="act" onclick="finishLoad(${p},${autostart},true)">上限までに切って読込</div>
+        <div class="act warn" onclick="finishLoad(${p},${autostart},false)">無視して指定枚数で読込</div>
+      </div>
+      <button class="close" onclick="openDeckLoad()">戻る</button>`;
+    veil.classList.add("on");
+    PENDING_DECK = {p, text};
+    return;
+  }
+  applyLoad(p, parsed, autostart);
+}
+
+let PENDING_DECK = null;
+function finishLoad(p, autostart, enforce){
+  const {text} = PENDING_DECK;
+  let parsed;
+  if(enforce){ parsed = parseDeckText(text); }
+  else {
+    // 上限を無視して全枚数を採用する版
+    parsed = parseDeckTextRaw(text);
+  }
+  applyLoad(p, parsed, autostart);
+}
+function parseDeckTextRaw(text){
+  const main=[], ex=[], miss=[];
+  text.split(/\r?\n/).forEach(line=>{
+    line=line.trim(); if(!line) return;
+    const m = line.match(/^(.*?)(?:\s*[x×✕*]\s*(\d+))?$/i);
+    let name=(m[1]||"").trim(); let qty=parseInt(m[2]||"1",10);
+    name = name.replace(/\s+\d+$/,'').trim() || name;
+    const idx = CARD_DB.findIndex(c=>c.n===name);
+    if(idx<0){ miss.push(name); return; }
+    for(let i=0;i<qty;i++){
+      const card={id:idx, face:"down", pos:"atk"};
+      if(CARD_DB[idx].ex) ex.push(card); else main.push(card);
+    }
+  });
+  return {main, ex, miss, violations:[]};
+}
+function applyLoad(p, parsed, autostart){
+  const {main, ex, miss} = parsed;
+  if(!main.length && !ex.length){ alert("有効なカードがありません（ダミーDBは10種のみ）"); return; }
+  act({type:"LOAD_DECK", player:p, deck:main, ex});
+  if(autostart){
+    act({type:"SHUFFLE", player:p});
+    act({type:"DRAW", player:p, n:5});
+  }
+  closeSheet();
+  if(miss.length) setTimeout(()=>alert("見つからないカード:\n"+[...new Set(miss)].join("\n")),50);
+}
+
+/* =========================================================================
+   起動
+   ========================================================================= */
+/* カードデータは姉妹アプリ index.html の <script id="carddata"> から読み込む。
+   これによりデータはindex.html1箇所に集約され、更新時はindex.htmlだけ直せばよい
+   （carddata.json を別途用意する必要はない）。失敗時はダミーDBで継続。 */
+async function loadCardDataFromIndex(){
+  const res = await fetch('index.html');
+  if(!res.ok) throw new Error('index.html fetch失敗 ('+res.status+')');
+  const txt = await res.text();
+  // DOMParserで <script id="carddata" type="application/json"> の中身を取り出す
+  const doc = new DOMParser().parseFromString(txt, 'text/html');
+  const el = doc.getElementById('carddata');
+  if(!el) throw new Error('index.html に id="carddata" が見つかりません');
+  const data = JSON.parse(el.textContent.trim());
+  if(!Array.isArray(data) || !data.length) throw new Error('カードデータが空です');
+  return data;
+}
+async function boot(){
+  try{
+    CARD_DB = await loadCardDataFromIndex();
+  }catch(e){
+    console.warn('index.htmlからのカード読込に失敗、ダミーDBで継続:', e);
+  }
+  gameState = newGame();
+  logIt(gameState, `<b>決闘開始</b> — カード ${CARD_DB.length}種読込済。デッキを読み込んでください`);
+  render();
+}
+boot();
+</script>
+</body>
+</html>
