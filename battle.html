@@ -432,6 +432,21 @@ textarea{
 .pick-row.dim{opacity:.42}
 .pick-row.dim .pk-sub{color:var(--forbidden)}
 
+/* ---------- 相手ターン割り込み ---------- */
+.d-act.react{border-color:var(--trap);color:var(--trap);font-weight:800}
+.d-act.react .kb{background:var(--trap);color:#120a1f}
+.g-can.react{border-color:var(--trap);color:var(--trap);background:rgba(157,110,222,.10)}
+.react-warn{
+  font-size:11.5px;font-weight:700;color:var(--trap);text-align:center;
+  padding:9px 10px;margin:0 0 10px;border:1px dashed var(--trap);border-radius:5px;
+  background:rgba(157,110,222,.10);
+}
+.react-warn:active{background:rgba(157,110,222,.18)}
+.rk-set{
+  margin-left:6px;font-size:9px;font-weight:800;padding:1px 5px;border-radius:7px;
+  background:var(--trap);color:#120a1f;
+}
+
 .fp-mark{
   display:inline-block;margin-left:5px;font-size:8.5px;font-weight:800;
   padding:1px 5px;border-radius:8px;background:var(--gold);color:var(--gold-ink);
@@ -935,7 +950,7 @@ function render(){
 /* ---- guide strip HTML ---- */
 function guideHTML(gs, view, curIdx, chN){
   const P = gs.players[view];
-  const loaded = P.deck.length>0 || P.hand.length>0;
+  const loaded = P.deck.length>0 || P.hand.length>0 || P.mz.length>0 || P.sz.length>0 || P.grave.length>0;
   const phase = gs.phase;
   const cans = [];
   const canNormal = (phase==="main1"||phase==="main2");
@@ -955,6 +970,9 @@ function guideHTML(gs, view, curIdx, chN){
     if(phase==="battle"){
       const canAtk = P.mz.some(c=>c && c.face==='up' && c.pos==='atk');
       cans.push(`<span class="g-can ${canAtk?'':'mute'}">攻撃宣言${canAtk?'':'（表側攻撃なし）'}</span>`);
+      const rp = view===0?1:0;
+      const rn = reactableCards(rp).length;
+      if(rn) cans.push(`<span class="g-can react">${nameOf(rp)}は罠を撃てる(${rn})</span>`);
     }
     if(phase==="end") cans.push(`<span class="g-can">手札7枚調整→ターン終了</span>`);
     cans.push(`<span class="g-can mute">効果発動</span>`);
@@ -991,10 +1009,16 @@ function renderDock(gs, curIdx, chN){
     : "";
   const drawDone = (gs.phase==="draw" && gs.drawnThisTurn);
   const drawCls = (gs.phase==="draw" && !gs.drawnThisTurn) ? "d-act gold pulse" : (drawDone ? "d-act" : "d-act gold");
+  // 相手ターン中に撃てる自分の伏せカード
+  const rp = gs.activePlayer===0 ? 1 : 0;
+  const reactN = reactableCards(rp).length;
+  const reactBtn = reactN
+    ? `<button class="d-act react" onclick="openReact()">${nameOf(rp)}<span class="kb">${reactN}</span></button>`
+    : "";
   const actRow = `
     <button class="${drawCls}" onclick="doDraw()">ドロー${drawDone?"済":""}</button>
     <button class="d-act" onclick="focusHandHint()">手札</button>
-    ${exBtn}
+    ${exBtn}${reactBtn}
     <button class="d-act" onclick="openChain()">チェーン${chN?`<span class="kb">${chN}</span>`:""}</button>
     <button class="d-act undo" onclick="undo()" ${canUndo?'':'disabled'}>↺ 戻す</button>`;
 
@@ -1932,7 +1956,105 @@ function doExSummon(p, exIndex, materials, kind){
   veil.classList.add("on");
 }
 
-/* ---- 効果の有無判定と実行 ------------------------------------------- */
+/* 相手ターン中に発動できる自分のカードを集める。
+   1103は伏せの読み合いが肝なので、非手番側の罠・速攻魔法をすぐ撃てるようにする。
+   返り値: [{p, zone, index, db, ss}] */
+function reactableCards(p){
+  const P = gameState.players[p];
+  const out = [];
+  P.sz.forEach((c,i)=>{
+    const db = dbOf(c);
+    // 罠は伏せてあれば発動可、速攻魔法も同様。表側の永続系も効果を出せる。
+    const isTrap  = db.k==='t';
+    const isQuick = db.k==='s' && db.sub==='速攻';
+    if(isTrap || isQuick || c.face==='up'){
+      out.push({p, zone:'sz', index:i, db, ss: isTrap ? (db.sub==='カウンター'?3:2) : (isQuick?2:1)});
+    }
+  });
+  if(P.field){
+    out.push({p, zone:'field', index:0, db:dbOf(P.field), ss:1});
+  }
+  return out;
+}
+
+/* 非手番プレイヤー（＝相手ターン中の自分）の番号 */
+function reactingPlayer(){ return gameState.activePlayer===0 ? 1 : 0; }
+
+/* 相手ターン中の割り込みパネル */
+function openReact(){
+  const rp = reactingPlayer();
+  const list = reactableCards(rp);
+  if(!list.length){
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:6px">${nameOf(rp)}の割り込み</h3>
+      <div class="meta" style="margin-bottom:12px">
+        発動できる伏せカードがありません。<br>
+        罠・速攻魔法を伏せていると、ここから相手ターン中に発動できます。</div>
+      <button class="close" onclick="closeSheet()">閉じる</button>`;
+    veil.classList.add("on"); return;
+  }
+  const rows = list.map(it=>{
+    const P = gameState.players[rp];
+    const card = it.zone==='field' ? P.field : P.sz[it.index];
+    const hidden = card && card.face==='down';
+    const eff = hasEffect(it.db.n);
+    return `<div class="act pick-row" onclick="reactActivate(${rp},'${it.zone}',${it.index})">
+      <span class="pk-nm">${it.db.n}${hidden?'<span class="rk-set">伏</span>':''}</span>
+      <span class="pk-sub">${it.db.k==='t'?'罠':'魔法'}${it.db.sub?'・'+it.db.sub:''} SS${it.ss}${eff?' ⚡':''}</span>
+    </div>`;
+  }).join("");
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">${nameOf(rp)}の割り込み</h3>
+    <div class="meta" style="margin-bottom:10px">
+      相手ターン中に発動できるカードです。タップすると表側にしてチェーンに積みます。</div>
+    <div class="pick-list">${rows}</div>
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+
+/* 割り込み発動：表side にしてチェーンへ積む（効果があれば自動処理も選べる） */
+function reactActivate(p, zone, index){
+  const P = gameState.players[p];
+  const card = zone==='field' ? P.field : P.sz[index];
+  if(!card){ showToast("カードがありません"); return; }
+  const db = dbOf(card);
+  const nm = db.n||"";
+  const eff = hasEffect(nm);
+  const ss  = db.k==='t' ? (db.sub==='カウンター'?3:2) : (db.sub==='速攻'?2:1);
+  closeSheet();
+  // 裏側なら表にする
+  if(card.face==='down'){
+    act({type:"FX_SET_STATE", player:p, zone, index, face:"up", reason:"発動"});
+  }
+  // チェーンに積む
+  act({type:"CHAIN_ADD", player:p, cardId:card.id, name:nm, ss, from:zone, index});
+  if(eff){
+    // 効果を自動処理するか選ばせる
+    setTimeout(()=>{
+      sheet.innerHTML = `<div class="grip"></div>
+        <h3 style="margin-bottom:6px">${nm}</h3>
+        <div class="meta" style="margin-bottom:12px">チェーン${gameState.chain.length}に積みました。<br>
+          相手がチェーンしないなら、そのまま解決できます。</div>
+        <div class="act-grid wide">
+          <div class="act fx" onclick="closeSheet();resolveReact(${p},'${zone}',${index},${JSON.stringify(nm)})">⚡ 解決して効果を処理</div>
+          <div class="act" onclick="closeSheet();openChain()">チェーンを確認する</div>
+        </div>`;
+      veil.classList.add("on");
+    }, 60);
+  } else {
+    showToast(`${nm} をチェーン${gameState.chain.length}に積みました`);
+    openChain();
+  }
+}
+/* 割り込みカードを解決して効果まで処理する */
+function resolveReact(p, zone, index, nm){
+  // チェーンから取り除く
+  if(gameState.chain.length) act({type:"CHAIN_RESOLVE_TOP"});
+  const db = CARD_DB[findCardIndex(nm)]||{};
+  const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備");
+  runEffect(p, nm, {zone, index, keep});
+  render();
+}
 function hasEffect(name){
   return !!(CARD_EFFECT[name] || AUTO_EFFECT[name]);
 }
@@ -2435,8 +2557,16 @@ function beginAttack(p, atkIdx){
   const direct = directOK
     ? `<div class="act" onclick="doAttack(${p},${atkIdx},'direct')">直接攻撃（${aATK}ダメージ）</div>`
     : `<div class="act" style="opacity:.4">直接攻撃（相手モンスターがいる）</div>`;
+  // 攻撃宣言時は相手の伏せに注意（1103はここが読み合いの山場）
+  const rp = p===0?1:0;
+  const rn = reactableCards(rp).length;
+  const warn = rn
+    ? `<div class="react-warn" onclick="openReact()">
+         ${nameOf(rp)}は伏せカードを${rn}枚持っています — タップして割り込み
+       </div>` : "";
   sheet.innerHTML = `<div class="grip"></div>
     <div class="bt-row"><span class="a-atk">${atkDB.n}</span><span class="vs">攻 ${aATK} で攻撃</span></div>
+    ${warn}
     <div class="meta" style="margin-bottom:10px;text-align:center">対象を選ぶと戦闘処理・ダメージまで自動反映します（1103準拠）</div>
     ${targets? `<div class="act-label">相手モンスターへ</div><div class="act-grid wide">${targets}</div>`:""}
     <div class="act-label">プレイヤーへ</div><div class="act-grid">${direct}</div>
