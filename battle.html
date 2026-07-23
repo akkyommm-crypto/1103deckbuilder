@@ -393,6 +393,53 @@ textarea{
 .dl-n{font-size:11px;color:var(--gold-hi);white-space:nowrap;text-align:right}
 .dl-n small{display:block;font-size:9px;color:var(--text-dim)}
 
+/* ---------- 効果処理UI ---------- */
+.act.fx{
+  background:linear-gradient(var(--spell),#2a8e73); color:#07130f;
+  border-color:var(--spell); font-weight:800; letter-spacing:.03em;
+}
+.act.fx:active{filter:brightness(.9)}
+.fx-note{
+  font-size:10.5px;color:var(--spell);border:1px dashed var(--spell);border-radius:5px;
+  padding:6px 10px;margin-bottom:10px;background:rgba(53,176,142,.07);text-align:center;font-weight:600;
+}
+.pick-list{display:flex;flex-direction:column;gap:6px;max-height:52dvh;overflow-y:auto;margin-bottom:4px}
+.pick-row{justify-content:flex-start!important;text-align:left;gap:10px;padding:12px 12px}
+.pk-nm{flex:1;min-width:0;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pk-sub{font-size:10px;color:var(--text-dim);white-space:nowrap}
+
+/* ---------- 手札が空のときの導線 ---------- */
+.hand-empty{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 4px;
+}
+.hand-empty>span{font-size:11px;color:var(--text-dim);margin-right:2px}
+.he-btn{
+  padding:10px 14px;border-radius:5px;font-size:12px;font-weight:700;
+  background:var(--gold);color:var(--gold-ink);border:1px solid var(--gold-hi);
+}
+.he-btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.he-btn:active{filter:brightness(.9)}
+.dl-item.test{border-color:var(--spell);background:rgba(53,176,142,.08)}
+.dl-badge.test{background:var(--gold);color:var(--gold-ink)}
+
+/* ---------- EX / エクシーズ ---------- */
+.xyz-n{
+  position:absolute;bottom:2px;left:2px;z-index:4;min-width:15px;text-align:center;
+  font-size:9px;font-weight:800;padding:1px 4px;border-radius:8px;
+  background:var(--spell);color:#07130f;border:1px solid rgba(0,0,0,.3);
+}
+.slot.ex-ready{border-color:var(--spell);box-shadow:0 0 8px rgba(53,176,142,.28)}
+.pick-row.dim{opacity:.42}
+.pick-row.dim .pk-sub{color:var(--forbidden)}
+
+.fp-mark{
+  display:inline-block;margin-left:5px;font-size:8.5px;font-weight:800;
+  padding:1px 5px;border-radius:8px;background:var(--gold);color:var(--gold-ink);
+  vertical-align:middle;letter-spacing:.04em;
+}
+.d-act.pulse{animation:dpulse 1.4s ease-in-out infinite}
+@keyframes dpulse{0%,100%{box-shadow:0 0 0 0 rgba(201,162,75,.5)}50%{box-shadow:0 0 0 5px rgba(201,162,75,0)}}
+
 /* ---------- toast ---------- */
 .toast{
   position:fixed;left:50%;bottom:118px;transform:translateX(-50%) translateY(8px);
@@ -493,7 +540,9 @@ function makePlayer(){
   return { lp:8000, hand:[], deck:[], mz:[], sz:[], field:null, grave:[], banish:[], ex:[] };
 }
 function newGame(){
-  return { turn:1, phase:"main1", activePlayer:0, players:[makePlayer(), makePlayer()], log:[], chain:[] };
+  // 1103環境は先攻ドローあり。ターン1もドローフェイズから始める。
+  return { turn:1, phase:"draw", activePlayer:0, firstPlayer:0,
+           players:[makePlayer(), makePlayer()], log:[], chain:[], drawnThisTurn:false };
 }
 
 /* -------------------- applyAction --------------------
@@ -511,7 +560,8 @@ function applyAction(gs, a){
       gs.activePlayer = gs.activePlayer === 0 ? 1 : 0;
       gs.turn += 1;
       gs.phase = "draw";
-      logIt(gs, `<b>ターン ${gs.turn}</b> — ${nameOf(gs.activePlayer)}の手番`);
+      gs.drawnThisTurn = false;
+      logIt(gs, `<b>ターン ${gs.turn}</b> — ${nameOf(gs.activePlayer)}の手番（先攻ドローあり）`);
       break;
 
     case "LP":
@@ -521,7 +571,15 @@ function applyAction(gs, a){
 
     case "DRAW": {
       const n = a.n ?? 1;
-      for(let i=0;i<n;i++){ if(P.deck.length) P.hand.push(P.deck.shift()); }
+      for(let i=0;i<n;i++){
+        if(!P.deck.length) break;
+        const c = P.deck.shift();
+        c.face = 'up';           // 手札は常に表向き（タップ不要で内容が読める）
+        c.pos  = 'atk';
+        P.hand.push(c);
+      }
+      // ドローフェイズの通常ドローを記録（ガイド表示用）
+      if(gs.phase==="draw" && (a.player ?? gs.activePlayer)===gs.activePlayer) gs.drawnThisTurn = true;
       logIt(gs, `${nameOf(a.player)}：${n}枚ドロー`);
       break;
     }
@@ -579,14 +637,14 @@ function applyAction(gs, a){
         let msg = `<b>戦闘</b> ${cardName(atkCard)}(攻${aATK}) vs ${cardName(defCard)}(${defending?'守':'攻'}${dVal})：`;
         if(defending){
           // 攻撃表示 vs 守備表示
-          if(aATK > dVal){ oppP.mz.splice(a.target,1); oppP.grave.push(reset(defCard)); msg += `守備モンスター破壊`; }
+          if(aATK > dVal){ dropXyzMaterials(oppP,defCard); oppP.mz.splice(a.target,1); oppP.grave.push(reset(defCard)); msg += `守備モンスター破壊`; }
           else if(aATK < dVal){ const dmg=dVal-aATK; P.lp=Math.max(0,P.lp-dmg); msg += `反射ダメージ ${dmg} → ${nameOf(a.player)}（LP ${P.lp}）`; }
           else { msg += `相打ちならず（貫通なし）`; }
         } else {
           // 攻撃表示同士
-          if(aATK > dVal){ const dmg=aATK-dVal; oppP.mz.splice(a.target,1); oppP.grave.push(reset(defCard)); oppP.lp=Math.max(0,oppP.lp-dmg); msg += `相手モンスター破壊＋${dmg}ダメージ（LP ${oppP.lp}）`; }
-          else if(aATK < dVal){ const dmg=dVal-aATK; const gi=P.mz.indexOf(atkCard); if(gi>=0){P.mz.splice(gi,1);P.grave.push(reset(atkCard));} P.lp=Math.max(0,P.lp-dmg); msg += `自分モンスター破壊＋${dmg}ダメージ（LP ${P.lp}）`; }
-          else { const gi=P.mz.indexOf(atkCard); if(gi>=0){P.mz.splice(gi,1);P.grave.push(reset(atkCard));} oppP.mz.splice(a.target,1); oppP.grave.push(reset(defCard)); msg += `相打ち（両者破壊）`; }
+          if(aATK > dVal){ const dmg=aATK-dVal; dropXyzMaterials(oppP,defCard); oppP.mz.splice(a.target,1); oppP.grave.push(reset(defCard)); oppP.lp=Math.max(0,oppP.lp-dmg); msg += `相手モンスター破壊＋${dmg}ダメージ（LP ${oppP.lp}）`; }
+          else if(aATK < dVal){ const dmg=dVal-aATK; const gi=P.mz.indexOf(atkCard); if(gi>=0){dropXyzMaterials(P,atkCard);P.mz.splice(gi,1);P.grave.push(reset(atkCard));} P.lp=Math.max(0,P.lp-dmg); msg += `自分モンスター破壊＋${dmg}ダメージ（LP ${P.lp}）`; }
+          else { const gi=P.mz.indexOf(atkCard); if(gi>=0){dropXyzMaterials(P,atkCard);P.mz.splice(gi,1);P.grave.push(reset(atkCard));} dropXyzMaterials(oppP,defCard); oppP.mz.splice(a.target,1); oppP.grave.push(reset(defCard)); msg += `相打ち（両者破壊）`; }
         }
         logIt(gs, msg);
       }
@@ -613,6 +671,175 @@ function applyAction(gs, a){
       break;
     }
 
+    /* ================= 効果処理プリミティブ =================
+       全ての効果はこれらの組み合わせで表現する。applyAction を通るので
+       スナップショット／Undo／ログが自動的に効く。 */
+
+    /* 指定ゾーンのカードを墓地へ（破壊・墓地送り共通）
+       a:{player, zone:'mz'|'sz'|'field', index, reason} */
+    case "FX_TO_GRAVE": {
+      const card = removeFrom(P, a.zone, a.index);
+      if(!card) break;
+      dropXyzMaterials(P, card);
+      P.grave.push(reset(card));
+      logIt(gs, `${a.reason||"効果"}：${nameOf(a.player)}の ${cardName(card)} を墓地へ`);
+      break;
+    }
+
+    /* 複数まとめて墓地へ（全体破壊用）。a:{player, zone, reason} */
+    case "FX_WIPE_ZONE": {
+      const arr = P[a.zone] || [];
+      const names = arr.map(c=>cardName(c));
+      while(arr.length){ const w=arr.pop(); dropXyzMaterials(P,w); P.grave.push(reset(w)); }
+      if(names.length) logIt(gs, `${a.reason||"効果"}：${nameOf(a.player)}の ${names.join("・")} を破壊`);
+      break;
+    }
+
+    /* 墓地/除外/デッキ/手札 から フィールドへ特殊召喚
+       a:{player, from, fromIndex, pos, reason} */
+    case "FX_SPECIAL_SUMMON": {
+      if(P.mz.length >= ZONE_LIMITS.mz){ logIt(gs, `モンスターゾーンが一杯です`); break; }
+      const card = removeFrom(P, a.from, a.fromIndex);
+      if(!card) break;
+      card.face='up'; card.pos = a.pos||'atk';
+      P.mz.push(card);
+      logIt(gs, `${a.reason||"効果"}：${cardName(card)} を特殊召喚（${card.pos==='def'?'守備':'攻撃'}）`);
+      break;
+    }
+
+    /* デッキ→手札（サーチ）。a:{player, deckIndex, reason} */
+    case "FX_SEARCH": {
+      const card = removeFrom(P, "deck", a.deckIndex);
+      if(!card) break;
+      card.face='up';
+      P.hand.push(card);
+      shuffle(P.deck);
+      logIt(gs, `${a.reason||"効果"}：${cardName(card)} を手札に加えた（デッキシャッフル）`);
+      break;
+    }
+
+    /* デッキ→墓地（落とす）。a:{player, deckIndex, reason} */
+    case "FX_MILL": {
+      const card = removeFrom(P, "deck", a.deckIndex);
+      if(!card) break;
+      P.grave.push(reset(card));
+      shuffle(P.deck);
+      logIt(gs, `${a.reason||"効果"}：${cardName(card)} をデッキから墓地へ`);
+      break;
+    }
+
+    /* デッキトップから n 枚墓地へ。a:{player, n, reason} */
+    case "FX_MILL_TOP": {
+      const n = a.n||1; const names=[];
+      for(let i=0;i<n;i++){ if(!P.deck.length) break; const c=P.deck.shift(); names.push(cardName(c)); P.grave.push(reset(c)); }
+      logIt(gs, `${a.reason||"効果"}：デッキトップ ${names.join("・")||"0枚"} を墓地へ`);
+      break;
+    }
+
+    /* フィールド→手札（バウンス）。a:{player, zone, index, reason} */
+    case "FX_BOUNCE": {
+      const card = removeFrom(P, a.zone, a.index);
+      if(!card) break;
+      dropXyzMaterials(P, card);
+      card.face='up'; card.pos='atk';
+      P.hand.push(card);
+      logIt(gs, `${a.reason||"効果"}：${cardName(card)} を手札に戻した`);
+      break;
+    }
+
+    /* 除外。a:{player, zone, index, reason} */
+    case "FX_BANISH": {
+      const card = removeFrom(P, a.zone, a.index);
+      if(!card) break;
+      dropXyzMaterials(P, card);
+      P.banish.push(reset(card));
+      logIt(gs, `${a.reason||"効果"}：${cardName(card)} を除外`);
+      break;
+    }
+
+    /* 手札を捨てる（コスト）。a:{player, handIndex, reason} */
+    case "FX_DISCARD": {
+      const card = removeFrom(P, "hand", a.handIndex);
+      if(!card) break;
+      P.grave.push(reset(card));
+      logIt(gs, `${a.reason||"コスト"}：${cardName(card)} を手札から捨てた`);
+      break;
+    }
+
+    /* 手札→デッキトップ。a:{player, handIndex, reason} */
+    case "FX_HAND_TO_TOP": {
+      const card = removeFrom(P, "hand", a.handIndex);
+      if(!card) break;
+      card.face='down';
+      P.deck.unshift(card);
+      logIt(gs, `${a.reason||"効果"}：${cardName(card)} をデッキトップへ`);
+      break;
+    }
+
+    /* 表示形式・表裏の指定変更。a:{player, zone, index, face?, pos?} */
+    case "FX_SET_STATE": {
+      const card = zoneCard(P, a.zone, a.index);
+      if(!card) break;
+      if(a.face) card.face = a.face;
+      if(a.pos)  card.pos  = a.pos;
+      logIt(gs, `${a.reason||"効果"}：${cardName(card)} を${a.face==='down'?'裏側':''}${a.pos==='def'?'守備表示':a.pos==='atk'?'攻撃表示':''}に`);
+      break;
+    }
+
+    /* 発動したカード自身を墓地へ（通常魔法・罠の処理後） */
+    case "FX_SELF_TO_GRAVE": {
+      const card = removeFrom(P, a.zone, a.index);
+      if(!card) break;
+      P.grave.push(reset(card));
+      logIt(gs, `${cardName(card)} は墓地へ`);
+      break;
+    }
+
+    /* EXデッキから特殊召喚し、素材を処理する
+       a:{player, exIndex, materials:[mzIndex...], kind:'synchro'|'xyz'|'fusion', pos} */
+    case "FX_EX_SUMMON": {
+      const exCard = P.ex[a.exIndex];
+      if(!exCard){ break; }
+      if(P.mz.length - a.materials.length >= ZONE_LIMITS.mz){
+        logIt(gs, `モンスターゾーンが足りません`); break;
+      }
+      const db = CARD_DB[exCard.id]||{};
+      // 素材を場から取り除く（大きい添字から消してズレを防ぐ）
+      const mats = a.materials.slice().sort((x,y)=>y-x);
+      const matCards = [];
+      mats.forEach(mi=>{
+        const c = P.mz.splice(mi,1)[0];
+        if(c) matCards.push(c);
+      });
+      const matNames = matCards.map(c=>cardName(c)).reverse();
+      // EXデッキから取り出して場へ
+      P.ex.splice(a.exIndex,1);
+      exCard.face = 'up';
+      exCard.pos  = a.pos || 'atk';
+      if(a.kind === 'xyz'){
+        // エクシーズは素材をカードの下に重ねる
+        exCard.xyz = matCards.map(c=>reset(c));
+      } else {
+        // シンクロ・融合は素材を墓地へ
+        matCards.forEach(c=>P.grave.push(reset(c)));
+      }
+      P.mz.push(exCard);
+      const kindJa = {synchro:"シンクロ召喚", xyz:"エクシーズ召喚", fusion:"融合召喚"}[a.kind]||"特殊召喚";
+      logIt(gs, `<b>${kindJa}</b>：${matNames.join(" ＋ ")} → ${cardName(exCard)}`);
+      break;
+    }
+
+    /* エクシーズ素材を1つ取り除く（効果コスト）
+       a:{player, mzIndex, reason} */
+    case "FX_DETACH": {
+      const c = P.mz[a.mzIndex];
+      if(!c || !c.xyz || !c.xyz.length){ logIt(gs, `エクシーズ素材がありません`); break; }
+      const m = c.xyz.shift();
+      P.grave.push(reset(m));
+      logIt(gs, `${a.reason||"効果"}：${cardName(c)} の素材 ${cardName(m)} を取り除いた（残${c.xyz.length}）`);
+      break;
+    }
+
     case "RESET":
       Object.assign(gs, newGame());
       logIt(gs, "盤面をリセット");
@@ -631,14 +858,24 @@ function placeInto(P, zone, card, deckPos){
   if(zone==="field"){ P.field = card; return; }
   const arr = P[zone];
   if(zone==="deck"){
+    card.face='down'; card.pos='atk';
     if(deckPos==="bottom") arr.push(card); else arr.unshift(card);
     return;
   }
+  // 手札・墓地・除外は常に表向きで扱う（手札はタップせず読めるように）
+  if(zone==="hand" || zone==="grave" || zone==="banish"){ card.face='up'; card.pos='atk'; }
   arr.push(card);
 }
 function zoneCard(P, zone, idx){ return zone==="field" ? P.field : P[zone]?.[idx]; }
 /* 墓地・除外へ送る際にカードの表示状態を正規化 */
 function reset(card){ return { id:card.id, face:'up', pos:'atk' }; }
+/* 場を離れるカードが持つエクシーズ素材を墓地へ送る（本体処理の前に呼ぶ） */
+function dropXyzMaterials(P, card){
+  if(card && card.xyz && card.xyz.length){
+    card.xyz.forEach(m=>P.grave.push(reset(m)));
+    card.xyz = [];
+  }
+}
 
 /* -------------------- ログ / 名前 -------------------- */
 function logIt(gs, msg){ gs.log.unshift({t:Date.now(), msg}); if(gs.log.length>60) gs.log.pop(); }
@@ -659,8 +896,9 @@ function render(){
   const curIdx = PHASES.findIndex(x=>x.id===gs.phase);
   const chN = gs.chain.length;
 
+  const fp = gs.firstPlayer ?? 0;
   document.getElementById("turnFlag").innerHTML =
-    `T${gs.turn} · <b>${nameOf(view)}</b>`;
+    `T${gs.turn} · <b>${nameOf(view)}</b>${view===fp?`<span class="fp-mark">先</span>`:""}`;
 
   /* ===== guide strip：今のフェーズ＋できること ===== */
   document.getElementById("guide").innerHTML = guideHTML(gs, view, curIdx, chN);
@@ -674,7 +912,11 @@ function render(){
   document.getElementById("handCnt").textContent = `${P.hand.length}枚 / 山${P.deck.length}`;
   document.getElementById("hand").innerHTML = P.hand.map((c,i)=>
     cardHTML(c, "hcard", `openHand(${i})`, true)
-  ).join("") || `<div style="color:var(--text-dim);font-size:11px;padding:8px">手札なし — 右上「≡」→デッキ読込で開始</div>`;
+  ).join("") || `<div class="hand-empty">
+      <span>手札なし</span>
+      <button class="he-btn" onclick="startTestDuel(true)">テストデッキですぐ開始</button>
+      <button class="he-btn ghost" onclick="openDeckLoad('saved')">デッキを読み込む</button>
+    </div>`;
 
   /* ===== このターンにやったこと ===== */
   const tl = document.getElementById("turnlog");
@@ -698,12 +940,17 @@ function guideHTML(gs, view, curIdx, chN){
   const cans = [];
   const canNormal = (phase==="main1"||phase==="main2");
   if(!loaded){
-    cans.push(`<span class="g-can">右上「≡」→デッキ読込</span>`);
+    cans.push(`<span class="g-can">テストデッキ or 保存デッキで開始</span>`);
   } else {
-    if(phase==="draw")    cans.push(`<span class="g-can">ドロー可</span>`);
+    if(phase==="draw"){
+      cans.push(gs.drawnThisTurn
+        ? `<span class="g-can mute">ドロー済み</span>`
+        : `<span class="g-can">ドロー可${gs.turn===1?"（先攻ドローあり）":""}</span>`);
+    }
     if(canNormal){
       cans.push(`<span class="g-can">通常召喚/セット</span>`);
       cans.push(`<span class="g-can">魔法罠 発動/セット</span>`);
+      if(P.ex.length) cans.push(`<span class="g-can">EX召喚可</span>`);
     }
     if(phase==="battle"){
       const canAtk = P.mz.some(c=>c && c.face==='up' && c.pos==='atk');
@@ -734,11 +981,20 @@ function renderDock(gs, curIdx, chN){
       ? `<button class="d-next endturn" onclick="doPass()">ターン終了 ⇄</button>`
       : `<button class="d-next primary" onclick="doPhaseNext()">次へ ▸</button>`}`;
 
-  // 下段：頻用アクション（ドロー / 召喚→手札を開く導線 / チェーン / 1つ戻す）
+  // 下段：頻用アクション（ドロー / 手札 / EX / チェーン / 1つ戻す）
   const canUndo = HISTORY.length>0;
+  const P = gs.players[gs.activePlayer];
+  const exN = P.ex.length;
+  const inMain = (gs.phase==="main1"||gs.phase==="main2");
+  const exBtn = (exN && inMain)
+    ? `<button class="d-act" onclick="openExDeck(${gs.activePlayer})">EX<span class="kb">${exN}</span></button>`
+    : "";
+  const drawDone = (gs.phase==="draw" && gs.drawnThisTurn);
+  const drawCls = (gs.phase==="draw" && !gs.drawnThisTurn) ? "d-act gold pulse" : (drawDone ? "d-act" : "d-act gold");
   const actRow = `
-    <button class="d-act gold" onclick="doDraw()">ドロー</button>
+    <button class="${drawCls}" onclick="doDraw()">ドロー${drawDone?"済":""}</button>
     <button class="d-act" onclick="focusHandHint()">手札</button>
+    ${exBtn}
     <button class="d-act" onclick="openChain()">チェーン${chN?`<span class="kb">${chN}</span>`:""}</button>
     <button class="d-act undo" onclick="undo()" ${canUndo?'':'disabled'}>↺ 戻す</button>`;
 
@@ -799,8 +1055,10 @@ function pileSlot(p, zone, label, isOpp){
   }
   const n = P[zone].length;
   const top = P[zone][n-1];
-  return `<div class="pile"><div class="slot" onclick="openPile(${p},'${zone}')">
-    ${ n ? cardHTML(top,"", `openPile(${p},'${zone}')`, zone!=="deck") : `<span class="ph">${label}</span>` }
+  // EXデッキは召喚画面を開く（自分のみ）
+  const onclick = (zone==="ex" && !isOpp) ? `openExDeck(${p})` : `openPile(${p},'${zone}')`;
+  return `<div class="pile"><div class="slot ${zone==='ex'&&!isOpp&&n?'ex-ready':''}" onclick="${onclick}">
+    ${ n ? cardHTML(top,"", onclick, zone!=="deck" && zone!=="ex") : `<span class="ph">${label}</span>` }
     ${ n>0 ? `<span class="pile-n">${n}</span>`:"" }
   </div><span class="pile-lab">${label}</span></div>`;
 }
@@ -817,11 +1075,895 @@ function cardHTML(c, extra, onclick, faceUp){
     </div>`;
   }
   const badge = db.k==='m' ? (db.lv?`Lv${db.lv}`:"M") : db.k==='s' ? "魔" : db.k==='t' ? "罠" : "";
+  const xyzN = (c.xyz && c.xyz.length) ? `<span class="xyz-n">${c.xyz.length}</span>` : "";
   return `<div class="card ${kcls} ${extra} ${defRot}" onclick="${onclick}">
     <img src="${IMG_BASE}${db.c}.webp" onerror="this.style.display='none'">
     ${badge?`<span class="badge">${badge}</span>`:""}
+    ${xyzN}
     <div class="nm">${db.n||""}</div>
   </div>`;
+}
+
+const AUTO_EFFECT = {
+    "C・チッキー":{op:"recruit",trig:"ignition",f:{arch:"N・エア・ハミングバード"}},
+    "C・ドルフィーナ":{op:"recruit",trig:"ignition",f:{arch:"N・アクア・ドルフィン"}},
+    "C・パンテール":{op:"recruit",trig:"ignition",f:{arch:"N・ブラック・パンサー"}},
+    "C・ピニー":{op:"recruit",trig:"ignition",f:{arch:"N・グロー・モス"}},
+    "C・モーグ":{op:"recruit",trig:"ignition",f:{arch:"N・グラン・モール"}},
+    "C・ラーバ":{op:"recruit",trig:"ignition",f:{arch:"N・フレア・スカラベ"}},
+    "D・バリア":{op:"search",trig:"ignition",f:{arch:"D"}},
+    "D・リモコン":{op:"search",trig:"ignition",f:{arch:"D",tk:"m"}},
+    "E・HERO エアーマン":{op:"search",trig:"summon",f:{arch:"HERO",tk:"m"}},
+    "E・HERO キャプテン・ゴールド":{op:"search",trig:"ignition",f:{arch:"摩天楼 －スカイスクレイパー－"}},
+    "RAI－MEI":{op:"search",trig:"ignition",f:{lvmax:2,at:"光",tk:"m"}},
+    "Sin サイバー・エンド・ドラゴン":{op:"recruit",trig:"ignition",f:{arch:"サイバー・エンド・ドラゴン"}},
+    "Sin スターダスト・ドラゴン":{op:"recruit",trig:"ignition",f:{arch:"スターダスト・ドラゴン"}},
+    "Sin レインボー・ドラゴン":{op:"recruit",trig:"ignition",f:{arch:"究極宝玉神 レインボー・ドラゴン"}},
+    "Sin 真紅眼の黒竜":{op:"recruit",trig:"ignition",f:{arch:"真紅眼の黒竜"}},
+    "Sin 青眼の白龍":{op:"recruit",trig:"ignition",f:{arch:"青眼の白龍"}},
+    "TG サイバー・マジシャン":{op:"search",trig:"ignition",f:{arch:"TG",exclude:"TG サイバー・マジシャン",tk:"m"}},
+    "TG ラッシュ・ライノ":{op:"search",trig:"ignition",f:{arch:"TG",exclude:"TG ラッシュ・ライノ",tk:"m"}},
+    "TG ワーウルフ":{op:"search",trig:"ignition",f:{arch:"TG",exclude:"TG ワーウルフ",tk:"m"}},
+    "UFOタートル":{op:"recruit",trig:"ignition",f:{at:"炎",atkmax:1500,tk:"m"}},
+    "W星雲隕石":{op:"recruit",trig:"ignition",f:{lvmin:7,at:"光",ra:"爬虫類",tk:"m"}},
+    "XX－セイバー エマーズブレイド":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"X－セイバー",tk:"m"}},
+    "XX－セイバー ガルセム":{op:"search",trig:"ignition",f:{arch:"X－セイバー",tk:"m"}},
+    "おジャマジック":{op:"search",trig:"ignition",f:{arch:"おジャマ・グリーン"}},
+    "アタック・リフレクター・ユニット":{op:"recruit",trig:"ignition",f:{arch:"サイバー・バリア・ドラゴン"}},
+    "アトランティスの戦士":{op:"search",trig:"ignition",f:{arch:"伝説の都 アトランティス"}},
+    "アーケイン・ファイロ":{op:"search",trig:"ignition",f:{arch:"バスター・モード"}},
+    "アームド・ドラゴン LV3":{op:"recruit",trig:"ignition",f:{arch:"アームド・ドラゴン LV5"}},
+    "イエロー・ガジェット":{op:"search",trig:"summon",f:{arch:"グリーン・ガジェット"}},
+    "イレカエル":{op:"recruit",trig:"ignition",f:{arch:"ガエル",tk:"m"}},
+    "インフェルニティ・インフェルノ":{op:"mill",trig:"ignition",f:{arch:"インフェルニティ"}},
+    "インヴェルズを呼ぶ者":{op:"recruit",trig:"summon",f:{lvmax:4,arch:"インヴェルズ",tk:"m"}},
+    "ウェポンサモナー":{op:"search",trig:"ignition",f:{arch:"ガーディアン"}},
+    "カバリスト":{op:"search",trig:"ignition",f:{ra:"サイキック",tk:"m"}},
+    "カラクリ兵 弐参六":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"カラクリ",tk:"m"}},
+    "カラクリ商人 壱七七":{op:"search",trig:"summon",f:{arch:"カラクリ"}},
+    "カラクリ大将軍 無零怒":{op:"recruit",trig:"summon",f:{arch:"カラクリ",tk:"m"}},
+    "カラクリ将軍 無零":{op:"recruit",trig:"summon",f:{arch:"カラクリ",tk:"m"}},
+    "ガスタ・イグル":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"ガスタ",tuner:true,tk:"m"}},
+    "ガスタ・ガルド":{op:"recruit",trig:"ignition",f:{lvmax:2,arch:"ガスタ",tk:"m"}},
+    "ガスタ・サンボルト":{op:"recruit",trig:"ignition",f:{at:"風",ra:"サイキック",defmax:1500,tk:"m"}},
+    "ガスタ・スクイレル":{op:"recruit",trig:"ignition",f:{lvmin:5,arch:"ガスタ",tk:"m"}},
+    "キラーザウルス":{op:"search",trig:"ignition",f:{arch:"ジュラシックワールド"}},
+    "キラー・トマト":{op:"recruit",trig:"ignition",f:{at:"闇",atkmax:1500,tk:"m"}},
+    "キングス・ナイト":{op:"recruit",trig:"summon",f:{arch:"ジャックス・ナイト"}},
+    "キーマウス":{op:"search",trig:"ignition",f:{lvmax:3,ra:"獣",tk:"m"}},
+    "クリッター":{op:"search",trig:"ignition",f:{atkmax:1500,tk:"m"}},
+    "クロス・ポーター":{op:"search",trig:"ignition",f:{arch:"N",tk:"m"}},
+    "グリズリーマザー":{op:"recruit",trig:"ignition",f:{at:"水",atkmax:1500,tk:"m"}},
+    "グリーン・ガジェット":{op:"search",trig:"summon",f:{arch:"レッド・ガジェット"}},
+    "コアキメイル・ロック":{op:"search",trig:"ignition",f:{lvmax:4,arch:"コアキメイルの鋼核",tk:"m"}},
+    "コア転送ユニット":{op:"search",trig:"ignition",f:{arch:"コアキメイルの鋼核"}},
+    "コンバート・コンタクト":{op:"mill",trig:"ignition",f:{arch:"N"}},
+    "コーリング・ノヴァ":{op:"recruit",trig:"ignition",f:{at:"光",ra:"天使",atkmax:1500,tk:"m"}},
+    "コール・リゾネーター":{op:"search",trig:"ignition",f:{arch:"リゾネーター",tk:"m"}},
+    "ゴキポン":{op:"search",trig:"ignition",f:{ra:"昆虫",atkmax:1500,tk:"m"}},
+    "サイバー・ラーバァ":{op:"recruit",trig:"ignition",f:{arch:"サイバー・ラーバァ"}},
+    "シャインエンジェル":{op:"recruit",trig:"ignition",f:{at:"光",atkmax:1500,tk:"m"}},
+    "シャドウ・リチュア":{op:"search",trig:"ignition",f:{arch:"リチュア",tk:"s"}},
+    "シューティング・クェーサー・ドラゴン":{op:"recruit",trig:"ignition",f:{arch:"シューティング・スター・ドラゴン"}},
+    "シンクロ・フュージョニスト":{op:"search",trig:"ignition",f:{arch:"融合",tk:"s"}},
+    "ジェイドナイト":{op:"search",trig:"ignition",f:{lv:4,at:"光",ra:"機械",tk:"m"}},
+    "ジェネクス・ウンディーネ":{op:"search",trig:"summon",f:{arch:"ジェネクス・コントローラー"}},
+    "ジェネクス・サーチャー":{op:"recruit",trig:"ignition",f:{arch:"ジェネクス",atkmax:1500,tk:"m"}},
+    "ジェネクス・ニュートロン":{op:"search",trig:"ignition",f:{ra:"機械",tuner:true}},
+    "ジェネクス・パワー・プランナー":{op:"search",trig:"summon",f:{lv:3,arch:"ジェネクス",tk:"m"}},
+    "ジェネクス・ブラスト":{op:"search",trig:"summon",f:{at:"闇",arch:"ジェネクス",tk:"m"}},
+    "ジェネラルデーモン":{op:"search",trig:"ignition",f:{arch:"万魔殿－悪魔の巣窟－"}},
+    "ジェムタートル":{op:"search",trig:"ignition",f:{arch:"ジェムナイト・フュージョン"}},
+    "ジェムナイト・アレキサンド":{op:"recruit",trig:"ignition",f:{arch:"ジェムナイト",normal:true,tk:"m"}},
+    "ジェムレシス":{op:"search",trig:"summon",f:{arch:"ジェムナイト",tk:"m"}},
+    "ジュラック・ヴェロー":{op:"recruit",trig:"ignition",f:{arch:"ジュラック",atkmax:1700,tk:"m"}},
+    "スカル・ナイト":{op:"recruit",trig:"ignition",f:{arch:"スカル・ナイト"}},
+    "スクラップ・エリア":{op:"search",trig:"ignition",f:{arch:"スクラップ",tuner:true}},
+    "スクラップ・シャーク":{op:"mill",trig:"ignition",f:{arch:"スクラップ",tk:"m"}},
+    "スクラップ・ハンター":{op:"mill",trig:"ignition",f:{tuner:true}},
+    "スクラップ・リサイクラー":{op:"mill",trig:"summon",f:{ra:"機械",tk:"m"}},
+    "スネーク・ホイッスル":{op:"recruit",trig:"ignition",f:{lvmax:4,ra:"爬虫類",tk:"m"}},
+    "スモール・ピース・ゴーレム":{op:"recruit",trig:"summon",f:{arch:"ミッド・ピース・ゴーレム"}},
+    "スレイブタイガー":{op:"recruit",trig:"ignition",f:{arch:"剣闘獣",tk:"m"}},
+    "スレイブ・エイプ":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"剣闘獣",tk:"m"}},
+    "スーパイ":{op:"recruit",trig:"ignition",f:{arch:"太陽の神官"}},
+    "ダニポン":{op:"search",trig:"ignition",f:{ra:"昆虫",defmax:1000,tk:"m"}},
+    "ダーク・ジェネラル フリード":{op:"search",trig:"ignition",f:{lv:4,at:"闇",tk:"m"}},
+    "デステニー・シグナル":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"D－HERO",tk:"m"}},
+    "デスハムスター":{op:"recruit",trig:"ignition",f:{arch:"デスハムスター"}},
+    "デュアル・ソルジャー":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"デュアル・ソルジャー",tk:"m"}},
+    "デーモンとの駆け引き":{op:"recruit",trig:"ignition",f:{arch:"バーサーク・デッド・ドラゴン"}},
+    "トゥルース・リインフォース":{op:"recruit",trig:"ignition",f:{lvmax:2,ra:"戦士",tk:"m"}},
+    "トゥーンのもくじ":{op:"search",trig:"ignition",f:{arch:"トゥーン"}},
+    "トライアングル・エリア":{op:"recruit",trig:"ignition",f:{arch:"エーリアン",tk:"m"}},
+    "トライクラー":{op:"recruit",trig:"ignition",f:{arch:"ヴィークラー"}},
+    "ドラグニティナイト－ガジャルグ":{op:"search",trig:"ignition",f:{lvmax:4,ra:"ドラゴン",tk:"m"}},
+    "ドラグニティ－トリブル":{op:"mill",trig:"summon",f:{lvmax:3,ra:"ドラゴン",tk:"m"}},
+    "ドラゴニック・タクティクス":{op:"recruit",trig:"ignition",f:{lv:8,ra:"ドラゴン",tk:"m"}},
+    "ドラゴンフライ":{op:"recruit",trig:"ignition",f:{at:"風",atkmax:1500,tk:"m"}},
+    "ドレッド・ドラゴン":{op:"search",trig:"ignition",f:{lvmax:3,ra:"ドラゴン",tk:"m"}},
+    "ナチュル・クリフ":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"ナチュル",tk:"m"}},
+    "ナーガ":{op:"recruit",trig:"ignition",f:{lvmax:3,tk:"m"}},
+    "ネフティスの導き手":{op:"recruit",trig:"ignition",f:{arch:"ネフティスの鳳凰神"}},
+    "ハイエナ":{op:"recruit",trig:"ignition",f:{arch:"ハイエナ"}},
+    "ハンディキャップマッチ!":{op:"recruit",trig:"summon",f:{lvmax:4,arch:"剣闘獣",tk:"m"}},
+    "ハーピィ・クィーン":{op:"search",trig:"ignition",f:{arch:"ハーピィの狩場"}},
+    "バイオファルコン":{op:"search",trig:"ignition",f:{ra:"機械",atkmax:1000,tk:"m"}},
+    "バイオレット・ウィッチ":{op:"search",trig:"ignition",f:{ra:"植物",defmax:1500,tk:"m"}},
+    "バスター・ビースト":{op:"search",trig:"ignition",f:{arch:"バスター・モード"}},
+    "バフォメット":{op:"search",trig:"summon",f:{arch:"幻獣王ガゼル"}},
+    "バード・フェイス":{op:"search",trig:"ignition",f:{arch:"ハーピィ・レディ"}},
+    "パンダボーグ":{op:"recruit",trig:"ignition",f:{lv:4,ra:"サイキック",tk:"m"}},
+    "ヒーローアライブ":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"E・HERO",tk:"m"}},
+    "ヒーロー・キッズ":{op:"recruit",trig:"summon",f:{arch:"ヒーロー・キッズ"}},
+    "ヒーロー・シグナル":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"E・HERO",tk:"m"}},
+    "ビーストライカー":{op:"recruit",trig:"ignition",f:{arch:"モジャ"}},
+    "ピラミッド・タートル":{op:"recruit",trig:"ignition",f:{ra:"アンデット",defmax:2000,tk:"m"}},
+    "フェザー・ウィンド・アタック":{op:"search",trig:"ignition",f:{arch:"BF",tk:"m"}},
+    "フォーチュンレディ・ライティー":{op:"recruit",trig:"ignition",f:{arch:"フォーチュンレディ",tk:"m"}},
+    "ブルーメンブラット":{op:"recruit",trig:"ignition",f:{arch:"E・HERO ブルーメ"}},
+    "ヘカテリス":{op:"search",trig:"ignition",f:{arch:"神の居城－ヴァルハラ"}},
+    "ヘル・セキュリティ":{op:"recruit",trig:"ignition",f:{ra:"悪魔",tk:"m"}},
+    "ベビケラサウルス":{op:"recruit",trig:"ignition",f:{lvmax:4,ra:"恐竜",tk:"m"}},
+    "ボスラッシュ":{op:"recruit",trig:"ignition",f:{arch:"巨大戦艦",tk:"m"}},
+    "ボタニティ・ガール":{op:"search",trig:"ignition",f:{ra:"植物",defmax:1000,tk:"m"}},
+    "マクロコスモス":{op:"recruit",trig:"ignition",f:{arch:"原始太陽ヘリオス"}},
+    "マシンナーズ・ギアフレーム":{op:"search",trig:"summon",f:{arch:"マシンナーズ",exclude:"マシンナーズ・ギアフレーム",tk:"m"}},
+    "マシンナーズ・ディフェンダー":{op:"search",trig:"ignition",f:{arch:"督戦官コヴィントン"}},
+    "ミッド・ピース・ゴーレム":{op:"recruit",trig:"summon",f:{arch:"スモール・ピース・ゴーレム"}},
+    "メカウサー":{op:"recruit",trig:"ignition",f:{arch:"メカウサー"}},
+    "メンタルマスター":{op:"recruit",trig:"ignition",f:{lvmax:4,ra:"サイキック",tk:"m"}},
+    "ユーフォロイド":{op:"recruit",trig:"ignition",f:{ra:"機械",atkmax:1500,tk:"m"}},
+    "ラヴァル炎火山の侍女":{op:"mill",trig:"ignition",f:{arch:"ラヴァル",tk:"m"}},
+    "リチュア・アビス":{op:"search",trig:"summon",f:{arch:"リチュア・アビス",defmax:1000,tk:"m"}},
+    "リチュア・エリアル":{op:"search",trig:"ignition",f:{arch:"リチュア",tk:"m"}},
+    "リバース・オブ・ネオス":{op:"recruit",trig:"ignition",f:{arch:"E・HERO ネオス"}},
+    "レアル・ジェネクス・クラッシャー":{op:"search",trig:"summon",f:{lv:4,arch:"レアル・ジェネクス",tk:"m"}},
+    "レアル・ジェネクス・ターボ":{op:"search",trig:"summon",f:{lv:1,arch:"ジェネクス",tk:"m"}},
+    "レアル・ジェネクス・マグナ":{op:"search",trig:"summon",f:{lv:2,arch:"レアル・ジェネクス",tk:"m"}},
+    "レッド・ガジェット":{op:"search",trig:"summon",f:{arch:"イエロー・ガジェット"}},
+    "レプティレス・ガードナー":{op:"search",trig:"ignition",f:{arch:"レプティレス",tk:"m"}},
+    "ロード・ウォリアー":{op:"recruit",trig:"ignition",f:{lvmax:2,ra:"戦士",tk:"m"}},
+    "ローンファイア・ブロッサム":{op:"recruit",trig:"ignition",f:{ra:"植物",tk:"m"}},
+    "ワンハンドレッド・アイ・ドラゴン":{op:"search",trig:"ignition",f:{arch:"地縛神",tk:"m"}},
+    "ワーム・カルタロス":{op:"search",trig:"ignition",f:{lvmax:4,ra:"爬虫類",arch:"ワーム",tk:"m"}},
+    "ワーム・ゼクス":{op:"mill",trig:"summon",f:{ra:"爬虫類",arch:"ワーム",tk:"m"}},
+    "ヴァイロン・エレメント":{op:"recruit",trig:"ignition",f:{arch:"ヴァイロン",tuner:true}},
+    "ヴァイロン・マテリアル":{op:"search",trig:"ignition",f:{arch:"ヴァイロン",tk:"s"}},
+    "ヴィークラー":{op:"recruit",trig:"ignition",f:{arch:"アンサイクラー"}},
+    "ヴォルカニック・バレット":{op:"search",trig:"ignition",f:{arch:"ヴォルカニック・バレット"}},
+    "万華鏡－華麗なる分身－":{op:"recruit",trig:"ignition",f:{arch:"ハーピィ・レディ"}},
+    "人海戦術":{op:"recruit",trig:"ignition",f:{lvmax:2,normal:true,tk:"m"}},
+    "仮面竜":{op:"recruit",trig:"ignition",f:{ra:"ドラゴン",atkmax:1500,tk:"m"}},
+    "伝説の白石":{op:"search",trig:"ignition",f:{arch:"青眼の白龍"}},
+    "儀式の準備":{op:"search",trig:"ignition",f:{lvmax:7,tk:"m"}},
+    "充電池メン":{op:"recruit",trig:"summon",f:{arch:"電池メン",exclude:"充電池メン",tk:"m"}},
+    "六武ノ書":{op:"recruit",trig:"ignition",f:{arch:"大将軍 紫炎"}},
+    "共鳴虫":{op:"recruit",trig:"ignition",f:{ra:"昆虫",atkmax:1500,tk:"m"}},
+    "円盤ムスキー":{op:"search",trig:"ignition",f:{arch:"エーリアン"}},
+    "冥界の使者":{op:"search",trig:"ignition",f:{lvmax:3,normal:true,tk:"m"}},
+    "剣闘獣アレクサンデル":{op:"recruit",trig:"ignition",f:{arch:"剣闘獣",exclude:"剣闘獣アレクサンデル",tk:"m"}},
+    "剣闘獣エクイテ":{op:"recruit",trig:"summon",f:{arch:"剣闘獣",exclude:"剣闘獣エクイテ",tk:"m"}},
+    "剣闘獣ダリウス":{op:"recruit",trig:"summon",f:{arch:"剣闘獣",exclude:"剣闘獣ダリウス",tk:"m"}},
+    "剣闘獣ティゲル":{op:"search",trig:"summon",f:{arch:"剣闘獣",tk:"m"}},
+    "剣闘獣ディカエリィ":{op:"recruit",trig:"summon",f:{arch:"剣闘獣",exclude:"剣闘獣ディカエリィ",tk:"m"}},
+    "剣闘獣ベストロウリィ":{op:"recruit",trig:"summon",f:{arch:"剣闘獣",exclude:"剣闘獣ベストロウリィ",tk:"m"}},
+    "剣闘獣ホプロムス":{op:"recruit",trig:"summon",f:{arch:"剣闘獣",exclude:"剣闘獣ホプロムス",tk:"m"}},
+    "剣闘獣ムルミロ":{op:"recruit",trig:"summon",f:{arch:"剣闘獣",exclude:"剣闘獣ムルミロ",tk:"m"}},
+    "剣闘獣ラクエル":{op:"recruit",trig:"summon",f:{arch:"剣闘獣",exclude:"剣闘獣ラクエル",tk:"m"}},
+    "剣闘獣ラニスタ":{op:"recruit",trig:"summon",f:{arch:"剣闘獣",exclude:"剣闘獣ラニスタ",tk:"m"}},
+    "剣闘訓練所":{op:"search",trig:"ignition",f:{lvmax:4,arch:"剣闘獣",tk:"m"}},
+    "創造の代行者 ヴィーナス":{op:"recruit",trig:"ignition",f:{arch:"神聖なる球体"}},
+    "召喚師のスキル":{op:"search",trig:"ignition",f:{lvmin:5,normal:true,tk:"m"}},
+    "堕天使アスモディウス":{op:"mill",trig:"ignition",f:{ra:"天使",tk:"m"}},
+    "墓守の偵察者":{op:"recruit",trig:"ignition",f:{arch:"墓守の",atkmax:1500,tk:"m"}},
+    "墓守の司令官":{op:"search",trig:"ignition",f:{arch:"王家の眠る谷－ネクロバレー"}},
+    "大神官デ・ザード":{op:"recruit",trig:"ignition",f:{arch:"不死王リッチー"}},
+    "天空の使者 ゼラディアス":{op:"search",trig:"ignition",f:{arch:"天空の聖域"}},
+    "宝玉の導き":{op:"recruit",trig:"ignition",f:{arch:"宝玉獣",tk:"m"}},
+    "巨大ネズミ":{op:"recruit",trig:"ignition",f:{at:"地",atkmax:1500,tk:"m"}},
+    "幻影の魔術士":{op:"recruit",trig:"ignition",f:{arch:"HERO",atkmax:1000,tk:"m"}},
+    "悪魂邪苦止":{op:"search",trig:"ignition",f:{arch:"悪魂邪苦止"}},
+    "拘束解除":{op:"recruit",trig:"ignition",f:{arch:"剣聖－ネイキッド・ギア・フリード"}},
+    "暗黒界の斥候 スカー":{op:"search",trig:"ignition",f:{lvmax:4,arch:"暗黒界",tk:"m"}},
+    "極星宝ドラウプニル":{op:"search",trig:"ignition",f:{arch:"極星宝"}},
+    "極星獣タングニョースト":{op:"recruit",trig:"ignition",f:{arch:"極星獣",exclude:"極星獣タングニョースト",tk:"m"}},
+    "機皇兵スキエル・アイン":{op:"recruit",trig:"ignition",f:{arch:"機皇兵",tk:"m"}},
+    "機皇城":{op:"search",trig:"ignition",f:{arch:"機皇帝",tk:"m"}},
+    "死の花－ネクロ・フルール":{op:"recruit",trig:"ignition",f:{arch:"時花の魔女－フルール・ド・ソルシエール"}},
+    "氷結界の決起隊":{op:"search",trig:"ignition",f:{arch:"氷結界",tk:"m"}},
+    "氷結界の紋章":{op:"search",trig:"ignition",f:{arch:"氷結界",tk:"m"}},
+    "沼地の魔神王":{op:"search",trig:"ignition",f:{arch:"融合"}},
+    "深海のディーヴァ":{op:"recruit",trig:"summon",f:{lvmax:3,ra:"海竜",tk:"m"}},
+    "無敗将軍 フリード":{op:"search",trig:"ignition",f:{lvmax:4,ra:"戦士",tk:"m"}},
+    "白竜の聖騎士":{op:"recruit",trig:"ignition",f:{arch:"青眼の白龍"}},
+    "督戦官コヴィントン":{op:"recruit",trig:"ignition",f:{arch:"マシンナーズ・フォース"}},
+    "神の桎梏グレイプニル":{op:"search",trig:"ignition",f:{arch:"極星",tk:"m"}},
+    "神秘の代行者 アース":{op:"search",trig:"summon",f:{arch:"代行者",exclude:"神秘の代行者 アース",tk:"m"}},
+    "精神統一":{op:"search",trig:"ignition",f:{arch:"精神統一"}},
+    "素早いビッグハムスター":{op:"recruit",trig:"ignition",f:{lvmax:3,ra:"獣",tk:"m"}},
+    "素早いマンタ":{op:"recruit",trig:"ignition",f:{arch:"素早いマンタ"}},
+    "素早いモモンガ":{op:"recruit",trig:"ignition",f:{arch:"素早いモモンガ"}},
+    "紫炎の狼煙":{op:"search",trig:"ignition",f:{lvmax:3,arch:"六武衆",tk:"m"}},
+    "紫炎の足軽":{op:"recruit",trig:"ignition",f:{lvmax:3,arch:"六武衆",tk:"m"}},
+    "緊急鋼核処分":{op:"mill",trig:"ignition",f:{arch:"コアキメイルの鋼核"}},
+    "荒野の女戦士":{op:"recruit",trig:"ignition",f:{at:"地",ra:"戦士",atkmax:1500,tk:"m"}},
+    "蛇神降臨":{op:"recruit",trig:"ignition",f:{arch:"毒蛇神ヴェノミナーガ"}},
+    "融合賢者":{op:"search",trig:"ignition",f:{arch:"融合",tk:"s"}},
+    "見習い魔術師":{op:"recruit",trig:"summon",f:{lvmax:2,ra:"魔法使い",tk:"m"}},
+    "賢者の宝石":{op:"recruit",trig:"ignition",f:{arch:"ブラック・マジシャン"}},
+    "超古深海王シーラカンス":{op:"recruit",trig:"ignition",f:{lvmax:4,ra:"魚",tk:"m"}},
+    "軍隊竜":{op:"recruit",trig:"ignition",f:{arch:"軍隊竜"}},
+    "迷宮変化":{op:"recruit",trig:"ignition",f:{arch:"ウォール・シャドウ"}},
+    "遺言状":{op:"recruit",trig:"ignition",f:{atkmax:1500,tk:"m"}},
+    "闇・道化師のペーテン":{op:"recruit",trig:"ignition",f:{arch:"闇・道化師のペーテン"}},
+    "電池メン－ボタン型":{op:"recruit",trig:"ignition",f:{lvmax:4,arch:"電池メン－ボタン型",tk:"m"}},
+    "霞の谷の神風":{op:"recruit",trig:"ignition",f:{lvmax:4,at:"風",tk:"m"}},
+    "魔力掌握":{op:"search",trig:"ignition",f:{arch:"魔力掌握"}},
+    "魔法の歯車":{op:"recruit",trig:"ignition",f:{arch:"古代の機械巨人"}},
+    "魔轟神グリムロ":{op:"search",trig:"ignition",f:{arch:"魔轟神",exclude:"魔轟神グリムロ",tk:"m"}},
+    "魔轟神獣ペガラサス":{op:"mill",trig:"ignition",f:{arch:"魔轟神",tk:"m"}},
+    "黒き森のウィッチ":{op:"search",trig:"ignition",f:{defmax:1500,tk:"m"}},
+    "黒魔術のカーテン":{op:"recruit",trig:"ignition",f:{arch:"ブラック・マジシャン"}}
+  };
+
+/* =========================================================================
+   効果処理エンジン
+   ① AUTO_EFFECT  … 宣言テーブル（サーチ/リクルート/落とし）約220枚
+   ② HAND_EFFECT / FIELD_EFFECT / GRAVE_EFFECT … 1103汎用の個別スクリプト
+   実行は全て applyAction のプリミティブ経由なので Undo が効く。
+   ========================================================================= */
+
+/* ---- 対象選択のための共通ピッカー ---------------------------------- */
+/* PICK: 一覧から1枚選ばせる。cards=[{label, sub, onPick}] */
+function openPick(title, note, items, onCancel){
+  if(!items.length){
+    showToast("対象がありません");
+    if(onCancel) onCancel();
+    return;
+  }
+  const rows = items.map((it,i)=>
+    `<div class="act pick-row" onclick="__pick(${i})">
+       <span class="pk-nm">${it.label}</span>
+       ${it.sub?`<span class="pk-sub">${it.sub}</span>`:""}
+     </div>`).join("");
+  PICK_ITEMS = items; PICK_CANCEL = onCancel||null;
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">${title}</h3>
+    ${note?`<div class="meta" style="margin-bottom:10px">${note}</div>`:""}
+    <div class="pick-list">${rows}</div>
+    <button class="close" onclick="__pickCancel()">やめる</button>`;
+  veil.classList.add("on");
+}
+let PICK_ITEMS=[], PICK_CANCEL=null;
+function __pick(i){
+  const it = PICK_ITEMS[i];
+  PICK_ITEMS=[]; PICK_CANCEL=null;
+  closeSheet();
+  if(it && it.onPick) it.onPick();
+}
+function __pickCancel(){
+  const cb = PICK_CANCEL;
+  PICK_ITEMS=[]; PICK_CANCEL=null;
+  closeSheet();
+  if(cb) cb();
+}
+
+/* ---- フィルタ（index.html の soloAutoMatch と同仕様） ---------------- */
+function autoMatch(f){
+  return function(c){
+    if(!c) return false;
+    if(c.ex) return false;
+    if(f.tk==='m' && c.k!=='m') return false;
+    if(f.tk==='s' && c.k!=='s') return false;
+    if(f.tk==='t' && c.k!=='t') return false;
+    if(f.tk==='st' && !(c.k==='s'||c.k==='t')) return false;
+    if(f.lvmax!=null && !(c.k==='m'&&c.lv!=null&&c.lv<=f.lvmax)) return false;
+    if(f.lvmin!=null && !(c.k==='m'&&c.lv!=null&&c.lv>=f.lvmin)) return false;
+    if(f.lv!=null && !(c.k==='m'&&c.lv===f.lv)) return false;
+    if(f.at && c.at!==f.at) return false;
+    if(f.ra && c.ra!==f.ra) return false;
+    if(f.normal && (c.st||[]).indexOf('通常')<0) return false;
+    if(f.tuner && (c.st||[]).indexOf('チューナー')<0) return false;
+    if(f.atkmax!=null && !(c.atk!=null&&c.atk<=f.atkmax)) return false;
+    if(f.defmax!=null && !(c.def!=null&&c.def<=f.defmax)) return false;
+    if(f.arch && String(c.n).indexOf(f.arch)<0) return false;
+    if(f.exclude && c.n===f.exclude) return false;
+    return true;
+  };
+}
+
+/* ---- ゾーン参照ヘルパ ---------------------------------------------- */
+function myP(){ return gameState.players[gameState.activePlayer]; }
+function oppIdx(p){ return p===0?1:0; }
+function dbOf(c){ return CARD_DB[c.id]||{}; }
+function labelOf(c){ const d=dbOf(c); return d.n||"カード"; }
+function subOf(c){
+  const d=dbOf(c);
+  if(d.k==='m') return `${d.at||''}/${d.ra||''} Lv${d.lv||'-'} 攻${d.atk??'-'}`;
+  return d.k==='s' ? `魔法${d.sub?'・'+d.sub:''}` : `罠${d.sub?'・'+d.sub:''}`;
+}
+/* デッキから条件に合うカードの位置一覧 */
+function deckMatches(p, filt){
+  const P = gameState.players[p]; const out=[];
+  P.deck.forEach((c,i)=>{ if(filt(dbOf(c))) out.push({i, c}); });
+  return out;
+}
+function graveMatches(p, filt){
+  const P = gameState.players[p]; const out=[];
+  P.grave.forEach((c,i)=>{ if(filt(dbOf(c))) out.push({i, c}); });
+  return out;
+}
+
+/* ---- 宣言テーブルの実行（search / recruit / mill） ------------------- */
+function runAutoEffect(p, srcName, ent, selfLoc){
+  const filtBase = autoMatch(ent.f);
+  const filt = (cc)=>{
+    if(!cc || cc.ex) return false;
+    if(ent.op==='recruit' && cc.k!=='m') return false;
+    return filtBase(cc);
+  };
+  const P = gameState.players[p];
+  if(ent.op==='recruit' && P.mz.length>=ZONE_LIMITS.mz){ showToast("モンスターゾーンが一杯です"); return; }
+  const cands = deckMatches(p, filt);
+  if(!cands.length){ showToast("対象がデッキにありません"); return; }
+  const opJa = {search:"サーチ", mill:"墓地へ送る", recruit:"特殊召喚"}[ent.op];
+  openPick(`${srcName}：${opJa}する対象`, `デッキ ${cands.length}枚が該当`,
+    cands.map(({i,c})=>({
+      label: labelOf(c), sub: subOf(c),
+      onPick: ()=>{
+        if(ent.op==='search')      act({type:"FX_SEARCH", player:p, deckIndex:i, reason:srcName});
+        else if(ent.op==='mill')   act({type:"FX_MILL",   player:p, deckIndex:i, reason:srcName});
+        else                       act({type:"FX_SPECIAL_SUMMON", player:p, from:"deck", fromIndex:i, pos:"atk", reason:srcName});
+        afterEffect(p, selfLoc, srcName);
+      }
+    })));
+}
+
+/* 魔法・罠が効果を出し終えたら墓地へ送る */
+function afterEffect(p, selfLoc, srcName){
+  if(!selfLoc) return;
+  if(selfLoc.keep) return;                 // 永続・フィールドは残す
+  act({type:"FX_SELF_TO_GRAVE", player:p, zone:selfLoc.zone, index:selfLoc.index});
+}
+
+/* =========================================================================
+   1103環境の汎用カード個別スクリプト
+   fn(p, selfLoc) : p=発動プレイヤー, selfLoc={zone,index,keep?}
+   対象選択が要るものは openPick を使う。全て act() 経由なので Undo 可。
+   ========================================================================= */
+const CARD_EFFECT = {
+
+  /* ---------- 全体除去 ---------- */
+  "サンダー・ボルト": function(p, loc){
+    const o = oppIdx(p);
+    act({type:"FX_WIPE_ZONE", player:o, zone:"mz", reason:"サンダー・ボルト"});
+    afterEffect(p, loc, "サンダー・ボルト");
+  },
+  "ブラック・ホール": function(p, loc){
+    act({type:"FX_WIPE_ZONE", player:0, zone:"mz", reason:"ブラック・ホール"});
+    act({type:"FX_WIPE_ZONE", player:1, zone:"mz", reason:"ブラック・ホール"});
+    afterEffect(p, loc, "ブラック・ホール");
+  },
+  "激流葬": function(p, loc){
+    act({type:"FX_WIPE_ZONE", player:0, zone:"mz", reason:"激流葬"});
+    act({type:"FX_WIPE_ZONE", player:1, zone:"mz", reason:"激流葬"});
+    afterEffect(p, loc, "激流葬");
+  },
+  "聖なるバリア －ミラーフォース－": function(p, loc){
+    const o = oppIdx(p);
+    const P = gameState.players[o];
+    const atkPos = [];
+    P.mz.forEach((c,i)=>{ if(c.face==='up' && c.pos==='atk') atkPos.push(i); });
+    if(!atkPos.length){ showToast("相手に攻撃表示モンスターがいません"); return; }
+    // 後ろから消す（インデックスずれ防止）
+    atkPos.slice().reverse().forEach(i=>{
+      act({type:"FX_TO_GRAVE", player:o, zone:"mz", index:i, reason:"ミラーフォース"});
+    });
+    afterEffect(p, loc, "ミラーフォース");
+  },
+  "大嵐": function(p, loc){
+    // 自分の発動中のこのカードは残したまま両者の魔法罠を流す
+    act({type:"FX_WIPE_ZONE", player:oppIdx(p), zone:"sz", reason:"大嵐"});
+    const P = gameState.players[p];
+    for(let i=P.sz.length-1;i>=0;i--){
+      if(loc && loc.zone==='sz' && i===loc.index) continue;
+      act({type:"FX_TO_GRAVE", player:p, zone:"sz", index:i, reason:"大嵐"});
+    }
+    afterEffect(p, loc, "大嵐");
+  },
+
+  /* ---------- 単体除去 ---------- */
+  "サイクロン": function(p, loc){
+    const targets = [];
+    [0,1].forEach(pl=>{
+      const P = gameState.players[pl];
+      P.sz.forEach((c,i)=>targets.push({pl, zone:"sz", i, c}));
+      if(P.field) targets.push({pl, zone:"field", i:0, c:P.field});
+    });
+    const list = targets.filter(t=>!(loc && t.pl===p && t.zone===loc.zone && t.i===loc.index));
+    openPick("サイクロン：破壊する魔法・罠を選ぶ", "裏側のカードも選べます",
+      list.map(t=>({
+        label: (t.c.face==='down' ? "裏側のカード" : labelOf(t.c)),
+        sub: `${nameOf(t.pl)}・${t.zone==='field'?'フィールド':'魔法罠'}`,
+        onPick: ()=>{
+          act({type:"FX_TO_GRAVE", player:t.pl, zone:t.zone, index:t.i, reason:"サイクロン"});
+          afterEffect(p, loc, "サイクロン");
+        }
+      })));
+  },
+  "月の書": function(p, loc){
+    const targets=[];
+    [0,1].forEach(pl=>{
+      gameState.players[pl].mz.forEach((c,i)=>{ if(c.face==='up') targets.push({pl,i,c}); });
+    });
+    openPick("月の書：裏側守備表示にするモンスター", "",
+      targets.map(t=>({
+        label: labelOf(t.c), sub:`${nameOf(t.pl)}`,
+        onPick: ()=>{
+          act({type:"FX_SET_STATE", player:t.pl, zone:"mz", index:t.i, face:"down", pos:"def", reason:"月の書"});
+          afterEffect(p, loc, "月の書");
+        }
+      })));
+  },
+  "強制脱出装置": function(p, loc){
+    const targets=[];
+    [0,1].forEach(pl=>{ gameState.players[pl].mz.forEach((c,i)=>targets.push({pl,i,c})); });
+    openPick("強制脱出装置：手札に戻すモンスター", "",
+      targets.map(t=>({
+        label: t.c.face==='down'?"裏側のカード":labelOf(t.c), sub:`${nameOf(t.pl)}`,
+        onPick: ()=>{
+          act({type:"FX_BOUNCE", player:t.pl, zone:"mz", index:t.i, reason:"強制脱出装置"});
+          afterEffect(p, loc, "強制脱出装置");
+        }
+      })));
+  },
+  "次元幽閉": function(p, loc){
+    const o=oppIdx(p);
+    const targets=[];
+    gameState.players[o].mz.forEach((c,i)=>{ if(c.face==='up'&&c.pos==='atk') targets.push({i,c}); });
+    openPick("次元幽閉：除外する攻撃モンスター", "",
+      targets.map(t=>({
+        label: labelOf(t.c), sub:`${nameOf(o)}`,
+        onPick: ()=>{
+          act({type:"FX_BANISH", player:o, zone:"mz", index:t.i, reason:"次元幽閉"});
+          afterEffect(p, loc, "次元幽閉");
+        }
+      })));
+  },
+  "奈落の落とし穴": function(p, loc){
+    const o=oppIdx(p);
+    const targets=[];
+    gameState.players[o].mz.forEach((c,i)=>{ const d=dbOf(c); if((d.atk||0)>=1500) targets.push({i,c}); });
+    openPick("奈落の落とし穴：除外する（攻1500以上）", "",
+      targets.map(t=>({
+        label: labelOf(t.c), sub:`攻${dbOf(t.c).atk}`,
+        onPick: ()=>{
+          act({type:"FX_BANISH", player:o, zone:"mz", index:t.i, reason:"奈落の落とし穴"});
+          afterEffect(p, loc, "奈落の落とし穴");
+        }
+      })));
+  },
+
+  /* ---------- 蘇生・展開 ---------- */
+  "死者蘇生": function(p, loc){
+    const targets=[];
+    [0,1].forEach(pl=>{
+      gameState.players[pl].grave.forEach((c,i)=>{ if(dbOf(c).k==='m') targets.push({pl,i,c}); });
+    });
+    if(gameState.players[p].mz.length>=ZONE_LIMITS.mz){ showToast("モンスターゾーンが一杯です"); return; }
+    openPick("死者蘇生：蘇生するモンスター", "どちらの墓地からでも選べます",
+      targets.map(t=>({
+        label: labelOf(t.c), sub:`${nameOf(t.pl)}の墓地 / ${subOf(t.c)}`,
+        onPick: ()=>{
+          // 相手墓地から取る場合も自分の場に出す
+          const P=gameState.players[t.pl];
+          const card=P.grave[t.i];
+          if(t.pl===p){
+            act({type:"FX_SPECIAL_SUMMON", player:p, from:"grave", fromIndex:t.i, pos:"atk", reason:"死者蘇生"});
+          } else {
+            snapshot();
+            const c=P.grave.splice(t.i,1)[0];
+            c.face='up'; c.pos='atk';
+            gameState.players[p].mz.push(c);
+            logIt(gameState, `死者蘇生：${nameOf(t.pl)}の墓地から ${cardName(c)} を特殊召喚`);
+            render();
+          }
+          afterEffect(p, loc, "死者蘇生");
+        }
+      })));
+  },
+  "早すぎた埋葬": function(p, loc){
+    const P=gameState.players[p];
+    if(P.mz.length>=ZONE_LIMITS.mz){ showToast("モンスターゾーンが一杯です"); return; }
+    const targets=[];
+    P.grave.forEach((c,i)=>{ if(dbOf(c).k==='m') targets.push({i,c}); });
+    openPick("早すぎた埋葬：蘇生する（LP800支払い）", "",
+      targets.map(t=>({
+        label: labelOf(t.c), sub: subOf(t.c),
+        onPick: ()=>{
+          act({type:"LP", player:p, delta:-800});
+          act({type:"FX_SPECIAL_SUMMON", player:p, from:"grave", fromIndex:t.i, pos:"atk", reason:"早すぎた埋葬"});
+          // 装備状態は簡略化：このカードは場に残す
+        }
+      })));
+  },
+  "リビングデッドの呼び声": function(p, loc){
+    const P=gameState.players[p];
+    if(P.mz.length>=ZONE_LIMITS.mz){ showToast("モンスターゾーンが一杯です"); return; }
+    const targets=[];
+    P.grave.forEach((c,i)=>{ if(dbOf(c).k==='m') targets.push({i,c}); });
+    openPick("リビングデッドの呼び声：蘇生する", "",
+      targets.map(t=>({
+        label: labelOf(t.c), sub: subOf(t.c),
+        onPick: ()=>{
+          act({type:"FX_SPECIAL_SUMMON", player:p, from:"grave", fromIndex:t.i, pos:"atk", reason:"リビングデッドの呼び声"});
+        }
+      })));
+  },
+
+  /* ---------- ドロー・手札交換 ---------- */
+  "強欲な壺": function(p, loc){
+    act({type:"DRAW", player:p, n:2});
+    afterEffect(p, loc, "強欲な壺");
+  },
+  "天使の施し": function(p, loc){
+    act({type:"DRAW", player:p, n:3});
+    showToast("手札を2枚選んで捨ててください");
+    pickDiscard(p, 2, "天使の施し", ()=>afterEffect(p, loc, "天使の施し"));
+  },
+  "手札抹殺": function(p, loc){
+    [0,1].forEach(pl=>{
+      const P=gameState.players[pl];
+      const n=P.hand.length;
+      for(let i=P.hand.length-1;i>=0;i--){
+        if(loc && pl===p && loc.zone==='hand' && i===loc.index) continue;
+        act({type:"FX_DISCARD", player:pl, handIndex:i, reason:"手札抹殺"});
+      }
+      if(n) act({type:"DRAW", player:pl, n});
+    });
+    afterEffect(p, loc, "手札抹殺");
+  },
+  "貪欲な壺": function(p, loc){
+    const P=gameState.players[p];
+    const mons=[]; P.grave.forEach((c,i)=>{ if(dbOf(c).k==='m') mons.push({i,c}); });
+    if(mons.length<5){ showToast("墓地のモンスターが5体未満です"); return; }
+    // 簡略化：墓地の古い方から5体を戻す
+    snapshot();
+    const take=mons.slice(0,5).map(m=>m.i).sort((a,b)=>b-a);
+    take.forEach(i=>{ const c=P.grave.splice(i,1)[0]; c.face='down'; P.deck.push(c); });
+    shuffle(P.deck);
+    applyAction(gameState,{type:"DRAW", player:p, n:2});
+    logIt(gameState, `貪欲な壺：モンスター5体をデッキに戻して2枚ドロー`);
+    render();
+    afterEffect(p, loc, "貪欲な壺");
+  },
+
+  /* ---------- 個別モンスター効果（index.html から移植） ---------- */
+  "終末の騎士": function(p, loc){
+    const filt = c=>c.k==='m' && !c.ex && c.at==='闇';
+    const cands = deckMatches(p, filt);
+    if(!cands.length){ showToast("デッキに闇属性モンスターがいません"); return; }
+    openPick("終末の騎士：デッキから闇属性モンスターを墓地へ", `${cands.length}枚が該当`,
+      cands.map(({i,c})=>({
+        label: labelOf(c), sub: subOf(c),
+        onPick: ()=>act({type:"FX_MILL", player:p, deckIndex:i, reason:"終末の騎士"})
+      })));
+  },
+  "ダーク・グレファー": function(p, loc){
+    const P = gameState.players[p];
+    const handDark=[]; P.hand.forEach((c,i)=>{ const d=dbOf(c); if(d.k==='m'&&d.at==='闇') handDark.push({i,c}); });
+    if(!handDark.length){ showToast("手札に捨てる闇属性モンスターがいません"); return; }
+    const deckDark = deckMatches(p, c=>c.k==='m'&&!c.ex&&c.at==='闇');
+    if(!deckDark.length){ showToast("デッキに闇属性モンスターがいません"); return; }
+    openPick("ダーク・グレファー：捨てる闇属性モンスター", "手札から1枚",
+      handDark.map(({i,c})=>({
+        label: labelOf(c), sub: subOf(c),
+        onPick: ()=>{
+          act({type:"FX_DISCARD", player:p, handIndex:i, reason:"ダーク・グレファー"});
+          const dd = deckMatches(p, cc=>cc.k==='m'&&!cc.ex&&cc.at==='闇');
+          openPick("ダーク・グレファー：デッキから墓地へ送る闇属性", "",
+            dd.map(({i:di,c:dc})=>({
+              label: labelOf(dc), sub: subOf(dc),
+              onPick: ()=>act({type:"FX_MILL", player:p, deckIndex:di, reason:"ダーク・グレファー"})
+            })));
+        }
+      })));
+  },
+  "馬頭鬼": function(p, loc){
+    const P = gameState.players[p];
+    if(P.mz.length>=ZONE_LIMITS.mz){ showToast("モンスターゾーンが一杯です"); return; }
+    const selfIdx = loc ? loc.index : -1;
+    const und=[]; P.grave.forEach((c,i)=>{ const d=dbOf(c); if(i!==selfIdx && d.k==='m' && d.ra==='アンデット') und.push({i,c}); });
+    if(!und.length){ showToast("墓地に他のアンデット族がいません"); return; }
+    openPick("馬頭鬼：特殊召喚するアンデット族", "自身は除外されます",
+      und.map(({i,c})=>({
+        label: labelOf(c), sub: subOf(c),
+        onPick: ()=>{
+          if(selfIdx>=0) act({type:"FX_BANISH", player:p, zone:"grave", index:selfIdx, reason:"馬頭鬼"});
+          const P2=gameState.players[p];
+          let ti = P2.grave.findIndex(x=>x===c);
+          if(ti<0) ti = i>selfIdx && selfIdx>=0 ? i-1 : i;
+          act({type:"FX_SPECIAL_SUMMON", player:p, from:"grave", fromIndex:ti, pos:"atk", reason:"馬頭鬼"});
+        }
+      })));
+  },
+  "グローアップ・バルブ": function(p, loc){
+    const P = gameState.players[p];
+    if(P.mz.length>=ZONE_LIMITS.mz){ showToast("モンスターゾーンが一杯です"); return; }
+    act({type:"FX_MILL_TOP", player:p, n:1, reason:"グローアップ・バルブ"});
+    const idx = loc ? loc.index : gameState.players[p].grave.findIndex(c=>dbOf(c).n==='グローアップ・バルブ');
+    if(idx>=0) act({type:"FX_SPECIAL_SUMMON", player:p, from:"grave", fromIndex:idx, pos:"atk", reason:"グローアップ・バルブ"});
+  },
+  "ゾンビキャリア": function(p, loc){
+    const P = gameState.players[p];
+    if(P.mz.length>=ZONE_LIMITS.mz){ showToast("モンスターゾーンが一杯です"); return; }
+    if(!P.hand.length){ showToast("デッキトップに戻す手札がありません"); return; }
+    openPick("ゾンビキャリア：デッキトップに戻す手札", "",
+      P.hand.map((c,i)=>({
+        label: labelOf(c), sub: subOf(c),
+        onPick: ()=>{
+          act({type:"FX_HAND_TO_TOP", player:p, handIndex:i, reason:"ゾンビキャリア"});
+          const gi = loc ? loc.index : gameState.players[p].grave.findIndex(x=>dbOf(x).n==='ゾンビキャリア');
+          if(gi>=0) act({type:"FX_SPECIAL_SUMMON", player:p, from:"grave", fromIndex:gi, pos:"atk", reason:"ゾンビキャリア"});
+        }
+      })));
+  },
+
+  /* ---------- 手札誘発・その他 ---------- */
+  "増殖するG": function(p, loc){
+    showToast("相手の特殊召喚ごとに1枚ドロー（手動）");
+    if(loc && loc.zone==='hand') act({type:"FX_DISCARD", player:p, handIndex:loc.index, reason:"増殖するG"});
+  },
+  "灰流うらら": function(p, loc){
+    showToast("効果を無効にしました（手動で処理）");
+    if(loc && loc.zone==='hand') act({type:"FX_DISCARD", player:p, handIndex:loc.index, reason:"灰流うらら"});
+  },
+};
+
+/* 手札から n 枚捨てさせる（順に選択） */
+function pickDiscard(p, n, reason, done){
+  const P=gameState.players[p];
+  if(n<=0 || !P.hand.length){ if(done) done(); return; }
+  openPick(`${reason}：捨てる手札を選ぶ（あと${n}枚）`, "",
+    P.hand.map((c,i)=>({
+      label: labelOf(c), sub: subOf(c),
+      onPick: ()=>{
+        act({type:"FX_DISCARD", player:p, handIndex:i, reason});
+        pickDiscard(p, n-1, reason, done);
+      }
+    })), done);
+}
+
+
+/* =========================================================================
+   EXデッキ召喚（シンクロ / エクシーズ / 融合）
+   1103環境はシンクロが主力。エクシーズは9期以降のカードプール用。
+   ========================================================================= */
+function exKind(db){
+  const st = db.st||[];
+  if(st.indexOf('シンクロ')>=0) return 'synchro';
+  if(st.indexOf('エクシーズ')>=0) return 'xyz';
+  if(st.indexOf('融合')>=0) return 'fusion';
+  return null;
+}
+function isTuner(db){ return (db.st||[]).indexOf('チューナー')>=0; }
+
+/* 場の表側モンスター（素材候補）を集める */
+function materialCandidates(p){
+  const P = gameState.players[p];
+  const out = [];
+  P.mz.forEach((c,i)=>{
+    if(c.face!=='up') return;          // 裏側は素材にできない
+    const db = dbOf(c);
+    out.push({i, c, db, lv: db.lv||0, tuner: isTuner(db)});
+  });
+  return out;
+}
+
+/* シンクロ：チューナー1体＋非チューナー1体以上、レベル合計が一致 */
+function findSynchroCombos(p, targetLv){
+  const cands = materialCandidates(p);
+  const tuners = cands.filter(x=>x.tuner);
+  const others = cands.filter(x=>!x.tuner);
+  const combos = [];
+  tuners.forEach(t=>{
+    // 非チューナーの部分集合でレベル合計を合わせる
+    const need = targetLv - t.lv;
+    if(need <= 0) return;
+    const found = subsetsSummingTo(others, need, 4);
+    found.forEach(set=>{
+      combos.push({
+        materials: [t.i].concat(set.map(s=>s.i)),
+        label: `${t.db.n}(Lv${t.lv}) ＋ ${set.map(s=>`${s.db.n}(Lv${s.lv})`).join(" ＋ ")}`
+      });
+    });
+  });
+  return combos;
+}
+/* エクシーズ：同レベルを規定数。ランク=lv とみなす */
+function findXyzCombos(p, rank, count){
+  const cands = materialCandidates(p).filter(x=>x.lv===rank);
+  if(cands.length < count) return [];
+  const combos = [];
+  combinations(cands, count).forEach(set=>{
+    combos.push({
+      materials: set.map(s=>s.i),
+      label: set.map(s=>`${s.db.n}(Lv${s.lv})`).join(" ＋ ")
+    });
+  });
+  return combos;
+}
+/* 部分集合で合計がneedになるものを列挙（最大maxN体） */
+function subsetsSummingTo(arr, need, maxN){
+  const res = [];
+  const n = arr.length;
+  for(let size=1; size<=Math.min(maxN,n); size++){
+    combinations(arr, size).forEach(set=>{
+      const sum = set.reduce((s,x)=>s+x.lv,0);
+      if(sum===need) res.push(set);
+    });
+  }
+  return res;
+}
+function combinations(arr, k){
+  const res=[];
+  (function rec(start, cur){
+    if(cur.length===k){ res.push(cur.slice()); return; }
+    for(let i=start;i<arr.length;i++){ cur.push(arr[i]); rec(i+1,cur); cur.pop(); }
+  })(0,[]);
+  return res;
+}
+/* エクシーズの必要素材数を効果テキストから読む（「レベル4モンスター×2」） */
+function xyzMaterialCount(db){
+  const m = String(db.e||"").match(/レベル\s*\d+\s*モンスター\s*[×x]\s*(\d+)/);
+  return m ? parseInt(m[1],10) : 2;
+}
+
+/* EXデッキを開いて召喚可能なモンスターを提示 */
+function openExDeck(p){
+  const P = gameState.players[p];
+  if(!P.ex.length){
+    sheet.innerHTML = `<div class="grip"></div><h3>エクストラデッキ</h3>
+      <div class="meta" style="margin-bottom:12px">EXデッキにカードがありません。<br>
+      デッキビルダーでEXデッキを組むと、ここから召喚できます。</div>
+      <button class="close" onclick="closeSheet()">閉じる</button>`;
+    veil.classList.add("on"); return;
+  }
+  const rows = P.ex.map((c,i)=>{
+    const db = dbOf(c);
+    const kind = exKind(db);
+    const kindJa = {synchro:"シンクロ", xyz:"エクシーズ", fusion:"融合"}[kind] || "EX";
+    // 召喚可能かを判定
+    let ok=false, why="";
+    if(kind==='synchro'){
+      ok = findSynchroCombos(p, db.lv||0).length>0;
+      why = ok ? "" : "素材が足りません";
+    } else if(kind==='xyz'){
+      const need = xyzMaterialCount(db);
+      ok = findXyzCombos(p, db.lv||0, need).length>0;
+      why = ok ? "" : `同じレベル${db.lv}が${need}体必要`;
+    } else {
+      ok = true;   // 融合は素材指定が複雑なので手動選択
+      why = "素材を手動で選びます";
+    }
+    return `<div class="act pick-row ${ok?'':'dim'}" onclick="${ok?`exSummonPick(${p},${i})`:`showToast('${why}')`}">
+      <span class="pk-nm">${db.n}</span>
+      <span class="pk-sub">${kindJa} ${kind==='xyz'?`ランク${db.lv}`:`Lv${db.lv||'-'}`} 攻${db.atk??'-'}${ok?'':' ・'+why}</span>
+    </div>`;
+  }).join("");
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">エクストラデッキ（${P.ex.length}）</h3>
+    <div class="meta" style="margin-bottom:10px">召喚できるものが選択できます。素材は自動で判定します。</div>
+    <div class="pick-list">${rows}</div>
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+
+/* EXモンスターを選んだあと、素材の組み合わせを選ばせる */
+function exSummonPick(p, exIndex){
+  const P = gameState.players[p];
+  const c = P.ex[exIndex]; const db = dbOf(c);
+  const kind = exKind(db);
+  let combos = [];
+  if(kind==='synchro'){
+    combos = findSynchroCombos(p, db.lv||0);
+  } else if(kind==='xyz'){
+    combos = findXyzCombos(p, db.lv||0, xyzMaterialCount(db));
+  } else {
+    // 融合：場のモンスターから手動で複数選択
+    exFusionPick(p, exIndex);
+    return;
+  }
+  if(!combos.length){ showToast("素材が足りません"); return; }
+  if(combos.length===1){
+    doExSummon(p, exIndex, combos[0].materials, kind);
+    return;
+  }
+  openPick(`${db.n}：使用する素材を選ぶ`, `${combos.length}通りの組み合わせ`,
+    combos.map(cb=>({
+      label: cb.label, sub:"",
+      onPick: ()=>doExSummon(p, exIndex, cb.materials, kind)
+    })));
+}
+
+/* 融合：素材を順にタップして選ぶ */
+let FUSION_SEL = [];
+function exFusionPick(p, exIndex){
+  FUSION_SEL = [];
+  fusionStep(p, exIndex);
+}
+function fusionStep(p, exIndex){
+  const P = gameState.players[p];
+  const db = dbOf(P.ex[exIndex]);
+  const cands = materialCandidates(p).filter(x=>FUSION_SEL.indexOf(x.i)<0);
+  const chosen = FUSION_SEL.map(i=>{
+    const cc = P.mz[i]; return cc ? dbOf(cc).n : "?";
+  });
+  const items = cands.map(x=>({
+    label: x.db.n, sub:`Lv${x.lv} 攻${x.db.atk??'-'}`,
+    onPick: ()=>{ FUSION_SEL.push(x.i); fusionStep(p, exIndex); }
+  }));
+  // 確定ボタンを先頭に
+  if(FUSION_SEL.length>=2){
+    items.unshift({
+      label:`▶ この ${FUSION_SEL.length}体で融合召喚する`, sub:chosen.join(" ＋ "),
+      onPick: ()=>doExSummon(p, exIndex, FUSION_SEL.slice(), 'fusion')
+    });
+  }
+  openPick(`${db.n}：融合素材を選ぶ`,
+    FUSION_SEL.length?`選択中：${chosen.join(" ＋ ")}`:"場のモンスターを2体以上タップ",
+    items);
+}
+
+function doExSummon(p, exIndex, materials, kind){
+  const P = gameState.players[p];
+  const db = dbOf(P.ex[exIndex]);
+  closeSheet();
+  // 表示形式を選ばせる（守備で出したい場面もあるため）
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:6px">${db.n}</h3>
+    <div class="meta" style="margin-bottom:12px">表示形式を選んでください</div>
+    <div class="act-grid">
+      <div class="act fx" onclick="closeSheet();act({type:'FX_EX_SUMMON',player:${p},exIndex:${exIndex},materials:${JSON.stringify(materials)},kind:'${kind}',pos:'atk'})">攻撃表示</div>
+      <div class="act" onclick="closeSheet();act({type:'FX_EX_SUMMON',player:${p},exIndex:${exIndex},materials:${JSON.stringify(materials)},kind:'${kind}',pos:'def'})">守備表示</div>
+    </div>
+    <button class="close" onclick="closeSheet()">やめる</button>`;
+  veil.classList.add("on");
+}
+
+/* ---- 効果の有無判定と実行 ------------------------------------------- */
+function hasEffect(name){
+  return !!(CARD_EFFECT[name] || AUTO_EFFECT[name]);
+}
+/* 発動トリガ種別（召喚時 / 起動）。宣言テーブルのみ持つ */
+function effectTrigger(name){
+  const e = AUTO_EFFECT[name];
+  return e ? e.trig : "ignition";
+}
+/* 効果を実行する。selfLoc={zone,index,keep} */
+function runEffect(p, name, selfLoc){
+  const fn = CARD_EFFECT[name];
+  if(fn){ fn(p, selfLoc); return true; }
+  const ent = AUTO_EFFECT[name];
+  if(ent){ runAutoEffect(p, name, ent, selfLoc); return true; }
+  return false;
+}
+/* 召喚成功時に誘発する効果を自動で提示する */
+function offerSummonTrigger(p, cardName_){
+  const ent = AUTO_EFFECT[cardName_];
+  if(!ent || ent.trig!=="summon") return;
+  setTimeout(()=>{
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:6px">${cardName_} の効果</h3>
+      <div class="meta" style="margin-bottom:12px">召喚に成功しました。効果を発動しますか？</div>
+      <div class="act-grid wide">
+        <div class="act" style="background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi)"
+             onclick="closeSheet();runEffect(${p},${JSON.stringify(cardName_)},null)">効果を発動する</div>
+        <div class="act" onclick="closeSheet()">発動しない</div>
+      </div>`;
+    veil.classList.add("on");
+  }, 80);
 }
 
 /* =========================================================================
@@ -982,6 +2124,27 @@ function toggleLog(){
   document.getElementById("logToggle").textContent = LOG_OPEN ? "ログを閉じる ▴" : "ログを開く ▾";
 }
 
+/* 先攻を指定してターン1のドローフェイズからやり直す */
+function setFirstPlayer(p){
+  snapshot();
+  gameState.activePlayer = p;
+  gameState.firstPlayer  = p;
+  gameState.turn  = 1;
+  gameState.phase = "draw";
+  gameState.drawnThisTurn = false;
+  gameState.chain = [];
+  turnActions = [];
+  logIt(gameState, `<b>先攻：${nameOf(p)}</b>（1103は先攻ドローあり）`);
+  render(); closeSheet();
+  showToast(`${nameOf(p)}の先攻で開始`);
+}
+/* コイントスで先攻を決める */
+function coinToss(){
+  const p = Math.random() < 0.5 ? 0 : 1;
+  setFirstPlayer(p);
+  showToast(`コイントス → ${nameOf(p)}の先攻`);
+}
+
 /* ハンバーガーメニュー（たまに使う操作） */
 function openMenu(){
   const p = gameState.activePlayer;
@@ -989,20 +2152,25 @@ function openMenu(){
     <h3 style="margin-bottom:10px">メニュー</h3>
     <div class="act-label">デッキ</div>
     <div class="act-grid">
+      <div class="act fx" onclick="startTestDuel(true)">⚡ テストデッキで開始</div>
       <div class="act" onclick="openDeckLoad('saved')">保存デッキから</div>
       <div class="act" onclick="openDeckLoad('text')">テキストから</div>
       <div class="act" onclick="doShuffle();closeSheet()">シャッフル</div>
       <div class="act" onclick="closeSheet();openPile(${p},'deck')">デッキ操作</div>
       <div class="act" onclick="drawN()">まとめてドロー</div>
-      <div class="act" onclick="openLP(${gameState.activePlayer})">ライフ計算機</div>
     </div>
     <div class="meta" style="margin:10px 2px 0;font-size:10.5px">
       カードデータ：<b style="color:${DB_SOURCE==='dummy'?'var(--forbidden)':'var(--gold-hi)'}">${CARD_DB.length}種（${DB_SOURCE==='dummy'?'お試し用':DB_SOURCE}）</b>
     </div>
-    <div class="act-label">初手</div>
+    <div class="act-label">初手 / 先攻</div>
     <div class="act-grid">
       <div class="act" onclick="redrawHand()">初手を引き直す</div>
-      <div class="act" onclick="closeSheet();openPile(${p},'grave')">墓地を見る</div>
+      <div class="act" onclick="openLP(${gameState.activePlayer})">ライフ計算機</div>
+      <div class="act" onclick="setFirstPlayer(${gameState.activePlayer})">この人を先攻にする</div>
+      <div class="act" onclick="coinToss()">コイントス</div>
+    </div>
+    <div class="meta" style="margin:6px 2px 0;font-size:10.5px">
+      先攻：<b style="color:var(--gold-hi)">${nameOf(gameState.firstPlayer??0)}</b>（1103は先攻ドローあり）
     </div>
     <div class="act-label">盤面</div>
     <div class="act-grid wide">
@@ -1027,7 +2195,7 @@ function doReset(){
 function redrawHand(){
   const p = gameState.activePlayer;
   const P = gameState.players[p];
-  if(!P.hand.length && !P.deck.length){ alert("先にデッキを読み込んでください"); return; }
+  if(!P.hand.length && !P.deck.length){ showToast("先にデッキを読み込むか、テストデッキで開始してください"); return; }
   snapshot();
   // 手札を山へ戻す
   while(P.hand.length){ P.deck.push(P.hand.shift()); }
@@ -1072,39 +2240,77 @@ function openHand(i){
   const P = gameState.players[gameState.activePlayer];
   const c = P.hand[i]; const db = CARD_DB[c.id]||{};
   const p = gameState.activePlayer;
+  const nm = db.n||"";
+  const eff = hasEffect(nm);
   let primary = "", secondary = "";
+
   if(db.k==='m'){
+    const trig = effectTrigger(nm);
     primary = `
-      <div class="act" onclick="fromHand(${i},'mz','up','atk')">召喚（攻撃）</div>
+      <div class="act" onclick="fromHand(${i},'mz','up','atk')">通常召喚（攻撃）</div>
       <div class="act" onclick="fromHand(${i},'mz','down','def')">セット（裏守備）</div>
-      <div class="act" onclick="fromHand(${i},'mz','up','def')">特殊召喚（守備）</div>`;
+      <div class="act" onclick="fromHand(${i},'mz','up','def')">特殊召喚（守備）</div>
+      <div class="act" onclick="fromHand(${i},'mz','up','atk')">特殊召喚（攻撃）</div>`;
+    // 手札で発動する誘発（増殖するG・灰流うらら等）
+    if(eff && CARD_EFFECT[nm]){
+      primary = `<div class="act fx" onclick="closeSheet();runEffect(${p},${JSON.stringify(nm)},{zone:'hand',index:${i}})">⚡ 手札から効果を発動</div>` + primary;
+    }
     secondary = `
-      <div class="act" onclick="fromHand(${i},'grave')">墓地へ</div>
-      <div class="act" onclick="fromHand(${i},'banish')">除外</div>`;
+      <div class="act" onclick="fromHand(${i},'grave')">墓地へ捨てる</div>
+      <div class="act" onclick="fromHand(${i},'banish')">除外</div>
+      <div class="act" onclick="fromHand(${i},'deck')">デッキトップへ</div>`;
   } else {
     const toField = db.sub==="フィールド";
-    primary = `
-      <div class="act" onclick="handActivate(${i})">発動（チェーンへ）</div>
-      <div class="act" onclick="fromHand(${i},'${toField?'field':'sz'}','down')">セット（裏）</div>`;
+    const dest = toField ? 'field' : 'sz';
+    primary = eff
+      ? `<div class="act fx" onclick="activateFromHand(${i})">⚡ 発動（効果を自動処理）</div>
+         <div class="act" onclick="handActivate(${i})">発動（チェーンに積むだけ）</div>
+         <div class="act" onclick="fromHand(${i},'${dest}','down')">セット（裏）</div>`
+      : `<div class="act" onclick="handActivate(${i})">発動（チェーンへ）</div>
+         <div class="act" onclick="fromHand(${i},'${dest}','down')">セット（裏）</div>`;
     secondary = `
-      <div class="act" onclick="fromHand(${i},'grave')">墓地へ</div>
+      <div class="act" onclick="fromHand(${i},'grave')">墓地へ捨てる</div>
       <div class="act" onclick="fromHand(${i},'banish')">除外</div>`;
   }
   sheet.innerHTML = metaHead(db) +
+    (eff?`<div class="fx-note">このカードは効果を自動処理できます</div>`:"") +
     `<div class="act-label">プレイ</div><div class="act-grid">${primary}</div>
      <div class="act-label">その他へ送る</div><div class="act-grid">${secondary}</div>
      <button class="close" onclick="closeSheet()">閉じる</button>`;
   veil.classList.add("on");
 }
+
+/* 手札から魔法・罠を発動 → 場に置いてから効果を自動処理 */
+function activateFromHand(i){
+  const p = gameState.activePlayer;
+  const P = gameState.players[p];
+  const c = P.hand[i]; const db = CARD_DB[c.id]||{};
+  const nm = db.n||"";
+  const toField = db.sub==="フィールド";
+  const to = toField ? "field" : "sz";
+  if(to==="sz" && P.sz.length>=ZONE_LIMITS.sz){ showToast("魔法・罠ゾーンが一杯です"); return; }
+  if(to==="field" && P.field){ showToast("フィールドゾーンが埋まっています"); return; }
+  closeSheet();
+  act({type:"MOVE", player:p, from:"hand", fromIndex:i, to, face:"up"});
+  const idx = (to==="field") ? 0 : P.sz.length-1;
+  const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備");
+  logIt(gameState, `<b>${nm}</b> を発動`);
+  runEffect(p, nm, {zone:to, index:idx, keep});
+  render();
+}
 function fromHand(i, to, face, pos){
   // ゾーン制限チェック
-  const P = gameState.players[gameState.activePlayer];
+  const p = gameState.activePlayer;
+  const P = gameState.players[p];
   if(ZONE_LIMITS[to] && P[to].length>=ZONE_LIMITS[to] && to!=="field"){
-    alert(`${zoneJp(to)}ゾーンは${ZONE_LIMITS[to]}枚までです`); return;
+    showToast(`${zoneJp(to)}ゾーンは${ZONE_LIMITS[to]}枚までです`); return;
   }
-  if(to==="field" && P.field){ alert("フィールド魔法ゾーンは1枚までです"); return; }
-  act({type:"MOVE", player:gameState.activePlayer, from:"hand", fromIndex:i, to, face:face||"up", pos:pos||"atk"});
+  if(to==="field" && P.field){ showToast("フィールド魔法ゾーンは1枚までです"); return; }
+  const nm = (CARD_DB[P.hand[i]?.id]||{}).n || "";
+  act({type:"MOVE", player:p, from:"hand", fromIndex:i, to, face:face||"up", pos:pos||"atk"});
   closeSheet();
+  // 召喚成功時に誘発する効果（E・HEROエアーマン等）を提示
+  if(to==="mz" && (face||"up")==="up" && nm) offerSummonTrigger(p, nm);
 }
 /* 手札から魔法罠を発動：ゾーンへ置いてからチェーンに積む */
 function handActivate(i){
@@ -1137,10 +2343,20 @@ function openZone(p, zone, idx){
     ? `<div class="act" onclick="beginAttack(${p},${idx})">攻撃宣言</div>`
     : "";
 
-  // 発動（チェーンに乗せる）。表側なら常に、セット状態なら魔法罠のみ相手ターン含め発動可
-  const activate = (!isMon)
+  // 効果発動。自動処理できるカードは⚡付きで最優先に出す
+  const nm = db.n||"";
+  const eff = hasEffect(nm);
+  const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備");
+  const autoAct = eff
+    ? `<div class="act fx" onclick="activateFromZone(${p},'${zone}',${idx})">⚡ 効果を発動（自動処理）</div>`
+    : "";
+  // エクシーズ素材の取り除き
+  const detach = (zone==="mz" && c.xyz && c.xyz.length)
+    ? `<div class="act" onclick="closeSheet();act({type:'FX_DETACH',player:${p},mzIndex:${idx},reason:'効果コスト'})">素材を1つ取り除く（残${c.xyz.length}）</div>`
+    : "";
+  const activate = (!isMon || faceUp)
     ? `<div class="act" onclick="chainAddFromZone(${p},'${zone}',${idx})">効果を発動（チェーンへ）</div>`
-    : (faceUp ? `<div class="act" onclick="chainAddFromZone(${p},'${zone}',${idx})">効果を発動（チェーンへ）</div>` : "");
+    : "";
 
   const state = `
     ${c.face==='down'?`<div class="act" onclick="zAct('FLIP',${p},'${zone}',${idx})">表にする（反転）</div>`:""}
@@ -1151,15 +2367,32 @@ function openZone(p, zone, idx){
     <div class="act" onclick="zMove(${p},'${zone}',${idx},'hand')">手札へ</div>
     <div class="act" onclick="zMove(${p},'${zone}',${idx},'deck')">デッキ上へ</div>`;
 
-  const primary = attack + activate;
+  const primary = autoAct + detach + attack + activate;
   const hasPrimary = primary.trim().length>0;
   const hasState = state.trim().length>0;
   sheet.innerHTML = metaHead(db) +
+    (eff?`<div class="fx-note">このカードは効果を自動処理できます</div>`:"") +
     (hasPrimary ? `<div class="act-label">アクション</div><div class="act-grid">${primary}</div>` : "") +
     (hasState ? `<div class="act-label">状態</div><div class="act-grid">${state}</div>` : "") +
     `<div class="act-label">移動</div><div class="act-grid">${move}</div>
      <button class="close" onclick="closeSheet()">閉じる</button>`;
   veil.classList.add("on");
+}
+
+/* 場のカードの効果を自動処理。セット状態なら表にしてから発動 */
+function activateFromZone(p, zone, idx){
+  const P = gameState.players[p];
+  const c = zoneCard(P, zone, idx); if(!c) return;
+  const db = CARD_DB[c.id]||{};
+  const nm = db.n||"";
+  closeSheet();
+  if(c.face==='down'){
+    act({type:"FX_SET_STATE", player:p, zone, index:idx, face:"up", reason:"発動"});
+  }
+  const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備" || db.k==='m');
+  logIt(gameState, `<b>${nm}</b> の効果を発動`);
+  runEffect(p, nm, {zone, index:idx, keep});
+  render();
 }
 function zAct(type,p,zone,index){ act({type, player:p, zone, index}); closeSheet(); }
 function zMove(p,zone,idx,to){
@@ -1332,16 +2565,28 @@ function openPile(p, zone){
   veil.classList.add("on");
 }
 function pileAct(p, zone, i){
-  const db = CARD_DB[gameState.players[p][zone][i].id]||{};
+  const c = gameState.players[p][zone][i];
+  const db = CARD_DB[c.id]||{};
+  const nm = db.n||"";
+  const isMon = db.k==='m';
+  // 墓地で発動できる効果を持つカードは⚡で出す
+  const graveFx = (zone==="grave" && hasEffect(nm))
+    ? `<div class="act fx" onclick="closeSheet();runEffect(${p},${JSON.stringify(nm)},{zone:'grave',index:${i},keep:true})">⚡ 墓地で効果を発動</div>`
+    : "";
+  const ssBtn = isMon
+    ? `<div class="act" onclick="closeSheet();act({type:'FX_SPECIAL_SUMMON',player:${p},from:'${zone}',fromIndex:${i},pos:'atk',reason:'${zoneJp(zone)}から'})">特殊召喚（攻撃）</div>
+       <div class="act" onclick="closeSheet();act({type:'FX_SPECIAL_SUMMON',player:${p},from:'${zone}',fromIndex:${i},pos:'def',reason:'${zoneJp(zone)}から'})">特殊召喚（守備）</div>`
+    : "";
   sheet.innerHTML = metaHead(db)+
+    (graveFx?`<div class="act-label">効果</div><div class="act-grid wide">${graveFx}</div>`:"") +
+    (ssBtn?`<div class="act-label">召喚</div><div class="act-grid">${ssBtn}</div>`:"") +
     `<div class="act-label">${zoneJp(zone)}から移動</div>
      <div class="act-grid">
        <div class="act" onclick="pileMove(${p},'${zone}',${i},'hand')">手札へ</div>
-       <div class="act" onclick="pileMove(${p},'${zone}',${i},'mz','up','atk')">場（攻撃）</div>
-       <div class="act" onclick="pileMove(${p},'${zone}',${i},'mz','up','def')">場（守備）</div>
        <div class="act" onclick="pileMove(${p},'${zone}',${i},'sz','up')">魔法罠へ</div>
        <div class="act" onclick="pileMove(${p},'${zone}',${i},'grave')">墓地へ</div>
        <div class="act" onclick="pileMove(${p},'${zone}',${i},'banish')">除外へ</div>
+       <div class="act" onclick="pileMove(${p},'${zone}',${i},'deck')">デッキトップへ</div>
      </div>
      <button class="close" onclick="openPile(${p},'${zone}')">戻る</button>`;
 }
@@ -1356,8 +2601,129 @@ function pileMove(p,zone,i,to,face,pos){
    デッキ読込（「カード名 x3」テキスト）
    ========================================================================= */
 /* =========================================================================
-   デッキ読込 — ①デッキビルダーの保存デッキ ②テキスト貼り付け
+   テストプレイ用デッキ
+   デッキを読み込まずにすぐ回せるようにするためのサンプル。
+   1103環境らしい構成で、効果が自動処理できるカードを多めに入れている。
+   カードデータに無い名前は自動的に読み飛ばすので、ダミーDBでも動く。
    ========================================================================= */
+const TEST_DECK = {
+  name: "テストプレイ用（1103スタンダード）",
+  cards: [
+    // ---- 展開/初動モンスター ----
+    {n:"E・HERO エアーマン", q:3},      // 召喚時サーチ（自動処理）
+    {n:"終末の騎士", q:3},              // 闇を落とす（自動処理）
+    {n:"ダーク・グレファー", q:2},      // 手札コスト＋落とし（自動処理）
+    {n:"サイバー・ドラゴン", q:3},      // 1103の基本アタッカー
+    {n:"混沌の黒魔術師", q:0},          // （未収録なら無視される）
+    {n:"馬頭鬼", q:2},                  // 墓地から蘇生（自動処理）
+    {n:"ゾンビキャリア", q:1},           // チューナー
+    {n:"グローアップ・バルブ", q:1},     // チューナー
+    {n:"クレボンス", q:2},               // レベル2チューナー
+    {n:"ジャンク・シンクロン", q:2},     // レベル3チューナー
+    // ---- 汎用魔法 ----
+    {n:"死者蘇生", q:1},
+    {n:"サンダー・ボルト", q:1},
+    {n:"ブラック・ホール", q:1},
+    {n:"大嵐", q:1},
+    {n:"強欲な壺", q:1},
+    {n:"天使の施し", q:1},
+    {n:"貪欲な壺", q:1},
+    {n:"early", q:0},                   // プレースホルダ（存在しないので無視される）
+    {n:"早すぎた埋葬", q:1},
+    {n:"サイクロン", q:2},
+    {n:"月の書", q:2},
+    // ---- 罠 ----
+    {n:"激流葬", q:2},
+    {n:"聖なるバリア －ミラーフォース－", q:2},
+    {n:"奈落の落とし穴", q:1},
+    {n:"次元幽閉", q:1},
+    {n:"強制脱出装置", q:1},
+    {n:"リビングデッドの呼び声", q:2},
+  ],
+  // ---- エクストラデッキ（1103はシンクロ主体）----
+  ex: [
+    {n:"氷結界の龍 ブリューナク", q:1},
+    {n:"ブラック・ローズ・ドラゴン", q:1},
+    {n:"スターダスト・ドラゴン", q:1},
+    {n:"大地の騎士ガイアナイト", q:1},
+    {n:"氷結界の龍 トリシューラ", q:1},
+    {n:"ゴヨウ・ガーディアン", q:1},
+    {n:"A・O・J カタストル", q:1},
+    {n:"魔轟神獣ケルベラル", q:0},
+    {n:"氷結界の虎王ドゥローレン", q:1},
+    {n:"甲虫装機 ダンセル", q:0},
+    {n:"No.39 希望皇ホープ", q:1},
+    {n:"マジカル・アンドロイド", q:1},
+  ]
+};
+
+/* テストデッキを組む。実データが無い名前は飛ばし、
+   40枚に満たない場合はカードデータから適当なカードで埋める。 */
+function buildTestDeck(){
+  const main=[], ex=[], miss=[];
+  TEST_DECK.cards.forEach(e=>{
+    if(!e.q) return;
+    const idx = findCardIndex(e.n);
+    if(idx<0){ miss.push(e.n); return; }
+    for(let i=0;i<e.q;i++){
+      const card = {id:idx, face:"down", pos:"atk"};
+      if(CARD_DB[idx].ex) ex.push(card); else main.push(card);
+    }
+  });
+  // EXデッキ（シンクロ・エクシーズ）
+  (TEST_DECK.ex||[]).forEach(e=>{
+    if(!e.q) return;
+    const idx = findCardIndex(e.n);
+    if(idx<0){ miss.push(e.n); return; }
+    for(let i=0;i<e.q;i++) ex.push({id:idx, face:"down", pos:"atk"});
+  });
+  // EXが空ならカードデータからシンクロを拾って入れる（お試し用）
+  if(!ex.length){
+    const syn = [];
+    CARD_DB.forEach((c,i)=>{
+      if(c && c.ex && syn.length<10 && (c.st||[]).indexOf('シンクロ')>=0) syn.push(i);
+    });
+    syn.forEach(i=>ex.push({id:i, face:"down", pos:"atk"}));
+  }
+  // 40枚に足りなければ通常モンスター等で補充（ダミーDB時のフォールバック）
+  if(main.length < 40){
+    const filler = [];
+    CARD_DB.forEach((c,i)=>{ if(c && !c.ex && filler.length<200) filler.push(i); });
+    let fi = 0;
+    while(main.length < 40 && filler.length){
+      main.push({id:filler[fi % filler.length], face:"down", pos:"atk"});
+      fi++;
+    }
+  }
+  return {main, ex, side:[], miss, violations:[]};
+}
+
+/* テストデッキで即開始（両プレイヤーに配って手札を引く）
+   1103は先攻ドローありなので、ドローフェイズから始める。 */
+function startTestDuel(bothSides, firstPlayer){
+  const parsed = buildTestDeck();
+  if(!parsed.main.length){ showToast("カードデータが読み込まれていません"); return; }
+  closeSheet();
+  act({type:"LOAD_DECK", player:0, deck:parsed.main.slice(), ex:parsed.ex.slice()});
+  act({type:"SHUFFLE", player:0});
+  act({type:"DRAW", player:0, n:5});
+  if(bothSides){
+    const p2 = buildTestDeck();
+    act({type:"LOAD_DECK", player:1, deck:p2.main, ex:p2.ex});
+    act({type:"SHUFFLE", player:1});
+    act({type:"DRAW", player:1, n:5});
+  }
+  // 先攻を設定してドローフェイズから開始
+  const fp = (firstPlayer===1) ? 1 : 0;
+  gameState.activePlayer = fp;
+  gameState.firstPlayer  = fp;
+  gameState.turn  = 1;
+  gameState.phase = "draw";
+  gameState.drawnThisTurn = false;
+  logIt(gameState, `<b>先攻：${nameOf(fp)}</b>（1103は先攻ドローあり）`);
+  render();
+  showToast(`テストデッキで開始（先攻：${nameOf(fp)}）`);
+}
 /* index.html(1103デッキビルダー) と同じ localStorage を読む。
    保存形式: key "deck1103:<名前>" → {name, cards:[{n,q}], side:[{n,q}], date}
    編集中デッキ: key "work1103:current" → 同形式 */
@@ -1417,14 +2783,20 @@ function openDeckLoad(tab){
     const decks = listSavedDecks();
     const work  = getWorkDeck();
     const ls    = LS();
+    // テストデッキは常に先頭に出す（読み込むものが無くてもすぐ回せる）
+    const testRow = `
+      <div class="dl-item test" onclick="startTestDuel(true)">
+        <span class="dl-nm">テストプレイ用デッキ<span class="dl-badge test">おためし</span></span>
+        <span class="dl-n">40枚<small>両者に配って開始</small></span>
+      </div>`;
     if(!ls){
-      body = `<div class="meta">この環境では保存デッキを読めません。「テキストから」をお使いください。</div>`;
+      body = testRow + `<div class="meta" style="margin-top:10px">この環境では保存デッキを読めません。「テキストから」もお使いいただけます。</div>`;
     } else if(!decks.length && !work){
-      body = `<div class="meta">保存されたデッキがありません。<br>
-        デッキビルダー（index.html）で保存すると、ここに出ます。<br><br>
+      body = testRow + `<div class="meta" style="margin-top:10px">保存されたデッキがありません。<br>
+        デッキビルダー（index.html）で保存すると、ここに出ます。<br>
         <b style="color:var(--gold-hi)">同じブラウザ・同じサイト</b>で保存したデッキのみ読み込めます。</div>`;
     } else {
-      let rows = "";
+      let rows = testRow;
       if(work){
         const n = (work.cards||[]).reduce((s,e)=>s+(e.q||1),0);
         rows += `<div class="dl-item" onclick="loadSaved('__work__')">
@@ -1628,6 +3000,12 @@ function applyLoad(p, parsed, autostart){
   if(autostart){
     act({type:"SHUFFLE", player:p});
     act({type:"DRAW", player:p, n:5});
+    // 1103は先攻ドローあり。ドローフェイズから始める。
+    gameState.turn = 1;
+    gameState.phase = "draw";
+    gameState.drawnThisTurn = false;
+    gameState.firstPlayer = p;
+    gameState.activePlayer = p;
   }
   closeSheet();
   const missN = [...new Set(miss)].length;
