@@ -71,8 +71,39 @@ header .spacer{flex:1}
 }
 .phase-next:active{background:var(--surface-3)}
 
+/* ---------- guide strip（今やるべきこと）---------- */
+.guide{
+  flex:0 0 auto; display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  padding:7px 12px; border-bottom:1px solid var(--line);
+  background:linear-gradient(var(--bg-2),var(--surface));
+  min-height:36px;
+}
+.guide .g-phase{
+  font-family:"Shippori Mincho",serif; font-weight:800; font-size:13px;
+  color:var(--gold-ink); background:var(--gold); border:1px solid var(--gold-hi);
+  padding:3px 11px; border-radius:3px; letter-spacing:.06em; white-space:nowrap;
+}
+.guide .g-can{
+  font-size:10.5px; color:var(--gold-hi); border:1px solid var(--edge-dk);
+  padding:3px 9px; border-radius:11px; white-space:nowrap; background:rgba(201,162,75,0.06);
+}
+.guide .g-can.mute{color:var(--text-dim); border-color:var(--line); background:transparent}
+.guide .g-chainwarn{
+  margin-left:auto; font-size:11px; font-weight:700; color:#0d0a06;
+  background:var(--spell); padding:4px 11px; border-radius:12px; white-space:nowrap;
+  animation:pulse 1.1s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* header menu button */
+.hdr-btn{
+  width:34px;height:30px;border:1px solid var(--line-hi);border-radius:3px;
+  background:var(--surface-2);color:var(--gold-hi);font-size:17px;line-height:1;font-weight:700;
+}
+.hdr-btn:active{background:var(--surface-3)}
+
 /* ---------- board ---------- */
-.board{flex:1 1 auto; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:8px}
+.board{flex:1 1 auto; overflow-y:auto; padding:10px 10px 4px; display:flex; flex-direction:column; gap:8px}
 .side{
   border:1px solid var(--line); border-radius:4px; padding:8px 8px 10px;
   background:linear-gradient(var(--surface),var(--bg-2));
@@ -227,6 +258,150 @@ textarea{
 .tab-title{font-size:10px;letter-spacing:.2em;color:var(--text-dim);margin:2px 0 8px}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+
+/* ---------- このターンにやったこと ---------- */
+.turnlog{
+  flex:0 0 auto; display:flex; gap:5px; align-items:center; overflow-x:auto;
+  padding:6px 12px; border-top:1px solid var(--line); background:var(--bg);
+  min-height:34px;
+}
+.turnlog .tl-lab{font-size:9px;letter-spacing:.16em;color:var(--text-dim);white-space:nowrap;flex:0 0 auto}
+.turnlog .tl-chip{
+  flex:0 0 auto; font-size:10.5px; color:var(--ink); background:var(--surface-2);
+  border:1px solid var(--line); border-radius:11px; padding:3px 10px; white-space:nowrap;
+}
+.turnlog .tl-empty{font-size:10px;color:var(--text-dim)}
+
+/* ---------- collapsible log ---------- */
+.logwrap{flex:0 0 auto;border-top:1px solid var(--line);background:var(--bg)}
+.log-toggle{
+  width:100%; text-align:left; padding:6px 12px; font-size:10.5px; letter-spacing:.06em;
+  color:var(--text-dim); background:transparent; border:none; border-bottom:1px solid transparent;
+}
+.log-toggle:active{color:var(--gold-hi)}
+.log{max-height:120px}
+
+/* ---------- 下部固定ドック ---------- */
+.dock{
+  flex:0 0 auto; border-top:1px solid var(--line-hi);
+  background:linear-gradient(var(--surface),var(--bg-2));
+  padding:7px 10px calc(7px + env(safe-area-inset-bottom,0));
+  display:flex; flex-direction:column; gap:7px;
+  box-shadow:0 -6px 18px rgba(0,0,0,0.35);
+}
+.dock-phase{display:flex; align-items:stretch; gap:6px}
+.dock-actions{display:flex; align-items:stretch; gap:6px}
+
+/* フェーズ行：戻る / 現在フェーズ表示 / 進む */
+.d-prev,.d-next{
+  flex:0 0 auto; min-width:56px; padding:11px 12px; border-radius:5px; font-size:12px; font-weight:700;
+  border:1px solid var(--line-hi); background:var(--surface-2); color:var(--ink);
+  display:flex; align-items:center; justify-content:center; letter-spacing:.03em;
+}
+.d-prev:active,.d-next:active{background:var(--surface-3)}
+.d-next.primary{
+  flex:1 1 auto; background:var(--gold); color:var(--gold-ink); border-color:var(--gold-hi);
+  font-size:14px; font-weight:800; letter-spacing:.05em; min-height:48px;
+  box-shadow:0 0 14px rgba(201,162,75,0.2);
+}
+.d-next.endturn{background:var(--surface-2);color:var(--gold-hi);border-color:var(--line-hi)}
+.d-phase-cur{
+  flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  border:1px solid var(--line); border-radius:5px; background:rgba(201,162,75,0.05);
+  padding:4px 8px; min-width:0;
+}
+.d-phase-cur .cur{font-family:"Shippori Mincho",serif;font-weight:800;font-size:14px;color:var(--gold-hi);letter-spacing:.06em}
+.d-phase-cur .nxt{font-size:9px;color:var(--text-dim);letter-spacing:.06em;margin-top:1px}
+
+/* アクション行 */
+.d-act{
+  flex:1 1 0; min-width:0; padding:11px 6px; border-radius:5px; font-size:12px; font-weight:700;
+  border:1px solid var(--line); background:var(--surface-2); color:var(--ink);
+  display:flex; align-items:center; justify-content:center; gap:4px; min-height:46px; letter-spacing:.02em;
+}
+.d-act:active{background:var(--surface-3)}
+.d-act.gold{background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi)}
+.d-act.undo{color:var(--gold-hi);border-color:var(--line-hi)}
+.d-act:disabled{opacity:.34}
+.d-act .kb{font-size:10px;font-weight:800;padding:1px 6px;border-radius:9px;background:var(--spell);color:#0d0a06}
+
+/* チェーン解決の強調表示 */
+.chain-link.resolving{border-color:var(--spell);box-shadow:0 0 12px rgba(53,176,142,0.3);background:rgba(53,176,142,0.08)}
+.chain-next-hint{
+  font-size:12px;font-weight:700;color:var(--spell);text-align:center;
+  padding:8px;margin:2px 0 8px;border:1px dashed var(--spell);border-radius:5px;background:rgba(53,176,142,0.06);
+}
+.chain-link .cl-tag{font-size:9px;color:var(--text-dim);letter-spacing:.04em;margin-left:4px}
+
+/* battle step sheet */
+.bt-row{display:flex;align-items:center;justify-content:center;gap:10px;margin:6px 0 12px;
+  font-family:"Shippori Mincho",serif;font-size:15px}
+.bt-row .vs{color:var(--text-dim);font-size:12px}
+.bt-row .a-atk{color:var(--mon-effect);font-weight:800}
+.bt-row .a-def{color:var(--spell);font-weight:800}
+.bt-outcome{font-size:12px;text-align:center;color:var(--gold-hi);margin-bottom:10px}
+
+/* ---------- LP 計算機 ---------- */
+.lp-val{border:none;background:transparent;padding:2px 4px;border-radius:3px}
+.lp-val:active{background:var(--surface-3)}
+.lp-now{font-size:11.5px;color:var(--text-dim);margin-bottom:10px}
+.lp-now b{color:var(--gold-hi);font-size:14px;font-family:"Shippori Mincho",serif}
+.lp-prev{color:var(--forbidden);font-weight:700}
+.lp-prev.up{color:var(--spell)}
+.lp-display{
+  font-family:"Shippori Mincho",serif;font-weight:800;font-size:30px;text-align:right;
+  padding:10px 14px;border:1px solid var(--line-hi);border-radius:6px;
+  background:rgba(0,0,0,0.3);color:var(--gold-hi);margin-bottom:10px;letter-spacing:.04em;
+}
+.lp-quickrow{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.lp-quick{
+  flex:1 1 auto;min-width:56px;padding:8px 4px;font-size:12px;font-weight:700;
+  border:1px solid var(--line);border-radius:4px;background:var(--surface-2);color:var(--ink);
+}
+.lp-quick:active{background:var(--surface-3)}
+.lp-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.lp-key{
+  padding:15px 4px;font-size:18px;font-weight:700;font-family:"Shippori Mincho",serif;
+  border:1px solid var(--line);border-radius:5px;background:var(--surface-2);color:var(--ink);
+}
+.lp-key:active{background:var(--surface-3)}
+.lp-ops{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px}
+.lp-op{
+  padding:15px 8px;font-size:14px;font-weight:800;border-radius:6px;letter-spacing:.04em;
+  border:1px solid var(--line-hi);
+}
+.lp-op.dmg{background:var(--forbidden);color:#1a0b09;border-color:var(--forbidden)}
+.lp-op.heal{background:var(--spell);color:#07130f;border-color:var(--spell)}
+.lp-op:active{filter:brightness(.88)}
+
+/* ---------- デッキ読込 ---------- */
+.dl-tabs{display:flex;gap:6px;margin-bottom:12px}
+.dl-tab{
+  flex:1 1 0;padding:10px 8px;font-size:12.5px;font-weight:700;border-radius:5px;
+  border:1px solid var(--line);background:transparent;color:var(--text-dim);
+}
+.dl-tab.on{background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi)}
+.dl-list{display:flex;flex-direction:column;gap:6px;max-height:46dvh;overflow-y:auto}
+.dl-item{
+  display:flex;align-items:center;gap:10px;padding:13px 12px;border-radius:5px;
+  border:1px solid var(--line);background:var(--surface-2);min-height:48px;
+}
+.dl-item:active{background:var(--surface-3)}
+.dl-nm{flex:1;min-width:0;font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl-badge{margin-left:7px;font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;
+  background:var(--spell);color:#0d0a06;letter-spacing:.04em}
+.dl-n{font-size:11px;color:var(--gold-hi);white-space:nowrap;text-align:right}
+.dl-n small{display:block;font-size:9px;color:var(--text-dim)}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:118px;transform:translateX(-50%) translateY(8px);
+  background:var(--surface-3);color:var(--ink);border:1px solid var(--line-hi);
+  padding:10px 18px;border-radius:20px;font-size:12.5px;font-weight:600;z-index:60;
+  opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;max-width:88vw;text-align:center;
+  box-shadow:0 6px 20px rgba(0,0,0,.45);
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -234,12 +409,17 @@ textarea{
 <header>
   <div class="brand">決闘盤<small>DUEL FIELD · 1103</small></div>
   <div class="spacer"></div>
+  <button class="hdr-btn" id="menuBtn" onclick="openMenu()" title="メニュー">≡</button>
   <div class="turn-flag" id="turnFlag">手番 <b>—</b></div>
 </header>
 
-<div class="phases" id="phases"></div>
+<!-- guide strip: 今やるべきこと -->
+<div class="guide" id="guide"></div>
 
 <div class="board" id="board"></div>
+
+<!-- このターンにやったこと -->
+<div class="turnlog" id="turnlog"></div>
 
 <div class="handbar">
   <div class="hand-head">
@@ -250,9 +430,19 @@ textarea{
   <div class="hand" id="hand"></div>
 </div>
 
-<div class="controls" id="controls"></div>
+<!-- collapsible full log -->
+<div class="logwrap" id="logwrap">
+  <button class="log-toggle" id="logToggle" onclick="toggleLog()">ログを開く ▾</button>
+  <div class="log" id="log" hidden></div>
+</div>
 
-<div class="log" id="log"></div>
+<!-- ===== 下部固定ドック（親指ゾーン）===== -->
+<div class="dock" id="dock">
+  <!-- 上段：フェーズ操作 -->
+  <div class="dock-phase" id="dockPhase"></div>
+  <!-- 下段：頻用アクション -->
+  <div class="dock-actions" id="dockActions"></div>
+</div>
 
 <!-- action modal -->
 <div class="veil" id="veil"><div class="sheet" id="sheet"></div></div>
@@ -465,45 +655,95 @@ function render(){
   const gs = gameState;
   const view = gs.activePlayer;          // 手番プレイヤー視点
   const opp  = view===0?1:0;
+  const P = gs.players[view];
+  const curIdx = PHASES.findIndex(x=>x.id===gs.phase);
+  const chN = gs.chain.length;
 
   document.getElementById("turnFlag").innerHTML =
-    `ターン ${gs.turn} · 手番 <b>${nameOf(view)}</b>`;
+    `T${gs.turn} · <b>${nameOf(view)}</b>`;
 
-  // phases: past phases dimmed-gold, current highlighted, plus advance button
-  const curIdx = PHASES.findIndex(x=>x.id===gs.phase);
-  const atEnd = gs.phase === "end";
-  document.getElementById("phases").innerHTML = PHASES.map((ph,idx)=>{
-    const cls = ph.id===gs.phase ? "on" : (idx<curIdx ? "done" : "");
-    return `<button class="phase ${cls}" onclick="doPhase('${ph.id}')">${ph.jp}</button>`;
-  }).join("") +
-  (atEnd
-    ? `<button class="phase-next" onclick="doPass()">ターン終了 ⇄</button>`
-    : `<button class="phase-next" onclick="doPhaseNext()">次へ ▸</button>`);
+  /* ===== guide strip：今のフェーズ＋できること ===== */
+  document.getElementById("guide").innerHTML = guideHTML(gs, view, curIdx, chN);
 
-  // board: 相手を上、手番を下
+  /* ===== board：相手を上、手番を下 ===== */
   document.getElementById("board").innerHTML =
     sideHTML(opp, true) + sideHTML(view, false);
 
-  // hand（手番のみ表向き）
-  const P = gs.players[view];
+  /* ===== hand（手番のみ表向き） ===== */
   document.getElementById("handWho").textContent = `${nameOf(view)} の手札`;
-  document.getElementById("handCnt").textContent = `${P.hand.length}枚 / デッキ${P.deck.length}`;
+  document.getElementById("handCnt").textContent = `${P.hand.length}枚 / 山${P.deck.length}`;
   document.getElementById("hand").innerHTML = P.hand.map((c,i)=>
     cardHTML(c, "hcard", `openHand(${i})`, true)
-  ).join("") || `<div style="color:var(--text-dim);font-size:11px;padding:8px">手札なし — 下の「デッキ読込」から開始</div>`;
+  ).join("") || `<div style="color:var(--text-dim);font-size:11px;padding:8px">手札なし — 右上「≡」→デッキ読込で開始</div>`;
 
-  // controls
-  const chN = gs.chain.length;
-  document.getElementById("controls").innerHTML = `
-    <button class="btn gold" onclick="doDraw()">ドロー</button>
-    <button class="btn ${chN?'':'ghost'}" onclick="openChain()">チェーン${chN?`<span class="chain-badge">${chN}</span>`:""}</button>
-    <button class="btn" onclick="openDeckLoad()">デッキ読込</button>
-    <button class="btn ghost" onclick="doShuffle()">シャッフル</button>
-    <button class="btn ghost" onclick="openPile(${view},'deck')">デッキ操作</button>
-  `;
+  /* ===== このターンにやったこと ===== */
+  const tl = document.getElementById("turnlog");
+  tl.innerHTML = `<span class="tl-lab">このターン</span>` +
+    (turnActions.length
+      ? turnActions.slice(-12).map(c=>`<span class="tl-chip">${c}</span>`).join("")
+      : `<span class="tl-empty">まだ操作なし</span>`);
 
-  // log
+  /* ===== full log ===== */
   document.getElementById("log").innerHTML = gs.log.map(l=>`<div class="li">${l.msg}</div>`).join("");
+
+  /* ===== 下部ドック ===== */
+  renderDock(gs, curIdx, chN);
+}
+
+/* ---- guide strip HTML ---- */
+function guideHTML(gs, view, curIdx, chN){
+  const P = gs.players[view];
+  const loaded = P.deck.length>0 || P.hand.length>0;
+  const phase = gs.phase;
+  const cans = [];
+  const canNormal = (phase==="main1"||phase==="main2");
+  if(!loaded){
+    cans.push(`<span class="g-can">右上「≡」→デッキ読込</span>`);
+  } else {
+    if(phase==="draw")    cans.push(`<span class="g-can">ドロー可</span>`);
+    if(canNormal){
+      cans.push(`<span class="g-can">通常召喚/セット</span>`);
+      cans.push(`<span class="g-can">魔法罠 発動/セット</span>`);
+    }
+    if(phase==="battle"){
+      const canAtk = P.mz.some(c=>c && c.face==='up' && c.pos==='atk');
+      cans.push(`<span class="g-can ${canAtk?'':'mute'}">攻撃宣言${canAtk?'':'（表側攻撃なし）'}</span>`);
+    }
+    if(phase==="end") cans.push(`<span class="g-can">手札7枚調整→ターン終了</span>`);
+    cans.push(`<span class="g-can mute">効果発動</span>`);
+  }
+  const chainWarn = chN
+    ? `<span class="g-chainwarn">チェーン ${chN} 解決待ち</span>` : "";
+  return `<span class="g-phase">${phaseJp(phase)}</span>${cans.join("")}${chainWarn}`;
+}
+
+/* ---- 下部ドック HTML ---- */
+function renderDock(gs, curIdx, chN){
+  const atEnd = gs.phase==="end";
+  const nextPh = curIdx < PHASES.length-1 ? PHASES[curIdx+1].jp : null;
+  const prevDisabled = curIdx<=0;
+
+  // 上段：フェーズ戻る / 現在 / 進む
+  const phaseRow = `
+    <button class="d-prev" onclick="doPhasePrev()" ${prevDisabled?'disabled':''}>◂ 戻</button>
+    <div class="d-phase-cur">
+      <span class="cur">${phaseJp(gs.phase)}</span>
+      ${nextPh?`<span class="nxt">次 → ${nextPh}</span>`:`<span class="nxt">ターンを渡す</span>`}
+    </div>
+    ${atEnd
+      ? `<button class="d-next endturn" onclick="doPass()">ターン終了 ⇄</button>`
+      : `<button class="d-next primary" onclick="doPhaseNext()">次へ ▸</button>`}`;
+
+  // 下段：頻用アクション（ドロー / 召喚→手札を開く導線 / チェーン / 1つ戻す）
+  const canUndo = HISTORY.length>0;
+  const actRow = `
+    <button class="d-act gold" onclick="doDraw()">ドロー</button>
+    <button class="d-act" onclick="focusHandHint()">手札</button>
+    <button class="d-act" onclick="openChain()">チェーン${chN?`<span class="kb">${chN}</span>`:""}</button>
+    <button class="d-act undo" onclick="undo()" ${canUndo?'':'disabled'}>↺ 戻す</button>`;
+
+  document.getElementById("dockPhase").innerHTML = phaseRow;
+  document.getElementById("dockActions").innerHTML = actRow;
 }
 
 function sideHTML(p, isOpp){
@@ -518,7 +758,7 @@ function sideHTML(p, isOpp){
       <span class="side-tag">${isOpp?'相手':'手番'}</span>
       <div class="lp-box">
         <button class="lp-btn" onclick="lpAdj(${p},-500)">−</button>
-        <div class="lp-val ${lpLow?'low':''}">${P.lp}</div>
+        <button class="lp-val ${lpLow?'low':''}" onclick="openLP(${p})">${P.lp}</button>
         <button class="lp-btn" onclick="lpAdj(${p},500)">＋</button>
       </div>
     </div>
@@ -587,18 +827,216 @@ function cardHTML(c, extra, onclick, faceUp){
 /* =========================================================================
    UI アクション → applyAction → render のラッパ
    ========================================================================= */
-function act(a){ applyAction(gameState, a); render(); }
+/* ---- Undo（複数段階）＆ このターンにやったこと ---- */
+const HISTORY = [];              // 直前スナップショットのスタック
+const HISTORY_MAX = 40;
+let turnActions = [];            // このターンの短い履歴チップ
+
+/* SET_PHASE / PASS_TURN / SHUFFLE / LOAD_DECK はチップに出さない（ノイズ削減） */
+const CHIP_SKIP = new Set(["SET_PHASE","PASS_TURN","SHUFFLE","LOAD_DECK","CHAIN_CLEAR"]);
+
+function snapshot(){
+  // 構造が単純なので JSON でディープコピー（DBは別なので安全）
+  HISTORY.push(JSON.stringify(gameState));
+  if(HISTORY.length>HISTORY_MAX) HISTORY.shift();
+}
+function act(a){
+  snapshot();
+  const beforeTurn = gameState.turn;
+  applyAction(gameState, a);
+  // ターンが変わったらチップ履歴をリセット
+  if(gameState.turn !== beforeTurn) turnActions = [];
+  const chip = chipFor(a);
+  if(chip) turnActions.push(chip);
+  render();
+}
+function undo(){
+  if(!HISTORY.length) return;
+  gameState = JSON.parse(HISTORY.pop());
+  // チップは厳密復元が難しいので直近1つを削るだけ（実用上これで十分）
+  turnActions.pop();
+  render();
+}
+/* action を短い日本語チップに変換（このターンにやったこと用） */
+function chipFor(a){
+  if(CHIP_SKIP.has(a.type)) return null;
+  const P = gameState.players[a.player ?? gameState.activePlayer];
+  const nm = (c)=> c ? (CARD_DB[c.id]?.n || "カード") : "カード";
+  switch(a.type){
+    case "DRAW": return `ドロー${(a.n??1)>1?`×${a.n}`:""}`;
+    case "LP":   return `LP${a.delta>0?"+":""}${a.delta}`;
+    case "MOVE": {
+      const to = a.to;
+      const label = {mz:"召喚/特殊",sz:"魔法罠",field:"フィールド",grave:"墓地",banish:"除外",hand:"手札戻し",deck:"デッキ戻し",ex:"EX"}[to]||to;
+      const faceTag = a.face==='down' ? "セット" : label;
+      return faceTag;
+    }
+    case "FLIP": return "反転";
+    case "TOGGLE_POS": return "表示形式変更";
+    case "ATTACK": return a.target==='direct' ? "直接攻撃" : "攻撃宣言";
+    case "CHAIN_ADD": return `${a.name}発動`;
+    case "CHAIN_RESOLVE_TOP": return "チェーン解決";
+    default: return null;
+  }
+}
 
 function doPhase(id){ act({type:"SET_PHASE", phase:id}); }
 function doPhaseNext(){
   const i = PHASES.findIndex(x=>x.id===gameState.phase);
   if(i < PHASES.length-1) act({type:"SET_PHASE", phase:PHASES[i+1].id});
 }
+function doPhasePrev(){
+  const i = PHASES.findIndex(x=>x.id===gameState.phase);
+  if(i > 0) act({type:"SET_PHASE", phase:PHASES[i-1].id});
+}
 function doPass(){ act({type:"PASS_TURN"}); }
 function doDraw(){ act({type:"DRAW", n:1}); }
 function doShuffle(){ act({type:"SHUFFLE"}); }
 function doLP(d){ act({type:"LP", player:gameState.activePlayer, delta:d}); }
 function lpAdj(p,d){ act({type:"LP", player:p, delta:d}); }
+
+/* ================= ライフ計算機 =================
+   LP値をタップして開く。数値入力＋よく使う値、半分/倍（1103は「LPを半分払って」が多い）。 */
+let LP_TARGET = 0;
+let LP_INPUT  = "";
+function openLP(p){
+  LP_TARGET = p; LP_INPUT = "";
+  renderLP();
+}
+function renderLP(){
+  const p = LP_TARGET;
+  const P = gameState.players[p];
+  const cur = P.lp;
+  const val = parseInt(LP_INPUT||"0",10);
+  const after刻 = (d)=> Math.max(0, cur + d);
+  const keys = ["7","8","9","4","5","6","1","2","3","00","0","←"];
+  const keyHTML = keys.map(k=>
+    `<button class="lp-key" onclick="lpKey('${k}')">${k}</button>`
+  ).join("");
+  const quick = [100,200,300,500,800,1000,1500,2000,2500,3000]
+    .map(n=>`<button class="lp-quick" onclick="lpSet(${n})">${n}</button>`).join("");
+
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">${nameOf(p)} のライフ</h3>
+    <div class="lp-now">現在 <b>${cur}</b>${LP_INPUT?` → <span class="lp-prev">${after刻(-val)}</span> / <span class="lp-prev up">${after刻(val)}</span>`:""}</div>
+
+    <div class="lp-display">${LP_INPUT||"0"}</div>
+
+    <div class="lp-quickrow">${quick}</div>
+
+    <div class="lp-pad">${keyHTML}</div>
+
+    <div class="lp-ops">
+      <button class="lp-op dmg" onclick="lpApply(-1)">− ダメージ</button>
+      <button class="lp-op heal" onclick="lpApply(1)">＋ 回復</button>
+    </div>
+    <div class="act-label">よく使う</div>
+    <div class="act-grid">
+      <div class="act" onclick="lpHalf()">LPを半分にする</div>
+      <div class="act" onclick="lpSetExact()">この値ちょうどにする</div>
+    </div>
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+function lpKey(k){
+  if(k==="←"){ LP_INPUT = LP_INPUT.slice(0,-1); }
+  else if(LP_INPUT.length < 5){ LP_INPUT = (LP_INPUT==="0"?"":LP_INPUT) + k; }
+  renderLP();
+}
+function lpSet(n){ LP_INPUT = String(n); renderLP(); }
+function lpApply(sign){
+  const v = parseInt(LP_INPUT||"0",10);
+  if(!v){ showToast("数値を入力してください"); return; }
+  act({type:"LP", player:LP_TARGET, delta: sign*v});
+  LP_INPUT = "";
+  closeSheet();
+}
+function lpHalf(){
+  const P = gameState.players[LP_TARGET];
+  const half = Math.floor(P.lp/2);      // 端数切り捨て（払う側）
+  act({type:"LP", player:LP_TARGET, delta: -(P.lp-half)});
+  closeSheet();
+}
+function lpSetExact(){
+  const v = parseInt(LP_INPUT||"",10);
+  if(isNaN(v)){ showToast("数値を入力してください"); return; }
+  const P = gameState.players[LP_TARGET];
+  act({type:"LP", player:LP_TARGET, delta: v - P.lp});
+  LP_INPUT = "";
+  closeSheet();
+}
+
+/* 手札へ視線誘導（軽いフラッシュ） */
+function focusHandHint(){
+  const el = document.getElementById("hand");
+  if(!el) return;
+  el.scrollIntoView({behavior:"smooth", block:"nearest"});
+  el.animate?.([{boxShadow:"inset 0 0 0 2px var(--gold-hi)"},{boxShadow:"inset 0 0 0 0 transparent"}],{duration:700});
+}
+
+/* ログ折りたたみ */
+let LOG_OPEN = false;
+function toggleLog(){
+  LOG_OPEN = !LOG_OPEN;
+  document.getElementById("log").hidden = !LOG_OPEN;
+  document.getElementById("logToggle").textContent = LOG_OPEN ? "ログを閉じる ▴" : "ログを開く ▾";
+}
+
+/* ハンバーガーメニュー（たまに使う操作） */
+function openMenu(){
+  const p = gameState.activePlayer;
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:10px">メニュー</h3>
+    <div class="act-label">デッキ</div>
+    <div class="act-grid">
+      <div class="act" onclick="openDeckLoad('saved')">保存デッキから</div>
+      <div class="act" onclick="openDeckLoad('text')">テキストから</div>
+      <div class="act" onclick="doShuffle();closeSheet()">シャッフル</div>
+      <div class="act" onclick="closeSheet();openPile(${p},'deck')">デッキ操作</div>
+      <div class="act" onclick="drawN()">まとめてドロー</div>
+      <div class="act" onclick="openLP(${gameState.activePlayer})">ライフ計算機</div>
+    </div>
+    <div class="meta" style="margin:10px 2px 0;font-size:10.5px">
+      カードデータ：<b style="color:${DB_SOURCE==='dummy'?'var(--forbidden)':'var(--gold-hi)'}">${CARD_DB.length}種（${DB_SOURCE==='dummy'?'お試し用':DB_SOURCE}）</b>
+    </div>
+    <div class="act-label">初手</div>
+    <div class="act-grid">
+      <div class="act" onclick="redrawHand()">初手を引き直す</div>
+      <div class="act" onclick="closeSheet();openPile(${p},'grave')">墓地を見る</div>
+    </div>
+    <div class="act-label">盤面</div>
+    <div class="act-grid wide">
+      <div class="act warn" onclick="if(confirm('盤面を全てリセットします。よろしいですか？')){doReset();}">盤面をリセット</div>
+    </div>
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+function drawN(){
+  const n = parseInt(prompt("何枚ドローしますか？","5")||"0",10);
+  if(n>0){ act({type:"DRAW", n}); }
+  closeSheet();
+}
+function doReset(){
+  snapshot();
+  gameState = newGame();
+  turnActions = [];
+  logIt(gameState, "盤面をリセット");
+  render(); closeSheet();
+}
+/* 初手引き直し：手札を山に戻す→シャッフル→5枚 */
+function redrawHand(){
+  const p = gameState.activePlayer;
+  const P = gameState.players[p];
+  if(!P.hand.length && !P.deck.length){ alert("先にデッキを読み込んでください"); return; }
+  snapshot();
+  // 手札を山へ戻す
+  while(P.hand.length){ P.deck.push(P.hand.shift()); }
+  applyAction(gameState, {type:"SHUFFLE", player:p});
+  applyAction(gameState, {type:"DRAW", player:p, n:5});
+  turnActions = [];
+  logIt(gameState, `${nameOf(p)}：初手を引き直し`);
+  render(); closeSheet();
+}
 
 /* ---- モーダル ---- */
 const veil = document.getElementById("veil");
@@ -731,26 +1169,43 @@ function zMove(p,zone,idx,to){
   closeSheet();
 }
 
-/* ================= 攻撃 ================= */
+/* ================= 攻撃（戦闘専用UI） ================= */
 function beginAttack(p, atkIdx){
   const oppP = gameState.players[p===0?1:0];
   const atkDB = CARD_DB[gameState.players[p].mz[atkIdx].id]||{};
+  const aATK = atkDB.atk||0;
   // 対象候補：相手モンスター（表側／裏側とも）＋直接攻撃（相手モンスターが0なら）
   let targets = "";
   oppP.mz.forEach((c,i)=>{
     const db=CARD_DB[c.id]||{};
     const faceUp = c.face==='up';
-    const shown = faceUp ? `${db.n} (${c.pos==='def'?'守'+((db.def)||0):'攻'+((db.atk)||0)})` : "裏側のカード";
-    targets += `<div class="act" onclick="doAttack(${p},${atkIdx},${i})">${shown}</div>`;
+    let cmp="", name;
+    if(faceUp){
+      const defending = c.pos==='def';
+      const dVal = defending ? (db.def||0) : (db.atk||0);
+      name = `${db.n}`;
+      // 結果プレビュー
+      let out;
+      if(defending){
+        out = aATK>dVal ? "破壊" : aATK<dVal ? `反射${dVal-aATK}` : "変化なし";
+      } else {
+        out = aATK>dVal ? `破壊+${aATK-dVal}` : aATK<dVal ? `自壊-${dVal-aATK}` : "相打ち";
+      }
+      cmp = `<span style="font-size:10px;color:var(--text-dim)"> ${defending?'守':'攻'}${dVal} → <b style="color:var(--gold-hi)">${out}</b></span>`;
+    } else {
+      name = "裏側のカード";
+      cmp = `<span style="font-size:10px;color:var(--text-dim)"> 裏守備（要リバース処理）</span>`;
+    }
+    targets += `<div class="act" style="justify-content:flex-start;text-align:left" onclick="doAttack(${p},${atkIdx},${i})">${name}${cmp}</div>`;
   });
   const directOK = oppP.mz.length===0;
   const direct = directOK
-    ? `<div class="act" onclick="doAttack(${p},${atkIdx},'direct')">直接攻撃</div>`
-    : `<div class="act" style="opacity:.4">直接攻撃（相手モンスター有）</div>`;
+    ? `<div class="act" onclick="doAttack(${p},${atkIdx},'direct')">直接攻撃（${aATK}ダメージ）</div>`
+    : `<div class="act" style="opacity:.4">直接攻撃（相手モンスターがいる）</div>`;
   sheet.innerHTML = `<div class="grip"></div>
-    <h3 style="margin-bottom:4px">${atkDB.n} の攻撃</h3>
-    <div class="meta" style="margin-bottom:12px">攻撃力 ${atkDB.atk||0} / 対象を選択</div>
-    ${targets? `<div class="act-label">相手モンスターを攻撃</div><div class="act-grid">${targets}</div>`:""}
+    <div class="bt-row"><span class="a-atk">${atkDB.n}</span><span class="vs">攻 ${aATK} で攻撃</span></div>
+    <div class="meta" style="margin-bottom:10px;text-align:center">対象を選ぶと戦闘処理・ダメージまで自動反映します（1103準拠）</div>
+    ${targets? `<div class="act-label">相手モンスターへ</div><div class="act-grid wide">${targets}</div>`:""}
     <div class="act-label">プレイヤーへ</div><div class="act-grid">${direct}</div>
     <button class="close" onclick="closeSheet()">やめる</button>`;
   veil.classList.add("on");
@@ -800,38 +1255,57 @@ function chainAddFromHand(i){
   closeSheet();
   openChain();
 }
-/* チェーンパネル */
+/* チェーンパネル：積んだ順を見せ、逆順に1つずつ解決。
+   次に解決するリンク（＝一番上＝末尾）を強調し、次のアクションを明示する。 */
 function openChain(){
   const ch = gameState.chain;
   if(!ch.length){
     sheet.innerHTML = `<div class="grip"></div><h3>チェーン</h3>
-      <div class="act-label">現在チェーンは積まれていません</div>
-      <div class="meta" style="margin-bottom:12px">カードの「効果を発動（チェーンへ）」で積みます</div>
+      <div class="act-label">チェーンは積まれていません</div>
+      <div class="meta" style="margin-bottom:12px">場・手札のカードの「効果を発動（チェーンへ）」で積みます。<br>速攻魔法・罠は相手ターンでも積めます（スペルスピード判定あり）。</div>
       <button class="close" onclick="closeSheet()">閉じる</button>`;
     veil.classList.add("on"); return;
   }
-  // 上（最後に積んだ）から表示
+  const topIdx = ch.length-1;              // 次に解決するリンク
+  const topLink = ch[topIdx];
+
+  // チェーン1が下、最後に積んだリンクが上。次に解決するもの＝上を resolving 表示。
   let rows = "";
   for(let i=ch.length-1;i>=0;i--){
     const link = ch[i];
-    const isTop = i===ch.length-1;
-    rows += `<div class="chain-link ${isTop?'top':''}">
+    const resolving = i===topIdx;
+    const order = resolving ? "次に解決" : `${topIdx-i+1}番目に解決`;
+    rows += `<div class="chain-link ${resolving?'resolving':''}">
       <span class="cl-no">${i+1}</span>
       <span class="cl-nm">${link.name}</span>
       <span class="cl-ss">SS${link.ss}</span>
       <span class="cl-who">${nameOf(link.player)}</span>
+      <span class="cl-tag">${order}</span>
     </div>`;
   }
+
+  const nextHint = `<div class="chain-next-hint">▶ 次に解決：チェーン${topIdx+1}「${topLink.name}」<br><span style="font-size:10px;color:var(--text-dim);font-weight:400">効果は手動で処理してから下のボタンで解決</span></div>`;
+
   sheet.innerHTML = `<div class="grip"></div>
-    <h3 style="margin-bottom:8px">チェーン（${ch.length}）</h3>
+    <h3 style="margin-bottom:8px">チェーン処理（${ch.length}）</h3>
+    <div class="meta" style="margin-bottom:8px">チェーン1が最初に積まれた効果。解決は<b style="color:var(--gold-hi)">上（最後）から逆順</b>に1つずつ。</div>
     <div class="chain-list">${rows}</div>
-    <div class="act-label">解決（上から逆順）</div>
-    <div class="act-grid">
-      <div class="act" onclick="act({type:'CHAIN_RESOLVE_TOP'});openChain()">上を1つ解決</div>
-      <div class="act warn" onclick="act({type:'CHAIN_CLEAR'});closeSheet()">全てクリア</div>
+    ${nextHint}
+    <div class="act-grid wide">
+      <div class="act" style="background:var(--spell);color:#0d0a06;border-color:var(--spell)" onclick="resolveChainStep()">チェーン${topIdx+1}「${topLink.name}」を解決 ▸</div>
     </div>
-    <button class="close" onclick="closeSheet()">閉じる（保留）</button>`;
+    <div class="act-label">その他</div>
+    <div class="act-grid">
+      <div class="act" onclick="closeSheet()">保留（閉じる）</div>
+      <div class="act warn" onclick="if(confirm('チェーンを全て取り消します')){act({type:'CHAIN_CLEAR'});closeSheet();}">全て取消</div>
+    </div>`;
   veil.classList.add("on");
+}
+/* 1つ解決して、残りがあれば次の解決画面を続けて出す（テンポ重視） */
+function resolveChainStep(){
+  act({type:'CHAIN_RESOLVE_TOP'});
+  if(gameState.chain.length){ openChain(); }   // 続けて次を解決
+  else { closeSheet(); }                        // 全解決したら閉じる
 }
 
 /* 山札系（デッキ/墓地/除外/EX）を開く */
@@ -881,19 +1355,115 @@ function pileMove(p,zone,i,to,face,pos){
 /* =========================================================================
    デッキ読込（「カード名 x3」テキスト）
    ========================================================================= */
-function openDeckLoad(){
+/* =========================================================================
+   デッキ読込 — ①デッキビルダーの保存デッキ ②テキスト貼り付け
+   ========================================================================= */
+/* index.html(1103デッキビルダー) と同じ localStorage を読む。
+   保存形式: key "deck1103:<名前>" → {name, cards:[{n,q}], side:[{n,q}], date}
+   編集中デッキ: key "work1103:current" → 同形式 */
+const DECK_PREFIX = 'deck1103:';
+const WORK_KEY    = 'work1103:current';
+function LS(){ try{ return window.localStorage; }catch(e){ return null; } }
+
+function listSavedDecks(){
+  const out=[]; const ls=LS(); if(!ls) return out;
+  try{
+    for(let i=0;i<ls.length;i++){
+      const k=ls.key(i);
+      if(k && k.indexOf(DECK_PREFIX)===0){
+        try{ const d=JSON.parse(ls.getItem(k)); if(d && d.cards) out.push(d); }catch(e){}
+      }
+    }
+  }catch(e){}
+  out.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  return out;
+}
+function getWorkDeck(){
+  const ls=LS(); if(!ls) return null;
+  try{
+    const raw=ls.getItem(WORK_KEY); if(!raw) return null;
+    const d=JSON.parse(raw);
+    if(d && d.cards && d.cards.length) return d;
+  }catch(e){}
+  return null;
+}
+/* {cards:[{n,q}]} → 山札配列。保存デッキは既に1103上限が適用済みなのでそのまま採用 */
+function cardsToDeck(cards){
+  const main=[], ex=[], miss=[];
+  (cards||[]).forEach(e=>{
+    const idx = findCardIndex(e.n);
+    if(idx<0){ miss.push(e.n); return; }
+    const q = e.q||1;
+    for(let i=0;i<q;i++){
+      const card={id:idx, face:"down", pos:"atk"};
+      if(CARD_DB[idx].ex) ex.push(card); else main.push(card);
+    }
+  });
+  return {main, ex, side:[], miss, violations:[]};
+}
+
+let DECK_TAB = "saved";   // "saved" | "text"
+function openDeckLoad(tab){
+  if(tab) DECK_TAB = tab;
   const p = gameState.activePlayer;
-  sheet.innerHTML = `
-    <h3>${nameOf(p)} · デッキ読込</h3>
-    <div class="meta">既存デッキビルダーからコピペ。「カード名 x3」または「カード名」を1行ずつ。EXは自動でExtraへ振り分けます。</div>
-    <div class="sub">メイン / EX デッキリスト</div>
-    <textarea id="deckText" placeholder="サイバー・ドラゴン x3&#10;死者蘇生&#10;灰流うらら x3&#10;増殖するG x2"></textarea>
-    <div class="row2" style="margin-top:10px">
-      <button class="act" onclick="loadDeck(${p}, true)">読込＆シャッフル＆5枚ドロー</button>
-      <button class="act" onclick="loadDeck(${p}, false)">読込のみ</button>
-    </div>
+  const tabs = `
+    <div class="dl-tabs">
+      <button class="dl-tab ${DECK_TAB==='saved'?'on':''}" onclick="openDeckLoad('saved')">保存したデッキ</button>
+      <button class="dl-tab ${DECK_TAB==='text'?'on':''}" onclick="openDeckLoad('text')">テキストから</button>
+    </div>`;
+
+  let body = "";
+  if(DECK_TAB === "saved"){
+    const decks = listSavedDecks();
+    const work  = getWorkDeck();
+    const ls    = LS();
+    if(!ls){
+      body = `<div class="meta">この環境では保存デッキを読めません。「テキストから」をお使いください。</div>`;
+    } else if(!decks.length && !work){
+      body = `<div class="meta">保存されたデッキがありません。<br>
+        デッキビルダー（index.html）で保存すると、ここに出ます。<br><br>
+        <b style="color:var(--gold-hi)">同じブラウザ・同じサイト</b>で保存したデッキのみ読み込めます。</div>`;
+    } else {
+      let rows = "";
+      if(work){
+        const n = (work.cards||[]).reduce((s,e)=>s+(e.q||1),0);
+        rows += `<div class="dl-item" onclick="loadSaved('__work__')">
+          <span class="dl-nm">${work.name||'編集中のデッキ'}<span class="dl-badge">編集中</span></span>
+          <span class="dl-n">${n}枚</span></div>`;
+      }
+      decks.forEach((d,i)=>{
+        const n = (d.cards||[]).reduce((s,e)=>s+(e.q||1),0);
+        const dt = (d.date||'').slice(0,10);
+        rows += `<div class="dl-item" onclick="loadSaved(${i})">
+          <span class="dl-nm">${d.name||'無題'}</span>
+          <span class="dl-n">${n}枚<small>${dt}</small></span></div>`;
+      });
+      body = `<div class="dl-list">${rows}</div>
+        <div class="meta" style="margin-top:8px">タップすると読込→シャッフル→5枚ドローまで行います。</div>`;
+    }
+  } else {
+    body = `
+      <div class="meta">デッキビルダーの「テキスト」タブからコピーして貼り付け。見出し（■メインデッキ等）はそのままで大丈夫です。</div>
+      <textarea id="deckText" placeholder="# 我がデッキ&#10;■メインデッキ (40)&#10;[モンスター]&#10;サイバー・ドラゴン x3&#10;E・HERO エアーマン x1&#10;[魔法]&#10;サイクロン x2"></textarea>
+      <div class="row2" style="margin-top:10px">
+        <button class="act" onclick="loadDeck(${p}, true)">読込＆5枚ドロー</button>
+        <button class="act" onclick="loadDeck(${p}, false)">読込のみ</button>
+      </div>`;
+  }
+
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:10px">${nameOf(p)} · デッキ読込</h3>
+    ${tabs}${body}
     <button class="close" onclick="closeSheet()">閉じる</button>`;
   veil.classList.add("on");
+}
+/* 保存デッキを読み込む。i==='__work__' なら編集中デッキ */
+function loadSaved(i){
+  const p = gameState.activePlayer;
+  const d = (i==='__work__') ? getWorkDeck() : listSavedDecks()[i];
+  if(!d){ showToast("デッキが見つかりません"); return; }
+  const parsed = cardsToDeck(d.cards);
+  applyLoad(p, parsed, true);
 }
 /* 1103環境での同名カード上限（0/1/2/3枚）
    carddata.json の各カードが持つ lm キーを使う（lm:0=禁止,1=制限,2=準制限,無指定=無制限）。
@@ -905,28 +1475,108 @@ function deckLimit(name){
 }
 function limitLabel(lim){ return lim===0?"禁止":lim===1?"制限":lim===2?"準制限":""; }
 
-function parseDeckText(text){
-  const main=[], ex=[]; const miss=[];
-  const counts={};                 // name -> 採用枚数（上限適用後）
-  const violations=[];             // {name, requested, limit}
-  text.split(/\r?\n/).forEach(line=>{
-    line=line.trim(); if(!line) return;
-    const m = line.match(/^(.*?)(?:\s*[x×✕*]\s*(\d+))?$/i);
-    let name=(m[1]||"").trim(); let qty=parseInt(m[2]||"1",10);
-    name = name.replace(/\s+\d+$/,'').trim() || name;   // 末尾数字形式にも対応
-    const idx = CARD_DB.findIndex(c=>c.n===name);
-    if(idx<0){ miss.push(name); return; }
-    const lim = deckLimit(name);
-    const already = counts[name]||0;
-    const allowed = Math.max(0, Math.min(qty, lim - already));   // 上限までしか採用しない
-    if(allowed < qty){ violations.push({name, requested:qty+already, limit:lim}); }
-    counts[name] = already + allowed;
-    for(let i=0;i<allowed;i++){
+/* デッキテキスト解析
+   index.html の書き出し形式に対応:
+     # デッキ名
+     ■メインデッキ (40)
+     [モンスター]
+     サイバー・ドラゴン x3
+     ■エクストラ (15)
+     ■サイド (15)
+   加えて素朴な「カード名 x3」だけの羅列にも対応。
+   セクション見出し・装飾行はスキップし、■サイド以降はサイドとして分離する。 */
+
+/* 1行を {name, qty} に。カード行でなければ null */
+function parseDeckLine(line){
+  let s = line.trim();
+  if(!s) return null;
+  // コメント/見出し/セクション行を除外
+  if(/^#/.test(s)) return null;                    // # デッキ名
+  if(/^[■◆●▲【]/.test(s)) return null;             // ■メインデッキ (40)
+  if(/^\[.*\]$/.test(s)) return null;              // [モンスター]
+  if(/^-{2,}$/.test(s)) return null;               // 区切り線
+  if(/^(メインデッキ|エクストラ|サイド|main|extra|side)\b/i.test(s)) return null;
+  // 先頭の箇条書き記号を除去
+  s = s.replace(/^[・\-*\u2022]\s*/, '');
+  // 「3x カード名」形式
+  let m = s.match(/^(\d+)\s*[x×✕*]\s*(.+)$/i);
+  if(m) return { name: m[2].trim(), qty: parseInt(m[1],10) };
+  // 「カード名 x3」「カード名 ×3」「カード名 3」形式
+  m = s.match(/^(.*?)\s*(?:[x×✕*]\s*(\d+)|\s(\d+))\s*$/i);
+  if(m && (m[2]||m[3])){
+    const nm = (m[1]||"").trim();
+    if(nm) return { name: nm, qty: parseInt(m[2]||m[3],10) };
+  }
+  // 枚数指定なし = 1枚
+  return { name: s, qty: 1 };
+}
+
+/* テキスト → {main, ex, side, miss, violations}
+   enforceLimit=false なら1103上限を無視して指定枚数で採用 */
+function parseDeckText(text, enforceLimit){
+  if(enforceLimit === undefined) enforceLimit = true;
+  const main=[], ex=[], side=[], miss=[];
+  const counts={}; const violations=[];
+  let inSide = false;
+
+  text.split(/\r?\n/).forEach(raw=>{
+    const t = raw.trim();
+    // セクション切り替えを検出（■サイド 以降はサイドデッキ）
+    if(/^[■◆●【]?\s*サイド/.test(t) || /^\[?\s*side\b/i.test(t)){ inSide = true; return; }
+    if(/^[■◆●【]?\s*(メイン|main)/i.test(t)){ inSide = false; return; }
+    if(/^[■◆●【]?\s*(エクストラ|extra|EX)/i.test(t)){ inSide = false; return; }
+
+    const parsed = parseDeckLine(raw);
+    if(!parsed) return;
+    const idx = findCardIndex(parsed.name);
+    if(idx < 0){ miss.push(parsed.name); return; }
+
+    if(inSide){
+      // サイドはメインに混ぜない（1人回しでは未使用だが枚数だけ保持）
+      for(let i=0;i<parsed.qty;i++) side.push({id:idx, face:"down", pos:"atk"});
+      return;
+    }
+    let take = parsed.qty;
+    if(enforceLimit){
+      const lim = deckLimit(parsed.name);
+      const already = counts[parsed.name]||0;
+      take = Math.max(0, Math.min(parsed.qty, lim - already));
+      if(take < parsed.qty) violations.push({name:parsed.name, requested:parsed.qty+already, limit:lim});
+      counts[parsed.name] = already + take;
+    }
+    for(let i=0;i<take;i++){
       const card = {id:idx, face:"down", pos:"atk"};
       if(CARD_DB[idx].ex) ex.push(card); else main.push(card);
     }
   });
-  return {main, ex, miss, violations};
+  return {main, ex, side, miss, violations};
+}
+
+/* カード名の照合。完全一致 → 正規化一致 の順で探す。
+   全角/半角、長音・ハイフン類、空白の揺れを吸収する。 */
+let NAME_INDEX = null;
+function normName(s){
+  return String(s)
+    .replace(/[\u30fc\u2010-\u2015\u2212\uff0d\-]/g,'ー')  // 各種ハイフン→長音
+    .replace(/[\s\u3000]/g,'')                             // 空白除去
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)) // 全角英数→半角
+    .toLowerCase();
+}
+function buildNameIndex(){
+  NAME_INDEX = new Map();
+  CARD_DB.forEach((c,i)=>{
+    if(!c || !c.n) return;
+    if(!NAME_INDEX.has(c.n)) NAME_INDEX.set(c.n, i);
+    const k = normName(c.n);
+    if(!NAME_INDEX.has(k)) NAME_INDEX.set(k, i);
+  });
+}
+function findCardIndex(name){
+  if(!NAME_INDEX) buildNameIndex();
+  if(NAME_INDEX.has(name)) return NAME_INDEX.get(name);
+  const k = normName(name);
+  if(NAME_INDEX.has(k)) return NAME_INDEX.get(k);
+  return -1;
 }
 function loadDeck(p, autostart){
   const text = document.getElementById("deckText").value;
@@ -956,69 +1606,129 @@ function loadDeck(p, autostart){
 let PENDING_DECK = null;
 function finishLoad(p, autostart, enforce){
   const {text} = PENDING_DECK;
-  let parsed;
-  if(enforce){ parsed = parseDeckText(text); }
-  else {
-    // 上限を無視して全枚数を採用する版
-    parsed = parseDeckTextRaw(text);
-  }
+  const parsed = parseDeckText(text, enforce);
   applyLoad(p, parsed, autostart);
-}
-function parseDeckTextRaw(text){
-  const main=[], ex=[], miss=[];
-  text.split(/\r?\n/).forEach(line=>{
-    line=line.trim(); if(!line) return;
-    const m = line.match(/^(.*?)(?:\s*[x×✕*]\s*(\d+))?$/i);
-    let name=(m[1]||"").trim(); let qty=parseInt(m[2]||"1",10);
-    name = name.replace(/\s+\d+$/,'').trim() || name;
-    const idx = CARD_DB.findIndex(c=>c.n===name);
-    if(idx<0){ miss.push(name); return; }
-    for(let i=0;i<qty;i++){
-      const card={id:idx, face:"down", pos:"atk"};
-      if(CARD_DB[idx].ex) ex.push(card); else main.push(card);
-    }
-  });
-  return {main, ex, miss, violations:[]};
 }
 function applyLoad(p, parsed, autostart){
   const {main, ex, miss} = parsed;
-  if(!main.length && !ex.length){ alert("有効なカードがありません（ダミーDBは10種のみ）"); return; }
+  if(!main.length && !ex.length){
+    // 何も読めなかった理由を具体的に伝える
+    const why = miss.length
+      ? `カード名が ${CARD_DB.length}種のデータベースと一致しませんでした。\n\n例：\n・${[...new Set(miss)].slice(0,5).join("\n・")}`
+      : `カード行が見つかりませんでした。「カード名 x3」の形式で入力してください。`;
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:8px">読み込めませんでした</h3>
+      <div class="eff">${why.replace(/\n/g,"<br>")}</div>
+      <div class="meta" style="margin-bottom:10px">index.html の「テキスト」タブからコピーした内容をそのまま貼り付けられます。</div>
+      <button class="close" onclick="openDeckLoad()">戻る</button>`;
+    veil.classList.add("on");
+    return;
+  }
   act({type:"LOAD_DECK", player:p, deck:main, ex});
   if(autostart){
     act({type:"SHUFFLE", player:p});
     act({type:"DRAW", player:p, n:5});
   }
   closeSheet();
-  if(miss.length) setTimeout(()=>alert("見つからないカード:\n"+[...new Set(miss)].join("\n")),50);
+  const missN = [...new Set(miss)].length;
+  showToast(`メイン${main.length}枚 / EX${ex.length}枚 読込${missN?`（未一致${missN}種）`:""}`);
+  if(missN){
+    setTimeout(()=>{
+      sheet.innerHTML = `<div class="grip"></div>
+        <h3 style="margin-bottom:8px">読み込みました</h3>
+        <div class="meta" style="margin-bottom:8px">メイン${main.length}枚 / EX${ex.length}枚。<br>次の${missN}種はカードデータに見つからず、除外しました。</div>
+        <div class="eff">・${[...new Set(miss)].join("<br>・")}</div>
+        <button class="close" onclick="closeSheet()">閉じる</button>`;
+      veil.classList.add("on");
+    }, 60);
+  }
+}
+
+/* 軽量トースト */
+function showToast(msg){
+  let t = document.getElementById("toast");
+  if(!t){
+    t = document.createElement("div");
+    t.id = "toast"; t.className = "toast";
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(()=>t.classList.remove("on"), 2200);
 }
 
 /* =========================================================================
    起動
    ========================================================================= */
 /* カードデータは姉妹アプリ index.html の <script id="carddata"> から読み込む。
-   これによりデータはindex.html1箇所に集約され、更新時はindex.htmlだけ直せばよい
-   （carddata.json を別途用意する必要はない）。失敗時はダミーDBで継続。 */
-async function loadCardDataFromIndex(){
-  const res = await fetch('index.html');
-  if(!res.ok) throw new Error('index.html fetch失敗 ('+res.status+')');
-  const txt = await res.text();
-  // DOMParserで <script id="carddata" type="application/json"> の中身を取り出す
+   失敗時は carddata.json を試し、それも駄目ならダミーDBで継続する。
+   どのソースで動いているかは起動ログとメニューで確認できる。 */
+let DB_SOURCE = "dummy";
+function extractCarddata(txt){
   const doc = new DOMParser().parseFromString(txt, 'text/html');
   const el = doc.getElementById('carddata');
-  if(!el) throw new Error('index.html に id="carddata" が見つかりません');
-  const data = JSON.parse(el.textContent.trim());
-  if(!Array.isArray(data) || !data.length) throw new Error('カードデータが空です');
+  if(!el) return null;
+  const raw = (el.textContent||"").trim();
+  if(!raw) return null;
+  const data = JSON.parse(raw);
+  return (Array.isArray(data) && data.length) ? data : null;
+}
+async function loadCardDataFromIndex(){
+  const res = await fetch('index.html', {cache:'no-cache'});
+  if(!res.ok) throw new Error('index.html HTTP '+res.status);
+  const data = extractCarddata(await res.text());
+  if(!data) throw new Error('index.html に carddata が見つかりません');
+  return data;
+}
+async function loadCardDataFromJson(){
+  const res = await fetch('carddata.json', {cache:'no-cache'});
+  if(!res.ok) throw new Error('carddata.json HTTP '+res.status);
+  const data = await res.json();
+  if(!Array.isArray(data) || !data.length) throw new Error('carddata.json が空です');
   return data;
 }
 async function boot(){
+  const errors = [];
   try{
-    CARD_DB = await loadCardDataFromIndex();
-  }catch(e){
-    console.warn('index.htmlからのカード読込に失敗、ダミーDBで継続:', e);
+    // carddata.json を優先（index.html は現在この外部ファイルを読む構成）
+    CARD_DB = await loadCardDataFromJson(); DB_SOURCE = "carddata.json";
+  }catch(e1){
+    errors.push('carddata.json: '+e1.message);
+    try{
+      // 旧構成（index.html に carddata が埋め込まれている）にも対応
+      CARD_DB = await loadCardDataFromIndex(); DB_SOURCE = "index.html";
+    }catch(e2){
+      errors.push('index.html: '+e2.message);
+      CARD_DB = DUMMY_DB.slice(); DB_SOURCE = "dummy";
+    }
   }
+  NAME_INDEX = null;                 // 名前索引を再構築させる
   gameState = newGame();
-  logIt(gameState, `<b>決闘開始</b> — カード ${CARD_DB.length}種読込済。デッキを読み込んでください`);
+  turnActions = [];
+  if(DB_SOURCE === "dummy"){
+    logIt(gameState, `<b>注意</b> カードデータを読めませんでした（お試し用10種で動作中）`);
+    errors.forEach(m=>logIt(gameState, `　${m}`));
+  }else{
+    logIt(gameState, `<b>決闘開始</b> — ${CARD_DB.length}種読込（${DB_SOURCE}）。デッキを読み込んでください`);
+  }
   render();
+  if(DB_SOURCE === "dummy"){
+    setTimeout(()=>{
+      sheet.innerHTML = `<div class="grip"></div>
+        <h3 style="margin-bottom:8px">カードデータを読み込めませんでした</h3>
+        <div class="meta" style="margin-bottom:8px">
+          今はお試し用の10種だけで動いています。この状態ではデッキがほとんど読み込めません。</div>
+        <div class="eff">${errors.join('<br>')}</div>
+        <div class="meta" style="margin-top:8px">
+          battle.html は同じフォルダの <b>index.html</b>（または carddata.json）からカードを読みます。<br><br>
+          ・GitHub Pages など<b>サーバー経由</b>で開いてください<br>
+          ・ファイルを直接開く（file://）と読み込めません<br>
+          ・index.html と同じ場所に置いてください</div>
+        <button class="close" onclick="closeSheet()">閉じる</button>`;
+      veil.classList.add("on");
+    }, 300);
+  }
 }
 boot();
 </script>
