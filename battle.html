@@ -37,10 +37,26 @@ h1,h2,h3,.mincho{font-family:"Shippori Mincho",serif}
 button{font-family:inherit;color:inherit;cursor:pointer}
 
 /* ---------- top bar ---------- */
+/* ---------- 極小ステータスバー（常時表示はこれだけ） ---------- */
+.statusbar{
+  flex:0 0 auto; display:flex; align-items:center; gap:8px;
+  padding:4px 10px; border-bottom:1px solid var(--line);
+  background:var(--bg-2); min-height:26px; font-size:11px; overflow:hidden;
+}
+.sb-turn{font-family:"Shippori Mincho",serif;font-weight:800;font-size:12px;color:var(--gold-hi);white-space:nowrap}
+.sb-phase{
+  font-size:10.5px;font-weight:700;color:var(--gold-ink);background:var(--gold);
+  padding:2px 8px;border-radius:2px;white-space:nowrap;letter-spacing:.04em;
+}
+.sb-lp{margin-left:auto;display:flex;gap:8px;align-items:center;white-space:nowrap}
+.sb-lp b{font-family:"Shippori Mincho",serif;font-size:12px}
+.sb-lp .me{color:var(--gold-hi)}
+.sb-lp .op{color:var(--text-dim)}
+.sb-warn{font-size:10px;font-weight:700;color:#0d0a06;background:var(--spell);
+  padding:2px 7px;border-radius:9px;white-space:nowrap;animation:pulse 1.1s ease-in-out infinite}
+.sb-warn.trap{background:var(--trap);color:#120a1f}
 header{
-  flex:0 0 auto; display:flex; align-items:center; gap:12px;
-  padding:8px 14px; border-bottom:1px solid var(--line);
-  background:linear-gradient(var(--surface),var(--bg-2));
+  display:none;
 }
 header .brand{font-family:"Shippori Mincho",serif;font-weight:800;letter-spacing:.14em;font-size:15px;color:var(--gold-hi)}
 header .brand small{display:block;font-size:9px;letter-spacing:.34em;color:var(--text-dim);font-weight:400;font-family:"Zen Kaku Gothic New"}
@@ -73,10 +89,8 @@ header .spacer{flex:1}
 
 /* ---------- guide strip（今やるべきこと）---------- */
 .guide{
-  flex:0 0 auto; display:flex; align-items:center; gap:8px; flex-wrap:wrap;
-  padding:7px 12px; border-bottom:1px solid var(--line);
-  background:linear-gradient(var(--bg-2),var(--surface));
-  min-height:36px;
+  flex:0 0 auto; display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  padding:7px 2px 0; min-height:30px;
 }
 .guide .g-phase{
   font-family:"Shippori Mincho",serif; font-weight:800; font-size:13px;
@@ -103,35 +117,35 @@ header .spacer{flex:1}
 .hdr-btn:active{background:var(--surface-3)}
 
 /* ---------- board ---------- */
-.board{flex:1 1 auto; overflow-y:auto; padding:10px 10px 4px; display:flex; flex-direction:column; gap:8px}
+.board{flex:1 1 auto; overflow-y:auto; padding:6px 8px 2px; display:flex; flex-direction:column; gap:5px}
 .side{
-  border:1px solid var(--line); border-radius:4px; padding:8px 8px 10px;
+  border:1px solid var(--line); border-radius:4px; padding:4px 5px 5px;
   background:linear-gradient(var(--surface),var(--bg-2));
 }
 .side.opp{border-color:rgba(157,110,222,0.28)}
 .side.active-side{border-color:var(--gold-hi);box-shadow:0 0 0 1px var(--gold-hi) inset, 0 0 22px rgba(201,162,75,0.08)}
-.side-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.side-name{font-family:"Shippori Mincho",serif;font-weight:700;letter-spacing:.06em}
-.side-tag{font-size:9px;letter-spacing:.24em;color:var(--text-dim)}
+.side-head{display:flex;align-items:center;gap:6px;margin-bottom:4px;min-height:20px}
+.side-name{font-family:"Shippori Mincho",serif;font-weight:700;letter-spacing:.04em;font-size:11px}
+.side-tag{font-size:8px;letter-spacing:.18em;color:var(--text-dim)}
 .lp-box{margin-left:auto;display:flex;align-items:center;gap:4px}
-.lp-val{font-family:"Shippori Mincho",serif;font-weight:800;font-size:18px;min-width:66px;text-align:right;letter-spacing:.02em}
+.lp-val{font-family:"Shippori Mincho",serif;font-weight:800;font-size:15px;min-width:54px;text-align:right;letter-spacing:.02em}
 .lp-val.low{color:var(--forbidden)}
 .lp-btn{
-  width:24px;height:24px;line-height:1;border:1px solid var(--line);border-radius:2px;
-  background:var(--surface-2);color:var(--ink);font-size:13px;font-weight:700;
+  width:22px;height:22px;line-height:1;border:1px solid var(--line);border-radius:2px;
+  background:var(--surface-2);color:var(--ink);font-size:12px;font-weight:700;
 }
 .lp-btn:active{background:var(--surface-3)}
 
-.zones{display:flex;flex-direction:column;gap:6px}
-.zrow{display:grid;grid-template-columns:26px 1fr;gap:6px;align-items:start}
-.zrow .lab{font-size:9px;letter-spacing:.08em;color:var(--text-dim);text-align:center;
-  writing-mode:vertical-rl;text-orientation:upright;padding-top:6px;justify-self:center}
-.slots{display:grid;gap:5px}
+.zones{display:flex;flex-direction:column;gap:4px}
+.zrow{display:grid;grid-template-columns:16px 1fr;gap:4px;align-items:start}
+.zrow .lab{font-size:7.5px;letter-spacing:.02em;color:var(--text-dim);text-align:center;
+  writing-mode:vertical-rl;text-orientation:upright;padding-top:2px;justify-self:center}
+.slots{display:grid;gap:4px}
 .slots.mz,.slots.sz{grid-template-columns:repeat(5,1fr)}
 .slots.line5{grid-template-columns:repeat(5,1fr)}
 .pile{display:flex;flex-direction:column;align-items:stretch;gap:3px}
 .pile .slot{width:100%}
-.pile-lab{font-size:8px;letter-spacing:.08em;color:var(--text-dim);text-align:center}
+.pile-lab{font-size:7.5px;letter-spacing:.04em;color:var(--text-dim);text-align:center}
 .pile-n{
   position:absolute;bottom:2px;right:2px;z-index:4;min-width:16px;text-align:center;
   font-size:9px;font-weight:800;padding:1px 3px;border-radius:8px;
@@ -177,8 +191,8 @@ header .spacer{flex:1}
 .hand-head .who{font-family:"Shippori Mincho",serif;font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--gold-hi)}
 .hand-head .cnt{font-size:11px;color:var(--text-dim)}
 .hand-head .hint{margin-left:auto;font-size:9px;color:var(--text-dim);letter-spacing:.08em}
-.hand{display:flex;gap:7px;overflow-x:auto;padding:9px 12px 13px}
-.hand .hcard{flex:0 0 68px;aspect-ratio:59/86}
+.hand{display:flex;gap:6px;overflow-x:auto;padding:6px 8px}
+.hand .hcard{flex:0 0 60px;aspect-ratio:59/86}
 .hand .hcard .nm{font-size:9px}
 
 /* ---------- controls ---------- */
@@ -262,8 +276,7 @@ textarea{
 /* ---------- このターンにやったこと ---------- */
 .turnlog{
   flex:0 0 auto; display:flex; gap:5px; align-items:center; overflow-x:auto;
-  padding:6px 12px; border-top:1px solid var(--line); background:var(--bg);
-  min-height:34px;
+  padding:5px 2px 0; min-height:26px;
 }
 .turnlog .tl-lab{font-size:9px;letter-spacing:.16em;color:var(--text-dim);white-space:nowrap;flex:0 0 auto}
 .turnlog .tl-chip{
@@ -273,24 +286,36 @@ textarea{
 .turnlog .tl-empty{font-size:10px;color:var(--text-dim)}
 
 /* ---------- collapsible log ---------- */
-.logwrap{flex:0 0 auto;border-top:1px solid var(--line);background:var(--bg)}
+.logwrap{display:none}
 .log-toggle{
-  width:100%; text-align:left; padding:6px 12px; font-size:10.5px; letter-spacing:.06em;
-  color:var(--text-dim); background:transparent; border:none; border-bottom:1px solid transparent;
+  width:100%; text-align:left; padding:5px 2px; font-size:10px; letter-spacing:.06em;
+  color:var(--text-dim); background:transparent; border:none;
 }
 .log-toggle:active{color:var(--gold-hi)}
 .log{max-height:120px}
 
-/* ---------- 下部固定ドック ---------- */
+/* ---------- 下部ドック（既定は折りたたみ） ---------- */
 .dock{
   flex:0 0 auto; border-top:1px solid var(--line-hi);
   background:linear-gradient(var(--surface),var(--bg-2));
-  padding:7px 10px calc(7px + env(safe-area-inset-bottom,0));
-  display:flex; flex-direction:column; gap:7px;
+  padding:5px 8px calc(5px + env(safe-area-inset-bottom,0));
+  display:flex; flex-direction:column; gap:5px;
   box-shadow:0 -6px 18px rgba(0,0,0,0.35);
 }
-.dock-phase{display:flex; align-items:stretch; gap:6px}
-.dock-actions{display:flex; align-items:stretch; gap:6px}
+/* 常時見える1行 */
+.dock-bar{display:flex; align-items:stretch; gap:5px}
+/* 展開時のみ出る詳細 */
+.dock-body{display:flex; flex-direction:column; gap:5px; overflow:hidden;
+  max-height:50dvh; transition:max-height .18s ease, opacity .18s ease, margin .18s ease; opacity:1}
+.dock.collapsed .dock-body{max-height:0; opacity:0; margin:0; pointer-events:none}
+.dock-actions{display:flex; align-items:stretch; gap:5px}
+/* 展開ハンドル */
+.d-more{
+  flex:0 0 auto; min-width:42px; padding:10px 8px; border-radius:5px; font-size:15px; line-height:1;
+  border:1px solid var(--line-hi); background:var(--surface-2); color:var(--gold-hi);
+  display:flex; align-items:center; justify-content:center;
+}
+.d-more:active{background:var(--surface-3)}
 
 /* フェーズ行：戻る / 現在フェーズ表示 / 進む */
 .d-prev,.d-next{
@@ -442,6 +467,10 @@ textarea{
   background:rgba(157,110,222,.10);
 }
 .react-warn:active{background:rgba(157,110,222,.18)}
+.rk-zone{
+  margin-left:6px;font-size:9px;font-weight:800;padding:1px 5px;border-radius:7px;
+  background:var(--spell);color:#07130f;
+}
 .rk-set{
   margin-left:6px;font-size:9px;font-weight:800;padding:1px 5px;border-radius:7px;
   background:var(--trap);color:#120a1f;
@@ -454,6 +483,63 @@ textarea{
 }
 .d-act.pulse{animation:dpulse 1.4s ease-in-out infinite}
 @keyframes dpulse{0%,100%{box-shadow:0 0 0 0 rgba(201,162,75,.5)}50%{box-shadow:0 0 0 5px rgba(201,162,75,0)}}
+
+/* ---------- フェーズ制限の表示 ---------- */
+.phase-note{
+  font-size:10.5px;color:var(--gold-hi);background:rgba(201,162,75,.07);
+  border:1px solid var(--edge-dk);border-radius:4px;padding:5px 9px;margin-bottom:9px;
+  display:flex;align-items:center;gap:6px;
+}
+.ss-tag{margin-left:auto;font-size:9px;font-weight:800;padding:1px 6px;border-radius:8px;
+  background:var(--surface-3);color:var(--ink);letter-spacing:.04em}
+.act.blocked{opacity:.4;position:relative}
+.act.blocked .bk{
+  margin-left:6px;font-size:8.5px;font-weight:800;padding:1px 5px;border-radius:7px;
+  background:var(--forbidden);color:#1a0b09;white-space:nowrap;
+}
+/* ドローフェイズ用のバー内ドローボタン */
+.d-draw{
+  flex:0 0 auto; padding:11px 16px; border-radius:5px; font-size:13px; font-weight:800;
+  background:var(--gold); color:var(--gold-ink); border:1px solid var(--gold-hi);
+  letter-spacing:.04em; white-space:nowrap;
+}
+.d-draw:active{filter:brightness(.9)}
+
+/* ---------- チェーン常時スタック ---------- */
+.chainstack{
+  flex:0 0 auto; display:flex; align-items:center; gap:5px; overflow-x:auto;
+  padding:5px 8px; border-top:1px solid var(--spell);
+  background:rgba(53,176,142,.10);
+}
+.cs-lab{font-size:9px;letter-spacing:.1em;color:var(--spell);font-weight:800;white-space:nowrap;flex:0 0 auto}
+.cs-link{
+  flex:0 0 auto;font-size:10.5px;padding:3px 9px;border-radius:11px;white-space:nowrap;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--ink);
+}
+.cs-link small{margin-left:5px;font-size:8.5px;color:var(--text-dim)}
+.cs-link.top{border-color:var(--spell);background:rgba(53,176,142,.2);font-weight:700}
+.cs-go{
+  margin-left:auto;flex:0 0 auto;font-size:11px;font-weight:800;padding:5px 12px;border-radius:5px;
+  background:var(--spell);color:#07130f;border:1px solid var(--spell);white-space:nowrap;
+}
+/* 状態フラグ表示 */
+.flag-note{
+  font-size:10px;font-weight:700;color:var(--forbidden);
+  border:1px solid var(--forbidden);border-radius:4px;padding:4px 9px;margin-bottom:8px;text-align:center;
+}
+/* 状態インスペクタ */
+.state-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px}
+.state-cell{border:1px solid var(--line);border-radius:4px;padding:6px 8px;background:var(--surface-2)}
+.state-cell .k{font-size:8.5px;letter-spacing:.1em;color:var(--text-dim);display:block}
+.state-cell .v{font-size:12px;font-weight:700;color:var(--gold-hi)}
+.state-cell .v.off{color:var(--text-dim)}
+
+/* ---------- スクリプトデバッガー ---------- */
+.dbg-list{max-height:46dvh;overflow-y:auto;margin-bottom:10px}
+.dbg-entry{border:1px solid var(--line);border-radius:5px;padding:8px 10px;margin-bottom:6px;background:var(--surface-2)}
+.dbg-name{font-family:"Shippori Mincho",serif;font-weight:800;font-size:12.5px;color:var(--gold-hi);margin-bottom:4px}
+.dbg-step{font-size:11px;color:var(--ink);padding:1px 0}
+.dbg-step.ng{color:var(--forbidden)}
 
 /* ---------- toast ---------- */
 .toast{
@@ -468,42 +554,30 @@ textarea{
 </head>
 <body>
 
-<header>
-  <div class="brand">決闘盤<small>DUEL FIELD · 1103</small></div>
-  <div class="spacer"></div>
-  <button class="hdr-btn" id="menuBtn" onclick="openMenu()" title="メニュー">≡</button>
-  <div class="turn-flag" id="turnFlag">手番 <b>—</b></div>
-</header>
-
-<!-- guide strip: 今やるべきこと -->
-<div class="guide" id="guide"></div>
+<!-- 盤面が主役。上部の常時表示は極小のステータスバー1本だけ -->
+<div class="statusbar" id="statusbar" onclick="toggleDock()"></div>
 
 <div class="board" id="board"></div>
 
-<!-- このターンにやったこと -->
-<div class="turnlog" id="turnlog"></div>
+<!-- チェーンは積まれている間ずっと見える -->
+<div class="chainstack" id="chainstack" hidden></div>
 
 <div class="handbar">
-  <div class="hand-head">
-    <span class="who" id="handWho">手札</span>
-    <span class="cnt" id="handCnt"></span>
-    <span class="hint">タップで操作</span>
-  </div>
   <div class="hand" id="hand"></div>
 </div>
 
-<!-- collapsible full log -->
-<div class="logwrap" id="logwrap">
-  <button class="log-toggle" id="logToggle" onclick="toggleLog()">ログを開く ▾</button>
-  <div class="log" id="log" hidden></div>
-</div>
-
-<!-- ===== 下部固定ドック（親指ゾーン）===== -->
-<div class="dock" id="dock">
-  <!-- 上段：フェーズ操作 -->
-  <div class="dock-phase" id="dockPhase"></div>
-  <!-- 下段：頻用アクション -->
-  <div class="dock-actions" id="dockActions"></div>
+<!-- ===== 下部ドック：既定は折りたたみ。タップで展開 ===== -->
+<div class="dock collapsed" id="dock">
+  <!-- 常時見えるのはこの1行だけ（フェーズ＋次へ＋戻す） -->
+  <div class="dock-bar" id="dockBar"></div>
+  <!-- 展開時に出る詳細 -->
+  <div class="dock-body" id="dockBody">
+    <div class="dock-actions" id="dockActions"></div>
+    <div class="guide" id="guide"></div>
+    <div class="turnlog" id="turnlog"></div>
+    <button class="log-toggle" id="logToggle" onclick="toggleLog()">ログを開く ▾</button>
+    <div class="log" id="log" hidden></div>
+  </div>
 </div>
 
 <!-- action modal -->
@@ -552,12 +626,27 @@ const PNAME = ["プレイヤー I", "プレイヤー II"];
 let gameState = null;
 
 function makePlayer(){
-  return { lp:8000, hand:[], deck:[], mz:[], sz:[], field:null, grave:[], banish:[], ex:[] };
+  return {
+    lp:8000, hand:[], deck:[], mz:[], sz:[], field:null, grave:[], banish:[], ex:[],
+    normalSummonUsed:false,   // 通常召喚権（1ターン1回）
+    ssHistory:[],             // このターンの特殊召喚履歴 [{name, from, turn}]
+    graveHistory:[],          // このターンの墓地送り履歴 [{name, from, turn}]
+    effectFlags:{},           // 永続的なフラグ（1ターン1度の使用済み等）
+    temporaryFlags:{},        // ターン終了で消えるフラグ
+  };
 }
 function newGame(){
   // 1103環境は先攻ドローあり。ターン1もドローフェイズから始める。
-  return { turn:1, phase:"draw", activePlayer:0, firstPlayer:0,
-           players:[makePlayer(), makePlayer()], log:[], chain:[], drawnThisTurn:false };
+  return {
+    turn:1, phase:"draw", activePlayer:0, firstPlayer:0,
+    players:[makePlayer(), makePlayer()],
+    log:[], chain:[],
+    drawnThisTurn:false,
+    priority:0,        // 優先権を持つプレイヤー
+    pending:[],        // 発動待ち効果 [{player, name, note}]
+    reserved:[],       // 予約効果（このターン終了時など）[{player, name, at, note}]
+    scriptLog:[],      // カードスクリプトの処理トレース（デバッガー用）
+  };
 }
 
 /* -------------------- applyAction --------------------
@@ -571,13 +660,27 @@ function applyAction(gs, a){
       logIt(gs, `${nameOf(gs.activePlayer)}：${phaseJp(a.phase)}へ`);
       break;
 
-    case "PASS_TURN":
+    case "PASS_TURN": {
+      // ターン終了時の予約効果を消化
+      const due = gs.reserved.filter(r=>r.at==="endPhase" && r.turn===gs.turn);
+      due.forEach(r=>logIt(gs, `予約効果：${r.name}（${nameOf(r.player)}）`));
+      gs.reserved = gs.reserved.filter(r=>!(r.at==="endPhase" && r.turn===gs.turn));
       gs.activePlayer = gs.activePlayer === 0 ? 1 : 0;
       gs.turn += 1;
       gs.phase = "draw";
       gs.drawnThisTurn = false;
+      gs.priority = gs.activePlayer;
+      // 召喚権・攻撃済み・ターン中履歴をリセット
+      gs.players.forEach(pl=>{
+        pl.normalSummonUsed = false;
+        pl.ssHistory = [];
+        pl.graveHistory = [];
+        pl.temporaryFlags = {};
+        pl.mz.forEach(c=>{ if(c) c.attacked = false; });
+      });
       logIt(gs, `<b>ターン ${gs.turn}</b> — ${nameOf(gs.activePlayer)}の手番（先攻ドローあり）`);
       break;
+    }
 
     case "LP":
       P.lp = Math.max(0, P.lp + a.delta);
@@ -634,6 +737,8 @@ function applyAction(gs, a){
     }
 
     case "ATTACK": {
+      // 攻撃したモンスターに攻撃済みフラグを立てる（1ターン1回制限の管理）
+      if(P.mz[a.atkIdx]) P.mz[a.atkIdx].attacked = true;
       // a: {player, atkIdx, target:'direct'|monsterIdx}
       const atkCard = P.mz[a.atkIdx];
       if(!atkCard){ break; }
@@ -697,6 +802,7 @@ function applyAction(gs, a){
       if(!card) break;
       dropXyzMaterials(P, card);
       P.grave.push(reset(card));
+      P.graveHistory.push({name:cardName(card), from:a.zone, turn:gs.turn});
       logIt(gs, `${a.reason||"効果"}：${nameOf(a.player)}の ${cardName(card)} を墓地へ`);
       break;
     }
@@ -716,8 +822,9 @@ function applyAction(gs, a){
       if(P.mz.length >= ZONE_LIMITS.mz){ logIt(gs, `モンスターゾーンが一杯です`); break; }
       const card = removeFrom(P, a.from, a.fromIndex);
       if(!card) break;
-      card.face='up'; card.pos = a.pos||'atk';
+      card.face='up'; card.pos = a.pos||'atk'; card.attacked=false;
       P.mz.push(card);
+      P.ssHistory.push({name:cardName(card), from:a.from, turn:gs.turn});
       logIt(gs, `${a.reason||"効果"}：${cardName(card)} を特殊召喚（${card.pos==='def'?'守備':'攻撃'}）`);
       break;
     }
@@ -855,6 +962,120 @@ function applyAction(gs, a){
       break;
     }
 
+
+    /* ===== 追加プリミティブ ===== */
+
+    /* 通常召喚（召喚権を消費）。a:{player, handIndex, pos} */
+    case "NORMAL_SUMMON": {
+      if(P.normalSummonUsed){ logIt(gs, `このターンは既に通常召喚しています`); break; }
+      if(P.mz.length >= ZONE_LIMITS.mz){ logIt(gs, `モンスターゾーンが一杯です`); break; }
+      const card = removeFrom(P, "hand", a.handIndex);
+      if(!card) break;
+      card.face='up'; card.pos=a.pos||'atk'; card.attacked=false;
+      P.mz.push(card);
+      P.normalSummonUsed = true;
+      logIt(gs, `<b>通常召喚</b>：${cardName(card)}（${card.pos==='def'?'守備':'攻撃'}）`);
+      break;
+    }
+
+    /* セット（モンスター）。召喚権を消費。a:{player, handIndex} */
+    case "SET_MONSTER": {
+      if(P.normalSummonUsed){ logIt(gs, `このターンは既に通常召喚しています`); break; }
+      if(P.mz.length >= ZONE_LIMITS.mz){ logIt(gs, `モンスターゾーンが一杯です`); break; }
+      const card = removeFrom(P, "hand", a.handIndex);
+      if(!card) break;
+      card.face='down'; card.pos='def'; card.attacked=false;
+      P.mz.push(card);
+      P.normalSummonUsed = true;
+      logIt(gs, `セット：モンスターを裏側守備表示で置いた`);
+      break;
+    }
+
+    /* セット（魔法・罠）。a:{player, handIndex, toField} */
+    case "SET_ST": {
+      const zone = a.toField ? "field" : "sz";
+      if(zone==="sz" && P.sz.length >= ZONE_LIMITS.sz){ logIt(gs, `魔法・罠ゾーンが一杯です`); break; }
+      if(zone==="field" && P.field){ logIt(gs, `フィールドゾーンが埋まっています`); break; }
+      const card = removeFrom(P, "hand", a.handIndex);
+      if(!card) break;
+      card.face='down'; card.pos='atk';
+      if(zone==="field") P.field = card; else P.sz.push(card);
+      logIt(gs, `セット：カードを伏せた`);
+      break;
+    }
+
+    /* デッキへ戻す。a:{player, zone, index, toBottom} */
+    case "FX_RETURN_DECK": {
+      const card = removeFrom(P, a.zone, a.index);
+      if(!card) break;
+      dropXyzMaterials(P, card);
+      card.face='down'; card.pos='atk';
+      if(a.toBottom) P.deck.push(card); else P.deck.unshift(card);
+      logIt(gs, `${a.reason||"効果"}：${cardName(card)} をデッキ${a.toBottom?"ボトム":"トップ"}へ`);
+      break;
+    }
+
+    /* 無効化フラグを立てる（裁定はプレイヤーが行う。アプリは状態を保持する）
+       a:{player, zone, index, reason} */
+    case "FX_NEGATE": {
+      const card = zoneCard(P, a.zone, a.index);
+      if(!card) break;
+      card.negated = true;
+      logIt(gs, `${a.reason||"効果"}：${cardName(card)} の効果を無効化`);
+      break;
+    }
+
+    /* エクシーズ素材として重ねる。a:{player, targetMz, from, fromIndex} */
+    case "FX_OVERLAY": {
+      const target = P.mz[a.targetMz];
+      if(!target){ logIt(gs, `重ねる先が見つかりません`); break; }
+      const card = removeFrom(P, a.from, a.fromIndex);
+      if(!card) break;
+      target.xyz = target.xyz || [];
+      target.xyz.push(reset(card));
+      logIt(gs, `${cardName(card)} を ${cardName(target)} の素材として重ねた`);
+      break;
+    }
+
+    /* 優先権の移動。a:{to} */
+    case "SET_PRIORITY":
+      gs.priority = a.to;
+      logIt(gs, `優先権：${nameOf(a.to)}`);
+      break;
+
+    /* 発動待ち効果の登録／消化。a:{player, name, note} */
+    case "PENDING_ADD":
+      gs.pending.push({player:a.player, name:a.name, note:a.note||""});
+      logIt(gs, `発動待ち：${a.name}（${nameOf(a.player)}）`);
+      break;
+    case "PENDING_RESOLVE": {
+      const item = gs.pending.splice(a.index,1)[0];
+      if(item) logIt(gs, `発動待ちを処理：${item.name}`);
+      break;
+    }
+    case "PENDING_CLEAR":
+      gs.pending = [];
+      logIt(gs, `発動待ちをクリア`);
+      break;
+
+    /* 予約効果（このターンのエンドフェイズに戻す等）。a:{player, name, at, note} */
+    case "RESERVE_ADD":
+      gs.reserved.push({player:a.player, name:a.name, at:a.at||"endPhase", turn:gs.turn, note:a.note||""});
+      logIt(gs, `予約：${a.name}（${a.at==="endPhase"?"エンドフェイズ":a.at}）`);
+      break;
+    case "RESERVE_REMOVE": {
+      const r = gs.reserved.splice(a.index,1)[0];
+      if(r) logIt(gs, `予約を解除：${r.name}`);
+      break;
+    }
+
+    /* 攻撃済みフラグ操作（1ターン1回制限の管理）。a:{player, mzIndex, value} */
+    case "SET_ATTACKED": {
+      const c = P.mz[a.mzIndex];
+      if(c) c.attacked = !!a.value;
+      break;
+    }
+
     case "RESET":
       Object.assign(gs, newGame());
       logIt(gs, "盤面をリセット");
@@ -912,10 +1133,19 @@ function render(){
   const chN = gs.chain.length;
 
   const fp = gs.firstPlayer ?? 0;
-  document.getElementById("turnFlag").innerHTML =
-    `T${gs.turn} · <b>${nameOf(view)}</b>${view===fp?`<span class="fp-mark">先</span>`:""}`;
 
-  /* ===== guide strip：今のフェーズ＋できること ===== */
+  /* ===== 極小ステータスバー（常時表示はこれだけ） ===== */
+  const rp = view===0?1:0;
+  const reactN = reactableCards(rp).length;
+  const warn = chN
+    ? `<span class="sb-warn">チェーン${chN}</span>`
+    : (gs.phase==="battle" && reactN ? `<span class="sb-warn trap">伏せ${reactN}</span>` : "");
+  document.getElementById("statusbar").innerHTML =
+    `<span class="sb-turn">T${gs.turn} ${nameOf(view)}${view===fp?"(先)":""}</span>` +
+    `<span class="sb-phase">${phaseJp(gs.phase)}</span>${warn}` +
+    `<span class="sb-lp"><span class="me">${P.lp}</span><span class="op">${gs.players[opp].lp}</span></span>`;
+
+  /* ===== guide strip：今のフェーズ＋できること（ドック展開時のみ見える） ===== */
   document.getElementById("guide").innerHTML = guideHTML(gs, view, curIdx, chN);
 
   /* ===== board：相手を上、手番を下 ===== */
@@ -923,8 +1153,6 @@ function render(){
     sideHTML(opp, true) + sideHTML(view, false);
 
   /* ===== hand（手番のみ表向き） ===== */
-  document.getElementById("handWho").textContent = `${nameOf(view)} の手札`;
-  document.getElementById("handCnt").textContent = `${P.hand.length}枚 / 山${P.deck.length}`;
   document.getElementById("hand").innerHTML = P.hand.map((c,i)=>
     cardHTML(c, "hcard", `openHand(${i})`, true)
   ).join("") || `<div class="hand-empty">
@@ -943,6 +1171,9 @@ function render(){
   /* ===== full log ===== */
   document.getElementById("log").innerHTML = gs.log.map(l=>`<div class="li">${l.msg}</div>`).join("");
 
+  /* ===== チェーンは常時スタック表示 ===== */
+  renderChainStack(gs);
+
   /* ===== 下部ドック ===== */
   renderDock(gs, curIdx, chN);
 }
@@ -952,30 +1183,29 @@ function guideHTML(gs, view, curIdx, chN){
   const P = gs.players[view];
   const loaded = P.deck.length>0 || P.hand.length>0 || P.mz.length>0 || P.sz.length>0 || P.grave.length>0;
   const phase = gs.phase;
+  const R = PHASE_RULES[phase] || PHASE_RULES.main1;
   const cans = [];
-  const canNormal = (phase==="main1"||phase==="main2");
   if(!loaded){
     cans.push(`<span class="g-can">テストデッキ or 保存デッキで開始</span>`);
   } else {
-    if(phase==="draw"){
+    if(R.draw){
       cans.push(gs.drawnThisTurn
         ? `<span class="g-can mute">ドロー済み</span>`
         : `<span class="g-can">ドロー可${gs.turn===1?"（先攻ドローあり）":""}</span>`);
     }
-    if(canNormal){
-      cans.push(`<span class="g-can">通常召喚/セット</span>`);
-      cans.push(`<span class="g-can">魔法罠 発動/セット</span>`);
-      if(P.ex.length) cans.push(`<span class="g-can">EX召喚可</span>`);
-    }
-    if(phase==="battle"){
+    if(R.normalSummon) cans.push(`<span class="g-can">通常召喚/セット</span>`);
+    if(R.activateS1)   cans.push(`<span class="g-can">魔法罠 発動/セット</span>`);
+    if(R.exSummon && P.ex.length) cans.push(`<span class="g-can">EX召喚可</span>`);
+    if(R.attack){
       const canAtk = P.mz.some(c=>c && c.face==='up' && c.pos==='atk');
       cans.push(`<span class="g-can ${canAtk?'':'mute'}">攻撃宣言${canAtk?'':'（表側攻撃なし）'}</span>`);
-      const rp = view===0?1:0;
-      const rn = reactableCards(rp).length;
-      if(rn) cans.push(`<span class="g-can react">${nameOf(rp)}は罠を撃てる(${rn})</span>`);
     }
-    if(phase==="end") cans.push(`<span class="g-can">手札7枚調整→ターン終了</span>`);
-    cans.push(`<span class="g-can mute">効果発動</span>`);
+    // どのフェーズでも速攻魔法・罠は撃てる
+    cans.push(`<span class="g-can mute">速攻魔法・罠（SS2+）</span>`);
+    if(phase==="end") cans.push(`<span class="g-can">手札7枚調整</span>`);
+    const rp = view===0?1:0;
+    const rn = reactableCards(rp).length;
+    if(rn) cans.push(`<span class="g-can react">${nameOf(rp)}は${rn}枚撃てる</span>`);
   }
   const chainWarn = chN
     ? `<span class="g-chainwarn">チェーン ${chN} 解決待ち</span>` : "";
@@ -987,43 +1217,97 @@ function renderDock(gs, curIdx, chN){
   const atEnd = gs.phase==="end";
   const nextPh = curIdx < PHASES.length-1 ? PHASES[curIdx+1].jp : null;
   const prevDisabled = curIdx<=0;
-
-  // 上段：フェーズ戻る / 現在 / 進む
-  const phaseRow = `
-    <button class="d-prev" onclick="doPhasePrev()" ${prevDisabled?'disabled':''}>◂ 戻</button>
-    <div class="d-phase-cur">
-      <span class="cur">${phaseJp(gs.phase)}</span>
-      ${nextPh?`<span class="nxt">次 → ${nextPh}</span>`:`<span class="nxt">ターンを渡す</span>`}
-    </div>
-    ${atEnd
-      ? `<button class="d-next endturn" onclick="doPass()">ターン終了 ⇄</button>`
-      : `<button class="d-next primary" onclick="doPhaseNext()">次へ ▸</button>`}`;
-
-  // 下段：頻用アクション（ドロー / 手札 / EX / チェーン / 1つ戻す）
   const canUndo = HISTORY.length>0;
   const P = gs.players[gs.activePlayer];
   const exN = P.ex.length;
   const inMain = (gs.phase==="main1"||gs.phase==="main2");
+  const drawDone = (gs.phase==="draw" && gs.drawnThisTurn);
+  const rp = gs.activePlayer===0 ? 1 : 0;
+  const reactN = reactableCards(rp).length;
+
+  /* ===== 常時見える1行：フェーズ送り＋Undo＋展開 =====
+     盤面を最大化するため、ここ以外は折りたたむ。 */
+  // ドローフェイズは「ドロー」が唯一の主要行動なので、畳んだままでも押せる位置に出す
+  const drawInBar = (gs.phase==="draw" && !gs.drawnThisTurn)
+    ? `<button class="d-draw pulse" onclick="doDraw()">ドロー</button>` : "";
+  const bar = `
+    <button class="d-prev" onclick="doPhasePrev()" ${prevDisabled?'disabled':''}>◂</button>
+    ${drawInBar}
+    ${atEnd
+      ? `<button class="d-next endturn" onclick="doPass()">ターン終了 ⇄</button>`
+      : `<button class="d-next primary" onclick="doPhaseNext()">${phaseJp(gs.phase)} ▸ ${nextPh||""}</button>`}
+    <button class="d-more undo" onclick="undo()" ${canUndo?'':'disabled'}>↺</button>
+    <button class="d-more" onclick="redo()" ${REDO.length?'':'disabled'}>↻</button>
+    <button class="d-more" onclick="toggleDock()" id="dockToggle">${DOCK_OPEN?'▾':'▴'}</button>`;
+
+  /* ===== 展開時の詳細アクション ===== */
   const exBtn = (exN && inMain)
     ? `<button class="d-act" onclick="openExDeck(${gs.activePlayer})">EX<span class="kb">${exN}</span></button>`
     : "";
-  const drawDone = (gs.phase==="draw" && gs.drawnThisTurn);
-  const drawCls = (gs.phase==="draw" && !gs.drawnThisTurn) ? "d-act gold pulse" : (drawDone ? "d-act" : "d-act gold");
-  // 相手ターン中に撃てる自分の伏せカード
-  const rp = gs.activePlayer===0 ? 1 : 0;
-  const reactN = reactableCards(rp).length;
   const reactBtn = reactN
     ? `<button class="d-act react" onclick="openReact()">${nameOf(rp)}<span class="kb">${reactN}</span></button>`
     : "";
+  const canDrawNow = rules().draw && !gs.drawnThisTurn;
+  const drawCls = canDrawNow ? "d-act gold pulse" : (drawDone ? "d-act" : "d-act");
+  const drawLabel = drawDone ? "ドロー済" : "ドロー";
+  const drawClick = canDrawNow ? "doDraw()" : `showToast('${phaseJp(gs.phase)}では通常ドローできません')`;
   const actRow = `
-    <button class="${drawCls}" onclick="doDraw()">ドロー${drawDone?"済":""}</button>
-    <button class="d-act" onclick="focusHandHint()">手札</button>
+    <button class="${drawCls}" onclick="${drawClick}">${drawLabel}</button>
     ${exBtn}${reactBtn}
     <button class="d-act" onclick="openChain()">チェーン${chN?`<span class="kb">${chN}</span>`:""}</button>
-    <button class="d-act undo" onclick="undo()" ${canUndo?'':'disabled'}>↺ 戻す</button>`;
+    <button class="d-act" onclick="openMenu()">≡ メニュー</button>`;
 
-  document.getElementById("dockPhase").innerHTML = phaseRow;
+  document.getElementById("dockBar").innerHTML = bar;
   document.getElementById("dockActions").innerHTML = actRow;
+  const dock = document.getElementById("dock");
+  if(dock) dock.className = DOCK_OPEN ? "dock" : "dock collapsed";
+}
+
+
+/* =========================================================================
+   スワイプでフェーズ送り（盤面を左右にスワイプ）
+   ボタンを増やさずに操作ステップを減らすため。
+   ========================================================================= */
+function initSwipe(){
+  const el = document.getElementById("board");
+  if(!el || !el.addEventListener) return;
+  let x0=null, y0=null, t0=0;
+  el.addEventListener("touchstart", e=>{
+    if(e.touches.length!==1) return;
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY; t0=Date.now();
+  }, {passive:true});
+  el.addEventListener("touchend", e=>{
+    if(x0===null) return;
+    const t=e.changedTouches[0];
+    const dx=t.clientX-x0, dy=t.clientY-y0, dt=Date.now()-t0;
+    x0=null;
+    // 横方向が縦の2倍以上、かつ十分な距離と速さのときだけフェーズ送り
+    if(dt<600 && Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*2){
+      if(dx<0) doPhaseNext(); else doPhasePrev();
+      showToast(phaseJp(gameState.phase));
+    }
+  }, {passive:true});
+}
+
+/* チェーンスタックの常時表示 */
+function renderChainStack(gs){
+  const el = document.getElementById("chainstack");
+  if(!el) return;
+  if(!gs.chain.length){ el.hidden = true; el.innerHTML=""; return; }
+  el.hidden = false;
+  const rows = gs.chain.map((lk,i)=>{
+    const top = i===gs.chain.length-1;
+    return `<span class="cs-link ${top?'top':''}">${i+1}. ${lk.name}<small>SS${lk.ss}</small></span>`;
+  }).reverse().join("");
+  el.innerHTML = `<span class="cs-lab">チェーン</span>${rows}
+    <button class="cs-go" onclick="resolveChainStep()">解決 ▸</button>`;
+}
+
+/* ドックの開閉。盤面を広く使いたいので既定は閉じている。 */
+let DOCK_OPEN = false;
+function toggleDock(){
+  DOCK_OPEN = !DOCK_OPEN;
+  render();
 }
 
 function sideHTML(p, isOpp){
@@ -1044,20 +1328,25 @@ function sideHTML(p, isOpp){
     </div>
     <div class="zones">
       ${ isOpp
-        ? zoneRowHTML(p,"魔法罠","sz",5,isOpp) + zoneRowHTML(p,"モンスター","mz",5,isOpp)
-        : zoneRowHTML(p,"モンスター","mz",5,isOpp) + zoneRowHTML(p,"魔法罠","sz",5,isOpp) }
-      <div class="zrow">
-        <div class="lab">場外</div>
-        <div class="slots line5">
-          ${pileSlot(p,"field","フィールド",isOpp)}
-          ${pileSlot(p,"grave","墓地",isOpp)}
-          ${pileSlot(p,"banish","除外",isOpp)}
-          ${pileSlot(p,"deck","デッキ",isOpp)}
-          ${pileSlot(p,"ex","EX",isOpp)}
-        </div>
-      </div>
+        ? pileRowHTML(p,isOpp) + zoneRowHTML(p,"魔法罠","sz",5,isOpp) + zoneRowHTML(p,"モンスター","mz",5,isOpp)
+        : zoneRowHTML(p,"モンスター","mz",5,isOpp) + zoneRowHTML(p,"魔法罠","sz",5,isOpp) + pileRowHTML(p,isOpp) }
     </div>
   </section>`;
+}
+
+/* 場外（フィールド/墓地/除外/デッキ/EX）の行。
+   相手側は盤面の一番上、自分側は一番下に置く。 */
+function pileRowHTML(p, isOpp){
+  return `<div class="zrow">
+    <div class="lab">場外</div>
+    <div class="slots line5">
+      ${pileSlot(p,"field","フィールド",isOpp)}
+      ${pileSlot(p,"grave","墓地",isOpp)}
+      ${pileSlot(p,"banish","除外",isOpp)}
+      ${pileSlot(p,"deck","デッキ",isOpp)}
+      ${pileSlot(p,"ex","EX",isOpp)}
+    </div>
+  </div>`;
 }
 
 function zoneRowHTML(p, label, zone, count, isOpp){
@@ -1337,6 +1626,23 @@ const AUTO_EFFECT = {
    ② HAND_EFFECT / FIELD_EFFECT / GRAVE_EFFECT … 1103汎用の個別スクリプト
    実行は全て applyAction のプリミティブ経由なので Undo が効く。
    ========================================================================= */
+
+/* HTML属性内(onclick="...")に安全に埋め込めるJS文字列リテラルを作る。
+   JSON.stringify はダブルクォートを出すため属性が壊れる。
+   シングルクォート括りにし、危険な文字を実体参照/エスケープする。 */
+function jsStr(v){
+  return "'" + String(v)
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/"/g, "&quot;")
+    .replace(/\n/g, "\\n")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;") + "'";
+}
+/* 配列・オブジェクトを属性内に埋め込む（ダブルクォートを実体参照化） */
+function jsVal(v){
+  return JSON.stringify(v).replace(/"/g, "&quot;");
+}
 
 /* ---- 対象選択のための共通ピッカー ---------------------------------- */
 /* PICK: 一覧から1枚選ばせる。cards=[{label, sub, onPick}] */
@@ -1847,6 +2153,14 @@ function xyzMaterialCount(db){
 /* EXデッキを開いて召喚可能なモンスターを提示 */
 function openExDeck(p){
   const P = gameState.players[p];
+  if(!rules().exSummon){
+    sheet.innerHTML = `<div class="grip"></div><h3>エクストラデッキ</h3>
+      <div class="phase-note">${phaseJp(gameState.phase)}：${rules().note}</div>
+      <div class="meta" style="margin:10px 0 12px">${whyBlocked('exSummon')}<br>
+        メインフェイズに進んでから召喚してください。</div>
+      <button class="close" onclick="closeSheet()">閉じる</button>`;
+    veil.classList.add("on"); return;
+  }
   if(!P.ex.length){
     sheet.innerHTML = `<div class="grip"></div><h3>エクストラデッキ</h3>
       <div class="meta" style="margin-bottom:12px">EXデッキにカードがありません。<br>
@@ -1949,31 +2263,132 @@ function doExSummon(p, exIndex, materials, kind){
     <h3 style="margin-bottom:6px">${db.n}</h3>
     <div class="meta" style="margin-bottom:12px">表示形式を選んでください</div>
     <div class="act-grid">
-      <div class="act fx" onclick="closeSheet();act({type:'FX_EX_SUMMON',player:${p},exIndex:${exIndex},materials:${JSON.stringify(materials)},kind:'${kind}',pos:'atk'})">攻撃表示</div>
-      <div class="act" onclick="closeSheet();act({type:'FX_EX_SUMMON',player:${p},exIndex:${exIndex},materials:${JSON.stringify(materials)},kind:'${kind}',pos:'def'})">守備表示</div>
+      <div class="act fx" onclick="closeSheet();act({type:'FX_EX_SUMMON',player:${p},exIndex:${exIndex},materials:${jsVal(materials)},kind:'${kind}',pos:'atk'})">攻撃表示</div>
+      <div class="act" onclick="closeSheet();act({type:'FX_EX_SUMMON',player:${p},exIndex:${exIndex},materials:${jsVal(materials)},kind:'${kind}',pos:'def'})">守備表示</div>
     </div>
     <button class="close" onclick="closeSheet()">やめる</button>`;
   veil.classList.add("on");
 }
 
+
+/* =========================================================================
+   墓地・手札発動の自動判別
+   スクリプト未実装のカードでも、効果テキストから発動場所を推定して
+   相手ターン中の割り込み候補に載せる。
+   誤判定してもプレイヤーが選ばなければ発動しないので実害はない。
+   ========================================================================= */
+const GRAVE_PATTERNS = [
+  /墓地(に存在する|の)?この(カード|１枚)を(ゲームから)?除外(して|し、|する事で|し)/,
+  /自分の墓地からこのカードを(ゲームから)?除外/,
+  /このカードが墓地に存在する場合.*発動/,
+  /墓地のこのカードを/,
+  /このカードを除外して発動/,
+  /自分の墓地の(この)?カードを除外して発動/,
+];
+const HAND_PATTERNS = [
+  /手札からこのカードを(墓地へ)?捨て(て|る事で)/,
+  /このカードを手札から(墓地へ)?捨て(て|る事で)/,
+  /手札の?この(カード|１枚)を(墓地へ)?捨て/,
+];
+/* 相手ターンでも撃てる文言（誘発即時的なタイミング） */
+const QUICK_PATTERNS = [
+  /相手ターン(に|中)/,
+  /攻撃(宣言)?(対象に選択された)?時/,
+  /攻撃対象に選択された時/,
+  /攻撃を無効/,
+  /直接攻撃宣言時/,
+  /ダメージ計算(前|時|後)/,
+  /相手が.*発動した時/,
+  /相手のターン/,
+  /特殊召喚(に成功|された)時/,
+  /召喚・反転召喚・特殊召喚(に成功|された)時/,
+  /このカードが.*選択された時/,
+  /バトルフェイズ/,
+];
+
+/* テキストから発動可能ゾーンを推定する。結果はキャッシュする。 */
+const ACT_ZONE_CACHE = new Map();
+function detectActivateZones(db){
+  if(!db || !db.n) return null;
+  if(ACT_ZONE_CACHE.has(db.n)) return ACT_ZONE_CACHE.get(db.n);
+  const e = String(db.e||"") + " " + String(db.e0||"");
+  const zones = [];
+  if(GRAVE_PATTERNS.some(r=>r.test(e))) zones.push('grave');
+  if(HAND_PATTERNS.some(r=>r.test(e)))  zones.push('hand');
+  const quick = QUICK_PATTERNS.some(r=>r.test(e));
+  const res = zones.length ? {zones, quick} : null;
+  ACT_ZONE_CACHE.set(db.n, res);
+  return res;
+}
+
+/* カードが指定ゾーンから発動できるか（スクリプト宣言 → テキスト推定の順） */
+function canActivateFromZone(db, zone){
+  const sc = CARD_SCRIPTS[db.n];
+  if(sc){
+    if(!sc.activateFrom) return false;
+    return sc.activateFrom.indexOf(zone) >= 0;
+  }
+  const det = detectActivateZones(db);
+  return !!(det && det.zones.indexOf(zone) >= 0);
+}
+/* 相手ターン中にも撃てるか */
+function isQuickFromZone(db){
+  const sc = CARD_SCRIPTS[db.n];
+  if(sc) return sc.quickEffect !== false;
+  const det = detectActivateZones(db);
+  return !!(det && det.quick);
+}
+
 /* 相手ターン中に発動できる自分のカードを集める。
    1103は伏せの読み合いが肝なので、非手番側の罠・速攻魔法をすぐ撃てるようにする。
    返り値: [{p, zone, index, db, ss}] */
+/* 相手ターン中に発動できる自分のカードを集める。
+   魔法罠ゾーンだけでなく、スクリプトが activateFrom で宣言した場所
+   （墓地・手札・除外など）も対象にする。
+   例：ネクロ・ガードナー（墓地で除外して発動）、手札誘発。 */
 function reactableCards(p){
   const P = gameState.players[p];
   const out = [];
+  const seen = new Set();
+
+  /* ① 魔法・罠ゾーン（従来どおり） */
   P.sz.forEach((c,i)=>{
     const db = dbOf(c);
-    // 罠は伏せてあれば発動可、速攻魔法も同様。表側の永続系も効果を出せる。
     const isTrap  = db.k==='t';
     const isQuick = db.k==='s' && db.sub==='速攻';
     if(isTrap || isQuick || c.face==='up'){
       out.push({p, zone:'sz', index:i, db, ss: isTrap ? (db.sub==='カウンター'?3:2) : (isQuick?2:1)});
+      seen.add('sz:'+i);
     }
   });
   if(P.field){
     out.push({p, zone:'field', index:0, db:dbOf(P.field), ss:1});
   }
+
+  /* ② 墓地・手札などから発動できるカード
+     スクリプトが activateFrom を宣言していればそれを使う。
+     未実装カードは効果テキストから推定する（誤検出しても選ばなければ発動しない）。 */
+  const zones = ['grave','hand','banish','mz'];
+  zones.forEach(zone=>{
+    const arr = zone==='mz' ? P.mz : P[zone];
+    (arr||[]).forEach((c,i)=>{
+      if(!c) return;
+      const db = dbOf(c);
+      if(!canActivateFromZone(db, zone)) return;
+      if(!isQuickFromZone(db)) return;          // 相手ターンに撃てないものは除く
+      const sc = CARD_SCRIPTS[db.n];
+      // スクリプトがあれば発動条件も確認する
+      if(sc && sc.condition){
+        const ctx = makeContext(p, c, zone, i, "react", {});
+        let ok = true;
+        try{ ok = sc.condition(ctx); }catch(e){ ok = false; }
+        if(!ok) return;
+      }
+      out.push({p, zone, index:i, db,
+                ss: sc ? (sc.priority||2) : 2,
+                script: !!sc});
+    });
+  });
   return out;
 }
 
@@ -1995,12 +2410,17 @@ function openReact(){
   }
   const rows = list.map(it=>{
     const P = gameState.players[rp];
-    const card = it.zone==='field' ? P.field : P.sz[it.index];
-    const hidden = card && card.face==='down';
+    const card = it.zone==='field' ? P.field : (P[it.zone]||[])[it.index];
+    const hidden = card && card.face==='down' && (it.zone==='sz'||it.zone==='field');
     const eff = hasEffect(it.db.n);
+    // 発動場所を明示する（墓地・手札からの発動が分かるように）
+    const where = it.zone==='sz'||it.zone==='field' ? "" :
+      `<span class="rk-zone">${zoneJp(it.zone)}</span>`;
+    const kind = it.db.k==='t'?'罠' : it.db.k==='s'?'魔法' : 'モンスター';
+    const auto = it.script ? ' ⚡自動' : (eff ? ' ⚡' : ' 手動');
     return `<div class="act pick-row" onclick="reactActivate(${rp},'${it.zone}',${it.index})">
-      <span class="pk-nm">${it.db.n}${hidden?'<span class="rk-set">伏</span>':''}</span>
-      <span class="pk-sub">${it.db.k==='t'?'罠':'魔法'}${it.db.sub?'・'+it.db.sub:''} SS${it.ss}${eff?' ⚡':''}</span>
+      <span class="pk-nm">${it.db.n}${hidden?'<span class="rk-set">伏</span>':''}${where}</span>
+      <span class="pk-sub">${kind}${it.db.sub?'・'+it.db.sub:''} SS${it.ss}${auto}</span>
     </div>`;
   }).join("");
   sheet.innerHTML = `<div class="grip"></div>
@@ -2015,36 +2435,45 @@ function openReact(){
 /* 割り込み発動：表side にしてチェーンへ積む（効果があれば自動処理も選べる） */
 function reactActivate(p, zone, index){
   const P = gameState.players[p];
-  const card = zone==='field' ? P.field : P.sz[index];
+  const card = zone==='field' ? P.field : (P[zone]||[])[index];
   if(!card){ showToast("カードがありません"); return; }
   const db = dbOf(card);
   const nm = db.n||"";
   const eff = hasEffect(nm);
-  const ss  = db.k==='t' ? (db.sub==='カウンター'?3:2) : (db.sub==='速攻'?2:1);
+  const sc  = CARD_SCRIPTS[nm];
+  const ss  = sc && sc.priority ? sc.priority
+            : (db.k==='t' ? (db.sub==='カウンター'?3:2) : (db.sub==='速攻'?2:1));
   closeSheet();
-  // 裏側なら表にする
-  if(card.face==='down'){
+  // 場に伏せてあるカードだけ表にする（墓地・手札からの発動は不要）
+  if(card.face==='down' && (zone==='sz' || zone==='field' )){
     act({type:"FX_SET_STATE", player:p, zone, index, face:"up", reason:"発動"});
   }
   // チェーンに積む
   act({type:"CHAIN_ADD", player:p, cardId:card.id, name:nm, ss, from:zone, index});
-  if(eff){
-    // 効果を自動処理するか選ばせる
-    setTimeout(()=>{
-      sheet.innerHTML = `<div class="grip"></div>
-        <h3 style="margin-bottom:6px">${nm}</h3>
-        <div class="meta" style="margin-bottom:12px">チェーン${gameState.chain.length}に積みました。<br>
-          相手がチェーンしないなら、そのまま解決できます。</div>
-        <div class="act-grid wide">
-          <div class="act fx" onclick="closeSheet();resolveReact(${p},'${zone}',${index},${JSON.stringify(nm)})">⚡ 解決して効果を処理</div>
-          <div class="act" onclick="closeSheet();openChain()">チェーンを確認する</div>
-        </div>`;
-      veil.classList.add("on");
-    }, 60);
-  } else {
-    showToast(`${nm} をチェーン${gameState.chain.length}に積みました`);
-    openChain();
-  }
+  // 解決方法を選ばせる。スクリプトが無くても手動パレットで処理できる。
+  setTimeout(()=>{
+    const auto = eff
+      ? `<div class="act fx" onclick="closeSheet();resolveReact(${p},'${zone}',${index},${jsStr(nm)})">⚡ 解決して効果を処理</div>`
+      : "";
+    const eff_txt = db.e ? `<div class="eff">${String(db.e).replace(/\n/g,"<br>")}</div>` : "";
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:4px">${nm}</h3>
+      <div class="meta" style="margin-bottom:8px">チェーン${gameState.chain.length}に積みました（${zoneJp(zone)}から発動）。<br>
+        相手がチェーンしないなら解決できます。</div>
+      ${eff_txt}
+      <div class="act-grid wide">
+        ${auto}
+        <div class="act" onclick="closeSheet();manualResolveReact(${p},'${zone}',${index},${jsStr(nm)})">手動で処理する…</div>
+        <div class="act" onclick="closeSheet();openChain()">チェーンを確認する</div>
+      </div>`;
+    veil.classList.add("on");
+  }, 60);
+}
+/* スクリプトが無いカードを手動で解決する。
+   チェーンを解決してから汎用パレットを開き、コストの除外/墓地送りも案内する。 */
+function manualResolveReact(p, zone, index, nm){
+  if(gameState.chain.length) act({type:"CHAIN_RESOLVE_TOP"});
+  openPrimitives(p, zone, index, nm);
 }
 /* 割り込みカードを解決して効果まで処理する */
 function resolveReact(p, zone, index, nm){
@@ -2055,8 +2484,1113 @@ function resolveReact(p, zone, index, nm){
   runEffect(p, nm, {zone, index, keep});
   render();
 }
+/* =========================================================================
+   フェーズごとの行動制限（1103準拠）
+   ドローフェイズ／スタンバイは通常召喚も攻撃もできず、
+   撃てるのはスペルスピード2以上（速攻魔法・罠）だけ。
+   ========================================================================= */
+const PHASE_RULES = {
+  draw:    { draw:true,  normalSummon:false, setCard:false, activateS1:false, attack:false, exSummon:false,
+             note:"ドロー／速攻魔法・罠のみ" },
+  standby: { draw:false, normalSummon:false, setCard:false, activateS1:false, attack:false, exSummon:false,
+             note:"速攻魔法・罠のみ" },
+  main1:   { draw:false, normalSummon:true,  setCard:true,  activateS1:true,  attack:false, exSummon:true,
+             note:"召喚・セット・発動" },
+  battle:  { draw:false, normalSummon:false, setCard:false, activateS1:false, attack:true,  exSummon:false,
+             note:"攻撃宣言／速攻魔法・罠" },
+  main2:   { draw:false, normalSummon:true,  setCard:true,  activateS1:true,  attack:false, exSummon:true,
+             note:"召喚・セット・発動" },
+  end:     { draw:false, normalSummon:false, setCard:false, activateS1:false, attack:false, exSummon:false,
+             note:"手札7枚調整／速攻魔法・罠" },
+};
+function rules(){ return PHASE_RULES[gameState.phase] || PHASE_RULES.main1; }
+/* スペルスピード判定 */
+function spellSpeedOf(db){
+  if(!db) return 1;
+  if(db.k==='t') return db.sub==='カウンター' ? 3 : 2;
+  if(db.k==='s' && db.sub==='速攻') return 2;
+  return 1;
+}
+/* そのカードが今のフェーズで発動できるか。
+   スペルスピード2以上（速攻魔法・罠）はいつでも発動できる。 */
+function canActivateNow(db){
+  if(spellSpeedOf(db) >= 2) return true;
+  return rules().activateS1;
+}
+/* 制限に引っかかった時の理由文 */
+function whyBlocked(what){
+  const ph = phaseJp(gameState.phase);
+  const msg = {
+    normalSummon:`${ph}では通常召喚できません`,
+    setCard:`${ph}ではセットできません`,
+    activateS1:`${ph}では通常魔法・起動効果は発動できません（速攻魔法・罠のみ）`,
+    attack:`${ph}では攻撃できません`,
+    exSummon:`${ph}ではEX召喚できません`,
+  };
+  return msg[what] || `${ph}ではその操作はできません`;
+}
+
+
+/* =========================================================================
+   Step11-13: カードスクリプト基盤 / イベントシステム / デバッガー
+
+   設計:
+   - スクリプトは gameState を直接触らない。必ず API 経由。
+   - API は内部で act()（=applyAction）を呼ぶので Undo/Redo が効く。
+   - スクリプトは UI/DOM を触らない。対象選択は API が担当する。
+   - 処理の各段階は scriptLog に記録され、デバッガーで追える。
+   ========================================================================= */
+
+/* ---- デバッガー用トレース ---- */
+function traceStart(name){
+  gameState.scriptLog = gameState.scriptLog || [];
+  gameState.scriptLog.unshift({name, t:Date.now(), steps:[]});
+  if(gameState.scriptLog.length>20) gameState.scriptLog.pop();
+}
+function trace(msg, ok){
+  const cur = (gameState.scriptLog||[])[0];
+  if(cur) cur.steps.push({msg, ok: ok!==false});
+}
+
+/* ---- context を組み立てる ---- */
+function makeContext(p, card, zone, index, eventName, extra){
+  const gs = gameState;
+  return Object.assign({
+    gameState: gs,
+    player: p,
+    opponent: p===0?1:0,
+    card, zone, index,
+    phase: gs.phase,
+    turn: gs.turn,
+    chainDepth: gs.chain.length,
+    priority: gs.priority,
+    eventName: eventName||null,
+    targetCandidates: [],
+    selectedTargets: [],
+    reason: "",
+    debug: [],
+  }, extra||{});
+}
+
+/* =========================================================================
+   共通API（スクリプトが使える唯一の手段）
+   すべて act() 経由なので Undo が効く。
+   ========================================================================= */
+const API = {
+  /* --- 情報取得（読み取り専用） --- */
+  me(ctx){ return gameState.players[ctx.player]; },
+  foe(ctx){ return gameState.players[ctx.opponent]; },
+  db(card){ return CARD_DB[card.id]||{}; },
+  /* 場のカードを列挙 [{p, zone, index, card, db}] */
+  fieldCards(opts){
+    const o = opts||{};
+    const out=[];
+    [0,1].forEach(p=>{
+      if(o.player!=null && o.player!==p) return;
+      const P=gameState.players[p];
+      if(o.zone==null || o.zone==='mz') P.mz.forEach((c,i)=>out.push({p,zone:'mz',index:i,card:c,db:dbOf(c)}));
+      if(o.zone==null || o.zone==='sz') P.sz.forEach((c,i)=>out.push({p,zone:'sz',index:i,card:c,db:dbOf(c)}));
+      if((o.zone==null || o.zone==='field') && P.field) out.push({p,zone:'field',index:0,card:P.field,db:dbOf(P.field)});
+    });
+    return o.filter ? out.filter(o.filter) : out;
+  },
+  pileCards(p, zone, filter){
+    const arr = gameState.players[p][zone]||[];
+    const out = arr.map((c,i)=>({p, zone, index:i, card:c, db:dbOf(c)}));
+    return filter ? out.filter(filter) : out;
+  },
+
+  /* --- 盤面操作プリミティブ --- */
+  destroy(t, reason){ trace(`destroy: ${labelOf(t.card)}`); act({type:"FX_TO_GRAVE", player:t.p, zone:t.zone, index:t.index, reason}); },
+  destroyAll(zone, player, reason){
+    trace(`destroyAll: ${zoneJp(zone)}${player!=null?`(${nameOf(player)})`:"(両者)"}`);
+    const ps = player!=null ? [player] : [0,1];
+    ps.forEach(p=>act({type:"FX_WIPE_ZONE", player:p, zone, reason}));
+  },
+  sendToGrave(t, reason){ trace(`sendToGrave: ${labelOf(t.card)}`); act({type:"FX_TO_GRAVE", player:t.p, zone:t.zone, index:t.index, reason}); },
+  specialSummon(p, from, index, pos, reason){
+    trace(`specialSummon: ${from}[${index}] → ${pos||'atk'}`);
+    act({type:"FX_SPECIAL_SUMMON", player:p, from, fromIndex:index, pos:pos||'atk', reason});
+  },
+  searchDeck(p, deckIndex, reason){ trace(`search: deck[${deckIndex}]`); act({type:"FX_SEARCH", player:p, deckIndex, reason}); },
+  mill(p, deckIndex, reason){ trace(`mill: deck[${deckIndex}]`); act({type:"FX_MILL", player:p, deckIndex, reason}); },
+  millTop(p, n, reason){ trace(`millTop: ${n}`); act({type:"FX_MILL_TOP", player:p, n, reason}); },
+  discard(p, handIndex, reason){ trace(`discard: hand[${handIndex}]`); act({type:"FX_DISCARD", player:p, handIndex, reason}); },
+  returnToHand(t, reason){ trace(`returnToHand: ${labelOf(t.card)}`); act({type:"FX_BOUNCE", player:t.p, zone:t.zone, index:t.index, reason}); },
+  returnToDeck(t, toBottom, reason){ trace(`returnToDeck: ${labelOf(t.card)}`); act({type:"FX_RETURN_DECK", player:t.p, zone:t.zone, index:t.index, toBottom, reason}); },
+  banish(t, reason){ trace(`banish: ${labelOf(t.card)}`); act({type:"FX_BANISH", player:t.p, zone:t.zone, index:t.index, reason}); },
+  changePosition(t, pos, reason){ trace(`changePosition: ${labelOf(t.card)} → ${pos}`); act({type:"FX_SET_STATE", player:t.p, zone:t.zone, index:t.index, pos, reason}); },
+  flip(t, face, reason){ trace(`flip: ${labelOf(t.card)} → ${face}`); act({type:"FX_SET_STATE", player:t.p, zone:t.zone, index:t.index, face, reason}); },
+  negate(t, reason){ trace(`negate: ${labelOf(t.card)}`); act({type:"FX_NEGATE", player:t.p, zone:t.zone, index:t.index, reason}); },
+  overlay(p, targetMz, from, fromIndex){ trace(`overlay`); act({type:"FX_OVERLAY", player:p, targetMz, from, fromIndex}); },
+  detachMaterial(p, mzIndex, reason){ trace(`detach: mz[${mzIndex}]`); act({type:"FX_DETACH", player:p, mzIndex, reason}); },
+  shuffle(p){ trace(`shuffle`); act({type:"SHUFFLE", player:p}); },
+  draw(p, n){ trace(`draw: ${n||1}`); act({type:"DRAW", player:p, n:n||1}); },
+  damageLP(p, amount){ trace(`damage: ${nameOf(p)} -${amount}`); act({type:"LP", player:p, delta:-Math.abs(amount)}); },
+  recoverLP(p, amount){ trace(`recover: ${nameOf(p)} +${amount}`); act({type:"LP", player:p, delta:Math.abs(amount)}); },
+  payCost(p, amount){ trace(`payCost: ${amount}`); act({type:"LP", player:p, delta:-Math.abs(amount)}); },
+  /* コントロール奪取（強奪など）。場のカードを相手の場へ移す */
+  changeControl(t, toPlayer, reason){
+    trace(`changeControl: ${labelOf(t.card)} → ${nameOf(toPlayer)}`);
+    snapshot();
+    const P = gameState.players[t.p];
+    const arr = t.zone==='field' ? null : P[t.zone];
+    let card;
+    if(t.zone==='field'){ card = P.field; P.field=null; }
+    else { card = arr.splice(t.index,1)[0]; }
+    if(!card) return;
+    const D = gameState.players[toPlayer];
+    if(t.zone==='field'){ D.field = card; } else { D[t.zone].push(card); }
+    card.controller = toPlayer;
+    logIt(gameState, `${reason||"効果"}：${cardName(card)} のコントロールが ${nameOf(toPlayer)} へ`);
+    render();
+  },
+  /* --- チェーン --- */
+  addChainLink(p, card, name, ss, zone, index){
+    trace(`addChainLink: ${name} (SS${ss})`);
+    act({type:"CHAIN_ADD", player:p, cardId:card?card.id:0, name, ss, from:zone, index});
+  },
+  resolveChainLink(){ trace(`resolveChainLink`); act({type:"CHAIN_RESOLVE_TOP"}); },
+  /* --- 発動待ち・予約 --- */
+  registerPendingEffect(p, name, note){ trace(`pending: ${name}`); act({type:"PENDING_ADD", player:p, name, note}); },
+  registerReserveEffect(p, name, at, note){ trace(`reserve: ${name}@${at}`); act({type:"RESERVE_ADD", player:p, name, at, note}); },
+  /* --- フラグ --- */
+  setFlag(p, key, val, temporary){
+    snapshot();
+    const P = gameState.players[p];
+    (temporary ? P.temporaryFlags : P.effectFlags)[key] = val;
+    render();
+  },
+  getFlag(p, key){
+    const P = gameState.players[p];
+    return P.effectFlags[key] ?? P.temporaryFlags[key];
+  },
+  /* --- 選択（UI担当。スクリプトはコールバックを受け取るだけ） --- */
+  selectCard(title, candidates, onPick, note){
+    trace(`selectCard: ${candidates.length}件`);
+    if(!candidates.length){ trace(`対象なし`, false); showToast("対象がありません"); return; }
+    openPick(title, note||"", candidates.map(t=>({
+      label: t.card.face==='down' ? "裏側のカード" : labelOf(t.card),
+      sub: `${nameOf(t.p)}・${zoneJp(t.zone)}`,
+      onPick: ()=>{ trace(`選択: ${labelOf(t.card)}`); onPick(t); }
+    })));
+  },
+  selectPlayer(title, onPick){
+    openPick(title, "", [0,1].map(p=>({
+      label: nameOf(p), sub:"", onPick: ()=>onPick(p)
+    })));
+  },
+  selectZone(title, p, zones, onPick){
+    openPick(title, "", zones.map(z=>({label: zoneJp(z), sub:"", onPick: ()=>onPick(z)})));
+  },
+  confirm(title, message, onYes, onNo){
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:6px">${title}</h3>
+      <div class="meta" style="margin-bottom:12px">${message}</div>
+      <div class="act-grid">
+        <div class="act fx" onclick="__cfmYes()">はい</div>
+        <div class="act" onclick="__cfmNo()">いいえ</div>
+      </div>`;
+    CFM_YES = onYes||null; CFM_NO = onNo||null;
+    veil.classList.add("on");
+  },
+  log(msg){ logIt(gameState, msg); },
+};
+let CFM_YES=null, CFM_NO=null;
+function __cfmYes(){ const f=CFM_YES; CFM_YES=CFM_NO=null; closeSheet(); if(f) f(); }
+function __cfmNo(){  const f=CFM_NO;  CFM_YES=CFM_NO=null; closeSheet(); if(f) f(); }
+
+/* =========================================================================
+   カードスクリプト定義
+   condition / selectTargets / resolve / afterResolve / passive
+   ========================================================================= */
+const CARD_SCRIPTS = {};
+/* 登録ヘルパ。name をキーにする（このアプリはカード名で引くため） */
+function defineScript(name, def){ CARD_SCRIPTS[name] = Object.assign({name}, def); }
+
+/* 自身を墓地へ送る標準の後処理（通常魔法・通常罠） */
+function selfToGrave(ctx){
+  if(!ctx.zone || ctx.keep) return;
+  trace(`afterResolve: 自身を墓地へ`);
+  act({type:"FX_SELF_TO_GRAVE", player:ctx.player, zone:ctx.zone, index:ctx.index});
+}
+
+/* ---- スクリプト実行（発動条件 → 対象選択 → 解決 → 後処理） ---- */
+function runScript(name, p, zone, index, opts){
+  const sc = CARD_SCRIPTS[name];
+  if(!sc) return false;
+  const P = gameState.players[p];
+  const card = zone ? zoneCard(P, zone, index) : null;
+  const ctx = makeContext(p, card, zone, index, "activate", opts||{});
+  traceStart(name);
+
+  // 1. 発動条件
+  if(sc.condition){
+    const ok = sc.condition(ctx);
+    if(!ok){
+      trace(`発動条件 NG：${ctx.reason||"条件を満たしていません"}`, false);
+      showToast(ctx.reason || `${name} は今発動できません`);
+      render();
+      return true;
+    }
+  }
+  trace(`発動条件 OK`);
+
+  // 2. 対象選択 → 3. 解決 → 4. 後処理
+  const finish = ()=>{
+    if(sc.afterResolve) sc.afterResolve(ctx); else selfToGrave(ctx);
+    trace(`解決終了`);
+    render();
+  };
+  if(sc.selectTargets){
+    sc.selectTargets(ctx, (targets)=>{
+      ctx.selectedTargets = targets||[];
+      trace(`対象確定：${ctx.selectedTargets.map(t=>labelOf(t.card)).join("、")||"なし"}`);
+      sc.resolve(ctx);
+      finish();
+    });
+  } else {
+    sc.resolve(ctx);
+    finish();
+  }
+  return true;
+}
+
+/* =========================================================================
+   イベントシステム
+   イベント発火 → 該当スクリプトの passive を評価 → 候補提示
+   ========================================================================= */
+const EVENTS = [
+  "onDraw","onSummon","onNormalSummon","onSpecialSummon","onSet","onFlip",
+  "onAttackDeclare","onDamageStep","onBattleDestroy","onSendToGrave","onDestroy",
+  "onRemove","onChainStart","onChainResolve","onEndPhase","onStandbyPhase",
+  "onPhaseChange","onTurnStart","onTurnEnd","onLPChange","onTargetDeclared","onCardActivate"
+];
+
+/* 発火候補を集める。場・手札・墓地のカードでハンドラを持つものを探す */
+function collectHandlers(eventName, evt){
+  const out = [];
+  [0,1].forEach(p=>{
+    const P = gameState.players[p];
+    const scan = (zone, arr)=>{
+      (arr||[]).forEach((c,i)=>{
+        if(!c) return;
+        const nm = dbOf(c).n;
+        const sc = CARD_SCRIPTS[nm];
+        const h  = sc && sc.passive && sc.passive[eventName];
+        if(!h) return;
+        const ctx = makeContext(p, c, zone, i, eventName, {event:evt||{}});
+        // 条件を満たすものだけ候補にする
+        let ok = true;
+        try{ ok = h(ctx); }catch(e){ ok = false; }
+        if(ok) out.push({p, zone, index:i, card:c, name:nm, ctx});
+      });
+    };
+    scan('mz', P.mz); scan('sz', P.sz);
+    if(P.field) scan('field', [P.field]);
+    scan('hand', P.hand); scan('grave', P.grave);
+  });
+  return out;
+}
+
+/* イベント発火。候補があればプレイヤーに提示する（自動発動はしない） */
+function emitEvent(eventName, evt){
+  const cands = collectHandlers(eventName, evt);
+  if(!cands.length) return false;
+  // 相手の誘発を優先して出す（激流葬・奈落など）
+  const rp = reactingPlayer();
+  cands.sort((a,b)=> (a.p===rp?-1:1) - (b.p===rp?-1:1));
+  setTimeout(()=>{
+    const rows = cands.map((c,i)=>
+      `<div class="act pick-row" onclick="__evtPick(${i})">
+         <span class="pk-nm">${c.name}</span>
+         <span class="pk-sub">${nameOf(c.p)}・${zoneJp(c.zone)}</span>
+       </div>`).join("");
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:4px">${eventJp(eventName)}</h3>
+      <div class="meta" style="margin-bottom:10px">発動できるカードがあります。使用しますか？</div>
+      <div class="pick-list">${rows}</div>
+      <button class="close" onclick="__evtSkip()">発動しない</button>`;
+    EVT_CANDS = cands;
+    veil.classList.add("on");
+  }, 60);
+  return true;
+}
+let EVT_CANDS = [], EVT_AFTER = null;
+function __evtPick(i){
+  const c = EVT_CANDS[i]; EVT_CANDS=[];
+  closeSheet();
+  if(c) runScript(c.name, c.p, c.zone, c.index, {event:c.ctx.event});
+}
+function __evtSkip(){
+  EVT_CANDS=[]; closeSheet();
+  const f = EVT_AFTER; EVT_AFTER=null;
+  if(f) f();
+}
+function eventJp(e){
+  return ({
+    onDraw:"ドロー時", onSummon:"召喚時", onNormalSummon:"通常召喚時",
+    onSpecialSummon:"特殊召喚時", onSet:"セット時", onFlip:"反転時",
+    onAttackDeclare:"攻撃宣言時", onDamageStep:"ダメージステップ", onBattleDestroy:"戦闘破壊時",
+    onSendToGrave:"墓地へ送られた時", onDestroy:"破壊された時", onRemove:"場を離れた時",
+    onChainStart:"チェーン開始", onChainResolve:"チェーン解決", onEndPhase:"エンドフェイズ",
+    onStandbyPhase:"スタンバイフェイズ", onPhaseChange:"フェーズ変更", onTurnStart:"ターン開始",
+    onTurnEnd:"ターン終了", onLPChange:"LP変動", onTargetDeclared:"対象宣言", onCardActivate:"カード発動"
+  })[e] || e;
+}
+
+/* =========================================================================
+   Step14: 1103環境の主要カード
+   すべて共通API（API.*）の組み合わせのみで記述する。
+   gameState を直接触らないこと。
+   ========================================================================= */
+
+/* ---- サイクロン（速攻魔法・対象1枚破壊） ---- */
+defineScript("サイクロン", {
+  type:"quick-play", priority:2,
+  condition(ctx){
+    const t = API.fieldCards({zone:null}).filter(x=>x.zone!=='mz');
+    const others = t.filter(x=>!(x.p===ctx.player && x.zone===ctx.zone && x.index===ctx.index));
+    if(!others.length){ ctx.reason = "フィールドに魔法・罠がありません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const cands = API.fieldCards().filter(x=>x.zone!=='mz')
+      .filter(x=>!(x.p===ctx.player && x.zone===ctx.zone && x.index===ctx.index));
+    API.selectCard("サイクロン：破壊する魔法・罠", cands, t=>done([t]), "裏側のカードも選べます");
+  },
+  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.destroy(t, "サイクロン")); }
+});
+
+/* ---- 死者蘇生（どちらの墓地からでも蘇生） ---- */
+defineScript("死者蘇生", {
+  type:"spell", priority:1,
+  condition(ctx){
+    const mons = [0,1].flatMap(p=>API.pileCards(p,'grave',x=>x.db.k==='m'));
+    if(!mons.length){ ctx.reason = "墓地にモンスターがいません"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const mons = [0,1].flatMap(p=>API.pileCards(p,'grave',x=>x.db.k==='m'));
+    API.selectCard("死者蘇生：蘇生するモンスター", mons, t=>done([t]), "どちらの墓地からでも選べます");
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    if(t.p===ctx.player){
+      API.specialSummon(ctx.player, 'grave', t.index, 'atk', "死者蘇生");
+    } else {
+      // 相手の墓地から自分の場へ
+      API.changeControl(t, ctx.player, "死者蘇生");
+      const P = gameState.players[ctx.player];
+      const gi = P.grave.length-1;
+      if(gi>=0) API.specialSummon(ctx.player, 'grave', gi, 'atk', "死者蘇生");
+    }
+  }
+});
+
+/* ---- 激流葬（召喚に誘発してモンスター全破壊） ---- */
+defineScript("激流葬", {
+  type:"trap", priority:2,
+  condition(ctx){
+    const mons = API.fieldCards({zone:'mz'});
+    if(!mons.length){ ctx.reason = "フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  resolve(ctx){ API.destroyAll('mz', null, "激流葬"); },
+  passive:{
+    // モンスターが召喚・特殊召喚された時に発動できる
+    onNormalSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+    onSpecialSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+    onFlip(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+  }
+});
+
+/* ---- ブラック・ホール ---- */
+defineScript("ブラック・ホール", {
+  type:"spell", priority:1,
+  condition(ctx){
+    if(!API.fieldCards({zone:'mz'}).length){ ctx.reason = "フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  resolve(ctx){ API.destroyAll('mz', null, "ブラック・ホール"); }
+});
+
+/* ---- サンダー・ボルト（相手のみ全破壊） ---- */
+defineScript("サンダー・ボルト", {
+  type:"spell", priority:1,
+  condition(ctx){
+    if(!API.foe(ctx).mz.length){ ctx.reason = "相手フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  resolve(ctx){ API.destroyAll('mz', ctx.opponent, "サンダー・ボルト"); }
+});
+
+/* ---- 奈落の落とし穴（攻1500以上を除外） ---- */
+defineScript("奈落の落とし穴", {
+  type:"trap", priority:2,
+  condition(ctx){
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>(x.db.atk||0)>=1500});
+    if(!t.length){ ctx.reason = "攻撃力1500以上の相手モンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>(x.db.atk||0)>=1500});
+    API.selectCard("奈落の落とし穴：除外するモンスター", t, x=>done([x]));
+  },
+  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.banish(t, "奈落の落とし穴")); },
+  passive:{
+    onNormalSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+    onSpecialSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+  }
+});
+
+/* ---- 強制脱出装置（バウンス） ---- */
+defineScript("強制脱出装置", {
+  type:"trap", priority:2,
+  condition(ctx){
+    if(!API.fieldCards({zone:'mz'}).length){ ctx.reason = "フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("強制脱出装置：手札に戻すモンスター", API.fieldCards({zone:'mz'}), t=>done([t]));
+  },
+  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.returnToHand(t, "強制脱出装置")); }
+});
+
+/* ---- 月の書（裏側守備にする） ---- */
+defineScript("月の書", {
+  type:"quick-play", priority:2,
+  condition(ctx){
+    const t = API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'});
+    if(!t.length){ ctx.reason = "表側表示のモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'});
+    API.selectCard("月の書：裏側守備にするモンスター", t, x=>done([x]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.flip(t, 'down', "月の書");
+    API.changePosition(t, 'def', "月の書");
+  }
+});
+
+/* ---- ライトニング・ボルテックス（手札1枚捨てて相手表側全破壊） ---- */
+defineScript("ライトニング・ボルテックス", {
+  type:"spell", priority:1,
+  condition(ctx){
+    if(!API.me(ctx).hand.length){ ctx.reason = "捨てる手札がありません"; return false; }
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up'});
+    if(!t.length){ ctx.reason = "相手に表側表示モンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const P = API.me(ctx);
+    const hand = P.hand.map((c,i)=>({p:ctx.player, zone:'hand', index:i, card:c, db:dbOf(c)}))
+      .filter(x=>!(x.zone===ctx.zone && x.index===ctx.index));
+    API.selectCard("ライトニング・ボルテックス：捨てる手札", hand, t=>done([t]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0];
+    if(t) API.discard(ctx.player, t.index, "ライトニング・ボルテックス");
+    const foes = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up'});
+    // 添字ズレを避けるため後ろから破壊する
+    foes.sort((a,b)=>b.index-a.index).forEach(x=>API.destroy(x, "ライトニング・ボルテックス"));
+  }
+});
+
+/* ---- 強奪（相手モンスターのコントロールを得る／相手はスタンバイに1000回復） ---- */
+defineScript("強奪", {
+  type:"equip", priority:1,
+  condition(ctx){
+    if(!API.foe(ctx).mz.length){ ctx.reason = "相手フィールドにモンスターがいません"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "自分のモンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("強奪：奪うモンスター", API.fieldCards({zone:'mz', player:ctx.opponent}), t=>done([t]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.changeControl(t, ctx.player, "強奪");
+    // 相手はスタンバイフェイズ毎に1000回復する（予約として登録）
+    API.registerReserveEffect(ctx.opponent, "強奪：スタンバイに1000回復", "standby", "相手LP+1000");
+  },
+  afterResolve(ctx){ /* 装備魔法なので場に残す */ }
+});
+
+/* ---- 貪欲な壺（墓地のモンスター5体をデッキに戻して2ドロー） ---- */
+defineScript("貪欲な壺", {
+  type:"spell", priority:1,
+  condition(ctx){
+    const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
+    if(mons.length<5){ ctx.reason = `墓地のモンスターが5体未満です（現在${mons.length}体）`; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m').slice(0,5);
+    // 添字ズレを避けるため後ろから戻す
+    mons.sort((a,b)=>b.index-a.index).forEach(x=>API.returnToDeck(x, true, "貪欲な壺"));
+    API.shuffle(ctx.player);
+    API.draw(ctx.player, 2);
+  }
+});
+
+/* ---- 大嵐（魔法・罠を全破壊） ---- */
+defineScript("大嵐", {
+  type:"spell", priority:1,
+  condition(ctx){
+    const t = API.fieldCards().filter(x=>x.zone!=='mz')
+      .filter(x=>!(x.p===ctx.player && x.zone===ctx.zone && x.index===ctx.index));
+    if(!t.length){ ctx.reason = "他に魔法・罠がありません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    // 自分の発動中のこのカード以外を全て破壊
+    const all = API.fieldCards().filter(x=>x.zone!=='mz')
+      .filter(x=>!(x.p===ctx.player && x.zone===ctx.zone && x.index===ctx.index));
+    all.sort((a,b)=>b.index-a.index).forEach(x=>API.destroy(x, "大嵐"));
+  }
+});
+
+/* ---- リビングデッドの呼び声（蘇生・場に残る） ---- */
+defineScript("リビングデッドの呼び声", {
+  type:"trap", priority:2,
+  condition(ctx){
+    const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
+    if(!mons.length){ ctx.reason = "自分の墓地にモンスターがいません"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("リビングデッドの呼び声：蘇生するモンスター",
+      API.pileCards(ctx.player,'grave',x=>x.db.k==='m'), t=>done([t]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.specialSummon(ctx.player, 'grave', t.index, 'atk', "リビングデッドの呼び声");
+  },
+  afterResolve(ctx){ /* 永続罠なので場に残す */ }
+});
+
+/* ---- 聖なるバリア －ミラーフォース－ ---- */
+defineScript("聖なるバリア －ミラーフォース－", {
+  type:"trap", priority:2,
+  condition(ctx){
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+    if(!t.length){ ctx.reason = "相手に攻撃表示モンスターがいません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+    t.sort((a,b)=>b.index-a.index).forEach(x=>API.destroy(x, "ミラーフォース"));
+  },
+  passive:{ onAttackDeclare(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; } }
+});
+
+/* ---- 次元幽閉 ---- */
+defineScript("次元幽閉", {
+  type:"trap", priority:2,
+  condition(ctx){
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+    if(!t.length){ ctx.reason = "攻撃表示の相手モンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+    API.selectCard("次元幽閉：除外するモンスター", t, x=>done([x]));
+  },
+  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.banish(t, "次元幽閉")); },
+  passive:{ onAttackDeclare(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; } }
+});
+
+/* ---- 強欲な壺 ---- */
+defineScript("強欲な壺", {
+  type:"spell", priority:1,
+  condition(ctx){
+    if(API.me(ctx).deck.length<2){ ctx.reason = "デッキが2枚未満です"; return false; }
+    return true;
+  },
+  resolve(ctx){ API.draw(ctx.player, 2); }
+});
+
+/* ---- 天使の施し ---- */
+defineScript("天使の施し", {
+  type:"spell", priority:1,
+  condition(ctx){
+    if(API.me(ctx).deck.length<3){ ctx.reason = "デッキが3枚未満です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.draw(ctx.player, 3);
+    API.registerPendingEffect(ctx.player, "天使の施し：手札を2枚捨てる", "状態画面から処理");
+  }
+});
+
+
+/* =========================================================================
+   追加カードスクリプト
+   activateFrom: 発動できる場所を宣言する。
+     'grave' や 'hand' を指定すると相手ターン中の割り込み候補に載る。
+   quickEffect:false を指定すると相手ターン中は撃てない（自分ターン専用）。
+   ========================================================================= */
+
+/* ---- ネクロ・ガードナー（墓地から除外して攻撃を無効化） ---- */
+defineScript("ネクロ・ガードナー", {
+  type:"monster", priority:2,
+  activateFrom:["grave"],          // 墓地で発動 → 相手ターンでも撃てる
+  condition(ctx){
+    if(ctx.zone!=='grave'){ ctx.reason = "墓地でのみ発動できます"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.log("ネクロ・ガードナー：この攻撃を無効にした");
+    API.registerPendingEffect(ctx.player, "ネクロ・ガードナーで攻撃を無効化", "攻撃を止めてバトルを続行してください");
+  },
+  afterResolve(ctx){
+    // 自身を除外する（墓地から）
+    API.banish({p:ctx.player, zone:'grave', index:ctx.index, card:ctx.card}, "ネクロ・ガードナー");
+  }
+});
+
+/* ---- キラー・スネーク（スタンバイに墓地から手札へ） ---- */
+defineScript("キラー・スネーク", {
+  type:"monster", priority:1,
+  activateFrom:["grave"], quickEffect:false,
+  condition(ctx){
+    if(ctx.zone!=='grave'){ ctx.reason = "墓地でのみ発動できます"; return false; }
+    if(gameState.phase!=='standby'){ ctx.reason = "スタンバイフェイズに発動します"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const P = API.me(ctx);
+    const c = P.grave[ctx.index];
+    if(!c) return;
+    API.returnToHand({p:ctx.player, zone:'grave', index:ctx.index, card:c}, "キラー・スネーク");
+  },
+  afterResolve(){}
+});
+
+/* ---- 冥府の使者ゴーズ（手札から特殊召喚） ---- */
+defineScript("冥府の使者ゴーズ", {
+  type:"monster", priority:2,
+  activateFrom:["hand"],
+  condition(ctx){
+    if(ctx.zone!=='hand'){ ctx.reason = "手札から特殊召喚します"; return false; }
+    if(API.me(ctx).mz.length){ ctx.reason = "自分フィールドにモンスターがいると発動できません"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.specialSummon(ctx.player, 'hand', ctx.index, 'atk', "冥府の使者ゴーズ");
+    API.registerPendingEffect(ctx.player, "ゴーズ：トークン生成", "受けたダメージ分の攻守を持つトークンを出してください");
+  },
+  afterResolve(){}
+});
+
+/* ---- 非常食（自分の魔法罠を墓地へ送ってLP回復） ---- */
+defineScript("非常食", {
+  type:"quick-play", priority:2,
+  condition(ctx){
+    const t = API.fieldCards({player:ctx.player}).filter(x=>x.zone!=='mz')
+      .filter(x=>!(x.zone===ctx.zone && x.index===ctx.index));
+    if(!t.length){ ctx.reason = "他に自分の魔法・罠がありません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.fieldCards({player:ctx.player}).filter(x=>x.zone!=='mz')
+      .filter(x=>!(x.zone===ctx.zone && x.index===ctx.index));
+    API.selectCard("非常食：墓地へ送る自分の魔法・罠", t, x=>done([x]), "1枚につき1000回復");
+  },
+  resolve(ctx){
+    ctx.selectedTargets.forEach(t=>{
+      API.sendToGrave(t, "非常食");
+      API.recoverLP(ctx.player, 1000);
+    });
+  }
+});
+
+/* ---- 神の宣告（LP半分でカウンター） ---- */
+defineScript("神の宣告", {
+  type:"counter", priority:3,
+  condition(ctx){
+    const lp = API.me(ctx).lp;
+    if(lp<=1){ ctx.reason = "LPが足りません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const P = API.me(ctx);
+    const half = Math.floor(P.lp/2);
+    API.payCost(ctx.player, P.lp - half);
+    API.log("神の宣告：LPを半分払って発動を無効にした");
+    API.registerPendingEffect(ctx.player, "神の宣告で無効化", "対象の発動を無効にして破壊してください");
+  },
+  passive:{
+    onNormalSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+    onSpecialSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+    onCardActivate(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+  }
+});
+
+/* ---- 神の警告（2000払って召喚を無効） ---- */
+defineScript("神の警告", {
+  type:"counter", priority:3,
+  condition(ctx){
+    if(API.me(ctx).lp < 2000){ ctx.reason = "LPが2000未満です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.payCost(ctx.player, 2000);
+    API.log("神の警告：2000payして召喚・特殊召喚を無効にした");
+    API.registerPendingEffect(ctx.player, "神の警告で無効化", "召喚を無効にして破壊してください");
+  },
+  passive:{
+    onNormalSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+    onSpecialSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
+  }
+});
+
+/* ---- 王宮のお触れ（永続罠・罠を無効化） ---- */
+defineScript("王宮のお触れ", {
+  type:"continuous-trap", priority:2,
+  condition(){ return true; },
+  resolve(ctx){
+    API.log("王宮のお触れ：フィールドの罠カードの効果は無効になる");
+    API.setFlag(ctx.player, "royalDecree", true);
+  },
+  afterResolve(){}   // 永続なので場に残す
+});
+
+/* ---- デモンズ・チェーン（永続罠・効果無効＋攻撃不可） ---- */
+defineScript("デモンズ・チェーン", {
+  type:"continuous-trap", priority:2,
+  condition(ctx){
+    if(!API.foe(ctx).mz.length){ ctx.reason = "相手フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("デモンズ・チェーン：対象のモンスター",
+      API.fieldCards({zone:'mz', player:ctx.opponent}), t=>done([t]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.negate(t, "デモンズ・チェーン");
+    API.log("デモンズ・チェーン：対象は効果を発動できず攻撃もできない");
+  },
+  afterResolve(){}
+});
+
+/* ---- 異次元からの帰還（除外したモンスターを一斉に戻す） ---- */
+defineScript("異次元からの帰還", {
+  type:"trap", priority:2,
+  condition(ctx){
+    const b = API.pileCards(ctx.player,'banish',x=>x.db.k==='m');
+    if(!b.length){ ctx.reason = "除外されている自分のモンスターがいません"; return false; }
+    if(API.me(ctx).lp<=1){ ctx.reason = "LPが足りません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const P = API.me(ctx);
+    const half = Math.floor(P.lp/2);
+    API.payCost(ctx.player, P.lp - half);
+    const b = API.pileCards(ctx.player,'banish',x=>x.db.k==='m');
+    const room = ZONE_LIMITS.mz - P.mz.length;
+    b.slice(0, room).sort((a,c)=>c.index-a.index).forEach(x=>{
+      API.specialSummon(ctx.player, 'banish', x.index, 'atk', "異次元からの帰還");
+    });
+    API.registerReserveEffect(ctx.player, "異次元からの帰還：エンドに除外", "endPhase", "特殊召喚したモンスターを除外");
+  }
+});
+
+/* ---- クリッター（墓地へ送られた時にサーチ） ---- */
+defineScript("クリッター", {
+  type:"monster", priority:1,
+  condition(ctx){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && (x.db.atk||0)<=1500);
+    if(!t.length){ ctx.reason = "攻撃力1500以下のモンスターがデッキにいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && (x.db.atk||0)<=1500);
+    API.selectCard("クリッター：手札に加えるモンスター", t, x=>done([x]), "攻撃力1500以下");
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.searchDeck(ctx.player, t.index, "クリッター");
+  },
+  afterResolve(){},
+  passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
+});
+
+/* ---- ゴブリンゾンビ（墓地へ送られた時にアンデットをサーチ） ---- */
+defineScript("ゴブリンゾンビ", {
+  type:"monster", priority:1,
+  condition(ctx){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='アンデット' && (x.db.def||0)<=1200);
+    if(!t.length){ ctx.reason = "守備1200以下のアンデット族がデッキにいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='アンデット' && (x.db.def||0)<=1200);
+    API.selectCard("ゴブリンゾンビ：手札に加えるアンデット族", t, x=>done([x]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.searchDeck(ctx.player, t.index, "ゴブリンゾンビ");
+  },
+  afterResolve(){},
+  passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
+});
+
+/* ---- スノーマンイーター（リバースで破壊） ---- */
+defineScript("スノーマンイーター", {
+  type:"monster", priority:1,
+  condition(ctx){
+    if(!API.foe(ctx).mz.length){ ctx.reason = "相手フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("スノーマンイーター：破壊するモンスター",
+      API.fieldCards({zone:'mz', player:ctx.opponent}), t=>done([t]));
+  },
+  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.destroy(t, "スノーマンイーター")); },
+  afterResolve(){},
+  passive:{ onFlip(ctx){ return ctx.zone==='mz'; } }
+});
+
+/* ---- 異次元の女戦士（戦闘時に相手ごと除外） ---- */
+defineScript("異次元の女戦士", {
+  type:"monster", priority:1,
+  condition(ctx){
+    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("異次元の女戦士：ともに除外する相手モンスター",
+      API.fieldCards({zone:'mz', player:ctx.opponent}), t=>done([t]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0];
+    if(t) API.banish(t, "異次元の女戦士");
+    API.banish({p:ctx.player, zone:'mz', index:ctx.index, card:ctx.card}, "異次元の女戦士");
+  },
+  afterResolve(){},
+  passive:{ onBattleDestroy(ctx){ return ctx.zone==='mz'; } }
+});
+
+/* ---- カオス・ソーサラー（除外して特殊召喚する上級） ---- */
+defineScript("カオス・ソーサラー", {
+  type:"monster", priority:1, quickEffect:false,
+  condition(ctx){
+    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
+    if(!API.foe(ctx).mz.length){ ctx.reason = "除外する相手モンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("カオス・ソーサラー：除外する表側モンスター",
+      API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}), t=>done([t]));
+  },
+  resolve(ctx){
+    ctx.selectedTargets.forEach(t=>API.banish(t, "カオス・ソーサラー"));
+    API.log("カオス・ソーサラー：このターン攻撃できない");
+  },
+  afterResolve(){}
+});
+
+/* ---- 霊滅術師 カイクウ（墓地を除外） ---- */
+defineScript("霊滅術師 カイクウ", {
+  type:"monster", priority:1, quickEffect:false,
+  condition(ctx){
+    const g = [0,1].flatMap(p=>API.pileCards(p,'grave'));
+    if(!g.length){ ctx.reason = "墓地にカードがありません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const g = [0,1].flatMap(p=>API.pileCards(p,'grave'));
+    API.selectCard("カイクウ：除外する墓地のカード", g, t=>done([t]));
+  },
+  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.banish(t, "霊滅術師 カイクウ")); },
+  afterResolve(){}
+});
+
+/* ---- エフェクト・ヴェーラー（手札から効果無効） ---- */
+defineScript("エフェクト・ヴェーラー", {
+  type:"monster", priority:2,
+  activateFrom:["hand"],
+  condition(ctx){
+    if(ctx.zone!=='hand'){ ctx.reason = "手札から発動します"; return false; }
+    if(!API.foe(ctx).mz.length){ ctx.reason = "相手フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("エフェクト・ヴェーラー：効果を無効にするモンスター",
+      API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up'}), t=>done([t]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.negate(t, "エフェクト・ヴェーラー");
+  },
+  afterResolve(ctx){
+    API.discard(ctx.player, ctx.index, "エフェクト・ヴェーラー");
+  }
+});
+
+
+
+
+
+/* ---- マシュマロン（戦闘破壊されない） ---- */
+defineScript("マシュマロン", {
+  type:"monster", priority:1,
+  condition(ctx){ return true; },
+  resolve(ctx){
+    API.log("マシュマロン：戦闘では破壊されない");
+    API.registerPendingEffect(ctx.player, "マシュマロンは戦闘破壊されない", "戦闘破壊を取り消してください");
+  },
+  afterResolve(){}
+});
+
+/* ---- ライオウ（サーチ封じ・特殊召喚無効） ---- */
+defineScript("ライオウ", {
+  type:"monster", priority:1, quickEffect:false,
+  condition(ctx){
+    if(API.me(ctx).lp<1000){ ctx.reason = "LPが1000未満です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.payCost(ctx.player, 1000);
+    API.log("ライオウ：1000payして特殊召喚を無効にし破壊した");
+    API.registerPendingEffect(ctx.player, "ライオウで特殊召喚を無効化", "召喚を無効にして破壊してください");
+  },
+  afterResolve(){}
+});
+
+/* ---- 氷結界の龍 ブリューナク（手札を戻してバウンス） ---- */
+defineScript("氷結界の龍 ブリューナク", {
+  type:"synchro", priority:1, quickEffect:false,
+  condition(ctx){
+    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
+    if(!API.me(ctx).hand.length){ ctx.reason = "戻す手札がありません"; return false; }
+    if(!API.fieldCards().filter(x=>x.zone!=='mz'||x.p!==ctx.player).length){ ctx.reason = "対象がありません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const P = API.me(ctx);
+    const hand = P.hand.map((c,i)=>({p:ctx.player, zone:'hand', index:i, card:c, db:dbOf(c)}));
+    API.selectCard("ブリューナク：デッキに戻す手札（1枚につき1枚バウンス）", hand, h=>{
+      API.returnToDeck(h, false, "ブリューナク");
+      const t = API.fieldCards().filter(x=>!(x.p===ctx.player && x.zone==='mz' && x.index===ctx.index));
+      API.selectCard("ブリューナク：手札に戻すカード", t, tt=>done([tt]));
+    });
+  },
+  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.returnToHand(t, "ブリューナク")); },
+  afterResolve(){}
+});
+
+/* ---- 突然変異／おろかな埋葬など汎用サポート ---- */
+defineScript("おろかな埋葬", {
+  type:"spell", priority:1,
+  condition(ctx){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex);
+    if(!t.length){ ctx.reason = "デッキにモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex);
+    API.selectCard("おろかな埋葬：墓地へ送るモンスター", t, x=>done([x]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.mill(ctx.player, t.index, "おろかな埋葬");
+  }
+});
+
+/* ---- 増援（戦士族サーチ） ---- */
+defineScript("増援", {
+  type:"spell", priority:1,
+  condition(ctx){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='戦士' && (x.db.lv||9)<=4);
+    if(!t.length){ ctx.reason = "レベル4以下の戦士族がデッキにいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='戦士' && (x.db.lv||9)<=4);
+    API.selectCard("増援：手札に加える戦士族", t, x=>done([x]), "レベル4以下");
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.searchDeck(ctx.player, t.index, "増援");
+  }
+});
+
+/* ---- 光の援軍（デッキから3枚落として1枚サーチ） ---- */
+defineScript("光の援軍", {
+  type:"spell", priority:1,
+  condition(ctx){
+    if(API.me(ctx).deck.length<3){ ctx.reason = "デッキが3枚未満です"; return false; }
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='戦士' && (x.db.lv||9)<=4);
+    if(!t.length){ ctx.reason = "レベル4以下の戦士族がデッキにいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='戦士' && (x.db.lv||9)<=4);
+    API.selectCard("光の援軍：手札に加える戦士族（先に3枚落とす）", t, x=>done([x]));
+  },
+  resolve(ctx){
+    API.millTop(ctx.player, 3, "光の援軍");
+    const t = ctx.selectedTargets[0];
+    if(t){
+      // 落とした後にデッキが変わるので名前で引き直す
+      const nm = labelOf(t.card);
+      const again = API.pileCards(ctx.player,'deck',x=>labelOf(x.card)===nm);
+      if(again.length) API.searchDeck(ctx.player, again[0].index, "光の援軍");
+      else API.log("光の援軍：対象がデッキから失われました");
+    }
+  }
+});
+
+/* ---- ハリケーン（魔法罠を全て手札へ） ---- */
+defineScript("ハリケーン", {
+  type:"spell", priority:1,
+  condition(ctx){
+    const t = API.fieldCards().filter(x=>x.zone!=='mz')
+      .filter(x=>!(x.p===ctx.player && x.zone===ctx.zone && x.index===ctx.index));
+    if(!t.length){ ctx.reason = "他に魔法・罠がありません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const all = API.fieldCards().filter(x=>x.zone!=='mz')
+      .filter(x=>!(x.p===ctx.player && x.zone===ctx.zone && x.index===ctx.index));
+    all.sort((a,b)=>b.index-a.index).forEach(x=>API.returnToHand(x, "ハリケーン"));
+  }
+});
+
+/* ---- 早すぎた埋葬（800payして蘇生・装備） ---- */
+defineScript("早すぎた埋葬", {
+  type:"equip", priority:1,
+  condition(ctx){
+    if(API.me(ctx).lp<800){ ctx.reason = "LPが800未満です"; return false; }
+    const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
+    if(!mons.length){ ctx.reason = "自分の墓地にモンスターがいません"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("早すぎた埋葬：蘇生するモンスター",
+      API.pileCards(ctx.player,'grave',x=>x.db.k==='m'), t=>done([t]));
+  },
+  resolve(ctx){
+    API.payCost(ctx.player, 800);
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.specialSummon(ctx.player, 'grave', t.index, 'atk', "早すぎた埋葬");
+  },
+  afterResolve(){}   // 装備魔法なので場に残す
+});
+
 function hasEffect(name){
-  return !!(CARD_EFFECT[name] || AUTO_EFFECT[name]);
+  return !!(CARD_SCRIPTS[name] || CARD_EFFECT[name] || AUTO_EFFECT[name]);
 }
 /* 発動トリガ種別（召喚時 / 起動）。宣言テーブルのみ持つ */
 function effectTrigger(name){
@@ -2065,6 +3599,12 @@ function effectTrigger(name){
 }
 /* 効果を実行する。selfLoc={zone,index,keep} */
 function runEffect(p, name, selfLoc){
+  // ① カードスクリプト（Step11の正式基盤）を最優先
+  if(CARD_SCRIPTS[name]){
+    const loc = selfLoc||{};
+    return runScript(name, p, loc.zone, loc.index, {keep:loc.keep});
+  }
+  // ② 旧・個別実装 ③ 宣言テーブル の順にフォールバック
   const fn = CARD_EFFECT[name];
   if(fn){ fn(p, selfLoc); return true; }
   const ent = AUTO_EFFECT[name];
@@ -2072,6 +3612,47 @@ function runEffect(p, name, selfLoc){
   return false;
 }
 /* 召喚成功時に誘発する効果を自動で提示する */
+
+/* =========================================================================
+   割り込み確認
+   召喚・魔法罠の発動など「相手が反応できる場面」で、
+   相手が撃てる伏せを持っていれば確認を出す。
+   （激流葬・奈落・神の宣告などを撃ち逃さないため）
+   ========================================================================= */
+let ASK_CHAIN = true;               // メニューでON/OFFできる
+function askChain(triggerLabel, onContinue){
+  const rp = reactingPlayer();
+  const n  = ASK_CHAIN ? reactableCards(rp).length : 0;
+  if(!n){ if(onContinue) onContinue(); return; }
+  PENDING_CONTINUE = onContinue || null;
+  setTimeout(()=>{
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:4px">${triggerLabel}</h3>
+      <div class="meta" style="margin-bottom:10px">
+        <b style="color:var(--trap)">${nameOf(rp)}</b> は発動できるカードを ${n}枚 持っています。<br>
+        チェーンしますか？</div>
+      <div class="act-grid wide">
+        <div class="act" style="background:var(--trap);color:#120a1f;border-color:var(--trap)"
+             onclick="closeSheet();openReact()">${nameOf(rp)}が発動する</div>
+        <div class="act" onclick="chainPassed()">チェーンしない（このまま処理）</div>
+      </div>
+      <div class="meta" style="margin-top:8px;font-size:10px">
+        毎回聞かれるのが煩わしい場合は、メニューから確認をオフにできます。</div>`;
+    veil.classList.add("on");
+  }, 50);
+}
+let PENDING_CONTINUE = null;
+function chainPassed(){
+  const cb = PENDING_CONTINUE; PENDING_CONTINUE = null;
+  closeSheet();
+  if(cb) cb();
+}
+function toggleAskChain(){
+  ASK_CHAIN = !ASK_CHAIN;
+  showToast(ASK_CHAIN ? "チェーン確認：オン" : "チェーン確認：オフ");
+  closeSheet();
+}
+
 function offerSummonTrigger(p, cardName_){
   const ent = AUTO_EFFECT[cardName_];
   if(!ent || ent.trig!=="summon") return;
@@ -2081,7 +3662,7 @@ function offerSummonTrigger(p, cardName_){
       <div class="meta" style="margin-bottom:12px">召喚に成功しました。効果を発動しますか？</div>
       <div class="act-grid wide">
         <div class="act" style="background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi)"
-             onclick="closeSheet();runEffect(${p},${JSON.stringify(cardName_)},null)">効果を発動する</div>
+             onclick="closeSheet();runEffect(${p},${jsStr(cardName_)},null)">効果を発動する</div>
         <div class="act" onclick="closeSheet()">発動しない</div>
       </div>`;
     veil.classList.add("on");
@@ -2103,6 +3684,14 @@ function snapshot(){
   // 構造が単純なので JSON でディープコピー（DBは別なので安全）
   HISTORY.push(JSON.stringify(gameState));
   if(HISTORY.length>HISTORY_MAX) HISTORY.shift();
+  REDO.length = 0;                 // 新しい操作をしたらRedoは破棄
+}
+/* Redo：Undoで戻した操作をやり直す */
+function redo(){
+  if(!REDO.length) return;
+  HISTORY.push(JSON.stringify(gameState));
+  gameState = JSON.parse(REDO.pop());
+  render();
 }
 function act(a){
   snapshot();
@@ -2114,8 +3703,11 @@ function act(a){
   if(chip) turnActions.push(chip);
   render();
 }
+const REDO = [];
 function undo(){
   if(!HISTORY.length) return;
+  REDO.push(JSON.stringify(gameState));
+  if(REDO.length>HISTORY_MAX) REDO.shift();
   gameState = JSON.parse(HISTORY.pop());
   // チップは厳密復元が難しいので直近1つを削るだけ（実用上これで十分）
   turnActions.pop();
@@ -2147,13 +3739,23 @@ function chipFor(a){
 function doPhase(id){ act({type:"SET_PHASE", phase:id}); }
 function doPhaseNext(){
   const i = PHASES.findIndex(x=>x.id===gameState.phase);
-  if(i < PHASES.length-1) act({type:"SET_PHASE", phase:PHASES[i+1].id});
+  if(i < PHASES.length-1){
+    act({type:"SET_PHASE", phase:PHASES[i+1].id});
+    const ph = gameState.phase;
+    emitEvent("onPhaseChange", {phase:ph}) ||
+      (ph==="standby" && emitEvent("onStandbyPhase", {phase:ph})) ||
+      (ph==="end" && emitEvent("onEndPhase", {phase:ph}));
+  }
 }
 function doPhasePrev(){
   const i = PHASES.findIndex(x=>x.id===gameState.phase);
   if(i > 0) act({type:"SET_PHASE", phase:PHASES[i-1].id});
 }
-function doPass(){ act({type:"PASS_TURN"}); }
+function doPass(){
+  emitEvent("onTurnEnd", {turn:gameState.turn});
+  act({type:"PASS_TURN"});
+  emitEvent("onTurnStart", {turn:gameState.turn});
+}
 function doDraw(){ act({type:"DRAW", n:1}); }
 function doShuffle(){ act({type:"SHUFFLE"}); }
 function doLP(d){ act({type:"LP", player:gameState.activePlayer, delta:d}); }
@@ -2267,6 +3869,285 @@ function coinToss(){
   showToast(`コイントス → ${nameOf(p)}の先攻`);
 }
 
+
+/* =========================================================================
+   状態インスペクタ
+   ルール処理はプレイヤーが判断するので、アプリが保持している状態を
+   いつでも確認・手動修正できるようにする。
+   ========================================================================= */
+function openState(){
+  const gs = gameState;
+  const p  = gs.activePlayer;
+  const P  = gs.players[p], O = gs.players[p===0?1:0];
+  const cell=(k,v,off)=>`<div class="state-cell"><span class="k">${k}</span><span class="v ${off?'off':''}">${v}</span></div>`;
+  const atkDone = P.mz.filter(c=>c.attacked).length;
+  const pend = gs.pending.length
+    ? gs.pending.map((x,i)=>`<div class="act" onclick="act({type:'PENDING_RESOLVE',index:${i}});openState()">${x.name}（${nameOf(x.player)}）を処理</div>`).join("")
+    : `<div class="meta">なし</div>`;
+  const resv = gs.reserved.length
+    ? gs.reserved.map((x,i)=>`<div class="act" onclick="act({type:'RESERVE_REMOVE',index:${i}});openState()">${x.name}（T${x.turn}${x.at==='endPhase'?'エンド':''}）を解除</div>`).join("")
+    : `<div class="meta">なし</div>`;
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:8px">状態</h3>
+    <div class="state-grid">
+      ${cell("ターン", `T${gs.turn}`)}
+      ${cell("フェーズ", phaseJp(gs.phase))}
+      ${cell("手番", nameOf(gs.activePlayer))}
+      ${cell("優先権", nameOf(gs.priority??gs.activePlayer))}
+      ${cell("通常召喚権", P.normalSummonUsed?"使用済":"未使用", P.normalSummonUsed)}
+      ${cell("ドロー", gs.drawnThisTurn?"済":"未", gs.drawnThisTurn)}
+      ${cell("攻撃済み", `${atkDone} / ${P.mz.length}体`)}
+      ${cell("チェーン", `${gs.chain.length}`)}
+      ${cell("特殊召喚(今T)", `${P.ssHistory.length}回`, !P.ssHistory.length)}
+      ${cell("墓地送り(今T)", `${P.graveHistory.length}枚`, !P.graveHistory.length)}
+    </div>
+    <div class="act-label">手動で切り替え</div>
+    <div class="act-grid">
+      <div class="act" onclick="act({type:'SET_PRIORITY',to:${gs.priority===0?1:0}});openState()">優先権を渡す</div>
+      <div class="act" onclick="toggleNormalRight()">召喚権を${P.normalSummonUsed?'戻す':'使用済にする'}</div>
+      <div class="act" onclick="clearAttacked()">攻撃済みをリセット</div>
+      <div class="act" onclick="addPending()">発動待ちを登録</div>
+    </div>
+    <div class="act-label">発動待ち効果</div>
+    <div class="act-grid wide">${pend}</div>
+    <div class="act-label">予約効果</div>
+    <div class="act-grid wide">${resv}</div>
+    <div class="act-label">このターンの履歴</div>
+    <div class="meta">
+      特殊召喚：${P.ssHistory.map(h=>h.name).join("、")||"なし"}<br>
+      墓地送り：${P.graveHistory.map(h=>h.name).join("、")||"なし"}
+    </div>
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+function toggleNormalRight(){
+  const p = gameState.activePlayer;
+  snapshot();
+  gameState.players[p].normalSummonUsed = !gameState.players[p].normalSummonUsed;
+  logIt(gameState, `通常召喚権：${gameState.players[p].normalSummonUsed?'使用済':'未使用'}に変更`);
+  render(); openState();
+}
+function clearAttacked(){
+  const p = gameState.activePlayer;
+  snapshot();
+  gameState.players[p].mz.forEach(c=>{ if(c) c.attacked=false; });
+  logIt(gameState, `攻撃済みフラグをリセット`);
+  render(); openState();
+}
+function addPending(){
+  const nm = prompt("発動待ちの効果名を入力","");
+  if(!nm) return;
+  act({type:"PENDING_ADD", player:gameState.activePlayer, name:nm});
+  openState();
+}
+
+
+/* =========================================================================
+   汎用プリミティブ・パレット
+   カード固有処理を持たないカードも、ここから手動で効果を組み立てられる。
+   「対象を選ぶ → 処理を選ぶ」の2タップで完了する。
+   ========================================================================= */
+function openPrimitives(srcP, srcZone, srcIdx, srcName){
+  const label = srcName ? `${srcName} の効果` : "効果処理";
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">${label}</h3>
+    <div class="meta" style="margin-bottom:10px">処理を選ぶと対象を指定できます。裁定はプレイヤーが判断してください。</div>
+    <div class="act-label">場のカードに</div>
+    <div class="act-grid">
+      <div class="act" onclick="primPick('destroy')">破壊</div>
+      <div class="act" onclick="primPick('banish')">除外</div>
+      <div class="act" onclick="primPick('bounce')">手札に戻す</div>
+      <div class="act" onclick="primPick('todeck')">デッキに戻す</div>
+      <div class="act" onclick="primPick('position')">表示形式変更</div>
+      <div class="act" onclick="primPick('flip')">反転</div>
+      <div class="act" onclick="primPick('negate')">効果を無効化</div>
+      <div class="act" onclick="primPick('overlay')">素材として重ねる</div>
+    </div>
+    <div class="act-label">デッキ・墓地から</div>
+    <div class="act-grid">
+      <div class="act" onclick="primPick('search')">サーチ</div>
+      <div class="act" onclick="primPick('mill')">デッキから墓地へ</div>
+      <div class="act" onclick="primPick('revive')">墓地から特殊召喚</div>
+      <div class="act" onclick="primPick('graveBanish')">墓地から除外</div>
+    </div>
+    <div class="act-label">その他</div>
+    <div class="act-grid">
+      <div class="act" onclick="closeSheet();act({type:'DRAW',player:${srcP},n:1})">1枚ドロー</div>
+      <div class="act" onclick="primPick('discard')">手札を捨てる</div>
+      <div class="act" onclick="closeSheet();openLP(${srcP})">LPを増減</div>
+      <div class="act" onclick="closeSheet();act({type:'SHUFFLE',player:${srcP}})">シャッフル</div>
+    </div>
+    ${srcZone ? `<div class="act-label">このカード自身（コスト処理）</div>
+    <div class="act-grid">
+      <div class="act" onclick="primSelf('banish')">自身を除外</div>
+      <div class="act" onclick="primSelf('grave')">自身を墓地へ</div>
+    </div>` : ""}
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  PRIM_SRC = {p:srcP, zone:srcZone, index:srcIdx, name:srcName};
+  veil.classList.add("on");
+}
+let PRIM_SRC = null;
+/* 発動元カード自身を処理する（墓地から除外する等のコスト） */
+function primSelf(op){
+  const src = PRIM_SRC;
+  if(!src || !src.zone){ showToast("対象が特定できません"); return; }
+  closeSheet();
+  const t = {p:src.p, zone:src.zone, index:src.index, card:{}};
+  if(op==='banish') act({type:"FX_BANISH", player:src.p, zone:src.zone, index:src.index, reason:src.name||"コスト"});
+  else              act({type:"FX_TO_GRAVE", player:src.p, zone:src.zone, index:src.index, reason:src.name||"コスト"});
+}
+
+/* 処理を選んだあと、対象を選ばせて実行する */
+function primPick(op){
+  const src = PRIM_SRC || {p:gameState.activePlayer};
+  const p = src.p;
+  const fieldTargets = ()=>{
+    const out=[];
+    [0,1].forEach(pl=>{
+      const P=gameState.players[pl];
+      P.mz.forEach((c,i)=>out.push({pl,zone:'mz',i,c}));
+      P.sz.forEach((c,i)=>out.push({pl,zone:'sz',i,c}));
+      if(P.field) out.push({pl,zone:'field',i:0,c:P.field});
+    });
+    return out;
+  };
+  const listOf = (arr, pl, zone)=>arr.map((c,i)=>({
+    label: labelOf(c), sub: `${nameOf(pl)}の${zoneJp(zone)}`, pl, zone, i, c
+  }));
+
+  const runOnField = (title, fn)=>{
+    const t = fieldTargets();
+    openPick(title, "場のカードから選ぶ", t.map(x=>({
+      label: x.c.face==='down' ? "裏側のカード" : labelOf(x.c),
+      sub: `${nameOf(x.pl)}・${zoneJp(x.zone)}`,
+      onPick: ()=>fn(x)
+    })));
+  };
+
+  switch(op){
+    case 'destroy':
+      runOnField("破壊するカード", x=>act({type:"FX_TO_GRAVE", player:x.pl, zone:x.zone, index:x.i, reason:src.name||"効果"}));
+      break;
+    case 'banish':
+      runOnField("除外するカード", x=>act({type:"FX_BANISH", player:x.pl, zone:x.zone, index:x.i, reason:src.name||"効果"}));
+      break;
+    case 'bounce':
+      runOnField("手札に戻すカード", x=>act({type:"FX_BOUNCE", player:x.pl, zone:x.zone, index:x.i, reason:src.name||"効果"}));
+      break;
+    case 'todeck':
+      runOnField("デッキに戻すカード", x=>act({type:"FX_RETURN_DECK", player:x.pl, zone:x.zone, index:x.i, reason:src.name||"効果"}));
+      break;
+    case 'negate':
+      runOnField("無効化するカード", x=>act({type:"FX_NEGATE", player:x.pl, zone:x.zone, index:x.i, reason:src.name||"効果"}));
+      break;
+    case 'position':
+      runOnField("表示形式を変えるカード", x=>{
+        const cur = x.c.pos==='atk'?'def':'atk';
+        act({type:"FX_SET_STATE", player:x.pl, zone:x.zone, index:x.i, pos:cur, reason:src.name||"効果"});
+      });
+      break;
+    case 'flip':
+      runOnField("反転するカード", x=>act({type:"FX_SET_STATE", player:x.pl, zone:x.zone, index:x.i,
+        face: x.c.face==='up'?'down':'up', reason:src.name||"効果"}));
+      break;
+    case 'overlay': {
+      const P = gameState.players[p];
+      const xyzMons = P.mz.map((c,i)=>({c,i})).filter(x=>x.c.xyz);
+      if(!xyzMons.length){ showToast("素材を持てるモンスターがいません"); return; }
+      openPick("素材を重ねる先", "", xyzMons.map(x=>({
+        label: labelOf(x.c), sub:`素材${x.c.xyz.length}`,
+        onPick: ()=>{
+          const others = P.mz.map((c,i)=>({c,i})).filter(y=>y.i!==x.i);
+          openPick("素材にするモンスター", "", others.map(y=>({
+            label: labelOf(y.c), sub: subOf(y.c),
+            onPick: ()=>act({type:"FX_OVERLAY", player:p, targetMz:x.i, from:"mz", fromIndex:y.i})
+          })));
+        }
+      })));
+      break;
+    }
+    case 'search': {
+      const P = gameState.players[p];
+      openPick("デッキから手札に加える", `デッキ${P.deck.length}枚`,
+        P.deck.map((c,i)=>({label:labelOf(c), sub:subOf(c),
+          onPick: ()=>act({type:"FX_SEARCH", player:p, deckIndex:i, reason:src.name||"効果"})})));
+      break;
+    }
+    case 'mill': {
+      const P = gameState.players[p];
+      openPick("デッキから墓地へ送る", `デッキ${P.deck.length}枚`,
+        P.deck.map((c,i)=>({label:labelOf(c), sub:subOf(c),
+          onPick: ()=>act({type:"FX_MILL", player:p, deckIndex:i, reason:src.name||"効果"})})));
+      break;
+    }
+    case 'revive': {
+      const P = gameState.players[p];
+      const mons = P.grave.map((c,i)=>({c,i})).filter(x=>dbOf(x.c).k==='m');
+      openPick("墓地から特殊召喚", "", mons.map(x=>({label:labelOf(x.c), sub:subOf(x.c),
+        onPick: ()=>act({type:"FX_SPECIAL_SUMMON", player:p, from:"grave", fromIndex:x.i, pos:"atk", reason:src.name||"効果"})})));
+      break;
+    }
+    case 'graveBanish': {
+      const P = gameState.players[p];
+      openPick("墓地から除外", "", P.grave.map((c,i)=>({label:labelOf(c), sub:subOf(c),
+        onPick: ()=>act({type:"FX_BANISH", player:p, zone:"grave", index:i, reason:src.name||"効果"})})));
+      break;
+    }
+    case 'discard': {
+      const P = gameState.players[p];
+      openPick("捨てる手札", "", P.hand.map((c,i)=>({label:labelOf(c), sub:subOf(c),
+        onPick: ()=>act({type:"FX_DISCARD", player:p, handIndex:i, reason:src.name||"コスト"})})));
+      break;
+    }
+  }
+}
+
+
+/* =========================================================================
+   Step13: カードスクリプト デバッガー
+   直近のスクリプト実行の各段階（条件→対象→解決→後処理）を追える。
+   ========================================================================= */
+function openScriptDebug(){
+  const logs = gameState.scriptLog || [];
+  const body = logs.length
+    ? logs.map(l=>`
+        <div class="dbg-entry">
+          <div class="dbg-name">【${l.name}】</div>
+          ${l.steps.map(st=>`<div class="dbg-step ${st.ok?'':'ng'}">${st.ok?'✓':'✗'} ${st.msg}</div>`).join("")}
+        </div>`).join("")
+    : `<div class="meta">まだスクリプトが実行されていません。<br>
+        効果を発動すると、条件判定・対象選択・解決の流れがここに記録されます。</div>`;
+  const impl = Object.keys(CARD_SCRIPTS).length;
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">スクリプト デバッガー</h3>
+    <div class="meta" style="margin-bottom:10px">実装済みスクリプト：<b style="color:var(--gold-hi)">${impl}枚</b></div>
+    <div class="dbg-list">${body}</div>
+    <div class="act-grid">
+      <div class="act" onclick="openScriptList()">実装済み一覧</div>
+      <div class="act" onclick="clearScriptLog()">記録を消去</div>
+    </div>
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+function clearScriptLog(){ gameState.scriptLog = []; openScriptDebug(); }
+function openScriptList(){
+  const names = Object.keys(CARD_SCRIPTS).sort();
+  const rows = names.map(n=>{
+    const sc = CARD_SCRIPTS[n];
+    const ev = sc.passive ? Object.keys(sc.passive).map(e=>eventJp(e)).join("・") : "";
+    return `<div class="act pick-row">
+      <span class="pk-nm">${n}</span>
+      <span class="pk-sub">${sc.type||''}${ev?' / '+ev:''}</span>
+    </div>`;
+  }).join("");
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">実装済みスクリプト（${names.length}）</h3>
+    <div class="meta" style="margin-bottom:10px">これらは共通APIのみで記述されています。</div>
+    <div class="pick-list">${rows}</div>
+    <button class="close" onclick="openScriptDebug()">戻る</button>`;
+  veil.classList.add("on");
+}
+
 /* ハンバーガーメニュー（たまに使う操作） */
 function openMenu(){
   const p = gameState.activePlayer;
@@ -2290,6 +4171,10 @@ function openMenu(){
       <div class="act" onclick="openLP(${gameState.activePlayer})">ライフ計算機</div>
       <div class="act" onclick="setFirstPlayer(${gameState.activePlayer})">この人を先攻にする</div>
       <div class="act" onclick="coinToss()">コイントス</div>
+      <div class="act" onclick="toggleAskChain()">チェーン確認：${ASK_CHAIN?'オン':'オフ'}</div>
+      <div class="act" onclick="openState()">状態を確認</div>
+      <div class="act" onclick="openScriptDebug()">スクリプト デバッガー</div>
+      <div class="act" onclick="openPrimitives(${gameState.activePlayer},null,null,'')">効果処理パレット</div>
     </div>
     <div class="meta" style="margin:6px 2px 0;font-size:10.5px">
       先攻：<b style="color:var(--gold-hi)">${nameOf(gameState.firstPlayer??0)}</b>（1103は先攻ドローあり）
@@ -2364,18 +4249,32 @@ function openHand(i){
   const p = gameState.activePlayer;
   const nm = db.n||"";
   const eff = hasEffect(nm);
+  const R = rules();
+  const ph = phaseJp(gameState.phase);
   let primary = "", secondary = "";
 
+  /* できない操作はグレーで理由を出す（消すと「なぜ無いのか」が分からないため） */
+  const btn = (ok, label, onclick, why, cls)=> ok
+    ? `<div class="act ${cls||''}" onclick="${onclick}">${label}</div>`
+    : `<div class="act blocked" onclick="showToast('${why}')">${label}<span class="bk">${ph}不可</span></div>`;
+
   if(db.k==='m'){
-    const trig = effectTrigger(nm);
-    primary = `
-      <div class="act" onclick="fromHand(${i},'mz','up','atk')">通常召喚（攻撃）</div>
-      <div class="act" onclick="fromHand(${i},'mz','down','def')">セット（裏守備）</div>
-      <div class="act" onclick="fromHand(${i},'mz','up','def')">特殊召喚（守備）</div>
-      <div class="act" onclick="fromHand(${i},'mz','up','atk')">特殊召喚（攻撃）</div>`;
-    // 手札で発動する誘発（増殖するG・灰流うらら等）
-    if(eff && CARD_EFFECT[nm]){
-      primary = `<div class="act fx" onclick="closeSheet();runEffect(${p},${JSON.stringify(nm)},{zone:'hand',index:${i}})">⚡ 手札から効果を発動</div>` + primary;
+    const nsLeft = !P.normalSummonUsed;
+    const nsWhy  = !R.normalSummon ? whyBlocked('normalSummon') : 'このターンは既に通常召喚しています';
+    primary =
+      btn(R.normalSummon && nsLeft, "通常召喚（攻撃）", `doNormalSummon(${i},'atk')`, nsWhy) +
+      btn(R.normalSummon && nsLeft, "通常召喚（守備）", `doNormalSummon(${i},'def')`, nsWhy) +
+      btn(R.setCard && nsLeft,      "セット（裏守備）", `doSetMonster(${i})`, nsWhy) +
+      `<div class="act" onclick="doSpecialFromHand(${i},'atk')">特殊召喚（攻撃）</div>
+       <div class="act" onclick="doSpecialFromHand(${i},'def')">特殊召喚（守備）</div>`;
+    // 手札で発動する誘発（スクリプト宣言 or テキスト推定）
+    const scH = CARD_SCRIPTS[nm];
+    if(canActivateFromZone(db, 'hand')){
+      primary = (scH
+        ? `<div class="act fx" onclick="closeSheet();runScript(${jsStr(nm)},${p},'hand',${i})">⚡ 手札から効果を発動</div>`
+        : `<div class="act fx" onclick="closeSheet();openPrimitives(${p},'hand',${i},${jsStr(nm)})">⚡ 手札から効果を発動（手動）</div>`) + primary;
+    } else if(eff && CARD_EFFECT[nm]){
+      primary = `<div class="act fx" onclick="closeSheet();runEffect(${p},${jsStr(nm)},{zone:'hand',index:${i}})">⚡ 手札から効果を発動</div>` + primary;
     }
     secondary = `
       <div class="act" onclick="fromHand(${i},'grave')">墓地へ捨てる</div>
@@ -2384,17 +4283,21 @@ function openHand(i){
   } else {
     const toField = db.sub==="フィールド";
     const dest = toField ? 'field' : 'sz';
-    primary = eff
-      ? `<div class="act fx" onclick="activateFromHand(${i})">⚡ 発動（効果を自動処理）</div>
-         <div class="act" onclick="handActivate(${i})">発動（チェーンに積むだけ）</div>
-         <div class="act" onclick="fromHand(${i},'${dest}','down')">セット（裏）</div>`
-      : `<div class="act" onclick="handActivate(${i})">発動（チェーンへ）</div>
-         <div class="act" onclick="fromHand(${i},'${dest}','down')">セット（裏）</div>`;
+    const canAct = canActivateNow(db);
+    const ss = spellSpeedOf(db);
+    const why = `${ph}では通常魔法は発動できません（速攻魔法・罠のみ）`;
+    primary =
+      (eff ? btn(canAct, "⚡ 発動（効果を自動処理）", `activateFromHand(${i})`, why, "fx") : "") +
+      btn(canAct, "発動（チェーンへ）", `handActivate(${i})`, why) +
+      btn(R.setCard, "セット（裏）", `doSetST(${i},${toField})`, whyBlocked('setCard'));
     secondary = `
       <div class="act" onclick="fromHand(${i},'grave')">墓地へ捨てる</div>
       <div class="act" onclick="fromHand(${i},'banish')">除外</div>`;
   }
+  secondary += `<div class="act" onclick="closeSheet();openPrimitives(${p},'hand',${i},${jsStr(nm)})">手動で効果処理…</div>`;
+  const ssTag = db.k!=='m' ? `<span class="ss-tag">SS${spellSpeedOf(db)}</span>` : "";
   sheet.innerHTML = metaHead(db) +
+    `<div class="phase-note">${ph}：${R.note}${ssTag}</div>` +
     (eff?`<div class="fx-note">このカードは効果を自動処理できます</div>`:"") +
     `<div class="act-label">プレイ</div><div class="act-grid">${primary}</div>
      <div class="act-label">その他へ送る</div><div class="act-grid">${secondary}</div>
@@ -2417,9 +4320,46 @@ function activateFromHand(i){
   const idx = (to==="field") ? 0 : P.sz.length-1;
   const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備");
   logIt(gameState, `<b>${nm}</b> を発動`);
-  runEffect(p, nm, {zone:to, index:idx, keep});
   render();
+  // 発動に対してチェーンできるので確認してから効果を処理する
+  askChain(`${nm} の発動`, ()=>{ runEffect(p, nm, {zone:to, index:idx, keep}); render(); });
 }
+
+/* ---- 新プリミティブを使う UI ラッパ ---- */
+function doNormalSummon(i, pos){
+  const p = gameState.activePlayer;
+  const nm = (CARD_DB[gameState.players[p].hand[i]?.id]||{}).n || "";
+  closeSheet();
+  act({type:"NORMAL_SUMMON", player:p, handIndex:i, pos});
+  // イベント発火 → 誘発候補（激流葬・奈落など）を提示 → 無ければ召喚時効果
+  EVT_AFTER = ()=>offerSummonTrigger(p, nm);
+  if(!emitEvent("onNormalSummon", {player:p, name:nm})){
+    EVT_AFTER = null;
+    askChain(`${nm} の召喚`, ()=>offerSummonTrigger(p, nm));
+  }
+}
+function doSetMonster(i){
+  const p = gameState.activePlayer;
+  closeSheet();
+  act({type:"SET_MONSTER", player:p, handIndex:i});
+}
+function doSetST(i, toField){
+  const p = gameState.activePlayer;
+  closeSheet();
+  act({type:"SET_ST", player:p, handIndex:i, toField:!!toField});
+}
+function doSpecialFromHand(i, pos){
+  const p = gameState.activePlayer;
+  const nm = (CARD_DB[gameState.players[p].hand[i]?.id]||{}).n || "";
+  closeSheet();
+  act({type:"FX_SPECIAL_SUMMON", player:p, from:"hand", fromIndex:i, pos, reason:"手札から"});
+  EVT_AFTER = ()=>offerSummonTrigger(p, nm);
+  if(!emitEvent("onSpecialSummon", {player:p, name:nm})){
+    EVT_AFTER = null;
+    askChain(`${nm} の特殊召喚`, ()=>offerSummonTrigger(p, nm));
+  }
+}
+
 function fromHand(i, to, face, pos){
   // ゾーン制限チェック
   const p = gameState.activePlayer;
@@ -2431,8 +4371,10 @@ function fromHand(i, to, face, pos){
   const nm = (CARD_DB[P.hand[i]?.id]||{}).n || "";
   act({type:"MOVE", player:p, from:"hand", fromIndex:i, to, face:face||"up", pos:pos||"atk"});
   closeSheet();
-  // 召喚成功時に誘発する効果（E・HEROエアーマン等）を提示
-  if(to==="mz" && (face||"up")==="up" && nm) offerSummonTrigger(p, nm);
+  if(to==="mz" && (face||"up")==="up" && nm){
+    // 召喚に対して激流葬・奈落などを撃てるので確認する
+    askChain(`${nm} の召喚`, ()=>offerSummonTrigger(p, nm));
+  }
 }
 /* 手札から魔法罠を発動：ゾーンへ置いてからチェーンに積む */
 function handActivate(i){
@@ -2459,26 +4401,41 @@ function openZone(p, zone, idx){
   const isMon = db.k==='m';
   const faceUp = c.face==='up';
   const canAttack = isMon && faceUp && c.pos==='atk';
+  const R = rules();
+  const ph = phaseJp(gameState.phase);
+  const blockedBtn = (label, why)=>
+    `<div class="act blocked" onclick="showToast('${why}')">${label}<span class="bk">${ph}不可</span></div>`;
 
-  // 攻撃（表側攻撃表示モンスターのみ）
-  const attack = canAttack
-    ? `<div class="act" onclick="beginAttack(${p},${idx})">攻撃宣言</div>`
-    : "";
+  // 攻撃（表側攻撃表示モンスター、かつバトルフェイズのみ）
+  const already = !!c.attacked;
+  const attack = !canAttack ? ""
+    : (!R.attack ? blockedBtn("攻撃宣言", whyBlocked('attack'))
+      : already  ? blockedBtn("攻撃宣言", "このモンスターは既に攻撃しています")
+      : `<div class="act" onclick="beginAttack(${p},${idx})">攻撃宣言</div>`);
+  // 無効化・攻撃済みの状態表示
+  const flags = [];
+  if(c.attacked) flags.push('攻撃済');
+  if(c.negated)  flags.push('無効');
+  const flagNote = flags.length ? `<div class="flag-note">${flags.join(' / ')}</div>` : "";
 
   // 効果発動。自動処理できるカードは⚡付きで最優先に出す
   const nm = db.n||"";
   const eff = hasEffect(nm);
   const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備");
-  const autoAct = eff
-    ? `<div class="act fx" onclick="activateFromZone(${p},'${zone}',${idx})">⚡ 効果を発動（自動処理）</div>`
-    : "";
+  const canAct = canActivateNow(db);
+  const actWhy = `${ph}では通常魔法・起動効果は発動できません（速攻魔法・罠のみ）`;
+  const autoAct = !eff ? ""
+    : (canAct
+        ? `<div class="act fx" onclick="activateFromZone(${p},'${zone}',${idx})">⚡ 効果を発動（自動処理）</div>`
+        : blockedBtn("⚡ 効果を発動", actWhy));
   // エクシーズ素材の取り除き
   const detach = (zone==="mz" && c.xyz && c.xyz.length)
     ? `<div class="act" onclick="closeSheet();act({type:'FX_DETACH',player:${p},mzIndex:${idx},reason:'効果コスト'})">素材を1つ取り除く（残${c.xyz.length}）</div>`
     : "";
-  const activate = (!isMon || faceUp)
-    ? `<div class="act" onclick="chainAddFromZone(${p},'${zone}',${idx})">効果を発動（チェーンへ）</div>`
-    : "";
+  const activate = !(!isMon || faceUp) ? ""
+    : (canAct
+        ? `<div class="act" onclick="chainAddFromZone(${p},'${zone}',${idx})">効果を発動（チェーンへ）</div>`
+        : blockedBtn("効果を発動（チェーンへ）", actWhy));
 
   const state = `
     ${c.face==='down'?`<div class="act" onclick="zAct('FLIP',${p},'${zone}',${idx})">表にする（反転）</div>`:""}
@@ -2489,10 +4446,12 @@ function openZone(p, zone, idx){
     <div class="act" onclick="zMove(${p},'${zone}',${idx},'hand')">手札へ</div>
     <div class="act" onclick="zMove(${p},'${zone}',${idx},'deck')">デッキ上へ</div>`;
 
-  const primary = autoAct + detach + attack + activate;
+  const manual = `<div class="act" onclick="closeSheet();openPrimitives(${p},'${zone}',${idx},${jsStr(db.n||'')})">手動で効果処理…</div>`;
+  const primary = autoAct + detach + attack + activate + manual;
   const hasPrimary = primary.trim().length>0;
   const hasState = state.trim().length>0;
   sheet.innerHTML = metaHead(db) +
+    `<div class="phase-note">${ph}：${R.note}${db.k!=='m'?`<span class="ss-tag">SS${spellSpeedOf(db)}</span>`:""}</div>` + flagNote +
     (eff?`<div class="fx-note">このカードは効果を自動処理できます</div>`:"") +
     (hasPrimary ? `<div class="act-label">アクション</div><div class="act-grid">${primary}</div>` : "") +
     (hasState ? `<div class="act-label">状態</div><div class="act-grid">${state}</div>` : "") +
@@ -2513,8 +4472,8 @@ function activateFromZone(p, zone, idx){
   }
   const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備" || db.k==='m');
   logIt(gameState, `<b>${nm}</b> の効果を発動`);
-  runEffect(p, nm, {zone, index:idx, keep});
   render();
+  askChain(`${nm} の効果発動`, ()=>{ runEffect(p, nm, {zone, index:idx, keep}); render(); });
 }
 function zAct(type,p,zone,index){ act({type, player:p, zone, index}); closeSheet(); }
 function zMove(p,zone,idx,to){
@@ -2574,8 +4533,15 @@ function beginAttack(p, atkIdx){
   veil.classList.add("on");
 }
 function doAttack(p, atkIdx, target){
-  act({type:"ATTACK", player:p, atkIdx, target});
   closeSheet();
+  const atkName = (CARD_DB[gameState.players[p].mz[atkIdx]?.id]||{}).n || "モンスター";
+  const go = ()=>act({type:"ATTACK", player:p, atkIdx, target});
+  // 攻撃宣言に誘発するカード（ミラーフォース・次元幽閉など）を提示
+  EVT_AFTER = go;
+  if(!emitEvent("onAttackDeclare", {player:p, atkIdx, target, name:atkName})){
+    EVT_AFTER = null;
+    askChain(`${atkName} の攻撃宣言`, go);
+  }
 }
 
 /* ================= チェーン（手動・スペルスピード判定） ================= */
@@ -2700,9 +4666,16 @@ function pileAct(p, zone, i){
   const nm = db.n||"";
   const isMon = db.k==='m';
   // 墓地で発動できる効果を持つカードは⚡で出す
-  const graveFx = (zone==="grave" && hasEffect(nm))
-    ? `<div class="act fx" onclick="closeSheet();runEffect(${p},${JSON.stringify(nm)},{zone:'grave',index:${i},keep:true})">⚡ 墓地で効果を発動</div>`
-    : "";
+  // スクリプト宣言 or 効果テキスト推定で、このゾーンから発動できるか判定
+  const sc = CARD_SCRIPTS[nm];
+  const canHere = canActivateFromZone(db, zone);
+  const graveFx = canHere
+    ? (sc
+        ? `<div class="act fx" onclick="closeSheet();runScript(${jsStr(nm)},${p},'${zone}',${i})">⚡ ${zoneJp(zone)}で効果を発動</div>`
+        : `<div class="act fx" onclick="closeSheet();openPrimitives(${p},'${zone}',${i},${jsStr(nm)})">⚡ ${zoneJp(zone)}で効果を発動（手動）</div>`)
+    : ((zone==="grave" && hasEffect(nm))
+        ? `<div class="act fx" onclick="closeSheet();runEffect(${p},${jsStr(nm)},{zone:'grave',index:${i},keep:true})">⚡ 墓地で効果を発動</div>`
+        : "");
   const ssBtn = isMon
     ? `<div class="act" onclick="closeSheet();act({type:'FX_SPECIAL_SUMMON',player:${p},from:'${zone}',fromIndex:${i},pos:'atk',reason:'${zoneJp(zone)}から'})">特殊召喚（攻撃）</div>
        <div class="act" onclick="closeSheet();act({type:'FX_SPECIAL_SUMMON',player:${p},from:'${zone}',fromIndex:${i},pos:'def',reason:'${zoneJp(zone)}から'})">特殊召喚（守備）</div>`
@@ -2740,16 +4713,18 @@ const TEST_DECK = {
   name: "テストプレイ用（1103スタンダード）",
   cards: [
     // ---- 展開/初動モンスター ----
-    {n:"E・HERO エアーマン", q:3},      // 召喚時サーチ（自動処理）
-    {n:"終末の騎士", q:3},              // 闇を落とす（自動処理）
+    {n:"E・HERO エアーマン", q:2},      // 召喚時サーチ（自動処理）
+    {n:"終末の騎士", q:2},              // 闇を落とす（自動処理）
     {n:"ダーク・グレファー", q:2},      // 手札コスト＋落とし（自動処理）
-    {n:"サイバー・ドラゴン", q:3},      // 1103の基本アタッカー
+    {n:"サイバー・ドラゴン", q:2},      // 1103の基本アタッカー
     {n:"混沌の黒魔術師", q:0},          // （未収録なら無視される）
-    {n:"馬頭鬼", q:2},                  // 墓地から蘇生（自動処理）
+    {n:"馬頭鬼", q:1},                  // 墓地から蘇生（自動処理）
     {n:"ゾンビキャリア", q:1},           // チューナー
     {n:"グローアップ・バルブ", q:1},     // チューナー
-    {n:"クレボンス", q:2},               // レベル2チューナー
-    {n:"ジャンク・シンクロン", q:2},     // レベル3チューナー
+    {n:"ネクロ・ガードナー", q:2},       // 墓地から相手ターンに発動
+    {n:"クリッター", q:1},
+    {n:"クレボンス", q:1},               // レベル2チューナー
+    {n:"ジャンク・シンクロン", q:1},     // レベル3チューナー
     // ---- 汎用魔法 ----
     {n:"死者蘇生", q:1},
     {n:"サンダー・ボルト", q:1},
@@ -2760,8 +4735,11 @@ const TEST_DECK = {
     {n:"貪欲な壺", q:1},
     {n:"early", q:0},                   // プレースホルダ（存在しないので無視される）
     {n:"早すぎた埋葬", q:1},
-    {n:"サイクロン", q:2},
-    {n:"月の書", q:2},
+    {n:"サイクロン", q:1},
+    {n:"月の書", q:1},
+    {n:"増援", q:1},
+    {n:"おろかな埋葬", q:1},
+    {n:"ハリケーン", q:1},
     // ---- 罠 ----
     {n:"激流葬", q:2},
     {n:"聖なるバリア －ミラーフォース－", q:2},
@@ -2769,6 +4747,8 @@ const TEST_DECK = {
     {n:"次元幽閉", q:1},
     {n:"強制脱出装置", q:1},
     {n:"リビングデッドの呼び声", q:2},
+    {n:"神の宣告", q:1},
+    {n:"神の警告", q:1},
   ],
   // ---- エクストラデッキ（1103はシンクロ主体）----
   ex: [
@@ -3221,6 +5201,7 @@ async function boot(){
     logIt(gameState, `<b>決闘開始</b> — ${CARD_DB.length}種読込（${DB_SOURCE}）。デッキを読み込んでください`);
   }
   render();
+  initSwipe();
   if(DB_SOURCE === "dummy"){
     setTimeout(()=>{
       sheet.innerHTML = `<div class="grip"></div>
