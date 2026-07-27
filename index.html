@@ -791,6 +791,31 @@
   .guide-note{ font-size:10.5px; color:var(--text-dim); line-height:1.6; margin-top:8px; padding:0 2px; }
 
   /* ---------- Tournament recipe DB ---------- */
+  .tny-stats{
+    flex-shrink:0; max-height:46vh; overflow-y:auto; padding:12px 14px;
+    border-bottom:1px solid var(--line); background:var(--bg-2);
+  }
+  .tny-st-sec{
+    font-size:11px; letter-spacing:0.12em; color:var(--gold-hi); font-weight:700;
+    margin:14px 0 7px; padding-bottom:4px; border-bottom:1px solid var(--line);
+  }
+  .tny-st-sec:first-child{ margin-top:0; }
+  .tny-st-kpis{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tny-st-kpi{
+    flex:1; min-width:70px; text-align:center; padding:9px 6px;
+    border:1px solid var(--line); border-radius:3px; background:var(--surface-2);
+  }
+  .tny-st-kpi .n{ font-size:19px; font-weight:700; color:var(--gold-hi); line-height:1.1; }
+  .tny-st-kpi .l{ font-size:9.5px; color:var(--text-dim); margin-top:3px; letter-spacing:0.04em; }
+  .tny-st-row{ margin-bottom:7px; }
+  .tny-st-line{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; font-size:12px; margin-bottom:3px; }
+  .tny-st-name{ color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+  .tny-st-val{ color:var(--text-dim); font-size:11px; flex-shrink:0; }
+  .tny-st-barwrap{ height:6px; background:var(--surface-2); border-radius:3px; overflow:hidden; }
+  .tny-st-bar{ height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-hi)); border-radius:3px; }
+  .tny-st-bar.win{ background:linear-gradient(90deg,#b8892c,#ffd77a); }
+  .tny-st-empty{ font-size:11.5px; color:var(--text-dim); text-align:center; padding:10px 0; }
+  .tny-st-note{ font-size:10px; color:var(--text-dim); line-height:1.6; margin-top:8px; }
   .tny-bar{ flex-shrink:0; display:flex; flex-direction:column; gap:8px; padding:10px 14px 9px; border-bottom:1px solid var(--line); }
   .tny-bar-row{ display:flex; gap:6px; align-items:center; }
   .tny-search{
@@ -1180,8 +1205,12 @@
       <input class="tny-search" id="tnyGasUrl" placeholder="GAS連携URL（LPカウンターと共通・…/exec）" autocapitalize="off" autocomplete="off" spellcheck="false" style="flex:1">
       <button class="btn ghost sm" id="tnyGasSave">保存</button>
     </div>
+    <div class="tny-bar-row">
+      <button class="btn sm" id="tnyStatsBtn" style="flex:1">📊 分析を表示</button>
+    </div>
     <div class="tny-count" id="tnyCount"></div>
   </div>
+  <div class="tny-stats" id="tnyStats" style="display:none"></div>
   <div class="tny-scroll" id="tnyScroll"></div>
 </div>
 
@@ -4784,6 +4813,113 @@
   var tnySearchEl=document.getElementById('tnySearch');
   var tnySortEl=document.getElementById('tnySort');
   var tnyModalBack=document.getElementById('tnyModalBack');
+  var tnyStatsEl=document.getElementById('tnyStats');
+  var tnyStatsOpen=false;
+
+  // ---------- 分析 ----------
+  function tnyNorm(s){ return String(s||'').trim(); }
+  function tnyIsWin(r){ return /優勝/.test(r||'') && !/準/.test(r||''); }
+  function tnyIsTop2(r){ return /優勝/.test(r||''); } // 優勝 or 準優勝
+
+  function tnyBarBlock(title, rows, total, opts){
+    opts=opts||{};
+    if(!rows.length) return '<div class="tny-st-sec">'+esc(title)+'</div><div class="tny-st-empty">データがありません</div>';
+    var html='<div class="tny-st-sec">'+esc(title)+'</div>';
+    rows.forEach(function(r){
+      var pct = total>0 ? (r.count/total*100) : 0;
+      var valTxt = opts.valText ? opts.valText(r) : (r.count+'件 / '+pct.toFixed(1)+'%');
+      html+='<div class="tny-st-row">'
+          + '<div class="tny-st-line"><span class="tny-st-name">'+esc(r.name)+'</span><span class="tny-st-val">'+esc(valTxt)+'</span></div>'
+          + '<div class="tny-st-barwrap"><div class="tny-st-bar'+(opts.win?' win':'')+'" style="width:'+Math.max(pct,1.5).toFixed(1)+'%"></div></div>'
+          + '</div>';
+    });
+    return html;
+  }
+
+  function tnyCountBy(list, keyFn){
+    var map={};
+    list.forEach(function(e){
+      var k=tnyNorm(keyFn(e));
+      if(!k || k==='(デッキ名未入力)') return;
+      map[k]=(map[k]||0)+1;
+    });
+    return Object.keys(map).map(function(k){ return {name:k, count:map[k]}; })
+      .sort(function(a,b){ return b.count-a.count || a.name.localeCompare(b.name); });
+  }
+
+  function renderTnyStats(list){
+    if(!tnyStatsOpen){ tnyStatsEl.style.display='none'; return; }
+    tnyStatsEl.style.display='';
+    if(!list.length){ tnyStatsEl.innerHTML='<div class="tny-st-empty">分析するデータがありません</div>'; return; }
+
+    var events={}; list.forEach(function(e){ if(e.event) events[e.event]=1; });
+    var eventCount=Object.keys(events).length;
+    var deckSet={}; list.forEach(function(e){ var d=tnyNorm(e.deckName); if(d&&d!=='(デッキ名未入力)') deckSet[d]=1; });
+    var playerSet={}; list.forEach(function(e){ var p=tnyNorm(e.player); if(p) playerSet[p]=1; });
+    var withList=list.filter(function(e){ return tnyNorm(e.list); }).length;
+
+    var html='';
+    // KPI
+    html+='<div class="tny-st-kpis">'
+        + '<div class="tny-st-kpi"><div class="n">'+eventCount+'</div><div class="l">大会</div></div>'
+        + '<div class="tny-st-kpi"><div class="n">'+list.length+'</div><div class="l">登録デッキ</div></div>'
+        + '<div class="tny-st-kpi"><div class="n">'+Object.keys(deckSet).length+'</div><div class="l">デッキ種類</div></div>'
+        + '<div class="tny-st-kpi"><div class="n">'+Object.keys(playerSet).length+'</div><div class="l">使用者</div></div>'
+        + '</div>';
+
+    // デッキ使用率
+    var deckRows=tnyCountBy(list, function(e){ return e.deckName; });
+    html+=tnyBarBlock('デッキ使用率（全登録）', deckRows.slice(0,15), list.length);
+
+    // 優勝デッキ
+    var winList=list.filter(function(e){ return tnyIsWin(e.rank); });
+    var winRows=tnyCountBy(winList, function(e){ return e.deckName; });
+    html+=tnyBarBlock('優勝デッキ（'+winList.length+'件）', winRows.slice(0,12), winList.length, {win:true});
+
+    // 入賞率（優勝＋準優勝 / 使用数）
+    var top2=list.filter(function(e){ return tnyIsTop2(e.rank); });
+    var useMap={}, top2Map={};
+    list.forEach(function(e){ var d=tnyNorm(e.deckName); if(!d||d==='(デッキ名未入力)')return; useMap[d]=(useMap[d]||0)+1; });
+    top2.forEach(function(e){ var d=tnyNorm(e.deckName); if(!d||d==='(デッキ名未入力)')return; top2Map[d]=(top2Map[d]||0)+1; });
+    var rateRows=Object.keys(useMap).filter(function(d){ return useMap[d]>=2; }).map(function(d){
+      return { name:d, count:(top2Map[d]||0), use:useMap[d], rate:(top2Map[d]||0)/useMap[d]*100 };
+    }).sort(function(a,b){ return b.rate-a.rate || b.use-a.use; });
+    if(rateRows.length){
+      var html2='<div class="tny-st-sec">入賞率（優勝＋準優勝／使用2回以上）</div>';
+      rateRows.slice(0,12).forEach(function(r){
+        html2+='<div class="tny-st-row">'
+             + '<div class="tny-st-line"><span class="tny-st-name">'+esc(r.name)+'</span><span class="tny-st-val">'+r.rate.toFixed(0)+'%（'+r.count+'/'+r.use+'）</span></div>'
+             + '<div class="tny-st-barwrap"><div class="tny-st-bar win" style="width:'+Math.max(r.rate,1.5).toFixed(1)+'%"></div></div>'
+             + '</div>';
+      });
+      html+=html2;
+    }
+
+    // 使用者別
+    var playerRows=tnyCountBy(list, function(e){ return e.player; });
+    var pWin={}; winList.forEach(function(e){ var p=tnyNorm(e.player); if(p) pWin[p]=(pWin[p]||0)+1; });
+    if(playerRows.length){
+      var html3='<div class="tny-st-sec">使用者別 登録数・優勝数</div>';
+      playerRows.slice(0,12).forEach(function(r){
+        var w=pWin[r.name]||0;
+        var pct=list.length>0? r.count/list.length*100 : 0;
+        html3+='<div class="tny-st-row">'
+             + '<div class="tny-st-line"><span class="tny-st-name">'+esc(r.name)+'</span><span class="tny-st-val">'+r.count+'件'+(w?' ・優勝'+w:'')+'</span></div>'
+             + '<div class="tny-st-barwrap"><div class="tny-st-bar'+(w?' win':'')+'" style="width:'+Math.max(pct,1.5).toFixed(1)+'%"></div></div>'
+             + '</div>';
+      });
+      html+=html3;
+    }
+
+    // 大会別
+    var evRows=tnyCountBy(list, function(e){ return e.event; });
+    html+=tnyBarBlock('大会別 登録数', evRows.slice(0,12), list.length, {
+      valText:function(r){ return r.count+'件'; }
+    });
+
+    html+='<div class="tny-st-note">※ 絞り込み中は、その条件に一致するレシピだけを集計します。デッキリスト登録済み：'+withList+' / '+list.length+' 件</div>';
+    tnyStatsEl.innerHTML=html;
+  }
 
   function renderTourney(){
     if(!tnyPublicLoaded){ tnyFetchPublic(); }
@@ -4807,6 +4943,7 @@
     if(q) cnt+='（表示 '+shown.length+' 件）';
     if(tnyPublicStatus) cnt+=' ／ '+tnyPublicStatus;
     document.getElementById('tnyCount').textContent=cnt;
+    renderTnyStats(shown);
 
     if(!list.length){
       tnyScroll.innerHTML='<div class="tny-empty">まだレシピがありません。<br>「＋ レシピを登録」で入賞デッキを記録し、<b>「公開用JSON書出」</b>で <code>tournaments.json</code> を出力してリポジトリにコミットすると、全員がここで閲覧できるようになります。<br><br>デッキリストは「テキスト」機能と同じ「カード名 x3」形式です。</div>';
@@ -4898,6 +5035,11 @@
   }
   function tnyCloseForm(){ tnyModalBack.classList.remove('show'); }
 
+  document.getElementById('tnyStatsBtn').addEventListener('click', function(){
+    tnyStatsOpen=!tnyStatsOpen;
+    this.textContent = tnyStatsOpen ? '📊 分析を隠す' : '📊 分析を表示';
+    renderTourney();
+  });
   document.getElementById('tnyAdd').addEventListener('click', function(){ tnyOpenForm(null); });
   document.getElementById('tnyReload').addEventListener('click', function(){ tnyPublicLoaded=false; tnyPublicStatus='公開データを読み込み中…'; renderTourney(); tnyFetchPublic(); });
   // GAS連携URL
