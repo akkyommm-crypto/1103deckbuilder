@@ -553,6 +553,21 @@ textarea{
 }
 .ct-btn.add{background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi)}
 
+/* ---------- デッキトップめくり ---------- */
+.dt-ctl{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.dt-nums{display:flex;gap:4px;flex-wrap:wrap}
+.dt-n{
+  min-width:30px;height:30px;border-radius:4px;font-size:12px;font-weight:700;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--ink);
+}
+.dt-n.on{background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi)}
+.dt-n:active{filter:brightness(.9)}
+.pk-idx{
+  flex:0 0 auto;width:18px;height:18px;line-height:18px;text-align:center;
+  font-size:9.5px;font-weight:800;border-radius:9px;
+  background:var(--surface-3);color:var(--text-dim);margin-right:2px;
+}
+
 /* ---------- toast ---------- */
 .toast{
   position:fixed;left:50%;bottom:118px;transform:translateX(-50%) translateY(8px);
@@ -1226,13 +1241,18 @@ function render(){
     sideHTML(opp, true) + sideHTML(view, false);
 
   /* ===== hand（手番のみ表向き） ===== */
+  // デッキも場も空＝まだ開始していない時だけ、開始への導線を出す。
+  // デュエル中に手札を使い切っただけの時は邪魔なので出さない。
+  const notStarted = !P.hand.length && !P.deck.length && !P.mz.length && !P.sz.length && !P.grave.length;
   document.getElementById("hand").innerHTML = P.hand.map((c,i)=>
     cardHTML(c, "hcard", `openHand(${i})`, true)
-  ).join("") || `<div class="hand-empty">
-      <span>手札なし</span>
-      <button class="he-btn" onclick="startTestDuel(true)">テストデッキですぐ開始</button>
-      <button class="he-btn ghost" onclick="openDeckLoad('saved')">デッキを読み込む</button>
-    </div>`;
+  ).join("") || (notStarted
+    ? `<div class="hand-empty">
+        <span>手札なし</span>
+        <button class="he-btn" onclick="startTestDuel(true)">テストデッキですぐ開始</button>
+        <button class="he-btn ghost" onclick="openDeckLoad('saved')">デッキを読み込む</button>
+      </div>`
+    : `<div class="hand-empty"><span>手札なし</span></div>`);
 
   /* ===== このターンにやったこと ===== */
   const tl = document.getElementById("turnlog");
@@ -2477,9 +2497,12 @@ function reactableCards(p){
 /* 非手番プレイヤー（＝相手ターン中の自分）の番号 */
 function reactingPlayer(){ return gameState.activePlayer===0 ? 1 : 0; }
 
-/* 相手ターン中の割り込みパネル */
-function openReact(){
-  const rp = reactingPlayer();
+/* 指定プレイヤーの割り込みパネルを開く（チェーンを重ねる時に使う） */
+function openReactFor(p){ openReact(p); }
+
+/* 相手ターン中の割り込みパネル。p を渡すとそのプレイヤー視点で開く。 */
+function openReact(forceP){
+  const rp = (forceP===0||forceP===1) ? forceP : reactingPlayer();
   const list = reactableCards(rp);
   if(!list.length){
     sheet.innerHTML = `<div class="grip"></div>
@@ -2538,10 +2561,18 @@ function reactActivate(p, zone, index){
       ? `<div class="act fx" onclick="closeSheet();resolveReact(${p},'${zone}',${index},${jsStr(nm)})">⚡ 解決して効果を処理</div>`
       : "";
     const eff_txt = db.e ? `<div class="eff">${String(db.e).replace(/\n/g,"<br>")}</div>` : "";
+    // 相手がさらにチェーンできるかを調べて案内する
+    const foe = p===0?1:0;
+    const foeN = reactableCards(foe).length;
+    const foeRow = foeN
+      ? `<div class="react-warn" onclick="closeSheet();openReactFor(${foe})">
+           ${nameOf(foe)}は ${foeN}枚 チェーンできます — タップして発動
+         </div>` : "";
     sheet.innerHTML = `<div class="grip"></div>
       <h3 style="margin-bottom:4px">${nm}</h3>
       <div class="meta" style="margin-bottom:8px">チェーン${gameState.chain.length}に積みました（${zoneJp(zone)}から発動）。<br>
-        相手がチェーンしないなら解決できます。</div>
+        ${foeN?"相手のチェーンを確認してから解決してください。":"相手がチェーンしないなら解決できます。"}</div>
+      ${foeRow}
       ${eff_txt}
       <div class="act-grid wide">
         ${auto}
@@ -2657,6 +2688,24 @@ function makeContext(p, card, zone, index, eventName, extra){
    共通API（スクリプトが使える唯一の手段）
    すべて act() 経由なので Undo が効く。
    ========================================================================= */
+/* 対象の現在位置を解決する。
+   効果処理中に他のカードが動くと添字がずれるため、
+   記録しておいたカード実体から探し直す。 */
+function resolveTarget(t){
+  if(!t) return null;
+  const P = gameState.players[t.p];
+  if(t.zone === 'field'){
+    return (P.field && (!t.card || P.field===t.card)) ? {p:t.p, zone:'field', index:0, card:P.field} : null;
+  }
+  const arr = P[t.zone] || [];
+  if(t.card){
+    const i = arr.indexOf(t.card);
+    if(i < 0) return null;              // 既に場を離れている
+    return {p:t.p, zone:t.zone, index:i, card:t.card};
+  }
+  return (t.index < arr.length) ? {p:t.p, zone:t.zone, index:t.index, card:arr[t.index]} : null;
+}
+
 const API = {
   /* --- 情報取得（読み取り専用） --- */
   me(ctx){ return gameState.players[ctx.player]; },
@@ -2682,13 +2731,15 @@ const API = {
   },
 
   /* --- 盤面操作プリミティブ --- */
-  destroy(t, reason){ trace(`destroy: ${labelOf(t.card)}`); act({type:"FX_TO_GRAVE", player:t.p, zone:t.zone, index:t.index, reason}); },
+  destroy(t, reason){ const r=resolveTarget(t); if(!r){ trace(`destroy: 対象が場にない`, false); return; }
+    trace(`destroy: ${labelOf(r.card)}`); act({type:"FX_TO_GRAVE", player:r.p, zone:r.zone, index:r.index, reason}); },
   destroyAll(zone, player, reason){
     trace(`destroyAll: ${zoneJp(zone)}${player!=null?`(${nameOf(player)})`:"(両者)"}`);
     const ps = player!=null ? [player] : [0,1];
     ps.forEach(p=>act({type:"FX_WIPE_ZONE", player:p, zone, reason}));
   },
-  sendToGrave(t, reason){ trace(`sendToGrave: ${labelOf(t.card)}`); act({type:"FX_TO_GRAVE", player:t.p, zone:t.zone, index:t.index, reason}); },
+  sendToGrave(t, reason){ const r=resolveTarget(t); if(!r){ trace(`sendToGrave: 対象が場にない`, false); return; }
+    trace(`sendToGrave: ${labelOf(r.card)}`); act({type:"FX_TO_GRAVE", player:r.p, zone:r.zone, index:r.index, reason}); },
   specialSummon(p, from, index, pos, reason){
     trace(`specialSummon: ${from}[${index}] → ${pos||'atk'}`);
     act({type:"FX_SPECIAL_SUMMON", player:p, from, fromIndex:index, pos:pos||'atk', reason});
@@ -2697,12 +2748,18 @@ const API = {
   mill(p, deckIndex, reason){ trace(`mill: deck[${deckIndex}]`); act({type:"FX_MILL", player:p, deckIndex, reason}); },
   millTop(p, n, reason){ trace(`millTop: ${n}`); act({type:"FX_MILL_TOP", player:p, n, reason}); },
   discard(p, handIndex, reason){ trace(`discard: hand[${handIndex}]`); act({type:"FX_DISCARD", player:p, handIndex, reason}); },
-  returnToHand(t, reason){ trace(`returnToHand: ${labelOf(t.card)}`); act({type:"FX_BOUNCE", player:t.p, zone:t.zone, index:t.index, reason}); },
-  returnToDeck(t, toBottom, reason){ trace(`returnToDeck: ${labelOf(t.card)}`); act({type:"FX_RETURN_DECK", player:t.p, zone:t.zone, index:t.index, toBottom, reason}); },
-  banish(t, reason){ trace(`banish: ${labelOf(t.card)}`); act({type:"FX_BANISH", player:t.p, zone:t.zone, index:t.index, reason}); },
-  changePosition(t, pos, reason){ trace(`changePosition: ${labelOf(t.card)} → ${pos}`); act({type:"FX_SET_STATE", player:t.p, zone:t.zone, index:t.index, pos, reason}); },
-  flip(t, face, reason){ trace(`flip: ${labelOf(t.card)} → ${face}`); act({type:"FX_SET_STATE", player:t.p, zone:t.zone, index:t.index, face, reason}); },
-  negate(t, reason){ trace(`negate: ${labelOf(t.card)}`); act({type:"FX_NEGATE", player:t.p, zone:t.zone, index:t.index, reason}); },
+  returnToHand(t, reason){ const r=resolveTarget(t); if(!r){ trace(`returnToHand: 対象が場にない`, false); return; }
+    trace(`returnToHand: ${labelOf(r.card)}`); act({type:"FX_BOUNCE", player:r.p, zone:r.zone, index:r.index, reason}); },
+  returnToDeck(t, toBottom, reason){ const r=resolveTarget(t); if(!r){ trace(`returnToDeck: 対象が見つからない`, false); return; }
+    trace(`returnToDeck: ${labelOf(r.card)}`); act({type:"FX_RETURN_DECK", player:r.p, zone:r.zone, index:r.index, toBottom, reason}); },
+  banish(t, reason){ const r=resolveTarget(t); if(!r){ trace(`banish: 対象が見つからない`, false); return; }
+    trace(`banish: ${labelOf(r.card)}`); act({type:"FX_BANISH", player:r.p, zone:r.zone, index:r.index, reason}); },
+  changePosition(t, pos, reason){ const r=resolveTarget(t); if(!r) return;
+    trace(`changePosition: ${labelOf(r.card)} → ${pos}`); act({type:"FX_SET_STATE", player:r.p, zone:r.zone, index:r.index, pos, reason}); },
+  flip(t, face, reason){ const r=resolveTarget(t); if(!r) return;
+    trace(`flip: ${labelOf(r.card)} → ${face}`); act({type:"FX_SET_STATE", player:r.p, zone:r.zone, index:r.index, face, reason}); },
+  negate(t, reason){ const r=resolveTarget(t); if(!r) return;
+    trace(`negate: ${labelOf(r.card)}`); act({type:"FX_NEGATE", player:r.p, zone:r.zone, index:r.index, reason}); },
   overlay(p, targetMz, from, fromIndex){ trace(`overlay`); act({type:"FX_OVERLAY", player:p, targetMz, from, fromIndex}); },
   detachMaterial(p, mzIndex, reason){ trace(`detach: mz[${mzIndex}]`); act({type:"FX_DETACH", player:p, mzIndex, reason}); },
   shuffle(p){ trace(`shuffle`); act({type:"SHUFFLE", player:p}); },
@@ -2806,8 +2863,22 @@ function defineScript(name, def){ CARD_SCRIPTS[name] = Object.assign({name}, def
 /* 自身を墓地へ送る標準の後処理（通常魔法・通常罠） */
 function selfToGrave(ctx){
   if(!ctx.zone || ctx.keep) return;
+  // 効果処理中に他のカードが場を離れると添字がずれるので、
+  // 記録しておいたカード実体を探し直してから墓地へ送る。
+  const P = gameState.players[ctx.player];
+  let idx = ctx.index;
+  if(ctx.card){
+    const arr = ctx.zone==='field' ? (P.field?[P.field]:[]) : (P[ctx.zone]||[]);
+    const found = arr.indexOf(ctx.card);
+    if(found >= 0) idx = found;
+    else {
+      // 実体が見つからない＝既に場を離れている
+      trace(`afterResolve: 自身は既に場にない`);
+      return;
+    }
+  }
   trace(`afterResolve: 自身を墓地へ`);
-  act({type:"FX_SELF_TO_GRAVE", player:ctx.player, zone:ctx.zone, index:ctx.index});
+  act({type:"FX_SELF_TO_GRAVE", player:ctx.player, zone:ctx.zone, index:idx});
 }
 
 /* ---- スクリプト実行（発動条件 → 対象選択 → 解決 → 後処理） ---- */
@@ -2915,7 +2986,10 @@ let EVT_CANDS = [], EVT_AFTER = null;
 function __evtPick(i){
   const c = EVT_CANDS[i]; EVT_CANDS=[];
   closeSheet();
-  if(c) runScript(c.name, c.p, c.zone, c.index, {event:c.ctx.event});
+  if(!c) return;
+  // 誘発効果もチェーンに積む。相手がチェーンする余地を残すため、
+  // ここで即解決せず reactActivate と同じ経路を通す。
+  reactActivate(c.p, c.zone, c.index);
 }
 function __evtSkip(){
   EVT_CANDS=[]; closeSheet();
@@ -3746,6 +3820,78 @@ defineScript("アーカナイト・マジシャン", {
   }
 });
 
+
+/* ---- 強欲で謙虚な壺（デッキトップ3枚から1枚を手札へ） ---- */
+defineScript("強欲で謙虚な壺", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    if(API.me(ctx).deck.length < 3){ ctx.reason = "デッキが3枚未満です"; return false; }
+    // このターン特殊召喚していると発動できない
+    if(API.me(ctx).ssHistory.length){
+      ctx.reason = "このターン既に特殊召喚しているため発動できません"; return false;
+    }
+    if(API.getFlag(ctx.player, "gouyokuKenkyo")){
+      ctx.reason = "このカードは1ターンに1枚しか発動できません"; return false;
+    }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const P = API.me(ctx);
+    const top = P.deck.slice(0,3).map(function(c,i){
+      return { p:ctx.player, zone:'deck', index:i, card:c, db:dbOf(c) };
+    });
+    API.selectCard("強欲で謙虚な壺：手札に加える1枚", top,
+      function(t){ done([t]); },
+      "デッキトップ3枚をめくりました。残りはデッキに戻ります。");
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.searchDeck(ctx.player, t.index, "強欲で謙虚な壺");
+    // このターンは特殊召喚できない／同名カードは1枚まで
+    API.setFlag(ctx.player, "gouyokuKenkyo", true, true);
+    API.setFlag(ctx.player, "noSpecialSummon", true, true);
+    API.log("強欲で謙虚な壺：このターン特殊召喚できない");
+  }
+});
+
+/* ---- 成金ゴブリン（1枚ドロー・相手LP1000回復） ---- */
+defineScript("成金ゴブリン", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    if(!API.me(ctx).deck.length){ ctx.reason = "デッキが空です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.draw(ctx.player, 1);
+    API.recoverLP(ctx.opponent, 1000);
+  }
+});
+
+/* ---- 一時休戦（両者1ドロー・次ターンダメージ0） ---- */
+defineScript("一時休戦", {
+  type:"spell", priority:1,
+  condition(ctx){ return true; },
+  resolve(ctx){
+    API.draw(0, 1); API.draw(1, 1);
+    API.registerReserveEffect(ctx.player, "一時休戦：次のターンダメージ0", "endPhase", "お互いが受けるダメージは0");
+  }
+});
+
+/* ---- 打ち出の小槌（手札を戻して同数ドロー） ---- */
+defineScript("打ち出の小槌", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    if(!API.me(ctx).hand.length){ ctx.reason = "戻す手札がありません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const P = API.me(ctx);
+    const n = P.hand.length;
+    API.registerPendingEffect(ctx.player, "打ち出の小槌：戻す枚数を選ぶ", "手札を任意枚数デッキに戻して同数ドロー");
+    API.log("打ち出の小槌：手札を戻して同じ枚数ドローする（手動で処理）");
+  }
+});
+
 function hasEffect(name){
   return !!(CARD_SCRIPTS[name] || CARD_EFFECT[name] || AUTO_EFFECT[name]);
 }
@@ -4122,6 +4268,7 @@ function openPrimitives(srcP, srcZone, srcIdx, srcName){
     <div class="act-grid">
       <div class="act" onclick="primPick('search')">サーチ</div>
       <div class="act" onclick="primPick('mill')">デッキから墓地へ</div>
+      <div class="act" onclick="closeSheet();openDeckTop(${srcP},1)">トップをめくる</div>
       <div class="act" onclick="primPick('revive')">墓地から特殊召喚</div>
       <div class="act" onclick="primPick('graveBanish')">墓地から除外</div>
     </div>
@@ -4371,6 +4518,93 @@ function createTokenCustom(){
   act({type:"TOKEN_CREATE", player:p, name:name||"トークン", atk, def, lv, pos:'atk', n:1});
 }
 
+
+/* =========================================================================
+   デッキトップをめくる
+   「デッキの上からN枚めくり、その中から選ぶ」系の処理に使う。
+   選んだ後、残りをデッキに戻す（順番はトップ/ボトムを選べる）。
+   ========================================================================= */
+function openDeckTop(p, n, opts){
+  const P = gameState.players[p];
+  const want = Math.max(1, n||1);
+  const count = Math.min(want, P.deck.length);
+  if(!count){ showToast("デッキにカードがありません"); return; }
+  const o = opts||{};
+  DECKTOP_OPTS = {p, mode:o.mode||'hand', reason:o.reason||''};
+  const top = P.deck.slice(0, count);
+  const rows = top.map((c,i)=>{
+    const db = dbOf(c);
+    return `<div class="act pick-row" onclick="deckTopPick(${p},${count},${i},${jsStr(o.mode||'hand')},${jsStr(o.reason||'')})">
+      <span class="pk-idx">${i+1}</span>
+      <span class="pk-nm">${db.n||'カード'}</span>
+      <span class="pk-sub">${subOf(c)}</span>
+    </div>`;
+  }).join("");
+
+  // 枚数をその場で変えられるようにする（1枚から）
+  const maxN = Math.min(10, P.deck.length);
+  let btns = '';
+  for(let k=1;k<=maxN;k++){
+    btns += `<button class="dt-n ${k===count?'on':''}" onclick="openDeckTop(${p},${k},${jsVal(o)})">${k}</button>`;
+  }
+
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">デッキトップ ${count}枚</h3>
+    <div class="meta" style="margin-bottom:8px">
+      ${o.note || `上から${count}枚をめくりました。1枚タップで${modeJp(o.mode||'hand')}。`}</div>
+    <div class="dt-ctl">
+      <span class="odds-note">めくる枚数</span>
+      <div class="dt-nums">${btns}</div>
+    </div>
+    <div class="pick-list">${rows}</div>
+    <div class="act-label">選んだカードの行き先</div>
+    <div class="act-grid">
+      <div class="act ${(o.mode||'hand')==='hand'?'fx':''}" onclick="openDeckTop(${p},${count},{mode:'hand'})">手札に加える</div>
+      <div class="act ${o.mode==='grave'?'fx':''}" onclick="openDeckTop(${p},${count},{mode:'grave'})">墓地へ送る</div>
+      <div class="act ${o.mode==='summon'?'fx':''}" onclick="openDeckTop(${p},${count},{mode:'summon'})">特殊召喚</div>
+      <div class="act ${o.mode==='bottom'?'fx':''}" onclick="openDeckTop(${p},${count},{mode:'bottom'})">デッキ下へ</div>
+    </div>
+    <div class="act-label">選ばずに</div>
+    <div class="act-grid">
+      <div class="act" onclick="closeSheet()">見ただけで戻す</div>
+      <div class="act" onclick="deckTopShuffle(${p},${count})">戻してシャッフル</div>
+      <div class="act" onclick="deckTopAll(${p},${count},'grave')">全部墓地へ</div>
+      <div class="act" onclick="deckTopAll(${p},${count},'bottom')">全部デッキ下へ</div>
+    </div>
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+let DECKTOP_OPTS = null;
+function modeJp(m){
+  return ({hand:"手札に加える", grave:"墓地へ送る", summon:"特殊召喚", bottom:"デッキ下へ"})[m] || "手札に加える";
+}
+/* めくった中から複数枚まとめて処理する */
+function deckTopAll(p, count, mode){
+  closeSheet();
+  const rs = "デッキトップ";
+  // 後ろから処理して添字ズレを防ぐ
+  for(let i=count-1;i>=0;i--){
+    if(mode==='grave')  act({type:"FX_MILL", player:p, deckIndex:i, reason:rs});
+    else                act({type:"FX_RETURN_DECK", player:p, zone:"deck", index:i, toBottom:true, reason:rs});
+  }
+}
+/* めくった中から1枚を選ぶ。mode: 'hand'=手札に加える / 'grave'=墓地へ / 'summon'=特殊召喚 */
+function deckTopPick(p, count, idx, mode, reason){
+  closeSheet();
+  const rs = reason || "デッキトップ";
+  if(mode==='bottom')      act({type:"FX_RETURN_DECK", player:p, zone:"deck", index:idx, toBottom:true, reason:rs});
+  else if(mode==='grave')  act({type:"FX_MILL",   player:p, deckIndex:idx, reason:rs});
+  else if(mode==='summon') act({type:"FX_SPECIAL_SUMMON", player:p, from:"deck", fromIndex:idx, pos:"atk", reason:rs});
+  else                     act({type:"FX_SEARCH", player:p, deckIndex:idx, reason:rs});
+  // 残りはデッキに戻る扱い（FX_SEARCH/FX_MILL が内部でシャッフルする）
+  logIt(gameState, `残りのカードをデッキに戻した`);
+  render();
+}
+function deckTopShuffle(p, count){
+  closeSheet();
+  act({type:"SHUFFLE", player:p});
+}
+
 /* ハンバーガーメニュー（たまに使う操作） */
 function openMenu(){
   const p = gameState.activePlayer;
@@ -4399,6 +4633,7 @@ function openMenu(){
       <div class="act" onclick="openScriptDebug()">スクリプト デバッガー</div>
       <div class="act" onclick="openPrimitives(${gameState.activePlayer},null,null,'')">効果処理パレット</div>
       <div class="act" onclick="openTokenMenu()">トークンを出す</div>
+      <div class="act" onclick="closeSheet();openDeckTop(${gameState.activePlayer},1)">デッキトップをめくる</div>
     </div>
     <div class="meta" style="margin:6px 2px 0;font-size:10.5px">
       先攻：<b style="color:var(--gold-hi)">${nameOf(gameState.firstPlayer??0)}</b>（1103は先攻ドローあり）
@@ -4541,7 +4776,9 @@ function activateFromHand(i){
   if(to==="field" && P.field){ showToast("フィールドゾーンが埋まっています"); return; }
   closeSheet();
   act({type:"MOVE", player:p, from:"hand", fromIndex:i, to, face:"up"});
-  const idx = (to==="field") ? 0 : P.sz.length-1;
+  // 場に出した「後」の位置を取る（先に取ると -1 になり、自身を墓地へ送れない）
+  const P2 = gameState.players[p];
+  const idx = (to==="field") ? 0 : P2.sz.length-1;
   const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備");
   logIt(gameState, `<b>${nm}</b> を発動`);
   render();
