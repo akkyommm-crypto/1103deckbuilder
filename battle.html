@@ -139,7 +139,7 @@ header .spacer{flex:1}
 .zrow .lab{font-size:7.5px;letter-spacing:.02em;color:var(--text-dim);text-align:center;
   writing-mode:vertical-rl;text-orientation:upright;padding-top:2px;justify-self:center}
 .slots{display:grid;gap:4px;justify-items:center}
-.slots > *{width:100%;max-width:76px}
+.slots > *{width:100%;max-width:94px}
 .slots.mz,.slots.sz{grid-template-columns:repeat(5,1fr)}
 .slots.line5{grid-template-columns:repeat(5,1fr)}
 .pile{display:flex;flex-direction:column;align-items:stretch;gap:3px}
@@ -155,7 +155,12 @@ header .spacer{flex:1}
   /* 幅が広い端末でカードが巨大化しないよう上限を設ける（縦を節約） */
   /* 盤面6行(自分3+相手3)＋固定UIが1画面に収まる高さを画面から逆算する。
      これによりスクロールせずに全体を把握できる。 */
-  max-height:clamp(42px, calc((100dvh - 280px) / 6), 104px);
+  /* 場外をチップ化して空いた分、モンスター/魔法罠を大きく表示する。
+     4行(自分2+相手2)＋固定UIが1画面に収まる高さを画面から逆算。 */
+  /* 場外をチップ化して空いた分、モンスター/魔法罠を大きく表示する。
+     内訳: 固定UI約175 + 場外チップ2段64 + サイド枠66 + 余白5 ≒ 310px を差し引き、
+     残りを主要4行(自分2+相手2)で分ける。 */
+  max-height:clamp(50px, calc((100dvh - 330px) / 4), 132px);
   border:1px dashed var(--line); border-radius:3px;
   background:rgba(0,0,0,0.18); display:flex;align-items:center;justify-content:center;
   position:relative; overflow:hidden;
@@ -577,6 +582,28 @@ textarea{
   font-size:9.5px;font-weight:800;border-radius:9px;
   background:var(--surface-3);color:var(--text-dim);margin-right:2px;
 }
+
+/* ---------- 場外ゾーン（コンパクトなチップ列） ---------- */
+.pilebar{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:4px;
+  margin-top:2px;
+}
+.pchip{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+  min-height:30px; padding:3px 2px; border-radius:4px;
+  border:1px solid var(--line); background:rgba(0,0,0,.22); color:var(--text-dim);
+  overflow:hidden;
+}
+.pchip.has{border-color:var(--line-hi); background:var(--surface-2); color:var(--ink)}
+.pchip.ready{border-color:var(--spell); box-shadow:0 0 6px rgba(53,176,142,.25)}
+.pchip:active{background:var(--surface-3)}
+.pc-lab{font-size:8px; letter-spacing:.02em; line-height:1; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; max-width:100%}
+.pc-n{font-family:"Shippori Mincho",serif; font-weight:800; font-size:13px; line-height:1.1;
+  color:var(--gold-hi)}
+.pchip:not(.has) .pc-n{color:var(--text-dim); font-size:11px}
+.pc-nm{font-size:7.5px; line-height:1; white-space:nowrap; overflow:hidden;
+  text-overflow:ellipsis; max-width:100%; color:var(--gold-hi)}
 
 /* ---------- toast ---------- */
 .toast{
@@ -1439,15 +1466,32 @@ function sideHTML(p, isOpp){
 /* 場外（フィールド/墓地/除外/デッキ/EX）の行。
    相手側は盤面の一番上、自分側は一番下に置く。 */
 function pileRowHTML(p, isOpp){
-  return `<div class="zrow">
-    <div class="lab">場外</div>
-    <div class="slots line5">
-      ${pileSlot(p,"field","フィールド",isOpp)}
-      ${pileSlot(p,"grave","墓地",isOpp)}
-      ${pileSlot(p,"banish","除外",isOpp)}
-      ${pileSlot(p,"deck","デッキ",isOpp)}
-      ${pileSlot(p,"ex","EX",isOpp)}
-    </div>
+  const P = gameState.players[p];
+  const chip = (zone, label)=>{
+    if(zone==='field'){
+      const c=P.field;
+      const nm = c ? cardName(c) : '';
+      return `<button class="pchip ${c?'has':''}" onclick="openZone(${p},'field',0)">
+        <span class="pc-lab">${label}</span>
+        <span class="pc-n">${c?'1':'—'}</span>
+        ${c?`<span class="pc-nm">${nm}</span>`:''}
+      </button>`;
+    }
+    const n = P[zone].length;
+    // EXは自分だけ召喚画面へ、それ以外は中身一覧へ
+    const onclick = (zone==='ex' && !isOpp) ? `openExDeck(${p})` : `openPile(${p},'${zone}')`;
+    const ready = (zone==='ex' && !isOpp && n) ? 'ready' : '';
+    return `<button class="pchip ${n?'has':''} ${ready}" onclick="${onclick}">
+      <span class="pc-lab">${label}</span>
+      <span class="pc-n">${n||'—'}</span>
+    </button>`;
+  };
+  return `<div class="pilebar">
+    ${chip('field','フィールド')}
+    ${chip('grave','墓地')}
+    ${chip('banish','除外')}
+    ${chip('deck','デッキ')}
+    ${chip('ex','EX')}
   </div>`;
 }
 
