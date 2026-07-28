@@ -111,7 +111,11 @@ header .spacer{flex:1}
 .hdr-btn:active{background:var(--surface-3)}
 
 /* ---------- board ---------- */
-.board{flex:1 1 auto; overflow-y:auto; padding:6px 8px 2px; display:flex; flex-direction:column; gap:5px}
+.board{
+  flex:1 1 auto; min-height:0;          /* ← これが無いと縮まずドックが画面外に出る */
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding:6px 8px 2px; display:flex; flex-direction:column; gap:5px;
+}
 .side{
   border:1px solid var(--line); border-radius:4px; padding:4px 5px 5px;
   background:linear-gradient(var(--surface),var(--bg-2));
@@ -134,7 +138,8 @@ header .spacer{flex:1}
 .zrow{display:grid;grid-template-columns:16px 1fr;gap:4px;align-items:start}
 .zrow .lab{font-size:7.5px;letter-spacing:.02em;color:var(--text-dim);text-align:center;
   writing-mode:vertical-rl;text-orientation:upright;padding-top:2px;justify-self:center}
-.slots{display:grid;gap:4px}
+.slots{display:grid;gap:4px;justify-items:center}
+.slots > *{width:100%;max-width:76px}
 .slots.mz,.slots.sz{grid-template-columns:repeat(5,1fr)}
 .slots.line5{grid-template-columns:repeat(5,1fr)}
 .pile{display:flex;flex-direction:column;align-items:stretch;gap:3px}
@@ -146,7 +151,12 @@ header .spacer{flex:1}
   background:var(--gold-ink);color:var(--gold-hi);border:1px solid var(--edge-dk);
 }
 .slot{
-  aspect-ratio:59/86; border:1px dashed var(--line); border-radius:3px;
+  aspect-ratio:59/86;
+  /* 幅が広い端末でカードが巨大化しないよう上限を設ける（縦を節約） */
+  /* 盤面6行(自分3+相手3)＋固定UIが1画面に収まる高さを画面から逆算する。
+     これによりスクロールせずに全体を把握できる。 */
+  max-height:clamp(42px, calc((100dvh - 280px) / 6), 104px);
+  border:1px dashed var(--line); border-radius:3px;
   background:rgba(0,0,0,0.18); display:flex;align-items:center;justify-content:center;
   position:relative; overflow:hidden;
 }
@@ -178,12 +188,12 @@ header .spacer{flex:1}
 
 /* ---------- hand ---------- */
 .handbar{
-  flex:0 0 auto; border-top:1px solid var(--line);
+  flex:0 0 auto; min-height:0; border-top:1px solid var(--line);
   background:linear-gradient(var(--bg-2),var(--surface));
 }
 
-.hand{display:flex;gap:6px;overflow-x:auto;padding:6px 8px}
-.hand .hcard{flex:0 0 60px;aspect-ratio:59/86}
+.hand{display:flex;gap:5px;overflow-x:auto;padding:5px 8px;align-items:flex-start}
+.hand .hcard{flex:0 0 52px;aspect-ratio:59/86;max-height:14dvh}
 .hand .hcard .nm{font-size:9px}
 
 /* ---------- controls ---------- */
