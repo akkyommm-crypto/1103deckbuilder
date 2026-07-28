@@ -605,6 +605,29 @@ textarea{
 .pc-nm{font-size:7.5px; line-height:1; white-space:nowrap; overflow:hidden;
   text-overflow:ellipsis; max-width:100%; color:var(--gold-hi)}
 
+/* ---------- カードを表側でめくって選ぶ ---------- */
+.rv-grid{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.rv-card{
+  flex:0 0 auto;width:88px;padding:0;border:1px solid var(--line-hi);border-radius:5px;
+  background:var(--surface-2);overflow:hidden;display:flex;flex-direction:column;
+}
+.rv-card:active{border-color:var(--gold-hi)}
+.rv-card img{width:100%;aspect-ratio:59/86;object-fit:cover;display:block}
+.rv-nm{font-size:9.5px;padding:4px 3px;color:var(--ink);line-height:1.25;
+  display:block;word-break:break-word}
+/* 条件警告 */
+.warn-note{
+  font-size:11.5px;font-weight:700;color:var(--forbidden);
+  border:1px dashed var(--forbidden);border-radius:5px;padding:8px 10px;margin-bottom:10px;
+  background:rgba(200,80,60,.07);
+}
+/* 対象の公開 */
+.tg-reveal{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;
+  border:1px solid var(--line-hi);border-radius:5px;padding:7px 9px;background:var(--surface-2)}
+.tgr-lab{font-size:9px;letter-spacing:.14em;color:var(--text-dim)}
+.tgr-card{font-size:12px;font-weight:700;color:var(--gold-hi)}
+.tgr-card small{margin-left:5px;font-size:9px;font-weight:400;color:var(--text-dim)}
+
 /* ---------- toast ---------- */
 .toast{
   position:fixed;left:50%;bottom:118px;transform:translateX(-50%) translateY(8px);
@@ -710,6 +733,7 @@ function newGame(){
     pending:[],        // 発動待ち効果 [{player, name, note}]
     reserved:[],       // 予約効果（このターン終了時など）[{player, name, at, note}]
     scriptLog:[],      // カードスクリプトの処理トレース（デバッガー用）
+    lastBattle:null,   // 直前の戦闘（ダメージ計算後の誘発効果が参照する）
   };
 }
 
@@ -803,35 +827,77 @@ function applyAction(gs, a){
     case "ATTACK": {
       // 攻撃したモンスターに攻撃済みフラグを立てる（1ターン1回制限の管理）
       if(P.mz[a.atkIdx]) P.mz[a.atkIdx].attacked = true;
-      // a: {player, atkIdx, target:'direct'|monsterIdx}
       const atkCard = P.mz[a.atkIdx];
       if(!atkCard){ break; }
-      const atkDB = CARD_DB[atkCard.id]||{};
+      const atkDB = dbOf(atkCard);
       const oppP = gs.players[a.player===0?1:0];
       const aATK = a.atkOverride!=null ? a.atkOverride : (atkDB.atk||0);
+
       if(a.target==='direct'){
         oppP.lp = Math.max(0, oppP.lp - aATK);
+        gs.lastBattle = {player:a.player, atkIdx:a.atkIdx, target:'direct', damage:aATK, toPlayer:a.player===0?1:0};
         logIt(gs, `<b>攻撃</b> ${cardName(atkCard)}(${aATK}) が直接攻撃 → ${nameOf(a.player===0?1:0)} に ${aATK} ダメージ（LP ${oppP.lp}）`);
-      } else {
-        const defCard = oppP.mz[a.target];
-        if(!defCard){ break; }
-        const defDB = CARD_DB[defCard.id]||{};
-        const defending = defCard.pos==='def';
-        const dVal = a.defOverride!=null ? a.defOverride : (defending ? (defDB.def||0) : (defDB.atk||0));
-        let msg = `<b>戦闘</b> ${cardName(atkCard)}(攻${aATK}) vs ${cardName(defCard)}(${defending?'守':'攻'}${dVal})：`;
-        if(defending){
-          // 攻撃表示 vs 守備表示
-          if(aATK > dVal){ dropXyzMaterials(oppP,defCard); oppP.mz.splice(a.target,1); pushZone(oppP.grave, defCard); msg += `守備モンスター破壊`; }
-          else if(aATK < dVal){ const dmg=dVal-aATK; P.lp=Math.max(0,P.lp-dmg); msg += `反射ダメージ ${dmg} → ${nameOf(a.player)}（LP ${P.lp}）`; }
-          else { msg += `相打ちならず（貫通なし）`; }
-        } else {
-          // 攻撃表示同士
-          if(aATK > dVal){ const dmg=aATK-dVal; dropXyzMaterials(oppP,defCard); oppP.mz.splice(a.target,1); pushZone(oppP.grave, defCard); oppP.lp=Math.max(0,oppP.lp-dmg); msg += `相手モンスター破壊＋${dmg}ダメージ（LP ${oppP.lp}）`; }
-          else if(aATK < dVal){ const dmg=dVal-aATK; const gi=P.mz.indexOf(atkCard); if(gi>=0){dropXyzMaterials(P,atkCard);P.mz.splice(gi,1);pushZone(P.grave, atkCard);} P.lp=Math.max(0,P.lp-dmg); msg += `自分モンスター破壊＋${dmg}ダメージ（LP ${P.lp}）`; }
-          else { const gi=P.mz.indexOf(atkCard); if(gi>=0){dropXyzMaterials(P,atkCard);P.mz.splice(gi,1);pushZone(P.grave, atkCard);} dropXyzMaterials(oppP,defCard); oppP.mz.splice(a.target,1); pushZone(oppP.grave, defCard); msg += `相打ち（両者破壊）`; }
-        }
-        logIt(gs, msg);
+        break;
       }
+
+      const defCard = oppP.mz[a.target];
+      if(!defCard){ break; }
+      const defDB = dbOf(defCard);
+      const defending = defCard.pos==='def';
+      const dVal = a.defOverride!=null ? a.defOverride : (defending ? (defDB.def||0) : (defDB.atk||0));
+
+      /* 戦闘破壊耐性（置換効果）を判定する。
+         a.noDestroyAtk / a.noDestroyDef で個別に指定でき、
+         指定が無ければカードの耐性フラグとスクリプト宣言から自動判定する。 */
+      const protAtk = a.noDestroyAtk!=null ? a.noDestroyAtk : battleProof(atkCard);
+      const protDef = a.noDestroyDef!=null ? a.noDestroyDef : battleProof(defCard);
+
+      const killDef = ()=>{
+        if(protDef){ logIt(gs, `${cardName(defCard)} は戦闘では破壊されない`); return false; }
+        dropXyzMaterials(oppP, defCard);
+        const i = oppP.mz.indexOf(defCard);
+        if(i>=0) oppP.mz.splice(i,1);
+        pushZone(oppP.grave, defCard);
+        return true;
+      };
+      const killAtk = ()=>{
+        if(protAtk){ logIt(gs, `${cardName(atkCard)} は戦闘では破壊されない`); return false; }
+        const i = P.mz.indexOf(atkCard);
+        if(i>=0){ dropXyzMaterials(P, atkCard); P.mz.splice(i,1); pushZone(P.grave, atkCard); }
+        return true;
+      };
+
+      let msg = `<b>戦闘</b> ${cardName(atkCard)}(攻${aATK}) vs ${cardName(defCard)}(${defending?'守':'攻'}${dVal})：`;
+      let destroyedAtk=false, destroyedDef=false, dmgTo=null, dmgVal=0;
+
+      if(defending){
+        if(aATK > dVal){ destroyedDef = killDef(); msg += destroyedDef?`守備モンスター破壊`:`破壊されず`; }
+        else if(aATK < dVal){ dmgVal=dVal-aATK; dmgTo=a.player; P.lp=Math.max(0,P.lp-dmgVal);
+          msg += `反射ダメージ ${dmgVal} → ${nameOf(a.player)}（LP ${P.lp}）`; }
+        else { msg += `変化なし`; }
+      } else {
+        if(aATK > dVal){
+          destroyedDef = killDef();
+          dmgVal=aATK-dVal; dmgTo=a.player===0?1:0; oppP.lp=Math.max(0,oppP.lp-dmgVal);
+          msg += `${destroyedDef?'相手モンスター破壊':'破壊されず'}＋${dmgVal}ダメージ（LP ${oppP.lp}）`;
+        }
+        else if(aATK < dVal){
+          destroyedAtk = killAtk();
+          dmgVal=dVal-aATK; dmgTo=a.player; P.lp=Math.max(0,P.lp-dmgVal);
+          msg += `${destroyedAtk?'自分モンスター破壊':'破壊されず'}＋${dmgVal}ダメージ（LP ${P.lp}）`;
+        }
+        else { destroyedAtk=killAtk(); destroyedDef=killDef(); msg += `相打ち`; }
+      }
+      logIt(gs, msg);
+      /* ダメージ計算後の誘発効果（異次元の女戦士・ゴブリンゾンビ等）が参照する */
+      gs.lastBattle = {
+        player:a.player, atkIdx:a.atkIdx, target:a.target,
+        atkCard, defCard, destroyedAtk, destroyedDef,
+        // 破壊されると墓地では別オブジェクトになるため、名前でも照合できるようにする
+        atkName: cardName(atkCard), defName: cardName(defCard),
+        atkOwner: a.player, defOwner: a.player===0?1:0,
+        damage:dmgVal, toPlayer:dmgTo
+      };
       break;
     }
 
@@ -1231,6 +1297,24 @@ function reset(card){
 /* 墓地・除外へ送る共通処理。トークンなら消滅させる */
 function pushZone(arr, card){ const r = reset(card); if(r) arr.push(r); }
 /* 場を離れるカードが持つエクシーズ素材を墓地へ送る（本体処理の前に呼ぶ） */
+/* 戦闘では破壊されないカードか判定する。
+   スクリプトに battleProof:true があればそれを使う。
+   無ければ効果テキストから推定する（マシュマロン等）。 */
+const BATTLE_PROOF_CACHE = new Map();
+function battleProof(card){
+  if(!card) return false;
+  if(card.battleProof) return true;          // 効果で一時的に付与された場合
+  const db = dbOf(card);
+  const nm = db.n; if(!nm) return false;
+  const sc = CARD_SCRIPTS[nm];
+  if(sc && sc.battleProof!=null) return !!sc.battleProof;
+  if(BATTLE_PROOF_CACHE.has(nm)) return BATTLE_PROOF_CACHE.get(nm);
+  const e = String(db.e||"") + String(db.e0||"");
+  const proof = /戦闘では破壊されない|戦闘で破壊されない|戦闘によっては破壊されない/.test(e);
+  BATTLE_PROOF_CACHE.set(nm, proof);
+  return proof;
+}
+
 function dropXyzMaterials(P, card){
   if(card && card.xyz && card.xyz.length){
     card.xyz.forEach(m=>pushZone(P.grave, m));
@@ -2742,6 +2826,14 @@ function makeContext(p, card, zone, index, eventName, extra){
    共通API（スクリプトが使える唯一の手段）
    すべて act() 経由なので Undo が効く。
    ========================================================================= */
+/* 手札の候補を集める。発動元が手札のカード自身なら、それは候補から除く。 */
+function handCandidates(ctx, filter){
+  const P = gameState.players[ctx.player];
+  return P.hand.map((c,i)=>({p:ctx.player, zone:'hand', index:i, card:c, db:dbOf(c)}))
+    .filter(x=>!(ctx.zone==='hand' && x.card===ctx.card))
+    .filter(x=>!filter || filter(x));
+}
+
 /* 対象の現在位置を解決する。
    効果処理中に他のカードが動くと添字がずれるため、
    記録しておいたカード実体から探し直す。 */
@@ -2944,37 +3036,92 @@ function runScript(name, p, zone, index, opts){
   const ctx = makeContext(p, card, zone, index, "activate", opts||{});
   traceStart(name);
 
-  // 1. 発動条件
-  if(sc.condition){
-    const ok = sc.condition(ctx);
-    if(!ok){
-      trace(`発動条件 NG：${ctx.reason||"条件を満たしていません"}`, false);
-      showToast(ctx.reason || `${name} は今発動できません`);
-      render();
-      return true;
-    }
-  }
-  trace(`発動条件 OK`);
-
-  // 2. 対象選択 → 3. 解決 → 4. 後処理
   const finish = ()=>{
     if(sc.afterResolve) sc.afterResolve(ctx); else selfToGrave(ctx);
     trace(`解決終了`);
     render();
   };
-  if(sc.selectTargets){
-    sc.selectTargets(ctx, (targets)=>{
-      ctx.selectedTargets = targets||[];
-      trace(`対象確定：${ctx.selectedTargets.map(t=>labelOf(t.card)).join("、")||"なし"}`);
-      sc.resolve(ctx);
-      finish();
-    });
-  } else {
-    sc.resolve(ctx);
-    finish();
+  /* 対象選択 → 対象を公開 → 相手のチェーン確認 → 解決 */
+  const proceed = ()=>{
+    if(sc.selectTargets){
+      sc.selectTargets(ctx, (targets)=>{
+        ctx.selectedTargets = targets||[];
+        trace(`対象確定：${ctx.selectedTargets.map(t=>t&&t.card?labelOf(t.card):'—').join("、")||"なし"}`);
+        // 対象を相手に見せてからチェーンさせる（サイクロン等はここで神の宣告を撃たれる）
+        confirmTargets(ctx, name, ()=>{ sc.resolve(ctx); finish(); });
+      });
+    } else {
+      confirmTargets(ctx, name, ()=>{ sc.resolve(ctx); finish(); });
+    }
+  };
+
+  // 発動条件。満たさなくても警告を出して手動発動できるようにする（裁定はプレイヤーが判断）
+  if(sc.condition){
+    let ok=false;
+    try{ ok = sc.condition(ctx); }catch(e){ ok=false; ctx.reason='条件判定でエラー'; }
+    if(!ok){
+      trace(`発動条件 NG：${ctx.reason||"条件を満たしていません"}`, false);
+      render();
+      askForce(name, ctx.reason||"発動条件を満たしていません", proceed);
+      return true;
+    }
   }
+  trace(`発動条件 OK`);
+  proceed();
   return true;
 }
+
+/* 条件を満たさない時に「それでも発動する」かを尋ねる */
+function askForce(name, reason, onYes){
+  setTimeout(()=>{
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:6px">${name}</h3>
+      <div class="warn-note">${reason}</div>
+      <div class="meta" style="margin-bottom:12px">
+        タイミングや条件はアプリでは完全に判定できません。<br>
+        正しいと判断できる場合はそのまま発動できます。</div>
+      <div class="act-grid wide">
+        <div class="act fx" onclick="__forceYes()">それでも発動する</div>
+        <div class="act" onclick="__forceNo()">やめる</div>
+      </div>`;
+    FORCE_CB = onYes||null;
+    veil.classList.add("on");
+  }, 40);
+}
+let FORCE_CB=null;
+function __forceYes(){ const f=FORCE_CB; FORCE_CB=null; closeSheet(); if(f) f(); }
+function __forceNo(){ FORCE_CB=null; closeSheet(); showToast("発動を取りやめました"); }
+
+/* 対象を公開して、相手にチェーンの機会を与える */
+function confirmTargets(ctx, name, onResolve){
+  const foe = ctx.player===0?1:0;
+  const foeN = ASK_CHAIN ? reactableCards(foe).length : 0;
+  const tg = (ctx.selectedTargets||[]).filter(t=>t&&t.card);
+  const tgHTML = tg.length
+    ? `<div class="tg-reveal"><span class="tgr-lab">対象</span>${
+        tg.map(t=>`<span class="tgr-card">${labelOf(t.card)}<small>${nameOf(t.p)}</small></span>`).join("")
+      }</div>`
+    : "";
+  // 相手が撃てるものが無ければそのまま解決する
+  if(!foeN){ if(tg.length) trace(`対象を公開`); onResolve(); return; }
+  setTimeout(()=>{
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:6px">${name} を発動</h3>
+      ${tgHTML}
+      <div class="meta" style="margin-bottom:10px">
+        <b style="color:var(--trap)">${nameOf(foe)}</b> は発動できるカードを ${foeN}枚 持っています。<br>
+        チェーンしますか？</div>
+      <div class="act-grid wide">
+        <div class="act" style="background:var(--trap);color:#120a1f;border-color:var(--trap)"
+             onclick="closeSheet();openReactFor(${foe})">${nameOf(foe)}がチェーンする</div>
+        <div class="act fx" onclick="__tgResolve()">チェーンしない（解決）</div>
+      </div>`;
+    TG_RESOLVE = onResolve;
+    veil.classList.add("on");
+  }, 40);
+}
+let TG_RESOLVE=null;
+function __tgResolve(){ const f=TG_RESOLVE; TG_RESOLVE=null; closeSheet(); if(f) f(); }
 
 /* =========================================================================
    イベントシステム
@@ -3139,15 +3286,7 @@ defineScript("ブラック・ホール", {
   resolve(ctx){ API.destroyAll('mz', null, "ブラック・ホール"); }
 });
 
-/* ---- サンダー・ボルト（相手のみ全破壊） ---- */
-defineScript("サンダー・ボルト", {
-  type:"spell", priority:1,
-  condition(ctx){
-    if(!API.foe(ctx).mz.length){ ctx.reason = "相手フィールドにモンスターがいません"; return false; }
-    return true;
-  },
-  resolve(ctx){ API.destroyAll('mz', ctx.opponent, "サンダー・ボルト"); }
-});
+
 
 /* ---- 奈落の落とし穴（攻1500以上を除外） ---- */
 defineScript("奈落の落とし穴", {
@@ -3155,13 +3294,17 @@ defineScript("奈落の落とし穴", {
   condition(ctx){
     const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>(x.db.atk||0)>=1500});
     if(!t.length){ ctx.reason = "攻撃力1500以上の相手モンスターがいません"; return false; }
+    // 召喚に誘発するカードなので、召喚直後でなければ警告する
+    const ss = gameState.players[ctx.opponent].ssHistory.length;
+    const ns = gameState.players[ctx.opponent].normalSummonUsed;
+    if(!ss && !ns){ ctx.reason = "相手がモンスターを召喚した時に発動します"; return false; }
     return true;
   },
   selectTargets(ctx, done){
     const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>(x.db.atk||0)>=1500});
-    API.selectCard("奈落の落とし穴：除外するモンスター", t, x=>done([x]));
+    API.selectCard("奈落の落とし穴：破壊して除外するモンスター", t, x=>done([x]), "攻撃力1500以上");
   },
-  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.banish(t, "奈落の落とし穴")); },
+  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.banish(t, "奈落の落とし穴（破壊して除外）")); },
   passive:{
     onNormalSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
     onSpecialSummon(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; },
@@ -3211,8 +3354,7 @@ defineScript("ライトニング・ボルテックス", {
   },
   selectTargets(ctx, done){
     const P = API.me(ctx);
-    const hand = P.hand.map((c,i)=>({p:ctx.player, zone:'hand', index:i, card:c, db:dbOf(c)}))
-      .filter(x=>!(x.zone===ctx.zone && x.index===ctx.index));
+    const hand = handCandidates(ctx);
     API.selectCard("ライトニング・ボルテックス：捨てる手札", hand, t=>done([t]));
   },
   resolve(ctx){
@@ -3224,59 +3366,40 @@ defineScript("ライトニング・ボルテックス", {
   }
 });
 
-/* ---- 強奪（相手モンスターのコントロールを得る／相手はスタンバイに1000回復） ---- */
-defineScript("強奪", {
-  type:"equip", priority:1,
-  condition(ctx){
-    if(!API.foe(ctx).mz.length){ ctx.reason = "相手フィールドにモンスターがいません"; return false; }
-    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "自分のモンスターゾーンが一杯です"; return false; }
-    return true;
-  },
-  selectTargets(ctx, done){
-    API.selectCard("強奪：奪うモンスター", API.fieldCards({zone:'mz', player:ctx.opponent}), t=>done([t]));
-  },
-  resolve(ctx){
-    const t = ctx.selectedTargets[0]; if(!t) return;
-    API.changeControl(t, ctx.player, "強奪");
-    // 相手はスタンバイフェイズ毎に1000回復する（予約として登録）
-    API.registerReserveEffect(ctx.opponent, "強奪：スタンバイに1000回復", "standby", "相手LP+1000");
-  },
-  afterResolve(ctx){ /* 装備魔法なので場に残す */ }
-});
+
 
 /* ---- 貪欲な壺（墓地のモンスター5体をデッキに戻して2ドロー） ---- */
 defineScript("貪欲な壺", {
-  type:"spell", priority:1,
+  type:"spell", priority:1, quickEffect:false,
   condition(ctx){
     const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
     if(mons.length<5){ ctx.reason = `墓地のモンスターが5体未満です（現在${mons.length}体）`; return false; }
     return true;
   },
+  selectTargets(ctx, done){
+    // 5体を順に選ばせる
+    const chosen=[];
+    const step=()=>{
+      const left = API.pileCards(ctx.player,'grave',x=>x.db.k==='m')
+        .filter(x=>chosen.every(c=>c.card!==x.card));
+      if(chosen.length>=5 || !left.length){ done(chosen); return; }
+      API.selectCard(`貪欲な壺：デッキに戻すモンスター（${chosen.length+1}/5）`, left, t=>{
+        chosen.push(t); step();
+      });
+    };
+    step();
+  },
   resolve(ctx){
-    const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m').slice(0,5);
-    // 添字ズレを避けるため後ろから戻す
-    mons.sort((a,b)=>b.index-a.index).forEach(x=>API.returnToDeck(x, true, "貪欲な壺"));
+    const ts = ctx.selectedTargets||[];
+    if(ts.length<5){ API.log("貪欲な壺：5体選べなかったため不発"); return; }
+    // 実体で解決するので順不同で安全
+    ts.forEach(t=>API.returnToDeck(t, true, "貪欲な壺"));
     API.shuffle(ctx.player);
     API.draw(ctx.player, 2);
   }
 });
 
-/* ---- 大嵐（魔法・罠を全破壊） ---- */
-defineScript("大嵐", {
-  type:"spell", priority:1,
-  condition(ctx){
-    const t = API.fieldCards().filter(x=>x.zone!=='mz')
-      .filter(x=>!(x.p===ctx.player && x.zone===ctx.zone && x.index===ctx.index));
-    if(!t.length){ ctx.reason = "他に魔法・罠がありません"; return false; }
-    return true;
-  },
-  resolve(ctx){
-    // 自分の発動中のこのカード以外を全て破壊
-    const all = API.fieldCards().filter(x=>x.zone!=='mz')
-      .filter(x=>!(x.p===ctx.player && x.zone===ctx.zone && x.index===ctx.index));
-    all.sort((a,b)=>b.index-a.index).forEach(x=>API.destroy(x, "大嵐"));
-  }
-});
+
 
 /* ---- リビングデッドの呼び声（蘇生・場に残る） ---- */
 defineScript("リビングデッドの呼び声", {
@@ -3302,13 +3425,16 @@ defineScript("リビングデッドの呼び声", {
 defineScript("聖なるバリア －ミラーフォース－", {
   type:"trap", priority:2,
   condition(ctx){
-    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent,
+      filter:x=>x.card.face==='up' && x.card.pos==='atk'});
     if(!t.length){ ctx.reason = "相手に攻撃表示モンスターがいません"; return false; }
+    if(gameState.phase!=='battle'){ ctx.reason = "相手モンスターの攻撃宣言時に発動します"; return false; }
     return true;
   },
   resolve(ctx){
-    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
-    t.sort((a,b)=>b.index-a.index).forEach(x=>API.destroy(x, "ミラーフォース"));
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent,
+      filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+    t.forEach(x=>API.destroy(x, "ミラーフォース"));
   },
   passive:{ onAttackDeclare(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; } }
 });
@@ -3317,40 +3443,27 @@ defineScript("聖なるバリア －ミラーフォース－", {
 defineScript("次元幽閉", {
   type:"trap", priority:2,
   condition(ctx){
-    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+    const t = API.fieldCards({zone:'mz', player:ctx.opponent,
+      filter:x=>x.card.face==='up' && x.card.pos==='atk'});
     if(!t.length){ ctx.reason = "攻撃表示の相手モンスターがいません"; return false; }
+    if(gameState.phase!=='battle'){ ctx.reason = "相手モンスターの攻撃宣言時に発動します"; return false; }
     return true;
   },
   selectTargets(ctx, done){
-    const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
-    API.selectCard("次元幽閉：除外するモンスター", t, x=>done([x]));
+    // 攻撃済みのモンスターを優先して見せる（攻撃宣言したモンスターが対象）
+    const all = API.fieldCards({zone:'mz', player:ctx.opponent,
+      filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+    const atkd = all.filter(x=>x.card.attacked);
+    API.selectCard("次元幽閉：除外する攻撃モンスター", atkd.length?atkd:all, x=>done([x]),
+      atkd.length?"攻撃宣言したモンスター":"攻撃表示のモンスター");
   },
   resolve(ctx){ ctx.selectedTargets.forEach(t=>API.banish(t, "次元幽閉")); },
   passive:{ onAttackDeclare(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; } }
 });
 
-/* ---- 強欲な壺 ---- */
-defineScript("強欲な壺", {
-  type:"spell", priority:1,
-  condition(ctx){
-    if(API.me(ctx).deck.length<2){ ctx.reason = "デッキが2枚未満です"; return false; }
-    return true;
-  },
-  resolve(ctx){ API.draw(ctx.player, 2); }
-});
 
-/* ---- 天使の施し ---- */
-defineScript("天使の施し", {
-  type:"spell", priority:1,
-  condition(ctx){
-    if(API.me(ctx).deck.length<3){ ctx.reason = "デッキが3枚未満です"; return false; }
-    return true;
-  },
-  resolve(ctx){
-    API.draw(ctx.player, 3);
-    API.registerPendingEffect(ctx.player, "天使の施し：手札を2枚捨てる", "状態画面から処理");
-  }
-});
+
+
 
 /* =========================================================================
    追加カードスクリプト
@@ -3377,23 +3490,7 @@ defineScript("ネクロ・ガードナー", {
   }
 });
 
-/* ---- キラー・スネーク（スタンバイに墓地から手札へ） ---- */
-defineScript("キラー・スネーク", {
-  type:"monster", priority:1,
-  activateFrom:["grave"], quickEffect:false,
-  condition(ctx){
-    if(ctx.zone!=='grave'){ ctx.reason = "墓地でのみ発動できます"; return false; }
-    if(gameState.phase!=='standby'){ ctx.reason = "スタンバイフェイズに発動します"; return false; }
-    return true;
-  },
-  resolve(ctx){
-    const P = API.me(ctx);
-    const c = P.grave[ctx.index];
-    if(!c) return;
-    API.returnToHand({p:ctx.player, zone:'grave', index:ctx.index, card:c}, "キラー・スネーク");
-  },
-  afterResolve(){}
-});
+
 
 /* ---- 冥府の使者ゴーズ（手札から特殊召喚） ---- */
 defineScript("冥府の使者ゴーズ", {
@@ -3401,15 +3498,22 @@ defineScript("冥府の使者ゴーズ", {
   activateFrom:["hand"],
   condition(ctx){
     if(ctx.zone!=='hand'){ ctx.reason = "手札から特殊召喚します"; return false; }
-    if(API.me(ctx).mz.length){ ctx.reason = "自分フィールドにモンスターがいると発動できません"; return false; }
-    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "モンスターゾーンが一杯です"; return false; }
+    const P = API.me(ctx);
+    if(P.mz.length || P.sz.length || P.field){
+      ctx.reason = "自分フィールドにカードが存在すると発動できません"; return false;
+    }
     return true;
   },
   resolve(ctx){
     API.specialSummon(ctx.player, 'hand', ctx.index, 'atk', "冥府の使者ゴーズ");
-    // 受けたダメージ分の攻守を持つトークンを出す（数値はプレイヤーが入力）
-    const dmg = parseInt(prompt("受けたダメージ量（トークンの攻守）","0")||"0",10);
-    API.createToken(ctx.player, {name:"ゴーズトークン", atk:dmg, def:dmg, lv:1, ra:"悪魔", at:"闇", pos:'atk'}, 1);
+    // 戦闘ダメージなら「冥府の使者カイエントークン」（攻守＝受けたダメージ）
+    const dmg = parseInt(prompt("受けた戦闘ダメージ（カイエントークンの攻守）","0")||"0",10);
+    if(dmg>0){
+      API.createToken(ctx.player,
+        {name:"冥府の使者カイエントークン", atk:dmg, def:dmg, lv:7, ra:"天使", at:"光", pos:'atk'}, 1);
+    } else {
+      API.registerPendingEffect(ctx.player, "ゴーズ：効果ダメージの場合は相手に同量のダメージ", "手動でLPを調整してください");
+    }
   },
   afterResolve(){}
 });
@@ -3531,7 +3635,9 @@ defineScript("異次元からの帰還", {
 /* ---- クリッター（墓地へ送られた時にサーチ） ---- */
 defineScript("クリッター", {
   type:"monster", priority:1,
+  activateFrom:["grave"],
   condition(ctx){
+    if(API.getFlag(ctx.player,"critterUsed")){ ctx.reason="このカード名の効果は1ターンに1度です"; return false; }
     const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && (x.db.atk||0)<=1500);
     if(!t.length){ ctx.reason = "攻撃力1500以下のモンスターがデッキにいません"; return false; }
     return true;
@@ -3543,101 +3649,88 @@ defineScript("クリッター", {
   resolve(ctx){
     const t = ctx.selectedTargets[0]; if(!t) return;
     API.searchDeck(ctx.player, t.index, "クリッター");
+    API.setFlag(ctx.player, "critterUsed", true, true);
+    API.log("クリッター：このターン、加えたカードとその同名カードは発動できない");
   },
   afterResolve(){},
   passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
 });
 
-/* ---- ゴブリンゾンビ（墓地へ送られた時にアンデットをサーチ） ---- */
-defineScript("ゴブリンゾンビ", {
-  type:"monster", priority:1,
-  condition(ctx){
-    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='アンデット' && (x.db.def||0)<=1200);
-    if(!t.length){ ctx.reason = "守備1200以下のアンデット族がデッキにいません"; return false; }
-    return true;
-  },
-  selectTargets(ctx, done){
-    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='アンデット' && (x.db.def||0)<=1200);
-    API.selectCard("ゴブリンゾンビ：手札に加えるアンデット族", t, x=>done([x]));
-  },
-  resolve(ctx){
-    const t = ctx.selectedTargets[0]; if(!t) return;
-    API.searchDeck(ctx.player, t.index, "ゴブリンゾンビ");
-  },
-  afterResolve(){},
-  passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
-});
+
 
 /* ---- スノーマンイーター（リバースで破壊） ---- */
 defineScript("スノーマンイーター", {
   type:"monster", priority:1,
   condition(ctx){
-    if(!API.foe(ctx).mz.length){ ctx.reason = "相手フィールドにモンスターがいません"; return false; }
+    if(!API.fieldCards({zone:'mz'}).filter(x=>x.card.face==='up').length){
+      ctx.reason = "表側表示のモンスターがいません"; return false;
+    }
+    if(ctx.zone!=='mz'){ ctx.reason = "フィールドでリバースした時に発動します"; return false; }
     return true;
   },
   selectTargets(ctx, done){
-    API.selectCard("スノーマンイーター：破壊するモンスター",
-      API.fieldCards({zone:'mz', player:ctx.opponent}), t=>done([t]));
+    // 「フィールド上に表側表示で存在するモンスター」＝自分のも対象になる
+    const t = API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'})
+      .filter(x=>!(x.p===ctx.player && x.index===ctx.index));
+    API.selectCard("スノーマンイーター：破壊する表側モンスター", t, x=>done([x]));
   },
   resolve(ctx){ ctx.selectedTargets.forEach(t=>API.destroy(t, "スノーマンイーター")); },
   afterResolve(){},
   passive:{ onFlip(ctx){ return ctx.zone==='mz'; } }
 });
 
-/* ---- 異次元の女戦士（戦闘時に相手ごと除外） ---- */
-defineScript("異次元の女戦士", {
-  type:"monster", priority:1,
-  condition(ctx){
-    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
-    return true;
-  },
-  selectTargets(ctx, done){
-    API.selectCard("異次元の女戦士：ともに除外する相手モンスター",
-      API.fieldCards({zone:'mz', player:ctx.opponent}), t=>done([t]));
-  },
-  resolve(ctx){
-    const t = ctx.selectedTargets[0];
-    if(t) API.banish(t, "異次元の女戦士");
-    API.banish({p:ctx.player, zone:'mz', index:ctx.index, card:ctx.card}, "異次元の女戦士");
-  },
-  afterResolve(){},
-  passive:{ onBattleDestroy(ctx){ return ctx.zone==='mz'; } }
-});
+
 
 /* ---- カオス・ソーサラー（除外して特殊召喚する上級） ---- */
 defineScript("カオス・ソーサラー", {
   type:"monster", priority:1, quickEffect:false,
+  activateFrom:["hand"],
   condition(ctx){
-    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
-    if(!API.foe(ctx).mz.length){ ctx.reason = "除外する相手モンスターがいません"; return false; }
+    // 手札からの特殊召喚（光1体＋闇1体を除外）
+    if(ctx.zone==='hand'){
+      const g = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
+      const light = g.filter(x=>x.db.at==='光');
+      const dark  = g.filter(x=>x.db.at==='闇');
+      if(!light.length || !dark.length){
+        ctx.reason = "墓地に光属性と闇属性のモンスターが必要です"; return false;
+      }
+      if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+      return true;
+    }
+    // 場での起動効果（表側モンスター1体を除外）
+    if(API.getFlag(ctx.player,"chaosSorcererUsed")){ ctx.reason="1ターンに1度です"; return false; }
+    if(!API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}).length){
+      ctx.reason = "除外する表側表示モンスターがいません"; return false;
+    }
     return true;
   },
   selectTargets(ctx, done){
+    if(ctx.zone==='hand'){
+      // 光→闇の順に除外するモンスターを選ぶ
+      const light = API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && x.db.at==='光');
+      API.selectCard("カオス・ソーサラー：除外する光属性", light, l=>{
+        const dark = API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && x.db.at==='闇' && x.card!==l.card);
+        API.selectCard("カオス・ソーサラー：除外する闇属性", dark, d=>done([l,d]));
+      });
+      return;
+    }
     API.selectCard("カオス・ソーサラー：除外する表側モンスター",
       API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}), t=>done([t]));
   },
   resolve(ctx){
+    if(ctx.zone==='hand'){
+      ctx.selectedTargets.forEach(t=>API.banish(t, "カオス・ソーサラー（コスト）"));
+      API.specialSummon(ctx.player, 'hand', ctx.index, 'atk', "カオス・ソーサラー");
+      return;
+    }
     ctx.selectedTargets.forEach(t=>API.banish(t, "カオス・ソーサラー"));
-    API.log("カオス・ソーサラー：このターン攻撃できない");
+    API.setFlag(ctx.player, "chaosSorcererUsed", true, true);
+    API.log("カオス・ソーサラー：この効果を発動したターン攻撃できない");
   },
   afterResolve(){}
 });
 
-/* ---- 霊滅術師 カイクウ（墓地を除外） ---- */
-defineScript("霊滅術師 カイクウ", {
-  type:"monster", priority:1, quickEffect:false,
-  condition(ctx){
-    const g = [0,1].flatMap(p=>API.pileCards(p,'grave'));
-    if(!g.length){ ctx.reason = "墓地にカードがありません"; return false; }
-    return true;
-  },
-  selectTargets(ctx, done){
-    const g = [0,1].flatMap(p=>API.pileCards(p,'grave'));
-    API.selectCard("カイクウ：除外する墓地のカード", g, t=>done([t]));
-  },
-  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.banish(t, "霊滅術師 カイクウ")); },
-  afterResolve(){}
-});
+
 
 /* ---- エフェクト・ヴェーラー（手札から効果無効） ---- */
 defineScript("エフェクト・ヴェーラー", {
@@ -3661,53 +3754,11 @@ defineScript("エフェクト・ヴェーラー", {
   }
 });
 
-/* ---- マシュマロン（戦闘破壊されない） ---- */
-defineScript("マシュマロン", {
-  type:"monster", priority:1,
-  condition(ctx){ return true; },
-  resolve(ctx){
-    API.log("マシュマロン：戦闘では破壊されない");
-    API.registerPendingEffect(ctx.player, "マシュマロンは戦闘破壊されない", "戦闘破壊を取り消してください");
-  },
-  afterResolve(){}
-});
 
-/* ---- ライオウ（サーチ封じ・特殊召喚無効） ---- */
-defineScript("ライオウ", {
-  type:"monster", priority:1, quickEffect:false,
-  condition(ctx){
-    if(API.me(ctx).lp<1000){ ctx.reason = "LPが1000未満です"; return false; }
-    return true;
-  },
-  resolve(ctx){
-    API.payCost(ctx.player, 1000);
-    API.log("ライオウ：1000payして特殊召喚を無効にし破壊した");
-    API.registerPendingEffect(ctx.player, "ライオウで特殊召喚を無効化", "召喚を無効にして破壊してください");
-  },
-  afterResolve(){}
-});
 
-/* ---- 氷結界の龍 ブリューナク（手札を戻してバウンス） ---- */
-defineScript("氷結界の龍 ブリューナク", {
-  type:"synchro", priority:1, quickEffect:false,
-  condition(ctx){
-    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
-    if(!API.me(ctx).hand.length){ ctx.reason = "戻す手札がありません"; return false; }
-    if(!API.fieldCards().filter(x=>x.zone!=='mz'||x.p!==ctx.player).length){ ctx.reason = "対象がありません"; return false; }
-    return true;
-  },
-  selectTargets(ctx, done){
-    const P = API.me(ctx);
-    const hand = P.hand.map((c,i)=>({p:ctx.player, zone:'hand', index:i, card:c, db:dbOf(c)}));
-    API.selectCard("ブリューナク：デッキに戻す手札（1枚につき1枚バウンス）", hand, h=>{
-      API.returnToDeck(h, false, "ブリューナク");
-      const t = API.fieldCards().filter(x=>!(x.p===ctx.player && x.zone==='mz' && x.index===ctx.index));
-      API.selectCard("ブリューナク：手札に戻すカード", t, tt=>done([tt]));
-    });
-  },
-  resolve(ctx){ ctx.selectedTargets.forEach(t=>API.returnToHand(t, "ブリューナク")); },
-  afterResolve(){}
-});
+
+
+
 
 /* ---- 突然変異／おろかな埋葬など汎用サポート ---- */
 defineScript("おろかな埋葬", {
@@ -3747,27 +3798,24 @@ defineScript("増援", {
 
 /* ---- 光の援軍（デッキから3枚落として1枚サーチ） ---- */
 defineScript("光の援軍", {
-  type:"spell", priority:1,
+  type:"spell", priority:1, quickEffect:false,
   condition(ctx){
     if(API.me(ctx).deck.length<3){ ctx.reason = "デッキが3枚未満です"; return false; }
-    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='戦士' && (x.db.lv||9)<=4);
-    if(!t.length){ ctx.reason = "レベル4以下の戦士族がデッキにいません"; return false; }
+    const t = API.pileCards(ctx.player,'deck',
+      x=>x.db.k==='m' && (x.db.lv||9)<=4 && String(x.db.n||'').indexOf('ライトロード')>=0);
+    if(!t.length){ ctx.reason = "レベル4以下の「ライトロード」がデッキにいません"; return false; }
     return true;
   },
-  selectTargets(ctx, done){
-    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && x.db.ra==='戦士' && (x.db.lv||9)<=4);
-    API.selectCard("光の援軍：手札に加える戦士族（先に3枚落とす）", t, x=>done([x]));
-  },
   resolve(ctx){
+    // コストとして先に3枚落とす
     API.millTop(ctx.player, 3, "光の援軍");
-    const t = ctx.selectedTargets[0];
-    if(t){
-      // 落とした後にデッキが変わるので名前で引き直す
-      const nm = labelOf(t.card);
-      const again = API.pileCards(ctx.player,'deck',x=>labelOf(x.card)===nm);
-      if(again.length) API.searchDeck(ctx.player, again[0].index, "光の援軍");
-      else API.log("光の援軍：対象がデッキから失われました");
-    }
+    const t = API.pileCards(ctx.player,'deck',
+      x=>x.db.k==='m' && (x.db.lv||9)<=4 && String(x.db.n||'').indexOf('ライトロード')>=0);
+    if(!t.length){ API.log("光の援軍：対象がデッキに残っていない"); return; }
+    API.selectCard("光の援軍：手札に加える「ライトロード」", t, x=>{
+      API.searchDeck(ctx.player, x.index, "光の援軍");
+      render();
+    }, "レベル4以下");
   }
 });
 
@@ -3787,27 +3835,7 @@ defineScript("ハリケーン", {
   }
 });
 
-/* ---- 早すぎた埋葬（800payして蘇生・装備） ---- */
-defineScript("早すぎた埋葬", {
-  type:"equip", priority:1,
-  condition(ctx){
-    if(API.me(ctx).lp<800){ ctx.reason = "LPが800未満です"; return false; }
-    const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
-    if(!mons.length){ ctx.reason = "自分の墓地にモンスターがいません"; return false; }
-    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "モンスターゾーンが一杯です"; return false; }
-    return true;
-  },
-  selectTargets(ctx, done){
-    API.selectCard("早すぎた埋葬：蘇生するモンスター",
-      API.pileCards(ctx.player,'grave',x=>x.db.k==='m'), t=>done([t]));
-  },
-  resolve(ctx){
-    API.payCost(ctx.player, 800);
-    const t = ctx.selectedTargets[0]; if(!t) return;
-    API.specialSummon(ctx.player, 'grave', t.index, 'atk', "早すぎた埋葬");
-  },
-  afterResolve(){}   // 装備魔法なので場に残す
-});
+
 
 /* ---- スケープ・ゴート（羊トークン4体） ---- */
 defineScript("スケープ・ゴート", {
@@ -3852,26 +3880,29 @@ defineScript("アーカナイト・マジシャン", {
   type:"synchro", priority:1, quickEffect:false,
   condition(ctx){
     if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
-    const n = API.countCounter({p:ctx.player, zone:'mz', index:ctx.index}, "魔力");
-    if(!n){ ctx.reason = "魔力カウンターがありません"; return false; }
+    // 自分フィールドのどこかに魔力カウンターがあればよい
+    const has = API.fieldCards({player:ctx.player})
+      .some(x=>x.card.counters && (x.card.counters['魔力']||0)>0);
+    if(!has){ ctx.reason = "自分フィールドに魔力カウンターがありません"; return false; }
     if(!API.fieldCards({player:ctx.opponent}).length){ ctx.reason = "破壊する相手のカードがありません"; return false; }
     return true;
   },
   selectTargets(ctx, done){
-    // 相手フィールドのカードのみ対象（自身を巻き込まない）
-    API.selectCard("アーカナイト：破壊する相手のカード",
-      API.fieldCards({player:ctx.opponent}), t=>done([t]));
+    // 取り除くカウンターの置き場所 → 破壊する相手のカード
+    const src = API.fieldCards({player:ctx.player})
+      .filter(x=>x.card.counters && (x.card.counters['魔力']||0)>0);
+    API.selectCard("アーカナイト：魔力カウンターを取り除くカード", src, sc=>{
+      API.selectCard("アーカナイト：破壊する相手のカード",
+        API.fieldCards({player:ctx.opponent}), t=>done([sc, t]));
+    });
   },
   resolve(ctx){
-    // 先にカウンターを取り除いてから破壊する
-    API.removeCounter({p:ctx.player, zone:'mz', index:ctx.index}, "魔力", 1);
-    ctx.selectedTargets.forEach(t=>API.destroy(t, "アーカナイト・マジシャン"));
+    const [src, t] = ctx.selectedTargets;
+    if(src) API.removeCounter(src, "魔力", 1);
+    if(t)   API.destroy(t, "アーカナイト・マジシャン");
   },
   afterResolve(){},
-  passive:{
-    // S召喚成功時に魔力カウンター2つ
-    onSpecialSummon(ctx){ return ctx.zone==='mz'; }
-  }
+  passive:{ onSpecialSummon(ctx){ return ctx.zone==='mz'; } }
 });
 
 
@@ -3880,30 +3911,23 @@ defineScript("強欲で謙虚な壺", {
   type:"spell", priority:1, quickEffect:false,
   condition(ctx){
     if(API.me(ctx).deck.length < 3){ ctx.reason = "デッキが3枚未満です"; return false; }
-    // このターン特殊召喚していると発動できない
-    if(API.me(ctx).ssHistory.length){
-      ctx.reason = "このターン既に特殊召喚しているため発動できません"; return false;
-    }
-    if(API.getFlag(ctx.player, "gouyokuKenkyo")){
-      ctx.reason = "このカードは1ターンに1枚しか発動できません"; return false;
-    }
+    if(API.me(ctx).ssHistory.length){ ctx.reason = "このターン既に特殊召喚しています"; return false; }
+    if(API.getFlag(ctx.player, "gouyokuKenkyo")){ ctx.reason = "このカードは1ターンに1枚しか発動できません"; return false; }
     return true;
   },
   selectTargets(ctx, done){
     const P = API.me(ctx);
-    const top = P.deck.slice(0,3).map(function(c,i){
-      return { p:ctx.player, zone:'deck', index:i, card:c, db:dbOf(c) };
-    });
-    API.selectCard("強欲で謙虚な壺：手札に加える1枚", top,
-      function(t){ done([t]); },
-      "デッキトップ3枚をめくりました。残りはデッキに戻ります。");
+    // デッキトップ3枚を「表側で」めくって見せる
+    const top = P.deck.slice(0,3).map((c,i)=>({p:ctx.player, zone:'deck', index:i, card:c, db:dbOf(c)}));
+    revealPick("強欲で謙虚な壺：めくった3枚", "1枚を手札に加え、残りはデッキに戻します。",
+      top, (t)=>done([t]), ()=>done([]));
   },
   resolve(ctx){
-    const t = ctx.selectedTargets[0]; if(!t) return;
-    API.searchDeck(ctx.player, t.index, "強欲で謙虚な壺");
-    // このターンは特殊召喚できない／同名カードは1枚まで
+    const t = ctx.selectedTargets[0];
     API.setFlag(ctx.player, "gouyokuKenkyo", true, true);
     API.setFlag(ctx.player, "noSpecialSummon", true, true);
+    if(!t){ API.log("強欲で謙虚な壺：選ばずに終了"); return; }
+    API.searchDeck(ctx.player, t.index, "強欲で謙虚な壺");
     API.log("強欲で謙虚な壺：このターン特殊召喚できない");
   }
 });
@@ -3921,15 +3945,7 @@ defineScript("成金ゴブリン", {
   }
 });
 
-/* ---- 一時休戦（両者1ドロー・次ターンダメージ0） ---- */
-defineScript("一時休戦", {
-  type:"spell", priority:1,
-  condition(ctx){ return true; },
-  resolve(ctx){
-    API.draw(0, 1); API.draw(1, 1);
-    API.registerReserveEffect(ctx.player, "一時休戦：次のターンダメージ0", "endPhase", "お互いが受けるダメージは0");
-  }
-});
+
 
 /* ---- 打ち出の小槌（手札を戻して同数ドロー） ---- */
 defineScript("打ち出の小槌", {
@@ -3944,6 +3960,830 @@ defineScript("打ち出の小槌", {
     API.registerPendingEffect(ctx.player, "打ち出の小槌：戻す枚数を選ぶ", "手札を任意枚数デッキに戻して同数ドロー");
     API.log("打ち出の小槌：手札を戻して同じ枚数ドローする（手動で処理）");
   }
+});
+
+
+/* ---- 終末の騎士（召喚・反転召喚・特殊召喚に成功した時、闇を落とす） ---- */
+defineScript("終末の騎士", {
+  type:"monster", priority:1, quickEffect:false,
+  condition(ctx){
+    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && x.db.at==='闇');
+    if(!t.length){ ctx.reason = "デッキに闇属性モンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && x.db.at==='闇');
+    API.selectCard("終末の騎士：墓地へ送る闇属性モンスター", t, x=>done([x]), `デッキに${t.length}体`);
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    API.mill(ctx.player, t.index, "終末の騎士");
+  },
+  afterResolve(){},   // モンスターなので場に残る
+  passive:{
+    onNormalSummon(ctx){ return ctx.zone==='mz'; },
+    onSpecialSummon(ctx){ return ctx.zone==='mz'; },
+    onFlip(ctx){ return ctx.zone==='mz'; },
+  }
+});
+
+/* ---- E・HERO エアーマン（召喚時に選択：破壊 or サーチ） ---- */
+defineScript("E・HERO エアーマン", {
+  type:"monster", priority:1, quickEffect:false,
+  condition(ctx){
+    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const heroOnField = API.fieldCards({zone:'mz', player:ctx.player})
+      .filter(x=>String(x.db.n||'').indexOf('HERO')>=0 && x.index!==ctx.index).length;
+    const stOnField = API.fieldCards().filter(x=>x.zone!=='mz').length;
+    const deckHero = API.pileCards(ctx.player,'deck',
+      x=>x.db.k==='m' && !x.db.ex && String(x.db.n||'').indexOf('HERO')>=0);
+    API.confirm("E・HERO エアーマン",
+      `効果を1つ選んでください。<br>
+       ・破壊：他の「HERO」の数(${heroOnField})まで魔法・罠を破壊<br>
+       ・サーチ：デッキから「HERO」を手札に(${deckHero.length}体)`,
+      ()=>{   // はい＝サーチ
+        if(!deckHero.length){ showToast("デッキに「HERO」がいません"); done([]); return; }
+        API.selectCard("エアーマン：手札に加える「HERO」", deckHero, x=>done([{mode:'search', t:x}]));
+      },
+      ()=>{   // いいえ＝破壊
+        if(!heroOnField){ showToast("他の「HERO」がいないため破壊できません"); done([]); return; }
+        const st = API.fieldCards().filter(x=>x.zone!=='mz');
+        if(!st.length){ showToast("破壊できる魔法・罠がありません"); done([]); return; }
+        API.selectCard("エアーマン：破壊する魔法・罠", st, x=>done([{mode:'destroy', t:x}]));
+      });
+  },
+  resolve(ctx){
+    const sel = ctx.selectedTargets[0];
+    if(!sel) return;
+    if(sel.mode==='search') API.searchDeck(ctx.player, sel.t.index, "E・HERO エアーマン");
+    else                    API.destroy(sel.t, "E・HERO エアーマン");
+  },
+  afterResolve(){},
+  passive:{
+    onNormalSummon(ctx){ return ctx.zone==='mz'; },
+    onSpecialSummon(ctx){ return ctx.zone==='mz'; },
+  }
+});
+
+/* ---- ダーク・グレファー（手札の闇を捨ててデッキから闇を落とす） ---- */
+defineScript("ダーク・グレファー", {
+  type:"monster", priority:1, quickEffect:false,
+  condition(ctx){
+    if(API.getFlag(ctx.player,"greipherUsed")){ ctx.reason="1ターンに1度です"; return false; }
+    const hand = handCandidates(ctx, x=>x.db.k==='m' && x.db.at==='闇');
+    if(!hand.length){ ctx.reason = "手札に捨てる闇属性モンスターがいません"; return false; }
+    const deck = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && x.db.at==='闇');
+    if(!deck.length){ ctx.reason = "デッキに闇属性モンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const hand = handCandidates(ctx, x=>x.db.k==='m' && x.db.at==='闇');
+    API.selectCard("ダーク・グレファー：捨てる闇属性（コスト）", hand, h=>{
+      const deck = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && x.db.at==='闇');
+      API.selectCard("ダーク・グレファー：墓地へ送る闇属性", deck, d=>done([h,d]));
+    });
+  },
+  resolve(ctx){
+    const [h,d]=ctx.selectedTargets;
+    if(h) API.discard(ctx.player, h.index, "ダーク・グレファー（コスト）");
+    if(d){
+      // 手札を捨てた後にデッキ位置が変わらないよう名前で引き直す
+      const nm=labelOf(d.card);
+      const again=API.pileCards(ctx.player,'deck',x=>labelOf(x.card)===nm);
+      if(again.length) API.mill(ctx.player, again[0].index, "ダーク・グレファー");
+    }
+    API.setFlag(ctx.player,"greipherUsed",true,true);
+  },
+  afterResolve(){}
+});
+
+/* ---- 馬頭鬼（墓地から除外してアンデットを蘇生） ---- */
+defineScript("馬頭鬼", {
+  type:"monster", priority:1, quickEffect:false,
+  activateFrom:["grave"],
+  condition(ctx){
+    if(ctx.zone!=='grave'){ ctx.reason = "墓地で発動します"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    const t = API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && x.db.ra==='アンデット' && x.index!==ctx.index);
+    if(!t.length){ ctx.reason = "墓地に他のアンデット族がいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const t = API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && x.db.ra==='アンデット' && x.index!==ctx.index);
+    API.selectCard("馬頭鬼：特殊召喚するアンデット族", t, x=>done([x]), "このカードは除外されます");
+  },
+  resolve(ctx){
+    // 先に自身を除外（コスト）してから蘇生する
+    API.banish({p:ctx.player, zone:'grave', index:ctx.index, card:ctx.card}, "馬頭鬼（コスト）");
+    const t = ctx.selectedTargets[0]; if(!t) return;
+    const r = resolveTarget(t);
+    if(r) API.specialSummon(ctx.player, 'grave', r.index, 'atk', "馬頭鬼");
+  },
+  afterResolve(){}
+});
+
+/* ---- ゾンビキャリア（手札1枚をデッキトップへ戻して蘇生） ---- */
+defineScript("ゾンビキャリア", {
+  type:"monster", priority:1, quickEffect:false,
+  activateFrom:["grave"],
+  condition(ctx){
+    if(ctx.zone!=='grave'){ ctx.reason = "墓地で発動します"; return false; }
+    if(!API.me(ctx).hand.length){ ctx.reason = "戻す手札がありません"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const hand = API.me(ctx).hand.map((c,i)=>({p:ctx.player,zone:'hand',index:i,card:c,db:dbOf(c)}));
+    API.selectCard("ゾンビキャリア：デッキトップに戻す手札", hand, h=>done([h]));
+  },
+  resolve(ctx){
+    const h=ctx.selectedTargets[0];
+    if(h) act({type:"FX_HAND_TO_TOP", player:ctx.player, handIndex:h.index, reason:"ゾンビキャリア"});
+    const gi = gameState.players[ctx.player].grave.indexOf(ctx.card);
+    if(gi>=0) API.specialSummon(ctx.player, 'grave', gi, 'atk', "ゾンビキャリア");
+    API.log("ゾンビキャリア：フィールドを離れた場合は除外される");
+  },
+  afterResolve(){}
+});
+
+/* ---- グローアップ・バルブ（デッキトップを落として蘇生） ---- */
+defineScript("グローアップ・バルブ", {
+  type:"monster", priority:1, quickEffect:false,
+  activateFrom:["grave"],
+  condition(ctx){
+    if(ctx.zone!=='grave'){ ctx.reason = "墓地で発動します"; return false; }
+    if(!API.me(ctx).deck.length){ ctx.reason = "デッキが空です"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    if(API.getFlag(ctx.player,"bulbUsed")){ ctx.reason="デュエル中に1度しか使用できません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.millTop(ctx.player, 1, "グローアップ・バルブ");
+    const gi = gameState.players[ctx.player].grave.indexOf(ctx.card);
+    if(gi>=0) API.specialSummon(ctx.player, 'grave', gi, 'atk', "グローアップ・バルブ");
+    API.setFlag(ctx.player,"bulbUsed",true,false);   // デュエル中1度なので永続フラグ
+  },
+  afterResolve(){}
+});
+
+
+
+/* ---- ライオウ（自身を墓地へ送って特殊召喚を無効） ---- */
+defineScript("ライオウ", {
+  type:"monster", priority:2,
+  condition(ctx){
+    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
+    if(ctx.card && ctx.card.face!=='up'){ ctx.reason = "表側表示で発動します"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.log("ライオウ：相手モンスター1体の特殊召喚を無効にし破壊する");
+    API.registerPendingEffect(ctx.player, "ライオウで特殊召喚を無効化", "対象を無効にして破壊してください");
+  },
+  afterResolve(ctx){
+    // 自身を墓地へ送るのがコスト
+    API.sendToGrave({p:ctx.player, zone:'mz', index:ctx.index, card:ctx.card}, "ライオウ（コスト）");
+  }
+});
+
+/* ---- 氷結界の龍 ブリューナク（手札を捨てた数だけバウンス） ---- */
+defineScript("氷結界の龍 ブリューナク", {
+  type:"synchro", priority:1, quickEffect:false,
+  condition(ctx){
+    if(ctx.zone!=='mz'){ ctx.reason = "フィールドで発動します"; return false; }
+    if(API.getFlag(ctx.player,"brionacUsed")){ ctx.reason="1ターンに1度です"; return false; }
+    if(!API.me(ctx).hand.length){ ctx.reason = "捨てる手札がありません"; return false; }
+    if(!API.fieldCards({player:ctx.opponent}).length){ ctx.reason = "相手フィールドにカードがありません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    // 手札を1枚捨てるごとに相手カード1枚を対象にする
+    const picks=[];
+    const step=()=>{
+      const hand = API.me(ctx).hand.map((c,i)=>({p:ctx.player,zone:'hand',index:i,card:c,db:dbOf(c)}));
+      const foe  = API.fieldCards({player:ctx.opponent}).filter(x=>picks.every(pk=>pk.t.card!==x.card));
+      if(!hand.length || !foe.length){ done(picks); return; }
+      API.selectCard(`ブリューナク：捨てる手札（${picks.length+1}枚目・任意）`, hand, h=>{
+        API.selectCard("ブリューナク：手札に戻す相手のカード", foe, t=>{
+          picks.push({h, t}); step();
+        });
+      }, picks.length? "閉じると確定" : "");
+    };
+    step();
+  },
+  resolve(ctx){
+    const picks = ctx.selectedTargets||[];
+    // 先にコストをまとめて捨てる（添字ずれを避けるため後ろから）
+    picks.map(pk=>pk.h).sort((a,b)=>b.index-a.index)
+      .forEach(h=>API.discard(ctx.player, h.index, "ブリューナク（コスト）"));
+    picks.forEach(pk=>API.returnToHand(pk.t, "氷結界の龍 ブリューナク"));
+    API.setFlag(ctx.player,"brionacUsed",true,true);
+  },
+  afterResolve(){}
+});
+
+
+/* =========================================================================
+   戦闘関連の効果（ダメージ計算後の割り込みを利用）
+   ========================================================================= */
+
+/* ---- マシュマロン（戦闘破壊されない＋裏側で攻撃されたら1000ダメージ） ---- */
+defineScript("マシュマロン", {
+  type:"monster", priority:1,
+  battleProof:true,                 // 戦闘では破壊されない（engineが自動で参照）
+  condition(ctx){
+    const b = ctx.battle || gameState.lastBattle;
+    if(!b){ ctx.reason = "戦闘後に発動します"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const b = ctx.battle || gameState.lastBattle;
+    const atkP = b ? b.player : ctx.opponent;
+    API.damageLP(atkP, 1000);
+    API.log("マシュマロン：攻撃したモンスターのコントローラーに1000ダメージ");
+  },
+  afterResolve(){},
+  passive:{
+    onDamageStep(ctx){
+      const b = ctx.battle||{};
+      // 裏側表示だったこのカードが攻撃された場合
+      return ctx.zone==='mz' && b.defCard===ctx.card;
+    }
+  }
+});
+
+/* ---- 異次元の女戦士（戦闘したモンスターをまとめて除外） ---- */
+defineScript("異次元の女戦士", {
+  type:"monster", priority:1,
+  condition(ctx){
+    const b = ctx.battle || gameState.lastBattle;
+    if(!inBattle(ctx, b)){
+      ctx.reason = "このカードが戦闘を行ったダメージ計算後に発動します"; return false;
+    }
+    return true;
+  },
+  resolve(ctx){
+    const b = ctx.battle || gameState.lastBattle; if(!b) return;
+    // 自分が攻撃側だったか守備側だったかを名前でも判定する
+    const iWasAtk = (b.atkCard===ctx.card) ||
+                    (ctx.player===b.atkOwner && cardName(ctx.card)===b.atkName);
+    const foe = iWasAtk ? b.defCard : b.atkCard;
+    const fp  = iWasAtk ? b.defOwner : b.atkOwner;
+    if(foe){
+      const arr = gameState.players[fp].mz;
+      const i = arr.indexOf(foe);
+      if(i>=0) API.banish({p:fp, zone:'mz', index:i, card:foe}, "異次元の女戦士");
+      else {
+        // 既に墓地なら墓地から除外する
+        const gi = gameState.players[fp].grave.findIndex(c=>cardName(c)===cardName(foe));
+        if(gi>=0) API.banish({p:fp, zone:'grave', index:gi, card:gameState.players[fp].grave[gi]}, "異次元の女戦士");
+      }
+    }
+    // 自身が場に残っていれば除外、既に墓地なら墓地から除外する
+    const mi = gameState.players[ctx.player].mz.indexOf(ctx.card);
+    if(mi>=0){ API.banish({p:ctx.player, zone:'mz', index:mi, card:ctx.card}, "異次元の女戦士"); }
+    else {
+      const gi = gameState.players[ctx.player].grave.indexOf(ctx.card);
+      if(gi>=0) API.banish({p:ctx.player, zone:'grave', index:gi, card:ctx.card}, "異次元の女戦士");
+    }
+  },
+  afterResolve(){},
+  passive:{
+    onDamageStep(ctx){
+      const b = ctx.battle||{};
+      // 戦闘で破壊されて墓地にいても、その戦闘に参加していれば誘発する
+      return inBattle(ctx, b);
+    }
+  }
+});
+
+/* ---- ゴブリンゾンビ（戦闘ダメージを与えたら相手デッキトップを落とす） ---- */
+defineScript("ゴブリンゾンビ", {
+  type:"monster", priority:1,
+  condition(ctx){
+    // 墓地からのサーチ効果と、戦闘時のデッキ破壊の両方を持つ
+    if(ctx.zone==='grave'){
+      const t = API.pileCards(ctx.player,'deck',
+        x=>x.db.k==='m' && x.db.ra==='アンデット' && (x.db.def||0)<=1200);
+      if(!t.length){ ctx.reason = "守備1200以下のアンデット族がデッキにいません"; return false; }
+      return true;
+    }
+    const b = ctx.battle || gameState.lastBattle;
+    if(!b || b.atkCard!==ctx.card || !b.damage){ ctx.reason="戦闘ダメージを与えた時に発動します"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    if(ctx.zone!=='grave'){ done([]); return; }
+    const t = API.pileCards(ctx.player,'deck',
+      x=>x.db.k==='m' && x.db.ra==='アンデット' && (x.db.def||0)<=1200);
+    API.selectCard("ゴブリンゾンビ：手札に加えるアンデット族", t, x=>done([x]), "守備力1200以下");
+  },
+  resolve(ctx){
+    if(ctx.zone==='grave'){
+      const t = ctx.selectedTargets[0];
+      if(t) API.searchDeck(ctx.player, t.index, "ゴブリンゾンビ");
+      return;
+    }
+    API.millTop(ctx.opponent, 1, "ゴブリンゾンビ");
+  },
+  afterResolve(){},
+  passive:{
+    onSendToGrave(ctx){ return ctx.zone==='grave'; },
+    onDamageStep(ctx){
+      const b = ctx.battle||{};
+      return ctx.zone==='mz' && b.atkCard===ctx.card && b.damage>0;
+    }
+  }
+});
+
+/* ---- 霊滅術師 カイクウ（戦闘ダメージ時に相手墓地を2体まで除外） ---- */
+defineScript("霊滅術師 カイクウ", {
+  type:"monster", priority:1, quickEffect:false,
+  condition(ctx){
+    const g = API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m');
+    if(!g.length){ ctx.reason = "相手の墓地にモンスターがいません"; return false; }
+    const b = ctx.battle || gameState.lastBattle;
+    if(!b || b.atkCard!==ctx.card || !b.damage){
+      ctx.reason = "相手ライフに戦闘ダメージを与えた時に発動します"; return false;
+    }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const chosen=[];
+    const step=()=>{
+      const left = API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m')
+        .filter(x=>chosen.every(c=>c.card!==x.card));
+      if(chosen.length>=2 || !left.length){ done(chosen); return; }
+      API.selectCard(`カイクウ：除外する相手墓地のモンスター（${chosen.length+1}/2・任意）`, left,
+        t=>{ chosen.push(t); step(); }, "やめると確定");
+    };
+    step();
+  },
+  resolve(ctx){ (ctx.selectedTargets||[]).forEach(t=>API.banish(t, "霊滅術師 カイクウ")); },
+  afterResolve(){},
+  passive:{
+    onDamageStep(ctx){
+      const b = ctx.battle||{};
+      return ctx.zone==='mz' && b.atkCard===ctx.card && b.damage>0;
+    }
+  }
+});
+
+/* ---- オネスト（自分の光属性の攻撃力を相手の攻撃力分アップ） ---- */
+defineScript("オネスト", {
+  type:"monster", priority:2,
+  activateFrom:["hand"],
+  condition(ctx){
+    if(ctx.zone!=='hand'){ ctx.reason = "手札から発動します"; return false; }
+    const light = API.fieldCards({zone:'mz', player:ctx.player,
+      filter:x=>x.card.face==='up' && x.db.at==='光'});
+    if(!light.length){ ctx.reason = "自分フィールドに表側の光属性モンスターがいません"; return false; }
+    if(gameState.phase!=='battle'){ ctx.reason = "ダメージステップに発動します"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.log("オネスト：光属性モンスターの攻撃力が相手モンスターの攻撃力分アップ");
+    API.registerPendingEffect(ctx.player, "オネスト：攻撃力アップを適用",
+      "戦闘時に攻撃力を手動で加算してください（攻撃UIの数値上書きが使えます）");
+  },
+  afterResolve(ctx){ API.discard(ctx.player, ctx.index, "オネスト"); }
+});
+
+/* ---- N・グラン・モール（戦闘時にお互い手札へ戻る） ---- */
+defineScript("N・グラン・モール", {
+  type:"monster", priority:1,
+  condition(ctx){
+    const b = ctx.battle || gameState.lastBattle;
+    if(!inBattle(ctx, b)){
+      ctx.reason = "このカードが戦闘を行う時に発動します"; return false;
+    }
+    return true;
+  },
+  resolve(ctx){
+    const b = ctx.battle || gameState.lastBattle; if(!b) return;
+    const iWasAtk = (b.atkCard===ctx.card) ||
+                    (ctx.player===b.atkOwner && cardName(ctx.card)===b.atkName);
+    const foe = iWasAtk ? b.defCard : b.atkCard;
+    const fp  = iWasAtk ? b.defOwner : b.atkOwner;
+    if(foe){
+      const i = gameState.players[fp].mz.indexOf(foe);
+      if(i>=0) API.returnToHand({p:fp, zone:'mz', index:i, card:foe}, "N・グラン・モール");
+    }
+    const mi = gameState.players[ctx.player].mz.indexOf(ctx.card);
+    if(mi>=0) API.returnToHand({p:ctx.player, zone:'mz', index:mi, card:ctx.card}, "N・グラン・モール");
+  },
+  afterResolve(){},
+  passive:{
+    onDamageStep(ctx){
+      const b = ctx.battle||{};
+      return (b.atkCard===ctx.card || b.defCard===ctx.card);
+    }
+  }
+});
+
+
+/* =========================================================================
+   1103環境の制限・準制限カード（スクリプト化できるもの）
+   ========================================================================= */
+
+/* ---- ダーク・アームド・ドラゴン ---- */
+defineScript("ダーク・アームド・ドラゴン", {
+  type:"monster", priority:1, quickEffect:false,
+  activateFrom:["hand"],
+  condition(ctx){
+    if(ctx.zone==='hand'){
+      const dark = API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && x.db.at==='闇');
+      if(dark.length!==3){ ctx.reason = `墓地の闇属性がちょうど3体の時のみ特殊召喚できます（現在${dark.length}体）`; return false; }
+      if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+      return true;
+    }
+    const dark = API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && x.db.at==='闇');
+    if(!dark.length){ ctx.reason = "墓地に闇属性モンスターがいません"; return false; }
+    if(!API.fieldCards().length){ ctx.reason = "破壊する対象がありません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    if(ctx.zone==='hand'){ done([]); return; }
+    const dark = API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && x.db.at==='闇');
+    API.selectCard("ダークアームド：除外する墓地の闇属性（コスト）", dark, d=>{
+      API.selectCard("ダークアームド：破壊するフィールドのカード", API.fieldCards(), t=>done([d,t]));
+    });
+  },
+  resolve(ctx){
+    if(ctx.zone==='hand'){
+      API.specialSummon(ctx.player, 'hand', ctx.index, 'atk', "ダーク・アームド・ドラゴン");
+      return;
+    }
+    const [d,t]=ctx.selectedTargets;
+    if(d) API.banish(d, "ダークアームド（コスト）");
+    if(t) API.destroy(t, "ダーク・アームド・ドラゴン");
+  },
+  afterResolve(){}
+});
+
+/* ---- D－HERO ディアボリックガイ ---- */
+defineScript("D－HERO ディアボリックガイ", {
+  type:"monster", priority:1, quickEffect:false,
+  activateFrom:["grave"],
+  condition(ctx){
+    if(ctx.zone!=='grave'){ ctx.reason = "墓地で発動します"; return false; }
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.n==='D－HERO ディアボリックガイ');
+    if(!t.length){ ctx.reason = "デッキに同名カードがいません"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.banish({p:ctx.player, zone:'grave', index:ctx.index, card:ctx.card}, "ディアボリックガイ（コスト）");
+    const t = API.pileCards(ctx.player,'deck',x=>x.db.n==='D－HERO ディアボリックガイ');
+    if(t.length) API.specialSummon(ctx.player, 'deck', t[0].index, 'atk', "D－HERO ディアボリックガイ");
+  },
+  afterResolve(){}
+});
+
+/* ---- デステニー・ドロー ---- */
+defineScript("デステニー・ドロー", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    const hand = handCandidates(ctx, x=>String(x.db.n||'').indexOf('D－HERO')>=0);
+    if(!hand.length){ ctx.reason = "手札に「D－HERO」カードがありません"; return false; }
+    if(API.me(ctx).deck.length<2){ ctx.reason = "デッキが2枚未満です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const hand = handCandidates(ctx, x=>String(x.db.n||'').indexOf('D－HERO')>=0);
+    API.selectCard("デステニー・ドロー：捨てる「D－HERO」", hand, h=>done([h]));
+  },
+  resolve(ctx){
+    const h=ctx.selectedTargets[0];
+    if(h) API.discard(ctx.player, h.index, "デステニー・ドロー（コスト）");
+    API.draw(ctx.player, 2);
+  }
+});
+
+/* ---- ダンディライオン ---- */
+defineScript("ダンディライオン", {
+  type:"monster", priority:1,
+  condition(ctx){
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const room = ZONE_LIMITS.mz - API.me(ctx).mz.length;
+    API.createToken(ctx.player,
+      {name:"綿毛トークン", atk:0, def:0, lv:1, ra:"植物", at:"風", pos:'def'}, Math.min(2, room));
+  },
+  afterResolve(){},
+  passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
+});
+
+/* ---- ローンファイア・ブロッサム ---- */
+defineScript("ローンファイア・ブロッサム", {
+  type:"monster", priority:1, quickEffect:false,
+  condition(ctx){
+    if(API.getFlag(ctx.player,"lonefireUsed")){ ctx.reason="1ターンに1度です"; return false; }
+    const plants = API.fieldCards({zone:'mz', player:ctx.player,
+      filter:x=>x.card.face==='up' && x.db.ra==='植物'});
+    if(!plants.length){ ctx.reason = "リリースする表側の植物族がいません"; return false; }
+    const deck = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && x.db.ra==='植物');
+    if(!deck.length){ ctx.reason = "デッキに植物族モンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const plants = API.fieldCards({zone:'mz', player:ctx.player,
+      filter:x=>x.card.face==='up' && x.db.ra==='植物'});
+    API.selectCard("ローンファイア：リリースする植物族", plants, r=>{
+      const deck = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && x.db.ra==='植物');
+      API.selectCard("ローンファイア：特殊召喚する植物族", deck, t=>done([r,t]));
+    });
+  },
+  resolve(ctx){
+    const [r,t]=ctx.selectedTargets;
+    if(r) API.sendToGrave(r, "ローンファイア（リリース）");
+    if(t){
+      const nm=labelOf(t.card);
+      const again=API.pileCards(ctx.player,'deck',x=>labelOf(x.card)===nm);
+      if(again.length) API.specialSummon(ctx.player,'deck',again[0].index,'atk',"ローンファイア・ブロッサム");
+    }
+    API.setFlag(ctx.player,"lonefireUsed",true,true);
+  },
+  afterResolve(){}
+});
+
+/* ---- ワン・フォー・ワン ---- */
+defineScript("ワン・フォー・ワン", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    const hand = handCandidates(ctx, x=>x.db.k==='m');
+    if(!hand.length){ ctx.reason = "手札に捨てるモンスターがいません"; return false; }
+    const lv1 = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && x.db.lv===1);
+    if(!lv1.length){ ctx.reason = "デッキにレベル1モンスターがいません"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const hand = handCandidates(ctx, x=>x.db.k==='m');
+    API.selectCard("ワン・フォー・ワン：捨てるモンスター（コスト）", hand, h=>{
+      const lv1 = API.pileCards(ctx.player,'deck',x=>x.db.k==='m' && !x.db.ex && x.db.lv===1);
+      API.selectCard("ワン・フォー・ワン：特殊召喚するレベル1", lv1, t=>done([h,t]));
+    });
+  },
+  resolve(ctx){
+    const [h,t]=ctx.selectedTargets;
+    if(h) API.discard(ctx.player, h.index, "ワン・フォー・ワン（コスト）");
+    if(t){
+      const nm=labelOf(t.card);
+      const again=API.pileCards(ctx.player,'deck',x=>labelOf(x.card)===nm);
+      if(again.length) API.specialSummon(ctx.player,'deck',again[0].index,'atk',"ワン・フォー・ワン");
+    }
+  }
+});
+
+/* ---- ゴッドバードアタック ---- */
+defineScript("ゴッドバードアタック", {
+  type:"trap", priority:2,
+  condition(ctx){
+    const birds = API.fieldCards({zone:'mz', player:ctx.player, filter:x=>x.db.ra==='鳥獣'});
+    if(!birds.length){ ctx.reason = "リリースする鳥獣族がいません"; return false; }
+    if(!API.fieldCards().length){ ctx.reason = "破壊する対象がありません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const birds = API.fieldCards({zone:'mz', player:ctx.player, filter:x=>x.db.ra==='鳥獣'});
+    API.selectCard("ゴッドバードアタック：リリースする鳥獣族", birds, r=>{
+      const picks=[];
+      const step=()=>{
+        const left = API.fieldCards().filter(x=>x.card!==r.card && picks.every(pk=>pk.card!==x.card));
+        if(picks.length>=2 || !left.length){ done([r].concat(picks)); return; }
+        API.selectCard(`ゴッドバードアタック：破壊するカード（${picks.length+1}/2）`, left,
+          t=>{ picks.push(t); step(); });
+      };
+      step();
+    });
+  },
+  resolve(ctx){
+    const [r, ...targets]=ctx.selectedTargets;
+    if(r) API.sendToGrave(r, "ゴッドバードアタック（リリース）");
+    targets.forEach(t=>API.destroy(t, "ゴッドバードアタック"));
+  }
+});
+
+/* ---- カードガンナー ---- */
+defineScript("カードガンナー", {
+  type:"monster", priority:1, quickEffect:false,
+  condition(ctx){
+    if(API.getFlag(ctx.player,"cardGunnerUsed")){ ctx.reason="1ターンに1度です"; return false; }
+    if(!API.me(ctx).deck.length){ ctx.reason = "デッキが空です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const n = Math.min(3, API.me(ctx).deck.length);
+    API.millTop(ctx.player, n, "カードガンナー");
+    API.setFlag(ctx.player,"cardGunnerUsed",true,true);
+    API.log(`カードガンナー：${n}枚墓地へ送り、攻撃力+${n*500}（ターン終了時まで）`);
+    API.registerPendingEffect(ctx.player, `カードガンナー：攻撃力+${n*500}`, "攻撃時に数値を上書きしてください");
+  },
+  afterResolve(){}
+});
+
+/* ---- リミッター解除 ---- */
+defineScript("リミッター解除", {
+  type:"quick-play", priority:2,
+  condition(ctx){
+    const mech = API.fieldCards({zone:'mz', player:ctx.player,
+      filter:x=>x.card.face==='up' && x.db.ra==='機械'});
+    if(!mech.length){ ctx.reason = "自分フィールドに表側の機械族がいません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const mech = API.fieldCards({zone:'mz', player:ctx.player,
+      filter:x=>x.card.face==='up' && x.db.ra==='機械'});
+    API.log(`リミッター解除：機械族${mech.length}体の攻撃力が倍になる`);
+    mech.forEach(m=>API.log(`　${labelOf(m.card)}：攻${m.db.atk} → ${(m.db.atk||0)*2}`));
+    API.registerReserveEffect(ctx.player, "リミッター解除：エンドフェイズに機械族を破壊", "endPhase", "対象を破壊してください");
+    API.registerPendingEffect(ctx.player, "リミッター解除：攻撃力2倍を適用", "攻撃時に数値を上書きしてください");
+  }
+});
+
+/* ---- 光の護封剣 ---- */
+defineScript("光の護封剣", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(){ return true; },
+  resolve(ctx){
+    const foes = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='down'});
+    foes.forEach(f=>API.flip(f, 'up', "光の護封剣"));
+    API.log("光の護封剣：相手モンスターは3ターン攻撃できない");
+    API.registerReserveEffect(ctx.player, "光の護封剣：3ターン後に破壊", "endPhase", "3ターン後のエンドフェイズ");
+  },
+  afterResolve(){}   // 発動後フィールドに残る
+});
+
+/* ---- 名推理 ---- */
+defineScript("名推理", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    if(!API.me(ctx).deck.length){ ctx.reason = "デッキが空です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const lv = parseInt(prompt("相手が宣言するレベル（1〜12）","4")||"4",10);
+    API.log(`名推理：相手はレベル${lv}を宣言`);
+    // 通常召喚可能なモンスターが出るまでめくる
+    const P = gameState.players[ctx.player];
+    let hit=null, flipped=0;
+    while(P.deck.length && flipped<40){
+      const top = P.deck[0];
+      const db = dbOf(top);
+      flipped++;
+      if(db.k==='m' && !db.ex){ hit=db; break; }
+      API.millTop(ctx.player, 1, "名推理");
+    }
+    if(!hit){ API.log("名推理：通常召喚可能なモンスターが出なかった"); return; }
+    if(hit.lv===lv){
+      API.log(`名推理：レベル${hit.lv}で的中 → ${hit.n} は墓地へ`);
+      API.millTop(ctx.player, 1, "名推理（的中）");
+    } else {
+      API.log(`名推理：レベル${hit.lv}で外れ → ${hit.n} を特殊召喚`);
+      API.specialSummon(ctx.player, 'deck', 0, 'atk', "名推理");
+    }
+  }
+});
+
+/* ---- モンスターゲート ---- */
+defineScript("モンスターゲート", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    if(!API.me(ctx).mz.length){ ctx.reason = "リリースするモンスターがいません"; return false; }
+    if(!API.me(ctx).deck.length){ ctx.reason = "デッキが空です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("モンスターゲート：リリースするモンスター",
+      API.fieldCards({zone:'mz', player:ctx.player}), r=>done([r]));
+  },
+  resolve(ctx){
+    const r=ctx.selectedTargets[0];
+    if(r) API.sendToGrave(r, "モンスターゲート（リリース）");
+    const P = gameState.players[ctx.player];
+    let flipped=0;
+    while(P.deck.length && flipped<40){
+      const db = dbOf(P.deck[0]);
+      flipped++;
+      if(db.k==='m' && !db.ex){
+        API.specialSummon(ctx.player, 'deck', 0, 'atk', "モンスターゲート");
+        return;
+      }
+      API.millTop(ctx.player, 1, "モンスターゲート");
+    }
+    API.log("モンスターゲート：通常召喚可能なモンスターが出なかった");
+  }
+});
+
+/* ---- おジャマトリオ ---- */
+defineScript("おジャマトリオ", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    if(API.foe(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "相手のモンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const room = ZONE_LIMITS.mz - API.foe(ctx).mz.length;
+    API.createToken(ctx.opponent,
+      {name:"おジャマトークン", atk:0, def:1000, lv:2, ra:"獣", at:"光", pos:'def'}, Math.min(3, room));
+    API.log("おジャマトリオ：トークンが破壊されるとコントローラーに300ダメージ");
+  }
+});
+
+/* ---- 停戦協定 ---- */
+defineScript("停戦協定", {
+  type:"trap", priority:2,
+  condition(ctx){
+    const any = API.fieldCards({zone:'mz'}).length;
+    if(!any){ ctx.reason = "フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    // 裏側守備を全て表側守備にする
+    API.fieldCards({zone:'mz', filter:x=>x.card.face==='down'}).forEach(x=>{
+      API.flip(x, 'up', "停戦協定");
+      API.changePosition(x, 'def', "停戦協定");
+    });
+    // 効果モンスターの数×500ダメージ
+    const eff = API.fieldCards({zone:'mz', player:ctx.opponent,
+      filter:x=>(x.db.st||[]).indexOf('効果')>=0}).length;
+    if(eff) API.damageLP(ctx.opponent, eff*500);
+    API.log(`停戦協定：相手の効果モンスター${eff}体 × 500ダメージ`);
+  }
+});
+
+/* ---- マインドクラッシュ ---- */
+defineScript("マインドクラッシュ", {
+  type:"trap", priority:2,
+  condition(ctx){ return true; },
+  resolve(ctx){
+    const nm = prompt("宣言するカード名","")||"";
+    if(!nm){ API.log("マインドクラッシュ：宣言されず"); return; }
+    const foe = gameState.players[ctx.opponent];
+    const hit = foe.hand.map((c,i)=>({c,i})).filter(x=>labelOf(x.c)===nm);
+    if(hit.length){
+      hit.sort((a,b)=>b.i-a.i).forEach(x=>API.discard(ctx.opponent, x.i, "マインドクラッシュ"));
+      API.log(`マインドクラッシュ：${nm} を${hit.length}枚捨てさせた`);
+    } else {
+      API.log(`マインドクラッシュ：${nm} は相手の手札に無い → 自分が1枚捨てる`);
+      const P = API.me(ctx);
+      if(P.hand.length){
+        API.selectCard("マインドクラッシュ：自分が捨てる手札",
+          P.hand.map((c,i)=>({p:ctx.player,zone:'hand',index:i,card:c,db:dbOf(c)})),
+          h=>{ API.discard(ctx.player, h.index, "マインドクラッシュ"); render(); });
+      }
+    }
+  }
+});
+
+/* ---- ダスト・シュート ---- */
+defineScript("ダスト・シュート", {
+  type:"trap", priority:2,
+  condition(ctx){
+    if(API.foe(ctx).hand.length<4){ ctx.reason = "相手の手札が4枚未満です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const foe = gameState.players[ctx.opponent];
+    const mons = foe.hand.map((c,i)=>({p:ctx.opponent,zone:'hand',index:i,card:c,db:dbOf(c)}))
+      .filter(x=>x.db.k==='m');
+    if(!mons.length){ showToast("相手の手札にモンスターがいません"); done([]); return; }
+    API.selectCard("ダスト・シュート：デッキに戻すモンスター", mons, t=>done([t]), "相手の手札を確認");
+  },
+  resolve(ctx){
+    const t=ctx.selectedTargets[0]; if(!t) return;
+    act({type:"FX_RETURN_DECK", player:ctx.opponent, zone:'hand', index:t.index, toBottom:false, reason:"ダスト・シュート"});
+    API.shuffle(ctx.opponent);
+  }
+});
+
+/* ---- 血の代償（1103では無制限） ---- */
+defineScript("血の代償", {
+  type:"continuous-trap", priority:2,
+  condition(ctx){
+    if(API.me(ctx).lp<500){ ctx.reason = "LPが500未満です"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    if(!API.me(ctx).hand.length){ ctx.reason = "手札にモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    const hand = API.me(ctx).hand.map((c,i)=>({p:ctx.player,zone:'hand',index:i,card:c,db:dbOf(c)}))
+      .filter(x=>x.db.k==='m');
+    API.selectCard("血の代償：500払って通常召喚するモンスター", hand, h=>done([h]));
+  },
+  resolve(ctx){
+    const h=ctx.selectedTargets[0]; if(!h) return;
+    API.payCost(ctx.player, 500);
+    act({type:"FX_SPECIAL_SUMMON", player:ctx.player, from:'hand', fromIndex:h.index, pos:'atk', reason:"血の代償（通常召喚扱い）"});
+  },
+  afterResolve(){}
 });
 
 function hasEffect(name){
@@ -4011,15 +4851,26 @@ function toggleAskChain(){
 }
 
 function offerSummonTrigger(p, cardName_){
-  const ent = AUTO_EFFECT[cardName_];
-  if(!ent || ent.trig!=="summon") return;
+  // スクリプト実装済みなら、召喚時トリガーを持つ場合だけ提示する（宣言テーブルより優先）
+  const sc = CARD_SCRIPTS[cardName_];
+  if(sc){
+    const hasSummonTrigger = sc.passive && (sc.passive.onNormalSummon || sc.passive.onSpecialSummon);
+    if(!hasSummonTrigger) return;
+  } else {
+    const ent = AUTO_EFFECT[cardName_];
+    if(!ent || ent.trig!=="summon") return;
+  }
+  // 召喚したモンスターの場の位置を特定して渡す（zoneが無いと条件判定で弾かれる）
+  const P = gameState.players[p];
+  const mzIdx = P.mz.findIndex(c=>c && cardName(c)===cardName_);
+  if(mzIdx < 0) return;
   setTimeout(()=>{
     sheet.innerHTML = `<div class="grip"></div>
       <h3 style="margin-bottom:6px">${cardName_} の効果</h3>
       <div class="meta" style="margin-bottom:12px">召喚に成功しました。効果を発動しますか？</div>
       <div class="act-grid wide">
         <div class="act" style="background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi)"
-             onclick="closeSheet();runEffect(${p},${jsStr(cardName_)},null)">効果を発動する</div>
+             onclick="closeSheet();runEffect(${p},${jsStr(cardName_)},{zone:'mz',index:${mzIdx},keep:true})">効果を発動する</div>
         <div class="act" onclick="closeSheet()">発動しない</div>
       </div>`;
     veil.classList.add("on");
@@ -4659,6 +5510,39 @@ function deckTopShuffle(p, count){
   act({type:"SHUFFLE", player:p});
 }
 
+
+/* めくったカードを「表側で」見せて選ばせる。
+   強欲で謙虚な壺のように公開して選ぶ効果で使う。 */
+function revealPick(title, note, cards, onPick, onCancel){
+  if(!cards.length){ showToast("対象がありません"); if(onCancel) onCancel(); return; }
+  REVEAL_ITEMS = cards; REVEAL_CB = onPick; REVEAL_CANCEL = onCancel||null;
+  const cells = cards.map((it,i)=>{
+    const db = dbOf(it.card);
+    return `<button class="rv-card" onclick="__revealPick(${i})">
+      <img src="${IMG_BASE}${db.c}.webp" onerror="this.style.display='none'">
+      <span class="rv-nm">${db.n||'カード'}</span>
+    </button>`;
+  }).join("");
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">${title}</h3>
+    ${note?`<div class="meta" style="margin-bottom:10px">${note}</div>`:""}
+    <div class="rv-grid">${cells}</div>
+    <button class="close" onclick="__revealCancel()">やめる</button>`;
+  veil.classList.add("on");
+}
+let REVEAL_ITEMS=[], REVEAL_CB=null, REVEAL_CANCEL=null;
+function __revealPick(i){
+  const it=REVEAL_ITEMS[i], cb=REVEAL_CB;
+  REVEAL_ITEMS=[]; REVEAL_CB=null; REVEAL_CANCEL=null;
+  closeSheet();
+  if(cb) cb(it);
+}
+function __revealCancel(){
+  const cb=REVEAL_CANCEL;
+  REVEAL_ITEMS=[]; REVEAL_CB=null; REVEAL_CANCEL=null;
+  closeSheet(); if(cb) cb();
+}
+
 /* ハンバーガーメニュー（たまに使う操作） */
 function openMenu(){
   const p = gameState.activePlayer;
@@ -5059,10 +5943,78 @@ function beginAttack(p, atkIdx){
     <button class="close" onclick="closeSheet()">やめる</button>`;
   veil.classList.add("on");
 }
+
+/* ダメージ計算後の誘発をまとめて処理する。
+   直前の戦闘内容(gs.lastBattle)を見て、該当するカードだけ候補に出す。 */
+/* 戦闘に参加したカードか判定する。
+   破壊されて墓地に行くと実体が変わるので、名前と持ち主でも照合する。 */
+function inBattle(ctx, b){
+  if(!b) return false;
+  if(b.atkCard===ctx.card || b.defCard===ctx.card) return true;
+  const nm = cardName(ctx.card);
+  if(ctx.p===b.atkOwner && nm===b.atkName && b.destroyedAtk) return true;
+  if(ctx.p===b.defOwner && nm===b.defName && b.destroyedDef) return true;
+  if(ctx.player===b.atkOwner && nm===b.atkName && b.destroyedAtk) return true;
+  if(ctx.player===b.defOwner && nm===b.defName && b.destroyedDef) return true;
+  return false;
+}
+
+function afterDamageStep(){
+  const lb = gameState.lastBattle;
+  if(!lb) return;
+  const cands = [];
+  [0,1].forEach(p=>{
+    const P = gameState.players[p];
+    const scan = (zone, arr)=>{
+      (arr||[]).forEach((c,i)=>{
+        if(!c) return;
+        const nm = dbOf(c).n;
+        const sc = CARD_SCRIPTS[nm];
+        const h = sc && sc.passive && sc.passive.onDamageStep;
+        if(!h) return;
+        const ctx = makeContext(p, c, zone, i, "onDamageStep", {battle:lb});
+        let ok=false;
+        try{ ok = h(ctx); }catch(e){ ok=false; }
+        if(ok) cands.push({p, zone, index:i, card:c, name:nm});
+      });
+    };
+    scan('mz', P.mz);
+    scan('grave', P.grave);
+  });
+  if(!cands.length){ gameState.lastBattle=null; return; }
+  setTimeout(()=>{
+    const rows = cands.map((c,i)=>
+      `<div class="act pick-row" onclick="__dsPick(${i})">
+         <span class="pk-nm">${c.name}</span>
+         <span class="pk-sub">${nameOf(c.p)}・${zoneJp(c.zone)}</span>
+       </div>`).join("");
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:4px">ダメージ計算後</h3>
+      <div class="meta" style="margin-bottom:10px">誘発する効果があります。発動しますか？</div>
+      <div class="pick-list">${rows}</div>
+      <button class="close" onclick="__dsSkip()">発動しない</button>`;
+    DS_CANDS = cands;
+    veil.classList.add("on");
+  }, 60);
+}
+let DS_CANDS=[];
+function __dsPick(i){
+  const c = DS_CANDS[i]; DS_CANDS=[];
+  closeSheet();
+  if(c) runScript(c.name, c.p, c.zone, c.index, {battle:gameState.lastBattle});
+  gameState.lastBattle=null;
+}
+function __dsSkip(){ DS_CANDS=[]; closeSheet(); gameState.lastBattle=null; }
+
+
 function doAttack(p, atkIdx, target){
   closeSheet();
   const atkName = cardName(gameState.players[p].mz[atkIdx]) || "モンスター";
-  const go = ()=>act({type:"ATTACK", player:p, atkIdx, target});
+  const go = ()=>{
+    act({type:"ATTACK", player:p, atkIdx, target});
+    // ダメージ計算後に誘発する効果（異次元の女戦士・ゴブリンゾンビ・マシュマロン等）
+    afterDamageStep();
+  };
   // 攻撃宣言に誘発するカード（ミラーフォース・次元幽閉など）を提示
   EVT_AFTER = go;
   if(!emitEvent("onAttackDeclare", {player:p, atkIdx, target, name:atkName})){
@@ -5240,7 +6192,7 @@ const TEST_DECK = {
   name: "テストプレイ用（1103スタンダード）",
   cards: [
     // ---- 展開/初動モンスター ----
-    {n:"E・HERO エアーマン", q:2},      // 召喚時サーチ（自動処理）
+    {n:"E・HERO エアーマン", q:1},      // 召喚時サーチ（自動処理）
     {n:"終末の騎士", q:2},              // 闇を落とす（自動処理）
     {n:"ダーク・グレファー", q:2},      // 手札コスト＋落とし（自動処理）
     {n:"サイバー・ドラゴン", q:2},      // 1103の基本アタッカー
@@ -5248,32 +6200,32 @@ const TEST_DECK = {
     {n:"馬頭鬼", q:1},                  // 墓地から蘇生（自動処理）
     {n:"ゾンビキャリア", q:1},           // チューナー
     {n:"グローアップ・バルブ", q:1},     // チューナー
-    {n:"ネクロ・ガードナー", q:2},       // 墓地から相手ターンに発動
+    {n:"ネクロ・ガードナー", q:1},       // 墓地から相手ターンに発動
     {n:"クリッター", q:1},
     {n:"クレボンス", q:1},               // レベル2チューナー
     {n:"ジャンク・シンクロン", q:1},     // レベル3チューナー
     // ---- 汎用魔法 ----
     {n:"死者蘇生", q:1},
-    {n:"サンダー・ボルト", q:1},
     {n:"ブラック・ホール", q:1},
-    {n:"大嵐", q:1},
-    {n:"強欲な壺", q:1},
-    {n:"天使の施し", q:1},
+    {n:"ブラック・ホール", q:0},
+    {n:"ハリケーン", q:1},
+    {n:"強欲で謙虚な壺", q:3},
+    {n:"成金ゴブリン", q:1},
     {n:"貪欲な壺", q:1},
     {n:"early", q:0},                   // プレースホルダ（存在しないので無視される）
-    {n:"早すぎた埋葬", q:1},
+    {n:"リビングデッドの呼び声", q:1},
     {n:"サイクロン", q:1},
     {n:"月の書", q:1},
     {n:"増援", q:1},
     {n:"おろかな埋葬", q:1},
-    {n:"ハリケーン", q:1},
+    {n:"ハリケーン", q:0},
     // ---- 罠 ----
-    {n:"激流葬", q:2},
-    {n:"聖なるバリア －ミラーフォース－", q:2},
+    {n:"激流葬", q:1},
+    {n:"聖なるバリア －ミラーフォース－", q:1},
     {n:"奈落の落とし穴", q:1},
     {n:"次元幽閉", q:1},
     {n:"強制脱出装置", q:1},
-    {n:"リビングデッドの呼び声", q:2},
+    {n:"リビングデッドの呼び声", q:0},
     {n:"神の宣告", q:1},
     {n:"神の警告", q:1},
   ],
@@ -5284,12 +6236,12 @@ const TEST_DECK = {
     {n:"スターダスト・ドラゴン", q:1},
     {n:"大地の騎士ガイアナイト", q:1},
     {n:"氷結界の龍 トリシューラ", q:1},
-    {n:"ゴヨウ・ガーディアン", q:1},
+    {n:"氷結界の龍 ブリューナク", q:0},
     {n:"A・O・J カタストル", q:1},
     {n:"魔轟神獣ケルベラル", q:0},
     {n:"氷結界の虎王ドゥローレン", q:1},
     {n:"甲虫装機 ダンセル", q:0},
-    {n:"No.39 希望皇ホープ", q:1},
+    {n:"アーカナイト・マジシャン", q:1},
     {n:"マジカル・アンドロイド", q:1},
   ]
 };
