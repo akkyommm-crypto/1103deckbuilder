@@ -1659,7 +1659,8 @@ function cardHTML(c, extra, onclick, faceUp){
   const setDown = c.face==='down';
   const defRot  = (db.k==='m' && c.pos==='def') ? 'set-mon' : '';
   if(!faceUp || setDown){
-    return `<div class="card facedown ${extra}" onclick="${onclick}">
+    // 裏側でも守備表示なら横向きにする（裏側守備と裏側攻撃を区別する）
+    return `<div class="card facedown ${extra} ${defRot}" onclick="${onclick}">
       <img src="${IMG_BACK}" onerror="this.style.display='none'">
     </div>`;
   }
@@ -2889,6 +2890,15 @@ function handCandidates(ctx, filter){
     .filter(x=>!filter || filter(x));
 }
 
+/* 対象のカード名を伏せるべきか。
+   場（モンスター/魔法罠/フィールド）に裏側で置かれている時だけ隠す。
+   デッキ・墓地・除外・手札から選ぶ場合は内容が見えないと選択できない。 */
+function isHiddenTarget(t){
+  if(!t || !t.card) return false;
+  if(t.card.face !== 'down') return false;
+  return t.zone==='mz' || t.zone==='sz' || t.zone==='field';
+}
+
 /* 対象の現在位置を解決する。
    効果処理中に他のカードが動くと添字がずれるため、
    記録しておいたカード実体から探し直す。 */
@@ -3023,7 +3033,9 @@ const API = {
     trace(`selectCard: ${candidates.length}件`);
     if(!candidates.length){ trace(`対象なし`, false); showToast("対象がありません"); return; }
     openPick(title, note||"", candidates.map(t=>({
-      label: t.card.face==='down' ? "裏側のカード" : labelOf(t.card),
+      // 名前を隠すのは「場に伏せてあるカード」だけ。
+      // デッキ・墓地・手札から選ぶ時は内容が見えないと選べない。
+      label: isHiddenTarget(t) ? "裏側のカード" : labelOf(t.card),
       sub: `${nameOf(t.p)}・${zoneJp(t.zone)}`,
       onPick: ()=>{ trace(`選択: ${labelOf(t.card)}`); onPick(t); }
     })));
