@@ -31,7 +31,12 @@ body{
   color:var(--ink);
   font-family:"Zen Kaku Gothic New",system-ui,sans-serif;
   font-size:14px; line-height:1.5;
-  display:flex; flex-direction:column; height:100dvh; overflow:hidden;
+  display:flex; flex-direction:column; overflow:hidden;
+  /* 端末により dvh が使えないことがあるので3段構えにする。
+     最後の --appvh は JS が実測して入れるので最も確実。 */
+  height:100vh;
+  height:100dvh;
+  height:var(--appvh, 100dvh);
 }
 h1,h2,h3,.mincho{font-family:"Shippori Mincho",serif}
 button{font-family:inherit;color:inherit;cursor:pointer}
@@ -116,6 +121,10 @@ header .spacer{flex:1}
   overflow-y:auto; -webkit-overflow-scrolling:touch;
   padding:6px 8px 2px; display:flex; flex-direction:column; gap:5px;
 }
+/* 単位が効かない環境でも盤面が伸び切らないようにする保険。
+   ここが効くとカードは小さくなるが、ドックは必ず画面内に残る。 */
+.side{flex:0 1 auto; min-height:0}
+.side .slot{min-height:34px}
 .side{
   border:1px solid var(--line); border-radius:4px; padding:4px 5px 5px;
   background:linear-gradient(var(--surface),var(--bg-2));
@@ -160,7 +169,9 @@ header .spacer{flex:1}
   /* 場外をチップ化して空いた分、モンスター/魔法罠を大きく表示する。
      内訳: 固定UI約175 + 場外チップ2段64 + サイド枠66 + 余白5 ≒ 310px を差し引き、
      残りを主要4行(自分2+相手2)で分ける。 */
+  max-height:clamp(50px, calc((100vh - 330px) / 4), 132px);
   max-height:clamp(50px, calc((100dvh - 330px) / 4), 132px);
+  max-height:clamp(50px, calc((var(--appvh, 100dvh) - 330px) / 4), 132px);
   border:1px dashed var(--line); border-radius:3px;
   background:rgba(0,0,0,0.18); display:flex;align-items:center;justify-content:center;
   position:relative; overflow:hidden;
@@ -197,8 +208,13 @@ header .spacer{flex:1}
   background:linear-gradient(var(--bg-2),var(--surface));
 }
 
-.hand{display:flex;gap:5px;overflow-x:auto;padding:5px 8px;align-items:flex-start}
-.hand .hcard{flex:0 0 52px;aspect-ratio:59/86;max-height:14dvh}
+.hand{display:flex;gap:5px;overflow-x:auto;padding:5px 8px;align-items:flex-start;max-height:22vh}
+.hand .hcard{
+  flex:0 0 52px; aspect-ratio:59/86;
+  max-height:14vh;
+  max-height:14dvh;
+  max-height:calc(var(--appvh, 100dvh) * 0.14);
+}
 .hand .hcard .nm{font-size:9px}
 
 /* ---------- controls ---------- */
@@ -226,7 +242,7 @@ header .spacer{flex:1}
 }
 .veil.on{display:flex}
 .sheet{
-  width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;
+  width:100%;max-width:520px;max-height:88vh; max-height:88dvh; max-height:calc(var(--appvh, 100dvh) * 0.88);overflow-y:auto;
   border:1px solid var(--line-hi);border-bottom:none;
   border-radius:14px 14px 0 0;background:linear-gradient(var(--surface),var(--bg-2));
   padding:14px 16px calc(16px + env(safe-area-inset-bottom,0));
@@ -309,7 +325,7 @@ textarea{
 .dock-bar{display:flex; align-items:stretch; gap:5px}
 /* 展開時のみ出る詳細 */
 .dock-body{display:flex; flex-direction:column; gap:5px; overflow:hidden;
-  max-height:50dvh; transition:max-height .18s ease, opacity .18s ease, margin .18s ease; opacity:1}
+  max-height:50vh; max-height:50dvh; max-height:calc(var(--appvh, 100dvh) * 0.5); transition:max-height .18s ease, opacity .18s ease, margin .18s ease; opacity:1}
 .dock.collapsed .dock-body{max-height:0; opacity:0; margin:0; pointer-events:none}
 .dock-actions{display:flex; align-items:stretch; gap:5px}
 /* 展開ハンドル */
@@ -409,7 +425,7 @@ textarea{
   border:1px solid var(--line);background:transparent;color:var(--text-dim);
 }
 .dl-tab.on{background:var(--gold);color:var(--gold-ink);border-color:var(--gold-hi)}
-.dl-list{display:flex;flex-direction:column;gap:6px;max-height:46dvh;overflow-y:auto}
+.dl-list{display:flex;flex-direction:column;gap:6px;max-height:46vh;max-height:46dvh;max-height:calc(var(--appvh, 100dvh) * 0.46);overflow-y:auto}
 .dl-item{
   display:flex;align-items:center;gap:10px;padding:13px 12px;border-radius:5px;
   border:1px solid var(--line);background:var(--surface-2);min-height:48px;
@@ -431,7 +447,7 @@ textarea{
   font-size:10.5px;color:var(--spell);border:1px dashed var(--spell);border-radius:5px;
   padding:6px 10px;margin-bottom:10px;background:rgba(53,176,142,.07);text-align:center;font-weight:600;
 }
-.pick-list{display:flex;flex-direction:column;gap:6px;max-height:52dvh;overflow-y:auto;margin-bottom:4px}
+.pick-list{display:flex;flex-direction:column;gap:6px;max-height:52vh;max-height:52dvh;max-height:calc(var(--appvh, 100dvh) * 0.52);overflow-y:auto;margin-bottom:4px}
 .pick-row{justify-content:flex-start!important;text-align:left;gap:10px;padding:12px 12px}
 .pk-nm{flex:1;min-width:0;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pk-sub{font-size:10px;color:var(--text-dim);white-space:nowrap}
@@ -538,7 +554,7 @@ textarea{
 .state-cell .v.off{color:var(--text-dim)}
 
 /* ---------- スクリプトデバッガー ---------- */
-.dbg-list{max-height:46dvh;overflow-y:auto;margin-bottom:10px}
+.dbg-list{max-height:46vh;max-height:46dvh;max-height:calc(var(--appvh, 100dvh) * 0.46);overflow-y:auto;margin-bottom:10px}
 .dbg-entry{border:1px solid var(--line);border-radius:5px;padding:8px 10px;margin-bottom:6px;background:var(--surface-2)}
 .dbg-name{font-family:"Shippori Mincho",serif;font-weight:800;font-size:12.5px;color:var(--gold-hi);margin-bottom:4px}
 .dbg-step{font-size:11px;color:var(--ink);padding:1px 0}
@@ -558,7 +574,7 @@ textarea{
   font-size:9px;font-weight:800;padding:1px 4px;border-radius:8px;
   background:var(--trap);color:#120a1f;border:1px solid rgba(0,0,0,.35);
 }
-.ct-list{display:flex;flex-direction:column;gap:5px;max-height:44dvh;overflow-y:auto;margin-bottom:10px}
+.ct-list{display:flex;flex-direction:column;gap:5px;max-height:44vh;max-height:44dvh;max-height:calc(var(--appvh, 100dvh) * 0.44);overflow-y:auto;margin-bottom:10px}
 .ct-row{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:5px;padding:7px 10px;background:var(--surface-2)}
 .ct-name{flex:1;font-size:12.5px}
 .ct-name b{margin-left:8px;color:var(--gold-hi);font-size:14px;font-family:"Shippori Mincho",serif}
@@ -784,8 +800,10 @@ function applyAction(gs, a){
         c.pos  = 'atk';
         P.hand.push(c);
       }
-      // ドローフェイズの通常ドローを記録（ガイド表示用）
-      if(gs.phase==="draw" && (a.player ?? gs.activePlayer)===gs.activePlayer) gs.drawnThisTurn = true;
+      // ドローフェイズの通常ドローだけを記録する。
+      // 初手を配る時（a.initial）や複数枚まとめてのドローは通常ドローに数えない。
+      if(gs.phase==="draw" && !a.initial && (a.n??1)===1
+         && (a.player ?? gs.activePlayer)===gs.activePlayer) gs.drawnThisTurn = true;
       logIt(gs, `${nameOf(a.player)}：${n}枚ドロー`);
       break;
     }
@@ -1475,6 +1493,34 @@ function renderDock(gs, curIdx, chN){
   document.getElementById("dockActions").innerHTML = actRow;
   const dock = document.getElementById("dock");
   if(dock) dock.className = DOCK_OPEN ? "dock" : "dock collapsed";
+}
+
+
+/* =========================================================================
+   画面の実高さを測って CSS 変数に入れる。
+   Android の一部ブラウザで dvh が効かず、カードサイズの上限計算が
+   丸ごと無効になって盤面がドックを押し出す問題への対策。
+   ========================================================================= */
+function syncViewportHeight(){
+  try{
+    // visualViewport があればそれが最も正確（アドレスバーの伸縮に追従する）
+    const h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    if(h && h > 200){
+      document.documentElement.style.setProperty('--appvh', h + 'px');
+    }
+  }catch(e){}
+}
+function initViewportSync(){
+  syncViewportHeight();
+  if(!window.addEventListener) return;
+  window.addEventListener('resize', syncViewportHeight, {passive:true});
+  window.addEventListener('orientationchange', ()=>setTimeout(syncViewportHeight, 200), {passive:true});
+  if(window.visualViewport && window.visualViewport.addEventListener){
+    window.visualViewport.addEventListener('resize', syncViewportHeight, {passive:true});
+  }
+  // 起動直後はアドレスバーの高さが確定しないことがあるので少し遅れて再計測する
+  setTimeout(syncViewportHeight, 300);
+  setTimeout(syncViewportHeight, 1000);
 }
 
 /* =========================================================================
@@ -2529,10 +2575,19 @@ const HAND_PATTERNS = [
   /手札からこのカードを(墓地へ)?捨て(て|る事で)/,
   /このカードを手札から(墓地へ)?捨て(て|る事で)/,
   /手札の?この(カード|１枚)を(墓地へ)?捨て/,
+  /このカードを手札から(墓地へ)?送(り|って)/,
+  /このカードを手札から特殊召喚(する事が)?でき/,   // 極星獣タングニョースト等
+  /手札からこのカードを特殊召喚/,
+  /このカードは手札から特殊召喚(する事が)?でき/,
 ];
 /* 相手ターンでも撃てる文言（誘発即時的なタイミング） */
 const QUICK_PATTERNS = [
   /相手ターン(に|中)/,
+  /相手メインフェイズ/,
+  /戦闘によって破壊され墓地へ送られた時/,
+  /戦闘で破壊され墓地へ送られた場合/,
+  /破壊され墓地へ送られた時/,
+  /ダメージ計算(時|前|後)/,
   /攻撃(宣言)?(対象に選択された)?時/,
   /攻撃対象に選択された時/,
   /攻撃を無効/,
@@ -4786,6 +4841,123 @@ defineScript("血の代償", {
   afterResolve(){}
 });
 
+
+/* ---- 極星獣タングニョースト（戦闘破壊された時に手札から特殊召喚） ---- */
+defineScript("極星獣タングニョースト", {
+  type:"monster", priority:2,
+  activateFrom:["hand"],
+  condition(ctx){
+    if(ctx.zone==='hand'){
+      if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+      const b = ctx.battle || gameState.lastBattle;
+      const lost = b && ((b.destroyedAtk && b.atkOwner===ctx.player) ||
+                         (b.destroyedDef && b.defOwner===ctx.player));
+      if(!lost){ ctx.reason = "自分のモンスターが戦闘破壊された時に発動します"; return false; }
+      return true;
+    }
+    // 場での効果：守備→攻撃になった時に極星獣をリクルート
+    if(API.getFlag(ctx.player,"tanngnjostrUsed")){ ctx.reason="1ターンに1度です"; return false; }
+    const t = API.pileCards(ctx.player,'deck',
+      x=>x.db.k==='m' && !x.db.ex && String(x.db.n||'').indexOf('極星獣')>=0 && x.db.n!=='極星獣タングニョースト');
+    if(!t.length){ ctx.reason = "デッキに他の「極星獣」がいません"; return false; }
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    if(ctx.zone==='hand'){ done([]); return; }
+    const t = API.pileCards(ctx.player,'deck',
+      x=>x.db.k==='m' && !x.db.ex && String(x.db.n||'').indexOf('極星獣')>=0 && x.db.n!=='極星獣タングニョースト');
+    API.selectCard("タングニョースト：特殊召喚する「極星獣」", t, x=>done([x]), "表側守備表示で特殊召喚");
+  },
+  resolve(ctx){
+    if(ctx.zone==='hand'){
+      API.specialSummon(ctx.player, 'hand', ctx.index, 'atk', "極星獣タングニョースト");
+      return;
+    }
+    const t=ctx.selectedTargets[0]; if(!t) return;
+    const nm=labelOf(t.card);
+    const again=API.pileCards(ctx.player,'deck',x=>labelOf(x.card)===nm);
+    if(again.length) API.specialSummon(ctx.player,'deck',again[0].index,'def',"極星獣タングニョースト");
+    API.setFlag(ctx.player,"tanngnjostrUsed",true,true);
+  },
+  afterResolve(){}
+});
+
+/* ---- 極星獣タングリスニ（戦闘破壊されたらトークン2体） ---- */
+defineScript("極星獣タングリスニ", {
+  type:"monster", priority:1,
+  activateFrom:["grave"],
+  condition(ctx){
+    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const room = ZONE_LIMITS.mz - API.me(ctx).mz.length;
+    API.createToken(ctx.player,
+      {name:"極星獣トークン", atk:0, def:0, lv:3, ra:"獣", at:"地", pos:'def'}, Math.min(2, room));
+  },
+  afterResolve(){},
+  passive:{
+    onDamageStep(ctx){
+      const b = ctx.battle||{};
+      return inBattle(ctx, b) && (b.destroyedAtk || b.destroyedDef);
+    }
+  }
+});
+
+/* ---- D.D.クロウ（手札から捨てて相手墓地を除外） ---- */
+defineScript("D.D.クロウ", {
+  type:"monster", priority:2,
+  activateFrom:["hand"],
+  condition(ctx){
+    if(ctx.zone!=='hand'){ ctx.reason = "手札から発動します"; return false; }
+    const g = API.pileCards(ctx.opponent,'grave');
+    if(!g.length){ ctx.reason = "相手の墓地にカードがありません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("D.D.クロウ：除外する相手墓地のカード",
+      API.pileCards(ctx.opponent,'grave'), t=>done([t]));
+  },
+  resolve(ctx){
+    const t=ctx.selectedTargets[0];
+    if(t) API.banish(t, "D.D.クロウ");
+  },
+  afterResolve(ctx){ API.discard(ctx.player, ctx.index, "D.D.クロウ（コスト）"); }
+});
+
+/* ---- 速攻のかかし（直接攻撃を無効） ---- */
+defineScript("速攻のかかし", {
+  type:"monster", priority:2,
+  activateFrom:["hand"],
+  condition(ctx){
+    if(ctx.zone!=='hand'){ ctx.reason = "手札から発動します"; return false; }
+    if(gameState.phase!=='battle'){ ctx.reason = "相手モンスターの攻撃宣言時に発動します"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.log("速攻のかかし：その攻撃を無効にし、バトルフェイズを終了する");
+    API.registerPendingEffect(ctx.player, "速攻のかかしで攻撃を無効化", "攻撃を止めてバトルフェイズを終了してください");
+  },
+  afterResolve(ctx){ API.discard(ctx.player, ctx.index, "速攻のかかし"); }
+});
+
+/* ---- 冥府の使者ゴーズ相当：クリボー（戦闘ダメージを0に） ---- */
+defineScript("クリボー", {
+  type:"monster", priority:2,
+  activateFrom:["hand"],
+  condition(ctx){
+    if(ctx.zone!=='hand'){ ctx.reason = "手札から発動します"; return false; }
+    if(gameState.phase!=='battle'){ ctx.reason = "ダメージ計算時に発動します"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    API.log("クリボー：その戦闘によって発生する自分への戦闘ダメージは0になる");
+    API.registerPendingEffect(ctx.player, "クリボーで戦闘ダメージ0", "受けたLPを戻してください");
+  },
+  afterResolve(ctx){ API.discard(ctx.player, ctx.index, "クリボー"); }
+});
+
 function hasEffect(name){
   return !!(CARD_SCRIPTS[name] || CARD_EFFECT[name] || AUTO_EFFECT[name]);
 }
@@ -5604,7 +5776,7 @@ function redrawHand(){
   // 手札を山へ戻す
   while(P.hand.length){ P.deck.push(P.hand.shift()); }
   applyAction(gameState, {type:"SHUFFLE", player:p});
-  applyAction(gameState, {type:"DRAW", player:p, n:5});
+  applyAction(gameState, {type:"DRAW", player:p, n:5, initial:true});
   turnActions = [];
   logIt(gameState, `${nameOf(p)}：初手を引き直し`);
   render(); closeSheet();
@@ -5849,7 +6021,9 @@ function openZone(p, zone, idx){
 
   const state = `
     ${c.face==='down'?`<div class="act" onclick="zAct('FLIP',${p},'${zone}',${idx})">表にする（反転）</div>`:""}
-    ${isMon?`<div class="act" onclick="zAct('TOGGLE_POS',${p},'${zone}',${idx})">表示形式を変更</div>`:""}`;
+    ${isMon?`<div class="act" onclick="zAct('TOGGLE_POS',${p},'${zone}',${idx})">表示形式を変更</div>`:""}
+    ${isMon&&faceUp?`<div class="act" onclick="closeSheet();act({type:'FX_SET_STATE',player:${p},zone:'${zone}',index:${idx},face:'down',pos:'def',reason:'裏側守備に'})">裏側守備にする</div>`:""}
+    ${isMon&&!faceUp?`<div class="act" onclick="closeSheet();act({type:'FX_SET_STATE',player:${p},zone:'${zone}',index:${idx},face:'up',pos:'def',reason:'表側守備に'})">表にする（守備）</div>`:""}`;
   const move = `
     <div class="act" onclick="zMove(${p},'${zone}',${idx},'grave')">墓地へ</div>
     <div class="act" onclick="zMove(${p},'${zone}',${idx},'banish')">除外</div>
@@ -6295,12 +6469,12 @@ function startTestDuel(bothSides, firstPlayer){
   closeSheet();
   act({type:"LOAD_DECK", player:0, deck:parsed.main.slice(), ex:parsed.ex.slice()});
   act({type:"SHUFFLE", player:0});
-  act({type:"DRAW", player:0, n:5});
+  act({type:"DRAW", player:0, n:5, initial:true});
   if(bothSides){
     const p2 = buildTestDeck();
     act({type:"LOAD_DECK", player:1, deck:p2.main, ex:p2.ex});
     act({type:"SHUFFLE", player:1});
-    act({type:"DRAW", player:1, n:5});
+    act({type:"DRAW", player:1, n:5, initial:true});
   }
   // 先攻を設定してドローフェイズから開始
   const fp = (firstPlayer===1) ? 1 : 0;
@@ -6588,7 +6762,7 @@ function applyLoad(p, parsed, autostart){
   act({type:"LOAD_DECK", player:p, deck:main, ex});
   if(autostart){
     act({type:"SHUFFLE", player:p});
-    act({type:"DRAW", player:p, n:5});
+    act({type:"DRAW", player:p, n:5, initial:true});
     // 1103は先攻ドローあり。ドローフェイズから始める。
     gameState.turn = 1;
     gameState.phase = "draw";
@@ -6680,6 +6854,7 @@ async function boot(){
     logIt(gameState, `<b>決闘開始</b> — ${CARD_DB.length}種読込（${DB_SOURCE}）。デッキを読み込んでください`);
   }
   render();
+  initViewportSync();
   initSwipe();
   if(DB_SOURCE === "dummy"){
     setTimeout(()=>{
