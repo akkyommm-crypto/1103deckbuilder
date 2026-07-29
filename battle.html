@@ -644,6 +644,17 @@ textarea{
 .tgr-card{font-size:12px;font-weight:700;color:var(--gold-hi)}
 .tgr-card small{margin-left:5px;font-size:9px;font-weight:400;color:var(--text-dim)}
 
+/* 常時バー内の割り込みボタン（相手が撃てる時だけ出る） */
+.d-react{
+  flex:0 0 auto; padding:11px 12px; border-radius:5px; font-size:12px; font-weight:800;
+  background:var(--trap); color:#120a1f; border:1px solid var(--trap);
+  letter-spacing:.02em; white-space:nowrap;
+}
+.d-react:active{filter:brightness(.9)}
+
+/* 自分側のチェーンボタン */
+.d-act.myreact{border-color:var(--spell);color:var(--spell);font-weight:800}
+
 /* ---------- toast ---------- */
 .toast{
   position:fixed;left:50%;bottom:118px;transform:translateX(-50%) translateY(8px);
@@ -773,6 +784,7 @@ function applyAction(gs, a){
       gs.turn += 1;
       gs.phase = "draw";
       gs.drawnThisTurn = false;
+      gs.lastBattle = null;
       gs.priority = gs.activePlayer;
       // 召喚権・攻撃済み・ターン中履歴をリセット
       gs.players.forEach(pl=>{
@@ -843,6 +855,7 @@ function applyAction(gs, a){
     }
 
     case "ATTACK": {
+      gs.lastBattle = null;   // 直前の戦闘の記録は破棄してから新しい戦闘を行う
       // 攻撃したモンスターに攻撃済みフラグを立てる（1ターン1回制限の管理）
       if(P.mz[a.atkIdx]) P.mz[a.atkIdx].attacked = true;
       const atkCard = P.mz[a.atkIdx];
@@ -1456,15 +1469,24 @@ function renderDock(gs, curIdx, chN){
   const drawDone = (gs.phase==="draw" && gs.drawnThisTurn);
   const rp = gs.activePlayer===0 ? 1 : 0;
   const reactN = reactableCards(rp).length;
+  // 手番側も速攻魔法などをチェーンできるので、その導線も用意する
+  const myReactN = reactableCards(gs.activePlayer).length;
 
   /* ===== 常時見える1行：フェーズ送り＋Undo＋展開 =====
      盤面を最大化するため、ここ以外は折りたたむ。 */
   // ドローフェイズは「ドロー」が唯一の主要行動なので、畳んだままでも押せる位置に出す
   const drawInBar = (gs.phase==="draw" && !gs.drawnThisTurn)
     ? `<button class="d-draw pulse" onclick="doDraw()">ドロー</button>` : "";
+  // 相手が発動できるカードを持っている時は、畳んだままでも押せる位置に出す。
+  // （自分のターン中に相手が手札誘発を撃つ導線がこれ）
+  const reactInBar = reactN
+    ? `<button class="d-react pulse" onclick="openReact()">${nameOf(rp)} ${reactN}</button>` : "";
+  // 自分がチェーンできるカードを持っている時のボタン（速攻魔法・罠など）
+  const myReactBtn = myReactN
+    ? `<button class="d-act myreact" onclick="openReactFor(${gs.activePlayer})">自分 ${myReactN}</button>` : "";
   const bar = `
     <button class="d-prev" onclick="doPhasePrev()" ${prevDisabled?'disabled':''}>◂</button>
-    ${drawInBar}
+    ${drawInBar}${reactInBar}
     ${atEnd
       ? `<button class="d-next endturn" onclick="doPass()">ターン終了 ⇄</button>`
       : `<button class="d-next primary" onclick="doPhaseNext()">${phaseJp(gs.phase)} ▸ ${nextPh||""}</button>`}
@@ -1485,7 +1507,7 @@ function renderDock(gs, curIdx, chN){
   const drawClick = canDrawNow ? "doDraw()" : `showToast('${phaseJp(gs.phase)}では通常ドローできません')`;
   const actRow = `
     <button class="${drawCls}" onclick="${drawClick}">${drawLabel}</button>
-    ${exBtn}${reactBtn}
+    ${exBtn}${reactBtn}${myReactBtn}
     <button class="d-act" onclick="openChain()">チェーン${chN?`<span class="kb">${chN}</span>`:""}</button>
     <button class="d-act" onclick="openMenu()">≡ メニュー</button>`;
 
@@ -2661,6 +2683,15 @@ function reactableCards(p){
     out.push({p, zone:'field', index:0, db:dbOf(P.field), ss:1});
   }
 
+  /* ①' 手札の速攻魔法。自分のターンでも相手のターンでもチェーンできる。
+     （手札から直接発動できるのは速攻魔法だけ。通常魔法はセットが必要） */
+  P.hand.forEach((c,i)=>{
+    const db = dbOf(c);
+    if(db.k==='s' && db.sub==='速攻'){
+      out.push({p, zone:'hand', index:i, db, ss:2, fromHand:true});
+    }
+  });
+
   /* ② 墓地・手札などから発動できるカード
      スクリプトが activateFrom を宣言していればそれを使う。
      未実装カードは効果テキストから推定する（誤検出しても選ばなければ発動しない）。 */
@@ -2738,6 +2769,15 @@ function reactActivate(p, zone, index){
   if(!card){ showToast("カードがありません"); return; }
   const db = dbOf(card);
   const nm = db.n||"";
+  // 手札の速攻魔法は、魔法罠ゾーンに置いてから発動する
+  if(zone==='hand' && db.k==='s' && db.sub==='速攻'){
+    if(P.sz.length >= ZONE_LIMITS.sz){ showToast("魔法・罠ゾーンが一杯です"); return; }
+    closeSheet();
+    act({type:"MOVE", player:p, from:"hand", fromIndex:index, to:"sz", face:"up"});
+    const ni = gameState.players[p].sz.length-1;
+    reactActivate(p, 'sz', ni);
+    return;
+  }
   const eff = hasEffect(nm);
   const sc  = CARD_SCRIPTS[nm];
   const ss  = sc && sc.priority ? sc.priority
@@ -4970,6 +5010,138 @@ defineScript("クリボー", {
   afterResolve(ctx){ API.discard(ctx.player, ctx.index, "クリボー"); }
 });
 
+
+/* =========================================================================
+   効果テキストから誘発タイミングを推定する
+   スクリプト未実装のカードでも「今このカードが誘発する」と分かれば
+   プレイヤーに提示できる。判定は保守的にし、確実な文言だけを拾う。
+   ========================================================================= */
+const TRIGGER_PATTERNS = [
+  /* 墓地へ送られた時（フィールドから／どこからでも） */
+  { key:'onSendToGrave', zone:['grave'],
+    re:/(フィールド上?から)?墓地へ送られた(時|場合)/, jp:'墓地へ送られた時' },
+  /* 破壊された時（戦闘・効果を問わない） */
+  { key:'onDestroy', zone:['grave'],
+    re:/(?<!戦闘によって)破壊され(て墓地へ送られ)?た(時|場合)/, jp:'破壊された時' },
+  /* 戦闘で破壊された時 */
+  { key:'onBattleDestroy', zone:['grave'],
+    re:/戦闘に?よって破壊され|戦闘で破壊され/, jp:'戦闘で破壊された時' },
+  /* リバース */
+  { key:'onFlip', zone:['mz'],
+    re:/リバースした(時|場合)|反転召喚に成功した(時|場合)|リバース：/, jp:'リバースした時' },
+  /* 召喚成功時 */
+  { key:'onSummon', zone:['mz'],
+    re:/(召喚|反転召喚|特殊召喚)に成功した(時|場合)/, jp:'召喚に成功した時' },
+  /* 場を離れた時 */
+  { key:'onRemove', zone:['grave','banish'],
+    re:/フィールド上?を離れた(時|場合)/, jp:'フィールドを離れた時' },
+  /* スタンバイフェイズ */
+  { key:'onStandby', zone:['mz','sz','field','grave'],
+    re:/スタンバイフェイズ(時|に)/, jp:'スタンバイフェイズ' },
+  /* エンドフェイズ */
+  { key:'onEndPhase', zone:['mz','sz','field','grave'],
+    re:/エンドフェイズ(時|に)/, jp:'エンドフェイズ' },
+];
+
+/* カードの誘発タイミングを返す（キャッシュ付き） */
+const TRIGGER_CACHE = new Map();
+function detectTriggers(db){
+  if(!db || !db.n) return [];
+  if(TRIGGER_CACHE.has(db.n)) return TRIGGER_CACHE.get(db.n);
+  const e = String(db.e||"") + "\n" + String(db.e0||"");
+  const out = [];
+  TRIGGER_PATTERNS.forEach(t=>{
+    try{ if(t.re.test(e)) out.push(t); }catch(err){}
+  });
+  TRIGGER_CACHE.set(db.n, out);
+  return out;
+}
+
+/* いま起きた出来事に反応しうるカードを、テキストから推定して集める。
+   evt: {key, player, card}  key は TRIGGER_PATTERNS の key
+   返り値: [{p, zone, index, card, db, jp, script}] */
+function detectedTriggerCards(evtKey, evt){
+  const out = [];
+  [0,1].forEach(p=>{
+    const P = gameState.players[p];
+    const scan = (zone, arr)=>{
+      (arr||[]).forEach((c,i)=>{
+        if(!c) return;
+        const db = dbOf(c);
+        if(!db.n) return;
+        // スクリプトが同じ誘発を持っているならそちらに任せる
+        const sc = CARD_SCRIPTS[db.n];
+        if(sc && sc.passive) return;
+        const hits = detectTriggers(db).filter(t=>t.key===evtKey && t.zone.indexOf(zone)>=0);
+        if(!hits.length) return;
+        // 自分自身が対象の出来事なら、そのカードに限定する
+        if(evt && evt.card && evt.card !== c && evt.selfOnly) return;
+        out.push({p, zone, index:i, card:c, db, jp:hits[0].jp, script:false});
+      });
+    };
+    scan('mz', P.mz); scan('sz', P.sz);
+    if(P.field) scan('field', [P.field]);
+    scan('grave', P.grave); scan('hand', P.hand); scan('banish', P.banish);
+  });
+  return out;
+}
+
+/* 推定した誘発をプレイヤーに提示する。
+   自動では発動せず、使うかどうかは必ず人が選ぶ。 */
+function offerDetectedTriggers(evtKey, evt, after){
+  const cands = detectedTriggerCards(evtKey, evt);
+  if(!cands.length){ if(after) after(); return false; }
+  DTRG_AFTER = after || null;
+  setTimeout(()=>{
+    const rows = cands.map((c,i)=>
+      `<div class="act pick-row" onclick="__dtrgPick(${i})">
+         <span class="pk-nm">${c.db.n}</span>
+         <span class="pk-sub">${nameOf(c.p)}・${zoneJp(c.zone)}／${c.jp}</span>
+       </div>`).join("");
+    const jp = (TRIGGER_PATTERNS.find(t=>t.key===evtKey)||{}).jp || "誘発";
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:4px">${jp}</h3>
+      <div class="meta" style="margin-bottom:10px">
+        効果テキストから、この場面で発動できそうなカードを見つけました。<br>
+        処理内容は手動になります（誤検出なら「発動しない」を選んでください）。</div>
+      <div class="pick-list">${rows}</div>
+      <button class="close" onclick="__dtrgSkip()">発動しない</button>`;
+    DTRG_CANDS = cands;
+    veil.classList.add("on");
+  }, 80);
+  return true;
+}
+let DTRG_CANDS=[], DTRG_AFTER=null;
+function __dtrgPick(i){
+  const c = DTRG_CANDS[i]; DTRG_CANDS=[];
+  closeSheet();
+  const f = DTRG_AFTER; DTRG_AFTER=null;
+  if(c){
+    // スクリプトがあればそれを、無ければ効果テキストを見せて手動処理
+    if(CARD_SCRIPTS[c.db.n]) runScript(c.db.n, c.p, c.zone, c.index, {});
+    else openManualEffect(c);
+  }
+  if(f) f();
+}
+function __dtrgSkip(){
+  DTRG_CANDS=[]; closeSheet();
+  const f=DTRG_AFTER; DTRG_AFTER=null; if(f) f();
+}
+
+/* 効果テキストを見せて、汎用パレットで手動処理させる */
+function openManualEffect(c){
+  const e = String(c.db.e||"").replace(/\n/g,"<br>");
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">${c.db.n}</h3>
+    <div class="meta" style="margin-bottom:8px">${c.jp}に発動する効果です。内容を確認して処理してください。</div>
+    <div class="eff">${e}</div>
+    <div class="act-grid wide">
+      <div class="act fx" onclick="closeSheet();openPrimitives(${c.p},'${c.zone}',${c.index},${jsStr(c.db.n)})">効果処理パレットを開く</div>
+      <div class="act" onclick="closeSheet()">閉じる</div>
+    </div>`;
+  veil.classList.add("on");
+}
+
 function hasEffect(name){
   return !!(CARD_SCRIPTS[name] || CARD_EFFECT[name] || AUTO_EFFECT[name]);
 }
@@ -5345,6 +5517,7 @@ function openPrimitives(srcP, srcZone, srcIdx, srcName){
     <div class="act-label">場のカードに</div>
     <div class="act-grid">
       <div class="act" onclick="primPick('destroy')">破壊</div>
+      <div class="act" onclick="primPick('tograve')">墓地へ送る</div>
       <div class="act" onclick="primPick('banish')">除外</div>
       <div class="act" onclick="primPick('bounce')">手札に戻す</div>
       <div class="act" onclick="primPick('todeck')">デッキに戻す</div>
@@ -5417,7 +5590,10 @@ function primPick(op){
 
   switch(op){
     case 'destroy':
-      runOnField("破壊するカード", x=>act({type:"FX_TO_GRAVE", player:x.pl, zone:x.zone, index:x.i, reason:src.name||"効果"}));
+      runOnField("破壊するカード", x=>{
+        act({type:"FX_TO_GRAVE", player:x.pl, zone:x.zone, index:x.i, reason:(src.name||"効果")+"で破壊"});
+        afterSentToGrave("破壊");
+      });
       break;
     case 'banish':
       runOnField("除外するカード", x=>act({type:"FX_BANISH", player:x.pl, zone:x.zone, index:x.i, reason:src.name||"効果"}));
@@ -5476,6 +5652,18 @@ function primPick(op){
       const mons = P.grave.map((c,i)=>({c,i})).filter(x=>dbOf(x.c).k==='m');
       openPick("墓地から特殊召喚", "", mons.map(x=>({label:labelOf(x.c), sub:subOf(x.c),
         onPick: ()=>act({type:"FX_SPECIAL_SUMMON", player:p, from:"grave", fromIndex:x.i, pos:"atk", reason:src.name||"効果"})})));
+      break;
+    }
+    case 'tograve': {
+      const t = fieldTargets();
+      openPick("墓地へ送るカード", "場のカードから選ぶ", t.map(x=>({
+        label: x.c.face==='down' ? "裏側のカード" : labelOf(x.c),
+        sub: `${nameOf(x.pl)}・${zoneJp(x.zone)}`,
+        onPick: ()=>{
+          act({type:"FX_TO_GRAVE", player:x.pl, zone:x.zone, index:x.i, reason:src.name||"効果"});
+          afterSentToGrave("");
+        }
+      })));
       break;
     }
     case 'graveBanish': {
@@ -5727,6 +5915,30 @@ function __revealCancel(){
   closeSheet(); if(cb) cb();
 }
 
+
+/* カードが墓地へ送られた直後に、誘発しそうなカードを提示する。
+   act() の後に呼ぶ（applyAction 内からは UI を触らないため）。 */
+function afterSentToGrave(reason){
+  const isDestroy = /破壊/.test(String(reason||""));
+  offerDetectedTriggers(isDestroy ? 'onDestroy' : 'onSendToGrave', {});
+}
+
+
+/* 裏側から表側にする。リバース誘発をテキストから推定して提示する。 */
+function doFlipUp(p, zone, idx, pos){
+  act({type:'FX_SET_STATE', player:p, zone, index:idx, face:'up', pos, reason: pos==='atk'?'反転召喚':'表側守備に'});
+  const P = gameState.players[p];
+  const c = zoneCard(P, zone, idx);
+  const nm = c ? cardName(c) : "";
+  // スクリプトがあればそれを優先、無ければテキスト推定
+  const sc = CARD_SCRIPTS[nm];
+  if(sc && sc.passive && sc.passive.onFlip){
+    emitEvent("onFlip", {player:p, name:nm});
+  } else {
+    offerDetectedTriggers('onFlip', {});
+  }
+}
+
 /* ハンバーガーメニュー（たまに使う操作） */
 function openMenu(){
   const p = gameState.activePlayer;
@@ -5915,10 +6127,10 @@ function doNormalSummon(i, pos){
   closeSheet();
   act({type:"NORMAL_SUMMON", player:p, handIndex:i, pos});
   // イベント発火 → 誘発候補（激流葬・奈落など）を提示 → 無ければ召喚時効果
-  EVT_AFTER = ()=>offerSummonTrigger(p, nm);
+  EVT_AFTER = ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); };
   if(!emitEvent("onNormalSummon", {player:p, name:nm})){
     EVT_AFTER = null;
-    askChain(`${nm} の召喚`, ()=>offerSummonTrigger(p, nm));
+    askChain(`${nm} の召喚`, ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); });
   }
 }
 function doSetMonster(i){
@@ -5936,10 +6148,10 @@ function doSpecialFromHand(i, pos){
   const nm = (CARD_DB[gameState.players[p].hand[i]?.id]||{}).n || "";
   closeSheet();
   act({type:"FX_SPECIAL_SUMMON", player:p, from:"hand", fromIndex:i, pos, reason:"手札から"});
-  EVT_AFTER = ()=>offerSummonTrigger(p, nm);
+  EVT_AFTER = ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); };
   if(!emitEvent("onSpecialSummon", {player:p, name:nm})){
     EVT_AFTER = null;
-    askChain(`${nm} の特殊召喚`, ()=>offerSummonTrigger(p, nm));
+    askChain(`${nm} の特殊召喚`, ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); });
   }
 }
 
@@ -6035,7 +6247,8 @@ function openZone(p, zone, idx){
     ${c.face==='down'?`<div class="act" onclick="zAct('FLIP',${p},'${zone}',${idx})">表にする（反転）</div>`:""}
     ${isMon?`<div class="act" onclick="zAct('TOGGLE_POS',${p},'${zone}',${idx})">表示形式を変更</div>`:""}
     ${isMon&&faceUp?`<div class="act" onclick="closeSheet();act({type:'FX_SET_STATE',player:${p},zone:'${zone}',index:${idx},face:'down',pos:'def',reason:'裏側守備に'})">裏側守備にする</div>`:""}
-    ${isMon&&!faceUp?`<div class="act" onclick="closeSheet();act({type:'FX_SET_STATE',player:${p},zone:'${zone}',index:${idx},face:'up',pos:'def',reason:'表側守備に'})">表にする（守備）</div>`:""}`;
+    ${isMon&&!faceUp?`<div class="act" onclick="closeSheet();doFlipUp(${p},'${zone}',${idx},'def')">表にする（守備）</div>`:""}
+    ${isMon&&!faceUp?`<div class="act" onclick="closeSheet();doFlipUp(${p},'${zone}',${idx},'atk')">反転召喚（攻撃）</div>`:""}`;
   const move = `
     <div class="act" onclick="zMove(${p},'${zone}',${idx},'grave')">墓地へ</div>
     <div class="act" onclick="zMove(${p},'${zone}',${idx},'banish')">除外</div>
@@ -6130,6 +6343,27 @@ function beginAttack(p, atkIdx){
   veil.classList.add("on");
 }
 
+
+/* 相手が発動できるカードを持っていれば、その場で促す。
+   自分のターン中に相手が手札誘発を撃つ機会を逃さないための導線。 */
+function offerReactAfter(foe){
+  if(!ASK_CHAIN) return;
+  const n = reactableCards(foe).length;
+  if(!n) return;
+  setTimeout(()=>{
+    sheet.innerHTML = `<div class="grip"></div>
+      <h3 style="margin-bottom:6px">${nameOf(foe)} の割り込み</h3>
+      <div class="meta" style="margin-bottom:12px">
+        <b style="color:var(--trap)">${nameOf(foe)}</b> は発動できるカードを ${n}枚 持っています。</div>
+      <div class="act-grid wide">
+        <div class="act" style="background:var(--trap);color:#120a1f;border-color:var(--trap)"
+             onclick="closeSheet();openReactFor(${foe})">発動する</div>
+        <div class="act" onclick="closeSheet()">発動しない</div>
+      </div>`;
+    veil.classList.add("on");
+  }, 120);
+}
+
 /* ダメージ計算後の誘発をまとめて処理する。
    直前の戦闘内容(gs.lastBattle)を見て、該当するカードだけ候補に出す。 */
 /* 戦闘に参加したカードか判定する。
@@ -6147,7 +6381,7 @@ function inBattle(ctx, b){
 
 function afterDamageStep(){
   const lb = gameState.lastBattle;
-  if(!lb) return;
+  if(!lb) return false;
   const cands = [];
   [0,1].forEach(p=>{
     const P = gameState.players[p];
@@ -6167,7 +6401,7 @@ function afterDamageStep(){
     scan('mz', P.mz);
     scan('grave', P.grave);
   });
-  if(!cands.length){ gameState.lastBattle=null; return; }
+  if(!cands.length){ return false; }
   setTimeout(()=>{
     const rows = cands.map((c,i)=>
       `<div class="act pick-row" onclick="__dsPick(${i})">
@@ -6182,24 +6416,41 @@ function afterDamageStep(){
     DS_CANDS = cands;
     veil.classList.add("on");
   }, 60);
+  return true;
 }
-let DS_CANDS=[];
+let DS_CANDS=[], DS_AFTER=null;
 function __dsPick(i){
   const c = DS_CANDS[i]; DS_CANDS=[];
   closeSheet();
   if(c) runScript(c.name, c.p, c.zone, c.index, {battle:gameState.lastBattle});
-  gameState.lastBattle=null;
+  const f=DS_AFTER; DS_AFTER=null; if(f) f();
 }
-function __dsSkip(){ DS_CANDS=[]; closeSheet(); gameState.lastBattle=null; }
+function __dsSkip(){
+  DS_CANDS=[]; closeSheet();
+  const f=DS_AFTER; DS_AFTER=null; if(f) f();
+}
 
 
 function doAttack(p, atkIdx, target){
   closeSheet();
   const atkName = cardName(gameState.players[p].mz[atkIdx]) || "モンスター";
+  const foe = p===0?1:0;
   const go = ()=>{
     act({type:"ATTACK", player:p, atkIdx, target});
-    // ダメージ計算後に誘発する効果（異次元の女戦士・ゴブリンゾンビ・マシュマロン等）
-    afterDamageStep();
+    // ダメージ計算後の誘発（異次元の女戦士・マシュマロン等）を先に処理し、
+    // それが終わってから相手の割り込みを促す。
+    // （極星獣タングニョースト＝自分のモンスターが戦闘破壊された時 など）
+    const lb = gameState.lastBattle;
+    const chain2 = ()=>{
+      // 戦闘で破壊されたカードの誘発をテキストから推定して提示する
+      if(lb && (lb.destroyedAtk || lb.destroyedDef)){
+        offerDetectedTriggers('onBattleDestroy', {}, ()=>offerReactAfter(foe));
+      } else {
+        offerReactAfter(foe);
+      }
+    };
+    DS_AFTER = chain2;
+    if(!afterDamageStep()) { DS_AFTER=null; chain2(); }
   };
   // 攻撃宣言に誘発するカード（ミラーフォース・次元幽閉など）を提示
   EVT_AFTER = go;
