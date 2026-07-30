@@ -699,6 +699,26 @@ textarea{
 .d-act{min-width:0; font-size:11.5px; padding:10px 4px}
 .d-act .kb{margin-left:3px}
 
+/* ---------- 攻守の増減 ---------- */
+.mod-n{
+  position:absolute; bottom:2px; right:2px; z-index:4;
+  font-size:9px; font-weight:800; padding:1px 4px; border-radius:7px;
+  background:var(--mon); color:#1a1206; border:1px solid rgba(0,0,0,.35);
+}
+.mod-n small{font-size:7.5px; font-weight:600; opacity:.8}
+.mod-now{font-size:12px;color:var(--text-dim);margin-bottom:8px}
+.mod-now b{color:var(--mon);font-family:"Shippori Mincho",serif;font-size:14px}
+.mod-list{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.mod-chip{font-size:10px;padding:2px 8px;border-radius:10px;border:1px solid var(--line);
+  background:var(--surface-2);color:var(--ink)}
+.mod-chip small{margin-left:5px;color:var(--text-dim);font-size:8.5px}
+.mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px}
+.mod-b{padding:10px 2px;border-radius:4px;font-size:12px;font-weight:700;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--ink)}
+.mod-b.up{color:var(--spell);border-color:rgba(53,176,142,.4)}
+.mod-b.dn{color:var(--forbidden);border-color:rgba(200,80,60,.4)}
+.mod-b:active{background:var(--surface-3)}
+
 /* ---------- toast ---------- */
 .toast{
   position:fixed;left:50%;bottom:118px;transform:translateX(-50%) translateY(8px);
@@ -829,6 +849,7 @@ function applyAction(gs, a){
       gs.phase = "draw";
       gs.drawnThisTurn = false;
       gs.lastBattle = null;
+      clearExpiredMods(gs, 'endTurn');
       gs.priority = gs.activePlayer;
       // 召喚権・攻撃済み・ターン中履歴をリセット
       gs.players.forEach(pl=>{
@@ -906,7 +927,7 @@ function applyAction(gs, a){
       if(!atkCard){ break; }
       const atkDB = dbOf(atkCard);
       const oppP = gs.players[a.player===0?1:0];
-      const aATK = a.atkOverride!=null ? a.atkOverride : (atkDB.atk||0);
+      const aATK = a.atkOverride!=null ? a.atkOverride : curATK(atkCard);
 
       if(a.target==='direct'){
         oppP.lp = Math.max(0, oppP.lp - aATK);
@@ -919,7 +940,7 @@ function applyAction(gs, a){
       if(!defCard){ break; }
       const defDB = dbOf(defCard);
       const defending = defCard.pos==='def';
-      const dVal = a.defOverride!=null ? a.defOverride : (defending ? (defDB.def||0) : (defDB.atk||0));
+      const dVal = a.defOverride!=null ? a.defOverride : (defending ? curDEF(defCard) : curATK(defCard));
 
       /* 戦闘破壊耐性（置換効果）を判定する。
          a.noDestroyAtk / a.noDestroyDef で個別に指定でき、
@@ -1334,6 +1355,46 @@ function applyAction(gs, a){
       break;
     }
 
+
+    /* ===== 攻守の増減（継続効果）=====
+       EDOPro の EFFECT_UPDATE_ATTACK 相当。
+       card.mods に修正値を積み、期間が来たら自動で消える。
+       a:{player, zone, index, atk, def, until, label} */
+    case "MOD_ADD": {
+      const card = zoneCard(P, a.zone, a.index);
+      if(!card) break;
+      card.mods = card.mods || [];
+      card.mods.push({
+        atk: a.atk||0, def: a.def||0,
+        until: a.until || 'endTurn',      // endTurn / endPhase / permanent
+        label: a.label || '効果',
+        turn: gs.turn
+      });
+      const parts=[];
+      if(a.atk) parts.push(`攻${a.atk>0?'+':''}${a.atk}`);
+      if(a.def) parts.push(`守${a.def>0?'+':''}${a.def}`);
+      logIt(gs, `${a.label||'効果'}：${cardName(card)} ${parts.join(' ')}（${modUntilJp(a.until||'endTurn')}）`);
+      break;
+    }
+    /* 攻守を特定の値にする（半分にする・0にする等） */
+    case "MOD_SET": {
+      const card = zoneCard(P, a.zone, a.index);
+      if(!card) break;
+      const db = dbOf(card);
+      card.mods = card.mods || [];
+      if(a.atk!=null) card.mods.push({atk:a.atk-(db.atk||0), def:0, until:a.until||'endTurn', label:a.label||'効果', turn:gs.turn});
+      if(a.def!=null) card.mods.push({atk:0, def:a.def-(db.def||0), until:a.until||'endTurn', label:a.label||'効果', turn:gs.turn});
+      logIt(gs, `${a.label||'効果'}：${cardName(card)} を攻${a.atk??'—'}/守${a.def??'—'}に`);
+      break;
+    }
+    case "MOD_CLEAR": {
+      const card = zoneCard(P, a.zone, a.index);
+      if(!card) break;
+      delete card.mods;
+      logIt(gs, `${cardName(card)} の攻守修正を解除`);
+      break;
+    }
+
     case "RESET":
       Object.assign(gs, newGame());
       logIt(gs, "盤面をリセット");
@@ -1372,6 +1433,43 @@ function reset(card){
 /* 墓地・除外へ送る共通処理。トークンなら消滅させる */
 function pushZone(arr, card){ const r = reset(card); if(r) arr.push(r); }
 /* 場を離れるカードが持つエクシーズ素材を墓地へ送る（本体処理の前に呼ぶ） */
+/* 修正値を含めた攻撃力・守備力を返す。
+   継続効果（オネスト・リミッター解除等）はここに集約する。 */
+function curATK(card){
+  const db = dbOf(card);
+  let v = db.atk||0;
+  (card.mods||[]).forEach(m=>{ v += (m.atk||0); });
+  return Math.max(0, v);
+}
+function curDEF(card){
+  const db = dbOf(card);
+  let v = db.def||0;
+  (card.mods||[]).forEach(m=>{ v += (m.def||0); });
+  return Math.max(0, v);
+}
+/* 修正値が入っているか */
+function hasMod(card){ return !!(card && card.mods && card.mods.length); }
+function modUntilJp(u){
+  return ({endTurn:'このターン', endPhase:'このフェイズ', permanent:'永続'})[u] || 'このターン';
+}
+/* 期間切れの修正値を掃除する */
+function clearExpiredMods(gs, when){
+  gs.players.forEach(P=>{
+    ['mz','sz'].forEach(z=>{
+      (P[z]||[]).forEach(c=>{
+        if(!c || !c.mods) return;
+        c.mods = c.mods.filter(m=>{
+          if(m.until==='permanent') return true;
+          if(when==='endTurn')  return m.until!=='endTurn' && m.until!=='endPhase';
+          if(when==='endPhase') return m.until!=='endPhase';
+          return true;
+        });
+        if(!c.mods.length) delete c.mods;
+      });
+    });
+  });
+}
+
 /* 戦闘では破壊されないカードか判定する。
    スクリプトに battleProof:true があればそれを使う。
    無ければ効果テキストから推定する（マシュマロン等）。 */
@@ -1733,6 +1831,9 @@ function cardHTML(c, extra, onclick, faceUp){
   const badge = db.k==='m' ? (db.lv?`Lv${db.lv}`:"M") : db.k==='s' ? "魔" : db.k==='t' ? "罠" : "";
   const xyzN = (c.xyz && c.xyz.length) ? `<span class="xyz-n">${c.xyz.length}</span>` : "";
   // カウンター（魔力カウンター等）の表示
+  // 攻守が変動していたら盤面に出す
+  const modBadge = (hasMod(c) && db.k==='m' && faceUp)
+    ? `<span class="mod-n">${curATK(c)}<small>/${curDEF(c)}</small></span>` : "";
   const ctSum = c.counters ? Object.values(c.counters).reduce((a,b)=>a+b,0) : 0;
   const ctN = ctSum ? `<span class="ct-n" title="${Object.entries(c.counters).map(([k,v])=>k+v).join(' ')}">${ctSum}</span>` : "";
   // トークンは画像が無いので専用表示にする
@@ -1747,7 +1848,7 @@ function cardHTML(c, extra, onclick, faceUp){
   return `<div class="card ${kcls} ${extra} ${defRot}" onclick="${onclick}">
     <img src="${IMG_BASE}${db.c}.webp" onerror="this.style.display='none'">
     ${badge?`<span class="badge">${badge}</span>`:""}
-    ${xyzN}${ctN}
+    ${xyzN}${ctN}${modBadge}
     <div class="nm">${db.n||""}</div>
   </div>`;
 }
@@ -3058,6 +3159,15 @@ const API = {
   overlay(p, targetMz, from, fromIndex){ trace(`overlay`); act({type:"FX_OVERLAY", player:p, targetMz, from, fromIndex}); },
   detachMaterial(p, mzIndex, reason){ trace(`detach: mz[${mzIndex}]`); act({type:"FX_DETACH", player:p, mzIndex, reason}); },
   shuffle(p){ trace(`shuffle`); act({type:"SHUFFLE", player:p}); },
+  /* --- 攻守の増減（継続効果） --- */
+  modAtk(t, atk, def, until, label){
+    const r = resolveTarget(t); if(!r) return;
+    trace(`modAtk: ${labelOf(r.card)} 攻${atk>0?'+':''}${atk||0}`);
+    act({type:"MOD_ADD", player:r.p, zone:r.zone, index:r.index,
+         atk:atk||0, def:def||0, until:until||'endTurn', label:label||'効果'});
+  },
+  curAtk(t){ const r=resolveTarget(t); return r? curATK(r.card) : 0; },
+  curDef(t){ const r=resolveTarget(t); return r? curDEF(r.card) : 0; },
   /* --- カウンター --- */
   addCounter(t, kind, n){ trace(`addCounter: ${kind||'魔力'}×${n||1}`); act({type:"COUNTER_ADD", player:t.p, zone:t.zone, index:t.index, kind, n}); },
   removeCounter(t, kind, n){ trace(`removeCounter: ${kind||'魔力'}×${n||1}`); act({type:"COUNTER_REMOVE", player:t.p, zone:t.zone, index:t.index, kind, n}); },
@@ -4496,10 +4606,21 @@ defineScript("オネスト", {
     if(gameState.phase!=='battle'){ ctx.reason = "ダメージステップに発動します"; return false; }
     return true;
   },
+  selectTargets(ctx, done){
+    const light = API.fieldCards({zone:'mz', player:ctx.player,
+      filter:x=>x.card.face==='up' && x.db.at==='光'});
+    API.selectCard("オネスト：攻撃力を上げる光属性", light, me=>{
+      const foes = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up'});
+      if(!foes.length){ done([me]); return; }
+      API.selectCard("オネスト：戦闘している相手モンスター", foes, foe=>done([me, foe]));
+    });
+  },
   resolve(ctx){
-    API.log("オネスト：光属性モンスターの攻撃力が相手モンスターの攻撃力分アップ");
-    API.registerPendingEffect(ctx.player, "オネスト：攻撃力アップを適用",
-      "戦闘時に攻撃力を手動で加算してください（攻撃UIの数値上書きが使えます）");
+    const [me, foe] = ctx.selectedTargets;
+    if(!me) return;
+    const add = foe ? API.curAtk(foe) : 0;
+    API.modAtk(me, add, 0, 'endTurn', 'オネスト');
+    API.log(`オネスト：${labelOf(me.card)} の攻撃力が ${add} アップ`);
   },
   afterResolve(ctx){ API.discard(ctx.player, ctx.index, "オネスト"); }
 });
@@ -4734,8 +4855,10 @@ defineScript("カードガンナー", {
     const n = Math.min(3, API.me(ctx).deck.length);
     API.millTop(ctx.player, n, "カードガンナー");
     API.setFlag(ctx.player,"cardGunnerUsed",true,true);
-    API.log(`カードガンナー：${n}枚墓地へ送り、攻撃力+${n*500}（ターン終了時まで）`);
-    API.registerPendingEffect(ctx.player, `カードガンナー：攻撃力+${n*500}`, "攻撃時に数値を上書きしてください");
+    if(ctx.zone==='mz'){
+      API.modAtk({p:ctx.player, zone:'mz', index:ctx.index, card:ctx.card}, n*500, 0, 'endTurn', 'カードガンナー');
+    }
+    API.log(`カードガンナー：${n}枚墓地へ送り、攻撃力+${n*500}`);
   },
   afterResolve(){}
 });
@@ -4752,10 +4875,12 @@ defineScript("リミッター解除", {
   resolve(ctx){
     const mech = API.fieldCards({zone:'mz', player:ctx.player,
       filter:x=>x.card.face==='up' && x.db.ra==='機械'});
-    API.log(`リミッター解除：機械族${mech.length}体の攻撃力が倍になる`);
-    mech.forEach(m=>API.log(`　${labelOf(m.card)}：攻${m.db.atk} → ${(m.db.atk||0)*2}`));
+    mech.forEach(m=>{
+      const base = API.curAtk(m);
+      API.modAtk(m, base, 0, 'endTurn', 'リミッター解除');
+    });
+    API.log(`リミッター解除：機械族${mech.length}体の攻撃力が倍になった`);
     API.registerReserveEffect(ctx.player, "リミッター解除：エンドフェイズに機械族を破壊", "endPhase", "対象を破壊してください");
-    API.registerPendingEffect(ctx.player, "リミッター解除：攻撃力2倍を適用", "攻撃時に数値を上書きしてください");
   }
 });
 
@@ -5185,6 +5310,134 @@ function openManualEffect(c){
     </div>`;
   veil.classList.add("on");
 }
+
+
+/* ---- 収縮（元々の攻撃力を半分に） ---- */
+defineScript("収縮", {
+  type:"quick-play", priority:2,
+  condition(ctx){
+    if(!API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}).length){
+      ctx.reason="表側表示のモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("収縮：攻撃力を半分にするモンスター",
+      API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}), t=>done([t]));
+  },
+  resolve(ctx){
+    const t=ctx.selectedTargets[0]; if(!t) return;
+    const base = dbOf(t.card).atk||0;
+    API.modAtk(t, -Math.floor(base/2), 0, 'endTurn', '収縮');
+  }
+});
+
+/* ---- 突進（攻撃力700アップ） ---- */
+defineScript("突進", {
+  type:"quick-play", priority:2,
+  condition(ctx){
+    if(!API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}).length){
+      ctx.reason="表側表示のモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("突進：攻撃力を上げるモンスター",
+      API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}), t=>done([t]));
+  },
+  resolve(ctx){
+    const t=ctx.selectedTargets[0]; if(!t) return;
+    API.modAtk(t, 700, 0, 'endTurn', '突進');
+  }
+});
+
+/* ---- 地砕き（守備力が一番高い相手モンスターを破壊） ---- */
+defineScript("地砕き", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    if(!API.foe(ctx).mz.length){ ctx.reason="相手フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const foes = API.fieldCards({zone:'mz', player:ctx.opponent});
+    if(!foes.length) return;
+    const max = Math.max(...foes.map(x=>curDEF(x.card)));
+    const tops = foes.filter(x=>curDEF(x.card)===max);
+    if(tops.length===1){ API.destroy(tops[0], "地砕き"); return; }
+    API.selectCard("地砕き：破壊するモンスター（同値のため選択）", tops, t=>{ API.destroy(t,"地砕き"); render(); });
+  }
+});
+
+/* ---- 地割れ（攻撃力が一番低い相手モンスターを破壊） ---- */
+defineScript("地割れ", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    if(!API.foe(ctx).mz.length){ ctx.reason="相手フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  resolve(ctx){
+    const foes = API.fieldCards({zone:'mz', player:ctx.opponent});
+    if(!foes.length) return;
+    const min = Math.min(...foes.map(x=>curATK(x.card)));
+    const tops = foes.filter(x=>curATK(x.card)===min);
+    if(tops.length===1){ API.destroy(tops[0], "地割れ"); return; }
+    API.selectCard("地割れ：破壊するモンスター（同値のため選択）", tops, t=>{ API.destroy(t,"地割れ"); render(); });
+  }
+});
+
+/* ---- エネミーコントローラー（表示形式変更 or コントロール奪取） ---- */
+defineScript("エネミーコントローラー", {
+  type:"quick-play", priority:2,
+  condition(ctx){
+    if(!API.foe(ctx).mz.length){ ctx.reason="相手フィールドにモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.confirm("エネミーコントローラー",
+      "効果を選んでください。<br>・はい：表示形式を変更<br>・いいえ：自分のモンスターをリリースしてコントロール奪取",
+      ()=>{
+        API.selectCard("表示形式を変更する相手モンスター",
+          API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up'}),
+          t=>done([{mode:'pos', t}]));
+      },
+      ()=>{
+        const mine = API.fieldCards({zone:'mz', player:ctx.player});
+        if(!mine.length){ showToast("リリースするモンスターがいません"); done([]); return; }
+        API.selectCard("リリースする自分のモンスター", mine, r=>{
+          API.selectCard("コントロールを得る相手モンスター",
+            API.fieldCards({zone:'mz', player:ctx.opponent}), t=>done([{mode:'take', r, t}]));
+        });
+      });
+  },
+  resolve(ctx){
+    const sel = ctx.selectedTargets[0]; if(!sel) return;
+    if(sel.mode==='pos'){
+      const cur = sel.t.card.pos==='atk' ? 'def' : 'atk';
+      API.changePosition(sel.t, cur, "エネミーコントローラー");
+    } else {
+      API.sendToGrave(sel.r, "エネミーコントローラー（リリース）");
+      API.changeControl(sel.t, ctx.player, "エネミーコントローラー");
+      API.registerReserveEffect(ctx.player, "エネコン：エンドフェイズにコントロールを戻す", "endPhase", "");
+    }
+  }
+});
+
+/* ---- 抹殺の使徒（裏側モンスターを破壊して除外） ---- */
+defineScript("抹殺の使徒", {
+  type:"spell", priority:1, quickEffect:false,
+  condition(ctx){
+    if(!API.fieldCards({zone:'mz', filter:x=>x.card.face==='down'}).length){
+      ctx.reason="裏側表示のモンスターがいません"; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("抹殺の使徒：破壊して除外する裏側モンスター",
+      API.fieldCards({zone:'mz', filter:x=>x.card.face==='down'}), t=>done([t]));
+  },
+  resolve(ctx){
+    const t=ctx.selectedTargets[0]; if(!t) return;
+    API.banish(t, "抹殺の使徒（破壊して除外）");
+    API.log("抹殺の使徒：リバース効果モンスターだった場合、両者のデッキから同名カードを除外");
+  }
+});
 
 function hasEffect(name){
   return !!(CARD_SCRIPTS[name] || CARD_EFFECT[name] || AUTO_EFFECT[name]);
@@ -5983,6 +6236,54 @@ function doFlipUp(p, zone, idx, pos){
   }
 }
 
+
+/* 攻守の増減を入力する画面。よく使う値をワンタップで。 */
+function openModMenu(p, zone, idx){
+  const P = gameState.players[p];
+  const c = zoneCard(P, zone, idx);
+  if(!c) return;
+  const db = dbOf(c);
+  const quick = [300,400,500,600,700,800,1000,1500,2000];
+  const plus  = quick.map(n=>`<button class="mod-b up" onclick="applyMod(${p},'${zone}',${idx},${n},0)">+${n}</button>`).join("");
+  const minus = quick.map(n=>`<button class="mod-b dn" onclick="applyMod(${p},'${zone}',${idx},${-n},0)">-${n}</button>`).join("");
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">${db.n} の攻守</h3>
+    <div class="mod-now">基本 攻${db.atk??'-'}/守${db.def??'-'}
+      ${hasMod(c)?` → <b>攻${curATK(c)}/守${curDEF(c)}</b>`:""}</div>
+    ${hasMod(c)?`<div class="mod-list">${c.mods.map(m=>
+        `<span class="mod-chip">${m.label} ${m.atk?`攻${m.atk>0?'+':''}${m.atk}`:''}${m.def?` 守${m.def>0?'+':''}${m.def}`:''}<small>${modUntilJp(m.until)}</small></span>`
+      ).join("")}</div>`:""}
+    <div class="act-label">攻撃力を上げる</div>
+    <div class="mod-grid">${plus}</div>
+    <div class="act-label">攻撃力を下げる</div>
+    <div class="mod-grid">${minus}</div>
+    <div class="act-label">よく使う処理</div>
+    <div class="act-grid">
+      <div class="act" onclick="applyMod(${p},'${zone}',${idx},${(db.atk||0)},0,'倍化')">攻撃力を倍に</div>
+      <div class="act" onclick="applyMod(${p},'${zone}',${idx},${-Math.floor((db.atk||0)/2)},0,'半減')">攻撃力を半分に</div>
+      <div class="act" onclick="modSetZero(${p},'${zone}',${idx})">攻守を0にする</div>
+      <div class="act" onclick="modCustom(${p},'${zone}',${idx})">自由に入力…</div>
+    </div>
+    ${hasMod(c)?`<div class="act-grid"><div class="act warn" onclick="closeSheet();act({type:'MOD_CLEAR',player:${p},zone:'${zone}',index:${idx}})">修正を全て解除</div></div>`:""}
+    <button class="close" onclick="closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+function applyMod(p, zone, idx, atk, def, label){
+  act({type:"MOD_ADD", player:p, zone, index:idx, atk, def, until:'endTurn', label:label||'効果'});
+  openModMenu(p, zone, idx);
+}
+function modSetZero(p, zone, idx){
+  act({type:"MOD_SET", player:p, zone, index:idx, atk:0, def:0, until:'endTurn', label:'0にする'});
+  openModMenu(p, zone, idx);
+}
+function modCustom(p, zone, idx){
+  const a = parseInt(prompt("攻撃力の増減（例 800 / -500）","0")||"0",10);
+  const d = parseInt(prompt("守備力の増減","0")||"0",10);
+  if(!a && !d) return;
+  act({type:"MOD_ADD", player:p, zone, index:idx, atk:a, def:d, until:'endTurn', label:'手動'});
+  openModMenu(p, zone, idx);
+}
+
 /* ハンバーガーメニュー（たまに使う操作） */
 function openMenu(){
   const p = gameState.activePlayer;
@@ -6269,6 +6570,15 @@ function openZone(p, zone, idx){
         : blockedBtn("⚡ 効果を発動", actWhy));
   // カウンター操作（魔力カウンター等）
   const ctNow = c.counters ? Object.entries(c.counters).map(([k,v])=>`${k}${v}`).join(" / ") : "";
+  // 攻守の増減（継続効果）
+  const modNow = hasMod(c) ? `（現在 攻${curATK(c)}/守${curDEF(c)}）` : "";
+  const modRow = (isMon && faceUp) ? `
+    <div class="act-label">攻守の増減${modNow}</div>
+    <div class="act-grid">
+      <div class="act" onclick="openModMenu(${p},'${zone}',${idx})">数値を変更…</div>
+      ${hasMod(c)?`<div class="act warn" onclick="closeSheet();act({type:'MOD_CLEAR',player:${p},zone:'${zone}',index:${idx}})">修正を解除</div>`:""}
+    </div>` : "";
+
   const counterRow = `
     <div class="act-label">カウンター${ctNow?`（現在：${ctNow}）`:""}</div>
     <div class="act-grid">
@@ -6308,7 +6618,7 @@ function openZone(p, zone, idx){
     (eff?`<div class="fx-note">このカードは効果を自動処理できます</div>`:"") +
     (hasPrimary ? `<div class="act-label">アクション</div><div class="act-grid">${primary}</div>` : "") +
     (hasState ? `<div class="act-label">状態</div><div class="act-grid">${state}</div>` : "") +
-    counterRow +
+    modRow + counterRow +
     `<div class="act-label">移動</div><div class="act-grid">${move}</div>
      <button class="close" onclick="closeSheet()">閉じる</button>`;
   veil.classList.add("on");
@@ -6340,8 +6650,9 @@ function zMove(p,zone,idx,to){
 /* ================= 攻撃（戦闘専用UI） ================= */
 function beginAttack(p, atkIdx){
   const oppP = gameState.players[p===0?1:0];
-  const atkDB = dbOf(gameState.players[p].mz[atkIdx]);
-  const aATK = atkDB.atk||0;
+  const atkCard0 = gameState.players[p].mz[atkIdx];
+  const atkDB = dbOf(atkCard0);
+  const aATK = curATK(atkCard0);
   // 対象候補：相手モンスター（表側／裏側とも）＋直接攻撃（相手モンスターが0なら）
   let targets = "";
   oppP.mz.forEach((c,i)=>{
@@ -6350,7 +6661,7 @@ function beginAttack(p, atkIdx){
     let cmp="", name;
     if(faceUp){
       const defending = c.pos==='def';
-      const dVal = defending ? (db.def||0) : (db.atk||0);
+      const dVal = defending ? curDEF(c) : curATK(c);
       name = `${db.n}`;
       // 結果プレビュー
       let out;
