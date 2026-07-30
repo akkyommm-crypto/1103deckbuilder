@@ -321,16 +321,25 @@ textarea{
   display:flex; flex-direction:column; gap:5px;
   box-shadow:0 -6px 18px rgba(0,0,0,0.35);
 }
-/* 常時見える1行 */
-.dock-bar{display:flex; align-items:stretch; gap:5px}
+/* 常時見える1行。文字数で折り返して縦に伸びないよう厳しく固定する。 */
+.dock-bar{
+  display:flex; align-items:stretch; gap:4px;
+  height:46px; min-height:46px; max-height:46px;
+}
+.dock-bar > *{
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  line-height:1; padding-top:0; padding-bottom:0;
+  display:flex; align-items:center; justify-content:center;
+}
 /* 展開時のみ出る詳細 */
 .dock-body{display:flex; flex-direction:column; gap:5px; overflow:hidden;
   max-height:50vh; max-height:50dvh; max-height:calc(var(--appvh, 100dvh) * 0.5); transition:max-height .18s ease, opacity .18s ease, margin .18s ease; opacity:1}
 .dock.collapsed .dock-body{max-height:0; opacity:0; margin:0; pointer-events:none}
-.dock-actions{display:flex; align-items:stretch; gap:5px}
+.dock-actions{display:flex; align-items:stretch; gap:4px; min-height:44px}
+.dock-actions > *{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0}
 /* 展開ハンドル */
 .d-more{
-  flex:0 0 auto; min-width:42px; padding:10px 8px; border-radius:5px; font-size:15px; line-height:1;
+  flex:0 0 auto; min-width:34px; padding:0 6px; border-radius:5px; font-size:15px; line-height:1;
   border:1px solid var(--line-hi); background:var(--surface-2); color:var(--gold-hi);
   display:flex; align-items:center; justify-content:center;
 }
@@ -338,14 +347,14 @@ textarea{
 
 /* フェーズ行：戻る / 現在フェーズ表示 / 進む */
 .d-prev,.d-next{
-  flex:0 0 auto; min-width:56px; padding:11px 12px; border-radius:5px; font-size:12px; font-weight:700;
+  flex:0 0 auto; min-width:38px; padding:0 10px; border-radius:5px; font-size:12px; font-weight:700;
   border:1px solid var(--line-hi); background:var(--surface-2); color:var(--ink);
   display:flex; align-items:center; justify-content:center; letter-spacing:.03em;
 }
 .d-prev:active,.d-next:active{background:var(--surface-3)}
 .d-next.primary{
-  flex:1 1 auto; background:var(--gold); color:var(--gold-ink); border-color:var(--gold-hi);
-  font-size:14px; font-weight:800; letter-spacing:.05em; min-height:48px;
+  flex:1 1 auto; min-width:0; background:var(--gold); color:var(--gold-ink); border-color:var(--gold-hi);
+  font-size:13.5px; font-weight:800; letter-spacing:.03em;
   box-shadow:0 0 14px rgba(201,162,75,0.2);
 }
 .d-next.endturn{background:var(--surface-2);color:var(--gold-hi);border-color:var(--line-hi)}
@@ -518,7 +527,7 @@ textarea{
 }
 /* ドローフェイズ用のバー内ドローボタン */
 .d-draw{
-  flex:0 0 auto; padding:11px 16px; border-radius:5px; font-size:13px; font-weight:800;
+  flex:0 0 auto; padding:0 10px; border-radius:5px; font-size:12.5px; font-weight:800;
   background:var(--gold); color:var(--gold-ink); border:1px solid var(--gold-hi);
   letter-spacing:.04em; white-space:nowrap;
 }
@@ -646,14 +655,49 @@ textarea{
 
 /* 常時バー内の割り込みボタン（相手が撃てる時だけ出る） */
 .d-react{
-  flex:0 0 auto; padding:11px 12px; border-radius:5px; font-size:12px; font-weight:800;
+  flex:0 0 auto; padding:0 10px; border-radius:5px; font-size:11.5px; font-weight:800; gap:3px;
   background:var(--trap); color:#120a1f; border:1px solid var(--trap);
   letter-spacing:.02em; white-space:nowrap;
 }
 .d-react:active{filter:brightness(.9)}
+.d-react b{font-size:14px;font-family:"Shippori Mincho",serif}
+.d-act.myreact b{font-size:14px;margin-left:3px;font-family:"Shippori Mincho",serif}
 
 /* 自分側のチェーンボタン */
 .d-act.myreact{border-color:var(--spell);color:var(--spell);font-weight:800}
+
+/* 狭い画面ではラベルを削ってアイコン寄りにする */
+@media (max-width:359px){
+  .dock-bar{gap:3px}
+  .d-prev,.d-more{min-width:30px;padding:0 4px}
+  .d-draw{padding:0 8px;font-size:12px}
+  .d-react{padding:0 7px;font-size:11px}
+  .d-next.primary{font-size:12.5px;letter-spacing:0}
+}
+
+/* ---------- ドックのアイコンボタン ---------- */
+.d-icon{
+  flex:0 0 auto; width:40px; min-width:40px; padding:11px 0; border-radius:5px;
+  font-size:15px; line-height:1; font-weight:700; position:relative;
+  border:1px solid var(--line-hi); background:var(--surface-2); color:var(--gold-hi);
+  display:flex; align-items:center; justify-content:center;
+}
+.d-icon:active{background:var(--surface-3)}
+.d-icon:disabled{opacity:.32}
+.d-icon.react{border-color:var(--trap); color:var(--trap); background:rgba(157,110,222,.12)}
+.d-icon .kb{
+  position:absolute; top:1px; right:1px; min-width:14px; height:14px; line-height:14px;
+  font-size:9px; font-weight:800; padding:0 3px; border-radius:7px;
+  background:var(--trap); color:#120a1f;
+}
+/* 常時バーの文字が詰まらないようにする */
+.dock-bar{flex-wrap:nowrap}
+.d-next{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.d-draw{flex:0 0 auto; padding:11px 12px; font-size:12px}
+/* 展開時のボタンも詰まりにくく */
+.dock-actions{flex-wrap:wrap}
+.d-act{min-width:0; font-size:11.5px; padding:10px 4px}
+.d-act .kb{margin-left:3px}
 
 /* ---------- toast ---------- */
 .toast{
@@ -1476,30 +1520,29 @@ function renderDock(gs, curIdx, chN){
      盤面を最大化するため、ここ以外は折りたたむ。 */
   // ドローフェイズは「ドロー」が唯一の主要行動なので、畳んだままでも押せる位置に出す
   const drawInBar = (gs.phase==="draw" && !gs.drawnThisTurn)
-    ? `<button class="d-draw pulse" onclick="doDraw()">ドロー</button>` : "";
+    ? `<button class="d-draw pulse" onclick="doDraw()" title="1枚ドロー">ドロー</button>` : "";
   // 相手が発動できるカードを持っている時は、畳んだままでも押せる位置に出す。
   // （自分のターン中に相手が手札誘発を撃つ導線がこれ）
   const reactInBar = reactN
-    ? `<button class="d-react pulse" onclick="openReact()">${nameOf(rp)} ${reactN}</button>` : "";
+    ? `<button class="d-icon react pulse" onclick="openReact()" title="${nameOf(rp)}が発動できる${reactN}枚">⚡<span class="kb">${reactN}</span></button>` : "";
   // 自分がチェーンできるカードを持っている時のボタン（速攻魔法・罠など）
   const myReactBtn = myReactN
-    ? `<button class="d-act myreact" onclick="openReactFor(${gs.activePlayer})">自分 ${myReactN}</button>` : "";
+    ? `<button class="d-act myreact" onclick="openReactFor(${gs.activePlayer})">自分<b>${myReactN}</b></button>` : "";
   const bar = `
     <button class="d-prev" onclick="doPhasePrev()" ${prevDisabled?'disabled':''}>◂</button>
     ${drawInBar}${reactInBar}
     ${atEnd
-      ? `<button class="d-next endturn" onclick="doPass()">ターン終了 ⇄</button>`
-      : `<button class="d-next primary" onclick="doPhaseNext()">${phaseJp(gs.phase)} ▸ ${nextPh||""}</button>`}
-    <button class="d-more undo" onclick="undo()" ${canUndo?'':'disabled'}>↺</button>
-    <button class="d-more" onclick="redo()" ${REDO.length?'':'disabled'}>↻</button>
-    <button class="d-more" onclick="toggleDock()" id="dockToggle">${DOCK_OPEN?'▾':'▴'}</button>`;
+      ? `<button class="d-next endturn" onclick="doPass()">ターン終了</button>`
+      : `<button class="d-next primary" onclick="doPhaseNext()" title="${phaseJp(gs.phase)}から${nextPh||""}へ">${nextPh||"次へ"} ▸</button>`}
+    <button class="d-icon undo" onclick="undo()" ${canUndo?'':'disabled'} title="1つ戻す">↺</button>
+    <button class="d-icon" onclick="toggleDock()" id="dockToggle" title="詳細">${DOCK_OPEN?'▾':'▴'}</button>`;
 
   /* ===== 展開時の詳細アクション ===== */
   const exBtn = (exN && inMain)
     ? `<button class="d-act" onclick="openExDeck(${gs.activePlayer})">EX<span class="kb">${exN}</span></button>`
     : "";
   const reactBtn = reactN
-    ? `<button class="d-act react" onclick="openReact()">${nameOf(rp)}<span class="kb">${reactN}</span></button>`
+    ? `<button class="d-act react" onclick="openReact()">相手<span class="kb">${reactN}</span></button>`
     : "";
   const canDrawNow = rules().draw && !gs.drawnThisTurn;
   const drawCls = canDrawNow ? "d-act gold pulse" : (drawDone ? "d-act" : "d-act");
@@ -1509,7 +1552,8 @@ function renderDock(gs, curIdx, chN){
     <button class="${drawCls}" onclick="${drawClick}">${drawLabel}</button>
     ${exBtn}${reactBtn}${myReactBtn}
     <button class="d-act" onclick="openChain()">チェーン${chN?`<span class="kb">${chN}</span>`:""}</button>
-    <button class="d-act" onclick="openMenu()">≡ メニュー</button>`;
+    <button class="d-act" onclick="redo()" ${REDO.length?'':'disabled'} title="やり直す">↻</button>
+    <button class="d-act" onclick="openMenu()">≡</button>`;
 
   document.getElementById("dockBar").innerHTML = bar;
   document.getElementById("dockActions").innerHTML = actRow;
