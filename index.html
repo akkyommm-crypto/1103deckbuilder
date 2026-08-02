@@ -791,31 +791,6 @@
   .guide-note{ font-size:10.5px; color:var(--text-dim); line-height:1.6; margin-top:8px; padding:0 2px; }
 
   /* ---------- Tournament recipe DB ---------- */
-  .tny-stats{
-    flex-shrink:0; max-height:46vh; overflow-y:auto; padding:12px 14px;
-    border-bottom:1px solid var(--line); background:var(--bg-2);
-  }
-  .tny-st-sec{
-    font-size:11px; letter-spacing:0.12em; color:var(--gold-hi); font-weight:700;
-    margin:14px 0 7px; padding-bottom:4px; border-bottom:1px solid var(--line);
-  }
-  .tny-st-sec:first-child{ margin-top:0; }
-  .tny-st-kpis{ display:flex; gap:8px; flex-wrap:wrap; }
-  .tny-st-kpi{
-    flex:1; min-width:70px; text-align:center; padding:9px 6px;
-    border:1px solid var(--line); border-radius:3px; background:var(--surface-2);
-  }
-  .tny-st-kpi .n{ font-size:19px; font-weight:700; color:var(--gold-hi); line-height:1.1; }
-  .tny-st-kpi .l{ font-size:9.5px; color:var(--text-dim); margin-top:3px; letter-spacing:0.04em; }
-  .tny-st-row{ margin-bottom:7px; }
-  .tny-st-line{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; font-size:12px; margin-bottom:3px; }
-  .tny-st-name{ color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
-  .tny-st-val{ color:var(--text-dim); font-size:11px; flex-shrink:0; }
-  .tny-st-barwrap{ height:6px; background:var(--surface-2); border-radius:3px; overflow:hidden; }
-  .tny-st-bar{ height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-hi)); border-radius:3px; }
-  .tny-st-bar.win{ background:linear-gradient(90deg,#b8892c,#ffd77a); }
-  .tny-st-empty{ font-size:11.5px; color:var(--text-dim); text-align:center; padding:10px 0; }
-  .tny-st-note{ font-size:10px; color:var(--text-dim); line-height:1.6; margin-top:8px; }
   .tny-bar{ flex-shrink:0; display:flex; flex-direction:column; gap:8px; padding:10px 14px 9px; border-bottom:1px solid var(--line); }
   .tny-bar-row{ display:flex; gap:6px; align-items:center; }
   .tny-search{
@@ -1083,6 +1058,17 @@
 .tg-qbtn.clear{color:var(--text-dim,#8d8175)}
 .mini.wide{width:88px}
 .tg-table th.tg-p,.tg-table td.tg-p{text-align:right}
+
+/* 効果テキストは端末標準の選択を使わず、独自の長押し選択にする。
+   標準の選択を許すと、Android の選択ツールバーや Google の検索チップが
+   画面下部の検索ボタンに被って押せなくなるため。 */
+#modalEffect{
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
+  -webkit-touch-callout:none;
+}
+#modalEffect .tok{ display:inline; border-radius:3px; }
+#modalEffect .tok.sel{ background:rgba(214,175,88,.45); }
+#modalEffect .kw{ -webkit-touch-callout:none; }
 </style>
 </head>
 <body>
@@ -1146,7 +1132,7 @@
         <button class="btn ghost sm tool-dd-btn">検証 ▾</button>
         <div class="tool-dd-menu">
           <button class="btn ghost sm" id="soloBtn">初動確認</button>
-          <button class="btn ghost sm" id="firstTurnBtn">初動統計</button>
+          <button class="btn ghost sm" id="firstTurnBtn">初手統計</button>
         </div>
       </div>
       <div class="tool-dd" id="ddIO">
@@ -1177,7 +1163,7 @@
 
 <!-- Tournament recipe DB view -->
 <div class="view" id="view-tourney">
-  <div class="view-header">大会結果DB</div>
+  <div class="view-header">大会レシピDB</div>
   <div class="tny-bar">
     <div class="tny-bar-row">
       <input class="tny-search" id="tnySearch" placeholder="大会名・デッキ名・使用者で絞り込み">
@@ -1189,28 +1175,26 @@
       </select>
     </div>
     <div class="tny-bar-row">
-      <button class="btn sm" id="tnyAdd" style="flex:1">＋ 結果を登録</button>
-      <button class="btn sm" id="tnyStatsBtn" style="flex:1">📊 分析</button>
-      <button class="btn ghost sm" id="tnyMoreBtn" title="その他の操作">⋯</button>
+      <button class="btn sm" id="tnyAdd" style="flex:1">＋ レシピを登録</button>
     </div>
-    <div id="tnyMore" style="display:none;">
-      <div class="tny-bar-row" style="margin-top:8px">
-        <button class="btn ghost sm" id="tnyReload" style="flex:1">再読込</button>
-      </div>
-      <div class="tny-bar-row" style="margin-top:8px">
-        <input class="tny-search" id="tnyGasUrl" placeholder="GAS連携URL（LPカウンターと共通・…/exec）" autocapitalize="off" autocomplete="off" spellcheck="false" style="flex:1">
-        <button class="btn ghost sm" id="tnyGasSave">保存</button>
-      </div>
+    <div class="tny-bar-row">
+      <button class="btn sm" id="tnyPublish" style="flex:1">☁ GitHubに公開</button>
+      <button class="btn ghost sm" id="tnyGhCfg">⚙</button>
+    </div>
+    <div class="tny-bar-row">
+      <button class="btn ghost sm" id="tnyReload" style="flex:1">再読込</button>
+      <button class="btn ghost sm" id="tnyExport" style="flex:1">JSON書出</button>
+      <button class="btn ghost sm" id="tnyImport" style="flex:1">取込</button>
+      <input type="file" id="tnyImportFile" accept=".json,application/json" style="display:none">
     </div>
     <div class="tny-count" id="tnyCount"></div>
   </div>
-  <div class="tny-stats" id="tnyStats" style="display:none"></div>
   <div class="tny-scroll" id="tnyScroll"></div>
 </div>
 
 <!-- First-turn simulator view -->
 <div class="view" id="view-firstturn">
-  <div class="view-header">初動統計</div>
+  <div class="view-header">初手統計</div>
   <div class="ft-bar">
     <div class="ft-seg" id="ftSeg">
       <button data-hand="5" class="on">先攻（5枚）</button>
@@ -1239,7 +1223,7 @@
 
 <!-- Solo play view -->
 <div class="view" id="view-solo">
-  <div class="view-header">初動確認</div>
+  <div class="view-header">一人回し</div>
   <div class="solo-body" id="soloBody"></div>
   <div class="solo-hand-wrap" id="soloHandWrap" style="display:none;">
     <div class="solo-log" id="soloLog"></div>
@@ -1454,7 +1438,7 @@
 
 <div class="modal-back" id="tnyModalBack">
   <div class="modal" id="tnyModal">
-    <div class="modal-name" id="tnyModalTitle">🏆 大会結果を登録</div>
+    <div class="modal-name" id="tnyModalTitle">🏆 大会レシピを登録</div>
     <div class="tny-form">
       <div class="tny-grid2">
         <div><label for="tnyFDeck">デッキ名</label><input class="tny-input" id="tnyFDeck" placeholder="例：TG代行"></div>
@@ -1478,6 +1462,35 @@
   </div>
 </div>
 
+<div class="modal-back" id="tnyGhModalBack">
+  <div class="modal" id="tnyGhModal">
+    <div class="modal-name">⚙ GitHub公開設定</div>
+    <div class="text-io-hint">「GitHubに公開」ボタンで <code>tournaments.json</code> を直接コミットするための設定です。トークンはこの端末のブラウザにのみ保存され、外部には送信されません（GitHub APIを除く）。</div>
+    <div class="tny-form">
+      <div class="tny-grid2">
+        <div><label for="ghOwner">オーナー（ユーザー名）</label><input class="tny-input" id="ghOwner" placeholder="akkyommm-crypto" autocapitalize="off" autocomplete="off"></div>
+        <div><label for="ghRepo">リポジトリ名</label><input class="tny-input" id="ghRepo" placeholder="deck1103builder" autocapitalize="off" autocomplete="off"></div>
+      </div>
+      <div class="tny-grid2">
+        <div><label for="ghBranch">ブランチ</label><input class="tny-input" id="ghBranch" placeholder="main" autocapitalize="off" autocomplete="off"></div>
+        <div><label for="ghPath">ファイルパス</label><input class="tny-input" id="ghPath" placeholder="tournaments.json" autocapitalize="off" autocomplete="off"></div>
+      </div>
+      <label for="ghToken">アクセストークン（PAT）</label>
+      <input class="tny-input" id="ghToken" type="password" placeholder="github_pat_... / ghp_..." autocapitalize="off" autocomplete="off" spellcheck="false">
+      <div class="gh-help">
+        <b>推奨：</b>Fine-grained PAT で、このリポジトリの <b>Contents: Read and write</b> だけを許可。<br>
+        公開リポジトリのコードにトークンを書かないでください。共用端末では使わないでください。
+      </div>
+      <div class="text-io-status" id="ghCfgStatus"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="ghCfgClear">クリア</button>
+      <button class="btn ghost" id="ghCfgCancel">閉じる</button>
+      <button class="btn" id="ghCfgSave">保存</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <nav class="tabs">
@@ -1488,8 +1501,8 @@
 <div class="nav-menu-back" id="navMenuBack"></div>
 <div class="nav-menu" id="navMenu">
   <button class="nav-menu-item" data-goto="meta">環境主要デッキ</button>
-  <button class="nav-menu-item" data-goto="tourney">大会結果DB</button>
-  <a class="nav-menu-item" href="battle.html">デュエル（二人対戦） ↗</a>
+  <button class="nav-menu-item" data-goto="tourney">大会レシピDB</button>
+  <a class="nav-menu-item" href="battle.html">Battle（二人対戦） ↗</a>
   <button class="nav-menu-item" data-goto="saved">保存したデッキ</button>
   <button class="nav-menu-item" data-goto="guide">1103環境ガイド</button>
   <a class="nav-menu-item" href="https://akkyommm-crypto.github.io/yglpcalculator/">LPカウンター ↗</a>
@@ -3046,7 +3059,7 @@
       if(mainSize<5){
         st.innerHTML='<div class="solo-start-note">メインデッキが5枚未満です。<br>デッキ画面でカードを入れてから始めてください。</div>';
       } else {
-        st.innerHTML='<div class="solo-start-note">現在編集中のデッキ（メイン'+mainSize+'枚）で初動確認をします。<br>カードをタップすると操作メニューが出ます。<br><span style="color:var(--gold-hi)">金枠の「⚡発動」</span>が出るカードは効果処理まで自動です。</div>';
+        st.innerHTML='<div class="solo-start-note">現在編集中のデッキ（メイン'+mainSize+'枚）で一人回しをします。<br>カードをタップすると操作メニューが出ます。<br><span style="color:var(--gold-hi)">金枠の「⚡発動」</span>が出るカードは効果処理まで自動です。</div>';
         var b5=document.createElement('button'); b5.className='btn'; b5.textContent='先攻でスタート（初手5枚）';
         var b6=document.createElement('button'); b6.className='btn ghost'; b6.textContent='後攻でスタート（初手6枚）';
         b5.addEventListener('click', function(){ soloStart(5); });
@@ -4335,6 +4348,123 @@
     }
   }
 
+  /* 効果テキストを文字種ごとの塊（トークン）に分ける。
+     漢字・カタカナ・ひらがな・英数をそれぞれ1つの塊として扱うので、
+     「コントロール」「特殊召喚」のような語がそのまま選べる。 */
+  function tokenClass(ch){
+    if(/[\u4E00-\u9FFF\u3005\u3007]/.test(ch)) return 'kanji';
+    if(/[\u30A0-\u30FF\u30FC]/.test(ch))       return 'kata';
+    if(/[\u3040-\u309F]/.test(ch))             return 'hira';
+    if(/[0-9A-Za-z０-９Ａ-Ｚａ-ｚ]/.test(ch))   return 'alnum';
+    return null;                                  // 記号・句読点は塊にしない
+  }
+  function tokenizeTextNode(node){
+    var text = node.nodeValue || '';
+    if(!text) return;
+    var frag = document.createDocumentFragment();
+    var buf = '', cls = null;
+    function flush(){
+      if(!buf) return;
+      if(cls){
+        var sp = document.createElement('span');
+        sp.className = 'tok';
+        sp.textContent = buf;
+        frag.appendChild(sp);
+      } else {
+        frag.appendChild(document.createTextNode(buf));
+      }
+      buf = '';
+    }
+    for(var i=0;i<text.length;i++){
+      var ch = text[i], c = tokenClass(ch);
+      if(c !== cls){ flush(); cls = c; }
+      buf += ch;
+    }
+    flush();
+    node.parentNode.replaceChild(frag, node);
+  }
+  function tokenizeEffect(el){
+    if(!el || el._tokenized) return;
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    var nodes = [];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(tokenizeTextNode);
+    el._tokenized = true;
+  }
+
+  /* 長押しで塊を選び、指を滑らせて範囲を広げる。
+     端末標準の選択を使わないので、OSのツールバーとぶつからない。 */
+  var LP = { el:null, anchor:null, active:false, timer:null };
+  function tokensOf(el){ return Array.prototype.slice.call(el.querySelectorAll('.tok, .kw')); }
+  function tokenFromPoint(el, x, y){
+    var t = document.elementFromPoint(x, y);
+    while(t && t !== el){
+      if(t.classList && (t.classList.contains('tok') || t.classList.contains('kw'))) return t;
+      t = t.parentNode;
+    }
+    return null;
+  }
+  function clearTokenSel(el){
+    if(!el) return;
+    tokensOf(el).forEach(function(t){ t.classList.remove('sel'); });
+  }
+  function selectRange(el, a, b){
+    var list = tokensOf(el);
+    var i = list.indexOf(a), j = list.indexOf(b);
+    if(i < 0 || j < 0) return '';
+    if(i > j){ var t = i; i = j; j = t; }
+    var txt = '';
+    list.forEach(function(tk, k){
+      if(k >= i && k <= j){ tk.classList.add('sel'); txt += tk.textContent; }
+      else tk.classList.remove('sel');
+    });
+    return txt.trim();
+  }
+  function attachLongPressSelect(el){
+    if(!el || el._lpWired) return;
+    el._lpWired = true;
+    function start(x, y){
+      LP.el = el; LP.active = false;
+      LP.anchor = tokenFromPoint(el, x, y);
+      clearTimeout(LP.timer);
+      if(!LP.anchor) return;
+      LP.timer = setTimeout(function(){
+        LP.active = true;
+        var txt = selectRange(el, LP.anchor, LP.anchor);
+        if(txt){ tapBtnActive = false; showSelBtn(txt); }
+        if(navigator.vibrate) try{ navigator.vibrate(15); }catch(e){}
+      }, 400);
+    }
+    function move(x, y){
+      if(!LP.active || !LP.anchor) { clearTimeout(LP.timer); return; }
+      var t = tokenFromPoint(el, x, y);
+      if(!t) return;
+      var txt = selectRange(el, LP.anchor, t);
+      if(txt){ tapBtnActive = false; showSelBtn(txt); }
+    }
+    el.addEventListener('touchstart', function(e){
+      var t = e.touches[0]; start(t.clientX, t.clientY);
+    }, {passive:true});
+    el.addEventListener('touchmove', function(e){
+      if(LP.active) e.preventDefault();
+      var t = e.touches[0]; move(t.clientX, t.clientY);
+    }, {passive:false});
+    el.addEventListener('touchend', function(){ clearTimeout(LP.timer); });
+    el.addEventListener('touchcancel', function(){ clearTimeout(LP.timer); LP.active=false; });
+    // PC でも同じ操作ができるようにする
+    el.addEventListener('mousedown', function(e){ start(e.clientX, e.clientY); });
+    el.addEventListener('mousemove', function(e){ if(LP.active) move(e.clientX, e.clientY); });
+    el.addEventListener('mouseup',   function(){ clearTimeout(LP.timer); LP.active=false; });
+  }
+
+  /* 効果テキスト選択の部品。ヘッドレステストから参照する。 */
+  window.__effectSelect = {
+    tokenClass: tokenClass,
+    tokenizeEffect: tokenizeEffect,
+    selectRange: selectRange,
+    clearTokenSel: clearTokenSel,
+  };
+
   // wire keyword taps + selection search on the current effect element
   function wireEffectInteractions(){
     modal.querySelectorAll('.kw').forEach(function(sp){
@@ -4349,7 +4479,11 @@
       });
     });
     var effEl=modal.querySelector('#modalEffect');
-    if(effEl) attachSelectionSearch(effEl);
+    if(effEl){
+      tokenizeEffect(effEl);
+      attachLongPressSelect(effEl);
+      attachSelectionSearch(effEl);
+    }
   }
 
   // Wrap text inside 「」『』 with tappable .kw spans (already html-escaped input)
@@ -4440,6 +4574,8 @@
     var t=e.target;
     if(selBtn.contains(t)) return;          // tap on the button itself
     if(t.closest && t.closest('.kw')) return; // tap on a 「」 keyword (opens a new one)
+    if(LP.el) clearTokenSel(LP.el);
+    LP.active=false;
     hideSelBtn();
   }
   document.addEventListener('mousedown', dismissSelOnOutside, true);
@@ -4697,27 +4833,13 @@
   renderArchetypes();
 
   // ---------- Tournament recipe DB ----------
-  // 共有DB = GAS（deck_list で全員が閲覧）
-  // ローカル下書き = localStorage（GAS未接続時の一時保存）
+  // 公開データ = リポジトリ内 tournaments.json（fetchで全員が閲覧）
+  // ローカル下書き = localStorage（自分で作り、公開用JSONに書き出してコミット）
   var TNY_KEY='tourney1103:list';
-  var TNY_GAS_KEY='tourney1103:gasurl';    // GAS連携URL（LPカウンターと共通）
-  var tnyGasUrl='';
-  var tnyPublic=[];            // 共有DB(GAS)のデータ
+  var TNY_PUBLIC_URL='tournaments.json';   // index.htmlと同じ階層に置く
+  var tnyPublic=[];            // 公開データ
   var tnyPublicLoaded=false;   // fetch済みフラグ
   var tnyPublicStatus='';      // 状態メッセージ
-
-  function tnyLoadGasUrl(){
-    var ls=LS(); if(!ls) return '';
-    try{ return ls.getItem(TNY_GAS_KEY)||''; }catch(e){ return ''; }
-  }
-  function tnySaveGasUrl(u){
-    var ls=LS(); if(!ls) return;
-    try{ ls.setItem(TNY_GAS_KEY, u||''); }catch(e){}
-  }
-  function tnyGasEndpoint(action){
-    var u=tnyGasUrl; if(!u) return '';
-    return u + (u.indexOf('?')>=0?'&':'?') + 'action=' + encodeURIComponent(action);
-  }
 
   function tnyLoad(){          // ローカル下書き
     var ls=LS(); if(!ls) return [];
@@ -4729,7 +4851,7 @@
     catch(e){ showToast('保存に失敗しました（容量不足の可能性）'); return false; }
   }
   function tnyCp(o){ var r={}; for(var k in o){ if(Object.prototype.hasOwnProperty.call(o,k)) r[k]=o[k]; } return r; }
-  // 共有DB（GAS）を土台に、ローカル下書きを上書き
+  // 公開データを土台に、ローカル下書きを上書き（編集した公開エントリはローカル優先＝未公開扱い）
   function tnyMerged(){
     var map={}, order=[];
     tnyPublic.forEach(function(e){ if(e&&e.id){ var c=tnyCp(e); c._src='public'; if(!map[c.id]) order.push(c.id); map[c.id]=c; } });
@@ -4737,23 +4859,16 @@
     return order.map(function(id){ return map[id]; });
   }
   function tnyFetchPublic(){
-    if(!tnyGasUrl){
-      tnyPublic=[];
-      tnyPublicStatus='GAS連携URLが未設定です（「⋯」から設定してください）';
-      tnyPublicLoaded=true;
-      if(document.getElementById('view-tourney').classList.contains('active')) renderTourney();
-      return;
-    }
-    tnyPublicStatus='共有DBを読み込み中…';
-    fetch(tnyGasEndpoint('deck_list'),{cache:'no-store'})
+    tnyPublicStatus='公開データを読み込み中…';
+    fetch(TNY_PUBLIC_URL,{cache:'no-store'})
       .then(function(r){ if(!r.ok) throw new Error('http'+r.status); return r.json(); })
       .then(function(d){
-        tnyPublic = (d && d.ok && Object.prototype.toString.call(d.list)==='[object Array]') ? d.list : [];
+        tnyPublic = (Object.prototype.toString.call(d)==='[object Array]') ? d : [];
         tnyPublicStatus='';
       })
       .catch(function(){
         tnyPublic=[];
-        tnyPublicStatus='共有DBを取得できませんでした（URL/公開設定を確認）';
+        tnyPublicStatus='公開データ未取得（tournaments.json が無い、またはローカルで開いています）';
       })
       .then(function(){ tnyPublicLoaded=true; if(document.getElementById('view-tourney').classList.contains('active')) renderTourney(); });
   }
@@ -4776,113 +4891,6 @@
   var tnySearchEl=document.getElementById('tnySearch');
   var tnySortEl=document.getElementById('tnySort');
   var tnyModalBack=document.getElementById('tnyModalBack');
-  var tnyStatsEl=document.getElementById('tnyStats');
-  var tnyStatsOpen=false;
-
-  // ---------- 分析 ----------
-  function tnyNorm(s){ return String(s||'').trim(); }
-  function tnyIsWin(r){ return /優勝/.test(r||'') && !/準/.test(r||''); }
-  function tnyIsTop2(r){ return /優勝/.test(r||''); } // 優勝 or 準優勝
-
-  function tnyBarBlock(title, rows, total, opts){
-    opts=opts||{};
-    if(!rows.length) return '<div class="tny-st-sec">'+esc(title)+'</div><div class="tny-st-empty">データがありません</div>';
-    var html='<div class="tny-st-sec">'+esc(title)+'</div>';
-    rows.forEach(function(r){
-      var pct = total>0 ? (r.count/total*100) : 0;
-      var valTxt = opts.valText ? opts.valText(r) : (r.count+'件 / '+pct.toFixed(1)+'%');
-      html+='<div class="tny-st-row">'
-          + '<div class="tny-st-line"><span class="tny-st-name">'+esc(r.name)+'</span><span class="tny-st-val">'+esc(valTxt)+'</span></div>'
-          + '<div class="tny-st-barwrap"><div class="tny-st-bar'+(opts.win?' win':'')+'" style="width:'+Math.max(pct,1.5).toFixed(1)+'%"></div></div>'
-          + '</div>';
-    });
-    return html;
-  }
-
-  function tnyCountBy(list, keyFn){
-    var map={};
-    list.forEach(function(e){
-      var k=tnyNorm(keyFn(e));
-      if(!k || k==='(デッキ名未入力)') return;
-      map[k]=(map[k]||0)+1;
-    });
-    return Object.keys(map).map(function(k){ return {name:k, count:map[k]}; })
-      .sort(function(a,b){ return b.count-a.count || a.name.localeCompare(b.name); });
-  }
-
-  function renderTnyStats(list){
-    if(!tnyStatsOpen){ tnyStatsEl.style.display='none'; return; }
-    tnyStatsEl.style.display='';
-    if(!list.length){ tnyStatsEl.innerHTML='<div class="tny-st-empty">分析するデータがありません</div>'; return; }
-
-    var events={}; list.forEach(function(e){ if(e.event) events[e.event]=1; });
-    var eventCount=Object.keys(events).length;
-    var deckSet={}; list.forEach(function(e){ var d=tnyNorm(e.deckName); if(d&&d!=='(デッキ名未入力)') deckSet[d]=1; });
-    var playerSet={}; list.forEach(function(e){ var p=tnyNorm(e.player); if(p) playerSet[p]=1; });
-    var withList=list.filter(function(e){ return tnyNorm(e.list); }).length;
-
-    var html='';
-    // KPI
-    html+='<div class="tny-st-kpis">'
-        + '<div class="tny-st-kpi"><div class="n">'+eventCount+'</div><div class="l">大会</div></div>'
-        + '<div class="tny-st-kpi"><div class="n">'+list.length+'</div><div class="l">登録デッキ</div></div>'
-        + '<div class="tny-st-kpi"><div class="n">'+Object.keys(deckSet).length+'</div><div class="l">デッキ種類</div></div>'
-        + '<div class="tny-st-kpi"><div class="n">'+Object.keys(playerSet).length+'</div><div class="l">使用者</div></div>'
-        + '</div>';
-
-    // デッキ使用率
-    var deckRows=tnyCountBy(list, function(e){ return e.deckName; });
-    html+=tnyBarBlock('デッキ使用率（全登録）', deckRows.slice(0,15), list.length);
-
-    // 優勝デッキ
-    var winList=list.filter(function(e){ return tnyIsWin(e.rank); });
-    var winRows=tnyCountBy(winList, function(e){ return e.deckName; });
-    html+=tnyBarBlock('優勝デッキ（'+winList.length+'件）', winRows.slice(0,12), winList.length, {win:true});
-
-    // 入賞率（優勝＋準優勝 / 使用数）
-    var top2=list.filter(function(e){ return tnyIsTop2(e.rank); });
-    var useMap={}, top2Map={};
-    list.forEach(function(e){ var d=tnyNorm(e.deckName); if(!d||d==='(デッキ名未入力)')return; useMap[d]=(useMap[d]||0)+1; });
-    top2.forEach(function(e){ var d=tnyNorm(e.deckName); if(!d||d==='(デッキ名未入力)')return; top2Map[d]=(top2Map[d]||0)+1; });
-    var rateRows=Object.keys(useMap).filter(function(d){ return useMap[d]>=2; }).map(function(d){
-      return { name:d, count:(top2Map[d]||0), use:useMap[d], rate:(top2Map[d]||0)/useMap[d]*100 };
-    }).sort(function(a,b){ return b.rate-a.rate || b.use-a.use; });
-    if(rateRows.length){
-      var html2='<div class="tny-st-sec">入賞率（優勝＋準優勝／使用2回以上）</div>';
-      rateRows.slice(0,12).forEach(function(r){
-        html2+='<div class="tny-st-row">'
-             + '<div class="tny-st-line"><span class="tny-st-name">'+esc(r.name)+'</span><span class="tny-st-val">'+r.rate.toFixed(0)+'%（'+r.count+'/'+r.use+'）</span></div>'
-             + '<div class="tny-st-barwrap"><div class="tny-st-bar win" style="width:'+Math.max(r.rate,1.5).toFixed(1)+'%"></div></div>'
-             + '</div>';
-      });
-      html+=html2;
-    }
-
-    // 使用者別
-    var playerRows=tnyCountBy(list, function(e){ return e.player; });
-    var pWin={}; winList.forEach(function(e){ var p=tnyNorm(e.player); if(p) pWin[p]=(pWin[p]||0)+1; });
-    if(playerRows.length){
-      var html3='<div class="tny-st-sec">使用者別 登録数・優勝数</div>';
-      playerRows.slice(0,12).forEach(function(r){
-        var w=pWin[r.name]||0;
-        var pct=list.length>0? r.count/list.length*100 : 0;
-        html3+='<div class="tny-st-row">'
-             + '<div class="tny-st-line"><span class="tny-st-name">'+esc(r.name)+'</span><span class="tny-st-val">'+r.count+'件'+(w?' ・優勝'+w:'')+'</span></div>'
-             + '<div class="tny-st-barwrap"><div class="tny-st-bar'+(w?' win':'')+'" style="width:'+Math.max(pct,1.5).toFixed(1)+'%"></div></div>'
-             + '</div>';
-      });
-      html+=html3;
-    }
-
-    // 大会別
-    var evRows=tnyCountBy(list, function(e){ return e.event; });
-    html+=tnyBarBlock('大会別 登録数', evRows.slice(0,12), list.length, {
-      valText:function(r){ return r.count+'件'; }
-    });
-
-    html+='<div class="tny-st-note">※ 絞り込み中は、その条件に一致する登録だけを集計します。デッキリスト登録済み：'+withList+' / '+list.length+' 件</div>';
-    tnyStatsEl.innerHTML=html;
-  }
 
   function renderTourney(){
     if(!tnyPublicLoaded){ tnyFetchPublic(); }
@@ -4901,19 +4909,18 @@
       return (b.date||'').localeCompare(a.date||'') || (b.created||'').localeCompare(a.created||'');
     });
     var events={}; list.forEach(function(e){ if(e.event) events[e.event]=1; });
-    var cnt='共有DB '+tnyPublic.length+' 件 ・ '+Object.keys(events).length+' 大会';
+    var cnt='公開 '+tnyPublic.length+' 件 ・ '+Object.keys(events).length+' 大会';
     if(localCount) cnt+=' ・ 下書き '+localCount+' 件';
     if(q) cnt+='（表示 '+shown.length+' 件）';
     if(tnyPublicStatus) cnt+=' ／ '+tnyPublicStatus;
     document.getElementById('tnyCount').textContent=cnt;
-    renderTnyStats(shown);
 
     if(!list.length){
-      tnyScroll.innerHTML='<div class="tny-empty">まだ登録がありません。<br>「＋ 結果を登録」で大会結果を記録すると、共有DB（GAS）に保存され全員が閲覧できます。<br><br>デッキリストは「テキスト」機能と同じ「カード名 x3」形式です。</div>';
+      tnyScroll.innerHTML='<div class="tny-empty">まだレシピがありません。<br>「＋ レシピを登録」で入賞デッキを記録し、<b>「公開用JSON書出」</b>で <code>tournaments.json</code> を出力してリポジトリにコミットすると、全員がここで閲覧できるようになります。<br><br>デッキリストは「テキスト」機能と同じ「カード名 x3」形式です。</div>';
       return;
     }
     if(!shown.length){
-      tnyScroll.innerHTML='<div class="tny-empty">条件に一致する結果がありません。</div>';
+      tnyScroll.innerHTML='<div class="tny-empty">条件に一致するレシピがありません。</div>';
       return;
     }
     tnyScroll.innerHTML='';
@@ -4926,10 +4933,9 @@
       if(e.date)   metaParts.push(esc(e.date));
       if(e.player) metaParts.push(esc(e.player));
       var isLocal=(e._src==='local');
-      var isGasPublic=(e._src==='public' && !!tnyGasUrl);
       var actions='<button class="btn sm" data-act="load">デッキに読込</button>'+
                   '<button class="btn ghost sm" data-act="edit">編集</button>';
-      if(isLocal || isGasPublic) actions+='<button class="btn ghost sm" data-act="del">削除</button>';
+      if(isLocal) actions+='<button class="btn ghost sm" data-act="del">削除</button>';
       row.innerHTML=
         '<div class="tny-head">'+
           (e.rank? '<span class="tny-rank'+(rv<=2?' top':'')+'">'+esc(e.rank)+'</span>':'')+
@@ -4945,16 +4951,8 @@
       if(delBtn) delBtn.addEventListener('click', function(){
         var b=this;
         if(b.dataset.arm){
-          if(e._src==='local'){
-            var l=tnyLoad().filter(function(x){ return x.id!==e.id; });
-            if(tnySaveAll(l)) renderTourney();
-          } else if(tnyGasUrl){
-            // GAS共有DBから削除
-            fetch(tnyGasEndpoint('deck_del')+'&id='+encodeURIComponent(e.id),{method:'GET'})
-              .then(function(r){return r.json();})
-              .then(function(j){ if(j&&j.ok){ showToast('共有DBから削除しました'); tnyPublicLoaded=false; tnyFetchPublic(); } })
-              .catch(function(){ showToast('削除に失敗しました'); });
-          }
+          var l=tnyLoad().filter(function(x){ return x.id!==e.id; });
+          if(tnySaveAll(l)) renderTourney();
           return;
         }
         b.dataset.arm='1'; b.textContent='削除する？';
@@ -4983,7 +4981,7 @@
   function tnyOpenForm(e){
     tnyEditingId = e? e.id : null;
     var editingPublic = e && e._src==='public';
-    document.getElementById('tnyModalTitle').textContent = e? '🏆 大会結果を編集' : '🏆 大会結果を登録';
+    document.getElementById('tnyModalTitle').textContent = e? '🏆 大会レシピを編集' : '🏆 大会レシピを登録';
     document.getElementById('tnyFDeck').value   = e? (e.deckName||'') : '';
     document.getElementById('tnyFRank').value   = e? (e.rank||'')     : '';
     document.getElementById('tnyFEvent').value  = e? (e.event||'')    : '';
@@ -4993,33 +4991,13 @@
     document.getElementById('tnyFList').value   = e? (e.list||'')     : '';
     var st=document.getElementById('tnyFormStatus');
     st.classList.remove('err');
-    st.textContent = editingPublic ? '共有DBの登録を編集中です。保存すると共有DBに上書き更新されます。' : '';
+    st.textContent = editingPublic ? '公開データを編集中です。保存すると「未公開の下書き」になり、書出してコミットするまで公開には反映されません。' : '';
     tnyModalBack.classList.add('show');
   }
   function tnyCloseForm(){ tnyModalBack.classList.remove('show'); }
 
-  document.getElementById('tnyMoreBtn').addEventListener('click', function(){
-    var m=document.getElementById('tnyMore');
-    var open = m.style.display!=='none';
-    m.style.display = open ? 'none' : '';
-    this.classList.toggle('on', !open);
-  });
-  document.getElementById('tnyStatsBtn').addEventListener('click', function(){
-    tnyStatsOpen=!tnyStatsOpen;
-    this.textContent = tnyStatsOpen ? '📊 分析を隠す' : '📊 分析';
-    renderTourney();
-  });
   document.getElementById('tnyAdd').addEventListener('click', function(){ tnyOpenForm(null); });
-  document.getElementById('tnyReload').addEventListener('click', function(){ tnyPublicLoaded=false; tnyPublicStatus='共有DBを読み込み中…'; renderTourney(); tnyFetchPublic(); });
-  // GAS連携URL
-  tnyGasUrl = tnyLoadGasUrl();
-  (function(){ var el=document.getElementById('tnyGasUrl'); if(el) el.value=tnyGasUrl; })();
-  document.getElementById('tnyGasSave').addEventListener('click', function(){
-    tnyGasUrl=(document.getElementById('tnyGasUrl').value||'').trim();
-    tnySaveGasUrl(tnyGasUrl);
-    showToast(tnyGasUrl ? 'GAS連携URLを保存しました。再読込します' : 'GAS連携URLを解除しました');
-    tnyPublicLoaded=false; renderTourney(); tnyFetchPublic();
-  });
+  document.getElementById('tnyReload').addEventListener('click', function(){ tnyPublicLoaded=false; tnyPublicStatus='公開データを読み込み中…'; renderTourney(); tnyFetchPublic(); });
   document.getElementById('tnyFCancel').addEventListener('click', tnyCloseForm);
   tnyModalBack.addEventListener('click', function(ev){ if(ev.target===tnyModalBack) tnyCloseForm(); });
 
@@ -5071,23 +5049,162 @@
     if(!tnySaveAll(list)) return;
     tnyCloseForm();
     renderTourney();
-    // GAS連携が設定されていれば共有DBにも送信（LPカウンターと同じ保管庫）
-    if(tnyGasUrl){
-      try{
-        var payload=encodeURIComponent(JSON.stringify(entry));
-        fetch(tnyGasEndpoint('deck_add')+'&data='+payload,{method:'GET'})
-          .then(function(r){return r.json();})
-          .then(function(j){ if(j&&j.ok){ showToast('共有DB（GAS）にも登録しました'); tnyPublicLoaded=false; tnyFetchPublic(); } })
-          .catch(function(){});
-      }catch(e){}
-    }
-    var msg = tnyGasUrl ? '保存しました（共有DBに送信中…）' : '下書きに保存しました（GAS未接続のためこの端末のみ）';
+    var msg='下書きに保存しました（公開用JSON書出でコミット）';
     if(parsed.unknown.length){ msg+='／未認識'+parsed.unknown.length+'件'; }
     showToast(msg);
   });
 
+  document.getElementById('tnyExport').addEventListener('click', function(){
+    var out=tnyMerged().map(function(e){ var c=tnyCp(e); delete c._src; return c; });
+    if(!out.length){ showToast('書き出すレシピがありません'); return; }
+    var blob=new Blob([JSON.stringify(out,null,1)],{type:'application/json'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='tournaments.json';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.parentNode&&a.parentNode.removeChild(a); },1000);
+    showToast(out.length+'件を tournaments.json に書き出しました（リポジトリにコミットで公開）');
+  });
+
+  var tnyImportFile=document.getElementById('tnyImportFile');
+  document.getElementById('tnyImport').addEventListener('click', function(){ tnyImportFile.click(); });
+  tnyImportFile.addEventListener('change', function(){
+    var f=tnyImportFile.files && tnyImportFile.files[0];
+    if(!f) return;
+    var fr=new FileReader();
+    fr.onload=function(){
+      try{
+        var data=JSON.parse(fr.result);
+        if(Object.prototype.toString.call(data)!=='[object Array]') throw 0;
+        var list=tnyLoad();
+        var byId={}; list.forEach(function(x){ if(x&&x.id) byId[x.id]=true; });
+        var added=0, skipped=0;
+        data.forEach(function(x){
+          if(!x || typeof x!=='object' || !x.list || !x.deckName){ skipped++; return; }
+          if(x.id && byId[x.id]){ skipped++; return; }
+          if(!x.id) x.id='t'+Date.now()+Math.floor(Math.random()*100000);
+          byId[x.id]=true; list.push(x); added++;
+        });
+        if(tnySaveAll(list)){
+          renderTourney();
+          showToast(added+'件を下書きに取り込みました'+(skipped? '（重複等'+skipped+'件スキップ）':''));
+        }
+      }catch(e){ showToast('JSONの読み込みに失敗しました'); }
+      tnyImportFile.value='';
+    };
+    fr.readAsText(f);
+  });
+
   tnySearchEl.addEventListener('input', renderTourney);
   tnySortEl.addEventListener('change', renderTourney);
+
+  // ---------- GitHub publish ----------
+  var GH_KEY='tourney1103:gh';
+  function ghConfig(){
+    var ls=LS(); if(!ls) return {};
+    try{ var r=ls.getItem(GH_KEY); return r? JSON.parse(r) : {}; }catch(e){ return {}; }
+  }
+  function ghSaveConfig(cfg){
+    var ls=LS(); if(!ls) return false;
+    try{ ls.setItem(GH_KEY, JSON.stringify(cfg)); return true; }catch(e){ return false; }
+  }
+  function utf8ToBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
+
+  var tnyGhModalBack=document.getElementById('tnyGhModalBack');
+  function ghFillForm(){
+    var c=ghConfig();
+    document.getElementById('ghOwner').value  = c.owner||'';
+    document.getElementById('ghRepo').value   = c.repo||'';
+    document.getElementById('ghBranch').value = c.branch||'main';
+    document.getElementById('ghPath').value   = c.path||'tournaments.json';
+    document.getElementById('ghToken').value  = c.token||'';
+    var st=document.getElementById('ghCfgStatus'); st.textContent=''; st.classList.remove('err');
+  }
+  function ghOpenCfg(){ ghFillForm(); tnyGhModalBack.classList.add('show'); }
+  function ghCloseCfg(){ tnyGhModalBack.classList.remove('show'); }
+  document.getElementById('tnyGhCfg').addEventListener('click', ghOpenCfg);
+  document.getElementById('ghCfgCancel').addEventListener('click', ghCloseCfg);
+  tnyGhModalBack.addEventListener('click', function(ev){ if(ev.target===tnyGhModalBack) ghCloseCfg(); });
+  document.getElementById('ghCfgClear').addEventListener('click', function(){
+    var b=this;
+    if(b.dataset.arm){
+      b.dataset.arm=''; b.textContent='クリア';
+      var ls=LS(); if(ls){ try{ ls.removeItem(GH_KEY); }catch(e){} }
+      ghFillForm(); showToast('GitHub設定を消去しました');
+      return;
+    }
+    b.dataset.arm='1'; b.textContent='本当に消去？';
+    setTimeout(function(){ b.dataset.arm=''; b.textContent='クリア'; },2500);
+  });
+  document.getElementById('ghCfgSave').addEventListener('click', function(){
+    var cfg={
+      owner: document.getElementById('ghOwner').value.trim(),
+      repo:  document.getElementById('ghRepo').value.trim(),
+      branch:document.getElementById('ghBranch').value.trim()||'main',
+      path:  document.getElementById('ghPath').value.trim()||'tournaments.json',
+      token: document.getElementById('ghToken').value.trim()
+    };
+    var st=document.getElementById('ghCfgStatus'); st.classList.remove('err');
+    if(!cfg.owner||!cfg.repo||!cfg.token){ st.textContent='オーナー・リポジトリ名・トークンは必須です。'; st.classList.add('err'); return; }
+    if(ghSaveConfig(cfg)){ ghCloseCfg(); showToast('GitHub設定を保存しました'); }
+    else { st.textContent='保存に失敗しました。'; st.classList.add('err'); }
+  });
+
+  function ghApi(cfg, method, extra){
+    var url='https://api.github.com/repos/'+cfg.owner+'/'+cfg.repo+'/contents/'+
+            cfg.path.split('/').map(encodeURIComponent).join('/')+
+            (method==='GET'? '?ref='+encodeURIComponent(cfg.branch) : '');
+    var opt={ method:method, headers:{
+      'Authorization':'Bearer '+cfg.token,
+      'Accept':'application/vnd.github+json',
+      'X-GitHub-Api-Version':'2022-11-28'
+    }};
+    if(extra){ opt.headers['Content-Type']='application/json'; opt.body=JSON.stringify(extra); }
+    return fetch(url,opt);
+  }
+
+  document.getElementById('tnyPublish').addEventListener('click', function(){
+    var cfg=ghConfig();
+    if(!cfg.owner||!cfg.repo||!cfg.token){
+      showToast('先に ⚙ で GitHub 設定を登録してください');
+      ghOpenCfg(); return;
+    }
+    var merged=tnyMerged().map(function(e){ var c=tnyCp(e); delete c._src; return c; });
+    if(!merged.length){ showToast('公開するレシピがありません'); return; }
+    var jsonStr=JSON.stringify(merged,null,1)+'\n';
+    var btn=document.getElementById('tnyPublish');
+    btn.disabled=true; var oldLabel=btn.textContent; btn.textContent='☁ 公開中…';
+    var localDraftCount=tnyLoad().length;
+
+    // 1) 現在のsha取得（無ければ新規作成）
+    ghApi(cfg,'GET',null).then(function(r){
+      if(r.status===404) return null;
+      if(r.status===401) throw new Error('トークンが無効です（401）。設定を確認してください。');
+      if(r.status===403) throw new Error('権限不足またはレート制限（403）。トークンのContents権限を確認してください。');
+      if(r.status===404) return null;
+      if(!r.ok) throw new Error('取得失敗（'+r.status+'）。オーナー／リポジトリ名／ブランチを確認してください。');
+      return r.json().then(function(j){ return j.sha; });
+    }).then(function(sha){
+      var body={ message:'Update '+cfg.path+' via 1103 deck app', content:utf8ToBase64(jsonStr), branch:cfg.branch };
+      if(sha) body.sha=sha;
+      return ghApi(cfg,'PUT',body);
+    }).then(function(r){
+      if(r.status===409) throw new Error('競合（409）。他の端末が更新した可能性。「再読込」してからやり直してください。');
+      if(r.status===422) throw new Error('リクエスト不正（422）。ブランチ名やパスを確認してください。');
+      if(!r.ok) return r.text().then(function(t){ throw new Error('コミット失敗（'+r.status+'）：'+t.slice(0,120)); });
+      return r.json();
+    }).then(function(){
+      // 楽観的更新：コミットした内容が新しい公開データ。下書きをクリア。
+      tnyPublic=merged; tnyPublicLoaded=true; tnyPublicStatus='';
+      tnySaveAll([]);
+      renderTourney();
+      showToast('GitHubに公開しました（'+merged.length+'件）'+(localDraftCount? '／下書き'+localDraftCount+'件を公開に反映':'')+'。Pages反映まで数十秒');
+    }).catch(function(err){
+      showToast(String(err.message||err));
+    }).then(function(){
+      btn.disabled=false; btn.textContent=oldLabel;
+    });
+  });
 
   var KIND_ORDER={m:0,s:1,t:2};
   function deckToText(){
