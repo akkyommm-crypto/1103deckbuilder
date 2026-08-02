@@ -3428,7 +3428,7 @@ function hasFieldActivatableEffect(card){
     if(!sc.fieldIgnition) return false;
     // 発動回数を使い切っていれば出さない
     const loc = locateCard(card);
-    if(sc.countLimit && countLeft(loc ? loc.p : 0, db.n, sc) <= 0) return false;
+    if(sc.countLimit && countLeft(loc ? loc.p : 0, db.n, sc, card) <= 0) return false;
     return true;
   }
   if(FIELD_ACT_CACHE.has(db.n)) return FIELD_ACT_CACHE.get(db.n);
@@ -3516,7 +3516,9 @@ function reactableCards(p){
       if(!canActivateFromZone(db, zone)) return;
       if(!isQuickFromZone(db)) return;          // 相手ターンに撃てないものは除く
       const sc = CARD_SCRIPTS[db.n];
-      if(sc && sc.countLimit && countLeft(p, db.n, sc) <= 0) return;   // 使用済みは出さない
+      if(sc && sc.countLimit && countLeft(p, db.n, sc, c) <= 0) return;   // 使用済みは出さない
+      // 公開領域の強制の誘発即時が割り込む場面では、カウンター罠をチェーン1に撃てない
+      if(db.sub === 'カウンター' && !canActivateCounterTrap()) return;
       // スクリプトがあれば発動条件も確認する
       if(sc && sc.condition){
         const ctx = makeContext(p, c, zone, i, "react", {});
@@ -3705,22 +3707,55 @@ function whyBlocked(what){
    スクリプトに countLimit を書くだけで「1ターンに1度」等を自動管理する。
      countLimit: 1                    → 1ターンに1度
      countLimit: {n:1, scope:'duel'}  → デュエル中に1度
-   キーはカード名。同名カード共通で数える（OCGの「このカード名の」に相当）。
+
+   【1103では「カード個体」ごとに数える】
+   「このカード名の効果は1ターンに1度」という名称ターン1の概念は
+   2014年頃のテキスト整備で導入されたもので、1103環境には存在しない。
+   当時の「1ターンに1度」はカード1枚ごとの制限なので、
+   同名カードが2枚あればそれぞれ1回ずつ使える。
+     例）魔導戦士 ブレイカーが2体いれば、2体とも効果を使える
+         神の居城－ヴァルハラが2枚あれば、それぞれ1回発動できる
+
+   名称単位で数えるカードは nameLimit:true を宣言する（後年のフォーマット用）。
    ========================================================================= */
+const RULING_1103_PER_CARD_LIMIT = true;
 function countKey(name){ return 'cl:'+name; }
+
+/* カード個体に記録した使用回数 */
+function cardCountUsed(card, scope){
+  if(!card) return 0;
+  if(scope === 'duel') return card.clDuel || 0;
+  return (card.clTurn === gameState.turn) ? (card.clN || 0) : 0;
+}
+function cardCountConsume(card, scope){
+  if(!card) return;
+  if(scope === 'duel'){ card.clDuel = (card.clDuel||0) + 1; return; }
+  if(card.clTurn !== gameState.turn){ card.clTurn = gameState.turn; card.clN = 0; }
+  card.clN = (card.clN||0) + 1;
+}
+
+/* 名称単位で記録した使用回数（後年のフォーマット用） */
 function countUsed(p, name, scope){
   const P = gameState.players[p];
   const store = (scope==='duel') ? P.effectFlags : P.temporaryFlags;
   return store[countKey(name)] || 0;
 }
-function countLeft(p, name, sc){
+
+/* card を渡せば個体単位、渡さなければ名称単位で数える */
+function countLeft(p, name, sc, card){
   if(!sc || !sc.countLimit) return Infinity;
   const cl = (typeof sc.countLimit==='number') ? {n:sc.countLimit} : sc.countLimit;
-  return (cl.n||1) - countUsed(p, name, cl.scope);
+  const perCard = RULING_1103_PER_CARD_LIMIT && !sc.nameLimit && card;
+  const used = perCard ? cardCountUsed(card, cl.scope) : countUsed(p, name, cl.scope);
+  return (cl.n||1) - used;
 }
-function countConsume(p, name, sc){
+function countConsume(p, name, sc, card){
   if(!sc || !sc.countLimit) return;
   const cl = (typeof sc.countLimit==='number') ? {n:sc.countLimit} : sc.countLimit;
+  if(RULING_1103_PER_CARD_LIMIT && !sc.nameLimit && card){
+    cardCountConsume(card, cl.scope);
+    return;
+  }
   const P = gameState.players[p];
   const store = (cl.scope==='duel') ? P.effectFlags : P.temporaryFlags;
   store[countKey(name)] = (store[countKey(name)]||0) + 1;
@@ -4049,7 +4084,7 @@ function runScript(name, p, zone, index, opts){
   };
   /* コストは対象より先に払う。払えなければ発動できない。 */
   const doCost = ()=>{
-    countConsume(p, name, sc);          // 回数を消費（発動時点で消費する）
+    countConsume(p, name, sc, card);    // 回数を消費（発動時点で消費する）
     if(sc.cost){
       trace(`コスト支払い`);
       SCRIPT_PHASE = 'cost';
@@ -4065,7 +4100,7 @@ function runScript(name, p, zone, index, opts){
   const proceed = doCost;
 
   // 回数制限
-  if(sc.countLimit && countLeft(p, name, sc) <= 0){
+  if(sc.countLimit && countLeft(p, name, sc, card) <= 0){
     trace(`回数制限：${countLimitJp(sc)}まで`, false);
     showToast(`${name} は${countLimitJp(sc)}までです`);
     render();
@@ -4254,7 +4289,7 @@ function collectHandlers(eventName, evt){
         const sc = CARD_SCRIPTS[nm];
         const h  = sc && sc.passive && sc.passive[eventName];
         if(!h) return;
-        if(sc.countLimit && countLeft(p, nm, sc) <= 0) return;   // 使用済みは出さない
+        if(sc.countLimit && countLeft(p, nm, sc, c) <= 0) return;   // 使用済みは出さない
         const ctx = makeContext(p, c, zone, i, eventName, {event:evt||{}});
         if(!summonTriggerApplies(sc, ctx, eventName, evt)) return;
         // 条件を満たすものだけ候補にする
@@ -4284,18 +4319,26 @@ function emitEvent(eventName, evt){
     runScript(c.name, c.p, c.zone, c.index, {event:c.ctx.event});
     return true;
   }
-  // 相手の誘発を優先して出す（激流葬・奈落など）
-  const rp = reactingPlayer();
-  cands.sort((a,b)=> (a.p===rp?-1:1) - (b.p===rp?-1:1));
+  /* 同時に誘発した効果は SEGOC の順にチェーンへ積む。
+     ターンプレイヤーの強制 → 非ターンプレイヤーの強制
+     → ターンプレイヤーの任意 → 非ターンプレイヤーの任意 の順。
+     チェーンは逆順に解決されるので、後ろに積まれたものほど先に処理される。 */
+  const ordered = orderSimultaneous(
+    cands.map(c=>{
+      const sc = CARD_SCRIPTS[c.name];
+      return Object.assign({player:c.p, forced:!!(sc && sc.forced)}, c);
+    }), gameState.activePlayer);
+  cands.length = 0; ordered.forEach(x=>cands.push(x));
   setTimeout(()=>{
     const rows = cands.map((c,i)=>
       `<div class="act pick-row" onclick="__evtPick(${i})">
          <span class="pk-nm">${c.name}</span>
-         <span class="pk-sub">${nameOf(c.p)}・${zoneJp(c.zone)}</span>
+         <span class="pk-sub">${nameOf(c.p)}・${zoneJp(c.zone)}${c.forced?'・強制':''}</span>
        </div>`).join("");
     sheet.innerHTML = `<div class="grip"></div>
       <h3 style="margin-bottom:4px">${eventJp(eventName)}</h3>
-      <div class="meta" style="margin-bottom:10px">発動できるカードがあります。使用しますか？</div>
+      <div class="meta" style="margin-bottom:10px">
+        発動できるカードがあります。上から順にチェーンへ積みます（解決は逆順）。</div>
       <div class="pick-list">${rows}</div>
       <button class="close" onclick="__evtSkip()">発動しない</button>`;
     EVT_CANDS = cands;
@@ -6706,10 +6749,10 @@ defineScript("ドッペル・ウォリアー", {
 });
 
 /* 回数制限の残りを短く表示する */
-function clNote(p, name){
+function clNote(p, name, card){
   const sc = CARD_SCRIPTS[name];
   if(!sc || !sc.countLimit) return "";
-  const left = countLeft(p, name, sc);
+  const left = countLeft(p, name, sc, card);
   const jp = countLimitJp(sc);
   return left>0 ? `（${jp}／残り${left}）` : `（${jp}／使用済み）`;
 }
@@ -10118,6 +10161,27 @@ function act(a){
   // 御前試合・群雄割拠は永続効果なので、盤面が動いたら即座に適用する。
   // ダメージステップ中は⑤で処理するため、そこでは動かさない。
   if(!gameState.battle) enforceExclusions();
+  enforceSinUpkeep();
+}
+
+/* 「Sin」モンスターはフィールド魔法がなければ破壊される。
+   永続効果なので、盤面が動いたら自動で処理する。 */
+let SIN_RESOLVING = false;
+function enforceSinUpkeep(){
+  if(SIN_RESOLVING) return;
+  const dead = sinNeedsField();
+  if(!dead.length) return;
+  SIN_RESOLVING = true;
+  try{
+    dead.slice().reverse().forEach(x=>{
+      const loc = locateCard(x.card);
+      if(!loc) return;
+      applyAction(gameState, {type:"FX_TO_GRAVE", player:loc.p, zone:loc.zone,
+        index:loc.index, reason:"フィールド魔法が存在しないため破壊"});
+    });
+    showToast("フィールド魔法が無いため「Sin」モンスターが破壊されました");
+    render();
+  } finally { SIN_RESOLVING = false; }
 }
 const REDO = [];
 function undo(){
@@ -10193,7 +10257,27 @@ function destroyedThisTurn(card){
   return !!(g && g.byDestroy && g.turn === gameState.turn);
 }
 
-function doPhase(id){ act({type:"SET_PHASE", phase:id}); }
+/* 攻撃しなければならないモンスターが攻撃していないか調べる */
+function pendingMustAttack(){
+  const p = gameState.activePlayer;
+  return (gameState.players[p].mz||[]).filter(c=>
+    c && c.face==='up' && c.pos==='atk' && !c.attacked &&
+    mustAttackNow(c) && !c.cannotAttack);
+}
+
+function doPhase(id){
+  /* バトルフェイズを抜けるとき、攻撃可能なら攻撃しなければならない
+     モンスター（カラクリなど）が残っていれば確認する。 */
+  const leavingBattle = gameState.phase === 'battle' && id !== 'battle';
+  if(leavingBattle){
+    const must = pendingMustAttack();
+    if(must.length){
+      const names = must.map(c=>labelOf(c)).join('、');
+      if(!confirm(`${names} は攻撃可能な場合には攻撃しなければなりません。\nこのままバトルフェイズを終えますか？`)) return;
+    }
+  }
+  act({type:"SET_PHASE", phase:id});
+}
 function doPhaseNext(){
   const i = PHASES.findIndex(x=>x.id===gameState.phase);
   if(i < PHASES.length-1){
@@ -11400,7 +11484,7 @@ function openHand(i){
   const ssTag = db.k!=='m' ? `<span class="ss-tag">SS${spellSpeedOf(db)}</span>` : "";
   sheet.innerHTML = metaHead(db) +
     `<div class="phase-note">${ph}：${R.note}${ssTag}</div>` +
-    (eff?`<div class="fx-note">このカードは効果を自動処理できます${clNote(p, nm)}</div>`:"") +
+    (eff?`<div class="fx-note">このカードは効果を自動処理できます${clNote(p, nm, c)}</div>`:"") +
     `<div class="act-label">プレイ</div><div class="act-grid">${primary}</div>
      <div class="act-label">その他へ送る</div><div class="act-grid">${secondary}</div>
      <button class="close" onclick="closeSheet()">閉じる</button>`;
@@ -11690,7 +11774,7 @@ function openZone(p, zone, idx){
   const hasState = state.trim().length>0;
   sheet.innerHTML = metaHead(db) +
     `<div class="phase-note">${ph}：${R.note}${db.k!=='m'?`<span class="ss-tag">SS${spellSpeedOf(db)}</span>`:""}</div>` + flagNote +
-    (eff?`<div class="fx-note">このカードは効果を自動処理できます${clNote(p, db.n)}</div>`:"") +
+    (eff?`<div class="fx-note">このカードは効果を自動処理できます${clNote(p, db.n, c)}</div>`:"") +
     (hasPrimary ? `<div class="act-label">アクション</div><div class="act-grid">${primary}</div>` : "") +
     (hasState ? `<div class="act-label">状態</div><div class="act-grid">${state}</div>` : "") +
     modRow + counterRow + stateFlags + control +
@@ -11814,8 +11898,21 @@ function openSwapMenu(p, zone, idx){
 function zMove(p,zone,idx,to){
   const P=gameState.players[p];
   if(ZONE_LIMITS[to] && to!=="field" && P[to].length>=ZONE_LIMITS[to]){ alert(`${zoneJp(to)}は${ZONE_LIMITS[to]}枚まで`); return; }
+  if(!confirmGraveLock(zone, to)) return;
   act({type:"MOVE", player:p, from:zone, fromIndex:idx, to, face:to==="deck"?"down":"up"});
   closeSheet();
+}
+
+/* 手動で墓地からカードを動かすとき、ネクロバレーが適用されていれば確認する。
+   効果によるものかコストによるものかはアプリ側で判断できないので、
+   止めずに注意だけ出してプレイヤーに委ねる。 */
+function confirmGraveLock(from, to){
+  if(from !== 'grave') return true;
+  if(!necrovalleyLocked()) return true;
+  const msg = (to === 'banish')
+    ? "ネクロバレーが適用されています。墓地のカードは除外できません。\nそれでも動かしますか？"
+    : "ネクロバレーが適用されています。効果で墓地のカードを動かすことはできません。\n（コストや召喚条件による移動、墓地で発動する効果は可能です）\nそれでも動かしますか？";
+  return confirm(msg);
 }
 
 /* ================= 攻撃（戦闘専用UI） ================= */
@@ -12155,6 +12252,7 @@ function pileMove(p,zone,i,to,face,pos){
   const P=gameState.players[p];
   if(ZONE_LIMITS[to] && to!=="field" && P[to].length>=ZONE_LIMITS[to]){ alert(`${zoneJp(to)}は${ZONE_LIMITS[to]}枚まで`); return; }
   if(to==="field" && P.field){ alert("フィールドゾーンが埋まっています"); return; }
+  if(!confirmGraveLock(zone, to)) return;
   act({type:"MOVE", player:p, from:zone, fromIndex:i, to, face:face||"up", pos:pos||"atk"});
   closeSheet();
 }
@@ -12255,11 +12353,82 @@ const TEST_DECK = {
   ]
 };
 
+
+/* =========================================================================
+   動作確認用デッキ
+   実装した機能をひと通り試せるように組んだサンプル。
+   各カードのコメントが「何を確かめられるか」を示している。
+   ========================================================================= */
+const FEATURE_DECK = {
+  name: "動作確認用（実装した機能を試す）",
+  cards: [
+    // ---- 元々の攻撃力／効果無効 ----
+    {n:"神獣王バルバロス", q:2},        // 妥協召喚で1900。スキドレや聖杯で3000に戻る
+    {n:"スキルドレイン", q:2},          // 表側モンスターの効果を無効。チェーン候補に出ないことも確認
+    {n:"禁じられた聖杯", q:2},          // 対象1体をターン終了時まで無効（攻+400）
+    // ---- カウンターと対象を取る効果 ----
+    {n:"魔導戦士 ブレイカー", q:2},     // 召喚時にカウンター、外して魔法罠破壊（相手がチェーンできる）
+    // ---- 召喚誘発が自分だけに効くか ----
+    {n:"E・HERO エアーマン", q:1},      // 相手の場にいても、こちらの召喚に反応しないこと
+    // ---- EX素材の条件判定 ----
+    {n:"レスキューラビット", q:1},      // 同名の通常モンスター2体を特殊召喚
+    {n:"セイバーザウルス", q:2},        // 恐竜レベル4通常。ラギアの素材になる
+    // ---- 墓地で発動する効果（1103当時裁定）----
+    {n:"暗黒界の龍神 グラファ", q:1},   // ネクロバレー下でも墓地から特殊召喚できる
+    {n:"暗黒界の狩人 ブラウ", q:1},
+    {n:"暗黒界の取引", q:1},            // 効果で捨てて暗黒界を誘発させる
+    // ---- 墓地ロック ----
+    {n:"墓守の司令官", q:1},            // 捨ててネクロバレーをサーチ
+    {n:"テラ・フォーミング", q:1},
+    {n:"王家の眠る谷－ネクロバレー", q:1}, // 死者蘇生は止まり、グラファは通る
+    // ---- 攻撃強制 ----
+    {n:"カラクリ参謀 弐四八", q:1},     // 攻撃可能なら攻撃しなければならない（BP終了時に警告）
+    {n:"カラクリ忍者 七七四九", q:1},
+    // ---- エンドフェイズの自動処理 ----
+    {n:"ライトロード・マジシャン ライラ", q:2}, // エンドに自動でデッキを3枚削る
+    {n:"裁きの龍", q:1},                // エンドに4枚。スキドレ下では削らない
+    {n:"TG ラッシュ・ライノ", q:1},     // 破壊されたターンのエンドに自動でサーチ候補が出る
+    // ---- ダメージステップ ----
+    {n:"オネスト", q:1},                // ③ダメージ計算時まで発動できる
+    {n:"天空の聖域", q:1},              // 天使族のコントローラーは戦闘ダメージ0
+    {n:"光の護封壁", q:1},              // 払った数値以下の相手モンスターは攻撃できない
+    // ---- リリース処理 ----
+    {n:"古代の機械巨竜", q:1},          // 歯車街があればリリースが1体減る。攻撃時に相手は魔法罠を撃てない
+    {n:"歯車街", q:1},
+    // ---- コントロール ----
+    {n:"強制転移", q:1},                // お互いのモンスターを入れ替える
+    {n:"精神操作", q:1},                // エンドまで。攻撃とリリースが封じられる
+    // ---- 回数制限が個体ごとか ----
+    {n:"神の居城－ヴァルハラ", q:2},    // 2枚並べるとそれぞれ1回発動できる
+    // ---- 種類制限 ----
+    {n:"御前試合", q:1},                // 盤面が動くたびに自動で判定が走る
+    {n:"群雄割拠", q:1},
+    // ---- 召喚反応とカウンター罠 ----
+    {n:"激流葬", q:1},                  // セットしたターンは候補に出ない
+    {n:"奈落の落とし穴", q:1},
+    {n:"神の警告", q:1},
+    {n:"盗賊の七つ道具", q:1},
+    {n:"死者蘇生", q:1},                // ネクロバレー下では墓地から出せない
+  ],
+  ex: [
+    {n:"エヴォルカイザー・ラギア", q:1},          // 恐竜レベル4×2でのみ出せる
+    {n:"ガチガチガンテツ", q:1},                  // 素材の数×200で味方を強化
+    {n:"No.11 ビッグ・アイ", q:1},                // コントロールを永続的に得る／自身は攻撃できない
+    {n:"No.16 色の支配者ショック・ルーラー", q:1},// 表側の永続カードの効果の発動は止まらない
+    {n:"TG ハイパー・ライブラリアン", q:1},       // EX召喚でも誘発するようになった
+    {n:"カラクリ大将軍 無零怒", q:1},
+    {n:"A・O・J カタストル", q:1},                // 強制効果。グラン・モールとのチェーン順
+    {n:"氷結界の龍 トリシューラ", q:1},           // ネクロバレー下では墓地だけ除外できない
+    {n:"Sin サイバー・エンド・ドラゴン", q:1},    // フィールド魔法が無くなると自動で破壊される
+  ]
+};
+
 /* テストデッキを組む。実データが無い名前は飛ばし、
    40枚に満たない場合はカードデータから適当なカードで埋める。 */
-function buildTestDeck(){
+function buildTestDeck(which){
+  const D = (which === 'feature') ? FEATURE_DECK : TEST_DECK;
   const main=[], ex=[], miss=[];
-  TEST_DECK.cards.forEach(e=>{
+  D.cards.forEach(e=>{
     if(!e.q) return;
     const idx = findCardIndex(e.n);
     if(idx<0){ miss.push(e.n); return; }
@@ -12269,7 +12438,7 @@ function buildTestDeck(){
     }
   });
   // EXデッキ（シンクロ・エクシーズ）
-  (TEST_DECK.ex||[]).forEach(e=>{
+  (D.ex||[]).forEach(e=>{
     if(!e.q) return;
     const idx = findCardIndex(e.n);
     if(idx<0){ miss.push(e.n); return; }
@@ -12298,15 +12467,15 @@ function buildTestDeck(){
 
 /* テストデッキで即開始（両プレイヤーに配って手札を引く）
    1103は先攻ドローありなので、ドローフェイズから始める。 */
-function startTestDuel(bothSides, firstPlayer){
-  const parsed = buildTestDeck();
+function startTestDuel(bothSides, firstPlayer, which){
+  const parsed = buildTestDeck(which);
   if(!parsed.main.length){ showToast("カードデータが読み込まれていません"); return; }
   closeSheet();
   act({type:"LOAD_DECK", player:0, deck:parsed.main.slice(), ex:parsed.ex.slice()});
   act({type:"SHUFFLE", player:0});
   act({type:"DRAW", player:0, n:5, initial:true});
   if(bothSides){
-    const p2 = buildTestDeck();
+    const p2 = buildTestDeck(which);
     act({type:"LOAD_DECK", player:1, deck:p2.main, ex:p2.ex});
     act({type:"SHUFFLE", player:1});
     act({type:"DRAW", player:1, n:5, initial:true});
@@ -12320,7 +12489,8 @@ function startTestDuel(bothSides, firstPlayer){
   gameState.drawnThisTurn = false;
   logIt(gameState, `<b>先攻：${nameOf(fp)}</b>（1103は先攻ドローあり）`);
   render();
-  showToast(`テストデッキで開始（先攻：${nameOf(fp)}）`);
+  const dn = (which === 'feature') ? FEATURE_DECK.name : TEST_DECK.name;
+  showToast(`${dn}で開始（先攻：${nameOf(fp)}）`);
 }
 /* index.html(1103デッキビルダー) と同じ localStorage を読む。
    保存形式: key "deck1103:<名前>" → {name, cards:[{n,q}], side:[{n,q}], date}
@@ -12386,6 +12556,10 @@ function openDeckLoad(tab){
       <div class="dl-item test" onclick="startTestDuel(true)">
         <span class="dl-nm">テストプレイ用デッキ<span class="dl-badge test">おためし</span></span>
         <span class="dl-n">40枚<small>両者に配って開始</small></span>
+      </div>
+      <div class="dl-item" onclick="startTestDuel(true, 0, 'feature')">
+        <span class="dl-nm">動作確認用デッキ<span class="dl-badge test">新機能</span></span>
+        <span class="dl-n">40枚<small>実装した機能を試す</small></span>
       </div>`;
     if(!ls){
       body = testRow + `<div class="meta" style="margin-top:10px">この環境では保存デッキを読めません。「テキストから」もお使いいただけます。</div>`;
