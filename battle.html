@@ -3344,8 +3344,8 @@ function doExSummon(p, exIndex, materials, kind){
     <h3 style="margin-bottom:6px">${db.n}</h3>
     <div class="meta" style="margin-bottom:12px">表示形式を選んでください</div>
     <div class="act-grid">
-      <div class="act fx" onclick="closeSheet();act({type:'FX_EX_SUMMON',player:${p},exIndex:${exIndex},materials:${jsVal(materials)},kind:'${kind}',pos:'atk'})">攻撃表示</div>
-      <div class="act" onclick="closeSheet();act({type:'FX_EX_SUMMON',player:${p},exIndex:${exIndex},materials:${jsVal(materials)},kind:'${kind}',pos:'def'})">守備表示</div>
+      <div class="act fx" onclick="doExSummon(${p},${exIndex},${jsVal(materials)},'${kind}','atk')">攻撃表示</div>
+      <div class="act" onclick="doExSummon(${p},${exIndex},${jsVal(materials)},'${kind}','def')">守備表示</div>
     </div>
     <button class="close" onclick="closeSheet()">やめる</button>`;
   veil.classList.add("on");
@@ -4226,6 +4226,23 @@ const EVENTS = [
 ];
 
 /* 発火候補を集める。場・手札・墓地のカードでハンドラを持つものを探す */
+/* 直前に場へ出たモンスター。召喚イベントに乗せて「誰が召喚されたか」を伝える。 */
+function lastSummonedCard(p){
+  const mz = gameState.players[p].mz || [];
+  return mz.length ? mz[mz.length-1] : null;
+}
+
+/* 召喚に反応する効果は、既定では「自分自身が召喚された場合」に限る。
+   激流葬や奈落のように相手の召喚に反応するカードは
+   スクリプトに onOtherSummon:true を宣言する。 */
+const SUMMON_EVENTS = ['onNormalSummon','onSpecialSummon'];
+function summonTriggerApplies(sc, ctx, eventName, evt){
+  if(SUMMON_EVENTS.indexOf(eventName) < 0) return true;
+  if(sc.onOtherSummon) return true;              // 誰の召喚にも反応する
+  if(!evt || !evt.card) return true;             // 情報が無ければ従来どおり
+  return ctx.card === evt.card;                  // 自分が召喚された場合のみ
+}
+
 function collectHandlers(eventName, evt){
   const out = [];
   [0,1].forEach(p=>{
@@ -4239,6 +4256,7 @@ function collectHandlers(eventName, evt){
         if(!h) return;
         if(sc.countLimit && countLeft(p, nm, sc) <= 0) return;   // 使用済みは出さない
         const ctx = makeContext(p, c, zone, i, eventName, {event:evt||{}});
+        if(!summonTriggerApplies(sc, ctx, eventName, evt)) return;
         // 条件を満たすものだけ候補にする
         let ok = true;
         try{ ok = h(ctx); }catch(e){ ok = false; }
@@ -4363,6 +4381,7 @@ defineScript("死者蘇生", {
 
 /* ---- 激流葬（召喚に誘発してモンスター全破壊） ---- */
 defineScript("激流葬", {
+  onOtherSummon:true,           // 相手の召喚にも反応する
   type:"trap", priority:2,
   condition(ctx){
     const mons = API.fieldCards({zone:'mz'});
@@ -4392,6 +4411,7 @@ defineScript("ブラック・ホール", {
 
 /* ---- 奈落の落とし穴（攻1500以上を除外） ---- */
 defineScript("奈落の落とし穴", {
+  onOtherSummon:true,           // 相手の召喚にも反応する
   type:"trap", priority:2,
   condition(ctx){
     const t = API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>(x.db.atk||0)>=1500});
@@ -4644,6 +4664,7 @@ defineScript("非常食", {
 
 /* ---- 神の宣告（LP半分でカウンター） ---- */
 defineScript("神の宣告", {
+  onOtherSummon:true,           // 相手の召喚にも反応する
   type:"counter", priority:3,
   condition(ctx){
     const lp = API.me(ctx).lp;
@@ -4669,6 +4690,7 @@ defineScript("神の宣告", {
 
 /* ---- 神の警告（2000払って召喚を無効） ---- */
 defineScript("神の警告", {
+  onOtherSummon:true,           // 相手の召喚にも反応する
   type:"counter", priority:3,
   condition(ctx){
     if(API.me(ctx).lp < 2000){ ctx.reason = "LPが2000未満です"; return false; }
@@ -6422,6 +6444,7 @@ defineScript("大天使クリスティア", {
 
 /* ---------- 六武衆 ---------- */
 defineScript("六武の門", {
+  onOtherSummon:true,           // 「六武衆」の召喚に反応する
   fieldIgnition:true,          // 表側で場に残ったまま効果を発動できる
   timing:["summon","free"],     // カウンターを乗せるのは召喚時、使うのは起動効果
   type:"continuous-spell", priority:1,
@@ -6523,6 +6546,7 @@ defineScript("暗黒界の武神 ゴルド", {
 });
 
 defineScript("暗黒界の取引", {
+  onOtherSummon:true,           // 捨てられた場合の誘発を拾う
   timing:["summon","free"],     // 通常魔法なので任意のタイミング
   type:"spell", priority:1, quickEffect:false,
   condition(ctx){
@@ -7366,6 +7390,7 @@ defineScript("サイバー・ドラゴン", {
 /* ---- 王虎ワンフー ----
    攻撃力1400以下のモンスターが召喚・特殊召喚に成功した時、そのモンスターを破壊する。 */
 defineScript("王虎ワンフー", {
+  onOtherSummon:true,           // どちらの召喚にも反応する
   type:"monster", priority:1, forced:true,
   condition(ctx){
     if(ctx.zone !== 'mz' || ctx.card.face !== 'up'){
@@ -7676,6 +7701,7 @@ function wormTargets(p){
 /* ---- インターセプト ----
    リリースを必要とするモンスターの召喚に成功した時、そのコントロールを得る。 */
 defineScript("インターセプト", {
+  onOtherSummon:true,           // 相手のアドバンス召喚に反応する
   type:"trap", priority:3, targets:true,
   condition(ctx){
     if(!interceptTargets(ctx.opponent).length){
@@ -8797,6 +8823,7 @@ function sporeFodder(p, self){
 /* ---- TG ハイパー・ライブラリアン ----
    自分または相手が、このカード以外のSモンスターのS召喚に成功した場合、1枚ドローする。 */
 defineScript("TG ハイパー・ライブラリアン", {
+  onOtherSummon:true,           // 自分・相手のS召喚に反応する
   type:"monster", priority:1, forced:true,
   condition(ctx){
     if(ctx.zone !== 'mz' || ctx.card.face !== 'up'){
@@ -9991,6 +10018,21 @@ function toggleAskChain(){
   ASK_CHAIN = !ASK_CHAIN;
   showToast(ASK_CHAIN ? "チェーン確認：オン" : "チェーン確認：オフ");
   closeSheet();
+}
+
+/* EXデッキからの召喚。シンクロ・エクシーズ・融合も召喚イベントを発火させる。
+   これがないと TG ハイパー・ライブラリアンやカラクリ将軍が誘発しない。 */
+function doExSummon(p, exIndex, materials, kind, pos){
+  const nm = (dbOf((gameState.players[p].ex||[])[exIndex])||{}).n || "";
+  closeSheet();
+  act({type:"FX_EX_SUMMON", player:p, exIndex, materials, kind, pos});
+  const summoned = lastSummonedCard(p);
+  EVT_AFTER = ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); };
+  if(!emitEvent("onSpecialSummon", {player:p, name:nm, card:summoned, kind})){
+    EVT_AFTER = null;
+    askChain(`${nm} の${kind==='synchro'?'シンクロ':kind==='xyz'?'エクシーズ':'融合'}召喚`,
+      ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); });
+  }
 }
 
 function offerSummonTrigger(p, cardName_){
@@ -11473,9 +11515,10 @@ function finishNormalSummon(i, pos, tributes){
   const nm = (CARD_DB[gameState.players[p].hand[i]?.id]||{}).n || "";
   closeSheet();
   act({type:"NORMAL_SUMMON", player:p, handIndex:i, pos, tributes});
+  const summoned = lastSummonedCard(p);
   // イベント発火 → 誘発候補（激流葬・奈落など）を提示 → 無ければ召喚時効果
   EVT_AFTER = ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); };
-  if(!emitEvent("onNormalSummon", {player:p, name:nm})){
+  if(!emitEvent("onNormalSummon", {player:p, name:nm, card:summoned})){
     EVT_AFTER = null;
     askChain(`${nm} の召喚`, ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); });
   }
@@ -11495,8 +11538,9 @@ function doSpecialFromHand(i, pos){
   const nm = (CARD_DB[gameState.players[p].hand[i]?.id]||{}).n || "";
   closeSheet();
   act({type:"FX_SPECIAL_SUMMON", player:p, from:"hand", fromIndex:i, pos, reason:"手札から"});
+  const summoned = lastSummonedCard(p);
   EVT_AFTER = ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); };
-  if(!emitEvent("onSpecialSummon", {player:p, name:nm})){
+  if(!emitEvent("onSpecialSummon", {player:p, name:nm, card:summoned})){
     EVT_AFTER = null;
     askChain(`${nm} の特殊召喚`, ()=>{ offerSummonTrigger(p, nm); offerReactAfter(p===0?1:0); });
   }
