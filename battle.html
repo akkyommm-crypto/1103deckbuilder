@@ -10021,6 +10021,320 @@ Object.keys(AUTO_DECK_TABLE).forEach(nm=>{
   defineAutoDeckScript(nm, AUTO_DECK_TABLE[nm]);
 });
 
+/* =========================================================================
+   効果テキストの自動解釈
+   スクリプトが無いカードでも、効果テキストから「何をするか」を読み取り、
+   候補を絞り込んだ状態で手動処理に流す。完全自動化ではなく、
+   白紙のパレットではなく「下ごしらえ済みの選択肢」を出すのが狙い。
+
+   解析の流れ
+     1. テキストを句点・読点で節に分ける
+     2. 各節から動詞（破壊する・特殊召喚する等）を見つける
+     3. 動詞の手前から対象（誰の・どのゾーンの・何を・何枚）を読み取る
+   ========================================================================= */
+
+/* --- 対象の指定を読み取る --- */
+function parseTargetSpec(phrase){
+  const t = String(phrase||'');
+  const q = {};
+
+  // 誰の
+  if(/お互いの|お互いに/.test(t))      q.player = 'both';
+  else if(/相手(フィールド|の墓地|の手札|のデッキ|の除外)/.test(t)) q.player = 'opponent';
+  else if(/自分(フィールド|の墓地|の手札|のデッキ|の除外)/.test(t)) q.player = 'self';
+  else if(/相手/.test(t))              q.player = 'opponent';
+  else if(/自分/.test(t))              q.player = 'self';
+
+  // どのゾーン
+  if(/墓地/.test(t))                   q.zone = 'grave';
+  else if(/手札/.test(t))              q.zone = 'hand';
+  else if(/デッキ/.test(t))            q.zone = 'deck';
+  else if(/除外され|ゲームから除外されている/.test(t)) q.zone = 'banish';
+  else if(/フィールド/.test(t))        q.zone = 'field';
+
+  // 何を
+  if(/魔法・罠カード|魔法・罠/.test(t))      q.kind = 'st';
+  else if(/魔法カード/.test(t))              q.kind = 's';
+  else if(/罠カード/.test(t))                q.kind = 't';
+  else if(/モンスター/.test(t))              q.kind = 'm';
+  else if(/カード/.test(t))                  q.kind = 'any';
+
+  // 表示形式
+  if(/表側表示/.test(t))               q.face = 'up';
+  else if(/裏側表示|裏側守備表示/.test(t)) q.face = 'down';
+  if(/攻撃表示/.test(t))               q.pos = 'atk';
+  else if(/守備表示/.test(t))          q.pos = 'def';
+
+  // 属性・種族・レベル・攻守
+  let m;
+  for(const a of MAT_ATTRS){ if(t.indexOf(a+'属性') >= 0){ q.attr = a; break; } }
+  for(const r of MAT_RACES){ if(t.indexOf(r+'族') >= 0){ q.race = r; break; } }
+  if((m = t.match(/レベル\s*(\d+)\s*以上/)))      q.lvMin = +m[1];
+  else if((m = t.match(/レベル\s*(\d+)\s*以下/))) q.lvMax = +m[1];
+  else if((m = t.match(/レベル\s*(\d+)/)))        { q.lvMin = +m[1]; q.lvMax = +m[1]; }
+  if((m = t.match(/攻撃力\s*(\d+)\s*以下/)))      q.atkMax = +m[1];
+  if((m = t.match(/守備力\s*(\d+)\s*以下/)))      q.defMax = +m[1];
+  if((m = t.match(/「([^」]+)」と名のついた/)))    q.nameIncludes = m[1];
+
+  // 何枚
+  if(/全て|すべて/.test(t)) q.count = 'all';
+  else if((m = t.match(/(\d+)\s*[体枚]まで/)))  { q.count = +m[1]; q.upTo = true; }
+  else if((m = t.match(/(\d+)\s*[体枚]/)))      q.count = +m[1];
+  else q.count = 1;
+
+  return q;
+}
+
+/* --- 動詞の対応表。長い表現から順に照合する --- */
+const EFFECT_VERBS = [
+  { re:/ゲームから除外する|除外する/,            op:'banish',        jp:'除外する' },
+  { re:/持ち主の手札に戻す|手札に戻す/,          op:'bounce',        jp:'手札に戻す' },
+  { re:/デッキに戻す/,                           op:'toDeck',        jp:'デッキに戻す' },
+  { re:/墓地へ送る|墓地に送る/,                  op:'toGrave',       jp:'墓地へ送る' },
+  { re:/特殊召喚(する|できる)/,                  op:'specialSummon', jp:'特殊召喚する' },
+  { re:/手札に加える/,                           op:'search',        jp:'手札に加える' },
+  { re:/破壊する|破壊できる/,                    op:'destroy',       jp:'破壊する' },
+  { re:/発動を無効にし|効果を無効に|無効にする/, op:'negate',        jp:'無効にする' },
+  { re:/コントロールを(得る|移す|入れ替える)/,   op:'control',       jp:'コントロールを移す' },
+  { re:/裏側守備表示にする/,                     op:'faceDown',      jp:'裏側守備表示にする' },
+  { re:/表示形式を変更する/,                     op:'togglePos',     jp:'表示形式を変更する' },
+  { re:/ドローする|ドローできる/,                op:'draw',          jp:'ドローする' },
+  { re:/ダメージを与える/,                       op:'damage',        jp:'ダメージを与える' },
+  { re:/ライフポイントを回復する|回復する/,      op:'recover',       jp:'ライフを回復する' },
+  { re:/手札を?(\d+)?枚?捨て/,                   op:'discard',       jp:'手札を捨てる' },
+  { re:/ポイントアップ/,                         op:'atkUp',         jp:'攻撃力アップ' },
+  { re:/ポイントダウン/,                         op:'atkDown',       jp:'攻撃力ダウン' },
+];
+
+/* --- 効果テキストを手順に分解する --- */
+const EFFECT_STEP_CACHE = new Map();
+function parseEffectSteps(text){
+  const key = String(text||'');
+  if(EFFECT_STEP_CACHE.has(key)) return EFFECT_STEP_CACHE.get(key);
+  const steps = [];
+  // ①②の番号と改行を句切りにし、さらに「。」で節に分ける
+  const clauses = key.replace(/[①-⑳]:?/g, '\n')
+                     .split(/[\n。]/)
+                     .map(x=>x.trim()).filter(Boolean);
+  clauses.forEach(cl=>{
+    // 「〜できない」「〜されない」は禁止表現なので手順にしない
+    if(/できない|されない|扱わない/.test(cl)) return;
+    for(const v of EFFECT_VERBS){
+      const m = cl.match(v.re);
+      if(!m) continue;
+      const before = cl.slice(0, m.index);
+      const step = { op:v.op, jp:v.jp, raw:cl, target:parseTargetSpec(before) };
+      // 捨てる対象は必ず手札。動詞の手前に「手札」が来ないので補う。
+      if(v.op === 'discard'){ step.target.zone = 'hand'; step.target.kind = step.target.kind || 'any'; }
+      // ドローする枚数はゾーン指定ではない
+      if(v.op === 'draw'){ step.target.zone = null; }
+      // 数値を伴う効果は値を拾う
+      let nm;
+      if((nm = cl.match(/(\d+)\s*ポイント/)))     step.value = +nm[1];
+      else if((nm = cl.match(/(\d+)\s*枚ドロー/))) step.value = +nm[1];
+      else if(v.op === 'draw'){
+        const dn = cl.match(/デッキから(\d+)枚|(\d+)枚ドロー/);
+        step.value = dn ? +(dn[1]||dn[2]) : 1;
+      }
+      steps.push(step);
+      break;                       // 1つの節からは1つの手順だけ取る
+    }
+  });
+  EFFECT_STEP_CACHE.set(key, steps);
+  return steps;
+}
+
+/* --- 解析した対象指定から、実際の候補を集める --- */
+function autoTextCandidates(selfP, spec){
+  const foe = selfP===0?1:0;
+  const players = spec.player === 'both' ? [0,1]
+                : spec.player === 'opponent' ? [foe]
+                : spec.player === 'self' ? [selfP]
+                : [0,1];                       // 指定が無ければ両方から選べる
+  const zones = spec.zone === 'grave' ? ['grave']
+              : spec.zone === 'hand'  ? ['hand']
+              : spec.zone === 'deck'  ? ['deck']
+              : spec.zone === 'banish'? ['banish']
+              : spec.kind === 'm'     ? ['mz']
+              : spec.kind === 'st' || spec.kind === 's' || spec.kind === 't' ? ['sz','field']
+              : ['mz','sz','field'];
+  const out = [];
+  players.forEach(p=>{
+    const P = gameState.players[p];
+    zones.forEach(z=>{
+      const arr = (z === 'field') ? (P.field ? [P.field] : []) : (P[z] || []);
+      arr.forEach((c,i)=>{
+        if(!c) return;
+        if(!autoTextMatches(c, spec)) return;
+        out.push({p, zone:z, index:(z==='field'?0:i), card:c, db:dbOf(c)});
+      });
+    });
+  });
+  return out;
+}
+function autoTextMatches(card, q){
+  const db = dbOf(card);
+  if(q.kind === 'm'  && db.k !== 'm') return false;
+  if(q.kind === 's'  && db.k !== 's') return false;
+  if(q.kind === 't'  && db.k !== 't') return false;
+  if(q.kind === 'st' && db.k === 'm') return false;
+  if(q.face && card.face !== q.face) return false;
+  if(q.pos  && card.pos  !== q.pos)  return false;
+  if(q.attr && db.at !== q.attr) return false;
+  if(q.race && db.ra !== q.race) return false;
+  if(q.lvMin != null && curLV(card) < q.lvMin) return false;
+  if(q.lvMax != null && curLV(card) > q.lvMax) return false;
+  if(q.atkMax != null && (db.atk||0) > q.atkMax) return false;
+  if(q.defMax != null && (db.def||0) > q.defMax) return false;
+  if(q.nameIncludes && String(db.n||'').indexOf(q.nameIncludes) < 0) return false;
+  return true;
+}
+
+/* --- 手順の説明文を組み立てる --- */
+function autoStepLabel(step){
+  const q = step.target || {};
+  const bits = [];
+  if(q.player === 'opponent') bits.push('相手の');
+  else if(q.player === 'self') bits.push('自分の');
+  else if(q.player === 'both') bits.push('お互いの');
+  const zjp = {grave:'墓地', hand:'手札', deck:'デッキ', banish:'除外ゾーン', field:'フィールド'}[q.zone];
+  if(zjp) bits.push(zjp + 'の');
+  if(q.attr) bits.push(q.attr + '属性');
+  if(q.race) bits.push(q.race + '族');
+  if(q.nameIncludes) bits.push(`「${q.nameIncludes}」`);
+  const kjp = {m:'モンスター', s:'魔法カード', t:'罠カード', st:'魔法・罠カード', any:'カード'}[q.kind];
+  if(kjp) bits.push(kjp);
+  if(q.count === 'all') bits.push('全て');
+  else if(q.count > 1) bits.push(`${q.count}枚`);
+  return bits.join('') + 'を' + step.jp;
+}
+
+
+/* =========================================================================
+   解析した手順を実行する
+   1手順ずつ、絞り込んだ候補を出して処理する。
+   解析が不完全でも、白紙のパレットよりは確実に早い。
+   ========================================================================= */
+let AUTO_TEXT_CTX = null;
+
+function runAutoText(name, p, zone, index){
+  const P = gameState.players[p];
+  const card = zoneCard(P, zone, index);
+  const db = card ? dbOf(card) : (CARD_DB[findCardIndex(name)] || {});
+  const steps = parseEffectSteps(db.e || '');
+  if(!steps.length){
+    showToast("効果テキストから手順を読み取れませんでした");
+    openPrimitives(p, zone, index, name);
+    return;
+  }
+  AUTO_TEXT_CTX = {name, p, zone, index, card, steps, done:steps.map(()=>false)};
+  renderAutoText();
+}
+
+function renderAutoText(){
+  const c = AUTO_TEXT_CTX;
+  if(!c){ closeSheet(); return; }
+  const rows = c.steps.map((st,i)=>{
+    const n = autoTextCandidates(c.p, st.target).length;
+    const need = ['draw','damage','recover','discard'].indexOf(st.op) < 0;
+    const dis = c.done[i] ? ' warn' : '';
+    const sub = c.done[i] ? '処理済み'
+              : need ? `候補 ${n}件`
+              : (st.value ? `${st.value}` : '');
+    return `<div class="act pick-row${dis}" onclick="autoTextStep(${i})">
+        <span class="pk-nm">${autoStepLabel(st)}</span>
+        <span class="pk-sub">${sub}</span>
+      </div>`;
+  }).join("");
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:4px">${c.name}</h3>
+    <div class="meta" style="margin-bottom:10px">
+      効果テキストから読み取った手順です。上から順に処理してください。<br>
+      読み取りは完全ではないので、違う場合は「手動で効果処理」をお使いください。</div>
+    <div class="pick-list">${rows}</div>
+    <div class="act-grid" style="margin-top:10px">
+      <div class="act" onclick="closeSheet();openPrimitives(${c.p},'${c.zone}',${c.index},${jsStr(c.name)})">手動で効果処理…</div>
+    </div>
+    <button class="close" onclick="AUTO_TEXT_CTX=null;closeSheet()">閉じる</button>`;
+  veil.classList.add("on");
+}
+
+/* 1手順を処理する */
+function autoTextStep(i){
+  const c = AUTO_TEXT_CTX; if(!c) return;
+  const st = c.steps[i];
+  const finish = ()=>{ c.done[i] = true; render(); renderAutoText(); };
+
+  // 対象を取らない効果（ライフ・ドロー・手札の枚数指定）
+  if(st.op === 'draw'){    API.draw(c.p, st.value || 1, c.name); finish(); return; }
+  if(st.op === 'damage'){  API.damageLP(c.p===0?1:0, st.value || 0, c.name); finish(); return; }
+  if(st.op === 'recover'){ API.recoverLP(c.p, st.value || 0, c.name); finish(); return; }
+
+  const cands = autoTextCandidates(c.p, st.target);
+  if(!cands.length){ showToast("条件に合うカードがありません"); return; }
+
+  const count = (st.target.count === 'all') ? cands.length : (st.target.count || 1);
+  const chosen = [];
+  const pick = ()=>{
+    const left = cands.filter(x=>chosen.indexOf(x.card) < 0)
+                      .filter(x=>!!resolveTarget(x));
+    if(chosen.length >= count || !left.length){
+      chosen.forEach(cd=>applyAutoStep(c, st, cd));
+      finish(); return;
+    }
+    API.selectCard(`${c.name}：${autoStepLabel(st)}（${chosen.length+1}/${count}）`,
+      left, x=>{ chosen.push(x.card); pick(); },
+      st.target.upTo ? "選ばない場合は閉じてください" : "");
+  };
+  pick();
+}
+
+/* 手順1つを1枚のカードに適用する */
+function applyAutoStep(c, st, target){
+  const t = {card:target};
+  switch(st.op){
+    case 'destroy':        API.destroy(t, c.name); break;
+    case 'banish':         API.banish(t, c.name); break;
+    case 'bounce':         API.returnToHand(t, c.name); break;
+    case 'toDeck':         API.returnToDeck(t, false, c.name); break;
+    case 'toGrave':        API.sendToGrave(t, c.name); break;
+    case 'negate':         API.negate(t, c.name); break;
+    case 'faceDown':
+      act({type:"FX_SET_STATE", player:target.p, zone:'mz',
+           index:(gameState.players[target.p].mz||[]).indexOf(target),
+           face:'down', pos:'def', reason:c.name});
+      break;
+    case 'togglePos':      togglePosition(t, c.name); break;
+    case 'control': {
+      const loc = locateCard(target);
+      if(loc) API.changeControl(t, loc.p===0?1:0, c.name);
+      break;
+    }
+    case 'discard': {
+      const loc = locateCard(target) ||
+        (function(){ for(let p=0;p<2;p++){ const i=(gameState.players[p].hand||[]).indexOf(target);
+          if(i>=0) return {p, zone:'hand', index:i}; } return null; })();
+      if(loc) API.discard(loc.p, loc.index, c.name, {byPlayer:c.p});
+      break;
+    }
+    case 'specialSummon': {
+      const loc = (function(){
+        for(let p=0;p<2;p++){ for(const z of ['grave','hand','deck','banish','ex']){
+          const i=(gameState.players[p][z]||[]).indexOf(target);
+          if(i>=0) return {p, zone:z, index:i}; } } return null; })();
+      if(loc) API.specialSummon(c.p, loc.zone, loc.index, 'atk', c.name);
+      break;
+    }
+    case 'search': {
+      const i = (gameState.players[c.p].deck||[]).indexOf(target);
+      if(i>=0) API.searchDeck(c.p, i, c.name);
+      break;
+    }
+    case 'atkUp':   API.modAtk(t,  (st.value||0), 0, 'endTurn', c.name); break;
+    case 'atkDown': API.modAtk(t, -(st.value||0), 0, 'endTurn', c.name); break;
+  }
+}
+
 /* 召喚成功時に誘発する効果を自動で提示する */
 
 /* =========================================================================
@@ -11768,7 +12082,11 @@ function openZone(p, zone, idx){
       ${isMon?`<div class="act" onclick="openLvMenu(${p},'${zone}',${idx})">レベルを変更…</div>`:""}
     </div>` : "";
 
-  const manual = `<div class="act" onclick="closeSheet();openPrimitives(${p},'${zone}',${idx},${jsStr(db.n||'')})">手動で効果処理…</div>`;
+  const textSteps = (!CARD_SCRIPTS[db.n] && parseEffectSteps(db.e||'').length)
+    ? `<div class="act fx" onclick="closeSheet();runAutoText(${jsStr(db.n||'')},${p},'${zone}',${idx})">⚡ テキストから処理…</div>`
+    : "";
+  const manual = textSteps +
+    `<div class="act" onclick="closeSheet();openPrimitives(${p},'${zone}',${idx},${jsStr(db.n||'')})">手動で効果処理…</div>`;
   const primary = autoAct + detach + attack + activate + manual;
   const hasPrimary = primary.trim().length>0;
   const hasState = state.trim().length>0;
@@ -12220,7 +12538,9 @@ function pileAct(p, zone, i){
     ? (sc
         ? `<div class="act fx" onclick="closeSheet();runScript(${jsStr(nm)},${p},'${zone}',${i})">⚡ ${zoneJp(zone)}で効果を発動</div>`
         : `<div class="act fx" onclick="closeSheet();openPrimitives(${p},'${zone}',${i},${jsStr(nm)})">⚡ ${zoneJp(zone)}で効果を発動（手動）</div>`)
-    : ((zone==="grave" && hasEffect(nm))
+    : ((!sc && parseEffectSteps(db.e||'').length)
+        ? `<div class="act fx" onclick="closeSheet();runAutoText(${jsStr(nm)},${p},'${zone}',${i})">⚡ テキストから処理…</div>`
+      : (zone==="grave" && hasEffect(nm))
         ? `<div class="act fx" onclick="closeSheet();runEffect(${p},${jsStr(nm)},{zone:'grave',index:${i},keep:true})">⚡ 墓地で効果を発動</div>`
         : "");
   const foe = p===0?1:0;
