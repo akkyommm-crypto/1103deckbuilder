@@ -760,6 +760,20 @@ textarea{
   box-shadow:0 6px 20px rgba(0,0,0,.45);
 }
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* 選択中に盤面を確認しているときのバー */
+.peek-bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:60;
+  display:none; align-items:center; justify-content:space-between;
+  gap:12px; padding:14px 18px;
+  background:linear-gradient(180deg,#2a2114,#1b150c);
+  border-top:1px solid var(--gold,#d6af58);
+  color:var(--gold,#d6af58); font-size:15px;
+  box-shadow:0 -6px 20px rgba(0,0,0,.5);
+}
+.peek-bar.on{ display:flex; }
+.peek-bar b{ font-size:16px; }
+
 </style>
 </head>
 <body>
@@ -792,6 +806,9 @@ textarea{
 
 <!-- action modal -->
 <div class="veil" id="veil"><div class="sheet" id="sheet"></div></div>
+<div class="peek-bar" id="peekBar" onclick="peekReturn()">
+  <span>盤面を確認中</span><b>選択に戻る ▸</b>
+</div>
 
 <script>
 /* =========================================================================
@@ -2634,6 +2651,9 @@ function openPick(title, note, items, onCancel){
     <h3 style="margin-bottom:4px">${title}</h3>
     ${note?`<div class="meta" style="margin-bottom:10px">${note}</div>`:""}
     <div class="pick-list">${rows}</div>
+    <div class="act-grid" style="margin-top:10px">
+      <div class="act" onclick="peekBoard()">盤面を確認する</div>
+    </div>
     <button class="close" onclick="__pickCancel()">やめる</button>`;
   veil.classList.add("on");
 }
@@ -2645,6 +2665,7 @@ function __pick(i){
   if(it && it.onPick) it.onPick();
 }
 function __pickCancel(){
+  if(RESOLVE_ANCHOR != null){ dismissSheet(); return; }
   const cb = PICK_CANCEL;
   PICK_ITEMS=[]; PICK_CANCEL=null;
   closeSheet();
@@ -4056,6 +4077,7 @@ function runScript(name, p, zone, index, opts){
   const ctx = makeContext(p, card, zone, index, "activate", opts||{});
   ACTIVE_SCRIPT = sc;                  // 対象耐性の判定に使う
   SCRIPT_ZONE = zone;                  // 「墓地で発動する効果」の判定に使う
+  beginResolve(name);                  // 中断したときに巻き戻す位置を覚える
   traceStart(name);
   // カウンター罠の発動を通知する（豊穣のアルテミス等が反応する）
   if(dbOf(card).sub === 'カウンター') emitEvent("onCounterTrap", {player:p, name});
@@ -4068,6 +4090,7 @@ function runScript(name, p, zone, index, opts){
     ACTIVE_SCRIPT = null;
     SCRIPT_PHASE = null;
     SCRIPT_ZONE = null;
+    endResolve();
     render();
   };
   const doResolve = ()=>{ SCRIPT_PHASE = 'resolve'; sc.resolve(ctx); SCRIPT_PHASE = null; finish(); };
@@ -10462,6 +10485,86 @@ function updateTimingWindow(gs, a){
   }
 }
 
+/* =========================================================================
+   デュエルの自動保存と復帰
+   ブラウザの戻る操作や、うっかりタブを閉じた場合に盤面が消えないよう、
+   操作のたびに保存し、次に開いたときに続きから再開できるようにする。
+   ========================================================================= */
+const DUEL_SAVE_KEY = 'yg1103_duel_autosave';
+let SAVE_TIMER = null;
+
+function saveDuel(){
+  const st = LS(); if(!st) return;
+  try{
+    st.setItem(DUEL_SAVE_KEY, JSON.stringify({
+      at: Date.now(),
+      turn: gameState.turn,
+      state: gameState,
+    }));
+  }catch(e){ /* 容量超過などは無視する */ }
+}
+/* 連続操作でも重くならないよう、少し待ってから書き出す */
+function saveDuelSoon(){
+  clearTimeout(SAVE_TIMER);
+  SAVE_TIMER = setTimeout(saveDuel, 400);
+}
+function loadSavedDuel(){
+  const st = LS(); if(!st) return null;
+  try{
+    const raw = st.getItem(DUEL_SAVE_KEY);
+    if(!raw) return null;
+    const d = JSON.parse(raw);
+    return (d && d.state) ? d : null;
+  }catch(e){ return null; }
+}
+function clearSavedDuel(){
+  const st = LS(); if(!st) return;
+  try{ st.removeItem(DUEL_SAVE_KEY); }catch(e){}
+}
+
+/* 保存されたデュエルがあれば、続きから始めるか尋ねる */
+function offerResumeDuel(){
+  const d = loadSavedDuel();
+  if(!d) return false;
+  const mins = Math.round((Date.now() - (d.at||0)) / 60000);
+  const when = mins < 1 ? "さきほど" : (mins < 60 ? `${mins}分前` : `${Math.round(mins/60)}時間前`);
+  if(!confirm(`${when}のデュエル（${d.turn||1}ターン目）が保存されています。\n続きから再開しますか？`)){
+    clearSavedDuel();
+    return false;
+  }
+  gameState = d.state;
+  HISTORY.length = 0; REDO.length = 0;
+  render();
+  showToast("保存されていたデュエルを再開しました");
+  return true;
+}
+
+/* 戻る操作でページを離れないようにする。
+   1台のスマホで対戦するため、誤操作でデュエルが消えるのを防ぐ。 */
+function guardBackButton(){
+  try{ history.pushState({duel:1}, ""); }catch(e){ return; }
+  window.addEventListener('popstate', ()=>{
+    // シートが開いていれば、まずシートを閉じるだけにする
+    if(veil.classList.contains("on")){
+      history.pushState({duel:1}, "");
+      dismissSheet();
+      return;
+    }
+    if(peekBar.classList.contains("on")){
+      history.pushState({duel:1}, "");
+      peekReturn();
+      return;
+    }
+    if(confirm("デュエルを中断してページを離れますか？\n（盤面は保存されるので、次に開いたとき再開できます）")){
+      saveDuel();
+      history.back();
+      return;
+    }
+    history.pushState({duel:1}, "");
+  });
+  window.addEventListener('beforeunload', saveDuel);
+}
+
 function act(a){
   snapshot();
   const beforeTurn = gameState.turn;
@@ -10472,6 +10575,7 @@ function act(a){
   const chip = chipFor(a);
   if(chip) turnActions.push(chip);
   render();
+  saveDuelSoon();                 // 盤面が動くたびに自動保存する
   // 御前試合・群雄割拠は永続効果なので、盤面が動いたら即座に適用する。
   // ダメージステップ中は⑤で処理するため、そこでは動かさない。
   if(!gameState.battle) enforceExclusions();
@@ -11716,8 +11820,71 @@ function redrawHand(){
 /* ---- モーダル ---- */
 const veil = document.getElementById("veil");
 const sheet = document.getElementById("sheet");
+const peekBar = document.getElementById("peekBar");
 function closeSheet(){ veil.classList.remove("on"); }
-veil.addEventListener("click", e=>{ if(e.target===veil) closeSheet(); });
+
+/* =========================================================================
+   効果処理の中断とやり直し
+   効果の解決中にシートを閉じると、コストだけ払われた中途半端な状態が
+   残ってしまう。解決を始めた時点の履歴位置を覚えておき、
+   中断したらそこまで自動で巻き戻す。
+   ========================================================================= */
+let RESOLVE_ANCHOR = null;      // 解決開始時の HISTORY の長さ
+let RESOLVE_NAME   = "";
+
+function beginResolve(name){
+  if(RESOLVE_ANCHOR != null) return;    // 入れ子では最初の1つだけを覚える
+  RESOLVE_ANCHOR = HISTORY.length;
+  RESOLVE_NAME = name || "効果";
+}
+function endResolve(){ RESOLVE_ANCHOR = null; RESOLVE_NAME = ""; }
+
+/* 解決を中断して、始める前の盤面に戻す */
+function abortResolve(){
+  const anchor = RESOLVE_ANCHOR;
+  endResolve();
+  if(anchor == null){ closeSheet(); return; }
+  let n = 0;
+  while(HISTORY.length > anchor){ undo(); n++; }
+  closeSheet();
+  showToast(n ? `処理を中断して元に戻しました` : "処理を中断しました");
+  render();
+}
+
+/* シートを閉じようとしたとき。解決中なら確認する。 */
+function dismissSheet(){
+  if(RESOLVE_ANCHOR == null){ closeSheet(); return; }
+  const moved = HISTORY.length > RESOLVE_ANCHOR;
+  const msg = moved
+    ? `${RESOLVE_NAME} の処理を中断します。\nここまでの処理を取り消して元の盤面に戻しますか？`
+    : `${RESOLVE_NAME} の処理を中断しますか？`;
+  if(!confirm(msg)) return;      // 誤タップならシートを閉じない
+  abortResolve();
+}
+
+/* =========================================================================
+   選択中に盤面を確認する
+   シートを一時的に隠して盤面を見られるようにし、
+   「選択に戻る」で元のシートへ復帰する。
+   ========================================================================= */
+let PEEK_HTML = null;
+function peekBoard(){
+  PEEK_HTML = sheet.innerHTML;
+  veil.classList.remove("on");
+  peekBar.classList.add("on");
+}
+function peekReturn(){
+  peekBar.classList.remove("on");
+  if(PEEK_HTML != null){ sheet.innerHTML = PEEK_HTML; PEEK_HTML = null; }
+  veil.classList.add("on");
+}
+
+/* 誤タップでの取り消しを防ぐため、幕のタップでは閉じない */
+veil.addEventListener("click", e=>{
+  if(e.target !== veil) return;
+  if(RESOLVE_ANCHOR != null) return;    // 解決中は幕タップを無視する
+  closeSheet();
+});
 
 function cardMeta(db){
   if(db.k==='m'){
@@ -11847,12 +12014,15 @@ const TRIBUTE_OPTIONS = {
     {n:3, label:'3体リリースして召喚（相手フィールドを全破壊）'},
   ],
 };
+/* いま選べるリリース方法。1つしか無ければ確認せずそれを使う。
+   バルバロスのように「リリースなしで召喚できる」カードは、
+   場にモンスターがいなくても必ず 0体 の選択肢が残る。 */
 function tributeOptionsFor(db, p){
   const opts = TRIBUTE_OPTIONS[String(db.n||'')];
   if(!opts) return null;
   const avail = tributeCandidates(p).length;
   const usable = opts.filter(o=>o.n <= avail);
-  return usable.length > 1 ? usable : null;   // 選択肢が1つなら聞かない
+  return usable.length ? usable : null;
 }
 function gearTownActive(){
   return gameState.players.some(P=>P.field && P.field.face==='up' &&
@@ -11870,12 +12040,14 @@ function doNormalSummon(i, pos){
   // リリース数を選べるカードは、まず方法を選んでもらう
   const opts = tributeOptionsFor(db, p);
   if(opts){
+    const go = n => {
+      if(n === 0){ finishNormalSummon(i, pos, 0); return; }
+      pickTributes(p, n, [], ()=>finishNormalSummon(i, pos, n), db);
+    };
+    if(opts.length === 1){ go(opts[0].n); return; }   // 選択肢が1つなら聞かない
     API.selectCard(`${db.n}：召喚方法`,
       opts.map((o,k)=>({p, zone:'declare', index:k, card:null, db:{n:o.label}, n:o.n})),
-      pick=>{
-        if(pick.n === 0){ finishNormalSummon(i, pos, 0); return; }
-        pickTributes(p, pick.n, [], ()=>finishNormalSummon(i, pos, pick.n), db);
-      });
+      pick=>go(pick.n));
     return;
   }
   const need = tributesNeeded(db, p);
@@ -12810,6 +12982,8 @@ function startTestDuel(bothSides, firstPlayer, which){
   logIt(gameState, `<b>先攻：${nameOf(fp)}</b>（1103は先攻ドローあり）`);
   render();
   const dn = (which === 'feature') ? FEATURE_DECK.name : TEST_DECK.name;
+  clearSavedDuel();                 // 新しいデュエルなので前の保存は捨てる
+  saveDuelSoon();
   showToast(`${dn}で開始（先攻：${nameOf(fp)}）`);
 }
 /* index.html(1103デッキビルダー) と同じ localStorage を読む。
@@ -13187,6 +13361,8 @@ async function boot(){
   render();
   initViewportSync();
   initSwipe();
+  guardBackButton();                 // 戻る操作でデュエルが消えないようにする
+  if(DB_SOURCE !== "dummy") setTimeout(offerResumeDuel, 200);   // 続きがあれば尋ねる
   if(DB_SOURCE === "dummy"){
     setTimeout(()=>{
       sheet.innerHTML = `<div class="grip"></div>
