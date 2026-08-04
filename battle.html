@@ -4125,6 +4125,7 @@ function runScript(name, p, zone, index, opts){
     SCRIPT_ZONE = null;
     endResolve();
     render();
+    runChainAfter();               // チェーンから呼ばれていれば後始末する
   };
   const doResolve = ()=>{ SCRIPT_PHASE = 'resolve'; sc.resolve(ctx); SCRIPT_PHASE = null; finish(); };
   const doTarget = ()=>{
@@ -11982,6 +11983,7 @@ function endResolve(){ RESOLVE_ANCHOR = null; RESOLVE_NAME = ""; }
 function abortResolve(){
   const anchor = RESOLVE_ANCHOR;
   endResolve();
+  CHAIN_AFTER = null;      // 巻き戻すので、チェーンの後始末は行わない
   if(anchor == null){ closeSheet(); return; }
   let n = 0;
   while(HISTORY.length > anchor){ undo(); n++; }
@@ -12788,6 +12790,7 @@ function openChain(){
     <div class="act-grid wide">
       <div class="act" style="background:var(--spell);color:#0d0a06;border-color:var(--spell)" onclick="resolveChainStep()">チェーン${topIdx+1}「${topLink.name}」を解決 ▸</div>
     </div>
+    ${chainManualBtn(topLink)}
     <div class="act-label">その他</div>
     <div class="act-grid">
       <div class="act" onclick="closeSheet()">保留（閉じる）</div>
@@ -12796,10 +12799,95 @@ function openChain(){
   veil.classList.add("on");
 }
 /* 1つ解決して、残りがあれば次の解決画面を続けて出す（テンポ重視） */
+/* スクリプトが無いリンクには、テキスト解析か手動処理の入口を出す */
+function chainManualBtn(link){
+  if(CARD_SCRIPTS[link.name]) return "";
+  const card = chainLinkCard(link);
+  if(!card) return "";
+  const db = dbOf(card);
+  const loc = (link.from === 'field') ? {zone:'field', index:0}
+            : {zone:link.from, index:(gameState.players[link.player][link.from]||[]).indexOf(card)};
+  const steps = parseEffectSteps(db.e||'').length;
+  return `<div class="act-label">効果の処理</div>
+    <div class="act-grid">
+      ${steps?`<div class="act fx" onclick="closeSheet();runAutoText(${jsStr(link.name)},${link.player},'${loc.zone}',${loc.index})">⚡ テキストから処理…</div>`:""}
+      <div class="act" onclick="closeSheet();openPrimitives(${link.player},'${loc.zone}',${loc.index},${jsStr(link.name)})">手動で効果処理…</div>
+    </div>`;
+}
+
+/* チェーンリンクのカード実体を探す。
+   解決までに他のカードが動いて添字がずれることがあるので、
+   カードIDで照合しながら探す。 */
+function chainLinkCard(link){
+  const P = gameState.players[link.player];
+  const zone = link.from;
+  if(!zone) return null;
+  if(zone === 'field') return (P.field && P.field.id === link.cardId) ? P.field : null;
+  const arr = P[zone] || [];
+  if(arr[link.index] && arr[link.index].id === link.cardId) return arr[link.index];
+  const i = arr.findIndex(c=>c && c.id === link.cardId);
+  return i >= 0 ? arr[i] : null;
+}
+
+/* 解決を終えたチェーンリンクのカードを、行くべき場所へ送る。
+   通常魔法・通常罠・速攻魔法は墓地へ。
+   永続・フィールド・装備は場に残る。モンスターの効果も場に残る。 */
+function chainLinkAfterResolve(link){
+  const card = chainLinkCard(link);
+  if(!card) return;
+  const db = dbOf(card);
+  if(db.k === 'm') return;                               // モンスターの効果は場に残る
+  // 永続魔法・永続罠・フィールド魔法・装備魔法は場に残る。
+  // 通常魔法・通常罠・速攻魔法・カウンター罠は墓地へ送られる。
+  if(['永続','フィールド','装備'].indexOf(db.sub) >= 0) return;
+  const loc = (link.from === 'field')
+    ? {p:link.player, zone:'field', index:0}
+    : (function(){
+        const arr = gameState.players[link.player][link.from] || [];
+        const i = arr.indexOf(card);
+        return i >= 0 ? {p:link.player, zone:link.from, index:i} : null;
+      })();
+  if(!loc) return;
+  act({type:"FX_SELF_TO_GRAVE", player:loc.p, zone:loc.zone, index:loc.index});
+}
+
+/* チェーンの一番上を解決する。
+   スクリプトがあれば実行し、無ければテキスト解析か手動処理に回す。
+   処理が終わったらカードを墓地へ送る。 */
 function resolveChainStep(){
-  act({type:'CHAIN_RESOLVE_TOP'});
-  if(gameState.chain.length){ openChain(); }   // 続けて次を解決
-  else { closeSheet(); }                        // 全解決したら閉じる
+  const ch = gameState.chain;
+  if(!ch.length){ closeSheet(); return; }
+  const link = ch[ch.length-1];
+  const card = chainLinkCard(link);
+  const sc = CARD_SCRIPTS[link.name];
+
+  const finish = ()=>{
+    chainLinkAfterResolve(link);
+    render();
+    if(gameState.chain.length) openChain(); else closeSheet();
+  };
+
+  act({type:'CHAIN_RESOLVE_TOP'});     // 先にリンクを取り除く
+
+  if(sc && sc.resolve && card){
+    // スクリプトで処理する。処理の完了後に墓地送りを行う。
+    const loc = locateCard(card) ||
+      (function(){ const P=gameState.players[link.player]; const i=(P[link.from]||[]).indexOf(card);
+        return i>=0 ? {p:link.player, zone:link.from, index:i} : null; })();
+    if(loc){
+      CHAIN_AFTER = finish;
+      runScript(link.name, loc.p, loc.zone, loc.index, {fromChain:true});
+      return;
+    }
+  }
+  finish();
+}
+
+/* スクリプトの解決が終わったらチェーン側の後始末を呼ぶ */
+let CHAIN_AFTER = null;
+function runChainAfter(){
+  const f = CHAIN_AFTER; CHAIN_AFTER = null;
+  if(f) f();
 }
 
 /* 山札系（デッキ/墓地/除外/EX）を開く */
