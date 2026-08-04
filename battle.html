@@ -1159,8 +1159,9 @@ function applyAction(gs, a){
           dropXyzMaterials(PP, c); dropEquips(PP, c);
           PP.mz.splice(i,1);
           delete c.battleDestroyed;
-          pushZone(PP.grave, c);
-          const putB = PP.grave[PP.grave.length-1];
+          const ownerB = gs.players[(c.owner != null) ? c.owner : pi];
+          pushZone(ownerB.grave, c);
+          const putB = ownerB.grave[ownerB.grave.length-1];
           if(putB) putB.graveInfo = {turn:gs.turn, from:'mz', byDestroy:true};
           logIt(gs, `${cardName(c)} が戦闘破壊されて墓地へ`);
         }
@@ -1196,10 +1197,13 @@ function applyAction(gs, a){
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
       dropXyzMaterials(P, card); dropEquips(P, card);
-      pushZone(P.grave, card);
+      /* カードは持ち主の墓地へ行く。コントロールを奪ったモンスターを
+         破壊した場合、自分の墓地には残らない。 */
+      const ownerG = gs.players[(card.owner != null) ? card.owner : a.player];
+      pushZone(ownerG.grave, card);
       /* いつ・どこから墓地へ来たかを控える。
          「破壊され墓地へ送られたターンのエンドフェイズ」の判定に使う。 */
-      const putG = P.grave[P.grave.length-1];
+      const putG = ownerG.grave[ownerG.grave.length-1];
       if(putG) putG.graveInfo = {turn:gs.turn, from:a.zone,
         byDestroy: a.byDestroy !== false && (a.zone==='mz' || a.zone==='sz' || a.zone==='field')};
       P.graveHistory.push({name:cardName(card), from:a.zone, turn:gs.turn});
@@ -1699,10 +1703,26 @@ function placeInto(P, zone, card, deckPos){
 }
 function zoneCard(P, zone, idx){ return zone==="field" ? P.field : P[zone]?.[idx]; }
 /* 墓地・除外へ送る際にカードの表示状態を正規化 */
+/* 場を離れるカードの状態を落とす。
+   以前は新しいオブジェクトを作っていたが、それだとカードの同一性が失われ、
+   「リバースしたモンスター」「持ち主」「デュエル中に1度」などを追えなくなる。
+   同じオブジェクトのまま、場を離れたら消える状態だけを削る。 */
+const ZONE_LOCAL_KEYS = [
+  'mods','counters','xyz','equippedTo','equips',
+  'negated','negatedUntilTurn','attacked','battleDestroyed',
+  'cannotAttack','cannotTribute','lvMod',
+  'clTurn','clN',                      // 「1ターンに1度」はリセットされる
+  'controlReturnTo','controlReturnTurn','controller',
+  'barbarosNoTribute','fusionMaterialCount','dualUp',
+  'spearProof','wallValue','tributeCount','setTurn','chainedTo',
+];
 function reset(card){
   // トークンは場を離れると消滅する（墓地に残らない）
   if(card && card.token) return null;
-  return { id:card.id, face:'up', pos:'atk' };
+  if(!card) return null;
+  ZONE_LOCAL_KEYS.forEach(k=>{ delete card[k]; });
+  card.face = 'up'; card.pos = 'atk';
+  return card;                         // 同じオブジェクトを返して同一性を保つ
 }
 /* 墓地・除外へ送る共通処理。トークンなら消滅させる */
 function pushZone(arr, card){ const r = reset(card); if(r) arr.push(r); }
@@ -1780,6 +1800,17 @@ function effectNegatedBy(sources, card, loc){
     const f = src.sc.continuous && src.sc.continuous.negateEffect;
     if(typeof f !== 'function') return false;
     if(!continuousReaches(src.sc.continuous.scope||'self', src.p, loc, src.card, card)) return false;
+    try{ return !!f(card, src.card); }catch(e){ return false; }
+  });
+}
+
+/* 罠カードの効果が無効化されているか（王宮のお触れ）。
+   トラップ・スタンと同じ扱いで、発動の可否を判定するときに使う。 */
+function trapNegated(card){
+  if(!card || dbOf(card).k !== 't') return false;
+  return continuousSources().some(src=>{
+    const f = src.sc.continuous && src.sc.continuous.negateTrap;
+    if(typeof f !== 'function') return false;
     try{ return !!f(card, src.card); }catch(e){ return false; }
   });
 }
@@ -3540,6 +3571,8 @@ function reactableCards(p){
       if(sc && sc.countLimit && countLeft(p, db.n, sc, c) <= 0) return;   // 使用済みは出さない
       // 公開領域の強制の誘発即時が割り込む場面では、カウンター罠をチェーン1に撃てない
       if(db.sub === 'カウンター' && !canActivateCounterTrap()) return;
+      // 王宮のお触れ・トラップ・スタンで無効になっている罠は出さない
+      if(trapNegated(c) || trapStunned(p, c)) return;
       // スクリプトがあれば発動条件も確認する
       if(sc && sc.condition){
         const ctx = makeContext(p, c, zone, i, "react", {});
@@ -4293,9 +4326,19 @@ function lastSummonedCard(p){
 /* 召喚に反応する効果は、既定では「自分自身が召喚された場合」に限る。
    激流葬や奈落のように相手の召喚に反応するカードは
    スクリプトに onOtherSummon:true を宣言する。 */
+/* リバース時の誘発は、リバースしたモンスター本人だけが対象。 */
+function flipTriggerApplies(ctx, eventName, evt){
+  if(eventName !== 'onFlip') return true;
+  if(!evt || !evt.card) return true;
+  return ctx.card === evt.card;
+}
+
 const SUMMON_EVENTS = ['onNormalSummon','onSpecialSummon'];
 function summonTriggerApplies(sc, ctx, eventName, evt){
   if(SUMMON_EVENTS.indexOf(eventName) < 0) return true;
+  /* 'auto' は宣言テーブル由来。魔法・罠なら他のモンスターの召喚が起点、
+     モンスターなら自分が召喚された場合に限る。カードデータの読み込み後に判定する。 */
+  if(sc.onOtherSummon === 'auto') return dbOf(ctx.card).k !== 'm';
   if(sc.onOtherSummon) return true;              // 誰の召喚にも反応する
   if(!evt || !evt.card) return true;             // 情報が無ければ従来どおり
   return ctx.card === evt.card;                  // 自分が召喚された場合のみ
@@ -4313,8 +4356,13 @@ function collectHandlers(eventName, evt){
         const h  = sc && sc.passive && sc.passive[eventName];
         if(!h) return;
         if(sc.countLimit && countLeft(p, nm, sc, c) <= 0) return;   // 使用済みは出さない
-        const ctx = makeContext(p, c, zone, i, eventName, {event:evt||{}});
+        /* リバース効果は「フィールドで発動した扱い」になる（1103当時裁定）。
+           ②でリバースしたモンスターが⑤までに戦闘破壊されて墓地にあっても、
+           フィールドにいるものとして条件を判定する。 */
+        const asField = (eventName === 'onFlip' && evt && evt.treatAsField && evt.card === c);
+        const ctx = makeContext(p, c, asField ? 'mz' : zone, i, eventName, {event:evt||{}});
         if(!summonTriggerApplies(sc, ctx, eventName, evt)) return;
+        if(!flipTriggerApplies(ctx, eventName, evt)) return;
         // 条件を満たすものだけ候補にする
         let ok = true;
         try{ ok = h(ctx); }catch(e){ ok = false; }
@@ -4403,6 +4451,7 @@ function eventJp(e){
 
 /* ---- サイクロン（速攻魔法・対象1枚破壊） ---- */
 defineScript("サイクロン", {
+  targets:true,                 // 対象を取る効果
   type:"quick-play", priority:2,
   condition(ctx){
     const t = API.fieldCards({zone:null}).filter(x=>x.zone!=='mz');
@@ -4420,6 +4469,7 @@ defineScript("サイクロン", {
 
 /* ---- 死者蘇生（どちらの墓地からでも蘇生） ---- */
 defineScript("死者蘇生", {
+  targets:true,                 // 対象を取る効果
   type:"spell", priority:1,
   condition(ctx){
     const mons = [0,1].flatMap(p=>API.pileCards(p,'grave',x=>x.db.k==='m'));
@@ -4501,6 +4551,7 @@ defineScript("奈落の落とし穴", {
 
 /* ---- 強制脱出装置（バウンス） ---- */
 defineScript("強制脱出装置", {
+  targets:true,                 // 対象を取る効果
   type:"trap", priority:2,
   condition(ctx){
     if(!API.fieldCards({zone:'mz'}).length){ ctx.reason = "フィールドにモンスターがいません"; return false; }
@@ -4514,6 +4565,7 @@ defineScript("強制脱出装置", {
 
 /* ---- 月の書（裏側守備にする） ---- */
 defineScript("月の書", {
+  targets:true,                 // 対象を取る効果
   type:"quick-play", priority:2,
   condition(ctx){
     const t = API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'});
@@ -4558,6 +4610,7 @@ defineScript("ライトニング・ボルテックス", {
 
 /* ---- 貪欲な壺（墓地のモンスター5体をデッキに戻して2ドロー） ---- */
 defineScript("貪欲な壺", {
+  targets:true,                 // 対象を取る効果
   type:"spell", priority:1, quickEffect:false,
   condition(ctx){
     const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
@@ -4591,6 +4644,7 @@ defineScript("貪欲な壺", {
 
 /* ---- リビングデッドの呼び声（蘇生・場に残る） ---- */
 defineScript("リビングデッドの呼び声", {
+  targets:true,                 // 対象を取る効果
   type:"trap", priority:2,
   condition(ctx){
     const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
@@ -4779,6 +4833,12 @@ defineScript("神の警告", {
 
 /* ---- 王宮のお触れ（永続罠・罠を無効化） ---- */
 defineScript("王宮のお触れ", {
+  continuous:{
+    scope:'self', from:['sz'],
+    apply(){ return null; },
+    /* このカード以外のフィールドの全ての罠カードの効果を無効にする */
+    negateTrap(card, self){ return card !== self && dbOf(card).k === 't'; }
+  },
   type:"continuous-trap", priority:2,
   condition(){ return true; },
   resolve(ctx){
@@ -4790,6 +4850,7 @@ defineScript("王宮のお触れ", {
 
 /* ---- デモンズ・チェーン（永続罠・効果無効＋攻撃不可） ---- */
 defineScript("デモンズ・チェーン", {
+  targets:true,                 // 対象を取る効果
   type:"continuous-trap", priority:2,
   condition(ctx){
     if(!API.foe(ctx).mz.length){ ctx.reason = "相手フィールドにモンスターがいません"; return false; }
@@ -4883,6 +4944,7 @@ defineScript("スノーマンイーター", {
 
 /* ---- カオス・ソーサラー（除外して特殊召喚する上級） ---- */
 defineScript("カオス・ソーサラー", {
+  targets:true,                 // 対象を取る効果
   countLimit:1,
   type:"monster", priority:1, quickEffect:false,
   activateFrom:["hand"],
@@ -4933,6 +4995,7 @@ defineScript("カオス・ソーサラー", {
 
 /* ---- エフェクト・ヴェーラー（手札から効果無効） ---- */
 defineScript("エフェクト・ヴェーラー", {
+  targets:true,                 // 対象を取る効果
   type:"monster", priority:2,
   activateFrom:["hand"],
   condition(ctx){
@@ -5065,6 +5128,8 @@ defineScript("終焉の焔", {
 
 /* ---- 魔法都市エンディミオン（魔力カウンター管理） ---- */
 defineScript("魔法都市エンディミオン", {
+  auditNote:"③の身代わりのみ実装。魔力カウンターの自動蓄積は未実装",
+  countLimit:1,                 // ③ 1ターンに1度
   fieldIgnition:true,          // 表側で場に残ったまま効果を発動できる
   type:"field", priority:1,
   condition(){ return true; },
@@ -5077,6 +5142,7 @@ defineScript("魔法都市エンディミオン", {
 
 /* ---- アーカナイト・マジシャン（S召喚時に魔力2つ／取り除いて破壊） ---- */
 defineScript("アーカナイト・マジシャン", {
+  targets:true,                 // 対象を取る効果
   timing:["summon","free"],     // S召喚時のカウンターと、カウンターを使う起動効果
   type:"synchro", priority:1, quickEffect:false,
   condition(ctx){
@@ -5109,6 +5175,7 @@ defineScript("アーカナイト・マジシャン", {
 
 /* ---- 強欲で謙虚な壺（デッキトップ3枚から1枚を手札へ） ---- */
 defineScript("強欲で謙虚な壺", {
+  nameLimit:true,               // 「このカード名のカードは1ターンに1枚しか発動できず」
   countLimit:1,
   type:"spell", priority:1, quickEffect:false,
   condition(ctx){
@@ -5262,6 +5329,7 @@ defineScript("ダーク・グレファー", {
 
 /* ---- 馬頭鬼（墓地から除外してアンデットを蘇生） ---- */
 defineScript("馬頭鬼", {
+  targets:true,                 // 対象を取る効果
   type:"monster", priority:1, quickEffect:false,
   activateFrom:["grave"],
   condition(ctx){
@@ -5353,6 +5421,7 @@ defineScript("ライオウ", {
 
 /* ---- 氷結界の龍 ブリューナク（手札を捨てた数だけバウンス） ---- */
 defineScript("氷結界の龍 ブリューナク", {
+  targets:true,                 // 対象を取る効果
   countLimit:1,
   type:"synchro", priority:1, quickEffect:false,
   condition(ctx){
@@ -5607,6 +5676,7 @@ defineScript("N・グラン・モール", {
 
 /* ---- ダーク・アームド・ドラゴン ---- */
 defineScript("ダーク・アームド・ドラゴン", {
+  targets:true,                 // 対象を取る効果
   type:"monster", priority:1, quickEffect:false,
   activateFrom:["hand"],
   condition(ctx){
@@ -5758,6 +5828,7 @@ defineScript("ワン・フォー・ワン", {
 
 /* ---- ゴッドバードアタック ---- */
 defineScript("ゴッドバードアタック", {
+  targets:true,                 // 対象を取る効果
   type:"trap", priority:2,
   condition(ctx){
     const birds = API.fieldCards({zone:'mz', player:ctx.player, filter:x=>x.db.ra==='鳥獣'});
@@ -5827,6 +5898,11 @@ defineScript("リミッター解除", {
 
 /* ---- 光の護封剣 ---- */
 defineScript("光の護封剣", {
+  continuous:{
+    scope:'oppMonsters', from:['sz'],
+    apply(){ return null; },
+    cannotAttack(){ return true; }
+  },
   type:"spell", priority:1, quickEffect:false,
   condition(){ return true; },
   resolve(ctx){
@@ -5901,7 +5977,7 @@ defineScript("モンスターゲート", {
 
 /* ---- おジャマトリオ ---- */
 defineScript("おジャマトリオ", {
-  type:"spell", priority:1, quickEffect:false,
+  type:"trap", priority:1, quickEffect:false,
   condition(ctx){
     if(API.foe(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason = "相手のモンスターゾーンが一杯です"; return false; }
     return true;
@@ -6073,6 +6149,7 @@ defineScript("極星獣タングリスニ", {
 
 /* ---- D.D.クロウ（手札から捨てて相手墓地を除外） ---- */
 defineScript("D.D.クロウ", {
+  targets:true,                 // 対象を取る効果
   type:"monster", priority:2,
   activateFrom:["hand"],
   condition(ctx){
@@ -6260,6 +6337,7 @@ function openManualEffect(c){
 
 /* ---- 収縮（元々の攻撃力を半分に） ---- */
 defineScript("収縮", {
+  targets:true,                 // 対象を取る効果
   type:"quick-play", priority:2,
   condition(ctx){
     if(!API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}).length){
@@ -6279,6 +6357,7 @@ defineScript("収縮", {
 
 /* ---- 突進（攻撃力700アップ） ---- */
 defineScript("突進", {
+  targets:true,                 // 対象を取る効果
   type:"quick-play", priority:2,
   condition(ctx){
     if(!API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}).length){
@@ -6331,6 +6410,7 @@ defineScript("地割れ", {
 
 /* ---- エネミーコントローラー（表示形式変更 or コントロール奪取） ---- */
 defineScript("エネミーコントローラー", {
+  targets:true,                 // 対象を取る効果
   type:"quick-play", priority:2,
   condition(ctx){
     if(!API.foe(ctx).mz.length){ ctx.reason="相手フィールドにモンスターがいません"; return false; }
@@ -6711,6 +6791,7 @@ defineScript("カラクリ商人 壱七七", {
 });
 
 defineScript("カラクリ大将軍 無零怒", {
+  auditNote:"①のS召喚時効果のみ実装。②のドローは1ターンに1度だが未実装",
   timing:["summon","free"],     // S召喚時の特殊召喚と、表示形式変更時のドロー
   type:"synchro", priority:1, quickEffect:false,
   condition(ctx){
@@ -6736,6 +6817,7 @@ defineScript("カラクリ大将軍 無零怒", {
 
 /* ---------- ジャンド ---------- */
 defineScript("ジャンク・シンクロン", {
+  targets:true,                 // 対象を取る効果
   type:"monster", priority:1, quickEffect:false,
   condition(ctx){
     if(ctx.zone!=='mz'){ ctx.reason="フィールドで発動します"; return false; }
@@ -7092,7 +7174,7 @@ defineScript("裁きの龍", {
 /* ---- 光の召集 ----
    自分の手札を全て捨て、その枚数だけ墓地から光属性モンスターを手札に加える。 */
 defineScript("光の召集", {
-  type:"spell", priority:1,
+  type:"trap", priority:1,
   condition(ctx){
     if(!API.pileCards(ctx.player,'hand',x=>x.card!==ctx.card).length){
       ctx.reason = "捨てる手札がありません"; return false;
@@ -7155,6 +7237,55 @@ function makeTgEndSearch(nm, extra){
       onEndPhase(ctx){ return ctx.zone==='grave' && destroyedThisTurn(ctx.card); }
     }
   }, extra||{});
+}
+
+/* ---- TG ジェット・ファルコン ----
+   シンクロ召喚の素材として墓地へ送られた場合、相手に500ダメージを与える。 */
+defineScript("TG ジェット・ファルコン", {
+  type:"monster", priority:1, forced:true,
+  activateFrom:["grave"],
+  condition(ctx){
+    if(ctx.zone !== 'grave'){
+      ctx.reason = "シンクロ召喚の素材として墓地へ送られた場合に発動します"; return false;
+    }
+    return true;
+  },
+  resolve(ctx){ API.damageLP(ctx.opponent, 500, "TG ジェット・ファルコン"); },
+  afterResolve(){}
+});
+
+/* ---- TG カタパルト・ドラゴン ----
+   1ターンに1度、手札からレベル3以下の「TG」チューナー1体を特殊召喚できる。 */
+defineScript("TG カタパルト・ドラゴン", {
+  countLimit:1,
+  timing:["mainPhase","free"],
+  type:"monster", priority:1,
+  condition(ctx){
+    if(ctx.zone !== 'mz' || ctx.card.face !== 'up'){
+      ctx.reason = "フィールドに表側表示で存在する場合に発動します"; return false;
+    }
+    if(!catapultTargets(ctx.player).length){
+      ctx.reason = "手札にレベル3以下の「TG」チューナーがいません"; return false;
+    }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard("TG カタパルト・ドラゴン：特殊召喚する「TG」チューナー",
+      catapultTargets(ctx.player), t=>done([t]), "レベル3以下");
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets[0];
+    if(!t) return;
+    const nm = labelOf(t.card);
+    const now = API.pileCards(ctx.player,'hand',x=>labelOf(x.card)===nm);
+    if(now.length) API.specialSummon(ctx.player,'hand',now[0].index,'atk',"TG カタパルト・ドラゴン");
+  },
+  afterResolve(){}
+});
+function catapultTargets(p){
+  return API.pileCards(p,'hand',
+    x=>x.db.k==='m' && String(x.db.n||'').indexOf('TG')===0 &&
+       (x.db.st||[]).indexOf('チューナー')>=0 && (x.db.lv||9)<=3);
 }
 
 /* ---- TG ワンダー・マジシャン ----
@@ -7379,6 +7510,7 @@ defineScript("禁じられた聖杯", {
    ② 破壊され墓地へ送られた時、手札・デッキ・墓地から
       「アンティーク・ギア」モンスター1体を選んで特殊召喚する。 */
 defineScript("歯車街", {
+  auditNote:"②の特殊召喚のみ実装。リリース軽減は tributesNeeded 側で処理",
   type:"spell", priority:1,
   activateFrom:["grave"],
   condition(ctx){
@@ -9720,7 +9852,9 @@ defineScript("The splendid VENUS", {
 });
 
 /* 同じ誘発を持つ他の「TG」モンスター */
-['TG ワーウルフ','TG ストライカー','TG ジェット・ファルコン','TG カタパルト・ドラゴン']
+/* エンドフェイズにサーチできるのはワーウルフとストライカーだけ。
+   ジェット・ファルコンとカタパルト・ドラゴンは別の効果を持つ。 */
+['TG ワーウルフ','TG ストライカー']
   .forEach(nm=>{
     if(CARD_SCRIPTS[nm]){
       // 既存スクリプトにはエンドフェイズ誘発だけを足す
@@ -10012,9 +10146,12 @@ function defineAutoDeckScript(nm, ent){
       API.specialSummon(ctx.player, 'deck', t.index, 'atk', nm);
     },
     afterResolve(){},
+    /* 魔法・罠が召喚に反応する場合は、自分ではなく他のモンスターの召喚が起点。
+       ハンディキャップマッチ！のようなカードがこれにあたる。 */
+    onOtherSummon: ent.trig === 'summon' ? 'auto' : undefined,
     passive: ent.trig === 'summon'
-      ? { onNormalSummon(ctx){ return ctx.zone==='mz'; },
-          onSpecialSummon(ctx){ return ctx.zone==='mz'; } }
+      ? { onNormalSummon(ctx){ return ctx.zone!=='deck'; },
+          onSpecialSummon(ctx){ return ctx.zone!=='deck'; } }
       : undefined,
   });
 }
@@ -11638,7 +11775,9 @@ function enterDamageStep(){
         const nm = cardName(def);
         const sc = CARD_SCRIPTS[nm];
         if(sc && sc.passive && sc.passive.onFlip){
-          if(emitEvent("onFlip", {player:fo, name:nm})) DS_PENDING_UI = true;
+          // 墓地へ送られていても、フィールドで発動した扱いで処理する
+          if(emitEvent("onFlip", {player:fo, name:nm, card:def, treatAsField:true}))
+            DS_PENDING_UI = true;
           renderBattle(); return;
         }
       }
