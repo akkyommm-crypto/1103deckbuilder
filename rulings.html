@@ -143,7 +143,10 @@ details.proof summary{cursor:pointer;color:var(--dim);font-size:10px}
 <main class="app">
 <header class="app-header">
   <div><h1 class="brand-title">1103 裁定DB</h1><p class="brand-sub">カード名を入れて、答えをすぐ確認</p></div>
-  <div class="env" id="environment">2011.03 LIMIT · ～2011.08</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="index.html" style="color:var(--goldHi);text-decoration:none;font-size:10px;font-weight:700;white-space:nowrap">← デッキビルダー</a>
+    <div class="env" id="environment">2011.03 LIMIT · ～2011.08</div>
+  </div>
 </header>
 
 <section class="search-shell">
@@ -412,12 +415,36 @@ function applyData(data){
   data.rulings.forEach(r=>(r.cards||[]).forEach(c=>counts.set(c,(counts.get(c)||0)+1)));
   state.cards=[...counts].map(([name,count])=>({name,count}));
   $('environment').textContent='2011.03 LIMIT · ～2011.08';
-  $('footerVersion').textContent=`${data.meta.title} v${data.meta.version} · UI 5.0 · ${data.rulings.length} rulings`;
+  $('footerVersion').textContent=`${data.meta.title} v${data.meta.version} · UI 5.1 · ${data.rulings.length} rulings`;
+
+  // デッキビルダー連携: rulings.html?card=カード名
+  const params=new URLSearchParams(location.search);
+  const linkedCard=(params.get('card')||'').trim();
+  if(linkedCard){
+    $('searchInput').value=linkedCard;
+    state.query=linkedCard;
+    state.mode='all';
+  }
+
   renderModes();renderQuick();renderList();
+
   const hash=decodeURIComponent(location.hash.slice(1));
-  if(hash&&data.rulings.some(r=>r.id===hash))selectRuling(hash,false);
-  else if(innerWidth>900&&data.rulings[0])selectRuling(data.rulings[0].id,false);
-  else showListMobile();
+  if(hash&&data.rulings.some(r=>r.id===hash)){
+    selectRuling(hash,false);
+  }else if(linkedCard){
+    // スマホではそのカードの裁定一覧を見せる。
+    // PCでは先頭裁定を右ペインに表示しつつ一覧も残す。
+    if(innerWidth>900){
+      const rows=modeRows();
+      if(rows[0]) selectRuling(rows[0].id,false);
+    }else{
+      showListMobile();
+    }
+  }else if(innerWidth>900&&data.rulings[0]){
+    selectRuling(data.rulings[0].id,false);
+  }else{
+    showListMobile();
+  }
 }
 async function boot(){
   loadLocal();

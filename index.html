@@ -1891,6 +1891,7 @@
 <div class="nav-menu" id="navMenu">
   <button class="nav-menu-item" data-goto="meta">環境主要デッキ</button>
   <button class="nav-menu-item" data-goto="tourney">大会レシピDB</button>
+  <a class="nav-menu-item" href="rulings.html">裁定DB</a>
   <a class="nav-menu-item" href="battle.html">デュエル（開発中） ↗</a>
   <button class="nav-menu-item" data-goto="saved">保存デッキ</button>
   <button class="nav-menu-item" data-goto="recent">最近見たカード</button>
@@ -5247,7 +5248,7 @@
       window.open('https://www.google.com/search?q='+encodeURIComponent('site:yugioh-wiki.net '+c.n), '_blank');
     });
     modal.querySelector('#mdRuling').addEventListener('click', function(){
-      window.open('https://www.google.com/search?q='+encodeURIComponent('遊戯王 '+c.n+' 裁定'), '_blank');
+      window.location.href='rulings.html?card='+encodeURIComponent(c.n);
     });
     modal.querySelectorAll('.theme-chip').forEach(function(el){
       el.addEventListener('click', function(){ jumpToTag(parseInt(el.dataset.tg,10)); });
