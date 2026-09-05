@@ -41,6 +41,7 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>1103 デッキビルダー</title>
+<!-- Initial Hand Statistics UI v2: per-deck conditions, simplified setup -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700;800&family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -898,63 +899,162 @@
   .gh-help{ font-size:10.5px; color:var(--text-dim); line-height:1.7; margin-top:8px; padding:9px 11px; background:var(--surface-2); border-left:3px solid var(--gold); border-radius:2px; }
   .gh-help b{ color:var(--gold-hi); }
 
-  /* ---------- First-turn simulator ---------- */
-  .ft-bar{ flex-shrink:0; display:flex; flex-direction:column; gap:9px; padding:11px 14px 10px; border-bottom:1px solid var(--line); }
-  .ft-seg{ display:flex; gap:0; border:1px solid var(--line); border-radius:2px; overflow:hidden; }
+  /* ---------- Initial hand statistics v2 ---------- */
+  .ft-bar{
+    flex-shrink:0; display:flex; flex-direction:column; gap:9px;
+    padding:11px 14px 10px; border-bottom:1px solid var(--line);
+    background:var(--bg-2);
+  }
+  .ft-seg{
+    display:flex; gap:0; border:1px solid var(--line); border-radius:2px; overflow:hidden;
+  }
   .ft-seg button{
-    flex:1; padding:9px 4px; font-family:inherit; font-size:12px; font-weight:700; color:var(--text-dim);
-    background:var(--surface-2); border:none; cursor:pointer; transition:background .12s,color .12s;
+    flex:1; padding:9px 4px; font-family:inherit; font-size:12px; font-weight:700;
+    color:var(--text-dim); background:var(--surface-2); border:none; cursor:pointer;
+    transition:background .12s,color .12s;
   }
   .ft-seg button.on{ background:var(--gold); color:var(--gold-ink); }
   .ft-result{
     display:flex; flex-direction:column; align-items:center; gap:2px;
     padding:12px; background:var(--surface); border-left:3px solid var(--gold); border-radius:2px;
   }
-  .ft-pct{ font-family:'Shippori Mincho',serif; font-weight:800; font-size:34px; line-height:1.1; color:var(--gold-hi); }
-  .ft-pct-lb{ font-size:10.5px; color:var(--text-dim); letter-spacing:0.08em; }
-  .ft-sub{ font-size:10.5px; color:var(--text-dim); margin-top:3px; text-align:center; line-height:1.6; }
+  .ft-pct{
+    font-family:'Shippori Mincho',serif; font-weight:800; font-size:35px;
+    line-height:1.1; color:var(--gold-hi);
+  }
+  .ft-pct-lb{ font-size:10.5px; color:var(--text-dim); letter-spacing:0.06em; }
+  .ft-sub{ font-size:10px; color:var(--text-dim); margin-top:3px; text-align:center; line-height:1.55; }
   .ft-scroll{ flex:1; min-height:0; overflow-y:auto; padding:12px 14px 30px; }
-  .ft-group{ margin-bottom:11px; padding:11px 12px; background:var(--surface); border:1px solid var(--line); border-radius:2px; }
-  .ft-ghead{ display:flex; align-items:center; gap:7px; margin-bottom:8px; }
-  .ft-gname{
-    flex:1; min-width:0; background:var(--surface-2); border:1px solid var(--line); border-radius:2px;
-    padding:6px 9px; font-family:inherit; font-weight:700; font-size:12.5px; color:var(--ink); outline:none;
+
+  .ft-intro{
+    font-size:10.5px; color:var(--text-dim); line-height:1.65;
+    margin:0 0 9px; padding:0 2px;
   }
-  .ft-gname:focus{ border-color:var(--gold); }
-  .ft-thr{ display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-dim); flex-shrink:0; }
-  .ft-thr input{
-    width:38px; background:var(--surface-2); border:1px solid var(--line); border-radius:2px;
-    padding:6px 4px; text-align:center; font-family:inherit; font-size:12.5px; color:var(--ink); outline:none;
+  .ft-group{
+    margin:0; padding:12px; background:var(--surface);
+    border:1px solid var(--line); border-left:3px solid var(--gold); border-radius:2px;
   }
-  .ft-gdel{ flex-shrink:0; background:none; border:none; color:var(--text-dim); font-size:16px; cursor:pointer; padding:2px 4px; }
-  .ft-grate{ font-size:10.5px; color:var(--gold-hi); font-weight:700; margin-bottom:7px; }
-  .ft-grate.warn{ color:#c98a3a; }
-  .ft-chips{ display:flex; flex-wrap:wrap; gap:5px; }
+  .ft-ghead{
+    display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:9px;
+  }
+  .ft-condition-title{
+    display:flex; align-items:center; gap:7px;
+    font-family:'Shippori Mincho',serif; font-size:13px; font-weight:800; color:var(--ink);
+  }
+  .ft-condition-no{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:23px; height:23px; padding:0 5px;
+    background:var(--gold); color:var(--gold-ink);
+    font-family:'Cinzel',serif; font-size:10px; font-weight:900;
+  }
+  .ft-gdel{
+    flex-shrink:0; background:none; border:1px solid transparent; color:var(--text-dim);
+    font-family:inherit; font-size:10px; cursor:pointer; padding:5px 7px;
+  }
+  .ft-gdel:active{ color:var(--forbidden); border-color:var(--line); }
+
+  .ft-rule{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:var(--surface-2); border:1px solid var(--line);
+    padding:9px 10px; margin-bottom:8px;
+  }
+  .ft-rule-label{ font-size:11.5px; font-weight:700; color:var(--ink); white-space:nowrap; }
+  .ft-stepper{ display:flex; align-items:center; gap:0; flex-shrink:0; }
+  .ft-step-btn{
+    width:30px; height:30px; border:1px solid var(--line); background:var(--surface);
+    color:var(--gold-hi); font-family:inherit; font-size:17px; cursor:pointer;
+  }
+  .ft-step-btn:disabled{ opacity:.3; cursor:default; }
+  .ft-step-value{
+    min-width:78px; height:30px; display:flex; align-items:center; justify-content:center;
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--bg-2); color:var(--ink); font-size:11px; font-weight:800;
+  }
+
+  .ft-grate{
+    font-size:10.5px; color:var(--gold-hi); font-weight:700; margin:0 0 8px;
+    line-height:1.55;
+  }
+  .ft-grate.warn{ color:#d69a43; }
+  .ft-chips{ display:flex; flex-wrap:wrap; gap:5px; min-height:0; }
   .ft-chip{
     display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--ink);
-    background:var(--surface-2); border:1px solid var(--line); border-radius:2px; padding:4px 7px;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:2px; padding:5px 7px;
   }
-  .ft-chip.out{ opacity:0.45; }
-  .ft-chip .cnt{ color:var(--gold-hi); font-weight:700; }
-  .ft-chip .x{ color:var(--text-dim); cursor:pointer; font-weight:700; }
-  .ft-addcard{ margin-top:8px; width:100%; }
+  .ft-chip .cnt{ color:var(--gold-hi); font-weight:800; }
+  .ft-chip .x{ color:var(--text-dim); cursor:pointer; font-weight:800; padding-left:2px; }
+  .ft-chip.out{ opacity:.45; }
+  .ft-none{
+    font-size:11px; color:var(--text-dim); line-height:1.55;
+    padding:8px 2px 2px;
+  }
+  .ft-addcard{
+    margin-top:9px; width:100%; min-height:38px;
+  }
+  .ft-and{
+    height:35px; display:flex; align-items:center; justify-content:center; position:relative;
+    color:var(--gold-hi); font-size:20px; font-weight:300;
+  }
+  .ft-and::before,.ft-and::after{
+    content:""; height:1px; background:var(--line); flex:1;
+  }
+  .ft-and span{
+    padding:0 12px; font-family:'Cinzel',serif; font-size:15px; font-weight:900;
+  }
+  .ft-add-condition{
+    width:100%; margin-top:11px; min-height:42px;
+    background:var(--surface-2); border:1px dashed var(--line-hi); color:var(--gold-hi);
+    font-family:inherit; font-size:12px; font-weight:700; cursor:pointer;
+  }
+  .ft-add-condition:active{ background:var(--surface-3); }
+  .ft-help{
+    font-size:10px; color:var(--text-dim); line-height:1.6;
+    margin-top:8px; text-align:center;
+  }
   .ft-empty{ font-size:11.5px; color:var(--text-dim); line-height:1.7; padding:8px 4px; }
+
+  /* Card picker */
+  .ft-pick-head{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px;
+  }
+  .ft-pick-caption{ font-size:10px; color:var(--text-dim); margin-top:3px; line-height:1.5; }
+  .ft-pick-count{
+    flex-shrink:0; font-family:'Cinzel',serif; color:var(--gold-hi);
+    font-size:11px; font-weight:900; border:1px solid var(--line); padding:5px 7px;
+  }
   .ft-pick-list{ max-height:52vh; overflow-y:auto; margin:8px 0; }
   .ft-pick-item{
-    display:flex; align-items:center; gap:9px; padding:9px 8px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:9px; padding:8px 7px; border-bottom:1px solid var(--line);
     cursor:pointer; font-size:12.5px; color:var(--ink);
   }
-  .ft-pick-item:active{ background:var(--surface-2); }
+  .ft-pick-item:active,.ft-pick-item.sel{ background:var(--surface-2); }
+  .ft-pick-thumb{
+    width:32px; height:47px; flex-shrink:0; overflow:hidden;
+    background:var(--surface-3); border:1px solid var(--line);
+  }
+  .ft-pick-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .ft-pick-thumb.noimg img{ display:none; }
   .ft-pick-box{
-    width:18px; height:18px; flex-shrink:0; border:1px solid var(--line-hi); border-radius:2px;
-    display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--gold-ink); background:var(--surface-2);
+    width:20px; height:20px; flex-shrink:0; border:1px solid var(--line-hi); border-radius:2px;
+    display:flex; align-items:center; justify-content:center; font-size:12px;
+    color:var(--gold-ink); background:var(--surface);
   }
   .ft-pick-item.sel .ft-pick-box{ background:var(--gold); border-color:var(--gold); }
-  .ft-pick-nm{ flex:1; min-width:0; }
-  .ft-pick-cp{ font-size:11px; color:var(--text-dim); flex-shrink:0; }
+  .ft-pick-main{ flex:1; min-width:0; }
+  .ft-pick-nm{ font-size:12px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ft-pick-cp{ font-size:10px; color:var(--text-dim); margin-top:2px; }
   .ft-pick-search{
-    width:100%; box-sizing:border-box; background:var(--surface-2); border:1px solid var(--line); border-radius:2px;
-    padding:8px 10px; font-family:inherit; font-size:12.5px; color:var(--ink); outline:none;
+    width:100%; box-sizing:border-box; background:var(--surface-2);
+    border:1px solid var(--line); border-radius:2px; padding:9px 10px;
+    font-family:inherit; font-size:12.5px; color:var(--ink); outline:none;
+  }
+  .ft-pick-search:focus{ border-color:var(--gold); }
+
+  @media(max-width:420px){
+    .ft-rule{ align-items:flex-start; flex-direction:column; }
+    .ft-stepper{ width:100%; }
+    .ft-step-btn{ flex:0 0 34px; }
+    .ft-step-value{ flex:1; }
   }
 
   /* ---------- Solo play (一人回し) ---------- */
@@ -1514,7 +1614,7 @@
   <div class="tny-scroll" id="tnyScroll"></div>
 </div>
 
-<!-- First-turn simulator view -->
+<!-- Initial hand statistics view -->
 <div class="view" id="view-firstturn">
   <div class="view-header">初手統計</div>
   <div class="ft-bar">
@@ -1525,20 +1625,27 @@
     <div class="ft-result" id="ftResult">
       <div class="ft-pct">–</div>
       <div class="ft-pct-lb">初動成功率</div>
+      <div class="ft-sub">成功とする条件を下で設定してください</div>
     </div>
   </div>
   <div class="ft-scroll" id="ftScroll"></div>
 </div>
 
-<!-- Card picker modal -->
+<!-- Initial hand statistics card picker -->
 <div class="modal-back" id="ftPickBack">
   <div class="modal" id="ftPickModal">
-    <div class="modal-name" id="ftPickTitle">カードを選択</div>
+    <div class="ft-pick-head">
+      <div>
+        <div class="modal-name" id="ftPickTitle">条件に含めるカード</div>
+        <div class="ft-pick-caption">現在のメインデッキから複数選択できます</div>
+      </div>
+      <div class="ft-pick-count" id="ftPickCount">0枚</div>
+    </div>
     <input class="ft-pick-search" id="ftPickSearch" placeholder="カード名で絞り込み">
     <div class="ft-pick-list" id="ftPickList"></div>
     <div class="modal-actions">
       <button class="btn ghost" id="ftPickCancel">キャンセル</button>
-      <button class="btn" id="ftPickDone">決定</button>
+      <button class="btn" id="ftPickDone">このカードで決定</button>
     </div>
   </div>
 </div>
@@ -3705,19 +3812,76 @@
     else { closeOdds(); }
   });
 
-  // ---------- First-turn (初動) simulator ----------
-  var FT_KEY='firstturn1103:groups';
+  // ---------- Initial hand statistics v2 ----------
+  // Conditions are saved per deck so switching decks never leaves unrelated cards behind.
+  var FT_KEY_PREFIX='firstturn1103:deck:v2:';
+  var FT_LEGACY_KEY='firstturn1103:groups';
   var FT_TRIALS=60000;
   var ftState={ hand:5, groups:null };
+  var ftLoadedDeckId=null;
+
+  function ftDeckKey(){
+    return FT_KEY_PREFIX+(currentDeckId||'work');
+  }
+  function ftDefaultState(){
+    return { hand:5, groups:[ { threshold:1, cards:[] } ] };
+  }
+  function ftNormalize(o){
+    if(!o || !Array.isArray(o.groups)) return ftDefaultState();
+    var hand=(parseInt(o.hand,10)===6)?6:5;
+    var groups=o.groups.map(function(g){
+      return {
+        threshold:Math.max(1,Math.min(6,parseInt(g.threshold,10)||1)),
+        cards:Array.isArray(g.cards)?g.cards.map(function(i){return parseInt(i,10);}).filter(function(i){return !isNaN(i);}):[]
+      };
+    }).filter(function(g){return g;});
+    if(!groups.length) groups=[{threshold:1,cards:[]}];
+    return {hand:hand,groups:groups};
+  }
+  function ftLegacyFitsDeck(o){
+    if(!o || !Array.isArray(o.groups)) return false;
+    var selected=[];
+    o.groups.forEach(function(g){(g.cards||[]).forEach(function(i){selected.push(parseInt(i,10));});});
+    if(!selected.length) return false;
+    var inDeck=selected.filter(function(i){return !!deck[i];}).length;
+    return inDeck/selected.length>=0.6;
+  }
   function ftLoad(){
     var ls=LS();
-    if(ls){ try{ var r=ls.getItem(FT_KEY); if(r){ var o=JSON.parse(r); if(o&&o.groups) return o; } }catch(e){} }
-    return { hand:5, groups:[ { name:'初動', threshold:1, cards:[] } ] };
+    if(ls){
+      try{
+        var raw=ls.getItem(ftDeckKey());
+        if(raw){
+          var obj=JSON.parse(raw);
+          return ftNormalize(obj);
+        }
+        // One-time soft migration: reuse the old global setup only if most selected cards
+        // actually exist in the currently loaded deck.
+        var legacyRaw=ls.getItem(FT_LEGACY_KEY);
+        if(legacyRaw){
+          var legacy=JSON.parse(legacyRaw);
+          if(ftLegacyFitsDeck(legacy)){
+            var migrated=ftNormalize(legacy);
+            ls.setItem(ftDeckKey(),JSON.stringify(migrated));
+            return migrated;
+          }
+        }
+      }catch(e){}
+    }
+    return ftDefaultState();
+  }
+  function ftEnsureDeckState(){
+    var id=currentDeckId||'work';
+    if(ftLoadedDeckId!==id || !ftState.groups){
+      ftLoadedDeckId=id;
+      ftState=ftLoad();
+    }
   }
   function ftSave(){
     var ls=LS(); if(!ls) return;
-    try{ ls.setItem(FT_KEY, JSON.stringify(ftState)); }catch(e){}
+    try{ ls.setItem(ftDeckKey(), JSON.stringify(ftState)); }catch(e){}
   }
+
   function buildMainPoolIdx(){
     var pool=[];
     Object.keys(deck).forEach(function(idx){
@@ -3728,74 +3892,118 @@
     return pool;
   }
   function ftCopies(idx){ return deck[idx]||0; }
-  function ftGroupCopies(g){ var s=0; g.cards.forEach(function(idx){ s+=ftCopies(idx); }); return s; }
+  function ftGroupCopies(g){
+    var s=0; g.cards.forEach(function(idx){ s+=ftCopies(idx); }); return s;
+  }
+  function ftDeckLabel(){
+    return (deckNameInput && deckNameInput.value.trim()) || '現在のデッキ';
+  }
 
   var ftScroll=document.getElementById('ftScroll');
   var ftResultEl=document.getElementById('ftResult');
 
+  function ftRenderCondition(g,gi){
+    var el=document.createElement('div');
+    el.className='ft-group';
+    var copies=ftGroupCopies(g);
+    var selected=g.cards.filter(function(idx){return !!CARDS[idx];});
+
+    el.innerHTML=
+      '<div class="ft-ghead">'+
+        '<div class="ft-condition-title"><span class="ft-condition-no">'+(gi+1)+'</span>条件 '+(gi+1)+'</div>'+
+        (ftState.groups.length>1? '<button class="ft-gdel" data-del="'+gi+'">この条件を削除</button>':'')+
+      '</div>'+
+      '<div class="ft-rule">'+
+        '<div class="ft-rule-label">この中から</div>'+
+        '<div class="ft-stepper">'+
+          '<button class="ft-step-btn" data-step="'+gi+':-1" '+(g.threshold<=1?'disabled':'')+'>−</button>'+
+          '<div class="ft-step-value"><b>'+g.threshold+'</b>枚以上</div>'+
+          '<button class="ft-step-btn" data-step="'+gi+':1" '+(g.threshold>=6?'disabled':'')+'>＋</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="ft-rate-slot" data-rate="'+gi+'"></div>'+
+      '<div class="ft-chips" data-chips="'+gi+'"></div>'+
+      '<button class="btn ghost sm ft-addcard" data-add="'+gi+'">'+
+        (selected.length?'カードを変更':'カードを選ぶ')+
+        (copies?'（デッキ内 '+copies+'枚）':'')+
+      '</button>';
+
+    var chipWrap=el.querySelector('[data-chips="'+gi+'"]');
+    if(!selected.length){
+      chipWrap.innerHTML='<div class="ft-none">まだカードが選ばれていません。</div>';
+    }else{
+      selected.forEach(function(idx){
+        var c=CARDS[idx],cp=ftCopies(idx);
+        var chip=document.createElement('span');
+        chip.className='ft-chip'+(cp===0?' out':'');
+        chip.innerHTML=esc(c.n)+(cp>0?' <span class="cnt">×'+cp+'</span>':' <span class="cnt">デッキ外</span>')+
+          ' <span class="x" data-rm="'+gi+':'+idx+'" title="外す">×</span>';
+        chipWrap.appendChild(chip);
+      });
+    }
+    return el;
+  }
+
   function renderFirstTurn(){
-    if(!ftState.groups) ftState=ftLoad();
-    // seg
+    ftEnsureDeckState();
+
     document.querySelectorAll('#ftSeg button').forEach(function(b){
       b.classList.toggle('on', parseInt(b.dataset.hand,10)===ftState.hand);
     });
+
     var poolN=buildMainPoolIdx().length;
     ftScroll.innerHTML='';
+
     if(poolN===0){
-      ftScroll.innerHTML='<div class="ft-empty">メインデッキにカードを入れてから、初動になるカードをグループに登録してください。<br><br>例：単体初動なら「初動」グループに起点カードをまとめて「1枚以上」。コンボ初動なら「Aパーツ」「Bパーツ」の2グループを作り、それぞれ「1枚以上」にすると、両方引ける確率が出ます。</div>';
-      ftResultEl.innerHTML='<div class="ft-pct">–</div><div class="ft-pct-lb">初動成功率</div>';
+      ftScroll.innerHTML='<div class="ft-empty">メインデッキにカードを入れてから使えます。</div>';
+      ftResultEl.innerHTML='<div class="ft-pct">–</div><div class="ft-pct-lb">初動成功率</div>'+
+        '<div class="ft-sub">メインデッキが空です</div>';
       return;
     }
+
+    var intro=document.createElement('div');
+    intro.className='ft-intro';
+    intro.textContent='「この手札なら動ける」とする条件を設定します。条件を増やすと、すべてを同時に満たす確率を計算します。';
+    ftScroll.appendChild(intro);
+
     ftState.groups.forEach(function(g,gi){
-      var el=document.createElement('div');
-      el.className='ft-group';
-      var copies=ftGroupCopies(g);
-      el.innerHTML=
-        '<div class="ft-ghead">'+
-          '<input class="ft-gname" value="'+esc(g.name)+'" data-gi="'+gi+'">'+
-          '<div class="ft-thr"><input type="number" min="1" max="6" value="'+g.threshold+'" data-thr="'+gi+'">枚以上</div>'+
-          (ftState.groups.length>1? '<button class="ft-gdel" data-del="'+gi+'" title="グループ削除">×</button>':'')+
-        '</div>'+
-        '<div class="ft-rate-slot" data-rate="'+gi+'"></div>'+
-        '<div class="ft-chips" data-chips="'+gi+'"></div>'+
-        '<button class="btn ghost sm ft-addcard" data-add="'+gi+'">＋ カードを選択（該当'+copies+'枚）</button>';
-      ftScroll.appendChild(el);
-      // chips
-      var chipWrap=el.querySelector('[data-chips="'+gi+'"]');
-      if(!g.cards.length){
-        chipWrap.innerHTML='<span class="ft-empty" style="padding:2px 0">カード未選択</span>';
-      } else {
-        g.cards.forEach(function(idx){
-          var c=CARDS[idx]; if(!c) return;
-          var cp=ftCopies(idx);
-          var chip=document.createElement('span');
-          chip.className='ft-chip'+(cp===0?' out':'');
-          chip.innerHTML=esc(c.n)+(cp>0? ' <span class="cnt">'+cp+'</span>':' <span class="cnt">デッキ外</span>')+' <span class="x" data-rm="'+gi+':'+idx+'">×</span>';
-          chipWrap.appendChild(chip);
-        });
+      if(gi>0){
+        var and=document.createElement('div');
+        and.className='ft-and';
+        and.innerHTML='<span>＋</span>';
+        ftScroll.appendChild(and);
       }
+      ftScroll.appendChild(ftRenderCondition(g,gi));
     });
+
     var addG=document.createElement('button');
-    addG.className='btn ghost sm'; addG.style.width='100%'; addG.style.marginTop='4px';
-    addG.textContent='＋ グループを追加（AND条件）';
+    addG.className='ft-add-condition';
+    addG.textContent='＋ さらに条件を追加';
     addG.addEventListener('click', function(){
-      ftState.groups.push({ name:'パーツ'+(ftState.groups.length+1), threshold:1, cards:[] });
+      ftState.groups.push({threshold:1,cards:[]});
       ftSave(); renderFirstTurn();
+      setTimeout(function(){ ftScroll.scrollTop=ftScroll.scrollHeight; },0);
     });
     ftScroll.appendChild(addG);
 
-    // wire inputs
-    ftScroll.querySelectorAll('.ft-gname').forEach(function(inp){
-      inp.addEventListener('input', function(){ ftState.groups[+this.dataset.gi].name=this.value; ftSave(); });
-    });
-    ftScroll.querySelectorAll('[data-thr]').forEach(function(inp){
-      inp.addEventListener('input', function(){
-        var v=parseInt(this.value,10); if(!isNaN(v)&&v>=1){ ftState.groups[+this.dataset.thr].threshold=v; ftSave(); ftCompute(); }
+    var help=document.createElement('div');
+    help.className='ft-help';
+    help.textContent='例：条件1「初動札から1枚以上」＋ 条件2「妨害札から1枚以上」';
+    ftScroll.appendChild(help);
+
+    ftScroll.querySelectorAll('[data-step]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var p=this.dataset.step.split(':'),gi=+p[0],d=+p[1];
+        var g=ftState.groups[gi];
+        g.threshold=Math.max(1,Math.min(6,g.threshold+d));
+        ftSave(); renderFirstTurn();
       });
     });
     ftScroll.querySelectorAll('[data-del]').forEach(function(b){
       b.addEventListener('click', function(){
-        ftState.groups.splice(+this.dataset.del,1); ftSave(); renderFirstTurn();
+        ftState.groups.splice(+this.dataset.del,1);
+        if(!ftState.groups.length) ftState.groups=[{threshold:1,cards:[]}];
+        ftSave(); renderFirstTurn();
       });
     });
     ftScroll.querySelectorAll('[data-add]').forEach(function(b){
@@ -3803,86 +4011,116 @@
     });
     ftScroll.querySelectorAll('[data-rm]').forEach(function(x){
       x.addEventListener('click', function(){
-        var p=this.dataset.rm.split(':'); var gi=+p[0], idx=+p[1];
-        ftState.groups[gi].cards=ftState.groups[gi].cards.filter(function(i){ return i!==idx; });
+        var p=this.dataset.rm.split(':'),gi=+p[0],idx=+p[1];
+        ftState.groups[gi].cards=ftState.groups[gi].cards.filter(function(i){return i!==idx;});
         ftSave(); renderFirstTurn();
       });
     });
+
     ftCompute();
   }
 
   function ftCompute(){
+    ftEnsureDeckState();
     var poolIdx=buildMainPoolIdx();
     var N=poolIdx.length;
-    var hand=Math.min(ftState.hand, N);
-    var active=ftState.groups.filter(function(g){ return g.cards.length>0; });
+    var hand=Math.min(ftState.hand,N);
+    var active=ftState.groups.filter(function(g){return g.cards.length>0;});
+    var incomplete=ftState.groups.some(function(g){return g.cards.length===0;});
+
     if(N===0 || active.length===0){
       ftResultEl.innerHTML='<div class="ft-pct">–</div><div class="ft-pct-lb">初動成功率</div>'+
-        '<div class="ft-sub">初動カードをグループに登録すると計算します</div>';
+        '<div class="ft-sub">条件1のカードを選んでください</div>';
       return;
     }
-    // precompute group sets & per-group hit counters
-    var sets=active.map(function(g){ var s={}; g.cards.forEach(function(i){ s[i]=1; }); return {set:s, thr:g.threshold}; });
-    var groupHit=[]; for(var s=0;s<sets.length;s++) groupHit[s]=0;
+
+    var sets=active.map(function(g){
+      var st={}; g.cards.forEach(function(i){st[i]=1;});
+      return {set:st,thr:g.threshold};
+    });
+
     var overallHit=0;
     for(var t=0;t<FT_TRIALS;t++){
-      // partial Fisher-Yates: first `hand` positions
       for(var i=0;i<hand;i++){
         var j=i+Math.floor(Math.random()*(N-i));
         var tmp=poolIdx[i]; poolIdx[i]=poolIdx[j]; poolIdx[j]=tmp;
       }
       var allOk=true;
       for(var gi=0;gi<sets.length;gi++){
-        var cnt=0, st=sets[gi].set;
+        var cnt=0,st=sets[gi].set;
         for(var h=0;h<hand;h++){ if(st[poolIdx[h]]) cnt++; }
-        if(cnt>=sets[gi].thr){ groupHit[gi]++; } else { allOk=false; }
+        if(cnt<sets[gi].thr){ allOk=false; break; }
       }
       if(allOk) overallHit++;
     }
-    var overall=overallHit/FT_TRIALS;
-    // exact single-group (hypergeometric) when exactly one active group
-    var exactStr='';
-    if(active.length===1){
-      var K=ftGroupCopies(active[0]);
-      var pExact=hyperAtLeast(N, K, hand, active[0].threshold);
-      exactStr='（厳密値 '+(pExact*100).toFixed(1)+'%）';
-    }
-    ftResultEl.innerHTML=
-      '<div class="ft-pct">'+(overall*100).toFixed(1)+'%</div>'+
-      '<div class="ft-pct-lb">初動成功率'+(active.length>1? '（全'+active.length+'条件を同時に満たす）':'')+'</div>'+
-      '<div class="ft-sub">'+(ftState.hand===5?'先攻5枚':'後攻6枚')+'・デッキ'+N+'枚／'+FT_TRIALS.toLocaleString()+'回試行 '+exactStr+'</div>';
-    // per-group rates
-    active.forEach(function(g,ai){
-      // find its render slot by matching original group index
+
+    // Per-condition rates are exact hypergeometric values.
+    active.forEach(function(g){
       var oi=ftState.groups.indexOf(g);
       var slot=ftScroll.querySelector('[data-rate="'+oi+'"]');
       if(!slot) return;
-      var rate=(groupHit[ai]/FT_TRIALS*100);
       var cp=ftGroupCopies(g);
-      var warn=(cp<g.threshold);
+      var warn=cp<g.threshold;
+      var p=warn?0:hyperAtLeast(N,cp,hand,g.threshold);
       slot.innerHTML='<div class="ft-grate'+(warn?' warn':'')+'">'+
-        (warn? '⚠ 該当'+cp+'枚では'+g.threshold+'枚以上を満たせません'
-             : 'このグループ単独成功率 '+rate.toFixed(1)+'%（該当'+cp+'枚から'+g.threshold+'枚以上）')+'</div>';
+        (warn
+          ? '⚠ デッキ内 '+cp+'枚では '+g.threshold+'枚以上を引けません'
+          : 'この条件だけなら '+(p*100).toFixed(1)+'%（対象 '+cp+'枚）')+
+        '</div>';
     });
+
+    if(incomplete){
+      var missing=ftState.groups.findIndex(function(g){return g.cards.length===0;})+1;
+      ftResultEl.innerHTML='<div class="ft-pct">–</div><div class="ft-pct-lb">設定途中</div>'+
+        '<div class="ft-sub">条件'+missing+'のカードを選ぶと、全条件の成功率を計算します</div>';
+      return;
+    }
+
+    var overall;
+    var method;
+    if(active.length===1){
+      var K=ftGroupCopies(active[0]);
+      overall=hyperAtLeast(N,K,hand,active[0].threshold);
+      method='厳密計算';
+    }else{
+      overall=overallHit/FT_TRIALS;
+      method=FT_TRIALS.toLocaleString()+'回試行';
+    }
+
+    ftResultEl.innerHTML=
+      '<div class="ft-pct">'+(overall*100).toFixed(1)+'%</div>'+
+      '<div class="ft-pct-lb">'+(active.length===1?'この条件を満たす確率':'すべての条件を満たす確率')+'</div>'+
+      '<div class="ft-sub">《'+esc(ftDeckLabel())+'》・'+(ftState.hand===5?'先攻5枚':'後攻6枚')+
+      '・デッキ'+N+'枚・'+method+'</div>';
   }
 
-  // seg toggle
   document.querySelectorAll('#ftSeg button').forEach(function(b){
     b.addEventListener('click', function(){
+      ftEnsureDeckState();
       ftState.hand=parseInt(this.dataset.hand,10);
-      document.querySelectorAll('#ftSeg button').forEach(function(x){ x.classList.toggle('on', x===b); });
-      ftSave(); ftCompute();
+      ftSave(); renderFirstTurn();
     });
   });
 
   // ---- picker ----
   var ftPickBack=document.getElementById('ftPickBack');
-  var ftPickGi=null, ftPickSel=null;
+  var ftPickGi=null,ftPickSel=null;
+
+  function ftUpdatePickCount(){
+    var el=document.getElementById('ftPickCount');
+    if(!el || !ftPickSel) return;
+    var ids=Object.keys(ftPickSel);
+    var copies=0; ids.forEach(function(i){copies+=ftCopies(+i);});
+    el.textContent=ids.length+'種 / '+copies+'枚';
+  }
   function ftOpenPicker(gi){
+    ftEnsureDeckState();
     ftPickGi=gi;
-    ftPickSel={}; ftState.groups[gi].cards.forEach(function(i){ ftPickSel[i]=1; });
-    document.getElementById('ftPickTitle').textContent='「'+(ftState.groups[gi].name||'グループ')+'」に入れるカード';
+    ftPickSel={};
+    ftState.groups[gi].cards.forEach(function(i){ftPickSel[i]=1;});
+    document.getElementById('ftPickTitle').textContent='条件 '+(gi+1)+' のカード';
     document.getElementById('ftPickSearch').value='';
+    ftUpdatePickCount();
     ftRenderPicker('');
     ftPickBack.classList.add('show');
   }
@@ -3890,34 +4128,53 @@
     var names=deckUniqueNames();
     q=(q||'').trim().toLowerCase();
     var listEl=document.getElementById('ftPickList');
-    var shown=names.filter(function(o){ return !q || o.name.toLowerCase().indexOf(q)>=0; });
-    if(!shown.length){ listEl.innerHTML='<div class="ft-empty">該当なし</div>'; return; }
+    var shown=names.filter(function(o){return !q || o.name.toLowerCase().indexOf(q)>=0;});
+    if(!shown.length){
+      listEl.innerHTML='<div class="ft-empty">該当するカードがありません。</div>';
+      return;
+    }
     listEl.innerHTML='';
     shown.forEach(function(o){
+      var c=CARDS[o.idx];
       var it=document.createElement('div');
       it.className='ft-pick-item'+(ftPickSel[o.idx]?' sel':'');
-      it.innerHTML='<div class="ft-pick-box">'+(ftPickSel[o.idx]?'✓':'')+'</div>'+
-        '<div class="ft-pick-nm">'+esc(o.name)+'</div><div class="ft-pick-cp">'+o.copies+'枚</div>';
+      var src=imgSmallUrl(c);
+      it.innerHTML=
+        '<div class="ft-pick-box">'+(ftPickSel[o.idx]?'✓':'')+'</div>'+
+        '<div class="ft-pick-thumb'+(src?'':' noimg')+'">'+(src?'<img src="'+src+'" alt="">':'')+'</div>'+
+        '<div class="ft-pick-main"><div class="ft-pick-nm">'+esc(o.name)+'</div>'+
+        '<div class="ft-pick-cp">デッキに '+o.copies+'枚</div></div>';
       it.addEventListener('click', function(){
-        if(ftPickSel[o.idx]){ delete ftPickSel[o.idx]; it.classList.remove('sel'); it.querySelector('.ft-pick-box').textContent=''; }
-        else { ftPickSel[o.idx]=1; it.classList.add('sel'); it.querySelector('.ft-pick-box').textContent='✓'; }
+        if(ftPickSel[o.idx]){
+          delete ftPickSel[o.idx];
+          it.classList.remove('sel');
+          it.querySelector('.ft-pick-box').textContent='';
+        }else{
+          ftPickSel[o.idx]=1;
+          it.classList.add('sel');
+          it.querySelector('.ft-pick-box').textContent='✓';
+        }
+        ftUpdatePickCount();
       });
+      var img=it.querySelector('img');
+      if(img) wireImgFallback(img,it.querySelector('.ft-pick-thumb'));
       listEl.appendChild(it);
     });
   }
-  document.getElementById('ftPickSearch').addEventListener('input', function(){ ftRenderPicker(this.value); });
-  document.getElementById('ftPickCancel').addEventListener('click', function(){ ftPickBack.classList.remove('show'); });
-  ftPickBack.addEventListener('click', function(ev){ if(ev.target===ftPickBack) ftPickBack.classList.remove('show'); });
-  document.getElementById('ftPickDone').addEventListener('click', function(){
+
+  document.getElementById('ftPickSearch').addEventListener('input',function(){ftRenderPicker(this.value);});
+  document.getElementById('ftPickCancel').addEventListener('click',function(){ftPickBack.classList.remove('show');});
+  ftPickBack.addEventListener('click',function(ev){if(ev.target===ftPickBack)ftPickBack.classList.remove('show');});
+  document.getElementById('ftPickDone').addEventListener('click',function(){
     if(ftPickGi!==null){
-      ftState.groups[ftPickGi].cards=Object.keys(ftPickSel).map(function(i){ return parseInt(i,10); });
+      ftState.groups[ftPickGi].cards=Object.keys(ftPickSel).map(function(i){return parseInt(i,10);});
       ftSave();
     }
     ftPickBack.classList.remove('show');
     renderFirstTurn();
   });
 
-  document.getElementById('firstTurnBtn').addEventListener('click', function(){ switchView('firstturn'); });
+  document.getElementById('firstTurnBtn').addEventListener('click',function(){switchView('firstturn');});
 
   // ---------- Solo play (一人回し) ----------
   // Zones: lib(deck top=index0) / hand / mz(monster) / sz(spell&trap) / grave / banish / ex
