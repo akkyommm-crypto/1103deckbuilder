@@ -1127,14 +1127,16 @@ function emitBattleDamageV6(gs, o){
 let APPLY_ACTION_DEPTH_V31=0;
 function applyAction(gs,a){
   APPLY_ACTION_DEPTH_V31++;
-  try{return applyActionBodyV31(gs,a);}finally{APPLY_ACTION_DEPTH_V31--;}
+  /* S03-U21: ATTACK の reducer が読む戦闘状況を、Replay では Action のスナップショットから置く（ライブでは何もしない）。 */
+  const battleCtxS03 = (typeof installBattleContextS03==='function') ? installBattleContextS03(gs,a) : null;
+  try{return applyActionBodyV31(gs,a);}finally{APPLY_ACTION_DEPTH_V31--; if(battleCtxS03&&typeof restoreBattleContextS03==='function')restoreBattleContextS03(gs,battleCtxS03);}
 }
 function applyActionBodyV31(gs, a){
   const v4Before = (typeof v4CaptureBeforeAction==='function') ? v4CaptureBeforeAction(gs,a) : null;
   const P = gs.players[a.player ?? gs.activePlayer];
   switch(a.type){
     case 'EVENT_QUEUE_V31':
-      (gs.deferredEvents||(gs.deferredEvents=[])).push(JSON.parse(JSON.stringify(a.item)));break;
+      (gs.deferredEvents||(gs.deferredEvents=[])).push(JSON.parse(JSON.stringify(a.item)));/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,a.item);break;
     case 'EVENT_DEQUEUE_V31':
       if(gs.deferredEvents&&gs.deferredEvents.length)gs.deferredEvents.shift();break;
 
@@ -1559,14 +1561,17 @@ function applyActionBodyV31(gs, a){
       };
       if(defending){
         if(aATK > dVal){
-          destroyedDef = killDef(); msg += destroyedDef?`守備モンスター破壊`:`破壊されず`;
+          /* S03-U20: ダメージ計算（③-ⅳ）を戦闘破壊の確定（③-ⅴ）より先に行う。
+             確定したモンスターは継続効果を出さないので、先に確定させると
+             「このカードの戦闘で発生する自分への戦闘ダメージは0」が、そのカードが破壊される戦闘で働かない。 */
           // System v3.3.0: 貫通ダメージ。カード側は continuous.piercingDamage(info) で宣言する。
           const pierce = applyPiercingDamage({
             atkCard, defCard, atkOwner:a.player, defOwner:a.player===0?1:0,
             amount:aATK-dVal, direct:false
           });
+          if(pierce>0){ dmgTo=a.player===0?1:0; dmgVal=dealDamage(dmgTo,pierce); }
+          destroyedDef = killDef(); msg += destroyedDef?`守備モンスター破壊`:`破壊されず`;
           if(pierce>0){
-            dmgTo=a.player===0?1:0; dmgVal=dealDamage(dmgTo,pierce);
             msg += `＋貫通 ${dmgVal}ダメージ（LP ${oppP.lp}）`;
           }
         }
@@ -1575,13 +1580,15 @@ function applyActionBodyV31(gs, a){
         else { msg += `変化なし`; }
       } else {
         if(aATK > dVal){
-          destroyedDef = killDef();
+          /* S03-U20: ダメージ計算が先、戦闘破壊の確定が後。 */
           dmgTo=a.player===0?1:0; dmgVal=dealDamage(dmgTo, aATK-dVal);
+          destroyedDef = killDef();
           msg += `${destroyedDef?'相手モンスター破壊':'破壊されず'}＋${dmgVal}ダメージ（LP ${oppP.lp}）`;
         }
         else if(aATK < dVal){
-          destroyedAtk = killAtk();
+          /* S03-U20: ダメージ計算が先、戦闘破壊の確定が後。 */
           dmgTo=a.player; dmgVal=dealDamage(a.player, dVal-aATK);
+          destroyedAtk = killAtk();
           msg += `${destroyedAtk?'自分モンスター破壊':'破壊されず'}＋${dmgVal}ダメージ（LP ${P.lp}）`;
         }
         else { destroyedAtk=killAtk(); destroyedDef=killDef(); msg += `相打ち`; }
@@ -1894,6 +1901,8 @@ function applyActionBodyV31(gs, a){
             pushZone(ownerB.grave, c);
             const putB = ownerB.grave[ownerB.grave.length-1];
             if(putB) putB.graveInfo = {turn:gs.turn, from:'mz', byDestroy:true, lv:sentLv, face:sentFace, pos:sentPos, byPlayer:pi===0?1:0};
+            /* S03-U25: 「戦闘で破壊したモンスターの効果は無効化される」を宣言したモンスターが破壊した場合だけ、そのカードを記録する。 */
+            if(putB && typeof battleNegatorUidForVictimS03==='function'){ const negUid=battleNegatorUidForVictimS03(gs,c); if(negUid!=null) putB.graveInfo.battleNegatorUidS03=negUid; }
             logIt(gs, `${cardName(c)} が戦闘破壊されて墓地へ`);
           }
           if(spellN) v350TransferDestroyedSpellCounters(gs,spellN);
@@ -1930,6 +1939,12 @@ function applyActionBodyV31(gs, a){
         negated:false, activationNegated:false, effectNegated:false,
         negateMode:null, negateReason:''
       });
+      /* S03-U10: カードの発動だけのリンク（効果は解決しない）。true の時だけ書く。 */
+      if(a.cardActivationOnly) gs.chain[gs.chain.length-1].cardActivationOnly=true;
+      /* S03-U29: カードの発動（手札・セット状態から）。true の時だけ書く＝既存 Replay の digest は変わらない。 */
+      if(a.cardActivationS03) gs.chain[gs.chain.length-1].cardActivationS03=true;
+      /* S03-U16: コスト中に控えた値（空でない時だけ書く＝既存 Replay の digest は変わらない）。 */
+      if(a.costCtxS03&&typeof a.costCtxS03==='object'&&Object.keys(a.costCtxS03).length) gs.chain[gs.chain.length-1].costCtxS03=JSON.parse(JSON.stringify(a.costCtxS03));
       /* P3: 発動コストのスナップショットは非空のときだけチェーンリンクへ載せる。
          空なら書かない＝既存Replayのdigestは一切変わらない。 */
       if(Array.isArray(a.costSnapshots) && a.costSnapshots.length){
@@ -2441,7 +2456,7 @@ function applyActionBodyV31(gs, a){
     case "FX_CARD_FLAG_V46": {
       const card=zoneCard(P,a.zone,a.index); if(!card) break;
       if(a.value===false || a.value==null) delete card[a.flag]; else card[a.flag]=a.value===true?true:a.value;
-      logIt(gs,`${a.reason||'効果'}：${cardName(card)} ${a.flag}=${card[a.flag]===undefined?'OFF':String(card[a.flag])}`);
+      if(!a.silent) logIt(gs,`${a.reason||'効果'}：${cardName(card)} ${a.flag}=${card[a.flag]===undefined?'OFF':String(card[a.flag])}`);
       break;
     }
 
@@ -2529,7 +2544,7 @@ function applyActionBodyV31(gs, a){
       Q.ssHistory.push({name:cardName(ex),from:'ex',turn:gs.turn});
       gs.pendingExV2=null;
       gs.timingWindow={kind:'summon',turn:gs.turn,action:'EX_SUMMON_COMMIT_V42'};
-      (gs.deferredEvents||(gs.deferredEvents=[])).push({eventName:'onSpecialSummon',evt:{player:q.player,name:cardName(ex),uid:ex.uid,kind:q.kind}});
+      {const itemU14={eventName:'onSpecialSummon',evt:{player:q.player,name:cardName(ex),uid:ex.uid,kind:q.kind}};(gs.deferredEvents||(gs.deferredEvents=[])).push(itemU14);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,itemU14);}
       logIt(gs,`<b>${q.kind==='synchro'?'シンクロ召喚':'エクシーズ召喚'}成功</b>：${cardName(ex)}`);
       break;
     }
@@ -5574,7 +5589,12 @@ function normalizeDeclarationV11(kind,value,turn){
 
 function activationLinkForContextV11(ctx,gs){
   gs=gs||gameState; if(!gs) return null;
-  if(ctx&&ctx.chainId!=null) return (gs.chain||[]).find(x=>x&&x.chainId===ctx.chainId)||null;
+  if(ctx&&ctx.chainId!=null){
+    const hit=(gs.chain||[]).find(x=>x&&x.chainId===ctx.chainId);
+    if(hit) return hit;
+    /* S03-U14: 解決中のリンクは gs.chain から外れているので、解決コンテキストが持つリンクそのものを使う。 */
+    return (ctx.chainLink&&ctx.chainLink.chainId===ctx.chainId)?ctx.chainLink:null;
+  }
   if(ctx&&ctx.chainLink) return ctx.chainLink;
   return (gs.chain||[])[(gs.chain||[]).length-1]||null;
 }
@@ -8535,8 +8555,10 @@ function linkTargetsV19(gs, x){
   if(!Array.isArray(raw) || !raw.length) return [];
   const out = [];
   raw.forEach(t => {
+    /* S03-U19: チェーンリンクの対象は serializeChainSelectionV2 の参照形式（{__yg1103CardRefV2, ref:{uid}}）で保存される。 */
     const uid = (t && t.uid != null) ? t.uid
-              : (t && t.card && t.card.uid != null) ? t.card.uid : null;
+              : (t && t.card && t.card.uid != null) ? t.card.uid
+              : (t && t.ref && t.ref.uid != null) ? t.ref.uid : null;
     if(uid == null) return;
     const hit = (typeof findCardByUidInState === 'function')
       ? findCardByUidInState(gs, uid)
@@ -9407,6 +9429,351 @@ function assertProvenanceSerializableV30(gs){
     });
   });
   return { ok: bad.length===0, why: bad.join(', ') };
+}
+/* =========================================================================
+   S03-U14 — 召喚・特殊召喚される度に置くカウンター（チェーンを作らない）
+   -------------------------------------------------------------------------
+   「『六武衆』モンスターが召喚・特殊召喚される度に、このカードに武士道カウンターをN個置く」
+   を共通化する。カード側は summonCounterS03:{kind, n, group, label} を宣言する。
+
+   ■ いつ置くか
+     召喚成功イベント（onNormalSummon / onSpecialSummon）を予約する時点。
+     DUEL の予約は必ず Action の中（EVENT_QUEUE_V31 の reducer、または他の Action の reducer 内の予約）で
+     行われるので、置く処理も同じ Action に含まれ、Journal / Replay / Undo がそのまま再現する。
+     誘発効果ではないので、チェーンにも SEGOC の候補にも載らない。ダメージステップ中の召喚でも置く
+     （R1103-SIXGATE-001、R1103-SIXUNITED-001/003）。
+   ■ いくつ置くか
+     1回の召喚・特殊召喚ごとに N 個。複数体が同時に特殊召喚されても、その1回の出来事に対して N 個だけ置く
+     （R1103-SIXGATE-002）。表側表示の各カードにそれぞれ置く（R1103-SIXGATE-003）。
+   ■ 数えないもの
+     裏側表示のモンスター、モンスターゾーンに残っていないモンスター、置く側自身。
+   ■ 置く側
+     表側表示で魔法＆罠ゾーン／フィールドゾーンにあり、効果が無効になっておらず、
+     「カードの発動」がチェーン上で解決待ちでないカード。
+   ■ 上限
+     counterMaxV22 の宣言を placeCounterUnitsV22 が守る。新しい state は作らない（card.counters のみ）。
+   DUEL 以外のモードは従来どおり（置かない）。
+   ========================================================================= */
+function summonCounterSummonedS03(gs, item){
+  const e = (item && item.evt) || {};
+  const uids = Array.isArray(e.uids) ? e.uids : (e.uid != null ? [e.uid] : []);
+  const out = [];
+  uids.forEach(u=>{
+    const h = findCardByUidInState(gs, u);
+    if(h && h.card && h.zone==='mz' && h.card.face==='up' && out.every(x=>x.card!==h.card)) out.push(h);
+  });
+  return out;
+}
+function summonCounterObserverActiveS03(gs, card){
+  if(!card || card.face!=='up' || card.activationNegated) return false;
+  /* 「カードの発動」が解決待ちの間は、まだ効果が適用されていない。 */
+  if(card.activationPending && (gs.chain||[]).some(l=>l && l.uid===card.uid && l.cardActivationOnly)) return false;
+  if(typeof effectNegated==='function' && effectNegated(card)) return false;
+  return true;
+}
+function applySummonCountersS03(gs, item){
+  gs = gs || gameState;
+  if(!item || (item.eventName!=='onNormalSummon' && item.eventName!=='onSpecialSummon')) return 0;
+  if(typeof PLAY_MODE==='undefined' || PLAY_MODE!==PLAY_MODES.DUEL) return 0;
+  const summoned = summonCounterSummonedS03(gs, item);
+  if(!summoned.length) return 0;
+  let placed = 0;
+  for(let p=0; p<2; p++){
+    const P = gs.players[p];
+    const observers = (P.sz||[]).slice(); if(P.field) observers.push(P.field);
+    observers.forEach(c=>{
+      const sc = c && CARD_SCRIPTS[cardName(c)], def = sc && sc.summonCounterS03;
+      if(!def || !summonCounterObserverActiveS03(gs, c)) return;
+      if(!summoned.some(h=>h.card!==c && (!def.group || isCardInGroupV4(h.card, def.group)))) return;
+      const uid = ensureCardUid(gs, c), units = [];
+      for(let i=0; i<(Number(def.n)||1); i++) units.push(uid);
+      placed += placeCounterUnitsV22(gs, units, def.kind,
+        `${cardName(c)}（「${def.label||def.group}」の召喚・特殊召喚）`);
+    });
+  }
+  return placed;
+}
+/* =========================================================================
+   S03-U16 — コストにするカードを selectTargets で選ぶ旧形式スクリプト
+   -------------------------------------------------------------------------
+   一部の旧形式スクリプトは selectTargets で「コストにするカード」（リリース・除外・手札から捨てる等）を選び、
+   cost の中で ctx.selectedTargets を読む。prepareDuelActivation は cost を selectTargets より先に呼ぶので、
+   実際のデュエルでは cost が空の選択を読んで「コストを払えません」になり、発動できなかった。
+   またコスト中に ctx へ控えた値（除外したモンスターの元々の攻撃力など）は、解決時に作り直される ctx へ届かなかった。
+
+   ■ 宣言されたスクリプトだけ（cards/H4_claude_s03_cost_selection.js）
+     1. 先に selectTargets を呼んで選ぶ
+     2. cost を払う
+     3. コストで場所が変わったカードは対象から外す（コストとして使われたカードは対象ではない）
+     4. コスト中に ctx へ新しく書かれた JSON の基本値を CHAIN_ADD の costCtxS03 に載せ、解決時の ctx へ戻す
+   ルール順序（コスト → 対象）そのものは変えない。コストにするカードの「選択」を先に行うだけで、
+   本当の対象（コストで動かないカード）はコストの後もそのまま残る。
+   ========================================================================= */
+const COST_SELECTION_FIRST_S03 = new Set();
+function declareCostSelectionFirstS03(names){ (names||[]).forEach(n=>COST_SELECTION_FIRST_S03.add(n)); }
+function costSelectionFirstS03(name, sc){
+  return !!sc && COST_SELECTION_FIRST_S03.has(name)
+    && typeof sc.selectTargets==='function' && typeof sc.cost==='function' && typeof sc.activationV11!=='function';
+}
+/* cost の直前：ctx にあるキーと、選ばれたカードの場所を控える */
+function costSelectionBeforeS03(ctx){
+  const keys = new Set(Object.keys(ctx));
+  const places = (ctx.selectedTargets||[]).map(t=>{
+    const r = (typeof resolveTarget==='function') ? resolveTarget(t) : null;
+    const c = r && r.card;
+    if(!c) return null;
+    ensureCardUid(gameState, c);
+    return {uid:c.uid, zone:r.zone};
+  });
+  return {keys, places};
+}
+/* cost の直後：動いたカードを対象から外し、コスト中に書かれた値を costCtxS03 にまとめる */
+function costSelectionAfterS03(ctx, before){
+  const sel = ctx.selectedTargets || [];
+  ctx.selectedTargets = sel.filter((t,i)=>{
+    const pl = before.places[i];
+    if(!pl) return true;
+    const now = findCardByUid(pl.uid);
+    return !!now && now.zone===pl.zone;
+  });
+  const extras = {};
+  Object.keys(ctx).forEach(k=>{
+    if(before.keys.has(k)) return;
+    const v = ctx[k];
+    if(v===null || typeof v==='number' || typeof v==='string' || typeof v==='boolean') extras[k] = v;
+  });
+  if(Object.keys(extras).length) ctx.costCtxS03 = extras;
+}
+/* =========================================================================
+   S03-U18 — 「カードが発動した時に、その発動を無効にする」応答（カウンター罠など）
+   -------------------------------------------------------------------------
+   一部のスクリプトは、発動した相手のカードを onActivateSuccess の誘発イベント（ctx.event）で知り、
+   condition と resolve の両方で ctx.event を読む。しかし、
+     ・チェーン応答の合法性（getChainResponsesV2 / duelActivateResponseV2 → prepareDuelActivation）は
+       イベントを渡さないので、発動を無効にしたい相手の発動がチェーンに乗っている間は常に不合法だった。
+     ・遅延イベント onActivateSuccess はチェーンが解決した後に SEGOC で提示されるので、
+       無効にする発動が既に解決した後で発動でき、何も無効にできないままコストだけ払っていた。
+   ■ 宣言されたスクリプトだけ（cards/H5_claude_s03_activation_response.js）
+     1. チェーン応答の合法性判定と発動準備に、応答先＝チェーンの一番上のリンクの発動イベント
+        （makeActivationEventV12）を ctx.event として渡す。CHAIN_ADD がそのイベントを保持し、解決時の ctx.event になる。
+     2. onActivateSuccess の誘発候補（collectHandlers）には出さない。
+   チェーンが無い時はイベントを作らない（応答する発動が無いので不合法のまま）。
+   ========================================================================= */
+const ACTIVATION_RESPONSE_S03 = new Set();
+function declareActivationResponseS03(names){ (names||[]).forEach(n=>ACTIVATION_RESPONSE_S03.add(n)); }
+function activationResponseDeclaredS03(name){ return ACTIVATION_RESPONSE_S03.has(name); }
+/* 応答先（チェーンの一番上）の発動イベント */
+function topActivationEventS03(gs){
+  gs = gs || gameState;
+  const ch = Array.isArray(gs.chain) ? gs.chain : [];
+  if(!ch.length || typeof makeActivationEventV12!=='function') return null;
+  return makeActivationEventV12(gs, ch[ch.length-1]);
+}
+/* 宣言されたスクリプトの応答用 opts。既に onActivateSuccess のイベントを持っていればそのまま使う。 */
+function activationResponseOptsS03(name, opts){
+  if(!activationResponseDeclaredS03(name)) return opts || {};
+  if(opts && opts.event && opts.eventName==='onActivateSuccess') return opts;
+  const ev = topActivationEventS03(gameState);
+  if(!ev) return opts || {};
+  return Object.assign({}, opts || {}, {event:ev, eventName:'onActivateSuccess'});
+}
+
+/* S03-U19: 発動への応答ではない（対象にされた時の自動的な無効化など）が onActivateSuccess の誘発として書かれ、
+   S03-U19 で対象の読み取りが直ったために遅れて誘発してしまうスクリプトは、正しく実装するまで誘発として出さない。 */
+const ACTIVATION_LATE_TRIGGER_SUPPRESSED_S03 = new Set();
+function declareActivationLateTriggerSuppressedS03(names){ (names||[]).forEach(n=>ACTIVATION_LATE_TRIGGER_SUPPRESSED_S03.add(n)); }
+function activationLateTriggerSuppressedS03(name){
+  return ACTIVATION_RESPONSE_S03.has(name) || ACTIVATION_LATE_TRIGGER_SUPPRESSED_S03.has(name);
+}
+/* =========================================================================
+   S03-U21 — 戦闘状況（gameState.battle）を ATTACK の Replay で再現する
+   -------------------------------------------------------------------------
+   ダメージステップの戦闘状況 gameState.battle は startBattle / ダメージステップ処理が Action の外で設定する。
+   ATTACK の reducer（③ダメージ計算）の中では、継続効果が gameState.battle を読む
+   （ダメージステップ中の攻撃力変化：ダッシュ・ウォリアー、エトワール・サイバー、ネコ耳族 など、
+     戦闘ダメージの増減：battleDamage / piercingDamage）。
+   ライブでは値があるが、Replay では ATTACK だけが再生されるので値が無く、攻撃力・ダメージが変わって digest が一致しなかった。
+   ■ 対処
+     1. ATTACK を発行する時に、その時点の戦闘状況を JSON のスナップショットとして Action に持たせる（battleCtxS03）。
+     2. reducer の実行中だけ、gs.battle が無い場合（Replay）に限りスナップショットを置き、終わったら元に戻す。
+        ライブでは gs.battle が既にあるので何もしない。gameState.battle は digest に含まれない。
+   スナップショットは数値・文字列・真偽値・null と、それらの配列だけを写す。カード実体の flippedCard は uid で持ち、
+   置く時に uid から引き直す。フィールドを持たない既存の Replay パッケージは従来どおり。
+   ========================================================================= */
+function battleContextSnapshotS03(b){
+  if(!b || typeof b !== 'object') return null;
+  const prim = v => v === null || typeof v === 'string' || typeof v === 'boolean' || (typeof v === 'number' && Number.isFinite(v));
+  const out = {};
+  Object.keys(b).forEach(k=>{
+    const v = b[k];
+    if(k === 'flippedCard'){ out.flippedCardUidS03 = (v && v.uid != null) ? v.uid : null; return; }
+    if(prim(v)) out[k] = v;
+    else if(Array.isArray(v) && v.every(prim)) out[k] = v.slice();
+  });
+  return out;
+}
+function installBattleContextS03(gs, a){
+  if(!gs || !a || a.type !== 'ATTACK' || !a.battleCtxS03 || gs.battle) return null;
+  const token = {had: Object.prototype.hasOwnProperty.call(gs, 'battle'), prev: gs.battle};
+  const b = JSON.parse(JSON.stringify(a.battleCtxS03));
+  if(b.flippedCardUidS03 != null && typeof findCardByUid === 'function'){
+    const h = findCardByUid(b.flippedCardUidS03);
+    b.flippedCard = h ? h.card : null;
+  }else if(!('flippedCard' in b)) b.flippedCard = null;
+  delete b.flippedCardUidS03;
+  gs.battle = b;
+  return token;
+}
+function restoreBattleContextS03(gs, token){
+  if(!gs || !token) return;
+  if(token.had) gs.battle = token.prev; else delete gs.battle;
+}
+/* =========================================================================
+   S03-U22 — ダメージステップ中に解決する誘発効果の攻守変化
+   -------------------------------------------------------------------------
+   canModifyNow（engine/60）は「フリーチェーンの攻守変動は②ダメージ計算前まで」を、効果の解決時
+   （API.modAtk）に判定している。チェーンの解決では ACTIVE_SCRIPT が設定されないため、
+   全てのチェーンブロックがフリーチェーンの規則で判定され、③ダメージ計算時以降に解決する
+   誘発効果（ロケット戦士、ファイターズ・エイプ、ジュラック・ティラヌス など「ダメージ計算後」
+   「戦闘で破壊し墓地へ送った時」の効果）が攻守を変えられなかった。
+   2011 wiki：ヘル・ツイン・コップ「このカードの誘発効果の効果解決時に攻撃力が上がります」、
+   ファイターズ・エイプ「誘発効果であり（チェーンブロックが）作られます」。
+   ■ 解決中のチェーンブロックを覚えておく
+     ・誘発イベントで発動したブロック（eventName あり）…ダメージステップのどの段階でも攻守を変えられる。
+     ・damageStepOnly を宣言したスクリプトのブロック…③ダメージ計算時まで（dsOnly）。
+     ・それ以外（フリーチェーンで発動したブロック）…従来どおり canModifyNow の規則。
+   解決中の選択（pendingChoice）の後で続きが実行されることがあるので、印は次のブロックの解決開始か
+   チェーンの終了まで保持する。チェーンの外（手動の発動）は従来どおり ACTIVE_SCRIPT で判定する。
+   ========================================================================= */
+let RESOLVING_LINK_S03 = null;
+function beginLinkResolutionS03(link, sc){
+  RESOLVING_LINK_S03 = link ? {
+    name: link.name || null,
+    eventName: link.eventName || null,
+    damageStepOnly: !!(sc && sc.damageStepOnly)
+  } : null;
+}
+function endLinkResolutionS03(){ RESOLVING_LINK_S03 = null; }
+/* true / false で判定を返す。null なら従来の規則に任せる。 */
+function damageStepModifyAllowedS03(info){
+  const r = RESOLVING_LINK_S03;
+  if(!r || !info) return null;
+  if(r.eventName) return true;
+  if(r.damageStepOnly) return !!info.dsOnly;
+  return null;
+}
+/* =========================================================================
+   S03-U25 — 戦闘で破壊した（効果）モンスターの効果の無効化
+   -------------------------------------------------------------------------
+   漆黒の魔王 LV4 「このカードが戦闘によって破壊した相手モンスターの効果は無効化される」、
+   ワーム・ウォーロード 「このカードが戦闘で破壊した効果モンスターの効果は無効化される」、
+   エレメント・デビル（地属性）など。
+   2011 wiki：ワーム・ウォーロードのこの効果は永続効果で、相打ちの場合は「戦闘破壊された」を条件とする効果を無効にできない。
+   漆黒の魔王 LV6 の裁定では、発動した《キラー・トマト》の効果を無効にする（発動はでき、効果が無効になる）。
+   以前は、スクリプトが FX_NEGATE（card.negated）を場のモンスターに置いていたが、negated は領域ローカルなので
+   BATTLE_CLEANUP で墓地へ送られた時点で消え、しかもチェーンの解決は墓地から発動したリンクの無効を見ていなかった。
+   ■ 宣言したカード（cards/H6）だけ
+     1. BATTLE_CLEANUP で墓地へ送る時、破壊したモンスター（同じ戦闘で破壊されていない）が宣言済みなら、
+        破壊されたカードの graveInfo に battleNegatorUidS03 を書く（reducer 内なので Replay で再現される）。
+        宣言済みのカードが破壊した時だけ書くので、それ以外の戦闘の digest は変わらない。
+     2. チェーンの解決で、発動元がそのターンにそう記録された墓地のカードで、記録したカードがまだ表側でモンスターゾーンにあり
+        （効果が無効になっていない）、宣言の条件（effectOnly / condition）を満たすなら、そのリンクの効果は無効として扱う。
+   ========================================================================= */
+const BATTLE_DESTROYED_NEGATOR_S03 = {};
+function declareBattleDestroyedNegatorS03(name, spec){ BATTLE_DESTROYED_NEGATOR_S03[name] = Object.assign({effectOnly:true}, spec||{}); }
+function battleDestroyedNegatorSpecS03(name){ return BATTLE_DESTROYED_NEGATOR_S03[name] || null; }
+
+/* reducer（BATTLE_CLEANUP）用：victim を戦闘で破壊した宣言済みモンスターの uid。無ければ null。 */
+function battleNegatorUidForVictimS03(gs, victim){
+  const b = gs && gs.lastBattle; if(!b || !victim || victim.uid == null) return null;
+  let destroyerUid = null, destroyerDestroyed = false;
+  if(b.defenderUidV6 != null && b.defenderUidV6 === victim.uid){ destroyerUid = b.attackerUidV6; destroyerDestroyed = !!b.destroyedAtk; }
+  else if(b.attackerUidV6 != null && b.attackerUidV6 === victim.uid){ destroyerUid = b.defenderUidV6; destroyerDestroyed = !!b.destroyedDef; }
+  if(destroyerUid == null || destroyerDestroyed) return null;
+  const h = (typeof findCardByUidInState === 'function') ? findCardByUidInState(gs, destroyerUid) : null;
+  if(!h || !h.card || h.zone !== 'mz') return null;
+  return battleDestroyedNegatorSpecS03(dbOf(h.card).n) ? destroyerUid : null;
+}
+
+/* 解決用：このリンクの効果が、戦闘で破壊したモンスターの永続効果で無効か。 */
+function battleDestroyedLinkNegatedS03(link, srcCard){
+  if(!link || !srcCard) return false;
+  const g = srcCard.graveInfo;
+  if(!g || g.battleNegatorUidS03 == null || g.turn !== gameState.turn) return false;
+  const here = locateCardAnyV4(srcCard); if(!here || here.zone !== 'grave') return false;
+  const d = findCardByUid(g.battleNegatorUidS03);
+  if(!d || d.zone !== 'mz' || !d.card || d.card.face !== 'up') return false;
+  const spec = battleDestroyedNegatorSpecS03(dbOf(d.card).n); if(!spec) return false;
+  if(typeof effectNegated === 'function' && effectNegated(d.card)) return false;
+  if(spec.effectOnly && !((dbOf(srcCard).st || []).includes('効果'))) return false;
+  if(typeof spec.condition === 'function'){ try{ if(!spec.condition(d.card, srcCard)) return false; }catch(e){ return false; } }
+  return true;
+}
+/* =========================================================================
+   S03-U28 — 対象にされた時に自動で働く無効化（永続効果）
+   -------------------------------------------------------------------------
+   ミドル・シールド・ガードナー 「裏側表示のこのモンスター1体を対象とする魔法カードの発動を無効にする。その時、このカードは表側守備表示になる。」
+   アルカナフォース0－THE FOOL 「●表:このカードを対象にする自分のカードの効果を無効にし破壊する。●裏:このカードを対象にする相手のカードの効果を無効にし破壊する。」
+   2011 wiki：THE FOOL の表・裏の効果の種別は永続効果。
+   以前は onActivateSuccess の誘発効果として書かれていたが、発動に対するチェーンの誘発ではないので S03-U19 で遅れた誘発として止め、
+   何も無効にしていなかった。
+   ■ 宣言したカード（cards/H7）だけ
+     チェーンに発動を積んだ直後（CHAIN_ADD の直後）に、そのリンクが対象にしたモンスターゾーンのカードが宣言済みで、条件を満たすなら、
+     negateChainLinkV13（CHAIN_NEGATE_LINK と必要なら FX_TO_GRAVE、どちらも Action）でそのリンクを無効にし、後処理を行う。
+     チェーンブロックは作らない。
+   spec.applies({link, srcDb, negator}) → {mode:'activation'|'effect', destroySource, reason} か null。
+   spec.after({link, negator}) … 無効にした後の処理（Action で行う）。
+   ========================================================================= */
+const TARGETING_NEGATOR_S03 = {};
+function declareTargetingNegatorS03(name, spec){ TARGETING_NEGATOR_S03[name] = spec || {}; }
+function targetingNegatorSpecS03(name){ return TARGETING_NEGATOR_S03[name] || null; }
+
+function applyTargetingNegatorsS03(){
+  const chain = (gameState && gameState.chain) || [];
+  const link = chain[chain.length - 1];
+  if(!link || link.negated || link.chainId == null || !link.targets) return false;
+  const restored = (typeof deserializeChainSelectionV2 === 'function') ? deserializeChainSelectionV2(link.targets) : [];
+  const list = (Array.isArray(restored) ? restored : [restored]).filter(Boolean);
+  const srcDb = (link.cardId != null && CARD_DB[link.cardId]) ? CARD_DB[link.cardId] : null;
+  for(const t of list){
+    const h = (t && t.card) ? locateCardAnyV4(t.card) : null;
+    if(!h || h.zone !== 'mz' || !h.card) continue;
+    const spec = targetingNegatorSpecS03(dbOf(h.card).n);
+    if(!spec || typeof spec.applies !== 'function') continue;
+    if(typeof effectNegated === 'function' && effectNegated(h.card)) continue;
+    let r = null;
+    try{ r = spec.applies({link, srcDb, negator:h}); }catch(e){ r = null; }
+    if(!r) continue;
+    if(!negateChainLinkV13(link.chainId, r.mode === 'effect' ? 'effect' : 'activation', r.reason || dbOf(h.card).n, !!r.destroySource)) continue;
+    if(typeof spec.after === 'function'){
+      try{ spec.after({link, negator:locateCardAnyV4(h.card)}); }catch(e){}
+    }
+    return true;
+  }
+  return false;
+}
+/* S03-U29 C-S03-25 NEGATED_ACTIVATION_TO_GRAVE
+   ルール：カードの発動を無効にされた魔法・罠カードは、そのチェーンリンクの解決時に墓地へ送られる（破壊ではない）。
+   1103 裁定 R1103-SUPERVISE-002：発動を無効にされたカードは「表側表示でフィールド上から墓地へ送られた」扱いにならない。
+   - cardActivationMarkerS03：手札からの発動（opts.cardActivation / onAbort）とセット状態からの発動を「カードの発動」として
+     CHAIN_ADD に記録する（true の時だけ書く）。表側で場にある永続・フィールド・装備カードの効果の発動は含めない。
+   - settleNegatedCardActivationS03：発動を無効にされたリンクの解決時、そのカードがまだ発動した場所に表側で残っていれば
+     FX_SELF_TO_GRAVE で墓地へ送る。破壊・場から墓地へ送られた時のイベントは作らない。
+     効果で手札に戻した・セットし直したカード（ゴブリンのその場しのぎ／誤作動）や、無効と同時に破壊したカードは動かさない。 */
+function cardActivationMarkerS03(db, zone, card, opts){
+  if(!db || (db.k!=='s' && db.k!=='t') || !card) return false;
+  if(zone!=='sz' && zone!=='field') return false;
+  if(opts && (opts.cardActivation===true || typeof opts.onAbort==='function')) return true;
+  return card.face==='down';
+}
+function settleNegatedCardActivationS03(link){
+  if(!link || link.cardActivationS03!==true || link.uid==null) return false;
+  const h=findCardByUid(link.uid);
+  if(!h || !h.card || (h.zone!=='sz' && h.zone!=='field') || h.card.face!=='up') return false;
+  const d=dbOf(h.card);
+  if(d.k!=='s' && d.k!=='t') return false;
+  act({type:'FX_SELF_TO_GRAVE', player:h.p, zone:h.zone, index:h.index, reason:'発動を無効'});
+  return true;
 }
 /* =========================================================================
    RENDER — gameState を読んで描画するだけ
@@ -10900,7 +11267,19 @@ function hasFieldActivatableEffect(card){
        スキルドレインや天空の聖域のように、カードの発動が済んだ後は
        永続効果が適用されるだけのカードを候補から外す。 */
     if(!sc.resolve) return false;
-    if(!sc.fieldIgnition) return false;
+    /* S03-U13: 表側で発動できる効果の判定を広げる（応答リストは strict legality・ss>=top・ss>=2 で絞る）。
+       legacy：fieldIgnition、または U10 宣言表のカードで passive（誘発）設計でないもの。
+       統合：IGNITION / QUICK の効果、または U10 宣言表のカードの ACTIVATE 効果（その場合 ACTIVATE は場の効果）。 */
+    const declaredFreeV33 = (typeof CARD_ACTIVATION_FREE_V32!=='undefined') && CARD_ACTIVATION_FREE_V32.has(db.n);
+    let atWillV33 = !!sc.fieldIgnition;
+    if(!atWillV33 && sc.v4Unified && typeof nativeEffectsV4==='function'){
+      const effs = nativeEffectsV4(db.n) || [];
+      atWillV33 = effs.some(e=>e && (e.type===EFFECT_TYPE.IGNITION || e.type===EFFECT_TYPE.QUICK ||
+        (declaredFreeV33 && e.type===EFFECT_TYPE.ACTIVATE && (!e.events || [].concat(e.events).includes('activate')))));
+    } else if(!atWillV33 && declaredFreeV33 && !sc.passive){
+      atWillV33 = true;
+    }
+    if(!atWillV33) return false;
     // 発動回数を使い切っていれば出さない
     const loc = locateCard(card);
     if(sc.countLimit && countLeft(loc ? loc.p : 0, db.n, sc, card) <= 0) return false;
@@ -11894,7 +12273,11 @@ function processDamageStepV27(pl){
   if(!b) return PROC_V27_CANCEL;
   const stage=pl.stage||'enter', step=pl.step||b.step||'start';
   if(stage==='enter'){
-    if(!syncBattleIndicesV28()){
+    /* S03-U26: ダメージ計算を行った後の⑥ダメージステップ終了時は、戦闘で破壊されたモンスターが⑤で墓地へ送られて
+       場にいなくても行う（攻撃した側の「ダメージステップ終了時」の効果：電動刃虫、アックス・ドラゴニュート、アマゾネスの賢者 など）。
+       戦闘を行ったカードは lastBattle から引ける（battleContextV28）。ダメージ計算前に戦闘相手が消えた場合は従来どおり戦闘終了。 */
+    const endAfterCalcS03 = (step==='end' && b.battled===true);
+    if(!syncBattleIndicesV28() && !endAfterCalcS03){
       // Damage Stepに入った後に戦闘相手が消えた場合はリプレイではなく戦闘終了。
       finishDamageStepV28('combatant left field'); return PROC_V27_DONE;
     }
@@ -11921,7 +12304,8 @@ function processDamageStepV27(pl){
       const def=gameState.players[b.player===0?1:0].mz[b.target];
       b.defPosAtCalc=def?(def.pos||'atk'):null;
     }
-    act({type:'ATTACK',player:b.player,atkIdx:b.atkIdx,target:b.target,declaredAttackCount:attackCountV48(gameState.players[b.player].mz[b.atkIdx])}); b.resolved=true;
+    act({type:'ATTACK',player:b.player,atkIdx:b.atkIdx,target:b.target,declaredAttackCount:attackCountV48(gameState.players[b.player].mz[b.atkIdx]),
+      battleCtxS03:(typeof battleContextSnapshotS03==='function')?battleContextSnapshotS03(b):null}); b.resolved=true;   /* S03-U21 */
     if(markBattleLoserV28()) return PROC_V27_DONE;
     enqueueProcessorV27(PROCESSOR_V27.DAMAGE_STEP,{stage:'enter',step:'after'},true);
     return PROC_V27_DONE;
@@ -11959,18 +12343,27 @@ function resolveOnePreparedLinkV27(link){
   const srcLoc = srcCard ? locateCard(srcCard) : null;
   const sourceFieldNegated = !!(srcCard && link.from==='mz' && srcLoc && srcLoc.zone==='mz' && effectNegated(srcCard));
   const sourceEffectNegated = !!(link.sourceNegatedAtActivation || sourceFieldNegated);
-  const effectNegatedNow = chainEffectNegated || sourceEffectNegated;
+  /* S03-U25: 戦闘で破壊したモンスターの永続効果（漆黒の魔王 LV4 など）による、墓地から発動した効果の無効。 */
+  const battleNegatedS03 = (typeof battleDestroyedLinkNegatedS03==='function') ? battleDestroyedLinkNegatedS03(link, srcCard) : false;
+  const effectNegatedNow = chainEffectNegated || sourceEffectNegated || battleNegatedS03;
   if(activationNegated){
     logIt(gameState,`チェーン：${link.name} は${link.negateReason||'発動を無効'}のため発動が成立しません`);
+    /* S03-U29: 発動を無効にされた魔法・罠カードは墓地へ送られる（破壊ではない）。 */
+    if(typeof settleNegatedCardActivationS03==='function') settleNegatedCardActivationS03(link);
     return;
   }
   if(link.prepared&&sc){
     const ctx=preparedChainContext(link); RESOLUTION_SUMMON_BATCH_V2=[];
-    if(typeof sc.resolve==='function'){
+    if(link.cardActivationOnly){
+      /* S03-U10: カードの発動だけが成立した。効果は適用せず、カードは場に残る。 */
+      logIt(gameState,`チェーン：${link.name} の発動が成立（効果は発動していません）`);
+    }else if(typeof sc.resolve==='function'){
       if(effectNegatedNow){
         const why = chainEffectNegated ? (link.negateReason||'無効') : '発動元モンスターの効果が無効';
         logIt(gameState,`チェーン：${link.name} の効果は${why}のため適用されません`);
       }else{
+        /* S03-U22: 解決中のブロック（誘発イベント／damageStepOnly）を攻守変化の判定に使う。 */
+        if(typeof beginLinkResolutionS03==='function') beginLinkResolutionS03(link, sc);
         try{ sc.resolve(ctx); }catch(e){
           gameState.systemFault=`${link.name} 解決エラー：${e.message||e}`;
           logIt(gameState,`<b>システム</b>：${gameState.systemFault}`);
@@ -11989,6 +12382,7 @@ function resolveOnePreparedLinkV27(link){
 }
 function processChainEndV30(){
   gameState.chainWindow=null;
+  if(typeof endLinkResolutionS03==='function') endLinkResolutionS03();   /* S03-U22 */
   // 最終リンク解決後のAdjustを済ませてから、召喚無効窓や元処理へ戻る。
   if(gameState.pendingSummon){ finishSummonNegationChainV2(); return PROC_V27_DONE; }
   if(gameState.eventChainResumeV11){
@@ -12051,7 +12445,8 @@ function resolveReservedEffectsV30(at){
         const h=findCardByUid(uid), flagKey=r.flagKey||'v370LevelResetTurn';
         if(h && h.zone==='mz' && h.card[flagKey]===gameState.turn){
           act({type:'FX_SET_STATE',player:h.p,zone:'mz',index:h.index,lvReset:true,reason:r.name||'レベルを元に戻す'});
-          delete h.card[flagKey];
+          const now=findCardByUid(uid); // S03-U08: 期限flagの削除もActionで行う
+          if(now&&now.zone==='mz') act({type:'FX_CARD_FLAG_V46',player:now.p,zone:'mz',index:now.index,flag:flagKey,value:null,reason:r.name||'予約効果終了',silent:true});
         }
       });
       handled++; handledKinds.add('levelResetUids');
@@ -12151,6 +12546,21 @@ function scriptSpellSpeed(sc, db){
 }
 function chainTopSpeed(){ return gameState.chain.length ? (gameState.chain[gameState.chain.length-1].ss||1) : 0; }
 
+/* S03-U10 (C-S03-07): 永続魔法・フィールド魔法・永続罠の「カードの発動」と「効果の発動」を分ける。
+   宣言したカード（legacy の fieldIgnition:true、または declareCardActivationFreeV32 の表）を手札・セット状態から発動する時は
+   カードの発動だけを行う。効果の条件・回数制限・コスト・対象は使わず、解決しても効果は適用しない。
+   表側で場に残った後、効果は別に発動する。
+   史実：《竜の渓谷》10/07/04、《神の居城－ヴァルハラ》、《コア転送ユニット》《擬似空間》10/09/23（発動と同時に効果は使えない）。 */
+const CARD_ACTIVATION_FREE_V32 = new Set();
+function declareCardActivationFreeV32(names){ (names||[]).forEach(n=>CARD_ACTIVATION_FREE_V32.add(n)); }
+function cardActivationOnlyV32(name,sc,db,zone,card,opts){
+  if(!sc||!db||(db.k!=='s'&&db.k!=='t')||!['永続','フィールド'].includes(db.sub)) return false;
+  if(!(sc.fieldIgnition||CARD_ACTIVATION_FREE_V32.has(name))) return false;
+  if(opts&&opts.cardActivation) return true;
+  if(zone==='hand') return true;
+  return !!(card && card.face==='down' && (zone==='sz'||zone==='field'));
+}
+
 function strictScriptLegalityV2(name,p,zone,index,opts){
   const sc=CARD_SCRIPTS[name];
   const candidate=(opts&&opts.cardOverride)||zoneCard(gameState.players[p],zone,index);
@@ -12162,6 +12572,8 @@ function strictScriptLegalityV2(name,p,zone,index,opts){
   const logicalZone=(opts&&opts.logicalZone)||zone;
   const db=dbOf(card);
   if(db.k==='t' && (trapNegated(card) || trapStunned(p,card))) return {ok:false,reason:'この罠カードの効果は現在無効です'};
+  /* S03-U10: カードの発動だけを行う場合は、効果の回数制限・特殊召喚／サーチ封印・効果のタイミング・条件を判定しない。 */
+  if(cardActivationOnlyV32(name,sc,db,zone,card,opts)) return {ok:true,reason:'',cardActivationOnly:true};
   if(sc.countLimit){
     /* S03-U02: effects 指定の回数制限は、この発動が対象の効果である時だけ判定する。 */
     const limitKey=countLimitEffectKeyV32(name,sc,makeContext(p,card,logicalZone,index,(opts&&opts.eventName)||'legalCheck',Object.assign({},opts||{})));
@@ -12269,15 +12681,21 @@ function commitPreparedActivationV11(desc,data){
   const hit=findCardByUid(desc.uid); if(!hit){abortPreparedActivationV11(desc);return false;}
   const selectionData=serializeChainSelectionV2(data.targets||[]);
   const p3CostSnaps=(typeof takeCostSnapshotsV3==='function')?takeCostSnapshotsV3(gameState):[];
-  act({type:'CHAIN_ADD',player:desc.player,cardId:hit.card.id,uid:desc.uid,name:desc.name,ss:desc.ss,
+  act(Object.assign({type:'CHAIN_ADD',player:desc.player,cardId:hit.card.id,uid:desc.uid,name:desc.name,ss:desc.ss,
     from:desc.from,index:desc.index,costSnapshots:p3CostSnaps,prepared:true,targets:selectionData,
     event:desc.event||null,eventName:desc.eventName||null,
     v4EffectKey:data.v4EffectKey||desc.v4EffectKey||null,v44CountConsume:desc.v44CountConsume||null,
     v44ActivationPending:!!desc.v44ActivationPending,effectClass:desc.effectClass||null,
     sourceNegatedAtActivation:!!desc.sourceNegatedAtActivation,
     spellCounterObserverUids:desc.spellCounterObserverUids||[],keep:!!desc.keep,
-    eventResumeV11:desc.eventSelectionV11&&desc.eventSelectionV11.resume||null});
-  if(desc.noPriority){render();completeEventSelectionV11(desc,true);}
+    eventResumeV11:desc.eventSelectionV11&&desc.eventSelectionV11.resume||null},desc.cardActivationS03?{cardActivationS03:true}:{}));   /* S03-U29 */
+  if(typeof applyTargetingNegatorsS03==='function') applyTargetingNegatorsS03();   /* S03-U28: 対象にされた時の自動無効（永続効果） */
+  if(desc.noPriority){
+    render();completeEventSelectionV11(desc,true);
+    /* S03-U31: DUEL 以外では processor がチェーン解決を始めないので、コミットしたリンクの解決を明示的に開始する。 */
+    if(typeof PLAY_MODE!=='undefined' && typeof PLAY_MODES!=='undefined' && PLAY_MODE!==PLAY_MODES.DUEL
+       && typeof resolveWholeChainV2==='function' && gameState.chain.length) resolveWholeChainV2();
+  }
   else{gameState.chainWindow={priority:desc.player===0?1:0,passes:0};render();openChainPriorityV2();}
   return true;
 }
@@ -12286,10 +12704,16 @@ function prepareDuelActivation(name,p,zone,index,opts){
   const sc=CARD_SCRIPTS[name], P=gameState.players[p];
   if(!sc) return false;
   const card=zoneCard(P,zone,index);
+  /* S03-U18: 発動への応答（宣言したスクリプト）は、応答先の発動イベントを opts.event として持たせる（CHAIN_ADD が保持し解決時の ctx.event になる）。 */
+  if(typeof activationResponseOptsS03==='function') opts=activationResponseOptsS03(name,opts);
   const L=strictScriptLegalityV2(name,p,zone,index,opts);
   if(!L.ok){ showToast(L.reason); return false; }
   ensureCardUid(gameState,card);
   const db=dbOf(card), ss=scriptSpellSpeed(sc,db);
+  /* S03-U10: 裏側から表にする前に判定する（セット状態からの発動もカードの発動）。 */
+  const cardActivationOnly=cardActivationOnlyV32(name,sc,db,zone,card,opts);
+  /* S03-U29: 表にする前に「カードの発動」（手札・セット状態から）かを控える。 */
+  const cardActivationS03=(typeof cardActivationMarkerS03==='function')&&cardActivationMarkerS03(db,zone,card,opts);
   // System v3.3.0: コスト支払い前に、フィールドで受けている個別の効果無効を記録する。
   // Skill Drain のような継続無効は解決時に場に残っているかで判定するため、ここには含めない。
   const sourceNegatedAtActivation = zone==='mz' &&
@@ -12307,19 +12731,20 @@ function prepareDuelActivation(name,p,zone,index,opts){
     const spellCounterObserverUids = db.k==='s' ? v350SpellCounterObserverUids() : [];
     // 選択情報はカード参照だけでなく、効果モードや複数素材を含むことがある。
     const selectionData=serializeChainSelectionV2(ctx.selectedTargets||[]);
-    const v44CountConsume=countConsumePayloadV44(p,name,sc,card,countLimitEffectKeyV32(name,sc,ctx));
+    const v44CountConsume=cardActivationOnly?null:countConsumePayloadV44(p,name,sc,card,countLimitEffectKeyV32(name,sc,ctx));
     const v44ActivationPending=(db.k==='s'||db.k==='t') && ['永続','フィールド','装備'].includes(db.sub);
     // System v4.4: 回数制限の消費と activationPending は CHAIN_ADD 自体に含める。
     // これにより Replay/Undo の1 Actionが「発動をコミットした状態」と完全に一致する。
     /* P3: コスト支払い中に記録されたスナップショットをチェーンリンクへ引き渡す。
        将来 P1.1 の activationContext.costs も同じ形式を使う。 */
     const p3CostSnaps=(typeof takeCostSnapshotsV3==='function')?takeCostSnapshotsV3(gameState):[];
-    act({type:'CHAIN_ADD',player:p,cardId:card.id,uid:card.uid,name,ss,from:zone,index,
+    act(Object.assign({type:'CHAIN_ADD',player:p,cardId:card.id,uid:card.uid,name,ss,from:zone,index,
          costSnapshots:p3CostSnaps,
          prepared:true,targets:selectionData,event:(opts&&opts.event)||null,eventName:(opts&&opts.eventName)||null,
          v4EffectKey:ctx.v4EffectKey||null, v44CountConsume, v44ActivationPending,
          effectClass:effectClassV2(sc,db), sourceNegatedAtActivation, spellCounterObserverUids,
-         keep:(db.k==='m'||['永続','フィールド','装備'].includes(db.sub))});
+         keep:(db.k==='m'||['永続','フィールド','装備'].includes(db.sub))},cardActivationOnly?{cardActivationOnly:true}:{},cardActivationS03?{cardActivationS03:true}:{},ctx.costCtxS03?{costCtxS03:ctx.costCtxS03}:{}));
+    if(typeof applyTargetingNegatorsS03==='function') applyTargetingNegatorsS03();   /* S03-U28: 対象にされた時の自動無効（永続効果） */
     if(opts&&opts.noPriority){
       render();
       if(typeof opts.afterPrepared==='function') opts.afterPrepared();
@@ -12331,9 +12756,10 @@ function prepareDuelActivation(name,p,zone,index,opts){
   /* P3: コスト支払いの直前にスナップショットバッファを初期化する */
   if(typeof beginCostSnapshotsV3==='function') beginCostSnapshotsV3(gameState);
   /* P1.1カードはclosureを保存せず、handler名+JSON descriptorで発動準備を続行する。 */
-  if(typeof sc.activationV11==='function'){
+  if(!cardActivationOnly && typeof sc.activationV11==='function'){
     clearActivationChoiceV11(p);
     const desc=preparedActivationDescriptorV11(name,p,zone,index,opts||{},ctx,card,db,sc,ss,sourceNegatedAtActivation);
+    if(cardActivationS03) desc.cardActivationS03=true;   /* S03-U29 */
     const safe=choiceJsonSafetyV49(desc,'activationV11');
     if(!safe.ok){abortPreparedActivationV11(desc);throw new Error(`P1.1 activation descriptor is not JSON-safe: ${safe.why}`);}
     try{sc.activationV11(ctx,desc);}catch(e){abortPreparedActivationV11(desc);throw e;}
@@ -12343,6 +12769,22 @@ function prepareDuelActivation(name,p,zone,index,opts){
     if(sc.selectTargets) sc.selectTargets(ctx,targets=>{ ctx.selectedTargets=targets||[]; finishPrepare(); });
     else finishPrepare();
   };
+  /* S03-U10: カードの発動だけならコスト・対象は使わない。 */
+  if(cardActivationOnly){ finishPrepare(); return true; }
+  /* S03-U16 COST_SELECTION_FIRST: 宣言されたスクリプトは selectTargets がコストにするカードを選ぶ。
+     先に選び、コストを払い、コストで動いたカードを対象から外し、コスト中に ctx へ書かれた値を CHAIN_ADD へ載せる。 */
+  if(typeof costSelectionFirstS03==='function' && costSelectionFirstS03(name,sc)){
+    sc.selectTargets(ctx,targets=>{
+      ctx.selectedTargets=targets||[];
+      const beforeS03=costSelectionBeforeS03(ctx);
+      sc.cost(ctx,ok=>{
+        if(ok===false){ showToast('コストを払えません'); if(opts&&typeof opts.onAbort==='function') opts.onAbort(); return; }
+        costSelectionAfterS03(ctx,beforeS03);
+        finishPrepare();
+      });
+    });
+    return true;
+  }
   if(sc.cost) sc.cost(ctx,ok=>{ if(ok===false){ showToast('コストを払えません'); if(opts&&typeof opts.onAbort==='function') opts.onAbort(); return; } chooseTargets(); });
   else chooseTargets();
   return true;
@@ -12362,7 +12804,7 @@ function duelActivateFromHand(i){
     ensureCardUid(gameState,c); const uid=c.uid;
     closeSheet(); act({type:'MOVE',player:p,from:'hand',fromIndex:i,to,face:'up'});
     const idx=to==='field'?0:gameState.players[p].sz.length-1;
-    prepareDuelActivation(nm,p,to,idx,{onAbort:()=>{
+    prepareDuelActivation(nm,p,to,idx,{cardActivation:true,onAbort:()=>{
       const h=findCardByUid(uid); if(h&&(h.zone==='sz'||h.zone==='field')) act({type:'MOVE',player:h.p,from:h.zone,fromIndex:h.index,to:'hand',face:'up'});
     }}); return;
   }
@@ -12394,9 +12836,13 @@ function getChainResponsesV2(p){
     if(!c) return; const db=dbOf(c), nm=db.n||'', sc=CARD_SCRIPTS[nm];
     if(!sc||typeof sc.resolve!=='function') return;
     const ss=scriptSpellSpeed(sc,db); if(ss<top) return;
+    /* S03-U12: チェーン・応答タイミングで発動できるのはスペルスピード2以上だけ。
+       表側の永続・フィールド魔法の効果（SS1）は開いたゲーム状態（自分のメインフェイズの操作）でのみ発動する。 */
+    if(ss<2) return;
     if(db.k==='m' && sc.quickEffect!==true && ss<2) return;
     if((zone==='grave'||zone==='banish'||zone==='hand')&&!canActivateFromZone(db,zone)) return;
-    const L=strictScriptLegalityV2(nm,p,zone,index,{}); if(!L.ok) return;
+    /* S03-U18: 発動への応答（宣言したスクリプト）は、一番上のリンクの発動イベントを ctx.event にして判定する。 */
+    const L=strictScriptLegalityV2(nm,p,zone,index,(typeof activationResponseOptsS03==='function')?activationResponseOptsS03(nm,{}):{}); if(!L.ok) return;
     out.push({p,zone,index,card:c,db,ss});
   };
   P.sz.forEach((c,i)=>{
@@ -12412,7 +12858,10 @@ function getChainResponsesV2(p){
   if(p===gameState.activePlayer) P.hand.forEach((c,i)=>{ const db=dbOf(c); if(db.k==='s'&&db.sub==='速攻') push('hand',i,c); });
   ['hand','grave','banish','mz'].forEach(z=>(P[z]||[]).forEach((c,i)=>{
     const db=dbOf(c), sc=CARD_SCRIPTS[db.n];
-    if(!sc||sc.quickEffect!==true) return;
+    /* S03-U19: 発動への応答として宣言したモンスター（S03-U18）は、quickEffect を持たなくてもチェーン応答の候補にする。
+       合法性は一番上のリンクの発動イベントで判定される（S03-U18）。 */
+    const activationResponderS03 = typeof activationResponseDeclaredS03==='function' && activationResponseDeclaredS03(db.n);
+    if(!sc||(sc.quickEffect!==true&&!activationResponderS03)) return;
     if(!canActivateFromZone(db,z)&&z!=='mz') return;
     push(z,i,c);
   }));
@@ -12466,6 +12915,8 @@ function preparedChainContext(link){
     extra.battleOpponent=battleOpponentV28(card,extra.battle);
   }
   const ctx=makeContext(link.player,card,link.from,link.index,link.eventName||'resolve',extra);
+  /* S03-U16: コスト中に控えた値を解決時の ctx へ戻す（既存のキーは上書きしない）。 */
+  if(link.costCtxS03&&typeof link.costCtxS03==='object') Object.keys(link.costCtxS03).forEach(k=>{ if(!(k in ctx)) ctx[k]=link.costCtxS03[k]; });
   const restored=deserializeChainSelectionV2(link.selection||link.targets||[]);
   ctx.selectedTargets=Array.isArray(restored)?restored:[];
   ctx.keep=!!link.keep; return ctx;
@@ -12473,6 +12924,20 @@ function preparedChainContext(link){
 function afterPreparedResolve(link,ctx){
   const sc=CARD_SCRIPTS[link.name];
   if(sc&&sc.afterResolve) sc.afterResolve(ctx); else if(ctx.card) selfToGrave(ctx);
+  settleResolvedSpellTrapV32(link,ctx,sc);
+}
+/* S03-U07 (C-S03-04): 通常・速攻・カウンターの魔法／通常・カウンター罠は、解決後に墓地へ送られる（ルール）。
+   スクリプトの afterResolve が空でも、発動したゾーンに表側で残っていれば墓地へ送る。
+   対象外：永続・フィールド・装備（link.keep）、装備カードになったカード、裏側にセットし直したカード、
+   remainsOnFieldAfterResolve を宣言したカード（光の護封剣など「発動後フィールドに残る」カード）。 */
+function settleResolvedSpellTrapV32(link,ctx,sc){
+  if(!link || link.keep || !ctx || !ctx.card) return;
+  const d=dbOf(ctx.card);
+  if(d.k!=='s' && d.k!=='t') return;
+  if(sc && sc.remainsOnFieldAfterResolve) return;
+  const h=findCardByUid(ctx.card.uid);
+  if(!h || (h.zone!=='sz' && h.zone!=='field') || h.card.face!=='up' || h.card.equipTo) return;
+  act({type:'FX_SELF_TO_GRAVE', player:h.p, zone:h.zone, index:h.index});
 }
 /* System v2.3: 召喚方法による元々の数値変更は、効果無効で一度失われたら戻らない。
    Skill Drain 等の継続無効が「解決した後」にだけ判定する。 */
@@ -12499,7 +12964,7 @@ function queueDeferredEventV2(eventName,evt){
     safe.uids=safe.cards.map(c=>ensureCardUid(gameState,c)).filter(x=>x!=null); delete safe.cards;
   }
   const item={eventName,evt:safe};
-  if(typeof APPLY_ACTION_DEPTH_V31!=='undefined'&&APPLY_ACTION_DEPTH_V31>0)gameState.deferredEvents.push(item);
+  if(typeof APPLY_ACTION_DEPTH_V31!=='undefined'&&APPLY_ACTION_DEPTH_V31>0){gameState.deferredEvents.push(item);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gameState,item);}
   else commitAutomaticActionV44({type:'EVENT_QUEUE_V31',item});
 }
 function queueSpecialSummonSuccessV2(p,card,kind){
@@ -12551,6 +13016,10 @@ function summonNegatorsV2(pending){
 function beginSummonWindowV2(pending){
   act({type:'SUMMON_WINDOW_OPEN_V42',pending}); const list=summonNegatorsV2(gameState.pendingSummon||pending);
   if(!list.length || ADS_CHAIN_MODE===ADS_CHAIN_MODES.IGNORE){ commitPendingSummonV2(); return; }
+  showSummonWindowSheetV2(pending,list);
+}
+/* S03-U15: 召喚無効タイミングのシート。保存・Undo/Redo からの再表示でも使う。 */
+function showSummonWindowSheetV2(pending,list){
   const rows=list.map(x=>`<div class="act pick-row" onclick="activateSummonNegatorV2(${x.p},'${x.zone}',${x.index})"><span class="pk-nm">${x.db.n}</span><span class="pk-sub">召喚を無効 / SS${x.ss}</span></div>`).join('');
   sheet.innerHTML=`<div class="grip"></div><h3 style="margin-bottom:6px">召喚無効タイミング</h3><div class="meta" style="margin-bottom:10px">${pending.name} の${pending.label||'召喚'}を試みています。<br>召喚成功時の激流葬・奈落より前のタイミングです。</div><div class="pick-list">${rows}</div><div class="act-grid wide"><div class="act fx" onclick="commitPendingSummonV2()">何も発動しない — 召喚成功</div></div>`;
   veil.classList.add('on');
@@ -12561,8 +13030,20 @@ function activateSummonNegatorV2(p,zone,index){
 }
 function summonNegatePendingV2(reason){ if(gameState.pendingSummon) act({type:'SUMMON_WINDOW_NEGATE_V42',reason:reason||'召喚無効'}); }
 function finishSummonNegationChainV2(){ const ps=gameState.pendingSummon; if(!ps) return; if(ps.negated) cancelPendingSummonV2(); else commitPendingSummonV2(); }
-function commitPendingSummonV2(){ const ps=gameState.pendingSummon; if(!ps) return; closeSheet(); act({type:'SUMMON_WINDOW_CLOSE_V42',result:'commit'}); if(typeof ps.commit==='string'&&typeof window[ps.commit]==='function') window[ps.commit](); }
-function cancelPendingSummonV2(){ const ps=gameState.pendingSummon; if(!ps) return; closeSheet(); act({type:'SUMMON_WINDOW_CLOSE_V42',result:'cancel'}); if(typeof ps.cancel==='string'&&typeof window[ps.cancel]==='function') window[ps.cancel](); showToast(`${ps.name} の${ps.label||'召喚'}は無効になりました`); }
+function commitPendingSummonV2(){ const ps=gameState.pendingSummon; if(!ps) return; closeSheet(); act({type:'SUMMON_WINDOW_CLOSE_V42',result:'commit'}); if(typeof ps.commit==='string'&&typeof window[ps.commit]==='function') window[ps.commit](ps); }
+function cancelPendingSummonV2(){ const ps=gameState.pendingSummon; if(!ps) return; closeSheet(); act({type:'SUMMON_WINDOW_CLOSE_V42',result:'cancel'}); if(typeof ps.cancel==='string'&&typeof window[ps.cancel]==='function') window[ps.cancel](ps); showToast(`${ps.name} の${ps.label||'召喚'}は無効になりました`); }
+
+/* S03-U15 SUMMON_WINDOW_RESUME: 保存からの再開・Undo・Redo で召喚無効タイミングの途中へ戻った場合にシートを開き直す。
+   自動では確定しない（Undo が同じ窓へ戻るたびに召喚し直さないように）。
+   チェーン処理中・選択待ち中は既存の再開経路に任せる。 */
+function reopenSummonWindowAfterLoadS03(){
+  const ps=gameState&&gameState.pendingSummon;
+  if(!ps || typeof PLAY_MODE==='undefined' || PLAY_MODE!==PLAY_MODES.DUEL) return null;
+  if(gameState.chain&&gameState.chain.length) return 'chain';
+  if(gameState.pendingChoice) return 'choice';
+  showSummonWindowSheetV2(ps,summonNegatorsV2(ps));
+  return 'sheet';
+}
 
 function runSystemSelfTestV2(){
   const rows=[], test=(name,fn)=>{let ok=false,detail='';try{const r=fn();ok=!!r;detail=ok?'OK':String(r||'NG');}catch(e){detail=e.message||String(e);}rows.push({name,ok,detail});};
@@ -12916,8 +13397,39 @@ function runSummonProcedure(name,p,zone,index){
   veil.classList.add('on');
 }
 let PENDING_SUMMON_COMMIT=null, PENDING_SUMMON_CANCEL=null;
-function __pendingSummonCommit(){ const f=PENDING_SUMMON_COMMIT; PENDING_SUMMON_COMMIT=PENDING_SUMMON_CANCEL=null; if(f) f(); }
-function __pendingSummonCancel(){ const f=PENDING_SUMMON_CANCEL; PENDING_SUMMON_COMMIT=PENDING_SUMMON_CANCEL=null; if(f) f(); }
+/* S03-U15 SUMMON_WINDOW_RESUME: 召喚無効タイミングの続きは gameState.pendingSummon.resumeS03（JSON）から実行する。
+   関数クロージャに頼らないので、保存・リロード・Undo/Redo を跨いでも召喚を完了／無効にできる。
+   PENDING_SUMMON_COMMIT/CANCEL は resumeS03 を持たない呼び出し元のための互換として残す。 */
+function __pendingSummonCommit(ps){ const f=PENDING_SUMMON_COMMIT; PENDING_SUMMON_COMMIT=PENDING_SUMMON_CANCEL=null; if(ps&&ps.resumeS03) runSummonWindowResumeS03(ps,'commit'); else if(f) f(); else runSummonWindowResumeS03(ps,'commit'); }
+function __pendingSummonCancel(ps){ const f=PENDING_SUMMON_CANCEL; PENDING_SUMMON_COMMIT=PENDING_SUMMON_CANCEL=null; if(ps&&ps.resumeS03) runSummonWindowResumeS03(ps,'cancel'); else if(f) f(); else runSummonWindowResumeS03(ps,'cancel'); }
+function runSummonWindowResumeS03(ps,result){
+  const r=ps&&ps.resumeS03;
+  if(!r){ logIt(gameState,'召喚の続きを復元できないため、召喚無効タイミングを閉じました（続きのデータが無い保存）'); return false; }
+  const hit=findCardByUid(r.uid);
+  if(result==='commit'){
+    if(ps.kind==='normal'){
+      if(!hit||hit.zone!=='hand') return false;
+      const p=ps.player;
+      act({type:'NORMAL_SUMMON',player:p,handIndex:hit.index,pos:'atk',tributes:r.tributes,tributeValue:r.tributeValue,prepaid:true,summonMethod:r.summonMethod,p3Materials:r.p3Materials||[]});
+      const summoned=lastSummonedCard(p);
+      if(summoned) applyNormalSummonMethod(summoned,dbOf(summoned),p,r.summonMethod,'summon');
+      if(summoned) queueDeferredEventV2('onNormalSummon',{player:p,name:ps.name,card:summoned});
+      flushDeferredEventsV2(); return true;
+    }
+    if(ps.kind==='procedure'){ doSpecialFromZoneUidV370(r.uid,r.pos,ps.name,r.data); return true; }
+    if(ps.kind==='flip'){
+      if(!hit) return false;
+      act({type:'FX_SET_STATE',player:hit.p,zone:hit.zone,index:hit.index,face:'up',pos:'atk',reason:'反転召喚成功'});
+      const now=findCardByUid(r.uid); if(now) queueDeferredEventV2('onFlip',{player:ps.player,name:ps.name,card:now.card,treatAsField:true,flipSummon:true});
+      flushDeferredEventsV2(); return true;
+    }
+    return false;
+  }
+  if(!hit) return false;
+  if(ps.kind==='flip'){ act({type:'FX_TO_GRAVE',player:hit.p,zone:hit.zone,index:hit.index,reason:'反転召喚を無効',byDestroy:true}); return true; }
+  if(hit.zone!=='grave') act({type:'MOVE',player:hit.p,from:hit.zone,fromIndex:hit.index,to:'grave'});
+  return true;
+}
 function finishSummonProcedure(name,p,zone,index,pos){
   // v3.6以前の finishSummonProcedure(name,p,index,pos) 互換。
   if(typeof zone==='number'){ pos=index; index=zone; zone='hand'; }
@@ -12931,22 +13443,24 @@ function finishSummonProcedure(name,p,zone,index,pos){
     const hit=findCardByUid(card.uid);
     const allowed=summonProcedureZonesV370(sp);
     if(!hit||hit.p!==p||!allowed.includes(hit.zone)){ closeSheet(); showToast('特殊召喚するカードが指定ゾーンにありません'); return; }
-    PENDING_SUMMON_COMMIT=()=>doSpecialFromZoneUidV370(card.uid,pos,name);
-    PENDING_SUMMON_CANCEL=()=>{
-      const now=findCardByUid(card.uid);
-      if(now && now.zone!=='grave') act({type:'MOVE',player:now.p,from:now.zone,fromIndex:now.index,to:'grave'});
-    };
-    beginSummonWindowV2({player:p,name,kind:'procedure',label:'特殊召喚',uid:card.uid,commit:'__pendingSummonCommit',cancel:'__pendingSummonCancel'});
+    PENDING_SUMMON_COMMIT=PENDING_SUMMON_CANCEL=null;
+    beginSummonWindowV2({player:p,name,kind:'procedure',label:'特殊召喚',uid:card.uid,commit:'__pendingSummonCommit',cancel:'__pendingSummonCancel',resumeS03:Object.assign({uid:card.uid,pos:pos||'atk'},ctx.procedureDataS03?{data:JSON.parse(JSON.stringify(ctx.procedureDataS03))}:{})});
   };
   if(sp.cost){
     sp.cost(ctx,ok=>{ if(ok===false){ showToast('特殊召喚のコストを払えません'); render(); return; } proceed(); });
   }else proceed();
 }
-function doSpecialFromZoneUidV370(uid,pos,reason){
+/* S03-U17: 特殊召喚手順のコストで記録した JSON（procedureDataS03）があれば、特殊召喚した直後・召喚成功イベントの前に
+   summonProcedure.afterSummonS03(handle,data) を呼ぶ（例：墓地へ送ったレベル分だけレベルを下げる、除外したモンスターを戻す予約）。 */
+function doSpecialFromZoneUidV370(uid,pos,reason,procedureDataS03){
   const hit=findCardByUid(uid); if(!hit) return;
   const card=hit.card, nm=cardName(card), p=hit.p;
   act({type:'FX_SPECIAL_SUMMON',player:p,from:hit.zone,fromIndex:hit.index,pos:pos||'atk',reason:reason||nm});
   const h=locateCard(card);
+  if(h && h.p===p && h.zone==='mz' && procedureDataS03!==undefined){
+    const spS03=(CARD_SCRIPTS[nm]||{}).summonProcedure;
+    if(spS03 && typeof spS03.afterSummonS03==='function') spS03.afterSummonS03({p:h.p,zone:h.zone,index:h.index,card},procedureDataS03);
+  }
   if(h && h.p===p && h.zone==='mz') queueDeferredEventV2('onSpecialSummon',{player:p,name:nm,card,kind:'procedure'});
   flushDeferredEventsV2();
 }
@@ -13452,9 +13966,10 @@ const API = {
     act({type:'FX_UNEQUIP',player:r.p,szIndex:r.index,reason});
     return !r.card.v46MonsterEquip && !r.card.equipTo;
   },
-  setCardFlag(t,flag,value,reason){
+  setCardFlag(t,flag,value,reason,opts){
     const r=resolveTarget(t); if(!r)return false;
-    act({type:'FX_CARD_FLAG_V46',player:r.p,zone:r.zone,index:r.index,flag,value,reason}); return true;
+    /* S03-U08: 効果処理中のカード状態flagは必ずActionで書く（Replay digest一致）。silent はログを出さない。 */
+    act(Object.assign({type:'FX_CARD_FLAG_V46',player:r.p,zone:r.zone,index:r.index,flag,value,reason},(opts&&opts.silent)?{silent:true}:{})); return true;
   },
   shuffle(p){ trace(`shuffle`); act({type:"SHUFFLE", player:p}); },
   /* --- 攻守の増減（継続効果） --- */
@@ -14362,6 +14877,8 @@ function collectHandlers(eventName, evt){
            (eventName==='onNormalSummon'||eventName==='onSpecialSummon'||eventName==='onFlip')) return;
         const h  = sc && sc.passive && sc.passive[eventName];
         if(!h) return;
+        /* S03-U18: 発動への応答（宣言したスクリプト）はチェーン応答で発動する。解決後の遅れた誘発としては出さない。 */
+        if(eventName === 'onActivateSuccess' && typeof activationLateTriggerSuppressedS03==='function' && activationLateTriggerSuppressedS03(nm)) return;
         if(sc.countLimit && countLeft(p, nm, sc, c) <= 0) return;   // 使用済みは出さない
         /* リバース効果は「フィールドで発動した扱い」になる（1103当時裁定）。
            ②でリバースしたモンスターが⑤までに戦闘破壊されて墓地にあっても、
@@ -14385,6 +14902,16 @@ function collectHandlers(eventName, evt){
         // 条件を満たすものだけ候補にする。ここでは盤面を変更してはいけない。
         let ok = true;
         try{ ok = h(ctx); }catch(e){ ok = false; }
+        /* S03-U09: DUEL では、選択した時と同じ発動可否（condition・回数制限・封印・罠無効など）を満たす誘発だけを候補にする。
+           満たさない任意誘発は選んでも発動できず、強制誘発のグループはスキップできないためデュエルが止まる。
+           選択時（eventPickV2）と同じ opts を使う。リバースを場として扱う場合は logicalZone を mz にする。 */
+        /* S03-U10: 伏せた永続罠などの「カードの発動」は誘発効果ではないので SEGOC の候補にしない（チェーン応答から発動できる）。 */
+        if(ok && PLAY_MODE===PLAY_MODES.DUEL && typeof cardActivationOnlyV32==='function' && cardActivationOnlyV32(nm, sc, dbOf(c), zone, c, {})) ok = false;
+        if(ok && PLAY_MODE===PLAY_MODES.DUEL && typeof strictScriptLegalityV2==='function'){
+          const L = strictScriptLegalityV2(nm, p, zone, i, {cardOverride:c, logicalZone:asField?'mz':zone,
+            event:evt||{}, eventName, battle:extra.battle, step:extra.step, battleOpponent:extra.battleOpponent, ignoreTiming:true});
+          if(!L.ok) ok = false;
+        }
         if(ok) out.push({p, zone, index:i, card:c, name:nm, ctx, eventName, event:evt||{}});
       });
     };
@@ -14398,14 +14925,20 @@ function collectHandlers(eventName, evt){
 /* DUELモード用 SEGOC。強制/任意、ターン/非ターンの4群を順に処理し、
    同じ群に複数ある場合はプレイヤーが積む順を選べる。 */
 function startEventChainV2(eventName,evt,cands){
-  const mapped=cands.map(c=>{ const sc=CARD_SCRIPTS[c.name]; return Object.assign({player:c.p,forced:!!(sc&&sc.forced),rank:segocRank({player:c.p,forced:!!(sc&&sc.forced)},gameState.activePlayer)},c); });
-  EVT_V2_STATE={eventName,evt:evt||{},groups:[0,1,2,3].map(r=>mapped.filter(x=>x.rank===r)),rank:0,chainStart:gameState.chain.length,after:EVT_AFTER};
+  /* S03-U27: 魔法・罠カードの「〜した時に発動できる」は誘発効果ではないので、同時に誘発した誘発効果を全てチェーンに積んだ後に
+     発動する（ターンプレイヤー → 非ターンプレイヤー）。誘発効果の4群（0〜3）の後に 4 / 5 として並べる。
+     以前は誘発効果の群に混ざり、スペルスピード2の罠が先に積まれると、相手のスペルスピード1の誘発効果が
+     「スペルスピードが足りません」で発動できず、同じ候補が出続けた。 */
+  const mapped=cands.map(c=>{ const sc=CARD_SCRIPTS[c.name]; const k=c.card?dbOf(c.card).k:null;
+    const rank=(k==='s'||k==='t') ? (c.p===gameState.activePlayer?4:5) : segocRank({player:c.p,forced:!!(sc&&sc.forced)},gameState.activePlayer);
+    return Object.assign({player:c.p,forced:!!(sc&&sc.forced)&&rank<4,rank},c); });
+  EVT_V2_STATE={eventName,evt:evt||{},groups:[0,1,2,3,4,5].map(r=>mapped.filter(x=>x.rank===r)),rank:0,chainStart:gameState.chain.length,after:EVT_AFTER};
   EVT_AFTER=null; processEventGroupV2();
 }
 function processEventGroupV2(){
   const st=EVT_V2_STATE; if(!st) return;
-  while(st.rank<4 && !st.groups[st.rank].length) st.rank++;
-  if(st.rank>=4){ finishEventChainV2(); return; }
+  while(st.rank<st.groups.length && !st.groups[st.rank].length) st.rank++;   /* S03-U27: 6群 */
+  if(st.rank>=st.groups.length){ finishEventChainV2(); return; }
   const g=st.groups[st.rank], forced=st.rank<2;
   const rows=g.map((c,i)=>{
     const neg=(c.card && effectNegated(c.card))?'・効果無効中（発動は可能）':'';
@@ -15280,7 +15813,7 @@ defineScript("エフェクト・ヴェーラー", {
     const r=resolveTarget(t);
     // 解決時に相手がコントロールする表側表示モンスターでなくなっていれば適用しない。
     if(!r || r.zone!=='mz' || r.p!==ctx.opponent || !r.card || r.card.face!=='up') return;
-    r.card.negatedUntilTurn = gameState.turn;
+    API.setCardFlag({card:r.card},'negatedUntilTurn',gameState.turn,'エフェクト・ヴェーラー',{silent:true});
     API.log(`${labelOf(r.card)} の効果はターン終了時まで無効`);
   },
   afterResolve(){}
@@ -15656,7 +16189,7 @@ defineScript("ゾンビキャリア", {
     if(h) act({type:"FX_HAND_TO_TOP", player:ctx.player, handIndex:h.index, reason:"ゾンビキャリア"});
     const gi = gameState.players[ctx.player].grave.indexOf(ctx.card);
     if(gi>=0) API.specialSummon(ctx.player, 'grave', gi, 'atk', "ゾンビキャリア");
-    const loc=locateCard(ctx.card); if(loc&&loc.zone==='mz') ctx.card.banishWhenLeavesField=true;
+    const loc=locateCard(ctx.card); if(loc&&loc.zone==='mz') API.setCardFlag({card:ctx.card},'banishWhenLeavesField',true,'ゾンビキャリア',{silent:true});
     API.log("ゾンビキャリア：この効果で蘇生したため、フィールドを離れる場合は除外される");
   },
   afterResolve(){}
@@ -16197,6 +16730,7 @@ defineScript("リミッター解除", {
 
 /* ---- 光の護封剣 ---- */
 defineScript("光の護封剣", {
+  remainsOnFieldAfterResolve:true,   // S03-U07: 「このカードは発動後、フィールドに残り続け」
   continuous:{
     scope:'oppMonsters', from:['sz'],
     apply(){ return null; },
@@ -16892,63 +17426,7 @@ defineScript("大天使クリスティア", {
 });
 
 /* ---------- 六武衆 ---------- */
-defineScript("六武の門", {
-  onOtherSummon:true,           // 「六武衆」の召喚に反応する
-  fieldIgnition:true,          // 表側で場に残ったまま効果を発動できる
-  timing:["summon","free"],     // カウンターを乗せるのは召喚時、使うのは起動効果
-  type:"continuous-spell", priority:1,
-  condition(ctx){
-    const n = API.countCounter({p:ctx.player, zone:ctx.zone, index:ctx.index}, "武士道");
-    if(!n){ ctx.reason="武士道カウンターがありません"; return false; }
-    return true;
-  },
-  resolve(ctx){
-    const self = {p:ctx.player, zone:ctx.zone, index:ctx.index, card:ctx.card};
-    const n = API.countCounter(self, "武士道");
-    API.confirm("六武の門",
-      `武士道カウンター ${n}個。<br>・はい：2つ取り除いて攻守+500<br>・いいえ：4つ取り除いてサーチ`,
-      ()=>{
-        if(n<2){ showToast("カウンターが足りません"); return; }
-        API.removeCounter(self, "武士道", 2);
-        const t = API.fieldCards({zone:'mz', filter:x=>/六武衆|紫炎/.test(String(x.db.n||''))});
-        API.selectCard("六武の門：攻守を上げる対象", t, x=>{
-          API.modAtk(x, 500, 500, 'endTurn', '六武の門'); render();
-        });
-      },
-      ()=>{
-        if(n<4){ showToast("カウンターが足りません"); return; }
-        API.removeCounter(self, "武士道", 4);
-        const d = API.pileCards(ctx.player,'deck',x=>/六武衆|紫炎/.test(String(x.db.n||'')));
-        API.selectCard("六武の門：手札に加える「六武衆」", d, x=>{
-          API.searchDeck(ctx.player, x.index, "六武の門"); render();
-        });
-      });
-  },
-  afterResolve(){},
-  passive:{
-    // 「六武衆」が召喚されるたびカウンターを2つ置く
-    onNormalSummon(ctx){ return ctx.zone==='sz'; },
-    onSpecialSummon(ctx){ return ctx.zone==='sz'; },
-  }
-});
-
-defineScript("六武衆の結束", {
-  fieldIgnition:true,          // 表側で場に残ったまま効果を発動できる
-  type:"continuous-spell", priority:1,
-  condition(ctx){
-    const n = API.countCounter({p:ctx.player, zone:ctx.zone, index:ctx.index}, "武士道");
-    if(!n){ ctx.reason="武士道カウンターがありません"; return false; }
-    return true;
-  },
-  resolve(ctx){
-    const self = {p:ctx.player, zone:ctx.zone, index:ctx.index, card:ctx.card};
-    const n = API.countCounter(self, "武士道");
-    API.sendToGrave(self, "六武衆の結束");
-    API.draw(ctx.player, n);
-    API.log(`六武衆の結束：カウンター${n}個分ドロー`);
-  },
-  afterResolve(){}
-});
+/* 六武の門・六武衆の結束 は S03-U14 で cards/H3_claude_s03_bushido.js へ移した（召喚時の武士道カウンターと v49 の選択）。 */
 
 /* ---------- 暗黒界 ---------- */
 defineScript("暗黒界の狩人 ブラウ", {
@@ -17120,7 +17598,7 @@ defineScript("カラクリ大将軍 無零怒", {
   },
   resolve(ctx){
     if(ctx.eventName==='onKarakuriPositionChange'){
-      ctx.card.v350BureidoDrawTurn=gameState.turn; API.draw(ctx.player,1); return;
+      API.setCardFlag({card:ctx.card},'v350BureidoDrawTurn',gameState.turn,'カラクリ大将軍 無零怒',{silent:true}); API.draw(ctx.player,1); return;
     }
     const t=ctx.selectedTargets[0];if(!t)return;const nm=labelOf(t.card);
     const again=API.pileCards(ctx.player,'deck',x=>labelOf(x.card)===nm);
@@ -17823,7 +18301,7 @@ defineScript("禁じられた聖杯", {
     const t = ctx.selectedTargets[0];
     if(!t){ API.log("対象が場にないため不発"); return; }
     API.modAtk(t, 400, 0, 'endTurn', '禁じられた聖杯');
-    t.card.negatedUntilTurn = gameState.turn;
+    API.setCardFlag({card:t.card},'negatedUntilTurn',gameState.turn,'禁じられた聖杯',{silent:true});
     API.log(`${labelOf(t.card)} の効果はターン終了時まで無効`);
   }
 });
@@ -18047,7 +18525,7 @@ defineScript("超融合", {
     if(ei >= 0){
       API.specialSummon(ctx.player,'ex',ei,'atk',"超融合");
       const put = P.mz[P.mz.length-1];
-      if(put) put.fusionMaterialCount = n;   // キメラテックの元々の攻撃力に使う
+      if(put) API.setCardFlag({card:put},'fusionMaterialCount',n,'超融合',{silent:true});   // キメラテックの元々の攻撃力に使う
     }
   }
 });
@@ -18871,7 +19349,7 @@ defineScript("禁じられた聖槍", {
     const t = ctx.selectedTargets[0];
     if(!t){ API.log("対象が場にないため不発"); return; }
     API.modAtk(t, -800, 0, 'endTurn', '禁じられた聖槍');
-    t.card.spearProof = true;      // 魔法・罠の効果を受けない
+    API.setCardFlag({card:t.card},'spearProof',true,'禁じられた聖槍',{silent:true});      // 魔法・罠の効果を受けない
     API.log(`${labelOf(t.card)} は魔法・罠カードの効果を受けなくなった`);
   }
 });
@@ -18899,7 +19377,7 @@ defineScript("光の護封壁", {
   },
   resolve(ctx){
     const loc = API.fieldCards({zone:'sz', player:ctx.player, filter:x=>x.card===ctx.card})[0];
-    if(loc) loc.card.wallValue = ctx.wallValue || 0;
+    if(loc) API.setCardFlag({card:loc.card},'wallValue',ctx.wallValue || 0,'光の護封壁',{silent:true});
     API.log(`光の護封壁：攻撃力${ctx.wallValue}以下の相手モンスターは攻撃できない`);
   },
   afterResolve(){},          // 永続罠なので場に残る
@@ -19321,7 +19799,7 @@ defineScript("デブリ・ドラゴン", {
     // 特殊召喚したモンスターの効果は無効化される
     const P = gameState.players[ctx.player];
     const summoned = P.mz[P.mz.length-1];
-    if(summoned) summoned.negated = true;
+    if(summoned) API.setCardFlag({card:summoned},'negated',true,'デブリ・ドラゴン',{silent:true});
   },
   afterResolve(){},
   passive:{ onNormalSummon(ctx){ return ctx.zone==='mz'; } }
@@ -19358,7 +19836,7 @@ defineScript("スポーア", {
     const P = gameState.players[ctx.player];
     const summoned = P.mz[P.mz.length-1];
     if(summoned && ctx.sporeLv){
-      summoned.lvMod = (summoned.lvMod||0) + ctx.sporeLv;
+      API.setCardFlag({card:summoned},'lvMod',(summoned.lvMod||0) + ctx.sporeLv,'スポーア',{silent:true});
       API.log(`スポーアのレベルが ${ctx.sporeLv} 上がった`);
     }
   },
@@ -19479,7 +19957,7 @@ defineScript("レベル・スティーラー", {
   resolve(ctx){
     const t = ctx.selectedTargets[0];
     if(!t){ API.log("対象が場にないため不発"); return; }
-    t.card.lvMod = (t.card.lvMod||0) - 1;
+    API.setCardFlag({card:t.card},'lvMod',(t.card.lvMod||0) - 1,'レベル・スティーラー',{silent:true});
     const me = API.pileCards(ctx.player,'grave',x=>x.card===ctx.card)[0];
     if(me) API.specialSummon(ctx.player,'grave',me.index,'atk',"レベル・スティーラー");
   },
@@ -19918,7 +20396,7 @@ defineScript("レスキューラビット", {
       const summoned=lastSummonedCard(ctx.player);
       if(summoned){
         const uid=ensureCardUid(gameState,summoned);
-        summoned.rabbitEndDestroyTurn=gameState.turn;
+        API.setCardFlag({card:summoned},'rabbitEndDestroyTurn',gameState.turn,'レスキューラビット',{silent:true});
         summonedUids.push(uid);
       }
     }
@@ -20077,7 +20555,7 @@ defineScript("ジュラック・グアイバ", {
     // 特殊召喚したモンスターはこのターン攻撃宣言できない
     const P = gameState.players[ctx.player];
     const summoned = P.mz[P.mz.length-1];
-    if(summoned) summoned.cannotAttack = true;
+    if(summoned) API.setCardFlag({card:summoned},'cannotAttack',true,'ジュラック・グアイバ',{silent:true});
   },
   afterResolve(){},
   passive:{
@@ -20177,8 +20655,24 @@ function exclusionViolations(){
   continuousSources().forEach(src=>{
     const r = src.sc.restriction;
     if(!r) return;
-    r.violations().forEach(v=>out.push(Object.assign({script:src.sc.name}, v)));
+    /* S03-U11: v49 の統合定義は restriction を {key, jp} だけで持つ。violations() が無い場合は key から同じ規則で求める
+       （以前は r.violations is not a function で、表側の間は全 Action の後処理が例外になっていた）。 */
+    const list = (typeof r.violations==='function') ? r.violations() : exclusionViolationsByKeyV32(r.key);
+    list.forEach(v=>out.push(Object.assign({script:src.sc.name}, v)));
   });
+  return out;
+}
+/* S03-U11: 各プレイヤーの表側表示モンスターが key（at=属性 / ra=種族）で2種類以上なら違反。 */
+function exclusionViolationsByKeyV32(key){
+  const out = [];
+  if(!key) return out;
+  for(let p=0; p<2; p++){
+    const ups = (gameState.players[p].mz||[])
+      .map((c,i)=>({i, c}))
+      .filter(x=>x.c && x.c.face==='up');
+    const kinds = new Set(ups.map(x=>dbOf(x.c)[key]));
+    if(kinds.size >= 2) out.push({player:p, cards:ups, kinds:[...kinds]});
+  }
   return out;
 }
 
@@ -20684,7 +21178,7 @@ function v340FairyHand(p, exclude){ return API.pileCards(p,'hand',x=>x.card!==ex
 function v340ScheduleEndDestroy(card, player, label){
   if(!card) return;
   ensureCardUid(gameState,card);
-  card.v340EndDestroyTurn=gameState.turn;
+  API.setCardFlag({card:card},'v340EndDestroyTurn',gameState.turn,label||'エンドフェイズに破壊',{silent:true});
   API.registerReserveEffect(player,label||'エンドフェイズに破壊','endPhase','',{kind:'destroyUids',uids:[card.uid],flagKey:'v340EndDestroyTurn'});
 }
 
@@ -21018,7 +21512,7 @@ defineScript("六武衆－ヤイチ", {
     if(!pool.length){ctx.reason='セットされた魔法・罠カードがありません';return false;}return true;
   },
   selectTargets(ctx,done){API.selectCard('六武衆－ヤイチ：破壊するセット魔法・罠',API.fieldCards({filter:x=>(x.zone==='sz'||x.zone==='field')&&x.card.face==='down'}),t=>done([t]));},
-  resolve(ctx){ctx.card.cannotAttack=true;const t=ctx.selectedTargets[0];if(t)API.destroy(t,'六武衆－ヤイチ');},afterResolve(){}
+  resolve(ctx){API.setCardFlag({card:ctx.card},'cannotAttack',true,'六武衆－ヤイチ',{silent:true});const t=ctx.selectedTargets[0];if(t)API.destroy(t,'六武衆－ヤイチ');},afterResolve(){}
 });
 
 defineScript("六武衆－ザンジ", {
@@ -21081,7 +21575,7 @@ defineScript("鬼ガエル", {
   cost(ctx,done){
     if(ctx.zone==='mz'){
       API.selectCard('鬼ガエル：手札に戻す自分のモンスター',API.fieldCards({zone:'mz',player:ctx.player}),t=>{
-        ctx.card.v370FrogExtraTurn=gameState.turn;
+        API.setCardFlag({card:ctx.card},'v370FrogExtraTurn',gameState.turn,'鬼ガエル',{silent:true});
         API.returnToHand(t,'鬼ガエル（③の発動コスト）'); done(true);
       });
       return;
@@ -21098,7 +21592,7 @@ defineScript("鬼ガエル", {
   resolve(ctx){
     if(['onNormalSummon','onSpecialSummon','onFlip'].includes(ctx.eventName)){const t=ctx.selectedTargets[0];if(!t)return;if(t.zone==='deck')API.mill(ctx.player,t.index,'鬼ガエル');else API.sendToGrave(t,'鬼ガエル');return;}
     if(ctx.zone==='mz'){
-      const P=API.me(ctx);P.temporaryFlags.v370FrogExtraNormal=Number(P.temporaryFlags.v370FrogExtraNormal||0)+1;
+      const P=API.me(ctx);API.setFlag(ctx.player,'v370FrogExtraNormal',Number(P.temporaryFlags.v370FrogExtraNormal||0)+1,true);
       API.log('鬼ガエル：このターン「鬼ガエル」以外の「ガエル」を1度追加召喚できる');
       return;
     }
@@ -21123,7 +21617,7 @@ defineScript("バトルフェーダー", {
   includesSpecialSummon:true,
   blocksIfNoSpecialSummon:true,type:'monster',priority:2,quickEffect:true,activateFrom:['hand'],timing:['attackDeclare'],
   condition(ctx){const a=gameState.pendingAttack;if(ctx.zone!=='hand'||gameState.phase!=='battle'||!a||a.player!==ctx.opponent||a.targetUid!=null){ctx.reason='相手モンスターの直接攻撃宣言時に手札から発動します';return false;}if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ctx.reason='モンスターゾーンが一杯です';return false;}return true;},
-  resolve(ctx){const i=API.me(ctx).hand.indexOf(ctx.card);if(i<0)return;API.specialSummon(ctx.player,'hand',i,'def','バトルフェーダー');const h=locateCard(ctx.card);if(h&&h.zone==='mz')ctx.card.banishWhenLeavesField=true;v350EndBattlePhase();},afterResolve(){}
+  resolve(ctx){const i=API.me(ctx).hand.indexOf(ctx.card);if(i<0)return;API.specialSummon(ctx.player,'hand',i,'def','バトルフェーダー');const h=locateCard(ctx.card);if(h&&h.zone==='mz')API.setCardFlag({card:ctx.card},'banishWhenLeavesField',true,'バトルフェーダー',{silent:true});v350EndBattlePhase();},afterResolve(){}
 });
 
 defineScript("トラゴエディア", {
@@ -21153,11 +21647,11 @@ defineScript("トラゴエディア", {
     const chooseControl=()=>{
       API.selectCard('トラゴエディア③：墓地へ送る手札のモンスター',hand,t=>{
         const r=resolveTarget(t); if(!r){done(false);return;}
-        ctx.v370Mode='control';ctx.v370DiscardLevel=curLV(r.card);ctx.card.v370TragoControlTurn=gameState.turn;
+        ctx.v370Mode='control';ctx.v370DiscardLevel=curLV(r.card);API.setCardFlag({card:ctx.card},'v370TragoControlTurn',gameState.turn,'トラゴエディア',{silent:true});
         API.discard(ctx.player,r.index,'トラゴエディア③（コスト）');done(true);
       });
     };
-    const chooseLevel=()=>{ctx.v370Mode='level';ctx.card.v370TragoLevelTurn=gameState.turn;done(true);};
+    const chooseLevel=()=>{ctx.v370Mode='level';API.setCardFlag({card:ctx.card},'v370TragoLevelTurn',gameState.turn,'トラゴエディア',{silent:true});done(true);};
     if(canControl&&canLevel){API.confirm('トラゴエディア','効果を選んでください。<br>はい：③ 手札を墓地へ送りコントロール奪取<br>いいえ：④ 墓地モンスターのレベルをコピー',chooseControl,chooseLevel);return;}
     if(canControl){chooseControl();return;} chooseLevel();
   },
@@ -21175,7 +21669,7 @@ defineScript("トラゴエディア", {
     if(sel.mode==='control'){const t=resolveTarget(sel.t);if(t&&t.zone==='mz'&&t.card.face==='up')API.changeControl(t,ctx.player,'トラゴエディア③');return;}
     const t=resolveTarget(sel.t);if(!t)return;const lv=curLV(t.card),self=locateCard(ctx.card);if(!self||self.zone!=='mz')return;
     const delta=lv-curLV(ctx.card);if(delta)act({type:'FX_SET_STATE',player:self.p,zone:'mz',index:self.index,lvDelta:delta,reason:'トラゴエディア④'});
-    ensureCardUid(gameState,ctx.card);ctx.card.v370TragoLevelResetTurn=gameState.turn;
+    ensureCardUid(gameState,ctx.card);API.setCardFlag({card:ctx.card},'v370TragoLevelResetTurn',gameState.turn,'トラゴエディア',{silent:true});
     API.registerReserveEffect(ctx.player,'トラゴエディア④：レベルを元に戻す','endPhase','',{kind:'levelResetUids',uids:[ctx.card.uid],flagKey:'v370TragoLevelResetTurn'});
   },afterResolve(){},
   passive:{onDamageStep(ctx){const b=ctx.battle||{};return ctx.zone==='hand'&&ctx.step==='after'&&b.damage>0&&b.toPlayer===ctx.player;}},
@@ -21210,7 +21704,7 @@ defineScript("ブラック・ローズ・ドラゴン", {
       API.destroyAll('mz',null,'ブラック・ローズ・ドラゴン');API.destroyAll('sz',null,'ブラック・ローズ・ドラゴン');API.destroyAll('field',null,'ブラック・ローズ・ドラゴン');return;
     }
     const t=ctx.selectedTargets[0];if(!t)return;
-    ctx.card.v360Rose2Turn=gameState.turn;
+    API.setCardFlag({card:ctx.card},'v360Rose2Turn',gameState.turn,'ブラック・ローズ・ドラゴン',{silent:true});
     if(t.card.face==='down')API.flip(t,'up','ブラック・ローズ・ドラゴン');
     API.changePosition(t,'atk','ブラック・ローズ・ドラゴン');
     const a=curATK(t.card);if(a)API.modAtk(t,-a,0,'endTurn','ブラック・ローズ・ドラゴン');
@@ -21312,7 +21806,7 @@ defineScript("BF－暁のシロッコ", {
   normalSummonProcedure:{includeStandard:true,methods:[{id:'sirocco0',tributes:0,modes:['summon'],summonLabel:'相手だけにモンスターがいるためリリースなしで召喚',condition({player}){return gameState.players[player].mz.length===0&&gameState.players[player===0?1:0].mz.length>0;}}]},
   condition(ctx){if(ctx.zone!=='mz'||ctx.player!==gameState.activePlayer||gameState.phase!=='main1'){ctx.reason='自分メインフェイズ1に発動します';return false;}if(!v350FaceUpOwn(ctx.player,x=>v350BF(x.card)).length){ctx.reason='自分フィールドに表側表示の「BF」が必要です';return false;}return true;},
   selectTargets(ctx,done){API.selectCard('BF－暁のシロッコ：攻撃力を集めるBF',v350FaceUpOwn(ctx.player,x=>v350BF(x.card)),t=>done([t]));},
-  resolve(ctx){const t=ctx.selectedTargets[0];if(!t)return;const others=v350FaceUpOwn(ctx.player,x=>v350BF(x.card)&&x.card!==t.card);const gain=others.reduce((n,x)=>n+curATK(x.card),0);if(gain)API.modAtk(t,gain,0,'endTurn','BF－暁のシロッコ');ensureCardUid(gameState,t.card);API.me(ctx).temporaryFlags.v350OnlyAttackerUid=t.card.uid;},afterResolve(){}
+  resolve(ctx){const t=ctx.selectedTargets[0];if(!t)return;const others=v350FaceUpOwn(ctx.player,x=>v350BF(x.card)&&x.card!==t.card);const gain=others.reduce((n,x)=>n+curATK(x.card),0);if(gain)API.modAtk(t,gain,0,'endTurn','BF－暁のシロッコ');ensureCardUid(gameState,t.card);API.setFlag(ctx.player,'v350OnlyAttackerUid',t.card.uid,true);},afterResolve(){}
 });
 
 defineScript("BF－アーマード・ウィング", {
@@ -21404,7 +21898,7 @@ defineScript("ボルト・ヘッジホッグ", {
     if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ctx.reason='モンスターゾーンが一杯です';return false;}
     if(!v380FaceUp(ctx.player,'mz',x=>v380IsTuner(x.card)).length){ctx.reason='自分フィールドに表側表示のチューナーが必要です';return false;} return true;
   },
-  resolve(ctx){const i=API.me(ctx).grave.indexOf(ctx.card);if(i<0)return;API.specialSummon(ctx.player,'grave',i,'atk','ボルト・ヘッジホッグ');const h=locateCard(ctx.card);if(h&&h.zone==='mz')ctx.card.banishWhenLeavesField=true;},afterResolve(){}
+  resolve(ctx){const i=API.me(ctx).grave.indexOf(ctx.card);if(i<0)return;API.specialSummon(ctx.player,'grave',i,'atk','ボルト・ヘッジホッグ');const h=locateCard(ctx.card);if(h&&h.zone==='mz')API.setCardFlag({card:ctx.card},'banishWhenLeavesField',true,'ボルト・ヘッジホッグ',{silent:true});},afterResolve(){}
 });
 
 defineScript("ジャンク・ウォリアー", {
@@ -21548,7 +22042,7 @@ defineScript("BF－精鋭のゼピュロス", {
     if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ctx.reason='モンスターゾーンが一杯です';return false;}
     const pool=API.fieldCards({player:ctx.player,filter:x=>x.card.face==='up'});if(!pool.length){ctx.reason='手札へ戻す自分の表側表示カードがありません';return false;}return true;
   },
-  cost(ctx,done){API.selectCard('BF－精鋭のゼピュロス：手札へ戻す自分の表側カード',API.fieldCards({player:ctx.player,filter:x=>x.card.face==='up'}),t=>{ctx.card.v380ZephyrosUsed=true;API.returnToHand(t,'BF－精鋭のゼピュロス（コスト）');done(true);});},
+  cost(ctx,done){API.selectCard('BF－精鋭のゼピュロス：手札へ戻す自分の表側カード',API.fieldCards({player:ctx.player,filter:x=>x.card.face==='up'}),t=>{API.setCardFlag({card:ctx.card},'v380ZephyrosUsed',true,'BF－精鋭のゼピュロス',{silent:true});API.returnToHand(t,'BF－精鋭のゼピュロス（コスト）');done(true);});},
   resolve(ctx){const i=API.me(ctx).grave.indexOf(ctx.card);if(i>=0){API.specialSummon(ctx.player,'grave',i,'atk','BF－精鋭のゼピュロス');API.damageLP(ctx.player,400);}},afterResolve(){}
 });
 
@@ -21567,7 +22061,7 @@ defineScript("BF－大旆のヴァーユ", {
   },
   resolve(ctx){
     const s=ctx.selectedTargets[0];if(!s)return;const mr=resolveTarget(s.mate),self=resolveTarget({card:ctx.card}),er=resolveTarget(s.ex);if(!mr||mr.zone!=='grave'||!self||self.zone!=='grave'||!er||er.zone!=='ex')return;
-    API.banish(mr,'BF－大旆のヴァーユ');const self2=resolveTarget({card:ctx.card});if(!self2||self2.zone!=='grave')return;API.banish(self2,'BF－大旆のヴァーユ');const exNow=resolveTarget({card:s.ex.card});if(!exNow||exNow.zone!=='ex')return;API.specialSummon(ctx.player,'ex',exNow.index,'atk','BF－大旆のヴァーユ');const h=locateCard(s.ex.card);if(h&&h.zone==='mz')h.card.negated=true;
+    API.banish(mr,'BF－大旆のヴァーユ');const self2=resolveTarget({card:ctx.card});if(!self2||self2.zone!=='grave')return;API.banish(self2,'BF－大旆のヴァーユ');const exNow=resolveTarget({card:s.ex.card});if(!exNow||exNow.zone!=='ex')return;API.specialSummon(ctx.player,'ex',exNow.index,'atk','BF－大旆のヴァーユ');const h=locateCard(s.ex.card);if(h&&h.zone==='mz')API.setCardFlag({card:h.card},'negated',true,'BF－大旆のヴァーユ',{silent:true});
   },afterResolve(){},cannotSynchroMaterial:true
 });
 
@@ -21603,7 +22097,7 @@ defineScript("諸刃の活人剣術", {
   selectTargets(ctx,done){v380SelectExactly('諸刃の活人剣術：特殊召喚する六武衆',API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&v380IsSix(x.card)),2,done);},
   resolve(ctx){
     const cards=ctx.selectedTargets.map(x=>x.card),uids=[];
-    cards.forEach(c=>{const h=resolveTarget({card:c});if(!h||h.zone!=='grave')return;API.specialSummon(ctx.player,'grave',h.index,'atk','諸刃の活人剣術');const f=locateCard(c);if(f&&f.zone==='mz'){ensureCardUid(gameState,c);c.v380DoubleEdgeTurn=gameState.turn;uids.push(c.uid);}});
+    cards.forEach(c=>{const h=resolveTarget({card:c});if(!h||h.zone!=='grave')return;API.specialSummon(ctx.player,'grave',h.index,'atk','諸刃の活人剣術');const f=locateCard(c);if(f&&f.zone==='mz'){ensureCardUid(gameState,c);API.setCardFlag({card:c},'v380DoubleEdgeTurn',gameState.turn,'諸刃の活人剣術',{silent:true});uids.push(c.uid);}});
     if(uids.length)API.registerReserveEffect(ctx.player,'諸刃の活人剣術：エンド破壊＋ダメージ','endPhase','',{kind:'destroyDamageUids',uids,flagKey:'v380DoubleEdgeTurn',data:{damagePlayer:ctx.player}});
   }
 });
@@ -21800,7 +22294,7 @@ defineScript('ライトロード・マジシャン ライラ',{
   type:'monster',priority:1,endPhaseMill:3,timing:['mainPhase'],targets:true,
   condition(ctx){if(ctx.zone!=='mz'||ctx.player!==gameState.activePlayer||!['main1','main2'].includes(gameState.phase)||ctx.card.face!=='up'||ctx.card.pos!=='atk'){ctx.reason='自分メインフェイズに表側攻撃表示で発動します';return false;}if(!API.fieldCards({player:ctx.opponent,filter:x=>x.zone==='sz'||x.zone==='field'}).length){ctx.reason='相手の魔法・罠がありません';return false;}return true;},
   selectTargets(ctx,done){API.selectCard('ライラ：破壊する相手の魔法・罠',API.fieldCards({player:ctx.opponent,filter:x=>x.zone==='sz'||x.zone==='field'}),t=>done([t]));},
-  resolve(ctx){const self=locateCard(ctx.card);if(self)API.changePosition(self,'def','ライトロード・マジシャン ライラ');ctx.card.v380LylaLockThroughTurn=gameState.turn+2;const t=ctx.selectedTargets[0];if(t)API.destroy(t,'ライトロード・マジシャン ライラ');},afterResolve(){}
+  resolve(ctx){const self=locateCard(ctx.card);if(self)API.changePosition(self,'def','ライトロード・マジシャン ライラ');API.setCardFlag({card:ctx.card},'v380LylaLockThroughTurn',gameState.turn+2,'ライトロード・マジシャン ライラ',{silent:true});const t=ctx.selectedTargets[0];if(t)API.destroy(t,'ライトロード・マジシャン ライラ');},afterResolve(){}
 });
 
 defineScript('ゾンビ・マスター',{
@@ -21843,7 +22337,7 @@ defineScript('ソーラー・エクスチェンジ',{
 defineScript('魔轟神レイヴン',{
   type:'monster',priority:1,timing:['mainPhase'],
   condition(ctx){if(ctx.zone!=='mz'||ctx.player!==gameState.activePlayer||!['main1','main2'].includes(gameState.phase)){ctx.reason='自分メインフェイズに発動します';return false;}if(!API.me(ctx).hand.length){ctx.reason='捨てる手札がありません';return false;}return true;},
-  resolve(ctx){v380SelectUpTo('魔轟神レイヴン：効果で捨てる手札',API.pileCards(ctx.player,'hand'),API.me(ctx).hand.length,sel=>{const cards=sel.map(x=>x.card),n=cards.length;cards.forEach(c=>{const r=resolveTarget({card:c});if(r&&r.zone==='hand')API.discard(ctx.player,r.index,'魔轟神レイヴン',{byEffect:true,byPlayer:ctx.player});});if(n){ctx.card.lvMod=(ctx.card.lvMod||0)+n;const self=locateCard(ctx.card);if(self)API.modAtk(self,n*400,0,'endTurn','魔轟神レイヴン');}render();});}
+  resolve(ctx){v380SelectUpTo('魔轟神レイヴン：効果で捨てる手札',API.pileCards(ctx.player,'hand'),API.me(ctx).hand.length,sel=>{const cards=sel.map(x=>x.card),n=cards.length;cards.forEach(c=>{const r=resolveTarget({card:c});if(r&&r.zone==='hand')API.discard(ctx.player,r.index,'魔轟神レイヴン',{byEffect:true,byPlayer:ctx.player});});if(n){API.setCardFlag({card:ctx.card},'lvMod',(ctx.card.lvMod||0)+n,'魔轟神レイヴン',{silent:true});const self=locateCard(ctx.card);if(self)API.modAtk(self,n*400,0,'endTurn','魔轟神レイヴン');}render();});}
 });
 
 defineScript('暗黒界の軍神 シルバ',{
@@ -24239,7 +24733,7 @@ defineUnifiedCardV4('ゲイシャドウ',[{key:'battle-counter',type:EFFECT_TYPE
 defineUnifiedCardV4('サイコ・エンペラー',[{key:'summon-heal-psychics',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onNormalSummon','onSpecialSummon'],condition(ctx){return ctx.event&&ctx.event.card===ctx.card;},operation(ctx){API.recoverLP(ctx.player,API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&x.db.ra==='サイキック').length*500);},afterResolve(){}}],{type:'monster',priority:1,passive:{onNormalSummon:ctx=>ctx.event&&ctx.event.card===ctx.card,onSpecialSummon:ctx=>ctx.event&&ctx.event.card===ctx.card}});
 defineUnifiedCardV4('サクリファイス・スパイダー',[{key:'tribute-wipe-defense',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],condition(ctx){return API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&x.db.ra==='昆虫').length>=4;},cost(ctx,done){const h=locateCardAnyV4(ctx.card);if(h)API.sendToGrave(h,'サクリファイス・スパイダー（リリース）');done(!!h);},operation(ctx){API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'&&x.card.pos==='def'}).slice().forEach(t=>API.destroy(t,'サクリファイス・スパイダー'));},afterResolve(){}}],{type:'monster',priority:1,timing:['mainPhase'],destroysFieldV46:true});
 defineUnifiedCardV4('シャイニング・アブソーブ',[{key:'light-team-boost',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.MZONE,targetSide:'opponent',speed:1,events:['activate'],condition(ctx){return v85Face(ctx.opponent).some(x=>x.db.at==='光');},target(ctx,done){API.selectCard('シャイニング・アブソーブ：参照する光属性',v85Face(ctx.opponent).filter(x=>x.db.at==='光'),t=>done([t]));},operation(ctx){const h=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(h){const n=curATK(h.card);v85Face(ctx.player).filter(x=>x.card.pos==='atk').forEach(t=>v4RegisterStatModifier(t,{atk:n},{code:'シャイニング・アブソーブ',resetMask:RESET.END|RESET.LEAVE|RESET.FACE_DOWN}));}},afterResolve(){}}],{type:'spell',priority:1,targets:true});
-function v85ReviveOnSummon(name,filter){defineUnifiedCardV4(name,[{key:'summon-revive',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,targetRange:LOCATION.GRAVE,targetSide:'self',speed:1,events:['onNormalSummon'],condition(ctx){return ctx.event&&ctx.event.card===ctx.card&&hasMonsterZoneSpace(ctx.player)&&API.pileCards(ctx.player,'grave',filter).length>0;},target(ctx,done){API.selectCard(name+'：特殊召喚するモンスター',API.pileCards(ctx.player,'grave',filter),t=>done([t]));},operation(ctx){const h=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(h){API.specialSummon(ctx.player,'grave',h.index,'atk',name);h.card.negatedUntilTurn=999999;}},afterResolve(){}}],{type:'monster',priority:1,targets:true,includesSpecialSummon:true,blocksIfNoSpecialSummon:true,passive:{onNormalSummon:ctx=>ctx.event&&ctx.event.card===ctx.card}});}
+function v85ReviveOnSummon(name,filter){defineUnifiedCardV4(name,[{key:'summon-revive',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,targetRange:LOCATION.GRAVE,targetSide:'self',speed:1,events:['onNormalSummon'],condition(ctx){return ctx.event&&ctx.event.card===ctx.card&&hasMonsterZoneSpace(ctx.player)&&API.pileCards(ctx.player,'grave',filter).length>0;},target(ctx,done){API.selectCard(name+'：特殊召喚するモンスター',API.pileCards(ctx.player,'grave',filter),t=>done([t]));},operation(ctx){const h=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(h){API.specialSummon(ctx.player,'grave',h.index,'atk',name);API.setCardFlag({card:h.card},'negatedUntilTurn',999999,name,{silent:true});}},afterResolve(){}}],{type:'monster',priority:1,targets:true,includesSpecialSummon:true,blocksIfNoSpecialSummon:true,passive:{onNormalSummon:ctx=>ctx.event&&ctx.event.card===ctx.card}});}
 v85ReviveOnSummon('シンクロン・エクスプローラー',x=>isSetCardV4(x.db,SETCODE.SYNCHRON));v85ReviveOnSummon('ダーク・バグ',x=>x.db.k==='m'&&(x.db.lv||0)===3&&(x.db.st||[]).includes('チューナー'));
 defineUnifiedCardV4('シールド・ワーム',[{key:'summon-defense-mill',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onNormalSummon','onFlip','onSpecialSummon'],condition(ctx){return ctx.event&&ctx.event.card===ctx.card;},operation(ctx){const h=locateCardAnyV4(ctx.card);if(h)API.changePosition(h,'def','シールド・ワーム');const n=v85Face(ctx.player).filter(x=>x.db.ra==='昆虫').length;for(let i=0;i<n&&API.foe(ctx).deck.length;i++)API.mill(ctx.opponent,0,'シールド・ワーム');},afterResolve(){}}],{type:'monster',priority:1,forced:true,passive:{onNormalSummon:ctx=>ctx.event&&ctx.event.card===ctx.card,onFlip:ctx=>ctx.event&&ctx.event.card===ctx.card,onSpecialSummon:ctx=>ctx.event&&ctx.event.card===ctx.card}});
 defineUnifiedCardV4('ジェネティック・ウーマン',[{key:'pay-recover-psychic',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,targetRange:LOCATION.REMOVED,targetSide:'self',speed:1,events:['activate'],condition(ctx){return API.me(ctx).lp>1000&&API.pileCards(ctx.player,'banish',x=>x.db.k==='m'&&x.db.ra==='サイキック').length>0;},cost(ctx,done){API.payLP(ctx.player,1000);done(true);},target(ctx,done){API.selectCard('ジェネティック・ウーマン：手札へ加えるサイキック族',API.pileCards(ctx.player,'banish',x=>x.db.k==='m'&&x.db.ra==='サイキック'),t=>done([t]));},operation(ctx){const h=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(h)API.returnToHand(h,'ジェネティック・ウーマン');},afterResolve(){}}],{type:'monster',priority:1,countLimit:1,timing:['mainPhase'],targets:true});
@@ -35416,7 +35910,10 @@ defineScript('ボマー・ドラゴン', {
     /* このカードが攻撃した戦闘で生じるダメージは、どちらのプレイヤー分でも0 */
     battleDamage(info){
       const self = info.self;
-      return a5IsAttackerCard(self) ? 0 : info.amount;
+      /* S03-U20: 攻撃側はダメージ情報の atkCard で判定する。gameState.battle は Action の外で設定されるため、
+         ATTACK の reducer 内で読むと Replay では値が異なる（atkCard の無い直接呼び出しだけ従来の判定）。 */
+      const attacker = info.atkCard ? info.atkCard === self : a5IsAttackerCard(self);
+      return attacker ? 0 : info.amount;
     }
   }
 });
@@ -40323,8 +40820,9 @@ API.registerScheduleHandler('c2.minomushi', (entry) => {
   const h = findCardByUid(uid);
   if(h && h.zone === 'mz' && h.p !== back) API.changeControl(h, back, '電磁ミノ虫', 'permanent');
 });
+/* S03-U23: 「戦闘で破壊された場合」は⑤（墓地へ送られた後）。条件が墓地を見るので dsTiming は 'leave'。 */
 defineScript('電磁ミノ虫', {
-  type:'monster', priority:1, targets:true, activateFrom:['mz','grave'], dsTiming:'after',
+  type:'monster', priority:1, targets:true, activateFrom:['mz','grave'], dsTiming:'leave',
   condition(ctx){
     if(c2SummonedOrFlipped(ctx) && ctx.event && ctx.event.card === ctx.card){
       if(!API.fieldCards({ player:ctx.opponent, zone:'mz', filter:x => x.db.ra === '機械' }).length){
@@ -40756,8 +41254,9 @@ function c2SpiderKilledDef(ctx){
   const g = o.graveInfo;
   return (g && g.pos === 'def') ? o : null;
 }
+/* S03-U24 (C-S03-20): 条件が墓地（戦闘で破壊され墓地へ送られたモンスター／墓地の資源）を見るので、⑤（墓地へ送られた後）の dsTiming 'leave'。 */
 defineScript('スパイダー・スパイダー', {
-  type:'monster', priority:1, targets:true, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, targets:true, activateFrom:['mz'], dsTiming:'leave',
   condition(ctx){
     if(!c2SpiderKilledDef(ctx)){ ctx.reason = '守備表示モンスターを戦闘で破壊した場合に発動します'; return false; }
     if(!c2SpiderInsects(ctx.player).length){ ctx.reason = '墓地にレベル4以下の昆虫族がいません'; return false; }
@@ -40788,8 +41287,9 @@ API.registerScheduleHandler('c2.brainCrusher', (entry) => {
   if(h && h.zone === 'grave' && c2MzOpen(p))
     API.specialSummon(p, 'grave', h.index, 'atk', 'ブレイン・クラッシャー', h.p);
 });
+/* S03-U24 (C-S03-20): 条件が墓地（戦闘で破壊され墓地へ送られたモンスター／墓地の資源）を見るので、⑤（墓地へ送られた後）の dsTiming 'leave'。 */
 defineScript('ブレイン・クラッシャー', {
-  type:'monster', priority:1, countLimit:1, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, countLimit:1, activateFrom:['mz'], dsTiming:'leave',
   condition(ctx){
     const o = a6DestroyedFoeInBattle(ctx);
     if(!o){ ctx.reason = '戦闘で相手モンスターを破壊した場合に発動します'; return false; }
@@ -40957,8 +41457,9 @@ defineScript('サイコ・ヘルストランサー', {
 
 /* 2. ハイドロ・ジェネクス — 戦闘で相手モンスターを破壊し墓地へ送った時、
       破壊したモンスターの攻撃力分だけ回復する */
+/* S03-U24 (C-S03-20): 条件が墓地（戦闘で破壊され墓地へ送られたモンスター／墓地の資源）を見るので、⑤（墓地へ送られた後）の dsTiming 'leave'。 */
 defineScript('ハイドロ・ジェネクス', {
-  type:'monster', priority:1, forced:true, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, forced:true, activateFrom:['mz'], dsTiming:'leave',
   condition(ctx){
     const o = a6DestroyedFoeInBattle(ctx);
     if(!o){ ctx.reason = '戦闘で相手モンスターを破壊した場合に発動します'; return false; }
@@ -43567,8 +44068,9 @@ function c7EquipHost(ctx){
 function c7DeckByName(p, name){
   return API.pileCards(p, 'deck', x => x.db.n === name);
 }
+/* S03-U23: 「戦闘で破壊し墓地へ送った時」は⑤（墓地へ送られた後）。条件が墓地を見るので dsTiming は 'leave'。 */
 defineScript('ハイドロゲドン', {
-  type:'monster', priority:1, targets:true, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, targets:true, activateFrom:['mz'], dsTiming:'leave',
   condition(ctx){
     if(!c7KilledFoe(ctx)){ ctx.reason = '戦闘で相手モンスターを破壊し墓地へ送った場合に発動します'; return false; }
     if(!c7DeckByName(ctx.player, 'ハイドロゲドン').length){
@@ -43598,8 +44100,9 @@ function c7FlamvellTargets(p){
   return API.pileCards(p, 'deck', x => x.db.k === 'm' && x.db.at === '炎'
     && Number(x.db.def) <= 200 && x.db.n !== 'フレムベル・ヘルドッグ');
 }
+/* S03-U23: 「戦闘で破壊し墓地へ送った時」は⑤（墓地へ送られた後）。条件が墓地を見るので dsTiming は 'leave'。 */
 defineScript('フレムベル・ヘルドッグ', {
-  type:'monster', priority:1, targets:true, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, targets:true, activateFrom:['mz'], dsTiming:'leave',
   condition(ctx){
     if(!c7KilledFoe(ctx)){ ctx.reason = '戦闘で相手モンスターを破壊し墓地へ送った場合に発動します'; return false; }
     if(!c7FlamvellTargets(ctx.player).length){
@@ -43630,8 +44133,9 @@ function c7KilledLight(ctx){
   const o = c7KilledFoe(ctx);
   return (o && dbOf(o).at === '光') ? o : null;
 }
+/* S03-U23: 「戦闘で破壊し墓地へ送った時」は⑤（墓地へ送られた後）。条件が墓地を見るので dsTiming は 'leave'。 */
 defineScript('A・O・J リーサル・ウェポン', {
-  type:'monster', priority:1, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, activateFrom:['mz'], dsTiming:'leave',
   condition(ctx){
     if(!c7KilledLight(ctx)){ ctx.reason = '戦闘で光属性モンスターを破壊し墓地へ送った場合に発動します'; return false; }
     if(!API.me(ctx).deck.length){ ctx.reason = 'デッキにカードがありません'; return false; }
@@ -43682,8 +44186,9 @@ defineScript('A・O・J フィールド・マーシャル', {
 
 /* 5. ライトニング・ウォリアー — 戦闘で相手モンスターを破壊し墓地へ送った時、
       相手の手札の枚数×300ポイントダメージを与える */
+/* S03-U23: 「戦闘で破壊し墓地へ送った時」は⑤（墓地へ送られた後）。条件が墓地を見るので dsTiming は 'leave'。 */
 defineScript('ライトニング・ウォリアー', {
-  type:'monster', priority:1, forced:true, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, forced:true, activateFrom:['mz'], dsTiming:'leave',
   condition(ctx){
     if(!c7KilledFoe(ctx)){ ctx.reason = '戦闘で相手モンスターを破壊し墓地へ送った場合に発動します'; return false; }
     return true;
@@ -43713,8 +44218,9 @@ function c7PlantKilled(ctx){
   }
   return null;
 }
+/* S03-U24 (C-S03-20): 条件が墓地（戦闘で破壊され墓地へ送られたモンスター／墓地の資源）を見るので、⑤（墓地へ送られた後）の dsTiming 'leave'。 */
 defineScript('ブロッサム・ボンバー', {
-  type:'trap', priority:2, dsTiming:'after',
+  type:'trap', priority:2, dsTiming:'leave',
   condition(ctx){
     if(!c7PlantKilled(ctx)){
       ctx.reason = '自分の植物族が戦闘で相手モンスターを破壊し墓地へ送った場合に発動します'; return false; }
@@ -43732,8 +44238,9 @@ defineScript('ブロッサム・ボンバー', {
 
 /* 7. ヘル・ツイン・コップ — 戦闘で相手モンスターを破壊し墓地へ送った時、
       バトルフェイズ終了時まで攻撃力800アップし、もう1度だけ続けて攻撃できる */
+/* S03-U23: 「戦闘で破壊し墓地へ送った時」は⑤（墓地へ送られた後）。条件が墓地を見るので dsTiming は 'leave'。 */
 defineScript('ヘル・ツイン・コップ', {
-  type:'monster', priority:1, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, activateFrom:['mz'], dsTiming:'leave',
   condition(ctx){
     if(!c7KilledFoe(ctx)){ ctx.reason = '戦闘で相手モンスターを破壊し墓地へ送った場合に発動します'; return false; }
     return true;
@@ -43750,8 +44257,9 @@ defineScript('ヘル・ツイン・コップ', {
 
 /* 8. ワーム・ウォーロード — 特殊召喚できない。戦闘で破壊した効果モンスターの効果は
       無効化される。相手モンスターを戦闘破壊した場合、もう1度だけ続けて攻撃できる */
+/* S03-U23: 「戦闘で破壊し墓地へ送った時」は⑤（墓地へ送られた後）。条件が墓地を見るので dsTiming は 'leave'。 */
 defineScript('ワーム・ウォーロード', {
-  type:'monster', priority:1, forced:true, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, forced:true, activateFrom:['mz'], dsTiming:'leave',
   cannotSpecialSummon:true,
   condition(ctx){
     if(!c7KilledFoe(ctx)){ ctx.reason = '戦闘で相手モンスターを破壊し墓地へ送った場合に発動します'; return false; }
@@ -45868,30 +46376,26 @@ defineScript('メタルシルバー・アーマー', {
 /* 6. マジック・ストライカー — 自分の墓地の魔法1枚を除外して手札から特殊召喚できる。
       直接攻撃できる。このカードの戦闘で発生する自分への戦闘ダメージは0になる */
 defineScript('マジック・ストライカー', {
-  type:'monster', priority:1, targets:true, timing:['mainPhase'], activateFrom:['hand'],
+  /* S03-U17: ①「自分の墓地の魔法カード1枚を除外し、手札から特殊召喚できる」はチェーンを作らない特殊召喚手順。
+     除外は手順の一部で、発動する効果ではない（S03-U16 で調査：効果として書かれていたため実際のデュエルでは使えなかった）。 */
+  type:'monster', priority:1,
   canDirectAttack:true,
-  condition(ctx){
-    const me = locateCardAnyV4(ctx.card);
-    if(!me || me.zone !== 'hand'){ ctx.reason = '手札に存在する必要があります'; return false; }
-    if(!d2SpellGrave(ctx.player).length){ ctx.reason = '墓地に魔法カードがありません'; return false; }
-    if(!d2MzOpen(ctx.player)){ ctx.reason = 'モンスターゾーンに空きがありません'; return false; }
-    return true;
+  summonProcedure:{from:'hand', positions:['atk','def'],
+    condition(ctx){
+      if(!d2SpellGrave(ctx.player).length){ ctx.reason = '墓地に魔法カードがありません'; return false; }
+      return true;
+    },
+    cost(ctx, done){
+      const pool = d2SpellGrave(ctx.player);
+      if(!pool.length){ done(false); return; }
+      API.selectCard('マジック・ストライカー：除外する魔法カード', pool, t => {
+        const r = t && resolveTarget(t);
+        if(!r || r.zone !== 'grave'){ done(false); return; }
+        API.banish(r, 'マジック・ストライカー（特殊召喚）');
+        done(true);
+      });
+    }
   },
-  selectTargets(ctx, done){
-    API.selectCard('マジック・ストライカー：除外する魔法カード', d2SpellGrave(ctx.player), t => done([t]));
-  },
-  cost(ctx, done){
-    const t = ctx.selectedTargets && ctx.selectedTargets[0];
-    const r = t && resolveTarget(t);
-    if(r && r.zone === 'grave'){ API.banish(r, 'マジック・ストライカー'); done(true); }
-    else done(false);
-  },
-  resolve(ctx){
-    const me = locateCardAnyV4(ctx.card);
-    if(!me || me.zone !== 'hand' || !d2MzOpen(ctx.player)) return;
-    API.specialSummon(ctx.player, 'hand', me.index, 'atk', 'マジック・ストライカー', me.p);
-  },
-  afterResolve(){},
   continuous:{
     scope:'self', from:['mz'],
     apply(){ return null; },
@@ -45975,8 +46479,9 @@ function d2KilledZeroAtk(ctx){
   const h = locateCardAnyV4(o);
   return (h && h.zone === 'grave') ? o : null;
 }
+/* S03-U24 (C-S03-20): 条件が墓地（戦闘で破壊され墓地へ送られたモンスター／墓地の資源）を見るので、⑤（墓地へ送られた後）の dsTiming 'leave'。 */
 defineScript('レプティレス・スキュラ', {
-  type:'monster', priority:1, activateFrom:['mz'], dsTiming:'after',
+  type:'monster', priority:1, activateFrom:['mz'], dsTiming:'leave',
   condition(ctx){
     if(!d2KilledZeroAtk(ctx)){
       ctx.reason = '戦闘で攻撃力0のモンスターを破壊した場合に発動します'; return false; }
@@ -46157,8 +46662,9 @@ function d3RevealDrawn(handles, label){
 /* 1. ダーク・パーシアス — 戦闘で相手モンスターを破壊した場合、自分の墓地の
       闇属性1体を除外する事で1枚ドローする。
       攻撃力は自分の墓地の闇属性の数×100アップする */
+/* S03-U24 (C-S03-20): 条件が墓地（戦闘で破壊され墓地へ送られたモンスター／墓地の資源）を見るので、⑤（墓地へ送られた後）の dsTiming 'leave'。 */
 defineScript('ダーク・パーシアス', {
-  type:'monster', priority:1, forced:false, dsTiming:'after', targets:true,
+  type:'monster', priority:1, forced:false, dsTiming:'leave', targets:true,
   condition(ctx){
     if(!d3MyKillToGrave(ctx, k => k === ctx.card)){
       ctx.reason = '戦闘で相手モンスターを破壊した場合に発動します'; return false; }
@@ -47044,41 +47550,35 @@ defineScript('ダーク・ネフティス', {
 /* 8. 異次元の精霊 — 自分フィールドの表側モンスター1体を除外して手札から特殊召喚できる。
       この方法で特殊召喚した場合、次のスタンバイフェイズにその除外したモンスターを戻す */
 defineScript('異次元の精霊', {
-  type:'monster', priority:1, targets:true, activateFrom:['hand'], timing:['mainPhase'],
-  condition(ctx){
-    const me = locateCardAnyV4(ctx.card);
-    if(!me || me.zone !== 'hand'){ ctx.reason = '手札に存在する必要があります'; return false; }
-    if(!API.fieldCards({ player:ctx.player, zone:'mz',
-          filter:x => x.card.face === 'up' }).length){
-      ctx.reason = '除外する自分の表側表示モンスターがいません'; return false; }
-    return true;
-  },
-  selectTargets(ctx, done){
-    API.selectCard('異次元の精霊（コスト）：除外する自分のモンスター',
-      API.fieldCards({ player:ctx.player, zone:'mz', filter:x => x.card.face === 'up' }),
-      t => done([t]));
-  },
-  cost(ctx, done){
-    const t = ctx.selectedTargets && ctx.selectedTargets[0];
-    const r = t && resolveTarget(t);
-    if(!r || r.zone !== 'mz'){ done(false); return; }
-    ensureCardUid(gameState, r.card);
-    ctx.d4BanishedUid = r.card.uid;
-    ctx.d4BanishedPos = r.card.pos === 'def' ? 'def' : 'atk';
-    API.banish(r, '異次元の精霊（コスト）');
-    done(true);
-  },
-  resolve(ctx){
-    const me = locateCardAnyV4(ctx.card);
-    if(!me || me.zone !== 'hand' || !d4MzOpen(ctx.player)) return;
-    API.specialSummon(ctx.player, 'hand', me.index, 'atk', '異次元の精霊', me.p);
-    if(ctx.d4BanishedUid == null) return;
-    API.schedule({ at:'standbyPhase', turns:1, player:ctx.player,
-      handler:'d4.returnBanishedUid', source:ctx.card, note:'異次元の精霊',
-      args:{ player:ctx.player, uid:ctx.d4BanishedUid,
-             pos:ctx.d4BanishedPos, reason:'異次元の精霊' } });
-  },
-  afterResolve(){}
+  /* S03-U17: ①はチェーンを作らない特殊召喚手順（Wiki 10/11/17「召喚ルール効果」、10/11/15「除外はコストではなく手順」）。
+     ②「次のスタンバイフェイズに除外したモンスターを戻す」は既存の予約 d4.returnBanishedUid で行う
+     （裁定上はチェーンブロックを作る誘発効果。予約はチェーンを作らない近似として WORK_QUEUE に残す）。 */
+  type:'monster', priority:1,
+  summonProcedure:{from:'hand', positions:['atk','def'],
+    condition(ctx){
+      if(!API.fieldCards({ player:ctx.player, zone:'mz', filter:x => x.card.face === 'up' }).length){
+        ctx.reason = '除外する自分の表側表示モンスターがいません'; return false; }
+      return true;
+    },
+    cost(ctx, done){
+      const pool = API.fieldCards({ player:ctx.player, zone:'mz', filter:x => x.card.face === 'up' });
+      if(!pool.length){ done(false); return; }
+      API.selectCard('異次元の精霊：除外する自分の表側表示モンスター', pool, t => {
+        const r = t && resolveTarget(t);
+        if(!r || r.zone !== 'mz'){ done(false); return; }
+        ensureCardUid(gameState, r.card);
+        ctx.procedureDataS03 = { uid:r.card.uid, pos:(r.card.pos === 'def' ? 'def' : 'atk') };
+        API.banish(r, '異次元の精霊（特殊召喚）');
+        done(true);
+      });
+    },
+    afterSummonS03(h, data){
+      if(!h || !data || data.uid == null) return;
+      API.schedule({ at:'standbyPhase', turns:1, player:h.p,
+        handler:'d4.returnBanishedUid', source:h.card, note:'異次元の精霊',
+        args:{ player:h.p, uid:data.uid, pos:data.pos, reason:'異次元の精霊' } });
+    }
+  }
 });
 
 /* ===================== B. スタンバイフェイズの継続処理 ===================== */
@@ -48453,34 +48953,36 @@ defineScript('ゼータ・レティキュラント', {
 function d6LowHand(p){
   return API.pileCards(p, 'hand', x => x.db.k === 'm' && Number(x.db.lv) <= 4);
 }
+/* S03-U17: 手順で墓地へ送れるのは、手札にある現在レベル4以下のモンスター（このカード以外）。 */
+function d6ProcedureFodder(ctx){
+  return API.pileCards(ctx.player, 'hand', x => x.db.k === 'm' && x.card !== ctx.card && curLV(x.card) <= 4);
+}
 defineScript('パワー・ジャイアント', {
-  type:'monster', priority:1, targets:true, activateFrom:['hand'], timing:['mainPhase'],
-  condition(ctx){
-    const me = locateCardAnyV4(ctx.card);
-    if(!me || me.zone !== 'hand'){ ctx.reason = '手札に存在する必要があります'; return false; }
-    if(!d6LowHand(ctx.player).filter(x => x.card !== ctx.card).length){
-      ctx.reason = '手札にレベル4以下のモンスターがいません'; return false; }
-    if(!d6MzOpen(ctx.player)){ ctx.reason = 'モンスターゾーンに空きがありません'; return false; }
-    return true;
+  /* S03-U17: 「手札のレベル4以下のモンスター1体を墓地へ送り、手札から特殊召喚する事ができる」はチェーンを作らない特殊召喚手順
+     （Wiki 11/08/12：この特殊召喚はインヴェルズ・ローチで無効にできる）。
+     下げるレベルは墓地へ送ったモンスターの墓地でのレベル（元々のレベル）。表側表示で存在する限り下がったまま（10/07/18）。 */
+  type:'monster', priority:1,
+  summonProcedure:{from:'hand', positions:['atk','def'],
+    condition(ctx){
+      if(!d6ProcedureFodder(ctx).length){ ctx.reason = '手札にレベル4以下のモンスターがいません'; return false; }
+      return true;
+    },
+    cost(ctx, done){
+      const pool = d6ProcedureFodder(ctx);
+      if(!pool.length){ done(false); return; }
+      API.selectCard('パワー・ジャイアント：墓地へ送るレベル4以下のモンスター', pool, t => {
+        const r = t && resolveTarget(t);
+        if(!r || r.zone !== 'hand'){ done(false); return; }
+        ctx.procedureDataS03 = { sentLv: Number(dbOf(r.card).lv) || 0 };
+        API.sendHandToGrave(ctx.player, r.index, 'パワー・ジャイアント（特殊召喚）');
+        done(true);
+      });
+    },
+    afterSummonS03(h, data){
+      const down = Number(data && data.sentLv) || 0;
+      if(h && down > 0) API.modLevel(h, -down, 'permanent', 'パワー・ジャイアント');
+    }
   },
-  selectTargets(ctx, done){
-    API.selectCard('パワー・ジャイアント（コスト）：墓地へ送るレベル4以下のモンスター',
-      d6LowHand(ctx.player).filter(x => x.card !== ctx.card), t => done([t]));
-  },
-  cost(ctx, done){
-    const t = ctx.selectedTargets && ctx.selectedTargets[0];
-    const r = t && resolveTarget(t);
-    if(!r || r.zone !== 'hand'){ done(false); return; }
-    ctx.d6SentLv = Number(dbOf(r.card).lv) || 0;
-    API.sendHandToGrave(ctx.player, r.index, 'パワー・ジャイアント（コスト）');
-    done(true);
-  },
-  resolve(ctx){
-    const now = d6SelfSummonFromHand(ctx, 'パワー・ジャイアント', false);
-    const down = Number(ctx.d6SentLv) || 0;
-    if(now && down > 0) API.modLevel(now, -down, 'permanent', 'パワー・ジャイアント');
-  },
-  afterResolve(){},
   continuous:{
     scope:'self', from:['mz'],
     apply(){ return null; },
@@ -53806,8 +54308,9 @@ function e8PsychicKilledByAttack(ctx){
   }
   return null;
 }
+/* S03-U24 (C-S03-20): 条件が墓地（戦闘で破壊され墓地へ送られたモンスター／墓地の資源）を見るので、⑤（墓地へ送られた後）の dsTiming 'leave'。 */
 defineScript('カース・サイキック', {
-  type:'trap', priority:2, dsTiming:'after', activateFrom:['sz'], timing:['damageStep'],
+  type:'trap', priority:2, dsTiming:'leave', activateFrom:['sz'], timing:['damageStep'],
   condition(ctx){
     if(!e8PsychicKilledByAttack(ctx)){
       ctx.reason = '自分のサイキック族が相手の攻撃で破壊された時に発動します'; return false; }
@@ -53840,8 +54343,9 @@ function e8BattleDeadInGrave(ctx){
   }
   return null;
 }
+/* S03-U24 (C-S03-20): 条件が墓地（戦闘で破壊され墓地へ送られたモンスター／墓地の資源）を見るので、⑤（墓地へ送られた後）の dsTiming 'leave'。 */
 defineScript('時の機械－タイム・マシーン', {
-  type:'trap', priority:2, dsTiming:'after', activateFrom:['sz'], timing:['damageStep'],
+  type:'trap', priority:2, dsTiming:'leave', activateFrom:['sz'], timing:['damageStep'],
   condition(ctx){
     const h = e8BattleDeadInGrave(ctx);
     if(!h){
@@ -54954,7 +55458,7 @@ defineUnifiedCardV4('魔天使ローズ・ソーサラー',[],{
       const pos=(ctx.position==='def'||ctx.pos==='def')?'def':'atk';
       API.specialSummon(ctx.player,zone,i,pos,'魔天使ローズ・ソーサラー');
       const h=locateCardAnyV4(ctx.card);
-      if(h&&h.zone==='mz') ctx.card.banishWhenLeavesField=true;
+      if(h&&h.zone==='mz') API.setCardFlag({card:ctx.card},'banishWhenLeavesField',true,'魔天使ローズ・ソーサラー',{silent:true});
     }
   }
 });
@@ -55624,6 +56128,300 @@ defineUnifiedCardV4('ドラグニティナイト－ガジャルグ',[s03SearchTh
  {type:'synchro',priority:1,timing:['mainPhase'],countLimit:1,blocksIfNoDeckToHand:true});
 defineUnifiedCardV4('ラヴァルバル・ドラグーン',[s03SearchThenHandEffect('ラヴァルバル・ドラグーン')],
  {type:'synchro',priority:1,timing:['mainPhase'],countLimit:1,blocksIfNoDeckToHand:true});
+/* S03-U10 (C-S03-07) CARD_ACTIVATION_VS_EFFECT — declaration table.
+   These Continuous/Field Spells and Continuous Traps have no requirement on activating the card itself:
+   their text only describes effects that apply or are activated while the card is face-up on the field
+   (continuous effects, 「〜度に」 triggers, 「1ターンに1度…できる」 ignition effects, costs such as 「〜する事で」).
+   Activating them from the hand or from a face-down set is a card activation only (see cardActivationOnlyV32):
+   the effect's condition, count limit, cost and targets are not used, and resolving it applies no effect.
+   Rulings (2011 wiki snapshots): 《竜の渓谷》10/07/04, 《神の居城－ヴァルハラ》, 《コア転送ユニット》《擬似空間》10/09/23 —
+   the effect cannot be activated at the same time as the card.
+   Measured before this unit (U09 build, empty board): every card below could not be activated as a card at all,
+   and where the effect condition happened to hold the card activation ran the effect.
+   Classification: text review of the 135 refused scripted Continuous/Field S/T (scratchpad u10_classify.js + hand review).
+   Not declared (the card activation itself has a requirement, current legality kept):
+     target/selection — リビングデッドの呼び声, デモンズ・チェーン, 正統なる血統, 蘇りし魂, ブレインハザード, 奇跡の光臨, 闇次元の解放,
+       化石岩の解放, 携帯型バッテリー, エンジェル・リフト, 魂の共有－コモンソウル, グレイモヤ不発弾, 鉄壁の布陣, ミニチュアライズ,
+       六芒星の呪縛, 罅割れゆく斧;
+     cost — 光の護封壁, ヒステリック・パーティー, 超栄養太陽, 忍法 変化の術, フューチャー・グロウ, エレメンタル・アブソーバー;
+     declaration — DNA移植手術, DNA改造手術, 夜霧のスナイパー;
+     activation condition / timing — ゴブリンの小役人, 便乗, ボスラッシュ, デプス・アミュレット;
+     optional activation-time effect (needs its own handling) — マクロコスモス.
+     activation-time setup (needs a model change) — 光のピラミッド (its ACTIVATE operation links the Sphinxes present at activation;
+       the leave-field effect should look at the field when the card leaves).
+   Legacy scripts that already declare fieldIgnition:true are covered by the helper as well and are listed here for completeness. */
+declareCardActivationFreeV32([
+  /* legacy fieldIgnition (already flagged) */
+  '血の代償','六武の門','六武衆の結束','暗黒界の門','カラクリ解体新書','神の居城－ヴァルハラ',
+  /* legacy scripts: on-field ignition / trigger / continuous effects only */
+  '竜の渓谷','歯車街','黒い旋風','軽量化','木遁封印式','クラッキング','ウォーターハザード','エレキャノン','水遁封印式','死霊の巣',
+  'カードトレーダー','リサイクル','ドラゴン族・封印の壺','不死式冥界砲','天空の泉','墓荒らしの報い','アタック・フェロモン','追い剥ぎゾンビ',
+  'ドミノ','千里眼','スパイダー・ウェブ','コート・オブ・ジャスティス','大樹海','コモンメンタルワールド','弱者の意地','ウェポンチェンジ',
+  'アマゾネスの里','スピリットの誘い','ダーク・シティ','ビーストライザー','フューチャー・ヴィジョン','モンスターBOX','召喚の呪詛',
+  '急転直下','押し売りゾンビ','コア転送ユニット','ヴァイロン・エレメント','人海戦術','機皇城','霞の谷の神風',
+  /* unified cards without an ACTIVATE effect */
+  'つまずき','カウンターマシンガンパンチ','マスドライバー','冥界の宝札','前線基地','零式魔導粉砕機','アイスバーン','サイバー・サモン・ブラスター',
+  'ダーク・キュア','「A」細胞増殖装置','一族の結束','生還の宝札','雲魔物のスコール','魂吸収','ジェムフラッシュエナジー','悪夢の迷宮',
+  '太陽の祭壇','アポート','ミイラの呼び声','黒蛇病','押し売りゴブリン','炎熱旋風壁','門前払い','エクトプラズマー','エレキュア',
+  'ポイズン・ファング','デスカウンター','ウィルスメール','メサイアの蟻地獄','凡骨の意地','漆黒のトバリ','神速の具足','神の恵み',
+  '魔法吸収','暗黒の呪縛','連鎖炸薬','バベル・タワー','人造天使','士気高揚','サイキックブレイク','アイヴィ・シャックル','うごめく影',
+  '「A」細胞培養装置','古代遺跡コードA','サンダー・ボトル','追い剥ぎゴブリン','エレメントの泉','棺桶売り','アマゾネスの闘志','エレキャッスル',
+  /* unified cards whose ACTIVATE effect has no activation-time effect in the card text (checked separately) */
+  '聖域の歌声','強制終了','ディフェンド・スライム','D・ゲイザー','ライトロード・バリア','アストラルバリア','トゥーン・ディフェンス',
+  '怒れるもけもけ',
+]);
+/* S03-U14 SUMMON_COUNTER_PLACEMENT — 武士道カウンター（「六武衆」の召喚・特殊召喚）
+   ① 「六武衆」モンスターが召喚・特殊召喚される度に置く：engine/1N_summon_counter_s03.js の summonCounterS03 宣言。
+      チェーンを作らず、ダメージステップでも置く（R1103-SIXGATE-001、R1103-SIXUNITED-001/003）。
+      同時に特殊召喚された「六武衆」は1回の出来事として N 個だけ置く（R1103-SIXGATE-002）。
+   ② カウンターを取り除く／このカードを墓地へ送るコストと効果の選択は、P1.1 activationV11 と v49 の選択で行う
+      （閉包を使わないので、保存・Replay から再開できる）。
+   「六武衆」は P4 group SIX_SAMURAI_NAMED（setcode 0x1000 から紫炎系を除いた集合）で判定する。
+   「紫炎」は名前に「紫炎」を含むカード。効果テキストは data/carddata.json に従う。 */
+const S03_BUSHIDO = '武士道';
+const S03_BUSHIDO_DECL = {kind:S03_BUSHIDO, group:'SIX_SAMURAI_NAMED', label:'六武衆'};
+declareCardActivationFreeV32(['六武院']);   /* フィールド魔法。カードの発動は効果を発動しない */
+
+function s03SixNamed(x){ const c=x&&(x.card||x); return !!c&&isCardInGroupV4(c,'SIX_SAMURAI_NAMED'); }
+function s03ShienNamed(x){ const c=x&&(x.card||x); return !!c&&String(cardName(c)||'').indexOf('紫炎')>=0; }
+function s03EffectMonster(x){ const d=(x&&(x.db||dbOf(x.card||x)))||{}; return d.k==='m'&&Array.isArray(d.st)&&d.st.indexOf('効果')>=0; }
+function s03BushidoOn(card){ return (card&&card.counters&&Number(card.counters[S03_BUSHIDO]))||0; }
+function s03GraveLeaveBlocked(){ return typeof graveMoveBlocked==='function'&&!!graveMoveBlocked('grave','leave'); }
+function s03CanSpecialSummon(p,db){ return !(typeof v46SpecialSummonRestrictionReason==='function'&&v46SpecialSummonRestrictionReason(p,db)); }
+
+/* ---- 六武の門 ---------------------------------------------------------- */
+function s03GateBoostTargets(){
+  return API.fieldCards({zone:'mz',filter:x=>x.card.face==='up'&&s03EffectMonster(x)&&(s03SixNamed(x)||s03ShienNamed(x))});
+}
+function s03GateSearchPool(p){
+  const deck=deckToHandLockReasonV32(p)?[]:API.pileCards(p,'deck',x=>x.db.k==='m'&&s03SixNamed(x));
+  const grave=s03GraveLeaveBlocked()?[]:API.pileCards(p,'grave',x=>x.db.k==='m'&&s03SixNamed(x));
+  return deck.concat(grave);
+}
+function s03GateReviveTargets(p){
+  if(s03GraveLeaveBlocked()||!hasMonsterZoneSpace(p)) return [];
+  return API.pileCards(p,'grave',x=>s03EffectMonster(x)&&s03ShienNamed(x)&&s03CanSpecialSummon(p,x.db));
+}
+function s03GateModes(p){
+  const n=API.counterTotal(p,S03_BUSHIDO), out=[];
+  if(n>=2&&s03GateBoostTargets().length) out.push({key:'m2',cost:2,label:'2つ：「六武衆」「紫炎」効果モンスター1体の攻撃力を500アップ'});
+  if(n>=4&&s03GateSearchPool(p).length) out.push({key:'m4',cost:4,label:'4つ：デッキ・墓地から「六武衆」モンスター1体を手札に加える'});
+  if(n>=6&&s03GateReviveTargets(p).length) out.push({key:'m6',cost:6,label:'6つ：墓地の「紫炎」効果モンスター1体を特殊召喚'});
+  return out;
+}
+function s03GatePay(d,m,uids){
+  API.removeCounterSpread(uids,S03_BUSHIDO,'六武の門（コスト）');
+  if(m.key==='m4'){ p11cCommit(d,[],'m4'); return; }
+  const cands=m.key==='m2'?s03GateBoostTargets():s03GateReviveTargets(d.player);
+  p11cOpen(d,{title:m.key==='m2'?'六武の門：攻撃力を500アップするモンスター':'六武の門：特殊召喚する「紫炎」効果モンスター',
+    candidates:cands,targeting:true,min:1,max:1,cancelable:false},'s03u14.gate-target',{mode:m.key});
+}
+API.registerChoiceHandler('s03u14.gate-mode',(answer,args)=>{
+  const d=args.activation; if(answer.cancelled) return p11cAbort(d);
+  const key=String(answer.cards&&answer.cards[0]&&answer.cards[0].value||'');
+  const m=s03GateModes(d.player).find(x=>x.key===key); if(!m) return p11cAbort(d);
+  const units=API.counterUnits(d.player,S03_BUSHIDO);
+  if(new Set(units.map(u=>u.card.uid)).size<=1){ s03GatePay(d,m,units.slice(0,m.cost).map(u=>u.card.uid)); return; }
+  API.requestChoice({player:d.player,kind:'card',title:`六武の門：取り除く武士道カウンター（${m.cost}つ）`,candidates:units,
+    min:m.cost,max:m.cost,cancelable:true,resume:{handler:'s03u14.gate-pay',args:{activation:d,mode:m.key}},meta:{scriptName:d.name}});
+});
+API.registerChoiceHandler('s03u14.gate-pay',(answer,args)=>{
+  const d=args.activation; if(answer.cancelled) return p11cAbort(d);
+  const m=s03GateModes(d.player).find(x=>x.key===args.mode), uids=v22AnswerUids(answer);
+  if(!m||uids.length!==m.cost) return p11cAbort(d);
+  s03GatePay(d,m,uids);
+});
+API.registerChoiceHandler('s03u14.gate-target',(answer,args)=>{
+  const q=p11cCards(answer); if(q.length!==1) return p11cAbort(args.activation);
+  p11cCommit(args.activation,q,args.mode);
+});
+API.registerChoiceHandler('s03u14.to-hand',(answer,args)=>{
+  const picked=v49P1ChoiceCards(answer)[0], h=picked&&locateCardAnyV4(picked.card);
+  if(!h||h.p!==args.player) return;
+  if(h.zone==='deck') API.searchDeck(args.player,h.index,'六武の門');
+  else if(h.zone==='grave') API.returnToHand(h,'六武の門');
+});
+
+defineScript('六武の門',{
+  type:'continuous-spell', priority:1, fieldIgnition:true, targets:true, includesSpecialSummon:true,
+  summonCounterS03:Object.assign({n:2},S03_BUSHIDO_DECL), counterCapableV22:{'武士道':true},
+  condition(ctx){
+    if(ctx.zone!=='sz'){ ctx.reason='表側表示の六武の門から発動します'; return false; }
+    if(API.counterTotal(ctx.player,S03_BUSHIDO)<2){ ctx.reason='自分フィールドの武士道カウンターが足りません'; return false; }
+    if(!s03GateModes(ctx.player).length){ ctx.reason='発動できる効果がありません'; return false; }
+    return true;
+  },
+  activationV11(ctx,d){
+    const modes=s03GateModes(d.player); if(!modes.length){ p11cAbort(d); return; }
+    API.requestChoice({player:d.player,kind:'option',title:'六武の門：発動する効果（取り除く武士道カウンターの数）',
+      candidates:modes.map(m=>({key:m.key,value:m.key,label:m.label})),min:1,max:1,cancelable:true,
+      resume:{handler:'s03u14.gate-mode',args:{activation:d}},meta:{scriptName:d.name}});
+  },
+  resolve(ctx){
+    const mode=ctx.chainLink&&ctx.chainLink.v4EffectKey;
+    const t=(ctx.selectedTargets||[])[0], h=t&&resolveTarget(t);
+    if(mode==='m2'){
+      if(h&&h.zone==='mz'&&h.card.face==='up'&&s03EffectMonster(h)&&(s03SixNamed(h)||s03ShienNamed(h))) API.modAtk(h,500,0,'endTurn','六武の門');
+      return;
+    }
+    if(mode==='m4'){
+      const pool=s03GateSearchPool(ctx.player);
+      if(pool.length) v49P1Open(ctx,{kind:'card',title:'六武の門：手札に加える「六武衆」モンスター',candidates:pool,min:1,max:1},'s03u14.to-hand',{},false);
+      return;
+    }
+    if(mode==='m6'){
+      if(h&&h.zone==='grave'&&h.p===ctx.player&&s03EffectMonster(h)&&s03ShienNamed(h)&&hasMonsterZoneSpace(ctx.player)&&!s03GraveLeaveBlocked())
+        API.specialSummon(ctx.player,'grave',h.index,'atk','六武の門');
+    }
+  },
+  afterResolve(){}
+});
+
+/* ---- このカードを墓地へ送って発動する2枚 --------------------------------- */
+/* コストを払った時点で乗っていた数を activation cost の amount に残す（解決時にはカードが墓地にある）。 */
+function s03SendSelfCost(d,reason){
+  const h=findCardByUid(d.uid);
+  if(!h||h.zone!=='sz'||s03BushidoOn(h.card)<=0){ p11cAbort(d); return; }
+  API.recordActivationCost(p11cCtx(d.player),'bushido-self',[h],[],s03BushidoOn(h.card));
+  API.sendToGrave(h,reason+'（コスト）');
+  p11cCommit(d,[],null);
+}
+function s03SelfCostCount(ctx){ const r=API.activationCosts(ctx,'bushido-self')[0]; return r?(Number(r.amount)||0):0; }
+
+defineScript('六武衆の結束',{
+  type:'continuous-spell', priority:1, fieldIgnition:true,
+  summonCounterS03:Object.assign({n:1},S03_BUSHIDO_DECL), counterCapableV22:{'武士道':true}, counterMaxV22:{'武士道':2},
+  condition(ctx){
+    if(ctx.zone!=='sz'){ ctx.reason='表側表示の六武衆の結束から発動します'; return false; }
+    if(s03BushidoOn(ctx.card)<=0){ ctx.reason='武士道カウンターが置かれていません'; return false; }
+    return true;
+  },
+  activationV11(ctx,d){ s03SendSelfCost(d,'六武衆の結束'); },
+  resolve(ctx){ const n=s03SelfCostCount(ctx); if(n>0) API.draw(ctx.player,n); },
+  afterResolve(){}
+});
+
+function s03DojoPool(p,maxLv){
+  if(!hasMonsterZoneSpace(p)) return [];
+  return API.pileCards(p,'deck',x=>s03EffectMonster(x)&&(s03SixNamed(x)||s03ShienNamed(x))&&(Number(x.db.lv)||0)<=maxLv&&s03CanSpecialSummon(p,x.db));
+}
+defineScript('紫炎の道場',{
+  type:'continuous-spell', priority:1, fieldIgnition:true, includesSpecialSummon:true, blocksIfNoSpecialSummon:true,
+  summonCounterS03:Object.assign({n:1},S03_BUSHIDO_DECL), counterCapableV22:{'武士道':true},
+  condition(ctx){
+    const n=s03BushidoOn(ctx.card);
+    if(ctx.zone!=='sz'){ ctx.reason='表側表示の紫炎の道場から発動します'; return false; }
+    if(n<=0){ ctx.reason='武士道カウンターが置かれていません'; return false; }
+    if(!s03DojoPool(ctx.player,n).length){ ctx.reason='デッキに特殊召喚できるモンスターがいません'; return false; }
+    return true;
+  },
+  activationV11(ctx,d){ s03SendSelfCost(d,'紫炎の道場'); },
+  resolve(ctx){
+    const pool=s03DojoPool(ctx.player,s03SelfCostCount(ctx));
+    if(pool.length) v49P1Open(ctx,{kind:'card',title:'紫炎の道場：デッキから特殊召喚するモンスター',candidates:pool,min:1,max:1},
+      'p1cards.special-summon',{from:'deck',pos:'atk',reason:'紫炎の道場'},false);
+  },
+  afterResolve(){}
+});
+
+/* ---- 六武院 ------------------------------------------------------------ */
+defineScript('六武院',{
+  type:'field', priority:1,
+  summonCounterS03:Object.assign({n:1},S03_BUSHIDO_DECL), counterCapableV22:{'武士道':true},
+  /* 表側表示の六武院には発動する効果が無い（カードの発動は H2 の宣言で扱う） */
+  condition(ctx){ ctx.reason='六武院には発動する効果がありません'; return false; },
+  continuous:{scope:'oppMonsters',from:['field'],apply(card,self){
+    if(!card||card.face!=='up') return null;
+    const n=s03BushidoOn(self); return n>0?{atk:-100*n}:null;
+  }},
+  afterResolve(){}
+});
+/* S03-U16 C-S03-13 COST_SELECTION_FIRST — 宣言表
+   selectTargets で「コストにするカード」を選び、cost が ctx.selectedTargets を読む旧形式スクリプト。
+   engine/1O_cost_selection_first_s03.js の順序（選択 → コスト → 動いたカードを対象から除外 → コスト中の値を解決へ引き継ぐ）で発動する。
+   選定：cost 本体（波括弧で対応を取った範囲）が ctx.selectedTargets を読み、selectTargets を持ち、activationV11 を持たないもの（24件）から、
+   テキストが「…して発動する／できる」またはリリース・除外・墓地へ送る事がコストと裁定されている 21 件。
+   除外した3件は、テキスト上チェーンを作らない特殊召喚手順（召喚ルール効果）なのに効果として書かれているため、ここで発動可能にしない：
+     異次元の精霊（Wiki 10/11/17「召喚ルール効果」、10/11/15「除外はコストではなく手順」）、
+     マジック・ストライカー（「除外し、手札から特殊召喚できる」）、
+     パワー・ジャイアント（「墓地へ送り、手札から特殊召喚する事ができる」、Wiki 11/08/12 インヴェルズ・ローチで無効にできる）。
+   これらは特殊召喚手順への変換（カード作業）として WORK_QUEUE に残す。 */
+declareCostSelectionFirstS03([
+  /* リリース */
+  'キング・オブ・ビースト','昇天の角笛','XX－セイバー ガトムズ','吹き荒れるウィン','D・チャッカン','ジュラック・ティラヌス',
+  'ダーク・ダイブ・ボンバー','ヘル・ドラゴン',
+  /* 除外（墓地・フィールド）・除外ゾーンからデッキへ */
+  'ギョッ!','フレムベルカウンター','ダーク・パーシアス','シンクロ・チェンジ','泣き神の石像',
+  'ビーストライザー','ドラグニティナイト－ゲイボルグ','フューチャー・グロウ','ユニバード',
+  /* 手札・装備カード */
+  '鬼ゴブリン','アサルト・スピリッツ','D・クリーナン','ジェムエレファント',
+]);
+/* S03-U18 C-S03-15 ACTIVATION_RESPONSE_EVENT — 宣言表
+   「（相手が）〜を発動した時、その発動を無効にする」応答。condition と resolve が ctx.event（発動イベント）を読み、
+   onActivateSuccess を誘発として宣言していたスクリプト。engine/1P_activation_response_s03.js により、
+   チェーン応答として発動し（応答先は一番上のリンク）、解決後の遅れた誘発としては提示しない。
+   選定：onActivateSuccess を使う 52 件のうち、発動を無効にする 23 件から、次の2件を除いた 21 件。
+     ミドル・シールド・ガードナー（このカードを対象とする効果への反応）、アルカナフォース0－THE FOOL（対象にする効果を無効にする継続的な処理）は、
+     発動への応答とは仕組みが異なるため、別に分類する（WORK_QUEUE）。 */
+declareActivationResponseS03([
+  /* カウンター罠 */
+  '王宮の陥落','魔力終了宣告','蛇神の勅命','威風堂々','ダメージ・ポラリライザー','フュージョン・ガード',
+  'ゴブリンのその場しのぎ','誤作動','ギョッ!','フレムベルカウンター','アーマーブレイク','オーバーウェルム',
+  'マジック・ジャマー','マジック・ドレイン','鋼核の輝き',
+  /* 通常罠・速攻魔法 */
+  '墓場からの呼び声','グリフォンの翼','壺盗み',
+  /* モンスター効果 */
+  'ネイビィロイド','ヂェミナイ・デビル','ジャスティス・ブリンガー',
+]);
+
+/* S03-U19: 対象を読み取れるようになったため、次の2件は onActivateSuccess の遅れた誘発として出てしまう。
+   どちらも「発動への応答」ではない（ミドル・シールド・ガードナー：裏側のこのカードを対象とする魔法の無効化、
+   アルカナフォース0－THE FOOL：このカードを対象にする効果の無効化）ので、正しく実装するまで誘発として出さない（WORK_QUEUE ②）。 */
+declareActivationLateTriggerSuppressedS03(['ミドル・シールド・ガードナー','アルカナフォース0－THE FOOL']);
+/* S03-U25: 「このカードが戦闘で（によって）破壊した（相手／効果）モンスターの効果は無効化される」を宣言する。
+   仕組みは engine/1S_battle_destroyed_negation_s03.js。
+   2011 wiki：ワーム・ウォーロードのこの効果は永続効果（相打ちでは無効にできない）。
+   漆黒の魔王 LV4 の本文は「相手モンスター」だが、効果を持たないモンスターには無効にする効果が無いので effectOnly のまま扱う。 */
+declareBattleDestroyedNegatorS03('漆黒の魔王 LV4', {});
+declareBattleDestroyedNegatorS03('ワーム・ウォーロード', {});
+/* エレメント・デビル：フィールドに地属性モンスターが存在する場合だけ（解決時に判定）。 */
+declareBattleDestroyedNegatorS03('エレメント・デビル', {
+  condition(){
+    for(let p=0;p<2;p++){
+      const P = gameState.players[p];
+      if((P.mz||[]).some(c => c && c.face === 'up' && (typeof currentAttributeV17==='function' ? currentAttributeV17(c) : dbOf(c).at) === '地')) return true;
+    }
+    return false;
+  }
+});
+/* S03-U28: 対象にされた時に自動で働く無効化（永続効果）を宣言する。仕組みは engine/1T_targeting_negation_s03.js。 */
+
+/* ミドル・シールド・ガードナー：裏側表示のこのモンスター1体を対象とする魔法カードの発動を無効にし、表側守備表示になる。
+   本文は発動したプレイヤーを限定しないので、どちらのプレイヤーの魔法カードでも無効にする。 */
+declareTargetingNegatorS03('ミドル・シールド・ガードナー', {
+  applies({srcDb, negator}){
+    if(!srcDb || srcDb.k !== 's') return null;
+    if(!negator || !negator.card || negator.card.face !== 'down') return null;
+    return {mode:'activation', destroySource:false, reason:'ミドル・シールド・ガードナー'};
+  },
+  after({negator}){
+    if(negator && negator.zone === 'mz')
+      act({type:'FX_SET_STATE', player:negator.p, zone:'mz', index:negator.index, face:'up', pos:'def', reason:'ミドル・シールド・ガードナー'});
+  }
+});
+
+/* アルカナフォース0－THE FOOL：コイントスが表(1)ならこのカードを対象にする自分のカードの効果を、裏(2)なら相手のカードの効果を、無効にし破壊する。
+   2011 wiki：表・裏の効果の種別は永続効果。コイントスの結果は e9FoolCoin（cards/E2 の召喚時の誘発効果が記録）。 */
+declareTargetingNegatorS03('アルカナフォース0－THE FOOL', {
+  applies({link, negator}){
+    const c = negator && negator.card;
+    if(!c || c.face !== 'up') return null;
+    const coin = Number(c.e9FoolCoin || 0);
+    const side = coin === 1 ? negator.p : (coin === 2 ? (negator.p === 0 ? 1 : 0) : null);
+    if(side == null || link.player !== side) return null;
+    return {mode:'effect', destroySource:true, reason:'アルカナフォース0－THE FOOL'};
+  }
+});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、
@@ -56391,6 +57189,7 @@ function redo(){
   render();
   if(typeof refreshChoiceSheetV49==='function') refreshChoiceSheetV49();
   else if(!gameState.pendingChoice && typeof closeSheet==='function') closeSheet();
+  if(typeof reopenSummonWindowAfterLoadS03==='function') reopenSummonWindowAfterLoadS03();  /* S03-U15 */
 }
 /* 召喚・リバースなど、誘発の起点になったアクションの窓を開く */
 function updateTimingWindow(gs, a){
@@ -56492,6 +57291,7 @@ function offerResumeDuel(){
   HISTORY.length = 0; REDO.length = 0;
   render();
   if(typeof refreshChoiceSheetV49==='function') refreshChoiceSheetV49();
+  if(typeof reopenSummonWindowAfterLoadS03==='function') reopenSummonWindowAfterLoadS03();  /* S03-U15 */
   showToast("保存されていたデュエルを再開しました");
   return true;
 }
@@ -56601,6 +57401,7 @@ function undo(){
   render();
   if(typeof refreshChoiceSheetV49==='function') refreshChoiceSheetV49();
   else if(!gameState.pendingChoice && typeof closeSheet==='function') closeSheet();
+  if(typeof reopenSummonWindowAfterLoadS03==='function') reopenSummonWindowAfterLoadS03();  /* S03-U15 */
 }
 /* action を短い日本語チップに変換（このターンにやったこと用） */
 function chipFor(a){
@@ -57349,14 +58150,9 @@ function doFlipUp(p, zone, idx, pos){
     return;
   }
   ensureCardUid(gameState,c);
-  PENDING_SUMMON_COMMIT=()=>{
-    const hit=findCardByUid(c.uid); if(!hit) return;
-    act({type:'FX_SET_STATE',player:hit.p,zone:hit.zone,index:hit.index,face:'up',pos:'atk',reason:'反転召喚成功'});
-    const now=findCardByUid(c.uid); if(now) queueDeferredEventV2('onFlip',{player:p,name:nm,card:now.card,treatAsField:true,flipSummon:true});
-    flushDeferredEventsV2();
-  };
-  PENDING_SUMMON_CANCEL=()=>{ const hit=findCardByUid(c.uid); if(hit) act({type:'FX_TO_GRAVE',player:hit.p,zone:hit.zone,index:hit.index,reason:'反転召喚を無効',byDestroy:true}); };
-  beginSummonWindowV2({player:p,name:nm,kind:'flip',label:'反転召喚',uid:c.uid,commit:'__pendingSummonCommit',cancel:'__pendingSummonCancel'});
+  /* S03-U15: 続きは pendingSummon.resumeS03 から runSummonWindowResumeS03 が実行する（保存・Undo を跨げる）。 */
+  PENDING_SUMMON_COMMIT=PENDING_SUMMON_CANCEL=null;
+  beginSummonWindowV2({player:p,name:nm,kind:'flip',label:'反転召喚',uid:c.uid,commit:'__pendingSummonCommit',cancel:'__pendingSummonCancel',resumeS03:{uid:c.uid}});
 }
 
 
@@ -57472,6 +58268,9 @@ function canModifyNow(){
   const b = gameState.battle;
   if(!b) return true;                 // 戦闘中でなければ制限なし
   const info = dsInfo(b.step);
+  /* S03-U22: チェーンの解決中は、解決中のブロックの種類で判定する（誘発効果は段階を問わず適用できる）。 */
+  const byLinkS03 = (typeof damageStepModifyAllowedS03==='function') ? damageStepModifyAllowedS03(info) : null;
+  if(byLinkS03 !== null) return byLinkS03;
   if(ACTIVE_SCRIPT && ACTIVE_SCRIPT.damageStepOnly) return info.dsOnly;
   return info.quickMod;
 }
@@ -57637,7 +58436,8 @@ function enterDamageStep(){
       b.defPosAtCalc = def ? (def.face==='down' ? 'down' : def.pos) : null;
     }
     /* ③-ⅲ〜ⅴ ダメージ発生と戦闘破壊確定。破壊は確定するだけで場には残る */
-    act({type:"ATTACK", player:b.player, atkIdx:b.atkIdx, target:b.target});
+    act({type:"ATTACK", player:b.player, atkIdx:b.atkIdx, target:b.target,
+      battleCtxS03:(typeof battleContextSnapshotS03==='function') ? battleContextSnapshotS03(b) : null});   /* S03-U21 */
     b.resolved = true;
   }
 
@@ -58022,6 +58822,21 @@ function activateFromHand(i){
   const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備");
   logIt(gameState, `<b>${nm}</b> を発動`);
   render();
+  /* S03-U31 (C-S03-07 MANUAL): 宣言した永続・フィールドカードは「カードの発動」だけを行う。
+     効果・コスト・回数制限は使わず、表側で場に残す。効果は表側のカードから別に発動する。 */
+  const scU31 = CARD_SCRIPTS[nm];
+  const placedU31 = (to==="field") ? gameState.players[p].field : gameState.players[p].sz[idx];
+  if(typeof cardActivationOnlyV32==='function'
+     && cardActivationOnlyV32(nm, scU31, db, to, placedU31, {cardActivation:true})){
+    logIt(gameState, `${nm} の発動が成立（効果は発動していません）`);
+    render(); return;
+  }
+  /* S03-U31: P1.1（activationV11）のカードは、モード選択とコストを正しく通すため発動パイプラインを使う。
+     コミット後の解決は commitPreparedActivationV11 が DUEL 以外でも開始する。 */
+  if(scU31 && typeof scU31.activationV11==='function' && typeof prepareDuelActivation==='function'){
+    askChain(`${nm} の発動`, ()=>{ prepareDuelActivation(nm, p, to, idx, {noPriority:true}); render(); });
+    return;
+  }
   // 発動に対してチェーンできるので確認してから効果を処理する
   askChain(`${nm} の発動`, ()=>{ runEffect(p, nm, {zone:to, index:idx, keep}); render(); });
 }
@@ -58384,16 +59199,10 @@ function finishNormalSummon(i, pos, payment, methodId, extraNormalKey){
   }
   closeSheet();
   act({type:'NORMAL_SUMMON_ATTEMPT',player:p,name:nm,extraNormalKey:extraNormalKey||null});
-  PENDING_SUMMON_COMMIT=()=>{
-    const hit=findCardByUid(card.uid); if(!hit||hit.zone!=='hand') return;
-    act({type:'NORMAL_SUMMON',player:p,handIndex:hit.index,pos:'atk',tributes:payment.bodies,tributeValue:payment.value,prepaid:true,summonMethod:methodId,p3Materials:payment.p3Materials||[]});
-    const summoned=lastSummonedCard(p);
-    if(summoned) applyNormalSummonMethod(summoned,dbOf(summoned),p,methodId,'summon');
-    if(summoned) queueDeferredEventV2('onNormalSummon',{player:p,name:nm,card:summoned});
-    flushDeferredEventsV2();
-  };
-  PENDING_SUMMON_CANCEL=()=>{ const hit=findCardByUid(card.uid); if(hit) act({type:'MOVE',player:hit.p,from:hit.zone,fromIndex:hit.index,to:'grave'}); };
-  beginSummonWindowV2({player:p,name:nm,kind:'normal',label:extraNormalKey?'追加通常召喚':'通常召喚',uid:card.uid,commit:'__pendingSummonCommit',cancel:'__pendingSummonCancel'});
+  /* S03-U15: 続きは pendingSummon.resumeS03 から runSummonWindowResumeS03 が実行する（保存・Undo を跨げる）。 */
+  PENDING_SUMMON_COMMIT=PENDING_SUMMON_CANCEL=null;
+  const resumeS03=Object.assign({uid:card.uid,tributes:payment.bodies,tributeValue:payment.value,p3Materials:payment.p3Materials||[]},methodId!=null?{summonMethod:methodId}:{});
+  beginSummonWindowV2({player:p,name:nm,kind:'normal',label:extraNormalKey?'追加通常召喚':'通常召喚',uid:card.uid,commit:'__pendingSummonCommit',cancel:'__pendingSummonCancel',resumeS03});
 }
 function doSetMonster(i){
   const p = gameState.activePlayer;
@@ -58594,13 +59403,27 @@ function activateFromZone(p, zone, idx){
   const c = zoneCard(P, zone, idx); if(!c) return;
   const db = dbOf(c);
   const nm = db.n||"";
+  const scU31 = CARD_SCRIPTS[nm];
+  /* S03-U31 (C-S03-07 MANUAL): 表にする前に「カードの発動」かを判定する（セット状態からの発動もカードの発動）。 */
+  const cardActOnlyU31 = (typeof cardActivationOnlyV32==='function')
+    && cardActivationOnlyV32(nm, scU31, db, zone, c, {});
   closeSheet();
   if(c.face==='down'){
     act({type:"FX_SET_STATE", player:p, zone, index:idx, face:"up", reason:"発動"});
   }
   const keep = (db.sub==="永続" || db.sub==="フィールド" || db.sub==="装備" || db.k==='m');
+  if(cardActOnlyU31){
+    /* S03-U31: カードの発動だけが成立する。効果・コスト・回数制限は使わない。 */
+    logIt(gameState, `<b>${nm}</b> を発動（カードの発動：効果は発動していません）`);
+    render(); return;
+  }
   logIt(gameState, `<b>${nm}</b> の効果を発動`);
   render();
+  /* S03-U31: P1.1（activationV11）のカードは、モード選択とコストを正しく通すため発動パイプラインを使う。 */
+  if(scU31 && typeof scU31.activationV11==='function' && typeof prepareDuelActivation==='function'){
+    askChain(`${nm} の効果発動`, ()=>{ prepareDuelActivation(nm, p, zone, idx, {noPriority:true}); render(); });
+    return;
+  }
   askChain(`${nm} の効果発動`, ()=>{ runEffect(p, nm, {zone, index:idx, keep}); render(); });
 }
 function zAct(type,p,zone,index){
