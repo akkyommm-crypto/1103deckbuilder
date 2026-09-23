@@ -17738,24 +17738,58 @@ defineScript("ゴッドバードアタック", {
   }
 });
 
-/* ---- カードガンナー ---- */
-defineScript("カードガンナー", {
-  countLimit:1,
-  type:"monster", priority:1, quickEffect:false,
+/* ---- カードガンナー ----
+   2011年テキスト: 1ターンに1度、自分のデッキの上からカードを3枚まで墓地へ送る事ができる。この効果で墓地へ
+   送ったカード1枚につき、このカードの攻撃力はエンドフェイズ時まで500ポイントアップする。また、自分フィールド上に
+   存在するこのカードが破壊され墓地へ送られた時、自分のデッキからカードを1枚ドローする。
+   S03-U113: 2011年当時は「送る」までが効果（コストではない：後年の「送って発動できる」は採らない）。
+   以前の実装は (1) 送る枚数を選べず常に min(3, デッキ枚数) 枚を送り、(2) 破壊され墓地へ送られた時の
+   強制ドローが丸ごと無かった。枚数は解決時に1〜3から選ぶ（SaveLoad安全なハンドラ）。
+   「1ターンに1度」は起動効果だけに掛かる（誘発のドローは消費しない）。 */
+API.registerChoiceHandler('s03u113.card-gunner-mill', (answer, args) => {
+  const pk = answer && answer.cards && answer.cards[0];
+  const want = Math.max(0, Math.min(3, Number(pk && pk.value) || 0));
+  const P = gameState.players[args.player];
+  const n = Math.min(want, (P.deck||[]).length);
+  if(!n) return;
+  API.millTop(args.player, n, "カードガンナー");
+  const h = findCardByUid(args.uid);
+  if(h && h.zone==='mz' && h.card.face==='up')
+    API.modAtk({p:h.p, zone:'mz', index:h.index, card:h.card}, n*500, 0, 'endTurn', 'カードガンナー');
+  API.log(`カードガンナー：${n}枚墓地へ送り、攻撃力+${n*500}`);
+});
+function cardGunnerDestroyedFromFieldS03U113(ctx){
+  if(ctx.zone!=='grave' || !ctx.card) return false;
+  const e = ctx.event || {};
+  const self = (e.card && e.card===ctx.card) || (e.uid!=null && ctx.card.uid===e.uid);
+  const gi = ctx.card.graveInfo;
+  return !!(self && gi && gi.from==='mz' && gi.byDestroy);
+}
+defineUnifiedCardV4('カードガンナー',[{
+  key:'mill-boost', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, speed:1, events:['activate'],
   condition(ctx){
+    if(ctx.zone!=='mz' || !ctx.card || ctx.card.face!=='up'){ ctx.reason="フィールドで表側表示の時に発動します"; return false; }
     if(!API.me(ctx).deck.length){ ctx.reason = "デッキが空です"; return false; }
     return true;
   },
-  resolve(ctx){
-    const n = Math.min(3, API.me(ctx).deck.length);
-    API.millTop(ctx.player, n, "カードガンナー");
-    if(ctx.zone==='mz'){
-      API.modAtk({p:ctx.player, zone:'mz', index:ctx.index, card:ctx.card}, n*500, 0, 'endTurn', 'カードガンナー');
-    }
-    API.log(`カードガンナー：${n}枚墓地へ送り、攻撃力+${n*500}`);
+  operation(ctx){
+    const max = Math.min(3, API.me(ctx).deck.length);
+    if(!max) return;
+    ensureCardUid(gameState, ctx.card);
+    const cands = [1,2,3].slice(0,max).map(k=>({key:String(k), label:`${k}枚`, value:k}));
+    API.requestChoice({player:ctx.player, kind:'declare', title:"カードガンナー：デッキの上から墓地へ送る枚数",
+      candidates:cands, min:1, max:1, cancelable:false,
+      resume:{handler:'s03u113.card-gunner-mill', args:{player:ctx.player, uid:ctx.card.uid}},
+      meta:{scriptName:"カードガンナー"}});
   },
   afterResolve(){}
-});
+},{
+  key:'destroyed-draw', type:EFFECT_TYPE.TRIGGER, range:LOCATION.GRAVE, speed:1, events:['onDestroy'], forced:true,
+  condition(ctx){ return cardGunnerDestroyedFromFieldS03U113(ctx); },
+  operation(ctx){ API.draw(ctx.player, 1, "カードガンナー"); },
+  afterResolve(){}
+}],{type:'monster', priority:1, quickEffect:false, countLimit:{n:1, effects:['mill-boost']}, timing:['mainPhase'],
+  passive:{ onDestroy(ctx){ return cardGunnerDestroyedFromFieldS03U113(ctx); } }});
 
 /* ---- リミッター解除 ---- */
 defineScript("リミッター解除", {
@@ -18604,8 +18638,11 @@ defineScript("大天使クリスティア", {
 /* 六武の門・六武衆の結束 は S03-U14 で cards/H3_claude_s03_bushido.js へ移した（召喚時の武士道カウンターと v49 の選択）。 */
 
 /* ---------- 暗黒界 ---------- */
+/* S03-U112: 暗黒界の「カードの効果によって手札から捨てられた場合、…する」は強制誘発（forced）。
+   「相手のカードの効果によって捨てられた場合、さらに…」は、プレイヤーへの確認（自己申告）ではなく
+   捨てた時に記録された discardInfo.byPlayer（darkWorldDiscard）で判定する。 */
 defineScript("暗黒界の狩人 ブラウ", {
-  type:"monster", priority:2,
+  type:"monster", priority:2, forced:true,
   activateFrom:["grave"],
   condition(ctx){
     if(ctx.zone!=='grave'){ ctx.reason="効果で捨てられた時に発動します"; return false; }
@@ -18613,15 +18650,14 @@ defineScript("暗黒界の狩人 ブラウ", {
   },
   resolve(ctx){
     API.draw(ctx.player, 1);
-    API.confirm("暗黒界の狩人 ブラウ", "相手の効果で捨てられましたか？（もう1枚ドロー）",
-      ()=>{ API.draw(ctx.player, 1); render(); }, ()=>{});
+    if(darkWorldDiscard(ctx)==='opponent') API.draw(ctx.player, 1);   /* S03-U112 */
   },
   afterResolve(){},
   passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
 });
 
 defineScript("暗黒界の武神 ゴルド", {
-  type:"monster", priority:2,
+  type:"monster", priority:2, forced:true,   /* S03-U112 */
   activateFrom:["grave"],
   condition(ctx){
     if(ctx.zone!=='grave'){ ctx.reason="効果で捨てられた時に発動します"; return false; }
@@ -18629,13 +18665,12 @@ defineScript("暗黒界の武神 ゴルド", {
     return true;
   },
   resolve(ctx){
-    API.specialSummon(ctx.player,'grave',ctx.index,'atk',"暗黒界の武神 ゴルド");
-    API.requestChoice({player:ctx.player, kind:'yesno', title:"暗黒界の武神 ゴルド",
-      note:"相手の効果で捨てられましたか？（相手のカードを2枚まで破壊）",
-      candidates:[{key:'yes',label:'はい',value:true},{key:'no',label:'いいえ',value:false}],
-      min:1, max:1, cancelable:false,
-      resume:{handler:'s03u62.gold-destroy-confirm', args:{player:ctx.player, opponent:ctx.opponent, destroyedUids:[]}},
-      meta:{scriptName:"暗黒界の武神 ゴルド"}});
+    const me = API.pileCards(ctx.player,'grave',x=>x.card===ctx.card)[0];
+    if(me) API.specialSummon(ctx.player,'grave',me.index,'atk',"暗黒界の武神 ゴルド");
+    /* S03-U112: 相手のカードの効果で捨てられた場合だけ、さらに相手のカードを2枚まで破壊できる（任意）。
+       以前は「相手の効果で捨てられましたか？」の自己申告で決めていた。
+       's03u62.gold-destroy-confirm' ハンドラは古いセーブの続き用に残す。 */
+    if(darkWorldDiscard(ctx)==='opponent') goldDestroyStep(ctx.player, ctx.opponent, []);
   },
   afterResolve(){},
   passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
@@ -20226,13 +20261,18 @@ function darkWorldDiscard(ctx){
   const ev = ctx.event || {};
   if(ev.card && ev.card !== ctx.card) return null;
   if(ev.uid != null && ctx.card && ctx.card.uid != null && ev.uid !== ctx.card.uid) return null;
-  return info.byPlayer === ctx.player ? 'self' : 'opponent';
+  if(info.byPlayer !== ctx.player) return 'opponent';
+  /* S03-U112: discardInfo.byPlayer は P3 の設計どおり「手札の持ち主」基準のまま（明示指定が無ければ捨てた本人）。
+     誰の効果かは P3 provenance（act() 時に焼き込まれる actingPlayer）で判定する。これが無いと相手の《手札抹殺》等で
+     捨てられても「相手のカードの効果によって捨てられた場合」が起きなかった。 */
+  if(typeof movedByOpponentEffectV3==='function' && movedByOpponentEffectV3(ctx.card, ctx.player)) return 'opponent';
+  return 'self';
 }
 
 /* ---- 暗黒界の尖兵 ベージ ----
    効果で手札から捨てられた場合、墓地から特殊召喚する。 */
 defineScript("暗黒界の尖兵 ベージ", {
-  type:"monster", priority:1,
+  type:"monster", priority:1, forced:true,   /* S03-U112: 「…特殊召喚する」は強制 */
   activateFrom:["grave"],
   condition(ctx){
     if(!darkWorldDiscard(ctx)){
@@ -20259,7 +20299,7 @@ API.registerChoiceHandler('s03u62.snow-revive', (answer, args) => {
   if(h && h.zone==='grave') API.specialSummon(args.player,'grave',h.index,'def',"暗黒界の術師 スノウ");
 });
 defineScript("暗黒界の術師 スノウ", {
-  type:"monster", priority:1,
+  type:"monster", priority:1, forced:true,   /* S03-U112: サーチは強制（相手の効果の場合の追加蘇生だけ任意） */
   activateFrom:["grave"],
   condition(ctx){
     if(!darkWorldDiscard(ctx)){
@@ -20296,7 +20336,7 @@ function darkWorldInDeck(p){
    ① 自分フィールドの他の「暗黒界」1体を手札に戻して墓地から特殊召喚する。
    ② 効果で手札から捨てられた場合、相手フィールドのカード1枚を選択して破壊する。 */
 defineScript("暗黒界の龍神 グラファ", {
-  type:"monster", priority:1,
+  type:"monster", priority:1, forced:true,   /* S03-U112: 捨てられた時の破壊は強制（forced は誘発にだけ効き、墓地からの起動効果には影響しない） */
   activateFrom:["grave"],
   condition(ctx){
     if(ctx.zone !== 'grave'){ ctx.reason = "墓地から発動します"; return false; }
@@ -20320,7 +20360,7 @@ defineScript("暗黒界の龍神 グラファ", {
       const foes = API.fieldCards({player:ctx.opponent, filter:x=>x.card});
       if(!foes.length){ API.log("相手フィールドにカードがありません"); return; }
       API.requestChoice({player:ctx.player, kind:'card', title:"暗黒界の龍神 グラファ：破壊する相手のカード",
-        candidates: foes, min:1, max:1, cancelable:true,
+        candidates: foes, min:1, max:1, cancelable:false,   /* S03-U112: 強制 */
         resume:{handler:'s03u62.grapha-destroy', args:{}},
         meta:{scriptName:"暗黒界の龍神 グラファ"}});
       return;
@@ -20417,8 +20457,11 @@ defineScript("暗黒界の門", {
   resolve(ctx){
     const h = API.pileCards(ctx.player,'hand',x=>x.db.k==='m' && x.db.ra==='悪魔');
     if(!h.length){ API.log("手札に悪魔族がいないため不発"); return; }
+    /* S03-U112: 「手札から悪魔族モンスター1体を選択して捨てる。その後…1枚ドローする」は強制。
+       以前は cancelable:true で、コスト（墓地の悪魔族の除外）を払った後に選択を取り消すと
+       捨てる処理もドローも丸ごと行われず、強制効果が任意になっていた。 */
     API.requestChoice({player:ctx.player, kind:'card', title:"暗黒界の門：捨てる手札の悪魔族",
-      candidates: h, min:1, max:1, cancelable:true,
+      candidates: h, min:1, max:1, cancelable:false,
       resume:{handler:'s03u62.dark-world-gate-discard', args:{player:ctx.player}},
       meta:{scriptName:"暗黒界の門"}});
   },
@@ -21216,8 +21259,17 @@ defineScript("ナチュル・パルキオン", {
 /* ---- デブリ・ドラゴン ----
    召喚に成功した時、自分の墓地の攻撃力500以下のモンスター1体を対象として
    攻撃表示で特殊召喚する。その効果は無効化される。 */
+/* S03-U113: (1) 「このカードをシンクロ素材とする場合、ドラゴン族モンスターのシンクロ召喚にしか使用できず、
+   他のシンクロ素材モンスターは全てレベル4以外のモンスターでなければならない」が未実装だった
+   → synchroMaterialRestriction。(2) 解決時に対象を添字（選択時の位置）で特殊召喚し、その後「モンスターゾーンの
+   最後尾」を無効化していた → 対象はカードそのもので墓地にあるか確認し、特殊召喚できたそのカードだけを無効化する。 */
 defineScript("デブリ・ドラゴン", {
   type:"monster", priority:1, targets:true,
+  synchroMaterialRestriction(info){
+    const ex = info && info.exDb;
+    if(!ex || ex.ra!=='ドラゴン') return false;
+    return (info.set||[]).filter(x=>(x.card||x.c)!==info.source).every(x=>{ const c=x.card||x.c; return c && curLV(c)!==4; });
+  },
   condition(ctx){
     if(!debrisTargets(ctx.player).length){
       ctx.reason = "墓地に攻撃力500以下のモンスターがいません"; return false;
@@ -21230,12 +21282,13 @@ defineScript("デブリ・ドラゴン", {
   },
   resolve(ctx){
     const t = ctx.selectedTargets[0];
-    if(!t){ API.log("対象が墓地にないため不発"); return; }
-    API.specialSummon(ctx.player,'grave',t.index,'atk',"デブリ・ドラゴン");
-    // 特殊召喚したモンスターの効果は無効化される
-    const P = gameState.players[ctx.player];
-    const summoned = P.mz[P.mz.length-1];
-    if(summoned) API.setCardFlag({card:summoned},'negated',true,'デブリ・ドラゴン',{silent:true});
+    const h = t && t.card && locateCardAnyV4(t.card);
+    if(!h || h.p!==ctx.player || h.zone!=='grave'){ API.log("対象が墓地にないため不発"); return; }
+    const target = h.card;
+    const ok = API.specialSummon(ctx.player,'grave',h.index,'atk',"デブリ・ドラゴン");
+    // この効果で特殊召喚したモンスターの効果は無効化される（特殊召喚できたそのカードだけ）
+    const now = locateCardAnyV4(target);
+    if(ok!==false && now && now.zone==='mz') API.setCardFlag({card:target},'negated',true,'デブリ・ドラゴン',{silent:true});
   },
   afterResolve(){},
   passive:{ onNormalSummon(ctx){ return ctx.zone==='mz'; } }
@@ -23935,16 +23988,16 @@ defineScript('魔轟神レイヴン',{
 });
 
 defineScript('暗黒界の軍神 シルバ',{
-  type:'monster',priority:1,activateFrom:['grave'],blocksIfNoSpecialSummon:true,
+  type:'monster',priority:1,forced:true,activateFrom:['grave'],/* S03-U112: 強制 */blocksIfNoSpecialSummon:true,
   condition(ctx){if(ctx.zone!=='grave'||!darkWorldDiscard(ctx)){ctx.reason='カードの効果で手札から捨てられた時に発動します';return false;}return API.me(ctx).mz.length<ZONE_LIMITS.mz;},
   resolve(ctx){const mode=darkWorldDiscard(ctx),i=API.me(ctx).grave.indexOf(ctx.card);if(i>=0)API.specialSummon(ctx.player,'grave',i,'atk','暗黒界の軍神 シルバ');if(mode==='opponent'&&API.foe(ctx).hand.length>=2){v380SelectExactly('シルバ：デッキ下へ戻す相手手札',API.pileCards(ctx.opponent,'hand'),2,sel=>{sel.slice().reverse().forEach(t=>{const r=resolveTarget({card:t.card});if(r&&r.zone==='hand')API.returnToDeck(r,true,'暗黒界の軍神 シルバ');});render();});}},afterResolve(){},passive:{onDiscard(ctx){return ctx.zone==='grave'&&!!darkWorldDiscard(ctx);}}
 });
 
 defineScript('暗黒界の雷',{
   type:'spell',priority:1,targets:true,
-  condition(ctx){if(!API.fieldCards({filter:x=>x.card.face==='down'}).length){ctx.reason='裏側表示カードがありません';return false;}if(!API.me(ctx).hand.length){ctx.reason='効果で捨てる手札がありません';return false;}return true;},
-  selectTargets(ctx,done){API.selectCard('暗黒界の雷：破壊する裏側表示カード',API.fieldCards({filter:x=>x.card.face==='down'}),t=>done([t]));},
-  resolve(ctx){const t=ctx.selectedTargets[0];if(t)API.destroy(t,'暗黒界の雷');if(API.me(ctx).hand.length)API.requestChoice({player:ctx.player,kind:'card',title:'暗黒界の雷：効果で捨てる手札',candidates:API.pileCards(ctx.player,'hand'),min:1,max:1,cancelable:true,resume:{handler:'s03u62.dark-world-thunder-discard',args:{player:ctx.player}},meta:{scriptName:'暗黒界の雷'}});}
+  condition(ctx){/* S03-U111/U112: 発動したこのカード自身（セット中は裏側）は対象にできない */if(!API.fieldCards({filter:x=>x.card.face==='down'&&x.card!==ctx.card}).length){ctx.reason='このカード以外に裏側表示カードがありません';return false;}if(!API.me(ctx).hand.length){ctx.reason='効果で捨てる手札がありません';return false;}return true;},
+  selectTargets(ctx,done){API.selectCard('暗黒界の雷：破壊する裏側表示カード',API.fieldCards({filter:x=>x.card.face==='down'&&x.card!==ctx.card}),t=>done([t]));},
+  resolve(ctx){const t=ctx.selectedTargets[0];if(t)API.destroy(t,'暗黒界の雷');if(API.me(ctx).hand.length)API.requestChoice({player:ctx.player,kind:'card',title:'暗黒界の雷：効果で捨てる手札',candidates:API.pileCards(ctx.player,'hand'),min:1,max:1,cancelable:false/* S03-U112: 「その後…捨てる」は強制 */,resume:{handler:'s03u62.dark-world-thunder-discard',args:{player:ctx.player}},meta:{scriptName:'暗黒界の雷'}});}
 });
 /* S03-U62: resolve() 内の legacy API.selectCard を SaveLoad安全な登録済みハンドラへ移行。 */
 API.registerChoiceHandler('s03u62.dark-world-thunder-discard',(answer,args)=>{
