@@ -2735,6 +2735,9 @@ function applyActionBodyV31(gs, a){
     case "SET_NEXT_DECK": {
       P.loadedDeckV32 = {source:String(a.source||'user'), name:String(a.name||''),
         main:(a.deck||[]).map(c=>c&&c.id).filter(x=>x!=null), ex:(a.ex||[]).map(c=>c&&c.id).filter(x=>x!=null)};
+      /* S03-U114: 保存デッキの内部ID・サイド（カード名と枚数）を保持する */
+      if(a.deckId) P.loadedDeckV32.deckId = String(a.deckId);
+      if(Array.isArray(a.side)) P.loadedDeckV32.side = a.side.map(e=>({n:String(e&&e.n||''), q:Number(e&&e.q)||1})).filter(e=>e.n);
       logIt(gs, `${nameOf(a.player)}：次回開始デッキ ${P.loadedDeckV32.main.length}枚 / EX ${P.loadedDeckV32.ex.length}枚 選択`);
       break;
     }
@@ -2747,7 +2750,9 @@ function applyActionBodyV31(gs, a){
       let mi = 0;
       if(a.materialUid != null){
         const byUid = c.xyz.findIndex(m=>m && m.uid === a.materialUid);
-        if(byUid >= 0) mi = byUid;
+        /* S03-U114: 指定の素材が無ければ何も取り除かない（別の素材＝先頭へ黙って置き換えない） */
+        if(byUid < 0){ logIt(gs, `${a.reason||"効果"}：指定されたX素材が見つからないため取り除けません`); break; }
+        mi = byUid;
       } else if(Number.isInteger(a.materialIndex) && a.materialIndex >= 0 && a.materialIndex < c.xyz.length){
         mi = a.materialIndex;
       }
@@ -10502,6 +10507,212 @@ function applyTargetingProtectorsS03(){
   return false;
 }
 /* =========================================================================
+   S03-U114 — Xyz material detach choice (generic capability)
+   -------------------------------------------------------------------------
+   User report (reproduced on device): card effects that detach Xyz materials always removed the FIRST material.
+   API.detachMaterial(p, mzIndex, reason) sent FX_DETACH without materialUid/materialIndex, and FX_DETACH then
+   used index 0. U108 only fixed the manual field UI (openXyzDetachPick).
+
+   Contract
+   - requestDetachMaterialS03(spec) is the single primitive for "remove N Xyz materials" where the player chooses.
+       spec: {player (chooser), holderUid | (holderPlayer?, mzIndex), count (default 1), reason,
+              cancelable, cont, contArgs, cancelCont, scriptName}
+     If the monster has exactly `count` materials they are all removed (no prompt). With more, a P1 ChoiceRequest
+     (declare-kind, candidate value = material UID) asks "取り除くX素材を選択してください" and requires exactly
+     `count` picks. Materials are identified by UID, never by array index. Continuations are registered names +
+     JSON args (registerDetachContinuationS03), so a save taken inside the choice resumes with the same candidates.
+   - Each removal is its own FX_DETACH {materialUid}; the material goes to its OWNER's GY (reducer). Replay replays
+     the chosen UIDs from the journal.
+   - Activation costs: a script (or a v4 effect) declares `detachCostS03:{count, reason, holders?, after?, targets?}`.
+     prepareDuelActivation then runs the P1.1 path (prepared JSON descriptor → detach choice → optional registered
+     target choice → commitPreparedActivationV11); cancelling the choice aborts the activation before anything moves.
+   ========================================================================= */
+
+const XYZ_DETACH_CONT_S03 = Object.create(null);
+function registerDetachContinuationS03(name, fn){
+  if(typeof name!=='string' || !name || typeof fn!=='function') throw new Error('registerDetachContinuationS03: bad args');
+  XYZ_DETACH_CONT_S03[name] = fn;
+}
+function runDetachContinuationS03(name, args, uids){
+  const fn = name && XYZ_DETACH_CONT_S03[name];
+  if(typeof fn==='function') fn(args||{}, uids||[]);
+}
+function xyzHolderS03(spec){
+  if(spec.holderUid!=null){
+    const h = findCardByUid(spec.holderUid);
+    return (h && h.zone==='mz') ? h : null;
+  }
+  const hp = (spec.holderPlayer===0||spec.holderPlayer===1) ? spec.holderPlayer : spec.player;
+  const P = gameState.players[hp]; const c = P && P.mz[spec.mzIndex];
+  if(!c) return null;
+  ensureCardUid(gameState, c);
+  return {p:hp, zone:'mz', index:spec.mzIndex, card:c};
+}
+/* Remove the given materials (by UID) from the holder, one FX_DETACH each. Returns the UIDs actually removed. */
+function detachMaterialsByUidS03(holderUid, uids, reason){
+  const done = [];
+  (uids||[]).forEach(u=>{
+    const h = findCardByUid(holderUid);
+    if(!h || h.zone!=='mz') return;
+    if(!(h.card.xyz||[]).some(m=>m && m.uid===u)) return;
+    act({type:'FX_DETACH', player:h.p, mzIndex:h.index, materialUid:u, reason:reason||'効果'});
+    done.push(u);
+  });
+  return done;
+}
+function detachMaterialLabelS03(m, holderP){
+  const own = (m && m.owner!=null && m.owner!==holderP && typeof nameOf==='function') ? `（${nameOf(m.owner)}の所有）` : '';
+  return `${cardName(m)}${own}`;
+}
+/* Closure-continuation variant for the non-DUEL runScript pipeline (which already runs costs with closures).
+   done(true, uids) after the chosen materials are removed; done(false) when cancelled. */
+function requestDetachMaterialLegacyS03(spec, done){
+  spec = spec || {};
+  const count = Math.max(1, Number(spec.count)||1);
+  const h = xyzHolderS03(spec);
+  if(!h){ done(false); return; }
+  const mats = (h.card.xyz||[]).filter(Boolean);
+  if(mats.length < count){ done(false); return; }
+  mats.forEach(m=>ensureCardUid(gameState, m));
+  ensureCardUid(gameState, h.card);
+  const holderUid = h.card.uid;
+  if(mats.length === count){ done(true, detachMaterialsByUidS03(holderUid, mats.map(m=>m.uid), spec.reason)); return; }
+  requestChoiceV49({
+    player:(spec.player===0||spec.player===1)?spec.player:h.p, kind:'declare',
+    title: count>1 ? `取り除くX素材を${count}つ選択してください` : '取り除くX素材を選択してください',
+    note:`${cardName(h.card)}：${spec.reason||''}（素材${mats.length}つ）`,
+    candidates: mats.map(m=>({key:'mat:'+m.uid, label:detachMaterialLabelS03(m, h.p), value:m.uid})),
+    min:count, max:count, cancelable:true,
+    legacy:{onPick:(first, all)=>{
+      const uids=(all||[first]).map(c=>c&&c.value).filter(v=>v!=null);
+      if(uids.length!==count){ done(false); return; }
+      done(true, detachMaterialsByUidS03(holderUid, uids, spec.reason));
+    }, onCancel:()=>done(false)},
+    meta:{scriptName: spec.scriptName || cardName(h.card)}
+  });
+}
+/* runScript (non-DUEL) cost step for scripts declaring detachCostS03: holder → materials → spec.after. */
+function runScriptDetachCostS03(ctx, spec, done){
+  const count = Math.max(1, Number(spec.count)||1);
+  const holders = detachCostHoldersS03(ctx, spec).filter(h=>(h.card.xyz||[]).length >= count);
+  if(!holders.length){ done(false); return; }
+  const fromHolder = hh=>{
+    ensureCardUid(gameState, hh.card);
+    requestDetachMaterialLegacyS03({player:ctx.player, holderUid:hh.card.uid, count, reason:spec.reason||''}, (ok, uids)=>{
+      if(!ok){ done(false); return; }
+      if(typeof spec.after==='function'){ try{ spec.after(ctx, uids); }catch(e){} }
+      done(true);
+    });
+  };
+  if(holders.length===1){ fromHolder(holders[0]); return; }
+  API.selectCard('X素材を取り除くエクシーズモンスターを選択してください', holders, t=>{ const h=t&&resolveTarget(t); if(h) fromHolder(h); else done(false); });
+}
+/* Returns false (and does nothing) when the monster does not have enough materials. */
+function requestDetachMaterialS03(spec){
+  spec = spec || {};
+  const count = Math.max(1, Number(spec.count)||1);
+  const h = xyzHolderS03(spec);
+  if(!h) return false;
+  const mats = (h.card.xyz||[]).filter(Boolean);
+  if(mats.length < count) return false;
+  mats.forEach(m=>ensureCardUid(gameState, m));
+  ensureCardUid(gameState, h.card);
+  const holderUid = h.card.uid;
+  if(mats.length === count){
+    const uids = detachMaterialsByUidS03(holderUid, mats.map(m=>m.uid), spec.reason);
+    runDetachContinuationS03(spec.cont, spec.contArgs, uids);
+    return true;
+  }
+  const chooser = (spec.player===0||spec.player===1) ? spec.player : h.p;
+  API.requestChoice({
+    player: chooser, kind:'declare',
+    title: count>1 ? `取り除くX素材を${count}つ選択してください` : '取り除くX素材を選択してください',
+    note: `${cardName(h.card)}：${spec.reason||''}（素材${mats.length}つ）`,
+    candidates: mats.map(m=>({key:'mat:'+m.uid, label:detachMaterialLabelS03(m, h.p), value:m.uid})),
+    min: count, max: count, cancelable: !!spec.cancelable,
+    resume:{handler:'s03u114.detach-pick', args:{holderUid, count, reason:spec.reason||'', cont:spec.cont||null,
+      contArgs:spec.contArgs||{}, cancelCont:spec.cancelCont||null}},
+    meta:{scriptName: spec.scriptName || cardName(h.card)}
+  });
+  return true;
+}
+registerChoiceHandlerV49('s03u114.detach-pick', (answer, args)=>{
+  if(!answer || answer.cancelled){ runDetachContinuationS03(args.cancelCont, args.contArgs, []); return; }
+  const uids = (answer.cards||[]).map(c=>c && c.value).filter(v=>v!=null);
+  if(uids.length !== args.count){ runDetachContinuationS03(args.cancelCont, args.contArgs, []); return; }
+  const done = detachMaterialsByUidS03(args.holderUid, uids, args.reason);
+  runDetachContinuationS03(args.cont, args.contArgs, done);
+});
+
+/* ---- activation-cost integration (P1.1) ---------------------------------------------------------------- */
+function detachCostSpecS03(sc, name, ctx){
+  if(!sc) return null;
+  let spec = sc.detachCostS03 || null;
+  /* unified v4 cards: the effect being activated (v4SelectEffectForContext honours ctx.v4EffectKey) */
+  if(!spec && typeof nativeEffectsV4==='function' && typeof v4SelectEffectForContext==='function' && nativeEffectsV4(name).length){
+    let e = null;
+    try{ e = v4SelectEffectForContext(name, ctx); }catch(err){ e = null; }
+    spec = (e && e.detachCostS03) || null;
+  }
+  if(typeof spec==='function') spec = spec(ctx);
+  return (spec && typeof spec==='object') ? spec : null;
+}
+function ctxFromPreparedDescS03(d, hit){
+  const opts = {};
+  if(d.event) opts.event = d.event;
+  if(d.eventName) opts.eventName = d.eventName;
+  if(d.v4EffectKey) opts.v4EffectKey = d.v4EffectKey;
+  return makeContext(d.player, hit.card, hit.zone, hit.index, d.eventName||'activate', opts);
+}
+function detachCostHoldersS03(ctx, spec){
+  if(typeof spec.holders==='function') return (spec.holders(ctx)||[]).filter(x=>x && x.card);
+  return ctx.card ? [{p:ctx.player, zone:'mz', index:ctx.index, card:ctx.card}] : [];
+}
+function beginDetachCostS03(ctx, desc, spec){
+  const count = Math.max(1, Number(spec.count)||1);
+  const args = {activation:desc, count, reason:spec.reason||desc.name, player:desc.player};
+  const holders = detachCostHoldersS03(ctx, spec).filter(h=>(h.card.xyz||[]).length >= count);
+  if(!holders.length){ abortPreparedActivationV11(desc); showToast('取り除けるX素材がありません'); return; }
+  holders.forEach(h=>ensureCardUid(gameState, h.card));
+  if(holders.length === 1){ detachCostStepS03(holders[0].card.uid, args); return; }
+  API.requestChoice({player:desc.player, kind:'card', title:'X素材を取り除くエクシーズモンスターを選択してください',
+    candidates:holders, min:1, max:1, cancelable:true,
+    resume:{handler:'s03u114.detach-holder', args}, meta:{scriptName:desc.name}});
+}
+registerChoiceHandlerV49('s03u114.detach-holder', (answer, args)=>{
+  if(!answer || answer.cancelled) return abortPreparedActivationV11(args.activation);
+  const c = (answer.cards||[]).find(x=>x && !x.stale);
+  const uid = c && (c.uid!=null ? c.uid : (c.card && c.card.uid));
+  if(uid==null) return abortPreparedActivationV11(args.activation);
+  detachCostStepS03(uid, args);
+});
+function detachCostStepS03(holderUid, args){
+  const ok = requestDetachMaterialS03({player:args.player, holderUid, count:args.count, reason:args.reason,
+    cancelable:true, cont:'s03u114.cost-continue', contArgs:{activation:args.activation},
+    cancelCont:'s03u114.cost-abort', scriptName:args.activation && args.activation.name});
+  if(!ok) abortPreparedActivationV11(args.activation);
+}
+registerDetachContinuationS03('s03u114.cost-abort', a=>abortPreparedActivationV11(a.activation));
+registerDetachContinuationS03('s03u114.cost-continue', (a, uids)=>continueAfterDetachCostS03(a.activation, uids));
+function continueAfterDetachCostS03(d, uids){
+  const sc = CARD_SCRIPTS[d.name], hit = findCardByUid(d.uid);
+  if(!sc || !hit){ abortPreparedActivationV11(d); return; }
+  const ctx = ctxFromPreparedDescS03(d, hit);
+  const spec = detachCostSpecS03(sc, d.name, ctx) || {};
+  if(typeof spec.after==='function'){ try{ spec.after(ctx, uids); }catch(e){ if(typeof trace==='function') trace(`detachCost after: ${e.message||e}`, false); } }
+  /* Card targets after the cost: a registered choice (SaveLoad-safe) committed by the P1.1 handler. */
+  if(typeof spec.targets==='function'){
+    const t = spec.targets(ctx) || {};
+    const cands = (t.candidates||[]).filter(Boolean);
+    if(!cands.length){ commitPreparedActivationV11(d, {targets:[]}); return; }
+    API.requestChoice({player:d.player, kind:t.kind||'card', title:t.title||`${d.name}：対象を選択`,
+      candidates:cands, min:t.min||1, max:t.max||1, cancelable:false, targeting:t.kind!=='declare',
+      resume:{handler:'p11cards.commit-targets', args:{activation:d}}, meta:{scriptName:d.name}});
+    return;
+  }
+  commitPreparedActivationV11(d, {targets:[]});
+}
+/* =========================================================================
    RENDER — gameState を読んで描画するだけ
    ========================================================================= */
 function render(){
@@ -13574,6 +13785,21 @@ function prepareDuelActivation(name,p,zone,index,opts){
   };
   /* P3: コスト支払いの直前にスナップショットバッファを初期化する */
   if(typeof beginCostSnapshotsV3==='function') beginCostSnapshotsV3(gameState);
+  /* S03-U114: 「X素材を取り除いて発動」するコスト（detachCostS03）は、取り除く素材をプレイヤーが選ぶ。
+     P1.1 と同じく closure を保存せず JSON descriptor＋登録ハンドラで続行する（選択中のセーブから再開できる）。 */
+  const detachSpecS03=(!cardActivationOnly && typeof detachCostSpecS03==='function') ? detachCostSpecS03(sc,name,ctx) : null;
+  if(detachSpecS03){
+    clearActivationChoiceV11(p);
+    const desc=preparedActivationDescriptorV11(name,p,zone,index,opts||{},ctx,card,db,sc,ss,sourceNegatedAtActivation);
+    if(cardActivationS03) desc.cardActivationS03=true;
+    if(drawReplacementS03) desc.drawReplacementS03=true;
+    if(ctx.v4EffectKey && !desc.v4EffectKey) desc.v4EffectKey=ctx.v4EffectKey;
+    if(typeof endActivationPrepS03==='function') endActivationPrepS03();
+    const safe=choiceJsonSafetyV49(desc,'detachCostS03');
+    if(!safe.ok){abortPreparedActivationV11(desc);throw new Error(`detachCostS03 descriptor is not JSON-safe: ${safe.why}`);}
+    try{ beginDetachCostS03(ctx,desc,detachSpecS03); }catch(e){ abortPreparedActivationV11(desc); throw e; }
+    return true;
+  }
   /* P1.1カードはclosureを保存せず、handler名+JSON descriptorで発動準備を続行する。 */
   if(!cardActivationOnly && typeof sc.activationV11==='function'){
     clearActivationChoiceV11(p);
@@ -14839,7 +15065,11 @@ const API = {
   negate(t, reason){ const r=resolveTarget(t); if(!r) return;
     trace(`negate: ${labelOf(r.card)}`); act({type:"FX_NEGATE", player:r.p, zone:r.zone, index:r.index, reason}); },
   overlay(p, targetMz, from, fromIndex){ trace(`overlay`); act({type:"FX_OVERLAY", player:p, targetMz, from, fromIndex}); },
-  detachMaterial(p, mzIndex, reason){ trace(`detach: mz[${mzIndex}]`); act({type:"FX_DETACH", player:p, mzIndex, reason}); },
+  /* S03-U114: 取り除く素材は UID で指定できる（opts.materialUid）。プレイヤーが選ぶ処理は requestDetachMaterial を使う。 */
+  detachMaterial(p, mzIndex, reason, opts){ trace(`detach: mz[${mzIndex}]`);
+    act(Object.assign({type:"FX_DETACH", player:p, mzIndex, reason}, (opts&&opts.materialUid!=null)?{materialUid:opts.materialUid}:{})); },
+  /* S03-U114: プレイヤーが取り除く X 素材を選ぶ汎用処理（engine/1ZF_xyz_detach_choice_s03.js） */
+  requestDetachMaterial(spec){ return requestDetachMaterialS03(spec); },
   grantAdditionalAttack(t,n,reason,afterCurrent){
     const r=resolveTarget(t); if(!r||r.zone!=='mz') return false;
     trace(`additional attack: ${labelOf(r.card)}`);
@@ -15474,7 +15704,19 @@ function __cfmNo(){  const f=CFM_NO;  CFM_YES=CFM_NO=null; closeSheet(); if(f) f
    ========================================================================= */
 const CARD_SCRIPTS = {};
 /* 登録ヘルパ。name をキーにする（このアプリはカード名で引くため） */
-function defineScript(name, def){ CARD_SCRIPTS[name] = Object.assign({name}, def); }
+function defineScript(name, def){
+  const sc = Object.assign({name}, def);
+  /* S03-U114: detachCostS03 を宣言し cost を持たないスクリプトは、cost() を直接呼ばれても同じ素材選択で払う
+     （発動パイプラインは cost より先に detachCostS03 を処理する。これは cost を直接使う経路との整合用）。 */
+  if(sc.detachCostS03 && typeof sc.cost!=='function'){
+    sc.cost = function(ctx, done){
+      const spec = (typeof detachCostSpecS03==='function') ? detachCostSpecS03(CARD_SCRIPTS[name]||sc, name, ctx) : null;
+      if(!spec || typeof runScriptDetachCostS03!=='function'){ done(false); return; }
+      runScriptDetachCostS03(ctx, spec, ok=>done(ok!==false));
+    };
+  }
+  CARD_SCRIPTS[name] = sc;
+}
 
 /* 自身を墓地へ送る標準の後処理（通常魔法・通常罠） */
 function selfToGrave(ctx){
@@ -15544,6 +15786,18 @@ function runScript(name, p, zone, index, opts){
     if(v44Count){
       if(typeof commitAutomaticActionV44==='function') commitAutomaticActionV44({type:'EFFECT_COUNT_CONSUME_V44',consume:v44Count});
       else countConsume(p,name,sc,card,limitKey);
+    }
+    /* S03-U114: 「X素材を取り除いて発動」は宣言（detachCostS03）から、取り除く素材をプレイヤーに選ばせる */
+    const detachSpecRS=(typeof detachCostSpecS03==='function')?detachCostSpecS03(sc,name,ctx):null;
+    if(detachSpecRS){
+      trace(`コスト支払い（X素材）`);
+      SCRIPT_PHASE = 'cost';
+      runScriptDetachCostS03(ctx, detachSpecRS, ok=>{
+        SCRIPT_PHASE = null;
+        if(ok===false){ trace(`コストを払えない`, false); ACTIVE_SCRIPT=null; p3EndEffectContextV3(); SCRIPT_PHASE=null; SCRIPT_ZONE=null; endResolve(); showToast("コストを払えません"); render(); return; }
+        doTarget();
+      });
+      return;
     }
     if(sc.cost){
       trace(`コスト支払い`);
@@ -15999,6 +16253,16 @@ function createEffectV4(def){
   if(!e.key) e.key='main';
   if(!Number.isFinite(Number(e.range))) e.range=LOCATION.ALL;
   if(!Number.isFinite(Number(e.targetRange))) e.targetRange=LOCATION.ALL;
+  /* S03-U114: X素材コストを宣言した効果（cost なし）には、同じ素材選択で払う cost を付ける
+     （発動パイプラインは detachCostS03 を先に処理する。effect.cost を直接呼ぶ経路との整合用。freeze より前に付ける） */
+  if(e.detachCostS03 && typeof e.cost!=='function'){
+    const spec=e.detachCostS03;
+    e.cost=function(ctx,done){
+      const sp=(typeof spec==='function')?spec(ctx):spec;
+      if(!sp||typeof runScriptDetachCostS03!=='function'){ done(false); return; }
+      runScriptDetachCostS03(ctx,sp,ok=>done(ok!==false));
+    };
+  }
   return Object.freeze(e);
 }
 function registerEffectsV4(name,effects){
@@ -16034,6 +16298,12 @@ function v4SelectEffectForContext(name,ctx){
   return null;
 }
 function v4RunCost(e,ctx,done){
+  /* S03-U114: X素材コストを宣言した効果（cost なし）は、cost 経由でも同じ素材選択で払う */
+  if(e && typeof e.cost!=='function' && e.detachCostS03 && typeof runScriptDetachCostS03==='function'){
+    const sp = (typeof e.detachCostS03==='function') ? e.detachCostS03(ctx) : e.detachCostS03;
+    if(!sp){ done(false); return; }
+    runScriptDetachCostS03(ctx, sp, ok=>done(ok!==false)); return;
+  }
   if(!e||typeof e.cost!=='function'){done(true);return;}
   let called=false; const cb=v=>{if(called)return;called=true;done(v!==false);};
   let r; try{r=e.cost(ctx,cb);}catch(err){ctx.reason=`v4 cost error: ${err.message||err}`;cb(false);return;}
@@ -20080,6 +20350,10 @@ defineScript("No.11 ビッグ・アイ", {
   countLimit:1,
   timing:["mainPhase"],
   type:"monster", priority:1, targets:true,
+  /* S03-U114: 素材を選んで取り除き、その後に対象を選ぶ（どちらも SaveLoad 安全な登録済み選択） */
+  detachCostS03:{count:1, reason:"No.11 ビッグ・アイ（素材1つ）",
+    targets(ctx){ return {title:"No.11 ビッグ・アイ：コントロールを得るモンスター",
+      candidates:API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card})}; }},
   condition(ctx){
     if(ctx.zone !== 'mz'){ ctx.reason = "フィールドで発動します"; return false; }
     if(!(ctx.card.xyz||[]).length){ ctx.reason = "エクシーズ素材が必要です"; return false; }
@@ -20088,10 +20362,7 @@ defineScript("No.11 ビッグ・アイ", {
     }
     return true;
   },
-  cost(ctx, done){
-    API.detachMaterial(ctx.player, ctx.index, "No.11 ビッグ・アイ（素材1つ）");
-    done(true);
-  },
+  /* S03-U114: X素材のコストは detachCostS03（DUEL・runScript とも engine/1ZF_xyz_detach_choice_s03.js が処理） */
   selectTargets(ctx, done){
     API.selectCard("No.11 ビッグ・アイ：コントロールを得るモンスター",
       API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card}), t=>done([t]));
@@ -21117,15 +21388,15 @@ API.registerChoiceHandler('s03u63.gold-sarcophagus-banish', (answer, args) => {
 defineScript("No.16 色の支配者ショック・ルーラー", {
   countLimit:1,
   type:"monster", priority:1, quickEffect:false,
+  detachCostS03:{count:1, reason:"ショック・ルーラー（素材1つ）",   /* S03-U114 */
+    targets(){ return {kind:'declare', title:"ショック・ルーラー：宣言するカードの種類",
+      candidates:[{key:'m',label:'モンスター',value:'m'},{key:'s',label:'魔法',value:'s'},{key:'t',label:'罠',value:'t'}]}; }},
   condition(ctx){
     if(ctx.zone !== 'mz'){ ctx.reason = "フィールドで発動します"; return false; }
     if(!(ctx.card.xyz||[]).length){ ctx.reason = "エクシーズ素材が必要です"; return false; }
     return true;
   },
-  cost(ctx, done){
-    API.detachMaterial(ctx.player, ctx.index, "ショック・ルーラー（素材1つ）");
-    done(true);
-  },
+  /* S03-U114: X素材のコストは detachCostS03（DUEL・runScript とも engine/1ZF_xyz_detach_choice_s03.js が処理） */
   selectTargets(ctx, done){
     const kinds = [
       {label:'モンスター', key:'m'},
@@ -21996,6 +22267,8 @@ function rabbitTargets(p){
    攻撃宣言イベントのチェーン解決後に battle へ進ませない。 */
 defineScript("No.39 希望皇ホープ", {
   type:"monster", priority:2, quickEffect:true,
+  /* S03-U114: X素材を1つ取り除く（素材が2つ以上ならプレイヤーが選ぶ。engine/1ZF_xyz_detach_choice_s03.js） */
+  detachCostS03:{count:1, reason:"No.39 希望皇ホープ"},
   condition(ctx){
     if(ctx.zone!=='mz' || !ctx.card || ctx.card.face!=='up'){
       ctx.reason="表側表示でフィールドに存在する必要があります"; return false;
@@ -22006,10 +22279,7 @@ defineScript("No.39 希望皇ホープ", {
     if(!(ctx.card.xyz||[]).length){ ctx.reason="エクシーズ素材がありません"; return false; }
     return true;
   },
-  cost(ctx, done){
-    API.detachMaterial(ctx.player, ctx.index, "No.39 希望皇ホープ");
-    done(true);
-  },
+  /* S03-U114: X素材のコストは detachCostS03（DUEL・runScript とも engine/1ZF_xyz_detach_choice_s03.js が処理） */
   resolve(ctx){
     /* S03-U39: 攻撃無効は Action（NEGATE_ATTACK_V45）で記録する（直接書くと Replay が一致しない） */
     API.negateAttack("No.39 希望皇ホープ");
@@ -22027,6 +22297,7 @@ defineScript("No.39 希望皇ホープ", {
    X召喚はランクなので対象外。カード効果による特殊召喚にも使えない。 */
 defineScript("インヴェルズ・ローチ", {
   type:"monster", priority:2, quickEffect:true,
+  detachCostS03:{count:1, reason:"インヴェルズ・ローチ"},   /* S03-U114 */
   summonNegate:{
     kinds:['procedure','synchro'], specialOnly:true,
     condition(pending){
@@ -22043,10 +22314,7 @@ defineScript("インヴェルズ・ローチ", {
     if(!(ctx.card.xyz||[]).length){ ctx.reason="エクシーズ素材がありません"; return false; }
     return true;
   },
-  cost(ctx, done){
-    API.detachMaterial(ctx.player, ctx.index, "インヴェルズ・ローチ");
-    done(true);
-  },
+  /* S03-U114: X素材のコストは detachCostS03（DUEL・runScript とも engine/1ZF_xyz_detach_choice_s03.js が処理） */
   resolve(ctx){
     summonNegatePendingV2("インヴェルズ・ローチ");
     API.log("インヴェルズ・ローチ：特殊召喚を無効にし破壊する");
@@ -22061,6 +22329,7 @@ defineScript("インヴェルズ・ローチ", {
    1103では「1ターンに1度」の制限がないので、素材が続く限り撃てる。 */
 defineScript("エヴォルカイザー・ラギア", {
   type:"monster", priority:2, quickEffect:true,
+  detachCostS03:{count:2, reason:"エヴォルカイザー・ラギア（素材2つ）"},   /* S03-U114: 2つ選ぶ */
   /* 通常召喚と、チェーンに乗らない特殊召喚だけを召喚無効窓で拾う。
      反転召喚や、死者蘇生など効果解決中の特殊召喚はここでは無効にしない。 */
   summonNegate:{kinds:['normal','procedure','synchro','xyz']},
@@ -22077,11 +22346,7 @@ defineScript("エヴォルカイザー・ラギア", {
     ctx.reason = "通常召喚・チェーンに乗らない特殊召喚、または魔法・罠カードの発動に対して発動します";
     return false;
   },
-  cost(ctx, done){
-    API.detachMaterial(ctx.player, ctx.index, "エヴォルカイザー・ラギア（素材2つ）");
-    API.detachMaterial(ctx.player, ctx.index, "エヴォルカイザー・ラギア（素材2つ）");
-    done(true);
-  },
+  /* S03-U114: X素材のコストは detachCostS03（DUEL・runScript とも engine/1ZF_xyz_detach_choice_s03.js が処理） */
   resolve(ctx){
     if(gameState.pendingSummon){
       summonNegatePendingV2("エヴォルカイザー・ラギア");
@@ -24570,8 +24835,8 @@ defineUnifiedCardV4('虚空海竜リヴァイエール',[{
     if(!pool.length){ctx.reason='除外されているレベル4以下のモンスターがいません';return false;}
     return true;
   },
-  cost(ctx,done){const h=v45SelfMz(ctx);if(!h){done(false);return;}API.detachMaterial(ctx.player,h.index,'虚空海竜リヴァイエール（コスト）');done(true);},
-  target(ctx,done){
+  /* S03-U114 */detachCostS03:{count:1,reason:'虚空海竜リヴァイエール（コスト）',targets(ctx){return {title:'虚空海竜リヴァイエール：特殊召喚する除外モンスター',candidates:API.pileCards(0,'banish',v45BanishedLevelMonster).concat(API.pileCards(1,'banish',v45BanishedLevelMonster))};}},
+    target(ctx,done){
     const pool=API.pileCards(0,'banish',v45BanishedLevelMonster).concat(API.pileCards(1,'banish',v45BanishedLevelMonster));
     API.selectCard('虚空海竜リヴァイエール：特殊召喚する除外モンスター',pool,t=>done([t]));
   },
@@ -24768,8 +25033,8 @@ defineUnifiedCardV4('グレンザウルス',[{
     if(!(ctx.card.xyz||[]).length){ctx.reason='取り除けるX素材がありません';return false;}
     return true;
   },
-  cost(ctx,done){const h=v45SelfMz(ctx);if(!h||!(ctx.card.xyz||[]).length){done(false);return;}API.detachMaterial(ctx.player,h.index,'グレンザウルス（コスト）');done(true);},
-  operation(ctx){API.damageLP(ctx.opponent,1000);},afterResolve(){}
+  /* S03-U114 */detachCostS03:{count:1,reason:'グレンザウルス（コスト）'},
+    operation(ctx){API.damageLP(ctx.opponent,1000);},afterResolve(){}
 }],{type:'xyz',priority:1,dsTiming:'leave',passive:{onDamageStep(ctx){const b=ctx.battle||{};return ctx.zone==='mz'&&ctx.card.face==='up'&&ctx.step==='leave'&&b.atkCard===ctx.card&&!!b.destroyedDef&&(ctx.card.xyz||[]).length>0;}}});
 
 /* No.17 リバイス・ドラゴン — X素材1つでATK+500。素材0なら直接攻撃不可。 */
@@ -24781,8 +25046,8 @@ defineUnifiedCardV4('No.17 リバイス・ドラゴン',[{
     if(!(ctx.card.xyz||[]).length){ctx.reason='取り除けるX素材がありません';return false;}
     return true;
   },
-  cost(ctx,done){const h=v45SelfMz(ctx);if(!h||!(ctx.card.xyz||[]).length){done(false);return;}API.detachMaterial(ctx.player,h.index,'No.17 リバイス・ドラゴン（コスト）');done(true);},
-  operation(ctx){v4RegisterStatModifier({card:ctx.card},{atk:500},{controller:ctx.player,code:'Number 17 +500',targetCard:ctx.card,resetMask:RESET.LEAVE|RESET.FACE_DOWN});},afterResolve(){}
+  /* S03-U114 */detachCostS03:{count:1,reason:'No.17 リバイス・ドラゴン（コスト）'},
+    operation(ctx){v4RegisterStatModifier({card:ctx.card},{atk:500},{controller:ctx.player,code:'Number 17 +500',targetCard:ctx.card,resetMask:RESET.LEAVE|RESET.FACE_DOWN});},afterResolve(){}
 }],{
   type:'xyz',priority:1,countLimit:1,timing:['mainPhase'],
   continuous:{scope:'self',from:['mz'],apply(){return null;},cannotDirectAttack(card,self){return card===self&&!(self.xyz||[]).length;}}
@@ -24900,8 +25165,8 @@ defineUnifiedCardV4('イビリチュア・メロウガイスト',[{
     if(!(ctx.card.xyz||[]).length){ctx.reason='取り除けるX素材がありません';return false;}
     return !!(b.defCard&&!b.defCard.token);
   },
-  cost(ctx,done){const h=v46SelfMz(ctx);if(!h||!(ctx.card.xyz||[]).length){done(false);return;}API.detachMaterial(ctx.player,h.index,'イビリチュア・メロウガイスト（コスト）');done(true);},
-  operation(ctx){const c=(ctx.battle||{}).defCard,h=c&&locateCardAnyV4(c);if(h&&h.zone==='mz'&&h.p===ctx.opponent&&c.battleDestroyed)API.returnToDeck(h,false,'イビリチュア・メロウガイスト');},afterResolve(){}
+  /* S03-U114 */detachCostS03:{count:1,reason:'イビリチュア・メロウガイスト（コスト）'},
+    operation(ctx){const c=(ctx.battle||{}).defCard,h=c&&locateCardAnyV4(c);if(h&&h.zone==='mz'&&h.p===ctx.opponent&&c.battleDestroyed)API.returnToDeck(h,false,'イビリチュア・メロウガイスト');},afterResolve(){}
 }],{type:'xyz',priority:1,dsTiming:'after',passive:{onDamageStep(ctx){const b=ctx.battle||{};return ctx.zone==='mz'&&ctx.card.face==='up'&&ctx.step==='after'&&b.atkCard===ctx.card&&!!b.destroyedDef&&!!(ctx.card.xyz||[]).length;}}});
 
 /* ヴァイロン・ディシグマ — X素材1つで相手攻撃表示効果モンスターを装備。 */
@@ -24915,8 +25180,8 @@ defineUnifiedCardV4('ヴァイロン・ディシグマ',[
       const p=API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'&&x.card.pos==='atk'&&x.db.k==='m'&&(x.db.st||[]).includes('効果')});
       if(!p.length){ctx.reason='相手に表側攻撃表示の効果モンスターがいません';return false;} return true;
     },
-    cost(ctx,done){const h=v46SelfMz(ctx);if(!h){done(false);return;}API.detachMaterial(ctx.player,h.index,'ヴァイロン・ディシグマ（コスト）');API.setCardFlag(h,'v46DisigmaAbsorbTurn',gameState.turn,'ヴァイロン・ディシグマ');done(true);},
-    target(ctx,done){API.selectCard('ヴァイロン・ディシグマ：装備する相手モンスター',API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'&&x.card.pos==='atk'&&x.db.k==='m'&&(x.db.st||[]).includes('効果')}),t=>done([t]));},
+    /* S03-U114 */detachCostS03:{count:1,reason:'ヴァイロン・ディシグマ（コスト）',after(ctx){const h=v46SelfMz(ctx);if(h)API.setCardFlag(h,'v46DisigmaAbsorbTurn',gameState.turn,'ヴァイロン・ディシグマ');},targets(ctx){return {title:'ヴァイロン・ディシグマ：装備する相手モンスター',candidates:API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'&&x.card.pos==='atk'&&x.db.k==='m'&&(x.db.st||[]).includes('効果')})};}},
+        target(ctx,done){API.selectCard('ヴァイロン・ディシグマ：装備する相手モンスター',API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'&&x.card.pos==='atk'&&x.db.k==='m'&&(x.db.st||[]).includes('効果')}),t=>done([t]));},
     operation(ctx){const t=ctx.selectedTargets&&ctx.selectedTargets[0],self=v46SelfMz(ctx);if(t&&self)API.equipMonster(ctx.player,t,self,'ヴァイロン・ディシグマ');},afterResolve(){}
   },
   {
@@ -25167,10 +25432,7 @@ function v47OwnFaceUpMonsters(p){
 function v47OpponentFaceUpMonsters(p){
   return API.fieldCards({player:p===0?1:0,zone:'mz',filter:x=>x.card&&x.card.face==='up'});
 }
-function v47DetachSelf(ctx,reason){
-  const h=v47SelfMz(ctx); if(!h||!(ctx.card.xyz||[]).length)return false;
-  API.detachMaterial(ctx.player,h.index,reason); return true;
-}
+/* S03-U114: v47DetachSelf (always the first material) was removed — these costs use detachCostS03. */
 function v47FusionSummonedNow(ctx){
   const d=dbOf(ctx.card)||{};
   return ctx.eventName==='onSpecialSummon'&&ctx.zone==='mz'&&ctx.card&&ctx.card.specialSummonedFrom==='ex'&&Array.isArray(d.st)&&d.st.includes('融合');
@@ -25322,7 +25584,7 @@ defineUnifiedCardV4('C・ドラゴン',[
 defineUnifiedCardV4('発条機甲ゼンマイスター',[{
   key:'windup-set',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,targetRange:LOCATION.MZONE,targetSide:'self',speed:1,events:['activate'],
   condition(ctx){if(ctx.zone!=='mz'||ctx.card.face!=='up')return false;if(!(ctx.card.xyz||[]).length){ctx.reason='X素材がありません';return false;}if(!v47OwnFaceUpMonsters(ctx.player).length){ctx.reason='自分フィールドに表側表示モンスターがいません';return false;}return true;},
-  cost(ctx,done){done(v47DetachSelf(ctx,'発条機甲ゼンマイスター（コスト）'));},
+  /* S03-U114 */detachCostS03:{count:1,reason:'発条機甲ゼンマイスター（コスト）',targets(ctx){return {title:'発条機甲ゼンマイスター：裏側守備表示にするモンスター',candidates:v47OwnFaceUpMonsters(ctx.player)};}},
   target(ctx,done){API.selectCard('発条機甲ゼンマイスター：裏側守備表示にするモンスター',v47OwnFaceUpMonsters(ctx.player),t=>done([t]));},
   operation(ctx){const t=ctx.selectedTargets&&ctx.selectedTargets[0],r=t&&resolveTarget(t);if(!r||r.p!==ctx.player||r.zone!=='mz'||r.card.face!=='up')return;ensureCardUid(gameState,r.card);API.setCardFlag(r,'v47ZenmaisterTurn',gameState.turn,'発条機甲ゼンマイスター');API.flip(r,'down','発条機甲ゼンマイスター');API.changePosition(r,'def','発条機甲ゼンマイスター');API.registerReserveEffect(ctx.player,'発条機甲ゼンマイスター：表側攻撃表示','endPhase','対象を表側攻撃表示にする',{kind:'flipUpAttackUids',uids:[r.card.uid],flagKey:'v47ZenmaisterTurn'});},afterResolve(){}
 }],{type:'xyz',priority:1,countLimit:1,targets:true,timing:['mainPhase'],continuous:{scope:'self',from:['mz'],apply(card,self){return card===self?{atk:(self.xyz||[]).length*300}:null;}}});
@@ -25331,7 +25593,7 @@ defineUnifiedCardV4('発条機甲ゼンマイスター',[{
 defineUnifiedCardV4('潜航母艦エアロ・シャーク',[{
   key:'aero-burn',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],
   condition(ctx){if(ctx.zone!=='mz'||ctx.card.face!=='up')return false;if(!(ctx.card.xyz||[]).length){ctx.reason='X素材がありません';return false;}return true;},
-  cost(ctx,done){done(v47DetachSelf(ctx,'潜航母艦エアロ・シャーク（コスト）'));},
+  /* S03-U114 */detachCostS03:{count:1,reason:'潜航母艦エアロ・シャーク（コスト）'},
   operation(ctx){API.damageLP(ctx.opponent,(gameState.players[ctx.player].banish||[]).filter(c=>dbOf(c).k==='m').length*100);},afterResolve(){}
 }],{type:'xyz',priority:1,countLimit:1,timing:['mainPhase']});
 
@@ -25339,14 +25601,14 @@ defineUnifiedCardV4('潜航母艦エアロ・シャーク',[{
 defineUnifiedCardV4('No.30 破滅のアシッド・ゴーレム',[{
   key:'acid-standby',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onStandbyPhase'],
   condition(ctx){return ctx.zone==='mz'&&ctx.card.face==='up'&&ctx.player===gameState.activePlayer;},
-  operation(ctx){const h=v47SelfMz(ctx);if(!h)return;if((ctx.card.xyz||[]).length)API.detachMaterial(ctx.player,h.index,'No.30 破滅のアシッド・ゴーレム');else API.damageLP(ctx.player,2000);},afterResolve(){}
+  operation(ctx){const h=v47SelfMz(ctx);if(!h)return;if((ctx.card.xyz||[]).length){/* S03-U114 */ensureCardUid(gameState,ctx.card);requestDetachMaterialS03({player:ctx.player,holderUid:ctx.card.uid,count:1,reason:'No.30 破滅のアシッド・ゴーレム',cancelable:false});}else API.damageLP(ctx.player,2000);},afterResolve(){}
 }],{type:'xyz',priority:1,forced:true,passive:{onStandbyPhase(ctx){return ctx.zone==='mz'&&ctx.card.face==='up'&&ctx.player===gameState.activePlayer;}},continuous:{scope:'self',from:['mz'],cannotAttack(card,self){return card===self&&!(self.xyz||[]).length;}}});
 
 /* No.20 蟻岩土ブリリアント */
 defineUnifiedCardV4('No.20 蟻岩土ブリリアント',[{
   key:'giga-boost',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],
   condition(ctx){if(ctx.zone!=='mz'||ctx.card.face!=='up')return false;if(!(ctx.card.xyz||[]).length){ctx.reason='X素材がありません';return false;}return true;},
-  cost(ctx,done){done(v47DetachSelf(ctx,'No.20 蟻岩土ブリリアント（コスト）'));},
+  /* S03-U114 */detachCostS03:{count:1,reason:'No.20 蟻岩土ブリリアント（コスト）'},
   operation(ctx){v47OwnFaceUpMonsters(ctx.player).forEach(t=>v4RegisterStatModifier(t,{atk:300},{controller:ctx.player,code:'No.20 +300',targetCard:t.card,resetMask:RESET.LEAVE|RESET.END|RESET.FACE_DOWN}));},afterResolve(){}
 }],{type:'xyz',priority:1,countLimit:1,timing:['mainPhase']});
 
@@ -25357,7 +25619,7 @@ defineUnifiedCardV4('No.34 電算機獣テラ・バイト',[{
     if(ctx.zone!=='mz'||ctx.card.face!=='up')return false;if(!(ctx.card.xyz||[]).length){ctx.reason='X素材がありません';return false;}
     const p=API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'&&x.card.pos==='atk'&&curLV(x.card)<=4});if(!p.length){ctx.reason='相手フィールドに表側攻撃表示のレベル4以下モンスターがいません';return false;}return true;
   },
-  cost(ctx,done){done(v47DetachSelf(ctx,'No.34 電算機獣テラ・バイト（コスト）'));},
+  /* S03-U114 */detachCostS03:{count:1,reason:'No.34 電算機獣テラ・バイト（コスト）',targets(ctx){return {title:'No.34 電算機獣テラ・バイト：コントロールを得るモンスター',candidates:API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'&&x.card.pos==='atk'&&curLV(x.card)<=4})};}},
   target(ctx,done){API.selectCard('No.34 電算機獣テラ・バイト：コントロールを得るモンスター',API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'&&x.card.pos==='atk'&&curLV(x.card)<=4}),t=>done([t]));},
   operation(ctx){const t=ctx.selectedTargets&&ctx.selectedTargets[0],r=t&&resolveTarget(t);if(r&&r.p===ctx.opponent&&r.zone==='mz')API.changeControl(r,ctx.player,'No.34 電算機獣テラ・バイト','endPhase');},afterResolve(){}
 }],{type:'xyz',priority:1,countLimit:1,targets:true,timing:['mainPhase']});
@@ -25366,7 +25628,7 @@ defineUnifiedCardV4('No.34 電算機獣テラ・バイト',[{
 defineUnifiedCardV4('サンダーエンド・ドラゴン',[{
   key:'thunder-wipe',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,targetRange:LOCATION.MZONE,targetSide:'both',speed:1,events:['activate'],
   condition(ctx){if(ctx.zone!=='mz'||ctx.card.face!=='up')return false;if(!(ctx.card.xyz||[]).length){ctx.reason='X素材がありません';return false;}return true;},
-  cost(ctx,done){done(v47DetachSelf(ctx,'サンダーエンド・ドラゴン（コスト）'));},
+  /* S03-U114 */detachCostS03:{count:1,reason:'サンダーエンド・ドラゴン（コスト）'},
   operation(ctx){API.fieldCards({zone:'mz',filter:x=>x.card!==ctx.card}).slice().forEach(t=>{const r=resolveTarget(t);if(r)API.destroy(r,'サンダーエンド・ドラゴン');});},afterResolve(){}
 }],{type:'xyz',priority:1,countLimit:1,timing:['mainPhase'],destroysFieldV46:true});
 
@@ -25427,7 +25689,7 @@ defineUnifiedCardV4('ダイガスタ・フェニクス',[{
     const pool=API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'&&(x.db||dbOf(x.card)).at==='風'});
     if(!pool.length){ctx.reason='自分フィールドに表側表示の風属性モンスターがいません';return false;}return true;
   },
-  cost(ctx,done){const h=v48SelfMz(ctx);if(!h||!(ctx.card.xyz||[]).length){done(false);return;}API.detachMaterial(ctx.player,h.index,'ダイガスタ・フェニクス（コスト）');done(true);},
+  /* S03-U114 */detachCostS03:{count:1,reason:'ダイガスタ・フェニクス（コスト）',targets(ctx){return {title:'ダイガスタ・フェニクス：2回攻撃する風属性モンスター',candidates:API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'&&(x.db||dbOf(x.card)).at==='風'})};}},
   target(ctx,done){API.selectCard('ダイガスタ・フェニクス：2回攻撃する風属性モンスター',API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'&&(x.db||dbOf(x.card)).at==='風'}),t=>done([t]));},
   operation(ctx){const t=ctx.selectedTargets&&ctx.selectedTargets[0],r=t&&resolveTarget(t);if(r&&r.p===ctx.player&&r.zone==='mz'&&r.card.face==='up'&&dbOf(r.card).at==='風')API.grantAdditionalAttack(r,1,'ダイガスタ・フェニクス',false);},afterResolve(){}
 }],{type:'xyz',priority:1,countLimit:1,targets:true,timing:['mainPhase']});
@@ -25440,7 +25702,7 @@ defineUnifiedCardV4('カチコチドラゴン',[{
     if(!(ctx.card.xyz||[]).length){ctx.reason='取り除けるX素材がありません';return false;}
     if(!v48CanContinueAttack(ctx)){ctx.reason='このカードは続けて攻撃できません';return false;}return true;
   },
-  cost(ctx,done){const h=v48SelfMz(ctx);if(!h||!(ctx.card.xyz||[]).length){done(false);return;}API.detachMaterial(ctx.player,h.index,'カチコチドラゴン（コスト）');done(true);},
+  /* S03-U114 */detachCostS03:{count:1,reason:'カチコチドラゴン（コスト）'},
   operation(ctx){const h=v48SelfMz(ctx);if(!h||!v48CanContinueAttack(ctx))return;API.grantAdditionalAttack(h,1,'カチコチドラゴン',true);API.setFlag(ctx.player,'v48ConsecutiveAttackerUid',ensureCardUid(gameState,ctx.card),true);},afterResolve(){}
 }],{type:'xyz',priority:1,countLimit:1,dsTiming:'leave',passive:{onDamageStep(ctx){const b=ctx.battle||{},foe=b.defCard,h=foe&&locateCardAnyV4(foe);return ctx.zone==='mz'&&ctx.step==='leave'&&b.atkCard===ctx.card&&!!b.destroyedDef&&!!h&&h.zone==='grave'&&(ctx.card.xyz||[]).length>0&&v48CanContinueAttack(ctx);}}});
 /* Autobuild batch 01 — historically simple 1103 spells/traps. */
@@ -25470,7 +25732,7 @@ v49Spell('サンダー・ボルト',ctx=>API.fieldCards({player:ctx.opponent,zon
 v49Spell('ハーピィの羽根帚',ctx=>{API.fieldCards({player:ctx.opponent,zone:'sz'}).slice().forEach(t=>API.destroy(t,'ハーピィの羽根帚'));const f=API.fieldCards({player:ctx.opponent,zone:'field'});f.forEach(t=>API.destroy(t,'ハーピィの羽根帚'));},ctx=>API.fieldCards({player:ctx.opponent,zone:'sz'}).length+API.fieldCards({player:ctx.opponent,zone:'field'}).length>0,{destroysFieldV46:true});
 v49DestroyRace('トゲトゲ神の殺虫剤','昆虫');v49DestroyRace('悪魔払い','悪魔');v49DestroyRace('永遠の渇水','魚');
 
-defineUnifiedCardV4('スペース・サイクロン',[{key:'detach',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.MZONE,targetSide:'both',speed:2,events:['activate'],condition(ctx){return API.fieldCards({zone:'mz',filter:x=>(x.card.xyz||[]).length>0}).length>0;},target(ctx,done){API.selectCard('スペース・サイクロン：素材を取り除くXyzモンスター',API.fieldCards({zone:'mz',filter:x=>(x.card.xyz||[]).length>0}),t=>done([t]));},operation(ctx){const r=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(r&&(r.card.xyz||[]).length)API.detachMaterial(r.p,r.index,'スペース・サイクロン');},afterResolve(){}}],{type:'spell',priority:2,targets:true});
+defineUnifiedCardV4('スペース・サイクロン',[{key:'detach',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.MZONE,targetSide:'both',speed:2,events:['activate'],condition(ctx){return API.fieldCards({zone:'mz',filter:x=>(x.card.xyz||[]).length>0}).length>0;},target(ctx,done){API.selectCard('スペース・サイクロン：素材を取り除くXyzモンスター',API.fieldCards({zone:'mz',filter:x=>(x.card.xyz||[]).length>0}),t=>done([t]));},operation(ctx){const r=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(r&&(r.card.xyz||[]).length){/* S03-U114 */ensureCardUid(gameState,r.card);requestDetachMaterialS03({player:ctx.player,holderUid:r.card.uid,count:1,reason:'スペース・サイクロン',cancelable:false});}},afterResolve(){}}],{type:'spell',priority:2,targets:true});
 
 defineUnifiedCardV4('トゥーン・ワールド',[{key:'activate',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,speed:1,events:['activate'],condition(ctx){if(API.me(ctx).lp<=1000){ctx.reason='1000LPを払えません';return false;}return true;},cost(ctx,done){API.payCost(ctx.player,1000);done(true);},operation(){},afterResolve(){}}],{type:'spell',priority:1,continuous:{scope:'self',from:['sz'],apply(){return null;}}});
 
@@ -25649,7 +25911,7 @@ defineScript('インフェルニティ・アーチャー',{type:'monster',priori
 defineScript('インヴェルズ万能態',{type:'monster',priority:1,tributeValue:{value:2,condition(targetDb){return isSetCardV4(targetDb,SETCODE.INVELLZ);}}});
 defineScript('ウィンドフレーム',{type:'monster',priority:1,tributeValue:{value:2,condition(targetDb){return targetDb.at==='風'&&(targetDb.st||[]).includes('通常');}}});
 defineScript('ガイアフレーム',{type:'monster',priority:1,tributeValue:{value:2,condition(targetDb){return targetDb.at==='地'&&(targetDb.st||[]).includes('通常');}}});
-defineUnifiedCardV4('エクシーズエナジー',[{key:'detach-destroy',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.MZONE,targetSide:'opponent',speed:1,events:['activate'],condition(ctx){return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>Array.isArray(x.card.xyz)&&x.card.xyz.length>0}).length>0&&API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'}).length>0;},cost(ctx,done){API.selectCard('エクシーズエナジー：素材を取り除くXモンスター',API.fieldCards({player:ctx.player,zone:'mz',filter:x=>Array.isArray(x.card.xyz)&&x.card.xyz.length>0}),t=>{API.detachMaterial(ctx.player,t.index,'エクシーズエナジー（コスト）');done(true);});},target(ctx,done){API.selectCard('エクシーズエナジー：破壊する相手モンスター',API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'}),t=>done([t]));},operation(ctx){const t=ctx.selectedTargets&&ctx.selectedTargets[0];if(t)API.destroy(t,'エクシーズエナジー');},afterResolve(){}}],{type:'spell',priority:1,targets:true,destroysFieldV46:true});
+defineUnifiedCardV4('エクシーズエナジー',[{key:'detach-destroy',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.MZONE,targetSide:'opponent',speed:1,events:['activate'],condition(ctx){return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>Array.isArray(x.card.xyz)&&x.card.xyz.length>0}).length>0&&API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'}).length>0;},/* S03-U114 */detachCostS03:{count:1,reason:'エクシーズエナジー（コスト）',holders(ctx){return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>Array.isArray(x.card.xyz)&&x.card.xyz.length>0});},targets(ctx){return {title:'エクシーズエナジー：破壊する相手モンスター',candidates:API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'})};}},target(ctx,done){API.selectCard('エクシーズエナジー：破壊する相手モンスター',API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'}),t=>done([t]));},operation(ctx){const t=ctx.selectedTargets&&ctx.selectedTargets[0];if(t)API.destroy(t,'エクシーズエナジー');},afterResolve(){}}],{type:'spell',priority:1,targets:true,destroysFieldV46:true});
 defineUnifiedCardV4('カップ・オブ・エース',[{key:'coin-draw',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,speed:1,events:['activate'],operation(ctx){const heads=duelRandomInt(2)===0;API.log('カップ・オブ・エース：'+(heads?'表':'裏'));API.draw(heads?ctx.player:ctx.opponent,2);},afterResolve(){}}],{type:'spell',priority:1});
 defineUnifiedCardV4('ガンバラナイト',[{key:'target-defense',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onAttackDeclare'],condition(ctx){const a=gameState.pendingAttack;return !!(a&&a.targetUid===ensureCardUid(gameState,ctx.card)&&ctx.card.face==='up'&&ctx.card.pos==='atk');},operation(ctx){const h=locateCardAnyV4(ctx.card);if(h)API.changePosition(h,'def','ガンバラナイト');},afterResolve(){}}],{type:'monster',priority:1,passive:{onAttackDeclare(ctx){const a=gameState.pendingAttack;return ctx.zone==='mz'&&!!a&&a.targetUid===ensureCardUid(gameState,ctx.card);}}});
 defineUnifiedCardV4('ガーゴイルの道化師',[{key:'summon-position',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,targetRange:LOCATION.MZONE,targetSide:'both',speed:1,events:['onNormalSummon','onSpecialSummon','onFlip'],condition(ctx){return ctx.event&&ctx.event.card===ctx.card&&API.fieldCards({zone:'mz',filter:x=>x.card.face==='up'}).length>0;},target(ctx,done){API.selectCard('ガーゴイルの道化師：表示形式を変更するモンスター',API.fieldCards({zone:'mz',filter:x=>x.card.face==='up'}),t=>done([t]));},operation(ctx){const t=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(t)API.changePosition(t,t.card.pos==='atk'?'def':'atk','ガーゴイルの道化師');},afterResolve(){}}],{type:'monster',priority:1,targets:true,passive:{onNormalSummon:ctx=>ctx.event&&ctx.event.card===ctx.card,onSpecialSummon:ctx=>ctx.event&&ctx.event.card===ctx.card,onFlip:ctx=>ctx.event&&ctx.event.card===ctx.card}});
@@ -26128,7 +26390,7 @@ API.registerChoiceHandler('p1cards.deck-to-hand',(answer,args)=>{
 defineUnifiedCardV4('No.10 白輝士イルミネーター',[{
   key:'detach-cycle',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],
   condition(ctx){return !!((ctx.card.xyz||[]).length&&API.me(ctx).hand.length&&API.me(ctx).deck.length);},
-  cost(ctx,done){const h=locateCardAnyV4(ctx.card);if(!h){done(false);return;}API.detachMaterial(ctx.player,h.index,'No.10 白輝士イルミネーター（コスト）');done(true);},
+  /* S03-U114 */detachCostS03:{count:1,reason:'No.10 白輝士イルミネーター（コスト）'},
   operation(ctx){v49P1Open(ctx,{kind:'card',title:'No.10 白輝士イルミネーター：墓地へ送る手札',candidates:API.pileCards(ctx.player,'hand'),min:1,max:1},'p1cards.hand-send-draw',{},false);},afterResolve(){}
 }],{type:'xyz',priority:1,countLimit:1,timing:['mainPhase']});
 
@@ -31113,14 +31375,7 @@ function v21WarriorTargets(){
 defineUnifiedCardV4('皇の波動',[{
   key:'protect-own-xyz',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,speed:2,events:['activate'],
   condition(ctx){ return v21OwnXyzWithMaterial(ctx.player).length>0; },
-  cost(ctx,done){
-    const pool=v21OwnXyzWithMaterial(ctx.player);
-    if(!pool.length){ done(false); return; }
-    API.selectCard('皇の波動：素材を取り除くエクシーズ',pool,t=>{
-      const h=resolveTarget(t);
-      if(!h){ done(false); return; }
-      API.detachMaterial(h.p,h.index,'皇の波動（コスト）');
-      done(true);});},
+  /* S03-U114 */detachCostS03:{count:1,reason:'皇の波動（コスト）',holders(ctx){return v21OwnXyzWithMaterial(ctx.player);}},
   operation(ctx){
     API.fieldCards({player:ctx.player,zone:'mz',
       filter:x=>x.card.face==='up'&&(x.db.st||[]).indexOf('エクシーズ')>=0})
@@ -59773,7 +60028,7 @@ defineScript('ワーム・ゼクス', {
    this codebase's own established v21 precedent (cards/9G_destruction_protection_recovery.js).
    The "at the end of the Battle Phase in which this card battled" trigger reuses the existing
    API.battledThisPhase() primitive (precedent: ビッグ・ジョーズ／ステルスロイド, cards/91_battle_recovery.js),
-   and the per-End-Phase material removal reuses the existing API.detachMaterial() primitive. No new engine
+   and the per-End-Phase material removal uses requestDetachMaterialS03 (S03-U114: the controller chooses the material). No new engine
    capability was needed at all. Xyz materials on a real field card live on `card.xyz` (an array, set by the
    real FX_EX_SUMMON/FX_DETACH action handlers in engine/00_state_actions.js) — NOT `card.materials`, a
    different field that エクシーズエナジー (cards/56_v56_autobuild_batch08.js) incorrectly checks instead,
@@ -59806,7 +60061,8 @@ defineUnifiedCardV4('始祖の守護者ティラス',[
     },
     operation(ctx){
       const h=locateCardAnyV4(ctx.card);
-      if(h) API.detachMaterial(h.p, h.index, '始祖の守護者ティラス');
+      /* S03-U114: 取り除く素材はコントローラーが選ぶ（素材が1つなら自動） */
+      if(h){ ensureCardUid(gameState, h.card); requestDetachMaterialS03({player:h.p, holderUid:h.card.uid, count:1, reason:'始祖の守護者ティラス', cancelable:false}); }
     },
     afterResolve(){}
   }
@@ -64306,11 +64562,36 @@ function openDeveloperTestPresets(){
   veil.classList.add('on');
 }
 /* index.html(1103デッキビルダー) と同じ localStorage を読む。
-   既存の保存データは移動・削除・上書きしない。DUEL側は複数schemaを読み取り専用で吸収する。 */
+   既存の保存データは移動・削除・上書きしない（migration もしない）。DUEL側は読み取り専用。
+   S03-U114: デッキビルダー v90 の storage contract（index.html の storage 節）に合わせる。
+     LEGACY_DECK_PREFIX = 'deck1103:'            … 旧・名前キー（後方互換で読む）
+     DECK_V2_PREFIX     = 'deck1103v2:'          … 現行の正本。キーは内部ID（deck1103v2:<id>）
+     DECK_MIGRATION_KEY = 'deck1103v2:migrated'  … 移行済みマーカー。デッキではない
+   レコード形: {id, name, cards:[{n,q}], side:[{n,q}], candidates, memo, date}
+   ビルダーは旧データを v2 へ非破壊コピーする（旧キーは残る）ので、同じデッキが両方にあり得る。
+   v2 を優先し、旧データは「ビルダーと同じ legacyDeckId(name)」または正規化シグネチャで重複排除する。 */
 const DECK_PREFIX = 'deck1103:';
+const LEGACY_DECK_PREFIX = DECK_PREFIX;
+const DECK_V2_PREFIX = 'deck1103v2:';
+const DECK_MIGRATION_KEY = 'deck1103v2:migrated';
 const WORK_KEY    = 'work1103:current';
 const DECK_COLLECTION_KEYS = ['deck1103:decks','deck1103:list','yg1103_decks','1103_decks','decks1103'];
 function LS(){ try{ return window.localStorage; }catch(e){ return null; } }
+/* デッキビルダー legacyDeckId() と同一（FNV-1a）。旧名前キーのデッキが v2 へ移行された時の内部ID。 */
+function legacyDeckIdS03(name){
+  let h=2166136261; const str=String(name||'');
+  for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619); }
+  return 'legacy_'+(h>>>0).toString(36);
+}
+/* 正規化シグネチャ: 名前 + カード（名前順・枚数）。sourceKey を含めない（旧/v2 で同じデッキを同一視するため）。 */
+function savedDeckSignatureS03(d){
+  const norm = list => (list||[]).map(e=>{
+    const n = typeof e==='string' ? e : (e.n||e.name||e.cardName||e.card||'');
+    const q = typeof e==='string' ? 1 : (e.q||e.qty||e.count||1);
+    return n+'x'+q;
+  }).sort().join('|');
+  return `${String(d.name||'')}#${norm(d.cards)}#${norm(d.side)}`;
+}
 
 function savedDeckCardsOf(d){
   if(!d || typeof d!=='object') return null;
@@ -64320,7 +64601,8 @@ function savedDeckCardsOf(d){
 function normalizeSavedDeckEntry(d, fallbackName, sourceKey){
   const cards = savedDeckCardsOf(d);
   if(!cards || !cards.length) return null;
-  return {name:d.name||d.title||d.deckName||fallbackName||'無題', cards, side:d.side||d.sideDeck||[], date:d.date||d.updatedAt||d.updated||d.savedAt||'', sourceKey:sourceKey||''};
+  return {name:d.name||d.title||d.deckName||fallbackName||'無題', cards, side:d.side||d.sideDeck||[], date:d.date||d.updatedAt||d.updated||d.savedAt||'', sourceKey:sourceKey||'',
+          id:(d.id!=null?String(d.id):''), hasOwnName:!!d.name};   /* S03-U114: ビルダーは name を持つ旧レコードだけを移行する */
 }
 function pushSavedDeck(out, d, fallbackName, sourceKey){
   const n = normalizeSavedDeckEntry(d, fallbackName, sourceKey);
@@ -64348,21 +64630,47 @@ function collectSavedDecksFromValue(out, raw, sourceKey){
     });
   }
 }
+/* S03-U114: 一覧の各行は安定キー key を持つ（v2: 'v2:'+内部ID / 旧: 'legacy:'+legacyDeckId(name) または
+   'src:'+sourceKey）。選択は配列 index ではなく key で行う（localStorage の列挙順に依存しない）。 */
 function listSavedDecks(){
-  const out=[]; const ls=LS(); if(!ls) return out;
+  const ls=LS(); if(!ls) return [];
+  const v2=[], legacy=[];
   try{
-    for(let i=0;i<ls.length;i++){
-      const k=ls.key(i);
-      if(k && k.indexOf(DECK_PREFIX)===0){
-        collectSavedDecksFromValue(out, ls.getItem(k), k);
-      } else if(DECK_COLLECTION_KEYS.includes(k)){
-        collectSavedDecksFromValue(out, ls.getItem(k), k);
+    const keys=[];
+    for(let i=0;i<ls.length;i++){ const k=ls.key(i); if(k) keys.push(k); }
+    keys.forEach(k=>{
+      if(k.indexOf(DECK_V2_PREFIX)===0){
+        if(k===DECK_MIGRATION_KEY) return;                       /* 移行マーカーはデッキではない */
+        let rec=null; try{ rec=JSON.parse(ls.getItem(k)); }catch(e){ return; }
+        if(!rec || typeof rec!=='object') return;
+        const cards=savedDeckCardsOf(rec); if(!cards || !cards.length) return;
+        const id=String(rec.id || k.slice(DECK_V2_PREFIX.length));
+        v2.push({id, key:'v2:'+id, name:rec.name||'無題のデッキ', cards, side:Array.isArray(rec.side)?rec.side:[],
+                 date:rec.date||'', sourceKey:k, source:'v2'});
+      } else if(k.indexOf(LEGACY_DECK_PREFIX)===0 || DECK_COLLECTION_KEYS.includes(k)){
+        collectSavedDecksFromValue(legacy, ls.getItem(k), k);
       }
-    }
+    });
   }catch(e){}
-  delete out._seen;
-  out.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  delete legacy._seen;
+  const v2Ids=new Set(v2.map(d=>d.id)), v2Sigs=new Set(v2.map(savedDeckSignatureS03));
+  const out=v2.slice();
+  const legacySeen=new Set();
+  legacy.forEach(d=>{
+    /* 旧レコードが v2 へ移行される時の内部ID（ビルダーと同じ規則）。自前の id を持つ旧形式ならそれを使う。 */
+    const id = d.id ? d.id : (d.hasOwnName && d.sourceKey.indexOf(LEGACY_DECK_PREFIX)===0 ? legacyDeckIdS03(d.name) : '');
+    if(id && v2Ids.has(id)) return;                              /* ビルダーが移行済み（同じ内部ID） */
+    const sig = savedDeckSignatureS03(d);
+    if(v2Sigs.has(sig) || legacySeen.has(sig)) return;             /* 同一内容のデッキは1件だけ */
+    legacySeen.add(sig);
+    /* ID の無い旧形式は sourceKey + 内容ハッシュで安定キーを作る（列挙順・index に依存しない） */
+    out.push(Object.assign({}, d, {id, key: id ? 'legacy:'+id : 'src:'+d.sourceKey+'#'+legacyDeckIdS03(sig), source:'legacy'}));
+  });
+  out.sort((a,b)=>(b.date||'').localeCompare(a.date||'') || String(a.key).localeCompare(String(b.key)));
   return out;
+}
+function findSavedDeckByKeyS03(key){
+  return listSavedDecks().find(d=>d.key===key) || null;
 }
 function getWorkDeck(){
   const ls=LS(); if(!ls) return null;
@@ -64434,12 +64742,14 @@ function openDeckLoad(tab, player){
           <span class="dl-nm">${work.name||'編集中のデッキ'}<span class="dl-badge">編集中</span></span>
           <span class="dl-n">${n}枚</span></div>`;
       }
-      decks.forEach((d,i)=>{
+      /* S03-U114: 行は配列 index ではなく安定キー（v2 内部ID 等）で選ぶ。表示名はエスケープする。 */
+      const escT = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      decks.forEach(d=>{
         const n = (d.cards||[]).reduce((s,e)=>s+(e.q||1),0);
         const dt = (d.date||'').slice(0,10);
-        rows += `<div class="dl-item" onclick="loadSaved(${i})">
-          <span class="dl-nm">${d.name||'無題'}</span>
-          <span class="dl-n">${n}枚<small>${dt}${d.sourceKey?' / '+d.sourceKey:''}</small></span></div>`;
+        rows += `<div class="dl-item" data-deck-key="${escT(d.key)}" onclick="loadSavedById(${jsStr(d.key)})">
+          <span class="dl-nm">${escT(d.name||'無題')}</span>
+          <span class="dl-n">${n}枚<small>${escT(dt)}${d.source==='legacy'?' / 旧形式':''}</small></span></div>`;
       });
       body = `<div class="dl-list">${rows}</div>
         <div class="meta" style="margin-top:8px">タップすると${nameOf(p)}の次回開始用デッキに選択します。現在の手札・山札・盤面は変更しません。</div>`;
@@ -64461,14 +64771,21 @@ function openDeckLoad(tab, player){
     <button class="close" onclick="closeSheet()">閉じる</button>`;
   veil.classList.add("on");
 }
-/* 保存デッキを読み込む。i==='__work__' なら編集中デッキ */
-function loadSaved(i){
+/* 保存デッキを次回開始用に選ぶ。S03-U114: 一覧の安定キーで引く（index では引かない）。 */
+function applySavedDeckS03(d){
   const p = DECK_LOAD_PLAYER;
-  const d = (i==='__work__') ? getWorkDeck() : listSavedDecks()[i];
-  if(!d){ showToast("デッキが見つかりません"); return; }
+  if(!d){ showToast("デッキが見つかりません（一覧を開き直してください）"); return; }
   const parsed = cardsToDeck(d.cards);
   parsed.name = d.name||'';
+  parsed.deckId = d.id||'';
+  parsed.sideNames = (d.side||[]).map(e=>typeof e==='string'?{n:e,q:1}:{n:e.n||e.name||'',q:e.q||e.qty||1}).filter(e=>e.n);
   applyLoad(p, parsed, false);
+}
+function loadSavedById(key){ applySavedDeckS03(findSavedDeckByKeyS03(String(key||''))); }
+/* 旧呼び出し互換: '__work__' は編集中デッキ。数値 index は後方互換のためだけに残す（UI は loadSavedById を使う）。 */
+function loadSaved(i){
+  if(i==='__work__'){ applySavedDeckS03(getWorkDeck()); return; }
+  applySavedDeckS03(listSavedDecks()[i]);
 }
 /* 1103環境での同名カード上限（0/1/2/3枚）
    carddata.json の各カードが持つ lm キーを使う（lm:0=禁止,1=制限,2=準制限,無指定=無制限）。
@@ -64636,7 +64953,9 @@ function applyLoad(p, parsed, autostart){
     // 1103は先攻ドローあり。ドローフェイズから始める。
     act({type:"SET_FIRST_PLAYER", player:p});   /* S03-U38 (C-S03-29): 直接書かず Action で記録する */
   } else {
-    act({type:"SET_NEXT_DECK", player:p, deck:main, ex, source:'user', name:parsed.name||''});
+    /* S03-U114: 保存デッキの内部ID とサイド（カード名・枚数）も記録する（デュエルには使わない） */
+    act(Object.assign({type:"SET_NEXT_DECK", player:p, deck:main, ex, source:'user', name:parsed.name||''},
+      parsed.deckId ? {deckId:String(parsed.deckId)} : {}, Array.isArray(parsed.sideNames) ? {side:parsed.sideNames} : {}));
   }
   closeSheet();
   saveDuelSoon();
