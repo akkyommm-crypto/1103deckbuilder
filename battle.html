@@ -1402,6 +1402,7 @@ function applyActionBodyV31(gs, a){
       // from/to は "hand","mz","sz","field","grave","banish","deck","ex"
       const card = removeFrom(P, a.from, a.fromIndex);
       if(!card) break;
+      const preFaceU110 = card.face;   /* S03-U110: 置換判定は場を離れる前の表裏で行う */
       if(a.face) card.face = a.face;
       if(a.pos)  card.pos  = a.pos;
       /* System v3.3.0: 手動MOVEでもEXモンスターを手札/メインデッキへ戻さない。
@@ -1410,6 +1411,14 @@ function applyActionBodyV31(gs, a){
       /* System v3.5.0: 「この効果で特殊召喚したこのカードは、フィールドから離れた場合に除外」
          （ゾンビキャリア/バトルフェーダー等）を中央処理する。X素材化は場から離れる扱いではないため別。 */
       if(v350BanishWhenLeavesField(card,a.from,actualTo)) actualTo='banish';
+      /* S03-U110: 墓地へ送られる場合にデッキの一番上へ戻る置換（リリース・コスト等の MOVE 経路）。 */
+      if(actualTo==='grave' && a.toPlayer==null
+         && s03DeckTopInsteadOfGraveU110(gs, card, {p:a.player, zone:a.from, index:a.fromIndex}, preFaceU110)){
+        delete card.declaration; delete card.controlReturnTo; delete card.controlReturnTurn;
+        const retU110=returnToOwnerDeckOrExtra(gs, card, a.player, false);
+        logIt(gs, `${nameOf(a.player)}：${cardName(card)} は墓地へは行かず ${nameOf(retU110.owner)} のデッキの一番上に戻った`);
+        break;
+      }
       /* P1.1: 手動MOVEも領域を跨ぐ。永続宣言を次の領域へ持ち越さない。 */
       if(a.from!==actualTo) delete card.declaration;
       /* カードは持ち主のゾーンに戻る。コントロールを奪ったモンスターを
@@ -1738,7 +1747,8 @@ function applyActionBodyV31(gs, a){
       if(a.uid != null && cardP26.uid !== a.uid) break;
       if((backP26.mz||[]).length >= ZONE_LIMITS.mz){
         srcP26.mz.splice(a.index,1);
-        pushZone(backP26.grave, cardP26);
+        if(!s03DeckTopReplaceGraveU110(gs, cardP26, {p:a.player, zone:'mz', index:a.index}, cardP26.face, a.reason))   /* S03-U110 */
+          pushZone(backP26.grave, cardP26);
         logIt(gs, `${a.reason||'効果'}：${cardName(cardP26)} は戻す先が一杯のため墨地へ`);
         break;
       }
@@ -1800,7 +1810,9 @@ function applyActionBodyV31(gs, a){
           const back = gs.players[c.controlReturnTo];
           if((back.mz||[]).length >= ZONE_LIMITS.mz){
             logIt(gs, `${cardName(c)} は戻す先が一杯のため墓地へ`);
-            P.mz.splice(i,1); pushZone(back.grave, c); continue;
+            P.mz.splice(i,1);
+            if(!s03DeckTopReplaceGraveU110(gs, c, {p:pi, zone:'mz', index:i}, c.face, 'コントロール終了')) pushZone(back.grave, c);   /* S03-U110 */
+            continue;
           }
           P.mz.splice(i,1);
           const backIdxV26 = c.controlReturnTo;
@@ -1969,6 +1981,8 @@ function applyActionBodyV31(gs, a){
           if(v350BanishWhenLeavesField(c,'mz','grave')){
             pushZone(ownerB.banish,c);
             logIt(gs, `${cardName(c)} が戦闘破壊され除外へ`);
+          }else if(s03DeckTopReplaceGraveU110(gs, c, {p:pi, zone:'mz', index:i}, sentFace, '戦闘破壊')){
+            /* S03-U110: 破壊はされたが墓地へは行かない（持ち主のデッキの一番上）。 */
           }else{
             pushZone(ownerB.grave, c);
             const putB = ownerB.grave[ownerB.grave.length-1];
@@ -2257,6 +2271,8 @@ function applyActionBodyV31(gs, a){
       if(v350BanishWhenLeavesField(card,a.zone,'grave')){
         pushZone(ownerG.banish,card);
         logIt(gs, `${a.reason||"効果"}：${nameOf(a.player)}の ${cardName(card)} は墓地へ行かず除外`);
+      }else if(s03DeckTopReplaceGraveU110(gs, card, {p:a.player, zone:a.zone, index:a.index}, sentFace, a.reason)){
+        /* S03-U110: 持ち主のデッキの一番上へ（下の onSendToGrave は墓地にいる時だけ積まれる）。 */
       }else{
         pushZone(ownerG.grave, card);
         /* いつ・どこから墓地へ来たかを控える。 */
@@ -2300,7 +2316,7 @@ function applyActionBodyV31(gs, a){
         if(!c || !wipeCtxV21 || typeof applyDestructionProtectionV21!=='function') return null;
         return applyDestructionProtectionV21(gs, c, wipeCtxV21);
       };
-      const doomed=[], sparedV21=[];
+      const doomed=[], sparedV21=[], doomedLocU110=new Map();
       if(a.zone==='field'){
         if(P.field){
           const g=wipeGuardV21(P.field);
@@ -2317,7 +2333,9 @@ function applyActionBodyV31(gs, a){
         });
         for(let i=arr.length-1;i>=0;i--){
           if(sparedV21.indexOf(arr[i])>=0) continue;
-          doomed.push(arr.splice(i,1)[0]);
+          const wU110=arr.splice(i,1)[0];
+          doomed.push(wU110);
+          if(wU110) doomedLocU110.set(wU110, {p:a.player, zone:a.zone, index:i, face:wU110.face});   /* S03-U110 */
         }
       }
       const names=doomed.map(c=>cardName(c));
@@ -2325,7 +2343,9 @@ function applyActionBodyV31(gs, a){
         const spellN=v350DestroyedSpellCounterCount(w);
         dropXyzMaterials(P,w,gs); dropEquips(P,w,gs);
         const owner=cardOwnerIndex(gs,w,a.player), dst=gs.players[owner];
+        const locU110=doomedLocU110.get(w);
         if(v350BanishWhenLeavesField(w,a.zone,'grave')) pushZone(dst.banish,w);
+        else if(locU110 && s03DeckTopReplaceGraveU110(gs, w, locU110, locU110.face, a.reason)){ /* S03-U110 */ }
         else pushZone(dst.grave,w);
         if(spellN) v350TransferDestroyedSpellCounters(gs,spellN);
         /* System v11 */
@@ -2628,6 +2648,8 @@ function applyActionBodyV31(gs, a){
           const owner=cardOwnerIndex(gs,c,a.player),dst=gs.players[owner];
           if(v350BanishWhenLeavesField(c,'mz','grave')){
             const r=reset(c); if(r){ r.banishInfo={turn:gs.turn,from:'mz',face:'up',reason:'synchroMaterial'}; dst.banish.push(r); }
+          }else if(s03DeckTopReplaceGraveU110(gs, c, {p:a.player, zone:'mz', index:0}, sentFace, 'シンクロ素材')){
+            /* S03-U110: シンクロ素材として墓地へ送られる場合も置換される（墓地へ送られた時の誘発は起きない）。 */
           }else{
             pushZone(dst.grave,c); const put=dst.grave[dst.grave.length-1]; if(put) put.graveInfo={turn:gs.turn,from:'mz',reason:'synchroMaterial',lv:sentLv,face:sentFace};
             (gs.deferredEvents||(gs.deferredEvents=[])).push({eventName:'onSendToGrave',evt:{player:owner,uid:ensureCardUid(gs,c),reason:'synchroMaterial',kind:'synchro',summonUid:exCard.uid}});
@@ -2692,7 +2714,9 @@ function applyActionBodyV31(gs, a){
         // シンクロ・融合は素材を墓地へ。場を離れたら除外されるカードは中央置換。
         matCards.forEach(c=>{
           const owner=cardOwnerIndex(gs,c,a.player), dst=gs.players[owner];
-          if(v350BanishWhenLeavesField(c,'mz','grave')) pushZone(dst.banish,c); else pushZone(dst.grave,c);
+          if(v350BanishWhenLeavesField(c,'mz','grave')) pushZone(dst.banish,c);
+          else if(s03DeckTopReplaceGraveU110(gs, c, {p:a.player, zone:'mz', index:0}, c.face, '素材')){ /* S03-U110 */ }
+          else pushZone(dst.grave,c);
         });
       }
       if(a.kind === 'synchro'){
@@ -2706,12 +2730,28 @@ function applyActionBodyV31(gs, a){
       break;
     }
 
+    /* 次回開始用のデッキ構成を記録する。進行中の盤面・手札・山札は触らない。
+       a:{player, deck:[card], ex:[card], source, name} */
+    case "SET_NEXT_DECK": {
+      P.loadedDeckV32 = {source:String(a.source||'user'), name:String(a.name||''),
+        main:(a.deck||[]).map(c=>c&&c.id).filter(x=>x!=null), ex:(a.ex||[]).map(c=>c&&c.id).filter(x=>x!=null)};
+      logIt(gs, `${nameOf(a.player)}：次回開始デッキ ${P.loadedDeckV32.main.length}枚 / EX ${P.loadedDeckV32.ex.length}枚 選択`);
+      break;
+    }
+
     /* エクシーズ素材を1つ取り除く（効果コスト）
-       a:{player, mzIndex, reason} */
+       a:{player, mzIndex, reason, materialIndex?, materialUid?} */
     case "FX_DETACH": {
       const c = P.mz[a.mzIndex];
       if(!c || !c.xyz || !c.xyz.length){ logIt(gs, `エクシーズ素材がありません`); break; }
-      const m = c.xyz.shift();
+      let mi = 0;
+      if(a.materialUid != null){
+        const byUid = c.xyz.findIndex(m=>m && m.uid === a.materialUid);
+        if(byUid >= 0) mi = byUid;
+      } else if(Number.isInteger(a.materialIndex) && a.materialIndex >= 0 && a.materialIndex < c.xyz.length){
+        mi = a.materialIndex;
+      }
+      const m = c.xyz.splice(mi, 1)[0];
       /* X素材は現在のコントローラーではなく、その素材カードの持ち主の墓地へ送る。 */
       const matOwner = (m.owner != null && gs.players[m.owner]) ? m.owner : a.player;
       pushZone(gs.players[matOwner].grave, m);
@@ -3178,7 +3218,9 @@ function applyActionBodyV31(gs, a){
         const TP = gs.players[t.p];
         const arr = t.zone==='hand' ? TP.hand : TP.mz;
         const c = arr.splice(t.index,1)[0];
-        if(c){ names.push(cardName(c)); dropXyzMaterials(TP, c, gs); pushZone(TP.grave, c); }
+        if(c){ names.push(cardName(c)); dropXyzMaterials(TP, c, gs);
+          /* S03-U110: 場の表側クリスティアを儀式のリリースにした場合もデッキの一番上へ置換。 */
+          if(!(t.zone!=='hand' && s03DeckTopReplaceGraveU110(gs, c, {p:t.p, zone:'mz', index:t.index}, c.face, 'リリース'))) pushZone(TP.grave, c); }
       });
       const card = removeFrom(P, "hand", hIdx);
       if(!card) break;
@@ -3459,6 +3501,29 @@ const ZONE_LOCAL_KEYS = [
 /* System v3.5.0: 場を離れたら除外される残存効果を中央管理する。 */
 function v350BanishWhenLeavesField(card,fromZone,toZone){
   return !!(card && card.banishWhenLeavesField && ['mz','sz','field'].includes(fromZone) && !['mz','sz','field'].includes(toZone));
+}
+/* S03-U110: 「フィールドの表側表示のこのカードが墓地へ送られる場合、墓地へは行かず持ち主のデッキの一番上に戻る」
+   （《大天使クリスティア》④）の置換を中央処理する。script の leaveFieldToDeckTopS03:true で宣言する。
+   置換なので墓地へは一度も行かない（onSendToGrave・graveInfo は発生しない）。
+   effectNegated() は locateCard() で盤面の位置を引くため、場を離れた後では永続無効（スキルドレイン等）を
+   見られない。そこで呼び出し側が場を離れる直前の位置 preLoc と表裏 preFace を渡し、その位置で判定する。 */
+function s03DeckTopInsteadOfGraveU110(gs, card, preLoc, preFace){
+  if(!card || card.token || !preLoc || preLoc.zone!=='mz' || preFace!=='up') return false;
+  const sc=(typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
+  if(!sc || !sc.leaveFieldToDeckTopS03) return false;
+  if(card.negated) return false;
+  if(card.negatedUntilTurn!=null && card.negatedUntilTurn===gs.turn) return false;
+  if(typeof negatedByV13==='function' && negatedByV13(card, gs)) return false;
+  if(typeof effectNegatedBy==='function' && typeof collectSources==='function'
+     && effectNegatedBy(collectSources(['sz','field'], false), card, preLoc)) return false;
+  return true;
+}
+/* 置換が適用されたら持ち主のデッキの一番上へ置いて true を返す。呼び出し側は墓地処理を丸ごと飛ばす。 */
+function s03DeckTopReplaceGraveU110(gs, card, preLoc, preFace, label){
+  if(!s03DeckTopInsteadOfGraveU110(gs, card, preLoc, preFace)) return false;
+  const ret=returnToOwnerDeckOrExtra(gs, card, preLoc.p, false);
+  logIt(gs, `${label||'効果'}：${cardName(card)} は墓地へは行かず ${nameOf(ret.owner)} のデッキの一番上に戻った`);
+  return true;
 }
 function v350DestroyedSpellCounterCount(card){
   return (card && card.counters && Number(card.counters['魔力']||0)) || 0;
@@ -14127,7 +14192,9 @@ function v46GlobalSpecialSummonRestrictionReason(p){
       if(!c||c.face!=='up') continue;
       const n=cardName(c);
       if(typeof effectNegated==='function' && effectNegated(c)) continue;
-      if(['虚無魔人','フォッシル・ダイナ パキケファロ'].includes(n)) return `${n}の効果により特殊召喚できません`;
+      /* S03-U110: 《大天使クリスティア》③「お互いにモンスターを特殊召喚できない」も同じ表側モンスターの双方向ロック。
+         以前はクリスティアの resolve() がログを出すだけで、ロック自体はどこにも実装されていなかった。 */
+      if(['虚無魔人','フォッシル・ダイナ パキケファロ','大天使クリスティア'].includes(n)) return `${n}の効果により特殊召喚できません`;
       if(n==='No.30 破滅のアシッド・ゴーレム' && q===p) return `${n}の効果により特殊召喚できません`;
       continue;
     }
@@ -14721,7 +14788,7 @@ const API = {
   },
   sendToGrave(t, reason){ const r=resolveTarget(t); if(!r){ trace(`sendToGrave: 対象が場にない`, false); return; }
     trace(`sendToGrave: ${labelOf(r.card)}`); act({type:"FX_TO_GRAVE", player:r.p, zone:r.zone, index:r.index, reason, byDestroy:false}); },
-  specialSummon(p, from, index, pos, reason, fromPlayer){
+  specialSummon(p, from, index, pos, reason, fromPlayer, opts){
     if(graveMoveBlocked(from, 'leave')){ reportGraveLock('leave'); return false; }
     const sp=fromPlayer==null?p:fromPlayer;
     const before=(gameState.players[sp][from]||[])[index];
@@ -14729,7 +14796,8 @@ const API = {
     const sr=before?v46SpecialSummonRestrictionReason(p,dbOf(before)):v46GlobalSpecialSummonRestrictionReason(p);
     if(sr){ trace(`specialSummon blocked: ${sr}`,false); showToast(sr); return false; }
     trace(`specialSummon: ${from}[${index}] → ${pos||'atk'}`);
-    act({type:"FX_SPECIAL_SUMMON", player:p, fromPlayer:sp, from, fromIndex:index, pos:pos||'atk', reason});
+    const extra = opts && typeof opts === 'object' ? opts : {};
+    act(Object.assign({type:"FX_SPECIAL_SUMMON", player:p, fromPlayer:sp, from, fromIndex:index, pos:pos||'atk', reason}, extra));
     // System v3.4.0: 特殊召喚が制約等で失敗した時、既存の最後尾モンスターを誤って「召喚成功」にしない。
     if(PLAY_MODE===PLAY_MODES.DUEL && before){
       const h=locateCard(before);
@@ -17621,33 +17689,52 @@ defineScript("ワン・フォー・ワン", {
   }
 });
 
-/* ---- ゴッドバードアタック ---- */
+/* ---- ゴッドバードアタック ----
+   2011年テキスト: 自分フィールド上に存在する鳥獣族モンスター1体をリリースして発動する。
+   フィールド上に存在するカード2枚を選択して破壊する。
+   S03-U111: 以前の実装は (1) リリースをコストではなく解決時に行い（リリースする鳥獣族を「対象」として選ばせ、
+   発動が無効になってもリリースされず、チェーンで鳥獣族が除去されても破壊は通った）、
+   (2) 対象が2枚そろわなくても発動でき、(3) 発動したこのカード自身を対象に選べた。
+   デュアルスパーク（S03-U98）と同じ「コストでリリース → 対象選択」の順に直す。 */
+function godBirdBirdsS03U111(ctx){
+  return API.fieldCards({zone:'mz', player:ctx.player, filter:x=>x.db.ra==='鳥獣'});
+}
+/* 破壊対象の候補: フィールドのカードから、発動したこのカード自身と（指定があれば）リリースする鳥獣族を除く。 */
+function godBirdTargetsS03U111(ctx, releasedCard){
+  return API.fieldCards().filter(x=>x.card!==ctx.card && x.card!==releasedCard);
+}
 defineScript("ゴッドバードアタック", {
   targets:true,                 // 対象を取る効果
   type:"trap", priority:2,
   condition(ctx){
-    const birds = API.fieldCards({zone:'mz', player:ctx.player, filter:x=>x.db.ra==='鳥獣'});
+    const birds = godBirdBirdsS03U111(ctx);
     if(!birds.length){ ctx.reason = "リリースする鳥獣族がいません"; return false; }
-    if(!API.fieldCards().length){ ctx.reason = "破壊する対象がありません"; return false; }
+    /* リリース後に対象2枚が残る鳥獣族が1体でもいれば発動できる。 */
+    if(!birds.some(b=>godBirdTargetsS03U111(ctx, b.card).length>=2)){
+      ctx.reason = "リリースする鳥獣族以外に対象にできるカードが2枚必要です"; return false;
+    }
     return true;
   },
-  selectTargets(ctx, done){
-    const birds = API.fieldCards({zone:'mz', player:ctx.player, filter:x=>x.db.ra==='鳥獣'});
-    API.selectCard("ゴッドバードアタック：リリースする鳥獣族", birds, r=>{
-      const picks=[];
-      const step=()=>{
-        const left = API.fieldCards().filter(x=>x.card!==r.card && picks.every(pk=>pk.card!==x.card));
-        if(picks.length>=2 || !left.length){ done([r].concat(picks)); return; }
-        API.selectCard(`ゴッドバードアタック：破壊するカード（${picks.length+1}/2）`, left,
-          t=>{ picks.push(t); step(); });
-      };
-      step();
+  cost(ctx, done){
+    const birds = godBirdBirdsS03U111(ctx).filter(b=>godBirdTargetsS03U111(ctx, b.card).length>=2);
+    API.selectCard("ゴッドバードアタック：リリースする鳥獣族（コスト）", birds, r=>{
+      API.sendToGrave(r, "ゴッドバードアタック（リリース）");
+      done(true);
     });
   },
+  selectTargets(ctx, done){
+    const picks=[];
+    const step=()=>{
+      const left = godBirdTargetsS03U111(ctx, null).filter(x=>picks.every(pk=>pk.card!==x.card));
+      if(picks.length>=2 || !left.length){ done(picks); return; }
+      API.selectCard(`ゴッドバードアタック：破壊するカード（${picks.length+1}/2）`, left,
+        t=>{ picks.push(t); step(); });
+    };
+    step();
+  },
   resolve(ctx){
-    const [r, ...targets]=ctx.selectedTargets;
-    if(r) API.sendToGrave(r, "ゴッドバードアタック（リリース）");
-    targets.forEach(t=>API.destroy(t, "ゴッドバードアタック"));
+    /* 対象のうち、解決時にまだフィールドに残っているものだけを破壊する。 */
+    ctx.selectedTargets.forEach(t=>{ if(t && resolveTarget(t)) API.destroy(t, "ゴッドバードアタック"); });
   }
 });
 
@@ -18463,28 +18550,54 @@ API.registerChoiceHandler('s03u62.christia-bounce', (answer, args) => {
   const h = locateCardAnyV4(t.card);
   if(h && h.zone==='grave') act({type:"FX_BOUNCE", player:args.player, zone:'grave', index:h.index, reason:"大天使クリスティア"});
 });
+/* S03-U110: 2011年当時のテキスト（旧テキスト）:
+     自分の墓地に存在する天使族モンスターが4体のみの場合、このカードは手札から特殊召喚する事ができる。
+     この方法で特殊召喚に成功した時、自分の墓地に存在する天使族モンスター1体を選択して手札に加える。
+     このカードがフィールド上に表側表示で存在する限り、お互いにモンスターを特殊召喚する事はできない。
+     フィールド上に表側表示で存在するこのカードが墓地へ送られる場合、墓地へ送らずデッキの一番上に戻す。
+   以前の実装は4点すべてに誤り・欠落があった:
+   ① 手札からの特殊召喚を activateFrom:['hand'] の「効果の発動」として扱い、チェーンを組ませていた
+     → チェーンに乗らない特殊召喚手順 summonProcedure へ（サイバー・ドラゴンと同じ）。
+   ② 手札に加える処理を特殊召喚と同じ resolve() 内で任意（cancelable:true）・対象を取らずに行っていた
+     → ①の方法での特殊召喚成功時の強制誘発（対象を取る）へ。
+   ③ 「お互いに特殊召喚できない」はログを出すだけで、どこにも適用されていなかった
+     → v46GlobalSpecialSummonRestrictionReason の表側モンスター双方向ロック（虚無魔人と同じ）へ。
+   ④ デッキの一番上に戻る置換が無かった → leaveFieldToDeckTopS03（engine/00_state_actions.js の
+     s03DeckTopInsteadOfGraveU110）を宣言。 */
+function christiaFairyGraveS03U110(p){
+  return API.pileCards(p,'grave',x=>x.db.k==='m' && x.db.ra==='天使');
+}
+function christiaSummonConditionS03U110(ctx){
+  if(ctx.zone!=='hand'){ ctx.reason="手札から特殊召喚します"; return false; }
+  const n=christiaFairyGraveS03U110(ctx.player).length;
+  if(n!==4){ ctx.reason=`自分の墓地の天使族モンスターが4体のみの場合に限ります（現在${n}体）`; return false; }
+  return true;
+}
 defineScript("大天使クリスティア", {
-  type:"monster", priority:1,
-  activateFrom:["hand"],
+  type:"monster", priority:1, forced:true, targets:true,
+  leaveFieldToDeckTopS03:true,
+  summonProcedure:{ from:'hand', positions:['atk','def'], condition:christiaSummonConditionS03U110 },
   condition(ctx){
-    if(ctx.zone!=='hand'){ ctx.reason="手札から特殊召喚します"; return false; }
-    const ang = API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && x.db.ra==='天使');
-    if(ang.length!==4){ ctx.reason=`墓地の天使族がちょうど4体の時のみ（現在${ang.length}体）`; return false; }
-    if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
+    const ev=ctx.event||{};
+    if(ctx.zone!=='mz' || ctx.eventName!=='onSpecialSummon' || ev.card!==ctx.card || ev.kind!=='procedure'){
+      ctx.reason="このカードの方法で特殊召喚に成功した時に発動します"; return false;
+    }
+    if(!christiaFairyGraveS03U110(ctx.player).length){ ctx.reason="自分の墓地に天使族モンスターがいません"; return false; }
     return true;
   },
-  resolve(ctx){
-    API.specialSummon(ctx.player,'hand',ctx.index,'atk',"大天使クリスティア");
-    API.log("大天使クリスティア：お互いに特殊召喚できない");
-    const ang = API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && x.db.ra==='天使');
-    if(ang.length){
-      API.requestChoice({player:ctx.player, kind:'card', title:"クリスティア：手札に加える天使族",
-        candidates: ang, min:1, max:1, cancelable:true,
-        resume:{handler:'s03u62.christia-bounce', args:{player:ctx.player}},
-        meta:{scriptName:"大天使クリスティア"}});
-    }
+  selectTargets(ctx,done){
+    API.selectCard("大天使クリスティア：手札に加える天使族モンスター（対象）", christiaFairyGraveS03U110(ctx.player), t=>done([t]));
   },
-  afterResolve(){}
+  resolve(ctx){
+    const t=ctx.selectedTargets[0]; if(!t || !t.card) return;
+    const h=locateCardAnyV4(t.card);
+    if(!h || h.p!==ctx.player || h.zone!=='grave'){ API.log("大天使クリスティア：対象が墓地に存在しないため手札に加えられません"); return; }
+    API.returnToHand({p:h.p, zone:'grave', index:h.index, card:t.card}, "大天使クリスティア");
+  },
+  afterResolve(){},
+  passive:{
+    onSpecialSummon(ctx){ const ev=ctx.event||{}; return ctx.zone==='mz' && ev.card===ctx.card && ev.kind==='procedure'; }
+  }
 });
 
 /* ---------- 六武衆 ---------- */
@@ -20791,8 +20904,9 @@ defineScript("サンダー・ブレイク", {
     if(!API.pileCards(ctx.player,'hand',x=>x.card!==ctx.card).length){
       ctx.reason = "捨てる手札がありません"; return false;
     }
-    if(!API.fieldCards({filter:x=>x.card}).length){
-      ctx.reason = "フィールドにカードがありません"; return false;
+    /* S03-U111: 発動したこのカード自身は対象にできない。 */
+    if(!API.fieldCards({filter:x=>x.card && x.card!==ctx.card}).length){
+      ctx.reason = "このカード以外に対象にできるカードがありません"; return false;
     }
     return true;
   },
@@ -20805,7 +20919,7 @@ defineScript("サンダー・ブレイク", {
   },
   selectTargets(ctx, done){
     API.selectCard("サンダー・ブレイク：破壊するカード",
-      API.fieldCards({filter:x=>x.card}), t=>done([t]), "裏側のカードも選べます");
+      API.fieldCards({filter:x=>x.card && x.card!==ctx.card}), t=>done([t]), "裏側のカードも選べます");
   },
   resolve(ctx){
     const t = ctx.selectedTargets[0];
@@ -21428,6 +21542,10 @@ function treatedAsNormal(card){
   return false;
 }
 
+/* S03-U111: 対象候補 = フィールドのカードから、発動したこのカード自身と（指定があれば）リリースするモンスターを除く。 */
+function duelSparkTargetsS03U111(ctx, releasedCard){
+  return API.fieldCards({filter:x=>x.card && x.card!==ctx.card && x.card!==releasedCard});
+}
 /* ---- デュアルスパーク ----
    自分フィールドの表側のレベル4デュアルモンスター1体をリリースし、
    フィールドのカード1枚を対象として発動。破壊して1枚ドローする。 */
@@ -21437,17 +21555,21 @@ defineScript("デュアルスパーク", {
     if(!duelSparkFodder(ctx.player).length){
       ctx.reason = "リリースする表側のレベル4デュアルモンスターがいません"; return false;
     }
+    /* S03-U111: 発動したこのカード自身とリリースするモンスターは対象にできない。対象が1枚も残らないなら発動できない。 */
+    if(!duelSparkFodder(ctx.player).some(f=>duelSparkTargetsS03U111(ctx, f.card).length)){
+      ctx.reason = "リリースするモンスター以外に対象にできるカードがありません"; return false;
+    }
     return true;
   },
   cost(ctx, done){
     API.selectCard("デュアルスパーク：リリースするデュアルモンスター",
-      duelSparkFodder(ctx.player), r=>{
+      duelSparkFodder(ctx.player).filter(f=>duelSparkTargetsS03U111(ctx, f.card).length), r=>{
         API.sendToGrave(r, "デュアルスパーク（リリース）");
         done(true);
       });
   },
   selectTargets(ctx, done){
-    const cands = API.fieldCards({filter:x=>x.card});
+    const cands = duelSparkTargetsS03U111(ctx, null);
     if(!cands.length){ done([]); return; }
     API.selectCard("デュアルスパーク：破壊するカード", cands, t=>done([t]));
   },
@@ -25343,7 +25465,7 @@ defineUnifiedCardV4('スペシャルハリケーン',[{key:'wipe-special',type:E
 v50Field('ダークゾーン',d=>d.at==='闇',500,-400);v50Field('デザートストーム',d=>d.at==='風',500,-400);v50Field('バーニングブラッド',d=>d.at==='炎',500,-400);
 
 defineUnifiedCardV4('ダブル・サイクロン',[{key:'double-destroy',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.SZONE|LOCATION.FIELD,targetSide:'both',speed:2,events:['activate'],condition(ctx){const own=API.fieldCards({player:ctx.player}).filter(x=>['sz','field'].includes(x.zone)&&x.card!==ctx.card),foe=API.fieldCards({player:ctx.opponent}).filter(x=>['sz','field'].includes(x.zone));return own.length>0&&foe.length>0;},target(ctx,done){const own=API.fieldCards({player:ctx.player}).filter(x=>['sz','field'].includes(x.zone)&&x.card!==ctx.card);API.selectCard('ダブル・サイクロン：自分の魔法・罠',own,a=>API.selectCard('ダブル・サイクロン：相手の魔法・罠',API.fieldCards({player:ctx.opponent}).filter(x=>['sz','field'].includes(x.zone)),b=>done([a,b])));},operation(ctx){(ctx.selectedTargets||[]).forEach(t=>{const r=resolveTarget(t);if(r)API.destroy(r,'ダブル・サイクロン');});},afterResolve(){}}],{type:'spell',priority:2,targets:true,destroysFieldV46:true});
-defineUnifiedCardV4('ツイスター',[{key:'destroy-faceup-st',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.SZONE|LOCATION.FIELD,targetSide:'both',speed:2,events:['activate'],condition(ctx){if(API.me(ctx).lp<=500)return false;return API.fieldCards().some(x=>['sz','field'].includes(x.zone)&&x.card.face==='up');},cost(ctx,done){API.payCost(ctx.player,500);done(true);},target(ctx,done){API.selectCard('ツイスター：破壊する表側魔法・罠',API.fieldCards().filter(x=>['sz','field'].includes(x.zone)&&x.card.face==='up'),t=>done([t]));},operation(ctx){const t=ctx.selectedTargets&&ctx.selectedTargets[0];if(t)API.destroy(t,'ツイスター');},afterResolve(){}}],{type:'spell',priority:2,targets:true,destroysFieldV46:true});
+defineUnifiedCardV4('ツイスター',[{key:'destroy-faceup-st',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.SZONE|LOCATION.FIELD,targetSide:'both',speed:2,events:['activate'],condition(ctx){if(API.me(ctx).lp<=500)return false;return API.fieldCards().some(x=>['sz','field'].includes(x.zone)&&x.card.face==='up'&&x.card!==ctx.card);},cost(ctx,done){API.payCost(ctx.player,500);done(true);},target(ctx,done){/* S03-U111: 発動したこのカード自身は対象にできない */API.selectCard('ツイスター：破壊する表側魔法・罠',API.fieldCards().filter(x=>['sz','field'].includes(x.zone)&&x.card.face==='up'&&x.card!==ctx.card),t=>done([t]));},operation(ctx){const t=ctx.selectedTargets&&ctx.selectedTargets[0];if(t)API.destroy(t,'ツイスター');},afterResolve(){}}],{type:'spell',priority:2,targets:true,destroysFieldV46:true});
 
 defineScript('ツインヘデッド・ビースト',{type:'monster',priority:1,attackLimit:2});
 defineScript('ラージマウス',{type:'monster',priority:1,canDirectAttack:true});
@@ -59243,7 +59365,7 @@ API.registerScheduleHandler('s03u59.future-fusion-summon', (args) => {
     return;
   }
   const before = P.ex[exIdx];
-  const ok = API.specialSummon(p, 'ex', exIdx, 'atk', '未来融合－フューチャー・フュージョン');
+  const ok = API.specialSummon(p, 'ex', exIdx, 'atk', '未来融合－フューチャー・フュージョン', null, {summonKind: 'fusion'});
   if(ok) API.linkMutual({card: h.card}, {card: before}, {label: '未来融合－フューチャー・フュージョン'});
 });
 
@@ -62174,6 +62296,7 @@ function openMenu(){
     <div class="act-label">デッキ</div>
     <div class="act-grid">
       <div class="act fx" onclick="startRabbitOpponentDuel()">⚡ 兎ラギアと対戦開始</div>
+      <div class="act fx" onclick="startSelectedDeckDuel()">選択デッキで新規デュエル</div>
       <div class="act" onclick="openDeckLoad('saved')">保存デッキから</div>
       <div class="act" onclick="openDeckLoad('text')">テキストから</div>
       <div class="act" onclick="doShuffle();closeSheet()">シャッフル</div>
@@ -62925,7 +63048,7 @@ function openZone(p, zone, idx){
 
   // エクシーズ素材の取り除き
   const detach = (zone==="mz" && c.xyz && c.xyz.length)
-    ? `<div class="act" onclick="closeSheet();act({type:'FX_DETACH',player:${p},mzIndex:${idx},reason:'効果コスト'})">素材を1つ取り除く（残${c.xyz.length}）</div>`
+    ? `<div class="act" onclick="${c.xyz.length>1?`openXyzDetachPick(${p},${idx})`:`closeSheet();act({type:'FX_DETACH',player:${p},mzIndex:${idx},reason:'効果コスト'})`}">素材を1つ取り除く（残${c.xyz.length}）</div>`
     : "";
   const activate = !(!isMon || faceUp) ? ""
     : (canAct
@@ -62990,6 +63113,28 @@ function openZone(p, zone, idx){
     `<div class="act-label">移動</div><div class="act-grid">${move}</div>
      <button class="close" onclick="closeSheet()">閉じる</button>`;
   veil.classList.add("on");
+}
+
+function openXyzDetachPick(p, idx){
+  const c = gameState && gameState.players[p] && gameState.players[p].mz[idx];
+  const mats = c && Array.isArray(c.xyz) ? c.xyz : [];
+  if(!c || !mats.length){ showToast("エクシーズ素材がありません"); return; }
+  if(mats.length === 1){
+    closeSheet();
+    act({type:'FX_DETACH', player:p, mzIndex:idx, reason:'効果コスト'});
+    return;
+  }
+  openPick(`${cardName(c)}：取り除く素材`, `素材${mats.length}枚`,
+    mats.map((m,i)=>({
+      label:labelOf(m),
+      sub:`${i+1}枚目 / UID ${m.uid||''}`,
+      card:m,
+      onPick:()=>{
+        closeSheet();
+        act({type:'FX_DETACH', player:p, mzIndex:idx, materialIndex:i, materialUid:m.uid, reason:'効果コスト'});
+      }
+    }))
+  );
 }
 
 /* 場のカードの効果を自動処理。セット状態なら表にしてから発動 */
@@ -64108,41 +64253,84 @@ function openDeveloperTestPresets(){
   veil.classList.add('on');
 }
 /* index.html(1103デッキビルダー) と同じ localStorage を読む。
-   保存形式: key "deck1103:<名前>" → {name, cards:[{n,q}], side:[{n,q}], date}
-   編集中デッキ: key "work1103:current" → 同形式 */
+   既存の保存データは移動・削除・上書きしない。DUEL側は複数schemaを読み取り専用で吸収する。 */
 const DECK_PREFIX = 'deck1103:';
 const WORK_KEY    = 'work1103:current';
+const DECK_COLLECTION_KEYS = ['deck1103:decks','deck1103:list','yg1103_decks','1103_decks','decks1103'];
 function LS(){ try{ return window.localStorage; }catch(e){ return null; } }
 
+function savedDeckCardsOf(d){
+  if(!d || typeof d!=='object') return null;
+  const cards = d.cards || d.main || d.mainDeck || d.deck;
+  return Array.isArray(cards) ? cards : null;
+}
+function normalizeSavedDeckEntry(d, fallbackName, sourceKey){
+  const cards = savedDeckCardsOf(d);
+  if(!cards || !cards.length) return null;
+  return {name:d.name||d.title||d.deckName||fallbackName||'無題', cards, side:d.side||d.sideDeck||[], date:d.date||d.updatedAt||d.updated||d.savedAt||'', sourceKey:sourceKey||''};
+}
+function pushSavedDeck(out, d, fallbackName, sourceKey){
+  const n = normalizeSavedDeckEntry(d, fallbackName, sourceKey);
+  if(!n) return;
+  const sig = `${n.sourceKey}|${n.name}|${JSON.stringify(n.cards).slice(0,500)}`;
+  if(out._seen && out._seen.has(sig)) return;
+  if(!out._seen) out._seen = new Set();
+  out._seen.add(sig);
+  out.push(n);
+}
+function collectSavedDecksFromValue(out, raw, sourceKey){
+  let v;
+  try{ v = JSON.parse(raw); }catch(e){ return; }
+  if(Array.isArray(v)){
+    v.forEach((d,i)=>pushSavedDeck(out,d,`保存デッキ${i+1}`,sourceKey));
+    return;
+  }
+  pushSavedDeck(out,v,'',sourceKey);
+  if(v && typeof v==='object'){
+    ['decks','saved','items','list'].forEach(k=>{
+      if(Array.isArray(v[k])) v[k].forEach((d,i)=>pushSavedDeck(out,d,`保存デッキ${i+1}`,sourceKey+':'+k));
+    });
+    Object.keys(v).forEach(k=>{
+      if(v[k] && typeof v[k]==='object' && savedDeckCardsOf(v[k])) pushSavedDeck(out,v[k],k,sourceKey+':'+k);
+    });
+  }
+}
 function listSavedDecks(){
   const out=[]; const ls=LS(); if(!ls) return out;
   try{
     for(let i=0;i<ls.length;i++){
       const k=ls.key(i);
       if(k && k.indexOf(DECK_PREFIX)===0){
-        try{ const d=JSON.parse(ls.getItem(k)); if(d && d.cards) out.push(d); }catch(e){}
+        collectSavedDecksFromValue(out, ls.getItem(k), k);
+      } else if(DECK_COLLECTION_KEYS.includes(k)){
+        collectSavedDecksFromValue(out, ls.getItem(k), k);
       }
     }
   }catch(e){}
+  delete out._seen;
   out.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   return out;
 }
 function getWorkDeck(){
   const ls=LS(); if(!ls) return null;
-  try{
-    const raw=ls.getItem(WORK_KEY); if(!raw) return null;
-    const d=JSON.parse(raw);
-    if(d && d.cards && d.cards.length) return d;
-  }catch(e){}
+  const keys = [WORK_KEY,'deck1103:work','yg1103_work_deck'];
+  for(const key of keys){
+    try{
+      const raw=ls.getItem(key); if(!raw) continue;
+      const d=normalizeSavedDeckEntry(JSON.parse(raw),'編集中のデッキ',key);
+      if(d) return d;
+    }catch(e){}
+  }
   return null;
 }
 /* {cards:[{n,q}]} → 山札配列。保存デッキは既に1103上限が適用済みなのでそのまま採用 */
 function cardsToDeck(cards){
   const main=[], ex=[], miss=[];
   (cards||[]).forEach(e=>{
-    const idx = findCardIndex(e.n);
-    if(idx<0){ miss.push(e.n); return; }
-    const q = e.q||1;
+    const nm = typeof e==='string' ? e : (e.n||e.name||e.cardName||e.card||'');
+    const idx = findCardIndex(nm);
+    if(idx<0){ miss.push(nm); return; }
+    const q = e.q||e.qty||e.count||1;
     for(let i=0;i<q;i++){
       const card={id:idx, face:"down", pos:"atk"};
       if(CARD_DB[idx].ex) ex.push(card); else main.push(card);
@@ -64152,9 +64340,16 @@ function cardsToDeck(cards){
 }
 
 let DECK_TAB = "saved";   // "saved" | "text"
-function openDeckLoad(tab){
+let DECK_LOAD_PLAYER = 0;
+function openDeckLoad(tab, player){
   if(tab) DECK_TAB = tab;
-  const p = gameState.activePlayer;
+  if(player===0 || player===1) DECK_LOAD_PLAYER = player;
+  const p = DECK_LOAD_PLAYER;
+  const selected = (gameState.players[p] && gameState.players[p].loadedDeckV32) || null;
+  const playerTabs = `<div class="dl-tabs" style="margin-top:6px">
+      <button class="dl-tab ${p===0?'on':''}" onclick="openDeckLoad('${DECK_TAB}',0)">Player1</button>
+      <button class="dl-tab ${p===1?'on':''}" onclick="openDeckLoad('${DECK_TAB}',1)">Player2</button>
+    </div>`;
   const tabs = `
     <div class="dl-tabs">
       <button class="dl-tab ${DECK_TAB==='saved'?'on':''}" onclick="openDeckLoad('saved')">保存したデッキ</button>
@@ -64191,35 +64386,36 @@ function openDeckLoad(tab){
         const dt = (d.date||'').slice(0,10);
         rows += `<div class="dl-item" onclick="loadSaved(${i})">
           <span class="dl-nm">${d.name||'無題'}</span>
-          <span class="dl-n">${n}枚<small>${dt}</small></span></div>`;
+          <span class="dl-n">${n}枚<small>${dt}${d.sourceKey?' / '+d.sourceKey:''}</small></span></div>`;
       });
       body = `<div class="dl-list">${rows}</div>
-        <div class="meta" style="margin-top:8px">タップすると読込→シャッフル→5枚ドローまで行います。</div>`;
+        <div class="meta" style="margin-top:8px">タップすると${nameOf(p)}の次回開始用デッキに選択します。現在の手札・山札・盤面は変更しません。</div>`;
     }
   } else {
     body = `
       <div class="meta">デッキビルダーの「テキスト」タブからコピーして貼り付け。見出し（■メインデッキ等）はそのままで大丈夫です。</div>
       <textarea id="deckText" placeholder="# 我がデッキ&#10;■メインデッキ (40)&#10;[モンスター]&#10;サイバー・ドラゴン x3&#10;E・HERO エアーマン x1&#10;[魔法]&#10;サイクロン x2"></textarea>
       <div class="row2" style="margin-top:10px">
-        <button class="act" onclick="loadDeck(${p}, true)">読込＆5枚ドロー</button>
-        <button class="act" onclick="loadDeck(${p}, false)">読込のみ</button>
+        <button class="act" onclick="loadDeck(${p}, false)">次回開始用に選択</button>
       </div>`;
   }
 
   sheet.innerHTML = `<div class="grip"></div>
-    <h3 style="margin-bottom:10px">${nameOf(p)} · デッキ読込</h3>
-    ${tabs}${body}
+    <h3 style="margin-bottom:10px">${nameOf(p)} · デッキ選択</h3>
+    ${tabs}${playerTabs}
+    <div class="meta" style="margin:8px 0">${selected&&selected.main&&selected.main.length?`現在の次回開始用：${selected.name||'無題'}（${selected.main.length}+${(selected.ex||[]).length}）`:'次回開始用デッキは未選択です'}</div>
+    ${body}
     <button class="close" onclick="closeSheet()">閉じる</button>`;
   veil.classList.add("on");
 }
 /* 保存デッキを読み込む。i==='__work__' なら編集中デッキ */
 function loadSaved(i){
-  const p = gameState.activePlayer;
+  const p = DECK_LOAD_PLAYER;
   const d = (i==='__work__') ? getWorkDeck() : listSavedDecks()[i];
   if(!d){ showToast("デッキが見つかりません"); return; }
   const parsed = cardsToDeck(d.cards);
   parsed.name = d.name||'';
-  applyLoad(p, parsed, true);
+  applyLoad(p, parsed, false);
 }
 /* 1103環境での同名カード上限（0/1/2/3枚）
    carddata.json の各カードが持つ lm キーを使う（lm:0=禁止,1=制限,2=準制限,無指定=無制限）。
@@ -64380,16 +64576,19 @@ function applyLoad(p, parsed, autostart){
     veil.classList.add("on");
     return;
   }
-  act({type:"LOAD_DECK", player:p, deck:main, ex, source:'user', name:parsed.name||''});
   if(autostart){
+    act({type:"LOAD_DECK", player:p, deck:main, ex, source:'user', name:parsed.name||''});
     act({type:"SHUFFLE", player:p});
     act({type:"DRAW", player:p, n:5, initial:true});
     // 1103は先攻ドローあり。ドローフェイズから始める。
     act({type:"SET_FIRST_PLAYER", player:p});   /* S03-U38 (C-S03-29): 直接書かず Action で記録する */
+  } else {
+    act({type:"SET_NEXT_DECK", player:p, deck:main, ex, source:'user', name:parsed.name||''});
   }
   closeSheet();
+  saveDuelSoon();
   const missN = [...new Set(miss)].length;
-  showToast(`メイン${main.length}枚 / EX${ex.length}枚 読込${missN?`（未一致${missN}種）`:""}`);
+  showToast(`${nameOf(p)}：メイン${main.length}枚 / EX${ex.length}枚 ${autostart?'読込':'選択'}${missN?`（未一致${missN}種）`:""}`);
   if(missN){
     setTimeout(()=>{
       sheet.innerHTML = `<div class="grip"></div>
@@ -64400,6 +64599,32 @@ function applyLoad(p, parsed, autostart){
       veil.classList.add("on");
     }, 60);
   }
+}
+
+function loadedDeckCardsV108(p){
+  const d = gameState && gameState.players[p] && gameState.players[p].loadedDeckV32;
+  if(!d || !(d.main||[]).length) return null;
+  const toCards = ids => (ids||[]).filter(id=>CARD_DB[id]).map(id=>({id, face:"down", pos:"atk"}));
+  return {name:d.name||'', main:toCards(d.main), ex:toCards(d.ex), source:d.source||'user'};
+}
+function startSelectedDeckDuel(firstPlayer){
+  const d0 = loadedDeckCardsV108(0), d1 = loadedDeckCardsV108(1);
+  if(!d0 || !d1){ showToast('Player1とPlayer2のデッキを選択してください'); return false; }
+  resetForTestDuel();
+  act({type:"LOAD_DECK", player:0, deck:d0.main, ex:d0.ex, source:d0.source, name:d0.name});
+  act({type:"SHUFFLE", player:0});
+  act({type:"DRAW", player:0, n:5, initial:true});
+  act({type:"LOAD_DECK", player:1, deck:d1.main, ex:d1.ex, source:d1.source, name:d1.name});
+  act({type:"SHUFFLE", player:1});
+  act({type:"DRAW", player:1, n:5, initial:true});
+  const fp = (firstPlayer===1) ? 1 : 0;
+  act({type:"SET_FIRST_PLAYER", player:fp});
+  logIt(gameState, `<b>${d0.name||'Player1デッキ'}</b> 対 <b>${d1.name||'Player2デッキ'}</b> / 先攻 ${nameOf(fp)}`);
+  render();
+  clearSavedDuel();
+  saveDuelSoon();
+  showToast('選択デッキで新規デュエル開始');
+  return true;
 }
 
 /* 軽量トースト */
@@ -64415,7 +64640,6 @@ function showToast(msg){
   clearTimeout(showToast._tm);
   showToast._tm = setTimeout(()=>t.classList.remove("on"), 2200);
 }
-
 /* =========================================================================
    System v3.5.1: Android / Acode 実機スモークテスト HOTFIX
    v3.5.0ではDEVELOPERモードのまま盤面操作していたため、カードタップが
