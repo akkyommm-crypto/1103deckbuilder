@@ -2667,7 +2667,6 @@ body.vm-deck-list #view-deck #deckScroll .candidate-row .art{
 .core-workspace{ display:contents; }
 
 /* Wide / landscape workspace */
-@media (min-width:700px) and (orientation:landscape){
   body.workspace-split{
     width:100%;
     max-width:1440px;
@@ -2816,7 +2815,6 @@ body.vm-deck-list #view-deck #deckScroll .candidate-row .art{
   body.workspace-split .nav-menu{
     bottom:calc(52px + env(safe-area-inset-bottom,0));
   }
-}
 
 /* Larger desktop: search gets a little more room for browsing, deck remains generous. */
 @media (min-width:1100px){
@@ -2974,7 +2972,7 @@ body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn[data-add]{
 }
 
 /* In a narrow split-pane, keep the same data but save a few pixels. */
-@media (min-width:700px) and (orientation:landscape) and (max-width:980px){
+@media (max-width:980px){
   body.workspace-split.vm-deck-info #view-deck #deckScroll .deck-card-row{
     gap:5px;
     padding-left:7px;
@@ -3530,7 +3528,7 @@ body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn[data-add]{
   <button class="nav-menu-item" data-goto="guide"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></span><span class="nmi-lb">1103環境ガイド</span></button>
   <a class="nav-menu-item" href="https://akkyommm-crypto.github.io/yglpcalculator/"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg></span><span class="nmi-lb">LPカウンター</span><span class="nmi-ext">↗</span></a>
 </div>
-<div class="version">v1103-builder-103.4-three-deck-views</div>
+<div class="version">v1103-builder-103.5-rotationfix</div>
 
 <script id="tagdata" type="application/json">["六武衆","代行者","ライトロード","HERO","BF","インフェルニティ","カラクリ","ガジェット","マシンナーズ","ドラグニティ","TG","ジャンク","シンクロン","氷結界","ワーム","ジェムナイト","ラヴァル","ガスタ","リチュア","ナチュル","ジュラック","フレムベル","ヴァイロン","インヴェルズ","ヴェルズ","スクラップ","ゼンマイ","暗黒界","魔轟神","墓守","剣闘獣","電池メン","おジャマ","宝玉獣","雲魔物","A・O・J","X－セイバー","極星","霞の谷","ハーピィ","アマゾネス","ガエル","コアキメイル","フォーチュンレディ","ディフォーマー","ジェネクス","エーリアン","青眼","真紅眼","ブラック・マジシャン","サイバー・ドラゴン","忍者","フォトン","汎用魔法","汎用罠","手札誘発","サイド定番"]</script>
 <script>
@@ -8899,9 +8897,20 @@ body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn[data-add]{
 
   // ---------- tabs ----------
   var currentView1103='deck';
-  var splitMq1103=window.matchMedia('(min-width:700px) and (orientation:landscape)');
+  function splitViewport1103(){
+    var de=document.documentElement;
+    var w=Math.max(de ? de.clientWidth : 0, window.innerWidth||0);
+    var h=Math.max(de ? de.clientHeight : 0, window.innerHeight||0);
+    if(!w || !h) return false;
+    // Desktop / wide tablet: always use the two-pane workspace.
+    if(w>=900) return true;
+    // Phone / small tablet: use it when the actual viewport is clearly landscape.
+    // 540px is deliberately lower than the old 700px breakpoint because Android
+    // display scaling can report surprisingly small CSS-pixel widths.
+    return w>=540 && w>h*1.12;
+  }
   function syncWorkspace1103(){
-    var split=!!(splitMq1103.matches && (currentView1103==='search' || currentView1103==='deck'));
+    var split=!!(splitViewport1103() && (currentView1103==='search' || currentView1103==='deck'));
     document.body.classList.toggle('workspace-split',split);
     if(split){
       // Both panes are live. Keep their content fresh, but do not alter the selected tab.
@@ -8939,8 +8948,21 @@ body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn[data-add]{
       }
     }
   }
-  if(splitMq1103.addEventListener) splitMq1103.addEventListener('change',onWorkspaceViewportChange1103);
-  else if(splitMq1103.addListener) splitMq1103.addListener(onWorkspaceViewportChange1103);
+  var workspaceResizeTimer1103=null;
+  function scheduleWorkspaceViewportSync1103(){
+    clearTimeout(workspaceResizeTimer1103);
+    workspaceResizeTimer1103=setTimeout(onWorkspaceViewportChange1103,80);
+  }
+  window.addEventListener('resize',scheduleWorkspaceViewportSync1103,{passive:true});
+  window.addEventListener('orientationchange',function(){
+    // Android browsers/PWA shells often update viewport dimensions a moment
+    // after orientationchange, so check immediately and once again shortly after.
+    scheduleWorkspaceViewportSync1103();
+    setTimeout(onWorkspaceViewportChange1103,260);
+  },{passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',scheduleWorkspaceViewportSync1103,{passive:true});
+  }
   document.querySelectorAll('.tab[data-view]').forEach(function(t){
     t.addEventListener('click', function(){ switchView(t.dataset.view); });
   });
