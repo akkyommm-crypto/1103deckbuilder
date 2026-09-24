@@ -3598,6 +3598,31 @@ body.workspace-split .nav-menu{
   }
 }
 
+
+/* ==================================================================
+   LANDSCAPE WORKBENCH v2.1
+   Hide MAIN / EX / SIDE counters in landscape to free horizontal space.
+   Portrait layout is unchanged.
+   ================================================================== */
+body.workspace-split #view-deck .compact-counts{
+  display:none !important;
+}
+body.workspace-split #view-deck .deck-head{
+  grid-template-columns:minmax(150px,1fr) 52px 56px 38px 36px 54px 36px !important;
+}
+body.workspace-split #view-deck .deck-save-btn{ grid-column:2 !important; }
+body.workspace-split #view-deck .deck-duel-launch{ grid-column:3 !important; }
+body.workspace-split #view-deck .deck-action-rail>.vm-toggle{ grid-column:4 !important; }
+body.workspace-split #view-deck .deck-more{ grid-column:5 !important; }
+body.workspace-split #view-deck .landscape-global-more{ grid-column:6 !important; }
+body.workspace-split #view-deck .landscape-pane-focus{ grid-column:7 !important; }
+
+@media (max-width:900px){
+  body.workspace-split #view-deck .deck-head{
+    grid-template-columns:minmax(120px,1fr) 46px 50px 34px 32px 47px 32px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4165,7 +4190,7 @@ body.workspace-split .nav-menu{
   <button class="nav-menu-item" data-goto="guide"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></span><span class="nmi-lb">1103環境ガイド</span></button>
   <a class="nav-menu-item" href="https://akkyommm-crypto.github.io/yglpcalculator/"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg></span><span class="nmi-lb">LPカウンター</span><span class="nmi-ext">↗</span></a>
 </div>
-<div class="version">v1103-builder-103.8-landscapeworkbench2</div>
+<div class="version">v1103-builder-103.9-landscape-clean</div>
 
 <script id="tagdata" type="application/json">["六武衆","代行者","ライトロード","HERO","BF","インフェルニティ","カラクリ","ガジェット","マシンナーズ","ドラグニティ","TG","ジャンク","シンクロン","氷結界","ワーム","ジェムナイト","ラヴァル","ガスタ","リチュア","ナチュル","ジュラック","フレムベル","ヴァイロン","インヴェルズ","ヴェルズ","スクラップ","ゼンマイ","暗黒界","魔轟神","墓守","剣闘獣","電池メン","おジャマ","宝玉獣","雲魔物","A・O・J","X－セイバー","極星","霞の谷","ハーピィ","アマゾネス","ガエル","コアキメイル","フォーチュンレディ","ディフォーマー","ジェネクス","エーリアン","青眼","真紅眼","ブラック・マジシャン","サイバー・ドラゴン","忍者","フォトン","汎用魔法","汎用罠","手札誘発","サイド定番"]</script>
 <script>
