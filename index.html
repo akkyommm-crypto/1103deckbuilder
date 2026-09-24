@@ -1990,77 +1990,77 @@ body::after{
 /* ==================================================================
    GALLERY GRID — search / recent  (default view)
    ================================================================== */
-body:not(.vm-list) #cardScroll,
-body:not(.vm-list) #recentScroll{
+body:not(.vm-search-list) #cardScroll,
+body:not(.vm-search-list) #recentScroll{
   display:grid; grid-template-columns:repeat(auto-fill, minmax(104px, 1fr));
   gap:18px 11px; align-content:start; padding:14px 16px 36px;
 }
-body:not(.vm-list) #cardScroll > :not(.card-row),
-body:not(.vm-list) #recentScroll > :not(.card-row){ grid-column:1/-1; }
-body:not(.vm-list) .card-row{
+body:not(.vm-search-list) #cardScroll > :not(.card-row),
+body:not(.vm-search-list) #recentScroll > :not(.card-row){ grid-column:1/-1; }
+body:not(.vm-search-list) .card-row{
   display:grid; grid-template-columns:1fr 1fr; grid-template-rows:auto 1fr;
   padding:0; margin:0; gap:0; border:none; border-radius:0; background:none; box-shadow:none;
   overflow:visible; isolation:auto; align-items:stretch;
 }
-body:not(.vm-list) .card-row::before,
-body:not(.vm-list) .card-row::after{ display:none; }
-body:not(.vm-list) .card-row:active{ transform:none; }
-body:not(.vm-list) .card-row .art{
+body:not(.vm-search-list) .card-row::before,
+body:not(.vm-search-list) .card-row::after{ display:none; }
+body:not(.vm-search-list) .card-row:active{ transform:none; }
+body:not(.vm-search-list) .card-row .art{
   grid-column:1/-1; grid-row:1; width:100%; border-radius:6px; align-self:start;
   transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
   transition:transform .3s var(--ease), box-shadow .3s;
   box-shadow:0 0 0 1px color-mix(in srgb, var(--fc) 35%, rgba(216,180,95,.3)), 0 10px 24px rgba(0,0,0,.7);
 }
-body:not(.vm-list) .card-row .art-fb-n{ font-size:11.5px; letter-spacing:.1em; }
-body:not(.vm-list) .card-row .art-fb{ inset:5px; }
+body:not(.vm-search-list) .card-row .art-fb-n{ font-size:11.5px; letter-spacing:.1em; }
+body:not(.vm-search-list) .card-row .art-fb{ inset:5px; }
 @media (hover:hover){
-  body:not(.vm-list) .card-row:hover .art{
+  body:not(.vm-search-list) .card-row:hover .art{
     transform:perspective(700px) translateY(-5px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
     box-shadow:0 0 0 1px var(--gold-hi), 0 18px 34px rgba(0,0,0,.8), 0 0 28px rgba(243,217,148,.28);
   }
-  body:not(.vm-list) .card-row:hover .art-sheen{ opacity:1; }
+  body:not(.vm-search-list) .card-row:hover .art-sheen{ opacity:1; }
 }
-body:not(.vm-list) .card-row:active .art{ transform:scale(.97); }
-body:not(.vm-list) .card-row:has(.in-deck-badge) .art{
+body:not(.vm-search-list) .card-row:active .art{ transform:scale(.97); }
+body:not(.vm-search-list) .card-row:has(.in-deck-badge) .art{
   box-shadow:0 0 0 1.5px var(--gold-hi), 0 0 0 4px rgba(0,0,0,.9), 0 0 0 5px rgba(243,217,148,.35), 0 10px 26px rgba(0,0,0,.7), 0 0 26px rgba(243,217,148,.25);
 }
-body:not(.vm-list) .card-row .card-main{ grid-column:1/-1; grid-row:2; padding:9px 1px 0; min-width:0; }
-body:not(.vm-list) .card-row .card-name{
+body:not(.vm-search-list) .card-row .card-main{ grid-column:1/-1; grid-row:2; padding:9px 1px 0; min-width:0; }
+body:not(.vm-search-list) .card-row .card-name{
   font-size:11.5px; line-height:1.4; letter-spacing:.02em;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
 }
-body:not(.vm-list) .card-row .card-meta{
+body:not(.vm-search-list) .card-row .card-meta{
   flex-wrap:nowrap; overflow:hidden; margin-top:4px; white-space:nowrap;
   -webkit-mask-image:linear-gradient(90deg,#000 80%,transparent); mask-image:linear-gradient(90deg,#000 80%,transparent);
 }
-body:not(.vm-list) .card-row .mp{ font-size:9.5px; }
-body:not(.vm-list) .card-row .mp + .mp::before{ margin:0 4px 2px 2px; }
-body:not(.vm-list) .card-row .search-reason-row{ flex-wrap:nowrap; overflow:hidden; margin-top:5px; }
-body:not(.vm-list) .card-row .rm-mark,
-body:not(.vm-list) .card-row .add-mark{
+body:not(.vm-search-list) .card-row .mp{ font-size:9.5px; }
+body:not(.vm-search-list) .card-row .mp + .mp::before{ margin:0 4px 2px 2px; }
+body:not(.vm-search-list) .card-row .search-reason-row{ flex-wrap:nowrap; overflow:hidden; margin-top:5px; }
+body:not(.vm-search-list) .card-row .rm-mark,
+body:not(.vm-search-list) .card-row .add-mark{
   grid-row:1; align-self:end; z-index:2; width:32px; height:32px; margin:0 6px 6px; font-size:16px;
   background:rgba(6,6,6,.72); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
 }
-body:not(.vm-list) .card-row .rm-mark{ grid-column:1; justify-self:start; box-shadow:inset 0 0 0 1px rgba(255,255,255,.22); color:var(--ink); }
-body:not(.vm-list) .card-row .add-mark{ grid-column:2; justify-self:end; box-shadow:inset 0 0 0 1px var(--gold), 0 0 14px rgba(0,0,0,.6); }
-body:not(.vm-list) .card-row .add-mark:hover{ background:linear-gradient(180deg,#f7e2a2,#c99f45); color:#120c02; }
-body:not(.vm-list) .card-row .rm-mark.disabled{ visibility:hidden; }
-body:not(.vm-list) .card-row .in-deck-badge{
+body:not(.vm-search-list) .card-row .rm-mark{ grid-column:1; justify-self:start; box-shadow:inset 0 0 0 1px rgba(255,255,255,.22); color:var(--ink); }
+body:not(.vm-search-list) .card-row .add-mark{ grid-column:2; justify-self:end; box-shadow:inset 0 0 0 1px var(--gold), 0 0 14px rgba(0,0,0,.6); }
+body:not(.vm-search-list) .card-row .add-mark:hover{ background:linear-gradient(180deg,#f7e2a2,#c99f45); color:#120c02; }
+body:not(.vm-search-list) .card-row .rm-mark.disabled{ visibility:hidden; }
+body:not(.vm-search-list) .card-row .in-deck-badge{
   grid-column:1; grid-row:1; align-self:start; justify-self:start; z-index:3;
   margin:-8px 0 0 -8px; min-width:28px; height:28px; padding:0 6px; font-size:13px;
   box-shadow:0 0 0 2px #050505, 0 0 16px rgba(243,217,148,.55);
   animation:coin .45s var(--ease);
 }
 @keyframes coin{ from{ transform:scale(0) rotate(-120deg); } to{ transform:none; } }
-body:not(.vm-list) .card-row .limit-tag{
+body:not(.vm-search-list) .card-row .limit-tag{
   grid-column:2; grid-row:1; align-self:start; justify-self:end; z-index:2;
   margin:7px 0 0; padding:3px 7px 3px 8px; border:none; border-radius:3px 0 0 3px; font-size:9.5px; color:#fff;
   box-shadow:0 4px 10px rgba(0,0,0,.5);
 }
-body:not(.vm-list) .card-row .limit-tag.l0{ background:linear-gradient(180deg,#f06f63,#c3372c); }
-body:not(.vm-list) .card-row .limit-tag.l1{ background:linear-gradient(180deg,#f2b456,#c7831f); color:#1b1003; }
-body:not(.vm-list) .card-row .limit-tag.l2{ background:linear-gradient(180deg,#7fb4f6,#3f79c9); }
-body:not(.vm-list) .card-row .era-badge{
+body:not(.vm-search-list) .card-row .limit-tag.l0{ background:linear-gradient(180deg,#f06f63,#c3372c); }
+body:not(.vm-search-list) .card-row .limit-tag.l1{ background:linear-gradient(180deg,#f2b456,#c7831f); color:#1b1003; }
+body:not(.vm-search-list) .card-row .limit-tag.l2{ background:linear-gradient(180deg,#7fb4f6,#3f79c9); }
+body:not(.vm-search-list) .card-row .era-badge{
   grid-column:1/-1; grid-row:1; align-self:end; justify-self:center; z-index:2;
   margin-bottom:12px; padding:2px 5px; font-size:9px; background:rgba(6,6,6,.75); letter-spacing:.06em;
 }
@@ -2123,29 +2123,29 @@ body:not(.vm-list) .card-row .era-badge{
 .deck-group-label::before{ width:6px; height:6px; }
 .deck-sub-label{ margin:6px 0 2px; font-size:10px; letter-spacing:.3em; color:var(--gold); }
 
-body:not(.vm-list) #deckScroll{
+body:not(.vm-deck-list):not(.vm-deck-info) #deckScroll{
   display:grid; grid-template-columns:repeat(auto-fill, minmax(76px, 1fr));
   gap:16px 9px; align-content:start; padding:6px 16px 36px;
 }
-body:not(.vm-list) #deckScroll > :not(.deck-card-row){ grid-column:1/-1; }
-body:not(.vm-list) #deckScroll > .deck-sub-label{ margin-top:4px; }
-body:not(.vm-list) .deck-card-row{
+body:not(.vm-deck-list):not(.vm-deck-info) #deckScroll > :not(.deck-card-row){ grid-column:1/-1; }
+body:not(.vm-deck-list):not(.vm-deck-info) #deckScroll > .deck-sub-label{ margin-top:4px; }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row{
   display:grid; grid-template-columns:1fr 1fr; grid-template-rows:auto 1fr auto;
   padding:0; margin:0; gap:0; border:none; background:none; border-radius:0; align-items:stretch;
 }
-body:not(.vm-list) .deck-card-row::before{ display:none; }
-body:not(.vm-list) .deck-card-row .art{
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row::before{ display:none; }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .art{
   grid-column:1/-1; grid-row:1; width:100%; border-radius:5px; align-self:start;
   box-shadow:0 0 0 1px color-mix(in srgb, var(--fc) 35%, rgba(216,180,95,.3)), 0 8px 20px rgba(0,0,0,.7);
   transition:transform .25s var(--ease), box-shadow .25s;
 }
-body:not(.vm-list) .deck-card-row .art-fb-n{ font-size:9.5px; letter-spacing:.08em; }
-body:not(.vm-list) .deck-card-row .art-fb{ inset:5px; }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .art-fb-n{ font-size:9.5px; letter-spacing:.08em; }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .art-fb{ inset:5px; }
 @media (hover:hover){
-  body:not(.vm-list) .deck-card-row:hover .art{ transform:translateY(-4px); box-shadow:0 0 0 1px var(--gold-hi), 0 14px 30px rgba(0,0,0,.8), 0 0 22px rgba(243,217,148,.25); }
-  body:not(.vm-list) .deck-card-row:hover .art-sheen{ opacity:1; }
+  body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row:hover .art{ transform:translateY(-4px); box-shadow:0 0 0 1px var(--gold-hi), 0 14px 30px rgba(0,0,0,.8), 0 0 22px rgba(243,217,148,.25); }
+  body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row:hover .art-sheen{ opacity:1; }
 }
-body:not(.vm-list) .deck-card-row .dq{
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .dq{
   grid-column:1; grid-row:1; align-self:start; justify-self:start; z-index:2;
   margin:-7px 0 0 -7px; width:26px; height:26px; min-width:0; border-radius:50%;
   display:flex; align-items:center; justify-content:center; font-size:12.5px;
@@ -2153,24 +2153,24 @@ body:not(.vm-list) .deck-card-row .dq{
   color:#130c02; -webkit-text-fill-color:#130c02;
   box-shadow:0 0 0 2px #050505, 0 0 16px rgba(243,217,148,.5);
 }
-body:not(.vm-list) .deck-card-row .limit-tag{
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .limit-tag{
   grid-column:2; grid-row:1; align-self:start; justify-self:end; z-index:2; margin:7px 0 0;
   padding:3px 6px 3px 7px; border:none; border-radius:3px 0 0 3px; font-size:9px; color:#fff;
 }
-body:not(.vm-list) .deck-card-row .limit-tag.l0{ background:linear-gradient(180deg,#f06f63,#c3372c); }
-body:not(.vm-list) .deck-card-row .limit-tag.l1{ background:linear-gradient(180deg,#f2b456,#c7831f); color:#1b1003; }
-body:not(.vm-list) .deck-card-row .limit-tag.l2{ background:linear-gradient(180deg,#7fb4f6,#3f79c9); }
-body:not(.vm-list) .deck-card-row .card-main{ grid-column:1/-1; grid-row:2; padding:7px 1px 0; }
-body:not(.vm-list) .deck-card-row .card-name{
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .limit-tag.l0{ background:linear-gradient(180deg,#f06f63,#c3372c); }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .limit-tag.l1{ background:linear-gradient(180deg,#f2b456,#c7831f); color:#1b1003; }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .limit-tag.l2{ background:linear-gradient(180deg,#7fb4f6,#3f79c9); }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .card-main{ grid-column:1/-1; grid-row:2; padding:7px 1px 0; }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .card-name{
   font-size:10.5px !important; line-height:1.38;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
 }
-body:not(.vm-list) .deck-card-row .deck-row-meta{ display:none; }
-body:not(.vm-list) .deck-card-row .dq-btns{
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .deck-row-meta{ display:none; }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .dq-btns{
   grid-column:1/-1; grid-row:3; display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:6px; align-self:end;
 }
-body:not(.vm-list) .deck-card-row .dqbtn{ width:auto; height:25px; border-radius:6px; font-size:12px; background:transparent; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
-body:not(.vm-list) .deck-card-row .dqbtn[data-add]{ color:var(--gold-hi); box-shadow:inset 0 0 0 1px rgba(216,180,95,.4); }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .dqbtn{ width:auto; height:25px; border-radius:6px; font-size:12px; background:transparent; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .dqbtn[data-add]{ color:var(--gold-hi); box-shadow:inset 0 0 0 1px rgba(216,180,95,.4); }
 
 .candidate-row .art{ width:38px; margin-top:1px; }
 
@@ -2419,10 +2419,10 @@ body:not(.vm-list) .deck-card-row .dqbtn[data-add]{ color:var(--gold-hi); box-sh
 /* ==================================================================
    LIST MODE niceties
    ================================================================== */
-body.vm-list .card-row .art{ width:40px; }
-body.vm-list .deck-card-row .art{ width:32px; }
+body.vm-search-list .card-row .art{ width:40px; }
+body.vm-deck-list .deck-card-row .art{ width:32px; }
 
-@media (min-width:760px){ body{ max-width:900px; } body:not(.vm-list) #cardScroll, body:not(.vm-list) #recentScroll{ grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:22px 16px; padding:18px 22px 40px; } body:not(.vm-list) #deckScroll{ grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); } .tabs{ max-width:520px; margin-left:auto; margin-right:auto; width:calc(100% - 28px); } }
+@media (min-width:760px){ body{ max-width:900px; } body:not(.vm-search-list) #cardScroll, body:not(.vm-search-list) #recentScroll{ grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:22px 16px; padding:18px 22px 40px; } body:not(.vm-deck-list):not(.vm-deck-info) #deckScroll{ grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); } .tabs{ max-width:520px; margin-left:auto; margin-right:auto; width:calc(100% - 28px); } }
 
 /* ##################################################################
    ANGULAR — hard edges everywhere; only card art keeps a card's corner
@@ -2431,8 +2431,8 @@ body.vm-list .deck-card-row .art{ width:32px; }
 .art, .md-hero-card, .hand-card-img, .solo-card, .ft-pick-thumb, .solo-list-item .thumb, .sthumb, .modal-card-img img{ border-radius:3px !important; }
 /* round things become squares / diamonds */
 .tab-badge, .in-deck-badge, .fcount, .ft-pick-count{ clip-path:none; }
-body:not(.vm-list) .card-row .in-deck-badge,
-body:not(.vm-list) .deck-card-row .dq{
+body:not(.vm-search-list) .card-row .in-deck-badge,
+body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row .dq{
   clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
   width:32px; height:32px; min-width:32px; padding:0; margin:-10px 0 0 -10px; box-shadow:none;
   filter:drop-shadow(0 0 6px rgba(243,217,148,.6));
@@ -2466,7 +2466,7 @@ body:not(.vm-list) .deck-card-row .dq{
 .card-row, .deck-card-row, .saved-row, .tny-row, .shop-row, .arch-item, .guide-card, .ft-group, .data-panel, .candidate-row, .nav-menu-item{
   clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
 }
-body:not(.vm-list) .card-row, body:not(.vm-list) .deck-card-row{ clip-path:none; }
+body:not(.vm-search-list) .card-row, body:not(.vm-deck-list):not(.vm-deck-info) .deck-card-row{ clip-path:none; }
 /* small round controls → squares */
 .add-mark, .rm-mark{ width:32px; height:32px; }
 .modal-x{ width:34px; height:34px; }
@@ -2577,49 +2577,49 @@ body:not(.vm-list) .card-row, body:not(.vm-list) .deck-card-row{ clip-path:none;
 }
 
 /* ---- deck LIST mode: text only, maximum information density ---- */
-body.vm-list #view-deck #deckScroll{
+body.vm-deck-list #view-deck #deckScroll{
   padding:3px 8px 28px;
 }
-body.vm-list #view-deck #deckScroll .deck-group-label{
+body.vm-deck-list #view-deck #deckScroll .deck-group-label{
   margin:10px 1px 4px;
   font-size:13px;
   letter-spacing:.08em;
   gap:7px;
 }
-body.vm-list #view-deck #deckScroll .deck-group-label::before{
+body.vm-deck-list #view-deck #deckScroll .deck-group-label::before{
   width:5px;
   height:5px;
 }
-body.vm-list #view-deck #deckScroll .deck-sub-label{
+body.vm-deck-list #view-deck #deckScroll .deck-sub-label{
   margin:5px 0 2px 2px;
   font-size:9px;
   letter-spacing:.18em;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row{
   min-height:30px;
   gap:5px;
   margin-bottom:2px;
   padding:3px 5px 3px 9px;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row::before{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row::before{
   top:5px;
   bottom:5px;
   width:1px;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .art{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .art{
   display:none !important;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .dq{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .dq{
   min-width:16px;
   width:16px;
   font-size:13px;
   line-height:1;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .card-main{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .card-main{
   flex:1 1 auto;
   min-width:0;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .card-name{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .card-name{
   display:block;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -2627,34 +2627,34 @@ body.vm-list #view-deck #deckScroll .deck-card-row .card-name{
   font-size:12px !important;
   line-height:1.2;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .deck-row-meta{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .deck-row-meta{
   display:none !important;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .limit-tag{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .limit-tag{
   flex:0 0 auto;
   padding:2px 4px;
   font-size:8px;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .dq-btns{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .dq-btns{
   flex:0 0 auto;
   gap:2px;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .dqbtn{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .dqbtn{
   width:24px;
   height:24px;
   font-size:12px;
   padding:0;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .dqbtn.candidate{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .dqbtn.candidate{
   font-size:11px;
 }
-body.vm-list #view-deck #deckScroll .deck-card-row .dqbtn.move{
+body.vm-deck-list #view-deck #deckScroll .deck-card-row .dqbtn.move{
   font-size:11px;
 }
 
 /* Candidate box belongs to the deck workspace too: remove thumbnails in list mode,
    while keeping its comments/actions usable. */
-body.vm-list #view-deck #deckScroll .candidate-row .art{
+body.vm-deck-list #view-deck #deckScroll .candidate-row .art{
   display:none !important;
 }
 
@@ -2828,14 +2828,14 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
   }
 
   /* Search gallery can use the additional desktop width. */
-  body.workspace-split:not(.vm-list) #view-search #cardScroll{
+  body.workspace-split:not(.vm-search-list) #view-search #cardScroll{
     grid-template-columns:repeat(auto-fill,minmax(122px,1fr));
     gap:18px 13px;
   }
 
   /* Deck image mode stays visually identical in card design;
      only more columns are allowed when the pane is wide enough. */
-  body.workspace-split:not(.vm-list) #view-deck #deckScroll{
+  body.workspace-split:not(.vm-deck-list):not(.vm-deck-info) #view-deck #deckScroll{
     grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
   }
 }
@@ -2845,6 +2845,154 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
 @media (min-width:900px) and (orientation:portrait){
   body{
     max-width:760px;
+  }
+}
+
+
+/* ==================================================================
+   DECK VIEW MODE 3 — COMPACT INFO LIST
+   Small art + level / attribute / race / ATK DEF / tuner information.
+   ================================================================== */
+body.vm-deck-info #view-deck #deckScroll{
+  display:block;
+  padding:4px 8px 28px;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-group-label{
+  margin:11px 1px 5px;
+  font-size:13px;
+  letter-spacing:.09em;
+  gap:7px;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-group-label::before{
+  width:5px;
+  height:5px;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-sub-label{
+  margin:6px 0 3px 2px;
+  font-size:9px;
+  letter-spacing:.18em;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row{
+  display:flex;
+  align-items:center;
+  min-height:55px;
+  gap:7px;
+  margin-bottom:3px;
+  padding:4px 5px 4px 9px;
+  border:1px solid rgba(255,255,255,.055);
+  background:
+    linear-gradient(100deg,color-mix(in srgb,var(--fc) 8%,transparent),transparent 38%),
+    rgba(255,255,255,.022);
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row::before{
+  top:6px;
+  bottom:6px;
+  width:1px;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row .art{
+  display:block !important;
+  order:0;
+  width:34px;
+  flex:0 0 34px;
+  margin:0;
+  border-radius:2px !important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--fc) 34%,rgba(216,180,95,.25)),0 4px 10px rgba(0,0,0,.55);
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row .dq{
+  order:-1;
+  min-width:18px;
+  width:18px;
+  font-size:13px;
+  line-height:1;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row .card-main{
+  flex:1 1 auto;
+  min-width:0;
+  padding:0;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row .card-name{
+  display:block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:12.5px !important;
+  line-height:1.25;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row .deck-row-meta{
+  display:flex !important;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:4px 6px;
+  margin-top:3px;
+  font-size:9.5px;
+  line-height:1.2;
+  color:var(--text-dim);
+  letter-spacing:.015em;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-meta-stats{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-tuner-badge{
+  display:inline-flex;
+  align-items:center;
+  min-height:14px;
+  padding:1px 4px 0;
+  border:1px solid rgba(243,217,148,.48);
+  color:var(--gold-hi);
+  font-family:'Cinzel',serif;
+  font-size:7px;
+  line-height:1;
+  letter-spacing:.10em;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row .limit-tag{
+  flex:0 0 auto;
+  padding:2px 4px;
+  font-size:8px;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row .dq-btns{
+  flex:0 0 auto;
+  display:grid;
+  grid-template-columns:repeat(2,23px);
+  gap:2px;
+  margin:0;
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn{
+  width:23px;
+  height:23px;
+  min-width:23px;
+  padding:0;
+  font-size:11px;
+  background:transparent;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.075);
+}
+body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn[data-add]{
+  color:var(--gold-hi);
+  box-shadow:inset 0 0 0 1px rgba(216,180,95,.32);
+}
+
+/* In a narrow split-pane, keep the same data but save a few pixels. */
+@media (min-width:700px) and (orientation:landscape) and (max-width:980px){
+  body.workspace-split.vm-deck-info #view-deck #deckScroll .deck-card-row{
+    gap:5px;
+    padding-left:7px;
+  }
+  body.workspace-split.vm-deck-info #view-deck #deckScroll .deck-card-row .art{
+    width:30px;
+    flex-basis:30px;
+  }
+  body.workspace-split.vm-deck-info #view-deck #deckScroll .deck-card-row .deck-row-meta{
+    font-size:8.8px;
+  }
+  body.workspace-split.vm-deck-info #view-deck #deckScroll .deck-card-row .dq-btns{
+    grid-template-columns:repeat(2,21px);
+  }
+  body.workspace-split.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn{
+    width:21px;
+    height:21px;
+    min-width:21px;
   }
 }
 
@@ -3382,7 +3530,7 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
   <button class="nav-menu-item" data-goto="guide"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></span><span class="nmi-lb">1103環境ガイド</span></button>
   <a class="nav-menu-item" href="https://akkyommm-crypto.github.io/yglpcalculator/"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg></span><span class="nmi-lb">LPカウンター</span><span class="nmi-ext">↗</span></a>
 </div>
-<div class="version">v1103-builder-103.3-responsive-split</div>
+<div class="version">v1103-builder-103.4-three-deck-views</div>
 
 <script id="tagdata" type="application/json">["六武衆","代行者","ライトロード","HERO","BF","インフェルニティ","カラクリ","ガジェット","マシンナーズ","ドラグニティ","TG","ジャンク","シンクロン","氷結界","ワーム","ジェムナイト","ラヴァル","ガスタ","リチュア","ナチュル","ジュラック","フレムベル","ヴァイロン","インヴェルズ","ヴェルズ","スクラップ","ゼンマイ","暗黒界","魔轟神","墓守","剣闘獣","電池メン","おジャマ","宝玉獣","雲魔物","A・O・J","X－セイバー","極星","霞の谷","ハーピィ","アマゾネス","ガエル","コアキメイル","フォーチュンレディ","ディフォーマー","ジェネクス","エーリアン","青眼","真紅眼","ブラック・マジシャン","サイバー・ドラゴン","忍者","フォトン","汎用魔法","汎用罠","手札誘発","サイド定番"]</script>
 <script>
@@ -4561,9 +4709,10 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
     var meta='';
     if(c.k==='m'){
       var av=(c.atk===-2?'?':c.atk), dv=(c.def===-2?'?':c.def);
-      meta='<div class="deck-row-meta">★'+(c.lv||'-')+'　'+esc(c.at||'')+'　'+esc(c.ra||'')+'族　'+av+'/'+dv+'</div>';
+      var tuner=((c.st||[]).indexOf('チューナー')!==-1) ? '<span class="deck-tuner-badge">TUNER</span>' : '';
+      meta='<div class="deck-row-meta"><span class="deck-meta-stats">★'+(c.lv||'-')+'　'+esc(c.at||'')+'　'+esc(c.ra||'')+'族　'+av+'/'+dv+'</span>'+tuner+'</div>';
     } else if(c.sub){
-      meta='<div class="deck-row-meta">'+esc(c.sub)+'</div>';
+      meta='<div class="deck-row-meta"><span class="deck-meta-stats">'+esc(c.sub)+'</span></div>';
     }
     return '<div class="deck-card-row k-'+c.k+frameClass(c)+'" data-open="'+c._i+'">'+
       '<span class="dq">'+cnt+'</span>'+
@@ -9316,31 +9465,78 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
     }
   }
 
-  // ---------- gallery / list toggle ----------
+  // ---------- view mode toggles ----------
+  // Search: gallery <-> list
+  // Deck: gallery -> compact info -> text list -> gallery
   var ICON_GRID='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="6.5" height="7.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="7.5" rx="1"/><rect x="4" y="13" width="6.5" height="7.5" rx="1"/><rect x="13.5" y="13" width="6.5" height="7.5" rx="1"/></svg>';
-  var ICON_LIST='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="4.5" width="4" height="5.5" rx=".8"/><rect x="4" y="14" width="4" height="5.5" rx=".8"/><path d="M11 6.5h9M11 9h6M11 16h9M11 18.5h6"/></svg>';
-  var mode='grid'; try{ mode=(store&&store.getItem('ui1103:view'))||'grid'; }catch(e){}
-  var toggles=[];
+  var ICON_LIST='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 6h14M5 12h14M5 18h14"/></svg>';
+  var ICON_INFO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3.5" y="4" width="5.5" height="8" rx=".7"/><path d="M12 5.5h8M12 9h6"/><rect x="3.5" y="14" width="5.5" height="6" rx=".7"/><path d="M12 15.5h8M12 18.5h5"/></svg>';
+
+  var legacyMode='grid';
+  try{ legacyMode=(store&&store.getItem('ui1103:view'))||'grid'; }catch(e){}
+  var searchMode='grid', deckMode='grid';
+  try{
+    searchMode=(store&&store.getItem('ui1103:searchView')) || (legacyMode==='list'?'list':'grid');
+    deckMode=(store&&store.getItem('ui1103:deckView')) || (legacyMode==='list'?'list':'grid');
+  }catch(e){}
+  if(searchMode!=='list') searchMode='grid';
+  if(['grid','info','list'].indexOf(deckMode)<0) deckMode='grid';
+
+  var searchToggle=null, deckToggle=null;
+
   function applyMode(){
-    document.body.classList.toggle('vm-list', mode==='list');
-    toggles.forEach(function(b){
-      b.innerHTML = mode==='grid' ? ICON_LIST : ICON_GRID;
-      var lb = mode==='grid' ? 'リスト表示に切替' : 'ギャラリー表示に切替'; b.title=lb; b.setAttribute('aria-label', lb);
-    });
+    document.body.classList.toggle('vm-search-list', searchMode==='list');
+    document.body.classList.toggle('vm-deck-list', deckMode==='list');
+    document.body.classList.toggle('vm-deck-info', deckMode==='info');
+
+    if(searchToggle){
+      var searchNext=searchMode==='grid'?'list':'grid';
+      searchToggle.innerHTML=searchNext==='list'?ICON_LIST:ICON_GRID;
+      var slb=searchNext==='list'?'検索をリスト表示に切替':'検索を画像表示に切替';
+      searchToggle.title=slb;
+      searchToggle.setAttribute('aria-label',slb);
+    }
+
+    if(deckToggle){
+      var deckNext=deckMode==='grid'?'info':(deckMode==='info'?'list':'grid');
+      deckToggle.innerHTML=deckNext==='info'?ICON_INFO:(deckNext==='list'?ICON_LIST:ICON_GRID);
+      var dlb=deckNext==='info'?'デッキを情報付きリストに切替':
+              (deckNext==='list'?'デッキを文字リストに切替':'デッキを画像表示に切替');
+      deckToggle.title=dlb;
+      deckToggle.setAttribute('aria-label',dlb);
+    }
   }
-  function makeToggle(extra){
-    var b=document.createElement('button'); b.type='button'; b.className='vm-toggle'+(extra||'');
-    b.addEventListener('click', function(){
-      mode = mode==='grid' ? 'list' : 'grid';
-      try{ store&&store.setItem('ui1103:view', mode); }catch(e){}
+
+  function makeSearchToggle(){
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='vm-toggle';
+    b.addEventListener('click',function(){
+      searchMode=searchMode==='grid'?'list':'grid';
+      try{ store&&store.setItem('ui1103:searchView',searchMode); }catch(e){}
       applyMode();
     });
-    toggles.push(b); return b;
+    searchToggle=b;
+    return b;
   }
+
+  function makeDeckToggle(){
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='vm-toggle in-rail';
+    b.addEventListener('click',function(){
+      deckMode=deckMode==='grid'?'info':(deckMode==='info'?'list':'grid');
+      try{ store&&store.setItem('ui1103:deckView',deckMode); }catch(e){}
+      applyMode();
+    });
+    deckToggle=b;
+    return b;
+  }
+
   var ir=document.querySelector('#view-search .info-row'), ft=document.getElementById('filterToggle');
-  if(ir&&ft) ir.insertBefore(makeToggle(), ft);
+  if(ir&&ft) ir.insertBefore(makeSearchToggle(),ft);
   var rail=document.querySelector('.deck-action-rail'), dd=document.getElementById('ddManage');
-  if(rail&&dd) rail.insertBefore(makeToggle(' in-rail'), dd);
+  if(rail&&dd) rail.insertBefore(makeDeckToggle(),dd);
   applyMode();
 
   // ---------- pointer tilt + holo (fine pointers only) ----------
