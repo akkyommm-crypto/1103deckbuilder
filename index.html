@@ -2098,6 +2098,25 @@ body:not(.vm-list) .card-row .era-badge{
 .deck-action-rail{ border-radius:12px; border-color:rgba(255,255,255,.08); background:rgba(255,255,255,.025); }
 .deck-action-rail .vm-toggle{ border:none; border-radius:0; background:transparent; box-shadow:inset 1px 0 0 var(--line); width:44px; height:auto; min-height:40px; }
 
+.deck-duel-launch{
+  width:100%; min-height:42px; margin-top:10px; padding:0 14px;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  border:1px solid rgba(243,217,148,.42); border-radius:12px;
+  background:linear-gradient(180deg,rgba(216,180,95,.10),rgba(216,180,95,.035)),rgba(255,255,255,.018);
+  color:var(--gold-hi); box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  font-family:'Shippori Mincho',serif; font-size:13px; font-weight:800; letter-spacing:.08em;
+}
+.deck-duel-launch::before{
+  content:""; width:8px; height:8px; flex:0 0 8px;
+  transform:rotate(45deg); border:1px solid currentColor; box-shadow:0 0 10px rgba(243,217,148,.28);
+}
+.deck-duel-launch::after{
+  content:"DUEL"; margin-left:auto; font-family:'Cinzel',serif;
+  font-size:8px; letter-spacing:.26em; color:var(--gold); opacity:.78;
+}
+.deck-duel-launch:hover{ border-color:var(--gold-hi); background:rgba(216,180,95,.10); }
+.deck-duel-launch:active{ transform:translateY(1px); }
+
 .deck-group-label{
   font-size:17px; letter-spacing:.14em; margin:22px 0 12px; color:var(--ink);
 }
@@ -2549,6 +2568,7 @@ body:not(.vm-list) .card-row, body:not(.vm-list) .deck-card-row{ clip-path:none;
       </div>
       </div>
     </div>
+    <button class="btn ghost deck-duel-launch" id="duelLaunchBtn" type="button">このデッキでデュエルする</button>
     <div class="status-line" id="deckStatus"></div>
     <div class="deck-stats" id="deckStats" style="display:none;"></div>
     <div class="hand-sim" id="handSim" style="display:none;"></div>
@@ -7235,6 +7255,21 @@ body:not(.vm-list) .card-row, body:not(.vm-list) .deck-card-row{ clip-path:none;
     var sideCards=Object.keys(side).map(function(idx){return {n:CARDS[idx].n,q:side[idx]};});
     return {id:currentDeckId||makeDeckId(),name:deckNameInput.value.trim(),cards:cards,side:sideCards,candidates:serializeCandidates(),memo:currentDeckMemo||''};
   }
+  function launchDuelWithCurrentDeck(){
+    var rec=currentDeckRecord();
+    var mainCount=0;
+    (rec.cards||[]).forEach(function(e){
+      var idx=nameToIndex[e.n], c=(idx!==undefined?CARDS[idx]:null), q=parseInt(e.q,10)||0;
+      if(c && !isExtra(c)) mainCount+=q;
+    });
+    if(mainCount<=0){
+      showToast('メインデッキにカードを入れてください');
+      return;
+    }
+    persistWork();
+    try{ sessionStorage.setItem('duel1103:launchDeck',JSON.stringify(rec)); }catch(e){}
+    window.location.href='battle.html?from=builder';
+  }
   function saveCurrentDeck(){
     var name=deckNameInput.value.trim();
     if(!name){setDeckStatus('デッキ名を入力してください');return null;}
@@ -7247,6 +7282,7 @@ body:not(.vm-list) .card-row, body:not(.vm-list) .deck-card-row{ clip-path:none;
     return saved;
   }
   document.getElementById('saveDeckBtn').addEventListener('click',saveCurrentDeck);
+  document.getElementById('duelLaunchBtn').addEventListener('click',launchDuelWithCurrentDeck);
 
   function resetAsNewDeck(name){
     deck={};side={};candidates={};currentDeckMemo='';currentDeckId=makeDeckId();deckNameInput.value=name||'';
