@@ -2,7 +2,7 @@
   "name": "1103 デッキビルダー",
   "short_name": "1103",
   "description": "遊戯王1103環境のデッキビルダー",
-  "start_url": "./index.html",
+  "start_url": "./index.html?pwa=1103-recovery-v3",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
@@ -28,5 +28,5 @@
       "purpose": "maskable"
     }
   ],
-  "id": "./?app=1103-v2"
+  "id": "./?pwa=1103-recovery-v3"
 }
