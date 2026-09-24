@@ -2658,6 +2658,196 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
   display:none !important;
 }
 
+
+/* ==================================================================
+   RESPONSIVE SPLIT WORKSPACE
+   Portrait / narrow screens keep the existing one-pane UI.
+   Landscape phones, tablets and desktop show SEARCH + DECK together.
+   ================================================================== */
+.core-workspace{ display:contents; }
+
+/* Wide / landscape workspace */
+@media (min-width:700px) and (orientation:landscape){
+  body.workspace-split{
+    width:100%;
+    max-width:1440px;
+    margin:0 auto;
+  }
+
+  body.workspace-split .core-workspace{
+    flex:1 1 auto;
+    min-height:0;
+    display:grid;
+    grid-template-columns:minmax(0,1.12fr) minmax(340px,.88fr);
+    border-top:1px solid rgba(216,180,95,.14);
+    overflow:hidden;
+    background:#050505;
+  }
+
+  body.workspace-split #view-search,
+  body.workspace-split #view-deck{
+    display:flex !important;
+    min-width:0;
+    min-height:0;
+    overflow:hidden;
+    animation:none;
+  }
+
+  body.workspace-split #view-search{
+    border-right:1px solid rgba(216,180,95,.26);
+    box-shadow:12px 0 34px rgba(0,0,0,.26);
+    z-index:1;
+  }
+
+  /* The full deck is already visible at right, so the small search-page deck strip
+     is redundant in split mode and would only waste vertical space. */
+  body.workspace-split #view-search .deck-strip{
+    display:none !important;
+  }
+
+  /* Compact the top chrome in landscape so the card work area gets the height. */
+  body.workspace-split .app-header{
+    padding:5px 12px 6px;
+    padding-top:calc(5px + env(safe-area-inset-top,0));
+    gap:8px;
+  }
+  body.workspace-split .brand-mark{ width:24px; height:24px; }
+  body.workspace-split .brand-num{ font-size:19px; }
+  body.workspace-split .brand-word b{ font-size:8px; }
+  body.workspace-split .brand-word small{ display:none; }
+  body.workspace-split .app-sub{
+    max-width:none;
+    font-size:8px;
+    padding-left:8px;
+  }
+
+  /* Search pane: keep all existing functions, only reduce vertical padding. */
+  body.workspace-split #view-search .search-bar{
+    padding:7px 10px 5px;
+    gap:5px;
+  }
+  body.workspace-split #view-search .search-input{
+    min-height:34px;
+    padding-top:6px;
+    padding-bottom:6px;
+  }
+  body.workspace-split #view-search .filter-row{
+    min-height:29px;
+  }
+  body.workspace-split #view-search .fbtn{
+    min-height:28px;
+    padding-top:4px;
+    padding-bottom:4px;
+  }
+  body.workspace-split #view-search .info-row{
+    min-height:30px;
+  }
+  body.workspace-split #view-search .card-scroll{
+    padding:7px 9px 22px;
+  }
+
+  /* Deck pane: preserve the current compact header and give the list maximum height. */
+  body.workspace-split #view-deck .deck-head{
+    padding:5px 8px 5px;
+  }
+  body.workspace-split #view-deck .deck-name-row{
+    margin-bottom:3px;
+  }
+  body.workspace-split #view-deck .deck-name-shell{
+    padding-top:10px;
+  }
+  body.workspace-split #view-deck #deckNameInput.deck-name-input{
+    font-size:15px;
+    min-height:19px;
+  }
+  body.workspace-split #view-deck .deck-save-btn{
+    min-height:32px;
+  }
+  body.workspace-split #view-deck .deck-duel-launch{
+    min-height:29px;
+    margin-top:4px;
+  }
+  body.workspace-split #view-deck #deckScroll{
+    padding-top:4px;
+  }
+
+  /* Bottom dock becomes a slim desktop/landscape utility bar. */
+  body.workspace-split .tabs{
+    padding:3px 14px calc(3px + env(safe-area-inset-bottom,0));
+    min-height:42px;
+    align-items:center;
+  }
+  body.workspace-split .tab{
+    flex-direction:row;
+    justify-content:center;
+    gap:7px;
+    padding:4px 10px;
+  }
+  body.workspace-split .tab-ic{
+    width:22px !important;
+    height:22px !important;
+    margin:0 !important;
+    border:0 !important;
+    background:none !important;
+    box-shadow:none !important;
+    color:currentColor !important;
+  }
+  body.workspace-split .tab-ic svg{
+    width:18px !important;
+    height:18px !important;
+  }
+  body.workspace-split .tab-lb{
+    font-size:9px;
+    letter-spacing:.12em;
+  }
+  body.workspace-split .tab::after{
+    display:none !important;
+  }
+  body.workspace-split .tab.active{
+    background:rgba(216,180,95,.07);
+    box-shadow:inset 0 -1px 0 var(--gold-hi);
+  }
+  body.workspace-split .tab-badge{
+    position:static;
+    margin-left:2px;
+  }
+
+  /* Menus sit above the compact dock. */
+  body.workspace-split .nav-menu{
+    bottom:calc(52px + env(safe-area-inset-bottom,0));
+  }
+}
+
+/* Larger desktop: search gets a little more room for browsing, deck remains generous. */
+@media (min-width:1100px){
+  body.workspace-split{
+    max-width:1500px;
+  }
+  body.workspace-split .core-workspace{
+    grid-template-columns:minmax(0,1.28fr) minmax(410px,.72fr);
+  }
+
+  /* Search gallery can use the additional desktop width. */
+  body.workspace-split:not(.vm-list) #view-search #cardScroll{
+    grid-template-columns:repeat(auto-fill,minmax(122px,1fr));
+    gap:18px 13px;
+  }
+
+  /* Deck image mode stays visually identical in card design;
+     only more columns are allowed when the pane is wide enough. */
+  body.workspace-split:not(.vm-list) #view-deck #deckScroll{
+    grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+  }
+}
+
+/* Portrait tablet / desktop window: keep the proven single-pane flow,
+   but allow a wider centered canvas than the old phone-shaped 600px shell. */
+@media (min-width:900px) and (orientation:portrait){
+  body{
+    max-width:760px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2671,6 +2861,7 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
 </header>
 
 <!-- Search view -->
+<main class="core-workspace" id="coreWorkspace">
 <div class="view active" id="view-search">
   <div class="search-bar">
     <div class="search-row">
@@ -2754,6 +2945,8 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
   </div>
   <div class="card-scroll" id="deckScroll"></div>
 </div>
+
+</main>
 
 <!-- Meta decks view -->
 <div class="view" id="view-meta">
@@ -3189,7 +3382,7 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
   <button class="nav-menu-item" data-goto="guide"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></span><span class="nmi-lb">1103環境ガイド</span></button>
   <a class="nav-menu-item" href="https://akkyommm-crypto.github.io/yglpcalculator/"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg></span><span class="nmi-lb">LPカウンター</span><span class="nmi-ext">↗</span></a>
 </div>
-<div class="version">v1103-builder-103.2-compactdeck</div>
+<div class="version">v1103-builder-103.3-responsive-split</div>
 
 <script id="tagdata" type="application/json">["六武衆","代行者","ライトロード","HERO","BF","インフェルニティ","カラクリ","ガジェット","マシンナーズ","ドラグニティ","TG","ジャンク","シンクロン","氷結界","ワーム","ジェムナイト","ラヴァル","ガスタ","リチュア","ナチュル","ジュラック","フレムベル","ヴァイロン","インヴェルズ","ヴェルズ","スクラップ","ゼンマイ","暗黒界","魔轟神","墓守","剣闘獣","電池メン","おジャマ","宝玉獣","雲魔物","A・O・J","X－セイバー","極星","霞の谷","ハーピィ","アマゾネス","ガエル","コアキメイル","フォーチュンレディ","ディフォーマー","ジェネクス","エーリアン","青眼","真紅眼","ブラック・マジシャン","サイバー・ドラゴン","忍者","フォトン","汎用魔法","汎用罠","手札誘発","サイド定番"]</script>
 <script>
@@ -8556,7 +8749,19 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
   }
 
   // ---------- tabs ----------
+  var currentView1103='deck';
+  var splitMq1103=window.matchMedia('(min-width:700px) and (orientation:landscape)');
+  function syncWorkspace1103(){
+    var split=!!(splitMq1103.matches && (currentView1103==='search' || currentView1103==='deck'));
+    document.body.classList.toggle('workspace-split',split);
+    if(split){
+      // Both panes are live. Keep their content fresh, but do not alter the selected tab.
+      renderSearch();
+      renderDeck();
+    }
+  }
   function switchView(v){
+    currentView1103=v;
     document.querySelectorAll('.tab[data-view]').forEach(function(t){ t.classList.toggle('active', t.dataset.view===v); });
     var mb=document.getElementById('navMenuBtn');
     if(mb) mb.classList.toggle('active', v==='saved'||v==='recent'||v==='lists'||v==='data'||v==='guide'||v==='meta'||v==='tourney'||v==='firstturn'||v==='solo');
@@ -8571,7 +8776,22 @@ body.vm-list #view-deck #deckScroll .candidate-row .art{
     if(v==='firstturn') renderFirstTurn();
     if(v==='solo') renderSolo();
     if(v==='search') renderSearch();
+    syncWorkspace1103();
   }
+  function onWorkspaceViewportChange1103(){
+    var wasSplit=document.body.classList.contains('workspace-split');
+    syncWorkspace1103();
+    var isSplit=document.body.classList.contains('workspace-split');
+    if(wasSplit!==isSplit){
+      // Repaint once after crossing the breakpoint/orientation boundary.
+      if(currentView1103==='search' || currentView1103==='deck'){
+        renderSearch();
+        renderDeck();
+      }
+    }
+  }
+  if(splitMq1103.addEventListener) splitMq1103.addEventListener('change',onWorkspaceViewportChange1103);
+  else if(splitMq1103.addListener) splitMq1103.addListener(onWorkspaceViewportChange1103);
   document.querySelectorAll('.tab[data-view]').forEach(function(t){
     t.addEventListener('click', function(){ switchView(t.dataset.view); });
   });
