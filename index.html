@@ -2230,11 +2230,15 @@ body:not(.vm-list) .deck-card-row .dqbtn[data-add]{ color:var(--gold-hi); box-sh
 @keyframes holo{ from{ background-position:120% 0; } to{ background-position:-40% 0; } }
 .md-hero.noimg{ display:none; }
 
-/* Full-screen card viewer: tap the hero card, then tilt it with a finger/mouse. */
+/* Full-screen card viewer: lightweight 1-image hologram.
+   No permanent animation: GPU work happens only while the card is being moved / returning to center. */
 .card-viewer-back{
   position:fixed; inset:0; z-index:1200; display:none;
   align-items:center; justify-content:center; padding:calc(24px + env(safe-area-inset-top,0)) 18px calc(24px + env(safe-area-inset-bottom,0));
-  background:radial-gradient(circle at 50% 42%, rgba(216,180,95,.16), transparent 46%), rgba(2,2,3,.94);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(216,180,95,.16), transparent 46%),
+    radial-gradient(circle at 52% 55%, rgba(90,120,255,.08), transparent 42%),
+    rgba(2,2,3,.94);
   -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
   touch-action:none; overscroll-behavior:contain;
 }
@@ -2242,24 +2246,97 @@ body:not(.vm-list) .deck-card-row .dqbtn[data-add]{ color:var(--gold-hi); box-sh
 @keyframes viewerFade{ from{opacity:0} to{opacity:1} }
 .card-viewer-stage{
   width:min(92vw,520px); height:min(84dvh,760px); position:relative;
-  display:flex; align-items:center; justify-content:center; perspective:1100px;
+  display:flex; align-items:center; justify-content:center; perspective:1200px;
 }
 .card-viewer-card{
   position:relative; height:min(76dvh,680px); max-width:90vw; aspect-ratio:59/86;
-  overflow:hidden; background:#080808; cursor:grab; user-select:none; -webkit-user-select:none;
-  box-shadow:0 0 0 1px rgba(243,217,148,.9), 0 0 0 5px rgba(0,0,0,.75), 0 28px 80px rgba(0,0,0,.9), 0 0 90px rgba(243,217,148,.22);
-  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(var(--zoom,1));
-  transform-style:preserve-3d; will-change:transform;
-  transition:transform .38s cubic-bezier(.2,.8,.2,1), box-shadow .2s;
+  overflow:hidden; border-radius:14px; background:#080808; cursor:grab;
+  user-select:none; -webkit-user-select:none; transform-style:preserve-3d;
+  --rx:0deg; --ry:0deg; --mx:50%; --my:50%; --zoom:1;
+  --foilOpacity:.34; --glareOpacity:.28;
+  box-shadow:
+    0 0 0 1px rgba(243,217,148,.75),
+    0 0 0 5px rgba(0,0,0,.72),
+    0 28px 80px rgba(0,0,0,.90),
+    0 0 90px rgba(243,217,148,.18);
+  transform:rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--zoom));
+  transition:box-shadow .18s ease;
 }
-.card-viewer-card.dragging{ cursor:grabbing; transition:none; box-shadow:0 0 0 1px #fff0bd,0 0 0 5px rgba(0,0,0,.72),0 34px 90px rgba(0,0,0,.95),0 0 120px rgba(243,217,148,.34); }
-.card-viewer-card img{ width:100%; height:100%; display:block; object-fit:cover; pointer-events:none; -webkit-user-drag:none; }
-.card-viewer-holo{
-  position:absolute; inset:-20%; pointer-events:none; opacity:.72; mix-blend-mode:color-dodge;
+.card-viewer-card.dragging{
+  cursor:grabbing; will-change:transform;
+  box-shadow:
+    0 0 0 1px #fff0bd,
+    0 0 0 5px rgba(0,0,0,.70),
+    0 36px 92px rgba(0,0,0,.95),
+    0 0 120px rgba(243,217,148,.30);
+}
+.card-viewer-card img{
+  position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover;
+  pointer-events:none; -webkit-user-drag:none; transform:translateZ(0);
+}
+.card-viewer-foil,
+.card-viewer-glare,
+.card-viewer-shine,
+.card-viewer-scanline,
+.card-viewer-edge{
+  position:absolute; inset:0; border-radius:14px; pointer-events:none;
+}
+.card-viewer-foil{
+  opacity:var(--foilOpacity); mix-blend-mode:screen;
   background:
-    radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.55) 0 3%, rgba(175,225,255,.24) 12%, transparent 28%),
-    linear-gradient(115deg, transparent 34%, rgba(255,230,170,.22) 44%, rgba(150,220,255,.18) 52%, rgba(255,165,225,.15) 60%, transparent 70%);
-  transform:translateZ(24px); transition:opacity .2s;
+    radial-gradient(circle at var(--mx) var(--my),
+      rgba(255,255,255,.28) 0%,
+      rgba(255,255,255,.08) 12%,
+      rgba(255,255,255,0) 30%),
+    linear-gradient(115deg,
+      rgba(255,60,120,0) 0%,
+      rgba(255,60,120,.18) 15%,
+      rgba(255,180,70,.20) 28%,
+      rgba(245,255,120,.18) 38%,
+      rgba(60,255,150,.18) 50%,
+      rgba(90,180,255,.20) 63%,
+      rgba(170,110,255,.22) 78%,
+      rgba(255,60,180,.16) 92%,
+      rgba(255,60,180,0) 100%);
+  background-size:100% 100%, 210% 210%;
+  background-position:center, calc((100% - var(--mx))*1.1) calc((100% - var(--my))*1.1);
+  filter:saturate(130%) contrast(112%);
+}
+.card-viewer-glare{
+  opacity:var(--glareOpacity); mix-blend-mode:screen;
+  background:
+    radial-gradient(circle at var(--mx) var(--my),
+      rgba(255,255,255,.85) 0%,
+      rgba(255,255,255,.38) 10%,
+      rgba(255,255,255,.12) 18%,
+      rgba(255,255,255,0) 34%);
+}
+.card-viewer-shine{
+  opacity:.82; mix-blend-mode:soft-light;
+  background:
+    linear-gradient(145deg,
+      rgba(255,255,255,.44) 0%,
+      rgba(255,255,255,.12) 9%,
+      rgba(255,255,255,0) 28%,
+      rgba(255,255,255,0) 66%,
+      rgba(255,255,255,.12) 100%);
+}
+.card-viewer-scanline{
+  opacity:.075; mix-blend-mode:overlay;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255,255,255,.60) 0px,
+      rgba(255,255,255,.60) 1px,
+      rgba(255,255,255,0) 2px,
+      rgba(255,255,255,0) 4px
+    );
+}
+.card-viewer-edge{
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.16),
+    inset 0 0 24px rgba(255,255,255,.08),
+    inset 0 0 55px rgba(92,162,255,.06);
 }
 .card-viewer-close{
   position:absolute; top:0; right:0; z-index:3; width:44px; height:44px; border:1px solid rgba(243,217,148,.45);
@@ -8624,8 +8701,13 @@ body:not(.vm-list) .card-row, body:not(.vm-list) .deck-card-row{ clip-path:none;
   }
 
   // ---------- full-screen tactile card viewer ----------
+  // Lightweight holo: one card image + CSS overlays. requestAnimationFrame runs only while moving.
   var viewer=null, viewerCard=null, viewerImg=null, viewerName='';
   var viewerPointer=null, viewerMoved=false, viewerStartX=0, viewerStartY=0;
+  var viewerRAF=0;
+  var viewerState={rx:0,ry:0,mx:50,my:50};
+  var viewerTarget={rx:0,ry:0,mx:50,my:50};
+
   function ensureViewer(){
     if(viewer) return;
     viewer=document.createElement('div');
@@ -8633,56 +8715,139 @@ body:not(.vm-list) .card-row, body:not(.vm-list) .deck-card-row{ clip-path:none;
     viewer.setAttribute('aria-hidden','true');
     viewer.innerHTML='<div class="card-viewer-stage">'+
       '<button class="card-viewer-close" type="button" aria-label="拡大表示を閉じる">✕</button>'+
-      '<div class="card-viewer-card"><img alt=""><i class="card-viewer-holo"></i></div>'+
-      '<div class="card-viewer-hint">カードを指で動かせます　・　外側タップで閉じる</div>'+
+      '<div class="card-viewer-card"><img alt="">'+
+        '<i class="card-viewer-foil"></i>'+
+        '<i class="card-viewer-glare"></i>'+
+        '<i class="card-viewer-shine"></i>'+
+        '<i class="card-viewer-scanline"></i>'+
+        '<i class="card-viewer-edge"></i>'+
+      '</div>'+
+      '<div class="card-viewer-hint">カードを指で傾けられます　・　外側タップで閉じる</div>'+
       '</div>';
     document.body.appendChild(viewer);
     viewerCard=viewer.querySelector('.card-viewer-card');
     viewerImg=viewer.querySelector('img');
     viewer.querySelector('.card-viewer-close').addEventListener('click', closeViewer);
-    viewer.addEventListener('click', function(e){ if(e.target===viewer || e.target.classList.contains('card-viewer-stage')) closeViewer(); });
+    viewer.addEventListener('click', function(e){
+      if(e.target===viewer || e.target.classList.contains('card-viewer-stage')) closeViewer();
+    });
 
+    function setViewerVars(){
+      viewerCard.style.setProperty('--rx',viewerState.rx.toFixed(2)+'deg');
+      viewerCard.style.setProperty('--ry',viewerState.ry.toFixed(2)+'deg');
+      viewerCard.style.setProperty('--mx',viewerState.mx.toFixed(2)+'%');
+      viewerCard.style.setProperty('--my',viewerState.my.toFixed(2)+'%');
+      var energy=Math.min(1,(Math.abs(viewerState.rx)+Math.abs(viewerState.ry))/24);
+      viewerCard.style.setProperty('--foilOpacity',(0.34+energy*0.20).toFixed(3));
+      viewerCard.style.setProperty('--glareOpacity',(0.28+energy*0.28).toFixed(3));
+    }
+    function animateViewer(){
+      viewerRAF=0;
+      var dragging=viewerPointer!==null;
+      var ease=dragging?.28:.14;
+      viewerState.rx+=(viewerTarget.rx-viewerState.rx)*ease;
+      viewerState.ry+=(viewerTarget.ry-viewerState.ry)*ease;
+      viewerState.mx+=(viewerTarget.mx-viewerState.mx)*ease;
+      viewerState.my+=(viewerTarget.my-viewerState.my)*ease;
+      setViewerVars();
+      if(
+        Math.abs(viewerTarget.rx-viewerState.rx)>.02 ||
+        Math.abs(viewerTarget.ry-viewerState.ry)>.02 ||
+        Math.abs(viewerTarget.mx-viewerState.mx)>.05 ||
+        Math.abs(viewerTarget.my-viewerState.my)>.05
+      ){
+        viewerRAF=requestAnimationFrame(animateViewer);
+      }
+    }
+    function tickViewer(){
+      if(!viewerRAF) viewerRAF=requestAnimationFrame(animateViewer);
+    }
     function applyTilt(e){
       var r=viewerCard.getBoundingClientRect();
       var x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
       var y=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));
-      viewerCard.style.setProperty('--mx',(x*100).toFixed(1)+'%');
-      viewerCard.style.setProperty('--my',(y*100).toFixed(1)+'%');
-      viewerCard.style.setProperty('--rx',((.5-y)*20).toFixed(2)+'deg');
-      viewerCard.style.setProperty('--ry',((x-.5)*24).toFixed(2)+'deg');
+      viewerTarget.mx=x*100;
+      viewerTarget.my=y*100;
+      viewerTarget.rx=(.5-y)*28;
+      viewerTarget.ry=(x-.5)*28;
+      tickViewer();
     }
+    function centerViewer(){
+      viewerTarget.rx=0; viewerTarget.ry=0; viewerTarget.mx=50; viewerTarget.my=50;
+      tickViewer();
+    }
+
     viewerCard.addEventListener('pointerdown', function(e){
       viewerPointer=e.pointerId; viewerMoved=false; viewerStartX=e.clientX; viewerStartY=e.clientY;
-      viewerCard.setPointerCapture(e.pointerId); viewerCard.classList.add('dragging'); applyTilt(e); e.preventDefault();
+      viewerCard.setPointerCapture(e.pointerId);
+      viewerCard.classList.add('dragging');
+      viewerCard.style.setProperty('--zoom','1.025');
+      applyTilt(e);
+      e.preventDefault();
     });
     viewerCard.addEventListener('pointermove', function(e){
       if(viewerPointer!==e.pointerId) return;
       if(Math.abs(e.clientX-viewerStartX)+Math.abs(e.clientY-viewerStartY)>7) viewerMoved=true;
-      applyTilt(e); e.preventDefault();
+      applyTilt(e);
+      e.preventDefault();
     });
     function release(e){
       if(viewerPointer!==e.pointerId) return;
-      viewerPointer=null; viewerCard.classList.remove('dragging');
-      viewerCard.style.setProperty('--rx','0deg'); viewerCard.style.setProperty('--ry','0deg');
-      viewerCard.style.setProperty('--mx','50%'); viewerCard.style.setProperty('--my','50%');
+      viewerPointer=null;
+      viewerCard.classList.remove('dragging');
+      viewerCard.style.setProperty('--zoom','1');
+      centerViewer();
     }
     viewerCard.addEventListener('pointerup', release);
     viewerCard.addEventListener('pointercancel', release);
-    viewerCard.addEventListener('dblclick', function(e){
-      var zoom=viewerCard.style.getPropertyValue('--zoom')==='1.16'?'1':'1.16';
-      viewerCard.style.setProperty('--zoom',zoom); e.preventDefault();
+    viewerCard.addEventListener('lostpointercapture', function(){
+      if(viewerPointer!==null){
+        viewerPointer=null;
+        viewerCard.classList.remove('dragging');
+        viewerCard.style.setProperty('--zoom','1');
+        centerViewer();
+      }
     });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && viewer.classList.contains('show')) closeViewer(); });
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Escape' && viewer.classList.contains('show')) closeViewer();
+    });
   }
+
   function openViewer(url,name){
-    ensureViewer(); viewerName=name||''; viewerImg.alt=viewerName; viewerImg.src=url;
-    viewerCard.style.setProperty('--zoom','1'); viewerCard.style.setProperty('--rx','0deg'); viewerCard.style.setProperty('--ry','0deg');
-    viewerCard.style.setProperty('--mx','50%'); viewerCard.style.setProperty('--my','50%');
-    viewer.classList.add('show'); viewer.setAttribute('aria-hidden','false');
+    ensureViewer();
+    viewerName=name||'';
+    viewerImg.alt=viewerName;
+    viewerImg.src=url;
+    viewerPointer=null;
+    viewerState.rx=viewerTarget.rx=0;
+    viewerState.ry=viewerTarget.ry=0;
+    viewerState.mx=viewerTarget.mx=50;
+    viewerState.my=viewerTarget.my=50;
+    viewerCard.style.setProperty('--zoom','1');
+    viewerCard.style.setProperty('--rx','0deg');
+    viewerCard.style.setProperty('--ry','0deg');
+    viewerCard.style.setProperty('--mx','50%');
+    viewerCard.style.setProperty('--my','50%');
+    viewerCard.style.setProperty('--foilOpacity','.34');
+    viewerCard.style.setProperty('--glareOpacity','.28');
+    viewer.classList.add('show');
+    viewer.setAttribute('aria-hidden','false');
   }
+
   function closeViewer(){
-    if(!viewer) return; viewer.classList.remove('show'); viewer.setAttribute('aria-hidden','true'); viewerPointer=null;
-    if(viewerCard){ viewerCard.classList.remove('dragging'); viewerCard.style.setProperty('--rx','0deg'); viewerCard.style.setProperty('--ry','0deg'); }
+    if(!viewer) return;
+    viewer.classList.remove('show');
+    viewer.setAttribute('aria-hidden','true');
+    viewerPointer=null;
+    if(viewerRAF){ cancelAnimationFrame(viewerRAF); viewerRAF=0; }
+    if(viewerCard){
+      viewerCard.classList.remove('dragging');
+      viewerCard.style.setProperty('--zoom','1');
+      viewerCard.style.setProperty('--rx','0deg');
+      viewerCard.style.setProperty('--ry','0deg');
+      viewerCard.style.setProperty('--mx','50%');
+      viewerCard.style.setProperty('--my','50%');
+    }
   }
 
   // ---------- detail hero ----------
