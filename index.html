@@ -2994,6 +2994,359 @@ body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn[data-add]{
   }
 }
 
+
+/* ==================================================================
+   DEDICATED LANDSCAPE / DESKTOP WORKBENCH
+   Rebuild the UI for low-height wide screens instead of merely
+   placing the portrait UI side-by-side.
+   ================================================================== */
+:root{
+  --landscape-topbar-h:38px;
+}
+.landscape-topbar{ display:none; }
+.landscape-topbar .lsb-btn{ appearance:none; }
+
+body.workspace-split{
+  max-width:none !important;
+  width:100%;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  min-height:100dvh;
+  overflow:hidden;
+  background:
+    radial-gradient(160% 80% at 50% -10%, rgba(216,180,95,.08), transparent 55%),
+    linear-gradient(180deg,#050505,#070707 20%,#080808 100%);
+}
+body.workspace-split .app-header,
+body.workspace-split .tabs{
+  display:none !important;
+}
+body.workspace-split .landscape-topbar{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:10px;
+  min-height:var(--landscape-topbar-h);
+  padding:calc(4px + env(safe-area-inset-top,0)) 10px 4px;
+  border-bottom:1px solid rgba(216,180,95,.20);
+  background:
+    linear-gradient(180deg,rgba(11,11,11,.98),rgba(9,9,9,.95)),
+    radial-gradient(circle at 50% 120%, rgba(216,180,95,.10), transparent 55%);
+  box-shadow:0 5px 24px rgba(0,0,0,.30);
+  flex:0 0 auto;
+  z-index:32;
+}
+body.workspace-split .lsb-left,
+body.workspace-split .lsb-center,
+body.workspace-split .lsb-right{
+  min-width:0;
+  display:flex;
+  align-items:center;
+}
+body.workspace-split .lsb-left{ gap:8px; }
+body.workspace-split .lsb-center{
+  justify-content:center;
+  gap:6px;
+  color:rgba(243,217,148,.78);
+  letter-spacing:.14em;
+  font-size:10px;
+}
+body.workspace-split .lsb-logo{
+  font-family:'Cinzel',serif;
+  font-size:22px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:var(--gold-hi);
+  text-shadow:0 0 10px rgba(216,180,95,.20);
+}
+body.workspace-split .lsb-sub{
+  color:var(--text-dim);
+  font-size:9px;
+  letter-spacing:.24em;
+  white-space:nowrap;
+}
+body.workspace-split .lsb-chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:18px;
+  padding:0 7px;
+  border:1px solid rgba(216,180,95,.24);
+  border-radius:999px;
+  background:rgba(255,255,255,.02);
+}
+body.workspace-split .lsb-sep{
+  opacity:.6;
+  font-size:9px;
+}
+body.workspace-split .lsb-right{
+  justify-content:flex-end;
+  gap:6px;
+}
+body.workspace-split .lsb-btn{
+  min-height:28px;
+  padding:0 11px;
+  border:1px solid rgba(216,180,95,.32);
+  border-radius:10px;
+  background:rgba(255,255,255,.02);
+  color:var(--gold-hi);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  white-space:nowrap;
+}
+body.workspace-split .lsb-btn.duel{
+  background:
+    linear-gradient(180deg,rgba(216,180,95,.14),rgba(216,180,95,.05)),
+    rgba(255,255,255,.02);
+}
+body.workspace-split .lsb-btn:active{
+  transform:translateY(1px);
+}
+
+body.workspace-split .core-workspace{
+  flex:1 1 auto;
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,1.16fr) minmax(360px,.84fr);
+  overflow:hidden;
+  border-top:none;
+  background:transparent;
+}
+body.workspace-split #view-search,
+body.workspace-split #view-deck{
+  display:flex !important;
+  flex-direction:column;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  animation:none;
+}
+body.workspace-split #view-search{
+  border-right:1px solid rgba(216,180,95,.22);
+  box-shadow:10px 0 36px rgba(0,0,0,.24);
+}
+body.workspace-split #view-search .deck-strip{
+  display:none !important;
+}
+
+/* Search pane rebuilt for wide / short screens */
+body.workspace-split #view-search .search-bar{
+  padding:5px 8px 5px;
+  gap:4px;
+  border-bottom:1px solid rgba(216,180,95,.14);
+  background:
+    linear-gradient(180deg,rgba(18,18,18,.94),rgba(12,12,12,.88)),
+    linear-gradient(90deg,rgba(216,180,95,.04),transparent 32%);
+}
+body.workspace-split #view-search .search-row{
+  margin:0;
+}
+body.workspace-split #view-search .search-input{
+  min-height:31px;
+  padding:5px 11px 5px 40px;
+  font-size:14px;
+}
+body.workspace-split #view-search .search-input::placeholder{
+  font-size:13px;
+}
+body.workspace-split #view-search .filter-row{
+  display:flex;
+  flex-wrap:nowrap;
+  gap:4px;
+  min-height:auto;
+  overflow:auto;
+  padding-bottom:2px;
+  scrollbar-width:none;
+}
+body.workspace-split #view-search .filter-row::-webkit-scrollbar{
+  display:none;
+}
+body.workspace-split #view-search .fbtn{
+  flex:0 0 auto;
+  min-height:26px;
+  padding:4px 10px;
+  font-size:11px;
+  white-space:nowrap;
+}
+body.workspace-split #view-search .tag-active-row{
+  margin-top:1px;
+}
+body.workspace-split #view-search .criteria-origin-row{
+  margin-top:2px;
+}
+body.workspace-split #view-search .info-row{
+  gap:5px;
+  min-height:auto;
+}
+body.workspace-split #view-search .result-count{
+  font-size:11px;
+  min-width:0;
+}
+body.workspace-split #view-search .filter-toggle,
+body.workspace-split #view-search .sort-select,
+body.workspace-split #view-search .vm-toggle{
+  min-height:28px;
+  font-size:11px;
+}
+body.workspace-split #view-search .card-scroll{
+  flex:1 1 auto;
+  min-height:0;
+  padding:6px 8px 14px;
+}
+body.workspace-split.vm-search-list #view-search .card-row{
+  min-height:52px;
+}
+body.workspace-split:not(.vm-search-list) #view-search #cardScroll{
+  grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
+  gap:14px 10px;
+}
+
+/* Deck pane rebuilt for wide / short screens */
+body.workspace-split #view-deck .deck-head{
+  padding:5px 8px 5px;
+  border-bottom:1px solid rgba(216,180,95,.14);
+  background:
+    linear-gradient(180deg,rgba(18,18,18,.94),rgba(12,12,12,.88)),
+    linear-gradient(90deg,rgba(216,180,95,.04),transparent 32%);
+}
+body.workspace-split #view-deck .deck-name-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 58px;
+  align-items:center;
+  gap:6px;
+  margin-bottom:3px;
+}
+body.workspace-split #view-deck .deck-name-shell{
+  padding:7px 2px 2px;
+}
+body.workspace-split #view-deck .deck-name-shell::before{
+  top:0;
+  font-size:7px;
+  letter-spacing:.32em;
+}
+body.workspace-split #view-deck #deckNameInput.deck-name-input{
+  min-height:18px;
+  font-size:15px;
+}
+body.workspace-split #view-deck .deck-save-btn{
+  min-height:30px;
+  padding:0 8px;
+  font-size:11px;
+}
+body.workspace-split #view-deck .deck-summary-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(172px,.88fr);
+  gap:6px;
+  align-items:start;
+}
+body.workspace-split #view-deck .compact-counts{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:4px;
+  padding:0;
+}
+body.workspace-split #view-deck .compact-counts .count-pill{
+  gap:4px;
+  padding:2px 3px 4px;
+}
+body.workspace-split #view-deck .compact-counts .count-label{
+  font-size:7px;
+  letter-spacing:.18em;
+}
+body.workspace-split #view-deck .compact-counts .count-value{
+  font-size:17px;
+}
+body.workspace-split #view-deck .deck-action-rail{
+  min-width:0;
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+}
+body.workspace-split #view-deck .deck-action-rail>.btn.deck-hand-quick,
+body.workspace-split #view-deck .deck-action-rail #ddManage>.tool-dd-btn,
+body.workspace-split #view-deck .deck-action-rail .vm-toggle{
+  min-height:28px;
+  font-size:11px;
+}
+body.workspace-split #view-deck .deck-action-rail .deck-more{
+  min-width:auto;
+  flex-basis:auto;
+}
+body.workspace-split #view-deck .deck-duel-launch{
+  display:none !important;
+}
+body.workspace-split #view-deck #deckStatus:not(:empty){
+  margin-top:3px;
+  font-size:11px;
+}
+body.workspace-split #view-deck #deckScroll{
+  flex:1 1 auto;
+  min-height:0;
+  padding:4px 8px 14px;
+}
+body.workspace-split.vm-deck-list #view-deck #deckScroll .deck-card-row{
+  min-height:28px;
+}
+body.workspace-split.vm-deck-info #view-deck #deckScroll .deck-card-row{
+  min-height:50px;
+}
+body.workspace-split:not(.vm-deck-list):not(.vm-deck-info) #view-deck #deckScroll{
+  grid-template-columns:repeat(auto-fill,minmax(82px,1fr));
+  gap:10px 8px;
+}
+
+/* Menus / overlays in dedicated landscape mode */
+body.workspace-split .nav-menu{
+  top:calc(var(--landscape-topbar-h) + env(safe-area-inset-top,0) + 6px);
+  bottom:auto;
+}
+body.workspace-split .sheet{
+  max-height:84dvh;
+}
+body.workspace-split .modal{
+  max-height:84dvh;
+}
+
+/* Narrow phone landscape */
+@media (max-width:820px){
+  body.workspace-split .core-workspace{
+    grid-template-columns:minmax(0,1.08fr) minmax(290px,.92fr);
+  }
+  body.workspace-split .lsb-center{
+    display:none;
+  }
+  body.workspace-split .lsb-logo{
+    font-size:19px;
+  }
+  body.workspace-split .lsb-btn{
+    min-height:26px;
+    padding:0 9px;
+    font-size:10px;
+  }
+  body.workspace-split #view-search .search-input{
+    font-size:13px;
+  }
+  body.workspace-split #view-deck .deck-summary-row{
+    grid-template-columns:minmax(0,1fr);
+  }
+}
+
+/* Larger desktop */
+@media (min-width:1180px){
+  body.workspace-split .core-workspace{
+    grid-template-columns:minmax(0,1.26fr) minmax(430px,.74fr);
+  }
+  body.workspace-split:not(.vm-search-list) #view-search #cardScroll{
+    grid-template-columns:repeat(auto-fill,minmax(122px,1fr));
+    gap:16px 12px;
+  }
+  body.workspace-split:not(.vm-deck-list):not(.vm-deck-info) #view-deck #deckScroll{
+    grid-template-columns:repeat(auto-fill,minmax(88px,1fr));
+    gap:12px 10px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3005,6 +3358,22 @@ body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn[data-add]{
   <h1 class="app-title" style="margin:0"><span class="brand-num">1103</span><span class="brand-word"><b>DECK BUILDER</b><small>デッキビルダー</small></span></h1>
   <div class="app-sub" id="appSub">〜2011.08 OCG</div>
 </header>
+
+<div class="landscape-topbar" id="landscapeTopbar" aria-hidden="true">
+  <div class="lsb-left">
+    <span class="lsb-logo">1103</span>
+    <span class="lsb-sub">LANDSCAPE</span>
+  </div>
+  <div class="lsb-center">
+    <span class="lsb-chip">SEARCH</span>
+    <span class="lsb-sep">×</span>
+    <span class="lsb-chip">DECK</span>
+  </div>
+  <div class="lsb-right">
+    <button type="button" class="lsb-btn duel" id="landscapeDuelBtn">DUEL</button>
+    <button type="button" class="lsb-btn" id="landscapeMenuBtn">その他</button>
+  </div>
+</div>
 
 <!-- Search view -->
 <main class="core-workspace" id="coreWorkspace">
@@ -3528,7 +3897,7 @@ body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn[data-add]{
   <button class="nav-menu-item" data-goto="guide"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></span><span class="nmi-lb">1103環境ガイド</span></button>
   <a class="nav-menu-item" href="https://akkyommm-crypto.github.io/yglpcalculator/"><span class="nmi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg></span><span class="nmi-lb">LPカウンター</span><span class="nmi-ext">↗</span></a>
 </div>
-<div class="version">v1103-builder-103.5-rotationfix</div>
+<div class="version">v1103-builder-103.6-landscapeworkbench</div>
 
 <script id="tagdata" type="application/json">["六武衆","代行者","ライトロード","HERO","BF","インフェルニティ","カラクリ","ガジェット","マシンナーズ","ドラグニティ","TG","ジャンク","シンクロン","氷結界","ワーム","ジェムナイト","ラヴァル","ガスタ","リチュア","ナチュル","ジュラック","フレムベル","ヴァイロン","インヴェルズ","ヴェルズ","スクラップ","ゼンマイ","暗黒界","魔轟神","墓守","剣闘獣","電池メン","おジャマ","宝玉獣","雲魔物","A・O・J","X－セイバー","極星","霞の谷","ハーピィ","アマゾネス","ガエル","コアキメイル","フォーチュンレディ","ディフォーマー","ジェネクス","エーリアン","青眼","真紅眼","ブラック・マジシャン","サイバー・ドラゴン","忍者","フォトン","汎用魔法","汎用罠","手札誘発","サイド定番"]</script>
 <script>
@@ -8963,6 +9332,29 @@ body.vm-deck-info #view-deck #deckScroll .deck-card-row .dqbtn[data-add]{
   if(window.visualViewport){
     window.visualViewport.addEventListener('resize',scheduleWorkspaceViewportSync1103,{passive:true});
   }
+
+  var landscapeMenuBtn=document.getElementById('landscapeMenuBtn');
+  var landscapeDuelBtn=document.getElementById('landscapeDuelBtn');
+  var landscapeTopbar=document.getElementById('landscapeTopbar');
+  if(landscapeMenuBtn){
+    landscapeMenuBtn.addEventListener('click',function(){
+      var b=document.getElementById('navMenuBtn');
+      if(b) b.click();
+    });
+  }
+  if(landscapeDuelBtn){
+    landscapeDuelBtn.addEventListener('click',function(){
+      var b=document.getElementById('duelLaunchBtn');
+      if(b) b.click();
+    });
+  }
+  var _oldSyncWorkspace1103=syncWorkspace1103;
+  syncWorkspace1103=function(){
+    _oldSyncWorkspace1103();
+    var active=document.body.classList.contains('workspace-split');
+    if(landscapeTopbar) landscapeTopbar.setAttribute('aria-hidden',active?'false':'true');
+  };
+
   document.querySelectorAll('.tab[data-view]').forEach(function(t){
     t.addEventListener('click', function(){ switchView(t.dataset.view); });
   });
