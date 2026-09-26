@@ -924,7 +924,8 @@ function eventSelectionDescriptorV11(index){
  const unit=gameState.processorWaiting||gameState.processorCurrent;
  let resume=null;
  if(unit&&['EVENT','EVENT_BATCH'].includes(unit.type))resume={processor:true,
-   postPoint:unit.type==='EVENT'?postSummonFastPointV321(unit.payload.eventName,restoreEventRefsV27(unit.payload.evt)):null};
+   /* S03-U159: a batch that includes a summon success (Tribute Summon / Synchro materials + summon) carries its post-summon point */
+   postPoint:unit.type==='EVENT'?postSummonFastPointV321(unit.payload.eventName,restoreEventRefsV27(unit.payload.evt)):((unit.payload&&unit.payload.postPointS03)||null)};
  return {eventName:st.eventName,evt:safeActivationEventV11(st.evt),rank:st.rank,index,chainStart:st.chainStart,resume,
    groups:st.groups.map(g=>g.map(c=>({uid:c.card.uid,p:c.p,zone:c.zone,index:c.index,name:c.name,rank:c.rank,forced:c.forced,
      eventName:c.eventName,event:safeActivationEventV11(c.event||c.ctx&&c.ctx.event||st.evt)})))};
@@ -1170,6 +1171,10 @@ function applyActionBodyV31(gs, a){
       if(gs.deferredEvents&&gs.deferredEvents.length)gs.deferredEvents.shift();break;
     /* S03-U156: take the queued events of one kind for the given cards out of the queue, so that the caller dispatches them in
        its own simultaneous batch (battle cleanup: the onLeaveField of the battle-destroyed monsters). */
+    case 'DESTROY_SUB_S03':   /* S03-U173 (engine/1ZV) */
+      if(typeof destroySubReduceS03==='function') destroySubReduceS03(gs, a);
+      break;
+
     case 'EVENT_TAKE_S03':
       if(gs.deferredEvents&&gs.deferredEvents.length){
         const uidsS03=(a.uids||[]).map(Number);
@@ -1562,6 +1567,7 @@ function applyActionBodyV31(gs, a){
       }
       const atkCard = P.mz[a.atkIdx];
       if(!atkCard){ break; }
+      atkCard.battledTurnS03 = gs.turn;   /* S03-U180: 「このカードが戦闘を行ったバトルフェイズ終了時」 (engine/1ZZ) */
       /* System v6: このバトルフェイズ中の攻撃を記録する。
          バトルフェイズ終了時に消えるので無制限履歴にはならない。 */
       if(typeof recordBattlePhaseAttackV6==='function')
@@ -1592,6 +1598,10 @@ function applyActionBodyV31(gs, a){
 
       const defCard = oppP.mz[a.target];
       if(!defCard){ break; }
+      /* S03-U160: record the battle on both monsters (zone-local: a monster that leaves the field forgets it), for texts like
+         「このカードと戦闘を行ったモンスター」 (薄幸の乙女). Written inside the ATTACK action, so it is replayed. */
+      recordBattlePartnersS03(gs, atkCard, defCard);
+      defCard.battledTurnS03 = gs.turn;   /* S03-U180 */
       const defDB = dbOf(defCard);
       const defending = defCard.pos==='def';
       const dVal = a.defOverride!=null ? a.defOverride : (defending ? curDEF(defCard) : curATK(defCard));
@@ -1608,21 +1618,22 @@ function applyActionBodyV31(gs, a){
          確定したモンスターは永続効果を出さず、効果の対象にも取れなくなる。 */
       /* System v21: battleProof が false のときだけ、条件付き／回数制限付きの
          戦闘破壊耐性を見る。実際に守ったときだけ回数を消費する。 */
-      const protV21 = (card, foe)=>{
+      /* S03-U161: battleRole — 「…が攻撃する場合、攻撃モンスターは戦闘では破壊されない」 (エレキーウィ) needs to know the side */
+      const protV21 = (card, foe, role)=>{
         if(typeof applyDestructionProtectionV21!=='function') return null;
         return applyDestructionProtectionV21(gs, card,
-          {cause:'battle', opponentCard:foe, byPlayer:null, targeting:false, sourceKind:null});
+          {cause:'battle', opponentCard:foe, byPlayer:null, targeting:false, sourceKind:null, battleRole:role});
       };
       const killDef = ()=>{
         if(protDef){ logIt(gs, `${cardName(defCard)} は戦闘では破壊されない`); return false; }
-        const r = protV21(defCard, atkCard);
+        const r = protV21(defCard, atkCard, 'defender');
         if(r){ logIt(gs, `${r.label||'効果'}：${cardName(defCard)} は戦闘では破壊されない`); return false; }
         defCard.battleDestroyed = true;
         return true;
       };
       const killAtk = ()=>{
         if(protAtk){ logIt(gs, `${cardName(atkCard)} は戦闘では破壊されない`); return false; }
-        const r = protV21(atkCard, defCard);
+        const r = protV21(atkCard, defCard, 'attacker');
         if(r){ logIt(gs, `${r.label||'効果'}：${cardName(atkCard)} は戦闘では破壊されない`); return false; }
         atkCard.battleDestroyed = true;
         return true;
@@ -2276,7 +2287,7 @@ function applyActionBodyV31(gs, a){
          && typeof applyDestructionProtectionV21==='function'){
         const guard = zoneCard(P, a.zone, a.index);
         if(guard){
-          const gr = applyDestructionProtectionV21(gs, guard, effectDestroyCtxV21(gs, a));
+          const gr = applyDestructionProtectionV21(gs, guard, effectDestroyCtxV21(gs, a, guard));
           if(gr){
             logIt(gs, `${gr.label||'効果'}：${cardName(guard)} はカードの効果では破壊されない`);
             break;
@@ -2300,7 +2311,7 @@ function applyActionBodyV31(gs, a){
       const spellN = byDestroy ? v350DestroyedSpellCounterCount(card) : 0;
       dropXyzMaterials(P, card, gs); dropEquips(P, card, gs);
       const ownerIdx=cardOwnerIndex(gs,card,a.player), ownerG=gs.players[ownerIdx];
-      if(v350BanishWhenLeavesField(card,a.zone,'grave')){
+      if(v350BanishWhenLeavesField(card,a.zone,'grave',a)){
         pushZone(ownerG.banish,card);
         logIt(gs, `${a.reason||"効果"}：${nameOf(a.player)}の ${cardName(card)} は墓地へ行かず除外`);
       }else if(s03DeckTopReplaceGraveU110(gs, card, {p:a.player, zone:a.zone, index:a.index}, sentFace, a.reason)){
@@ -2346,7 +2357,7 @@ function applyActionBodyV31(gs, a){
       const wipeCtxV21 = (typeof effectDestroyCtxV21==='function') ? effectDestroyCtxV21(gs, a) : null;
       const wipeGuardV21 = (c)=>{
         if(!c || !wipeCtxV21 || typeof applyDestructionProtectionV21!=='function') return null;
-        return applyDestructionProtectionV21(gs, c, wipeCtxV21);
+        return applyDestructionProtectionV21(gs, c, effectDestroyCtxV21(gs, a, c));   /* S03-U168: per card (targeting) */
       };
       const doomed=[], sparedV21=[], doomedLocU110=new Map();
       if(a.zone==='field'){
@@ -2367,6 +2378,7 @@ function applyActionBodyV31(gs, a){
         });
         for(let i=arr.length-1;i>=0;i--){
           if(sparedV21.indexOf(arr[i])>=0) continue;
+          if(Array.isArray(a.spareUidsS03) && arr[i] && a.spareUidsS03.indexOf(arr[i].uid)>=0) continue;   /* S03-U173: destroyed a substitute instead */
           const wU110=arr.splice(i,1)[0];
           doomed.push(wU110);
           if(wU110) doomedLocU110.set(wU110, {p:a.player, zone:a.zone, index:i, face:wU110.face});   /* S03-U110 */
@@ -2385,7 +2397,7 @@ function applyActionBodyV31(gs, a){
         dropXyzMaterials(P,w,gs); dropEquips(P,w,gs);
         const owner=cardOwnerIndex(gs,w,a.player), dst=gs.players[owner];
         const locU110=doomedLocU110.get(w);
-        if(v350BanishWhenLeavesField(w,a.zone,'grave')) pushZone(dst.banish,w);
+        if(v350BanishWhenLeavesField(w,a.zone,'grave',a)) pushZone(dst.banish,w);
         else if(locU110 && s03DeckTopReplaceGraveU110(gs, w, locU110, locU110.face, a.reason)){ /* S03-U110 */ }
         else {
           pushZone(dst.grave,w);
@@ -2443,11 +2455,13 @@ function applyActionBodyV31(gs, a){
       /* System v30 B2: どちらのプレイヤーの領域から出したか。owner から推測しない。 */
       card.specialSummonedFromPlayer = (a.fromPlayer===0||a.fromPlayer===1) ? a.fromPlayer : a.player;
       card.specialSummonKind=a.summonKind||'effect';
+      if(a.gladiatorS03) card.gladiatorSummonedS03=true;   /* S03-U180: 「剣闘獣」モンスターの効果によって特殊召喚 (engine/1ZZ) */
       /* S03-U127: 正規の方法（summonKind が一致）で特殊召喚された記録。手札・デッキ・EXへ戻ると消える。 */
       if(typeof specialSummonMonsterKindS03==='function'){
         const kS03 = specialSummonMonsterKindS03(dbOf(card));
         /* 自身の効果で自分を特殊召喚する「通常召喚できない」モンスター（カオス・ソーサラー等）も正規の方法 */
-        if(kS03 && (a.summonKind===kS03 || (kS03==='procedure' && a.reason===cardName(card)) || (a.reason && properSummonSourcesS03(dbOf(card)).indexOf(a.reason)>=0))) card.properlySummonedS03=true;
+        if(kS03 && (a.summonKind===kS03 || ((kS03==='procedure' || a.summonKind==='procedure') && a.reason===cardName(card)) ||   /* S03-U174: a Fusion Monster's own procedure (contact fusion) */
+           (a.reason && properSummonSourcesS03(dbOf(card)).indexOf(a.reason)>=0))) card.properlySummonedS03=true;
       }
       P.mz.push(card);
       P.ssHistory.push({name:cardName(card), from:a.from, turn:gs.turn, fromPlayer:card.specialSummonedFromPlayer,
@@ -2526,7 +2540,7 @@ function applyActionBodyV31(gs, a){
       if(!card) break;
       dropXyzMaterials(P, card, gs); dropEquips(P, card, gs);
       if(card.token){ logIt(gs, `${cardName(card)} は消滅した`); break; }  // トークンは手札に戻らない
-      if(v350BanishWhenLeavesField(card,a.zone,'hand')){
+      if(v350BanishWhenLeavesField(card,a.zone,'hand',a)){
         const owner=cardOwnerIndex(gs,card,a.player); pushZone(gs.players[owner].banish,card);
         logIt(gs, `${a.reason||"効果"}：${cardName(card)} は手札へ戻らず除外`); break;
       }
@@ -2841,6 +2855,10 @@ function applyActionBodyV31(gs, a){
     /* System v2: 召喚無効窓へ入る時点で通常召喚権を消費する。
        召喚を神の宣告などで無効にされても召喚権は戻らない。 */
     /* S03-U125: 暗黒界の龍神 グラファ「相手の手札をランダムに1枚確認する」— 乱数はこの Action の中で引く（Replay で同じ結果）。 */
+    case "HAND_DESTROY_RANDOM_S03": {   /* S03-U176 (engine/1ZX): the random card is drawn inside the Action */
+      if(typeof handDestroyRandomReduceS03==='function') handDestroyRandomReduceS03(gs, a);
+      break;
+    }
     case "GRAPHA_PEEK_S03": {
       const H = (gs.players[a.opponent]||{}).hand||[];
       if(!H.length){ gs.graphaPeekS03 = null; break; }
@@ -2938,12 +2956,14 @@ function applyActionBodyV31(gs, a){
       if(!card) break;
       dropXyzMaterials(P, card, gs); dropEquips(P, card, gs);
       if(card.token){ logIt(gs, `${cardName(card)} は消滅した`); break; }
-      if(v350BanishWhenLeavesField(card,a.zone,'deck')){
+      if(v350BanishWhenLeavesField(card,a.zone,'deck',a)){
         const owner=cardOwnerIndex(gs,card,a.player); pushZone(gs.players[owner].banish,card);
         logIt(gs, `${a.reason||"効果"}：${cardName(card)} はデッキへ戻らず除外`); break;
       }
       const ret = returnToOwnerDeckOrExtra(gs, card, a.player, !!a.toBottom);
       if(ret.zone==='ex'){
+        /* S03-U179: 「この効果によってこのカードがエクストラデッキに戻った時」 — the End Phase return marks the card (engine/1ZW) */
+        if(a.epReturnS03) card.epReturnedS03 = gs.turn;
         logIt(gs, `${a.reason||"効果"}：${cardName(card)} は ${nameOf(ret.owner)} のEXデッキに戻った`);
       }else{
         logIt(gs, `${a.reason||"効果"}：${cardName(card)} を ${nameOf(ret.owner)} のデッキ${a.toBottom?"ボトム":"トップ"}へ`);
@@ -3571,8 +3591,11 @@ const ZONE_LOCAL_KEYS = [
   'oppTargetImmuneTurnS03','fusionMaterialS03',   // S03-U130: ダーク・フュージョン / 融合召喚に使用した融合素材
   'attackAllS03',   // S03-U149: the monsters an attack-all card attacked this turn
   'u155ReturnTurn','u155CoffinTurn',   // S03-U155: 異次元からの帰還 / 封印の黄金櫃 marks
+  'battledWithS03','u161ViceMarkedBy','u161ViceTargetUid','u165TempesterBy','u165TempesterUids','noSynchroMaterialTurnS03',                    // S03-U160: uids of the monsters this card battled while on the field (「このカードと戦闘を行ったモンスター」)
   'u154SwordsTurn','u154LimiterTurn',   // S03-U154: 光の護封剣 / リミッター解除 marks belong to this stay on the field
   'd4WeaponSrcUid','d4WeaponUntilTurn',   // S03-U151: ウェポンチェンジ's swap belongs to the monster's stay on the field
+  'battledTurnS03','gladiatorSummonedS03',   // S03-U180 (engine/1ZZ)
+  'negLinkS03','negLinkTargetS03',   // S03-U177: a monster's 「表側表示で存在する限り、選択したモンスターの効果は無効化される」 link (engine/1ZY)
   's03SummonedByUid',   // S03-U148: 「この効果で特殊召喚した」 monster → the summoner's uid (地獄の門番イル・ブラッド / 魔族召喚師)
   'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn',
   'banishWhenLeavesField','v350BureidoDrawTurn','v350ExtraNormalFrogTurn','v350OnlyAttackerUid',
@@ -3603,7 +3626,21 @@ const ZONE_LOCAL_KEYS = [
   'v47ZenmaisterTurn','v47ArmoryTurn','v47AfdSpecialTurn','v47AfdFieldTurn',
 ];
 /* System v3.5.0: 場を離れたら除外される残存効果を中央管理する。 */
-function v350BanishWhenLeavesField(card,fromZone,toZone){
+/* S03-U162: 「このカードは相手のカードの効果によってフィールド上から離れた場合、ゲームから除外される」 (マイン・モール).
+   Declared by the card script (banishIfLeavesByOpponentEffectS03). The cause is the move action's P3 stamp (a.p3: reason 'effect',
+   actingPlayer = the effect's controller), written when the action is committed and replayed with it; the controller whose field
+   the card leaves is a.player. Battle, costs and materials are not 「効果によって」. */
+function banishWhenLeavesByOpponentEffectS03(card,fromZone,toZone,a){
+  if(!card || !a || !a.p3 || a.p3.reason!=='effect') return false;
+  if(!['mz','sz','field'].includes(fromZone) || ['mz','sz','field'].includes(toZone)) return false;
+  const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
+  if(!sc || !sc.banishIfLeavesByOpponentEffectS03) return false;
+  if(card.face==='down' && fromZone==='mz') return false;          /* a face-down monster applies no effect */
+  const ap = a.p3.actingPlayer;
+  return (ap===0||ap===1) && ap!==a.player;
+}
+function v350BanishWhenLeavesField(card,fromZone,toZone,a){
+  if(banishWhenLeavesByOpponentEffectS03(card,fromZone,toZone,a)) return true;
   return !!(card && card.banishWhenLeavesField && ['mz','sz','field'].includes(fromZone) && !['mz','sz','field'].includes(toZone));
 }
 /* S03-U110: 「フィールドの表側表示のこのカードが墓地へ送られる場合、墓地へは行かず持ち主のデッキの一番上に戻る」
@@ -3801,7 +3838,8 @@ function continuousSources(){
      以前は negateTrap / trapStun を発動の可否でしか見ておらず、グラヴィティ・バインドやスキルドレインは無効化中も働いていた。 */
   if(typeof trapSourcesFilterS03==='function') outer = trapSourcesFilterS03(outer, null);
   // その上で、無効化されていないモンスターの継続効果を足す
-  const inner = collectSources(['mz'], true).filter(x=>!effectNegatedBy(outer, x.card, x));
+  const inner = collectSources(['mz'], true).filter(x=>!effectNegatedBy(outer, x.card, x)
+    && !(typeof linkedNegationActiveS03==='function' && linkedNegationActiveS03(x.card)));   /* S03-U177: engine/1ZY */
   /* S03-U118: モンスターの negateTrap（人造人間－サイコ・ショッカー）。自身が無効（スキルドレインが先に適用）なら inner に居ない。 */
   if(typeof trapSourcesFilterS03==='function') outer = trapSourcesFilterS03(outer, inner);
   /* System v29: 宣言済みの墓地ソースを最後に足す。既存2群の順序は変えない。
@@ -3840,6 +3878,8 @@ function effectNegated(card){
   if(card.negatedUntilTurn != null && card.negatedUntilTurn === gameState.turn) return true;
   // System v13: Action で置かれた期間つきの無効化
   if(typeof negatedByV13==='function' && negatedByV13(card, gameState)) return true;
+  /* S03-U177: a face-up monster's 「選択したモンスターの効果は無効化される」 link (engine/1ZY) */
+  if(typeof linkedNegationActiveS03==='function' && linkedNegationActiveS03(card)) return true;
   const loc = locateCard(card);
   if(!loc) return false;
   /* S03-U118: 無効化されている罠カード（トラップ・スタン／王宮のお触れ／サイコ・ショッカー）の negateEffect は数えない。
@@ -3862,6 +3902,9 @@ function cannotAttackNow(card){
   if(card.cannotAttackTurn===gameState.turn) return true;
   const loc = locateCard(card);
   if(!loc) return false;
+  /* S03-U170: 「このターン相手は攻撃宣言をする事ができない」 (威嚇する咆哮) — a turn-stamped player flag */
+  { const tfS03=gameState.players[loc.p]&&gameState.players[loc.p].temporaryFlags;
+    if(tfS03 && tfS03.noAttackDeclareS03===gameState.turn) return true; }
   const only=gameState.players[loc.p]&&gameState.players[loc.p].temporaryFlags&&gameState.players[loc.p].temporaryFlags.v350OnlyAttackerUid;
   if(only!=null && ensureCardUid(gameState,card)!==only) return true;
   const consecutive=gameState.players[loc.p]&&gameState.players[loc.p].temporaryFlags&&gameState.players[loc.p].temporaryFlags.v48ConsecutiveAttackerUid;
@@ -4201,6 +4244,11 @@ const BATTLE_PROOF_CACHE = new Map();
 function battleProof(card){
   if(!card) return false;
   if(card.battleProof) return true;          // 効果で一時的に付与された場合
+  /* S03-U171: 「このターン、自分のモンスターは戦闘では破壊されず」 (和睦の使者) — a turn-stamped flag of the monster's controller,
+     so monsters that arrive later in the turn are covered too */
+  { const locS03=(typeof locateCard==='function')?locateCard(card):null;
+    const tfS03=locS03&&locS03.zone==='mz'&&gameState.players[locS03.p]?gameState.players[locS03.p].temporaryFlags:null;
+    if(tfS03 && tfS03.noBattleDestroyS03===gameState.turn) return true; }
   // System v15: 装備カードなど外部ソースから与えられた戦闘破壊耐性
   if(typeof battleProofGrantedV15==='function' && battleProofGrantedV15(card)) return true;
   const db = dbOf(card);
@@ -4215,10 +4263,36 @@ function battleProof(card){
      で実際に確認した誤判定）。自己申告の動的判定がある以上、それを最終回答として扱う。 */
   if(sc && sc.continuous && typeof sc.continuous.battleProof === 'function') return false;
   if(BATTLE_PROOF_CACHE.has(nm)) return BATTLE_PROOF_CACHE.get(nm);
-  const e = String(db.e||"") + String(db.e0||"");
-  const proof = /戦闘では破壊されない|戦闘で破壊されない|戦闘によっては破壊されない/.test(e);
+  const proof = unconditionalBattleProofTextS03(db);
   BATTLE_PROOF_CACHE.set(nm, proof);
   return proof;
+}
+/* S03-U158: the text fallback used to match 「戦闘では破壊されない」 ANYWHERE in the text, so a monster became battle-indestructible
+   for good when the phrase was conditional (「自分フィールド上にチューナーが…存在する場合」 ホワイトポータン), limited (「1ターンに1度だけ」
+   ジャイロイド・混沌球体・スターダスト・シャオロン), about other monsters (D・ボードン, イレカエル, アマゾネス女王's others), or an effect used
+   from the hand / GY (シールド・ウォリアー, BF－蒼天のジェット, 紫炎の寄子). It also masked the System v21 declarations
+   (continuous.protectV21) of those cards, because battleProof is checked first.
+   Now the fallback only accepts a sentence that IS the unconditional self protection: 「（①:／また、）このカードは戦闘では
+   （によっては）破壊されない。」 (雲魔物, 巨大戦艦, X－セイバー パシウル, …). Everything else must be declared by the card
+   (sc.battleProof, continuous.battleProof, protectV21). */
+function recordBattlePartnersS03(gs, a, b){
+  if(!a || !b) return;
+  ensureCardUid(gs, a); ensureCardUid(gs, b);
+  const add = (c, uid)=>{ if(!Array.isArray(c.battledWithS03)) c.battledWithS03 = []; if(c.battledWithS03.indexOf(uid)<0) c.battledWithS03.push(uid); };
+  add(a, b.uid); add(b, a.uid);
+}
+/* did these two monsters battle each other while both stayed on the field? (both records are zone-local) */
+function battledTogetherS03(a, b){
+  return !!(a && b && a.uid!=null && b.uid!=null && Array.isArray(a.battledWithS03) && Array.isArray(b.battledWithS03)
+    && a.battledWithS03.indexOf(b.uid)>=0 && b.battledWithS03.indexOf(a.uid)>=0);
+}
+function unconditionalBattleProofTextS03(db){
+  if(!db || db.k!=='m') return false;
+  const e = String(db.e||"") + "\n" + String(db.e0||"");
+  return e.split(/[。\n]/).some(sen=>{
+    const t = sen.replace(/\s+/g,'').replace(/^(?:[①②③④⑤⑥][:：]|また、)/,'');
+    return /^このカードは戦闘(?:では|によっては|で)破壊されない$/.test(t);
+  });
 }
 
 /* 装備モンスターが場を離れた時、付いている装備魔法を墓地へ送る */
@@ -4303,7 +4377,7 @@ function shuffle(a,gsRef){
 /* GENERATED by tools/gen_setcode_overlay.py — DO NOT EDIT BY HAND.
    Source of truth: data/setcode_overlay_v4.json
    P4 SetcodeAuthority overlay (passcode-only membership). */
-const SETCODE_OVERLAY_V4 = {"schema_version":1,"authority_version":"P4-v5","generated_from":"data/carddata.json (read-only)","rule":"membership は passcode でのみ表現する。実行時に名前一致・ruby推測を行わない。","predicate_count":34,"authority_unique_passcode_count":474,"overlay_unique_passcode_count":328,"total_membership_count":479,"count_glossary":{"authority_unique_passcode_count":"全predicateのユニークpasscode数","overlay_unique_passcode_count":"setcode_exact群を除いたユニークpasscode数（overlay固有）","total_membership_count":"全predicateのmember総数（複数群に属するpasscodeは重複計上）"},"setcode_exact_groups":["FABLED","GENEX","GUSTO","ICE_BARRIER","WORM"],"groups":{"D_MORPHTRONIC":{"jp":"D（ディフォーマー）","ruby":"ディフォーマー","setcode_exact":false,"setcode":null,"basis":"公式ルビ=ディフォーマー（公式DB cid=7927『ディフォーマー・ゲイザー』）。ダブルツールＤ＆Ｃ(ディーアンドシー)/ブレンＤ(ディー)/Ｄ－ＨＥＲＯ(デステニー)は非member","ads":"EDOPro Morphtronic(36枚)はテーマ集合であり named predicate とは別物であることを確認","note":"DBが全角Ｄを半角Dへ正規化しているため、実行時に名前では判別できない","members":[2250266,7817703,10591919,20686759,28124263,28284902,29947751,44424095,45593005,48381268,48868994,49833312,55119278,56074358,57108202,66331855,70423794,75775867,76211194,76865611,77229910,84592800,85101228,90239723,91607976,92720564,93542102],"member_names":["D・キャメラン","D・クリーナン","D・クロックン","D・ゲイザー","D・コード","D・スクランブル","D・スコープン","D・ステープラン","D・スピードユニット","D・チャッカン","D・ナポレオン","D・バインド","D・バリア","D・パッチン","D・パワーユニット","D・ビデオン","D・フィールド","D・ボードン","D・マグネンI","D・マグネンU","D・モバホン","D・ライトン","D・ラジオン","D・ラジカッセン","D・リペアユニット","D・リモコン","D・レトロエンジン"]},"C_CHAIN":{"jp":"C（チェーン／Iron Chain）","ruby":"チェーン","setcode_exact":false,"setcode":null,"basis":"「C」と名のついた を参照するのはこの5枚のみ","ads":"EDOPro archetype=Iron Chain と一致","note":"C_CHRYSALIS と絶対に統合しないこと","members":[19974580,26157485,53152590,53274132,80769747],"member_names":["C・コイル","C・シューター","C・スネーク","C・ドラゴン","C・リペアラー"]},"C_CHRYSALIS":{"jp":"C（クリサリス／Chrysalis）","ruby":"クリサリス","setcode_exact":false,"setcode":null,"basis":"ネオスペース依存で N・カードを呼ぶ別系統。「C」と名のついた を参照しない","ads":"EDOPro archetype=Chrysalis と一致","note":"C_CHAIN と絶対に統合しないこと","members":[16241441,17363041,29246354,42239546,42682609,43751755],"member_names":["C・チッキー","C・ドルフィーナ","C・パンテール","C・ピニー","C・モーグ","C・ラーバ"]},"N_NEOSPACIAN":{"jp":"N（ネオスペーシアン）","ruby":"ネオスペーシアン","setcode_exact":false,"setcode":null,"basis":"ルビ=ネオスペーシアン","ads":"EDOProはElemental HERO配下。JP名称指定は独立","note":null,"members":[13857930,17732278,17955766,43237273,54959865,78734254,80344569,89621922],"member_names":["N・アクア・ドルフィン","N・エア・ハミングバード","N・グラン・モール","N・グロー・モス","N・ティンクル・モス","N・フレア・スカラベ","N・ブラック・パンサー","N・マリン・ドルフィン"]},"NEOS":{"jp":"ネオス","ruby":null,"setcode_exact":false,"setcode":null,"basis":"「ネオス」名称指定","ads":"EDOProはElemental HERO配下。JP名称指定は独立","note":null,"members":[5126490,5128859,11502550,11913700,17032740,18302224,19594506,28677304,31111109,42015635,47274077,48996569,49352945,52098461,55171412,60417395,69884162,72926163,78512663,81566151,85507811,86346643,89943723],"member_names":["E・HERO アクア・ネオス","E・HERO アナザー・ネオス","E・HERO エアー・ネオス","E・HERO カオス・ネオス","E・HERO グラン・ネオス","E・HERO グロー・ネオス","E・HERO ゴッド・ネオス","E・HERO ストーム・ネオス","E・HERO ネオス","E・HERO ネオス・ナイト","E・HERO フレア・ネオス","E・HERO ブラック・ネオス","E・HERO マグマ・ネオス","E・HERO マリン・ネオス","インスタント・ネオスペース","ダークネス・ネオスフィア","ネオスペース","ネオスペース・コンダクター","ネオス・フォース","ネオス・ワイズマン","ラス・オブ・ネオス","リバース・オブ・ネオス","レインボー・ネオス"]},"ROID":{"jp":"ロイド","ruby":null,"setcode_exact":false,"setcode":null,"basis":"公式裁定でマジカル・アンドロイド(サイキック族)がmember。種族非依存の literal 包含","ads":"EDOPro Roid(65枚)にダークジェロイド/アーマロイドガイデンゴー/極戦機王ヴァルバロイドを確認","note":null,"members":[984114,3897065,5368615,7602840,10449150,18325492,23299957,24311595,25034083,32752319,36256625,36378213,43385557,43697559,44729197,45945685,46848859,54702678,61538782,71218746,71930383,73333463,81003500,90980792,98049038,98927491,99861526],"member_names":["E・HERO ネクロイド・シャーマン","アーマロイドガイデンゴー","エクスプレスロイド","キューキューロイド","サイクロイド","サブマリンロイド","シャトルロイド","ジェット・ロイド","ジャイロイド","スチームジャイロイド","スチームロイド","ステルスロイド","スーパービークロイド－ジャンボドリル","スーパービークロイド－ステルス・ユニオン","ダークジェロイド","デコイロイド","トラックロイド","ドリルロイド","ネイビィロイド","パトロイド","ビークロイド・コネクション・ゾーン","マジカル・アンドロイド","ユーフォロイド","ユーフォロイド・ファイター","レスキューキューロイド","レスキューロイド","極戦機王ヴァルバロイド"]},"ARCHFIEND_DEMON":{"jp":"デーモン","ruby":null,"setcode_exact":false,"setcode":null,"basis":"デーモンの召喚が \"always treated as an 'Archfiend' card\"","ads":"EDOPro Archfiend で確認","note":null,"members":[6850209,8581705,8730435,9603356,11761845,11901678,14430063,16475472,22796548,24221808,28601770,35798491,35975813,36407615,37620434,40619825,42956963,48675364,49881766,50287060,52248570,56246017,59907935,59969392,61370518,66235877,70780151,70781052,70902743,72192100,73219648,75889523,77336644,79418153,91842653,94664694,99177923],"member_names":["アンデット・スカル・デーモン","インターセプト・デーモン","インフェルニティ・デーモン","インフェルノクインデーモン","サイバーデーモン","シャドウナイトデーモン","ジェネラルデーモン","ジェノサイドキングデーモン","タルワール・デーモン","ダークビショップデーモン","デスルークデーモン","デス・デーモン・ドラゴン","デーモンとの駆け引き","デーモンの召喚","デーモンの宣告","デーモンの斧","デーモンの雄叫び","デーモン・カオス・キング","デーモン・ソルジャー","デーモン・テイマー","デーモン・ビーバー","トゥーン・デーモン","ナイトメア・デーモンズ","ブラック・デーモンズ・ドラゴン","プリズンクインデーモン","ヘルポーンデーモン","マッド・デーモン","ミストデーモン","メンタルオーバー・デーモン","メンタルスフィア・デーモン","ランサー・デーモン","レッサー・デーモン","レッド・デーモンズ・ドラゴン","レッド・デーモンズ・ドラゴン／バスター","剣闘獣の闘器デーモンズシールド","暗黒魔族ギルファー・デーモン","迅雷の魔王－スカル・デーモン"]},"PHANTOM_BEAST":{"jp":"幻獣","ruby":null,"setcode_exact":false,"setcode":null,"basis":"幻獣王ガゼル/有翼幻獣キマイラともに \"always treated as a「Phantom Beast」card\"","ads":"EDOPro で明示テキストを確認","note":null,"members":[4796100,5818798,7576264,21350571,34961968,70969517,71181155],"member_names":["幻獣の角","幻獣クロスウィング","幻獣サンダーペガス","幻獣ロックリザード","幻獣ワイルドホーン","幻獣王ガゼル","有翼幻獣キマイラ"]},"SIN":{"jp":"Sin","ruby":"シン","setcode_exact":false,"setcode":null,"basis":"接頭辞Sin","ads":"EDOPro Malefic と一致","note":null,"members":[598988,1710476,8310162,9433350,27564031,36521459,37115575,53063039,55343236,74509280],"member_names":["Sin Claw Stream","Sin World","Sin サイバー・エンド・ドラゴン","Sin スターダスト・ドラゴン","Sin トゥルース・ドラゴン","Sin パラドクス・ドラゴン","Sin パラレルギア","Sin レインボー・ドラゴン","Sin 真紅眼の黒竜","Sin 青眼の白龍"]},"ASSAULT_MODE":{"jp":"/バスター","ruby":"バスター","setcode_exact":false,"setcode":null,"basis":"カード名は全角／(U+FF0F)、テキストは半角/","ads":"EDOPro Assault Mode と一致","note":"全角/半角の不一致により実行時の名前一致は不可","members":[1764972,14553285,37169670,38898779,61257789,77336644],"member_names":["アーカナイト・マジシャン／バスター","ギガンテック・ファイター／バスター","スターダスト・ドラゴン／バスター","デスカイザー・ドラゴン／バスター","ハイパーサイコガンナー／バスター","レッド・デーモンズ・ドラゴン／バスター"]},"MEKLORD":{"jp":"機皇","ruby":null,"setcode_exact":false,"setcode":null,"basis":"漢字。ルビ揺れなし","ads":"EDOPro Meklord と一致","note":null,"members":[2137678,4545683,12986778,31930787,38522377,39648965,59371387,63468625,67328336,68140974,75733063,77864539],"member_names":["機皇兵グランエル・アイン","機皇兵スキエル・アイン","機皇兵ワイゼル・アイン","機皇城","機皇帝の賜与","機皇帝グランエル∞","機皇帝スキエル∞","機皇帝ワイゼル∞","機皇廠","機皇神マシニクル∞","機皇神龍アステリスク","鉄壁の機皇兵"]},"MEKLORD_ARMY":{"jp":"機皇兵","ruby":null,"setcode_exact":false,"setcode":null,"basis":"機皇の部分集合","ads":"EDOPro Meklord Army と一致","note":null,"members":[2137678,39648965,59371387,75733063],"member_names":["機皇兵グランエル・アイン","機皇兵スキエル・アイン","機皇兵ワイゼル・アイン","鉄壁の機皇兵"]},"EARTHBOUND":{"jp":"地縛神","ruby":null,"setcode_exact":false,"setcode":null,"basis":"漢字","ads":"EDOPro Earthbound Immortal と一致","note":null,"members":[10875327,15187079,33537328,41181774,46263076,56339050,64187086,69931927,79798060],"member_names":["地縛神 Aslla piscu","地縛神 Ccapac Apu","地縛神 Ccarayhua","地縛神 Chacu Challhua","地縛神 Cusillu","地縛神 Uru","地縛神 Wiraqocha Rasca","地縛神の咆哮","地縛神の復活"]},"VENOM":{"jp":"ヴェノム","ruby":null,"setcode_exact":false,"setcode":null,"basis":"毒蛇の供物は名前に含まず非member","ads":"EDOPro Venom と一致","note":null,"members":[4466015,9284723,22499463,36278828,54306223,60728397,73899015],"member_names":["ヴェノム・コブラ","ヴェノム・サーペント","ヴェノム・ショット","ヴェノム・スネーク","ヴェノム・スプラッシュ","ヴェノム・スワンプ","ヴェノム・ボア"]},"REPTILIANNE":{"jp":"レプティレス","ruby":null,"setcode_exact":false,"setcode":null,"basis":"カタカナ","ads":"EDOPro Reptilianne と一致","note":null,"members":[16008155,16886617,16909657,21179143,42303365,43002864,43426903,60634565,79491903,89810518,90576781,91580102],"member_names":["レプティレス・アンガー","レプティレス・ガードナー","レプティレス・ゴルゴーン","レプティレス・サーヴァント","レプティレス・スキュラ","レプティレス・スポーン","レプティレス・ナージャ","レプティレス・バイパー","レプティレス・ポイズン","レプティレス・メデューサ","レプティレス・ラミア","レプティレス・ヴァースキ"]},"ANCIENT_GEAR":{"jp":"アンティーク・ギア","ruby":"アンティーク・ギア","setcode_exact":false,"setcode":null,"basis":"★ルビが群名、表示名は「古代の機械」","ads":"EDOPro Ancient Gear と一致","note":"ルビ由来の述語。表示名から導出しており実行時判定には使わない","members":[1953925,4446672,10509340,12652643,30435145,37457534,39303359,40830387,50933533,56094445,80045583,83104731,86321248,92001300],"member_names":["古代の機械兵士","古代の機械合成獣","古代の機械城","古代の機械工兵","古代の機械工場","古代の機械巨人","古代の機械巨竜","古代の機械戦車","古代の機械掌","古代の機械爆弾","古代の機械獣","古代の機械砲台","古代の機械究極巨人","古代の機械騎士"]},"BLACK_SCORPION":{"jp":"黒蠍","ruby":null,"setcode_exact":false,"setcode":null,"basis":"首領・ザルーグ/首領亀は名前に含まず非member","ads":"EDOPro と一致","note":null,"members":[6967870,20858318,40933924,48768179,61587183,68191243,74153887],"member_names":["必殺!黒蠍コンビネーション","黒蠍団召集","黒蠍盗掘団","黒蠍－強力のゴーグ","黒蠍－棘のミーネ","黒蠍－罠はずしのクリフ","黒蠍－逃げ足のチック"]},"BAMBOO_SWORD":{"jp":"竹光","ruby":null,"setcode_exact":false,"setcode":null,"basis":"装備魔法条件は別レイヤ","ads":"EDOPro Bamboo Sword と一致","note":null,"members":[41587307,51670553,74029853],"member_names":["折れ竹光","魂を吸う竹光","黄金色の竹光"]},"VOLCANIC":{"jp":"ヴォルカニック","ruby":null,"setcode_exact":false,"setcode":null,"basis":"ブレイズ・キャノンは別群","ads":"EDOPro Volcanic と一致","note":null,"members":[17415895,32543380,33112041,33365932,33725271,54514594,63014935,66436257,69750546,76459806,81020140],"member_names":["ヴォルカニック・エッジ","ヴォルカニック・カウンター","ヴォルカニック・クイーン","ヴォルカニック・チャージ","ヴォルカニック・デビル","ヴォルカニック・ハンマー","ヴォルカニック・バックショット","ヴォルカニック・バレット","ヴォルカニック・ラット","ヴォルカニック・リボルバー","ヴォルカニック・ロケット"]},"BLAZE_CANNON":{"jp":"ブレイズ・キャノン","ruby":null,"setcode_exact":false,"setcode":null,"basis":"ヴォルカニックとは別群","ads":"EDOPro Blaze Cannon と一致","note":null,"members":[21420702,69537999],"member_names":["ブレイズ・キャノン","ブレイズ・キャノン－トライデント"]},"EVOLTILE":{"jp":"エヴォルド","ruby":null,"setcode_exact":false,"setcode":null,"basis":"エヴォルダーと別述語","ads":"EDOPro Evoltile と一致","note":null,"members":[28877602,55488859,81873903],"member_names":["エヴォルド・ウェストロ","エヴォルド・オドケリス","エヴォルド・ゲフィロス"]},"EVOLSAUR":{"jp":"エヴォルダー","ruby":null,"setcode_exact":false,"setcode":null,"basis":"エヴォルドと別述語","ads":"EDOPro Evolsaur と一致","note":null,"members":[17045014,54266211,80651316],"member_names":["エヴォルダー・ウルカノドン","エヴォルダー・ケラト","エヴォルダー・ディプロドクス"]},"WATT":{"jp":"エレキ","ruby":null,"setcode_exact":false,"setcode":null,"basis":"カタカナ","ads":"EDOPro Watt と一致","note":null,"members":[402568,1834107,2772236,5554990,12296376,18407024,23274061,24996659,27324313,29765339,32061744,32548609,45801022,46897277,53193261,56993276,58924378,61380658,65612454,81896771,84428023,88205593,95084054,97885363],"member_names":["エレキジ","エレキタリス","エレキッズ","エレキツツキ","エレキツネ","エレキツネザル","エレキトンボ","エレキマイラ","エレキャッシュ","エレキャッスル","エレキャノン","エレキャンセル","エレキュア","エレキューブ","エレキリギリス","エレキリム","エレキリン","エレキンギョ","エレキングコブラ","エレキンメダイ","エレキンモグラ","エレキー","エレキーウィ","エレキーパー"]},"RESONATOR":{"jp":"リゾネーター","ruby":null,"setcode_exact":false,"setcode":null,"basis":"カタカナ","ads":"EDOPro Resonator と一致","note":null,"members":[5780210,13708425,15576074,23008320,40583194,77087109,89127526,97021916],"member_names":["クリエイト・リゾネーター","クロック・リゾネーター","コール・リゾネーター","ダーク・リゾネーター","バリア・リゾネーター","フォース・リゾネーター","フレア・リゾネーター","リゾネーター・エンジン"]},"PENGUIN":{"jp":"ペンギン","ruby":null,"setcode_exact":false,"setcode":null,"basis":"大皇帝ペンギンのテキストで述語の実在を確認","ads":"EDOPro Penguin と一致","note":null,"members":[5628232,6836211,36039163,48531733,81306586,93920745],"member_names":["トビペンギン","ペンギン・ソルジャー","ペンギン・ナイト","ペンギン・ナイトメア","ボルト・ペンギン","大皇帝ペンギン"]},"SIX_SAMURAI_NAMED":{"jp":"六武衆","ruby":null,"setcode_exact":false,"setcode":null,"basis":"setcode 0x1000(39枚)から紫炎系17枚を除外。真六武衆を含む","ads":"EDOPro Six Samurai と一致","note":"setcode 0x1000 はテーマ集合であり述語ではない","members":[1498130,2511717,27178262,27782503,27821104,29981921,31904181,44430454,46874015,48505422,49721904,61737116,64398890,65685470,69025477,72345736,74094021,75116619,78792195,83039729,90397998,95519486],"member_names":["六武衆のご隠居","六武衆の侍従","六武衆の師範","六武衆の影武者","六武衆の御霊代","六武衆の理","六武衆の結束","六武衆の荒行","六武衆の露払い","六武衆推参!","六武衆－イロウ","六武衆－カモン","六武衆－ザンジ","六武衆－ニサシ","六武衆－ヤイチ","六武衆－ヤリザ","真六武衆－エニシ","真六武衆－カゲキ","真六武衆－キザン","真六武衆－シエン","真六武衆－シナイ","真六武衆－ミズホ"]},"CLOUDIAN":{"jp":"雲魔物","ruby":null,"setcode_exact":false,"setcode":null,"basis":"setcode 0x1022(18枚)から支援6枚を除外","ads":"EDOPro Cloudian と一致","note":null,"members":[13474291,16197610,17810268,20003527,43318266,56597272,57610714,79703905,80825553,83604828,83982270,90135989],"member_names":["雲魔物のスコール","雲魔物－アイ・オブ・ザ・タイフーン","雲魔物－アシッド・クラウド","雲魔物－アルトス","雲魔物－キロスタス","雲魔物－ゴースト・フォッグ","雲魔物－ストーム・ドラゴン","雲魔物－スモークボール","雲魔物－タービュランス","雲魔物－ニンバスマン","雲魔物－ポイズン・クラウド","雲魔物－羊雲"]},"AMAZONESS":{"jp":"アマゾネス","ruby":null,"setcode_exact":false,"setcode":null,"basis":"setcode 0x1028(16枚)から女王の選択を除外","ads":"EDOPro Amazoness と一致","note":null,"members":[712559,10979723,15951532,22082163,29654737,36100154,47480070,53162898,55821894,67987611,73574678,81325903,89567993,91869203,94004268],"member_names":["アマゾネスの剣士","アマゾネスの吹き矢兵","アマゾネスの呪詛師","アマゾネスの射手","アマゾネスの弩弓隊","アマゾネスの意地","アマゾネスの格闘戦士","アマゾネスの聖戦士","アマゾネスの賢者","アマゾネスの里","アマゾネスの鎖使い","アマゾネスの闘志","アマゾネスペット虎","アマゾネス女王","アマゾネス訓練生"]},"AESIR":{"jp":"極神","ruby":null,"setcode_exact":false,"setcode":null,"basis":"「極神」と名のついたモンスターは3枚のみ。極星(NORDIC setcode 0x1025)とは別述語","ads":"EDOPro Aesir と一致","note":"NORDIC(0x1025)は極星17枚を含む上位集合。極神聖帝オーディンはsetcodeを持たないためsetcode由来の述語では表現できない","members":[30604579,67098114,93483212],"member_names":["極神皇トール","極神皇ロキ","極神聖帝オーディン"]},"WORM":{"jp":"ワーム","ruby":null,"setcode_exact":true,"setcode":4110,"basis":"setcode==述語 完全一致（支援混入0・欠落0）","ads":"EDOPro Worm と一致","note":null,"members":[2088870,3204467,7700132,10026986,11159464,11722335,14936691,15658249,17649753,28465301,28506708,30299166,35638627,44811425,47111934,51043243,54860010,57543573,58760121,71315423,74506079,76683171,81254059,84932271,85754829,88438982,88650530],"member_names":["ワーム・アグリィ","ワーム・アポカリプス","ワーム・イリダン","ワーム・イーロキン","ワーム・ウォーロード","ワーム・オペラ","ワーム・カルタロス","ワーム・キング","ワーム・クィーン","ワーム・グルス","ワーム・コール","ワーム・ジェートリクプス","ワーム・ゼクス","ワーム・ゼロ","ワーム・ソリッド","ワーム・テンタクルス","ワーム・ディミクレス","ワーム・ノーブル","ワーム・バルサス","ワーム・ファルコ","ワーム・プリンス","ワーム・ホープ","ワーム・ミリディス","ワーム・ヤガン","ワーム・リンクス","ワーム・ルクイエ","ワーム・ヴィクトリー"]},"ICE_BARRIER":{"jp":"氷結界","ruby":null,"setcode_exact":true,"setcode":4109,"basis":"完全一致","ads":"EDOPro Ice Barrier と一致","note":null,"members":[9056100,10691144,18482591,20700531,23950192,27527047,37806313,38528901,41090784,44877690,50032342,50088247,50321796,52687916,53921056,56704140,59546528,60161788,64926005,64990807,65749035,66661678,70583986,73061465,81275309,82498947,84206435,88494899,90311614,92065772],"member_names":["氷結界に住む魔酔虫","氷結界のロイヤル・ナイト","氷結界の三方陣","氷結界の交霊師","氷結界の伝道師","氷結界の修験者","氷結界の大僧正","氷結界の守護陣","氷結界の封魔団","氷結界の御庭番","氷結界の武士","氷結界の水影","氷結界の決起隊","氷結界の番人ブリズド","氷結界の破術師","氷結界の神精霊","氷結界の紋章","氷結界の舞姫","氷結界の虎将 ガンターラ","氷結界の虎将 グルナード","氷結界の虎将 ライホウ","氷結界の虎王ドゥローレン","氷結界の術者","氷結界の軍師","氷結界の輸送部隊","氷結界の鏡","氷結界の風水師","氷結界の龍 グングニール","氷結界の龍 トリシューラ","氷結界の龍 ブリューナク"]},"FABLED":{"jp":"魔轟神","ruby":null,"setcode_exact":true,"setcode":4124,"basis":"完全一致","ads":"EDOPro Fabled と一致","note":null,"members":[8316661,12235475,18282103,19439119,24040093,26704411,29905795,39477584,44155002,46833854,47217354,47395382,49633574,53199020,54048462,55277252,56399890,60434101,72328962,73040500,82888408,86840720,89194103,90616316,94845226,97439806,97651498],"member_names":["魔轟神アシェンヴェイル","魔轟神ウルストス","魔轟神オルトロ","魔轟神ガルバス","魔轟神クシャノ","魔轟神クルス","魔轟神グリムロ","魔轟神ソルキウス","魔轟神ディアネイラ","魔轟神ディフ","魔轟神トピー","魔轟神ミーズトージ","魔轟神ルリー","魔轟神レイジオン","魔轟神レイヴン","魔轟神レヴュアタン","魔轟神ヴァルキュルス","魔轟神獣ガナシア","魔轟神獣キャシー","魔轟神獣クダベ","魔轟神獣ケルベラル","魔轟神獣コカトル","魔轟神獣チャワ","魔轟神獣ノズチ","魔轟神獣ペガラサス","魔轟神獣ユニコール","魔轟神獣ルビィラーダ"]},"GUSTO":{"jp":"ガスタ","ruby":null,"setcode_exact":true,"setcode":4113,"basis":"完全一致","ads":"EDOPro Gusto と一致","note":null,"members":[336369,2766877,9837195,9897998,10755984,27944249,28066831,29552709,34109611,36331074,46044841,54455435,65277087,72439556,82422049,83544697,84766279,91449144,91662792,91822647],"member_names":["ガスタのつむじ風","ガスタの交信","ガスタの巫女 ウィンダ","ガスタの希望 カムイ","ガスタの疾風 リーズ","ガスタの神官 ムスト","ガスタの賢者 ウィンダール","ガスタの静寂 カーム","ガスタへの祈り","ガスタ・イグル","ガスタ・ガルド","ガスタ・コドル","ガスタ・サンボルト","ガスタ・スクイレル","ガスタ・ファルコ","ダイガスタ・イグルス","ダイガスタ・ガルドス","ダイガスタ・スフィアード","ダイガスタ・ファルコス","ダイガスタ・フェニクス"]},"GENEX":{"jp":"ジェネクス","ruby":null,"setcode_exact":true,"setcode":4141,"basis":"完全一致","ads":"EDOPro Genex と一致","note":null,"members":[1533292,4904812,6256844,6588580,10178757,15605085,16828633,17760003,19182751,20127343,24432029,27827903,30399511,32744558,33972299,38049541,38354937,43925870,46572756,47421985,51827737,52222372,52709508,53944920,56511382,57238939,63211608,64034255,65149697,66165755,67483216,68450517,68505803,73483491,73783043,83500096,89211486,89333528,91438994,93211836,93882364,94622638],"member_names":["A・ジェネクス・アクセル","A・ジェネクス・クラッシャー","A・ジェネクス・ケミストリ","A・ジェネクス・ソリッド","A・ジェネクス・チェンジャー","A・ジェネクス・トライアーム","A・ジェネクス・トライフォース","A・ジェネクス・ドゥルダーク","A・ジェネクス・バードマン","A・ジェネクス・パワーコール","A・ジェネクス・ベルフレイム","A・ジェネクス・ボルキャノン","A・ジェネクス・リバイバー","A・ジェネクス・リモート","アーミー・ジェネクス","ウィンドファーム・ジェネクス","サーマル・ジェネクス","ジェネクス・ウンディーネ","ジェネクス・ガイア","ジェネクス・コントローラー","ジェネクス・サーチャー","ジェネクス・ドクター","ジェネクス・ニュートロン","ジェネクス・パワー・プランナー","ジェネクス・ヒート","ジェネクス・ブラスト","ジェネクス・ワーカー","ジオ・ジェネクス","スペア・ジェネクス","ソーラー・ジェネクス","タービン・ジェネクス","ハイドロ・ジェネクス","リサイクル・ジェネクス","レアル・ジェネクス・アクセラレーター","レアル・ジェネクス・ウルティマム","レアル・ジェネクス・オラクル","レアル・ジェネクス・クラッシャー","レアル・ジェネクス・クロキシアン","レアル・ジェネクス・コーディネイター","レアル・ジェネクス・ターボ","レアル・ジェネクス・マグナ","レアル・ジェネクス・ヴィンディカイト"]}}};
+const SETCODE_OVERLAY_V4 = {"schema_version":1,"authority_version":"P4-v7","generated_from":"data/carddata.json (read-only)","rule":"membership は passcode でのみ表現する。実行時に名前一致・ruby推測を行わない。","predicate_count":36,"authority_unique_passcode_count":486,"overlay_unique_passcode_count":340,"total_membership_count":491,"count_glossary":{"authority_unique_passcode_count":"全predicateのユニークpasscode数","overlay_unique_passcode_count":"setcode_exact群を除いたユニークpasscode数（overlay固有）","total_membership_count":"全predicateのmember総数（複数群に属するpasscodeは重複計上）"},"setcode_exact_groups":["FABLED","GENEX","GUSTO","ICE_BARRIER","WORM"],"groups":{"D_MORPHTRONIC":{"jp":"D（ディフォーマー）","ruby":"ディフォーマー","setcode_exact":false,"setcode":null,"basis":"公式ルビ=ディフォーマー（公式DB cid=7927『ディフォーマー・ゲイザー』）。ダブルツールＤ＆Ｃ(ディーアンドシー)/ブレンＤ(ディー)/Ｄ－ＨＥＲＯ(デステニー)は非member","ads":"EDOPro Morphtronic(36枚)はテーマ集合であり named predicate とは別物であることを確認","note":"DBが全角Ｄを半角Dへ正規化しているため、実行時に名前では判別できない","members":[2250266,7817703,10591919,20686759,28124263,28284902,29947751,44424095,45593005,48381268,48868994,49833312,55119278,56074358,57108202,66331855,70423794,75775867,76211194,76865611,77229910,84592800,85101228,90239723,91607976,92720564,93542102],"member_names":["D・キャメラン","D・クリーナン","D・クロックン","D・ゲイザー","D・コード","D・スクランブル","D・スコープン","D・ステープラン","D・スピードユニット","D・チャッカン","D・ナポレオン","D・バインド","D・バリア","D・パッチン","D・パワーユニット","D・ビデオン","D・フィールド","D・ボードン","D・マグネンI","D・マグネンU","D・モバホン","D・ライトン","D・ラジオン","D・ラジカッセン","D・リペアユニット","D・リモコン","D・レトロエンジン"]},"C_CHAIN":{"jp":"C（チェーン／Iron Chain）","ruby":"チェーン","setcode_exact":false,"setcode":null,"basis":"「C」と名のついた を参照するのはこの5枚のみ","ads":"EDOPro archetype=Iron Chain と一致","note":"C_CHRYSALIS と絶対に統合しないこと","members":[19974580,26157485,53152590,53274132,80769747],"member_names":["C・コイル","C・シューター","C・スネーク","C・ドラゴン","C・リペアラー"]},"C_CHRYSALIS":{"jp":"C（クリサリス／Chrysalis）","ruby":"クリサリス","setcode_exact":false,"setcode":null,"basis":"ネオスペース依存で N・カードを呼ぶ別系統。「C」と名のついた を参照しない","ads":"EDOPro archetype=Chrysalis と一致","note":"C_CHAIN と絶対に統合しないこと","members":[16241441,17363041,29246354,42239546,42682609,43751755],"member_names":["C・チッキー","C・ドルフィーナ","C・パンテール","C・ピニー","C・モーグ","C・ラーバ"]},"N_NEOSPACIAN":{"jp":"N（ネオスペーシアン）","ruby":"ネオスペーシアン","setcode_exact":false,"setcode":null,"basis":"ルビ=ネオスペーシアン","ads":"EDOProはElemental HERO配下。JP名称指定は独立","note":null,"members":[13857930,17732278,17955766,43237273,54959865,78734254,80344569,89621922],"member_names":["N・アクア・ドルフィン","N・エア・ハミングバード","N・グラン・モール","N・グロー・モス","N・ティンクル・モス","N・フレア・スカラベ","N・ブラック・パンサー","N・マリン・ドルフィン"]},"NEOS":{"jp":"ネオス","ruby":null,"setcode_exact":false,"setcode":null,"basis":"「ネオス」名称指定","ads":"EDOProはElemental HERO配下。JP名称指定は独立","note":null,"members":[5126490,5128859,11502550,11913700,17032740,18302224,19594506,28677304,31111109,42015635,47274077,48996569,49352945,52098461,55171412,60417395,69884162,72926163,78512663,81566151,85507811,86346643,89943723],"member_names":["E・HERO アクア・ネオス","E・HERO アナザー・ネオス","E・HERO エアー・ネオス","E・HERO カオス・ネオス","E・HERO グラン・ネオス","E・HERO グロー・ネオス","E・HERO ゴッド・ネオス","E・HERO ストーム・ネオス","E・HERO ネオス","E・HERO ネオス・ナイト","E・HERO フレア・ネオス","E・HERO ブラック・ネオス","E・HERO マグマ・ネオス","E・HERO マリン・ネオス","インスタント・ネオスペース","ダークネス・ネオスフィア","ネオスペース","ネオスペース・コンダクター","ネオス・フォース","ネオス・ワイズマン","ラス・オブ・ネオス","リバース・オブ・ネオス","レインボー・ネオス"]},"ROID":{"jp":"ロイド","ruby":null,"setcode_exact":false,"setcode":null,"basis":"公式裁定でマジカル・アンドロイド(サイキック族)がmember。種族非依存の literal 包含","ads":"EDOPro Roid(65枚)にダークジェロイド/アーマロイドガイデンゴー/極戦機王ヴァルバロイドを確認","note":null,"members":[984114,3897065,5368615,7602840,10449150,18325492,23299957,24311595,25034083,32752319,36256625,36378213,43385557,43697559,44729197,45945685,46848859,54702678,61538782,71218746,71930383,73333463,81003500,90980792,98049038,98927491,99861526],"member_names":["E・HERO ネクロイド・シャーマン","アーマロイドガイデンゴー","エクスプレスロイド","キューキューロイド","サイクロイド","サブマリンロイド","シャトルロイド","ジェット・ロイド","ジャイロイド","スチームジャイロイド","スチームロイド","ステルスロイド","スーパービークロイド－ジャンボドリル","スーパービークロイド－ステルス・ユニオン","ダークジェロイド","デコイロイド","トラックロイド","ドリルロイド","ネイビィロイド","パトロイド","ビークロイド・コネクション・ゾーン","マジカル・アンドロイド","ユーフォロイド","ユーフォロイド・ファイター","レスキューキューロイド","レスキューロイド","極戦機王ヴァルバロイド"]},"ARCHFIEND_DEMON":{"jp":"デーモン","ruby":null,"setcode_exact":false,"setcode":null,"basis":"デーモンの召喚が \"always treated as an 'Archfiend' card\"","ads":"EDOPro Archfiend で確認","note":null,"members":[6850209,8581705,8730435,9603356,11761845,11901678,14430063,16475472,22796548,24221808,28601770,35798491,35975813,36407615,37620434,40619825,42956963,48675364,49881766,50287060,52248570,56246017,59907935,59969392,61370518,66235877,70780151,70781052,70902743,72192100,73219648,75889523,77336644,79418153,91842653,94664694,99177923],"member_names":["アンデット・スカル・デーモン","インターセプト・デーモン","インフェルニティ・デーモン","インフェルノクインデーモン","サイバーデーモン","シャドウナイトデーモン","ジェネラルデーモン","ジェノサイドキングデーモン","タルワール・デーモン","ダークビショップデーモン","デスルークデーモン","デス・デーモン・ドラゴン","デーモンとの駆け引き","デーモンの召喚","デーモンの宣告","デーモンの斧","デーモンの雄叫び","デーモン・カオス・キング","デーモン・ソルジャー","デーモン・テイマー","デーモン・ビーバー","トゥーン・デーモン","ナイトメア・デーモンズ","ブラック・デーモンズ・ドラゴン","プリズンクインデーモン","ヘルポーンデーモン","マッド・デーモン","ミストデーモン","メンタルオーバー・デーモン","メンタルスフィア・デーモン","ランサー・デーモン","レッサー・デーモン","レッド・デーモンズ・ドラゴン","レッド・デーモンズ・ドラゴン／バスター","剣闘獣の闘器デーモンズシールド","暗黒魔族ギルファー・デーモン","迅雷の魔王－スカル・デーモン"]},"PHANTOM_BEAST":{"jp":"幻獣","ruby":null,"setcode_exact":false,"setcode":null,"basis":"幻獣王ガゼル/有翼幻獣キマイラともに \"always treated as a「Phantom Beast」card\"","ads":"EDOPro で明示テキストを確認","note":null,"members":[4796100,5818798,7576264,21350571,34961968,70969517,71181155],"member_names":["幻獣の角","幻獣クロスウィング","幻獣サンダーペガス","幻獣ロックリザード","幻獣ワイルドホーン","幻獣王ガゼル","有翼幻獣キマイラ"]},"SIN":{"jp":"Sin","ruby":"シン","setcode_exact":false,"setcode":null,"basis":"接頭辞Sin","ads":"EDOPro Malefic と一致","note":null,"members":[598988,1710476,8310162,9433350,27564031,36521459,37115575,53063039,55343236,74509280],"member_names":["Sin Claw Stream","Sin World","Sin サイバー・エンド・ドラゴン","Sin スターダスト・ドラゴン","Sin トゥルース・ドラゴン","Sin パラドクス・ドラゴン","Sin パラレルギア","Sin レインボー・ドラゴン","Sin 真紅眼の黒竜","Sin 青眼の白龍"]},"ASSAULT_MODE":{"jp":"/バスター","ruby":"バスター","setcode_exact":false,"setcode":null,"basis":"カード名は全角／(U+FF0F)、テキストは半角/","ads":"EDOPro Assault Mode と一致","note":"全角/半角の不一致により実行時の名前一致は不可","members":[1764972,14553285,37169670,38898779,61257789,77336644],"member_names":["アーカナイト・マジシャン／バスター","ギガンテック・ファイター／バスター","スターダスト・ドラゴン／バスター","デスカイザー・ドラゴン／バスター","ハイパーサイコガンナー／バスター","レッド・デーモンズ・ドラゴン／バスター"]},"MEKLORD":{"jp":"機皇","ruby":null,"setcode_exact":false,"setcode":null,"basis":"漢字。ルビ揺れなし","ads":"EDOPro Meklord と一致","note":null,"members":[2137678,4545683,12986778,31930787,38522377,39648965,59371387,63468625,67328336,68140974,75733063,77864539],"member_names":["機皇兵グランエル・アイン","機皇兵スキエル・アイン","機皇兵ワイゼル・アイン","機皇城","機皇帝の賜与","機皇帝グランエル∞","機皇帝スキエル∞","機皇帝ワイゼル∞","機皇廠","機皇神マシニクル∞","機皇神龍アステリスク","鉄壁の機皇兵"]},"MEKLORD_ARMY":{"jp":"機皇兵","ruby":null,"setcode_exact":false,"setcode":null,"basis":"機皇の部分集合","ads":"EDOPro Meklord Army と一致","note":null,"members":[2137678,39648965,59371387,75733063],"member_names":["機皇兵グランエル・アイン","機皇兵スキエル・アイン","機皇兵ワイゼル・アイン","鉄壁の機皇兵"]},"EARTHBOUND":{"jp":"地縛神","ruby":null,"setcode_exact":false,"setcode":null,"basis":"漢字","ads":"EDOPro Earthbound Immortal と一致","note":null,"members":[10875327,15187079,33537328,41181774,46263076,56339050,64187086,69931927,79798060],"member_names":["地縛神 Aslla piscu","地縛神 Ccapac Apu","地縛神 Ccarayhua","地縛神 Chacu Challhua","地縛神 Cusillu","地縛神 Uru","地縛神 Wiraqocha Rasca","地縛神の咆哮","地縛神の復活"]},"VENOM":{"jp":"ヴェノム","ruby":null,"setcode_exact":false,"setcode":null,"basis":"毒蛇の供物は名前に含まず非member","ads":"EDOPro Venom と一致","note":null,"members":[4466015,9284723,22499463,36278828,54306223,60728397,73899015],"member_names":["ヴェノム・コブラ","ヴェノム・サーペント","ヴェノム・ショット","ヴェノム・スネーク","ヴェノム・スプラッシュ","ヴェノム・スワンプ","ヴェノム・ボア"]},"REPTILIANNE":{"jp":"レプティレス","ruby":null,"setcode_exact":false,"setcode":null,"basis":"カタカナ","ads":"EDOPro Reptilianne と一致","note":null,"members":[16008155,16886617,16909657,21179143,42303365,43002864,43426903,60634565,79491903,89810518,90576781,91580102],"member_names":["レプティレス・アンガー","レプティレス・ガードナー","レプティレス・ゴルゴーン","レプティレス・サーヴァント","レプティレス・スキュラ","レプティレス・スポーン","レプティレス・ナージャ","レプティレス・バイパー","レプティレス・ポイズン","レプティレス・メデューサ","レプティレス・ラミア","レプティレス・ヴァースキ"]},"ANCIENT_GEAR":{"jp":"アンティーク・ギア","ruby":"アンティーク・ギア","setcode_exact":false,"setcode":null,"basis":"★ルビが群名、表示名は「古代の機械」","ads":"EDOPro Ancient Gear と一致","note":"ルビ由来の述語。表示名から導出しており実行時判定には使わない","members":[1953925,4446672,10509340,12652643,30435145,37457534,39303359,40830387,50933533,56094445,80045583,83104731,86321248,92001300],"member_names":["古代の機械兵士","古代の機械合成獣","古代の機械城","古代の機械工兵","古代の機械工場","古代の機械巨人","古代の機械巨竜","古代の機械戦車","古代の機械掌","古代の機械爆弾","古代の機械獣","古代の機械砲台","古代の機械究極巨人","古代の機械騎士"]},"BLACK_SCORPION":{"jp":"黒蠍","ruby":null,"setcode_exact":false,"setcode":null,"basis":"首領・ザルーグ/首領亀は名前に含まず非member","ads":"EDOPro と一致","note":null,"members":[6967870,20858318,40933924,48768179,61587183,68191243,74153887],"member_names":["必殺!黒蠍コンビネーション","黒蠍団召集","黒蠍盗掘団","黒蠍－強力のゴーグ","黒蠍－棘のミーネ","黒蠍－罠はずしのクリフ","黒蠍－逃げ足のチック"]},"BAMBOO_SWORD":{"jp":"竹光","ruby":null,"setcode_exact":false,"setcode":null,"basis":"装備魔法条件は別レイヤ","ads":"EDOPro Bamboo Sword と一致","note":null,"members":[41587307,51670553,74029853],"member_names":["折れ竹光","魂を吸う竹光","黄金色の竹光"]},"VOLCANIC":{"jp":"ヴォルカニック","ruby":null,"setcode_exact":false,"setcode":null,"basis":"ブレイズ・キャノンは別群","ads":"EDOPro Volcanic と一致","note":null,"members":[17415895,32543380,33112041,33365932,33725271,54514594,63014935,66436257,69750546,76459806,81020140],"member_names":["ヴォルカニック・エッジ","ヴォルカニック・カウンター","ヴォルカニック・クイーン","ヴォルカニック・チャージ","ヴォルカニック・デビル","ヴォルカニック・ハンマー","ヴォルカニック・バックショット","ヴォルカニック・バレット","ヴォルカニック・ラット","ヴォルカニック・リボルバー","ヴォルカニック・ロケット"]},"BLAZE_CANNON":{"jp":"ブレイズ・キャノン","ruby":null,"setcode_exact":false,"setcode":null,"basis":"ヴォルカニックとは別群","ads":"EDOPro Blaze Cannon と一致","note":null,"members":[21420702,69537999],"member_names":["ブレイズ・キャノン","ブレイズ・キャノン－トライデント"]},"EVOLTILE":{"jp":"エヴォルド","ruby":null,"setcode_exact":false,"setcode":null,"basis":"エヴォルダーと別述語","ads":"EDOPro Evoltile と一致","note":null,"members":[28877602,55488859,81873903],"member_names":["エヴォルド・ウェストロ","エヴォルド・オドケリス","エヴォルド・ゲフィロス"]},"EVOLSAUR":{"jp":"エヴォルダー","ruby":null,"setcode_exact":false,"setcode":null,"basis":"エヴォルドと別述語","ads":"EDOPro Evolsaur と一致","note":null,"members":[17045014,54266211,80651316],"member_names":["エヴォルダー・ウルカノドン","エヴォルダー・ケラト","エヴォルダー・ディプロドクス"]},"WATT":{"jp":"エレキ","ruby":null,"setcode_exact":false,"setcode":null,"basis":"カタカナ","ads":"EDOPro Watt と一致","note":null,"members":[402568,1834107,2772236,5554990,12296376,18407024,23274061,24996659,27324313,29765339,32061744,32548609,45801022,46897277,53193261,56993276,58924378,61380658,65612454,81896771,84428023,88205593,95084054,97885363],"member_names":["エレキジ","エレキタリス","エレキッズ","エレキツツキ","エレキツネ","エレキツネザル","エレキトンボ","エレキマイラ","エレキャッシュ","エレキャッスル","エレキャノン","エレキャンセル","エレキュア","エレキューブ","エレキリギリス","エレキリム","エレキリン","エレキンギョ","エレキングコブラ","エレキンメダイ","エレキンモグラ","エレキー","エレキーウィ","エレキーパー"]},"TOMABO":{"jp":"トマボー","ruby":null,"setcode_exact":false,"setcode":null,"basis":"S03-U169: 「トマボー」と名のついたモンスター（プチトマボー）。トマボー／プチトマボーの2枚","ads":"EDOPro Tomabo と一致","note":null,"members":[525110,39703254],"member_names":["トマボー","プチトマボー"]},"GAERU":{"jp":"ガエル","ruby":null,"setcode_exact":false,"setcode":null,"basis":"S03-U161: 「ガエル」と名のついたモンスター（イレカエル）。イレカエル・サシカエル・粋カエル・フロッグ・バリアは名前に「ガエル」を含まず非member","ads":"EDOPro Frog(setcode 0x1029) は カエル 系と魔法を含む上位集合なので代用できない","note":null,"members":[9126351,9910360,12538374,46239604,49522489,56052205,56840658,63948258,81278754,84451804],"member_names":["ガエル・サンデス","デスガエル","引きガエル","悪魔ガエル","未知ガエル","裏ガエル","貫ガエル","鬼ガエル","魔知ガエル","黄泉ガエル"]},"RESONATOR":{"jp":"リゾネーター","ruby":null,"setcode_exact":false,"setcode":null,"basis":"カタカナ","ads":"EDOPro Resonator と一致","note":null,"members":[5780210,13708425,15576074,23008320,40583194,77087109,89127526,97021916],"member_names":["クリエイト・リゾネーター","クロック・リゾネーター","コール・リゾネーター","ダーク・リゾネーター","バリア・リゾネーター","フォース・リゾネーター","フレア・リゾネーター","リゾネーター・エンジン"]},"PENGUIN":{"jp":"ペンギン","ruby":null,"setcode_exact":false,"setcode":null,"basis":"大皇帝ペンギンのテキストで述語の実在を確認","ads":"EDOPro Penguin と一致","note":null,"members":[5628232,6836211,36039163,48531733,81306586,93920745],"member_names":["トビペンギン","ペンギン・ソルジャー","ペンギン・ナイト","ペンギン・ナイトメア","ボルト・ペンギン","大皇帝ペンギン"]},"SIX_SAMURAI_NAMED":{"jp":"六武衆","ruby":null,"setcode_exact":false,"setcode":null,"basis":"setcode 0x1000(39枚)から紫炎系17枚を除外。真六武衆を含む","ads":"EDOPro Six Samurai と一致","note":"setcode 0x1000 はテーマ集合であり述語ではない","members":[1498130,2511717,27178262,27782503,27821104,29981921,31904181,44430454,46874015,48505422,49721904,61737116,64398890,65685470,69025477,72345736,74094021,75116619,78792195,83039729,90397998,95519486],"member_names":["六武衆のご隠居","六武衆の侍従","六武衆の師範","六武衆の影武者","六武衆の御霊代","六武衆の理","六武衆の結束","六武衆の荒行","六武衆の露払い","六武衆推参!","六武衆－イロウ","六武衆－カモン","六武衆－ザンジ","六武衆－ニサシ","六武衆－ヤイチ","六武衆－ヤリザ","真六武衆－エニシ","真六武衆－カゲキ","真六武衆－キザン","真六武衆－シエン","真六武衆－シナイ","真六武衆－ミズホ"]},"CLOUDIAN":{"jp":"雲魔物","ruby":null,"setcode_exact":false,"setcode":null,"basis":"setcode 0x1022(18枚)から支援6枚を除外","ads":"EDOPro Cloudian と一致","note":null,"members":[13474291,16197610,17810268,20003527,43318266,56597272,57610714,79703905,80825553,83604828,83982270,90135989],"member_names":["雲魔物のスコール","雲魔物－アイ・オブ・ザ・タイフーン","雲魔物－アシッド・クラウド","雲魔物－アルトス","雲魔物－キロスタス","雲魔物－ゴースト・フォッグ","雲魔物－ストーム・ドラゴン","雲魔物－スモークボール","雲魔物－タービュランス","雲魔物－ニンバスマン","雲魔物－ポイズン・クラウド","雲魔物－羊雲"]},"AMAZONESS":{"jp":"アマゾネス","ruby":null,"setcode_exact":false,"setcode":null,"basis":"setcode 0x1028(16枚)から女王の選択を除外","ads":"EDOPro Amazoness と一致","note":null,"members":[712559,10979723,15951532,22082163,29654737,36100154,47480070,53162898,55821894,67987611,73574678,81325903,89567993,91869203,94004268],"member_names":["アマゾネスの剣士","アマゾネスの吹き矢兵","アマゾネスの呪詛師","アマゾネスの射手","アマゾネスの弩弓隊","アマゾネスの意地","アマゾネスの格闘戦士","アマゾネスの聖戦士","アマゾネスの賢者","アマゾネスの里","アマゾネスの鎖使い","アマゾネスの闘志","アマゾネスペット虎","アマゾネス女王","アマゾネス訓練生"]},"AESIR":{"jp":"極神","ruby":null,"setcode_exact":false,"setcode":null,"basis":"「極神」と名のついたモンスターは3枚のみ。極星(NORDIC setcode 0x1025)とは別述語","ads":"EDOPro Aesir と一致","note":"NORDIC(0x1025)は極星17枚を含む上位集合。極神聖帝オーディンはsetcodeを持たないためsetcode由来の述語では表現できない","members":[30604579,67098114,93483212],"member_names":["極神皇トール","極神皇ロキ","極神聖帝オーディン"]},"WORM":{"jp":"ワーム","ruby":null,"setcode_exact":true,"setcode":4110,"basis":"setcode==述語 完全一致（支援混入0・欠落0）","ads":"EDOPro Worm と一致","note":null,"members":[2088870,3204467,7700132,10026986,11159464,11722335,14936691,15658249,17649753,28465301,28506708,30299166,35638627,44811425,47111934,51043243,54860010,57543573,58760121,71315423,74506079,76683171,81254059,84932271,85754829,88438982,88650530],"member_names":["ワーム・アグリィ","ワーム・アポカリプス","ワーム・イリダン","ワーム・イーロキン","ワーム・ウォーロード","ワーム・オペラ","ワーム・カルタロス","ワーム・キング","ワーム・クィーン","ワーム・グルス","ワーム・コール","ワーム・ジェートリクプス","ワーム・ゼクス","ワーム・ゼロ","ワーム・ソリッド","ワーム・テンタクルス","ワーム・ディミクレス","ワーム・ノーブル","ワーム・バルサス","ワーム・ファルコ","ワーム・プリンス","ワーム・ホープ","ワーム・ミリディス","ワーム・ヤガン","ワーム・リンクス","ワーム・ルクイエ","ワーム・ヴィクトリー"]},"ICE_BARRIER":{"jp":"氷結界","ruby":null,"setcode_exact":true,"setcode":4109,"basis":"完全一致","ads":"EDOPro Ice Barrier と一致","note":null,"members":[9056100,10691144,18482591,20700531,23950192,27527047,37806313,38528901,41090784,44877690,50032342,50088247,50321796,52687916,53921056,56704140,59546528,60161788,64926005,64990807,65749035,66661678,70583986,73061465,81275309,82498947,84206435,88494899,90311614,92065772],"member_names":["氷結界に住む魔酔虫","氷結界のロイヤル・ナイト","氷結界の三方陣","氷結界の交霊師","氷結界の伝道師","氷結界の修験者","氷結界の大僧正","氷結界の守護陣","氷結界の封魔団","氷結界の御庭番","氷結界の武士","氷結界の水影","氷結界の決起隊","氷結界の番人ブリズド","氷結界の破術師","氷結界の神精霊","氷結界の紋章","氷結界の舞姫","氷結界の虎将 ガンターラ","氷結界の虎将 グルナード","氷結界の虎将 ライホウ","氷結界の虎王ドゥローレン","氷結界の術者","氷結界の軍師","氷結界の輸送部隊","氷結界の鏡","氷結界の風水師","氷結界の龍 グングニール","氷結界の龍 トリシューラ","氷結界の龍 ブリューナク"]},"FABLED":{"jp":"魔轟神","ruby":null,"setcode_exact":true,"setcode":4124,"basis":"完全一致","ads":"EDOPro Fabled と一致","note":null,"members":[8316661,12235475,18282103,19439119,24040093,26704411,29905795,39477584,44155002,46833854,47217354,47395382,49633574,53199020,54048462,55277252,56399890,60434101,72328962,73040500,82888408,86840720,89194103,90616316,94845226,97439806,97651498],"member_names":["魔轟神アシェンヴェイル","魔轟神ウルストス","魔轟神オルトロ","魔轟神ガルバス","魔轟神クシャノ","魔轟神クルス","魔轟神グリムロ","魔轟神ソルキウス","魔轟神ディアネイラ","魔轟神ディフ","魔轟神トピー","魔轟神ミーズトージ","魔轟神ルリー","魔轟神レイジオン","魔轟神レイヴン","魔轟神レヴュアタン","魔轟神ヴァルキュルス","魔轟神獣ガナシア","魔轟神獣キャシー","魔轟神獣クダベ","魔轟神獣ケルベラル","魔轟神獣コカトル","魔轟神獣チャワ","魔轟神獣ノズチ","魔轟神獣ペガラサス","魔轟神獣ユニコール","魔轟神獣ルビィラーダ"]},"GUSTO":{"jp":"ガスタ","ruby":null,"setcode_exact":true,"setcode":4113,"basis":"完全一致","ads":"EDOPro Gusto と一致","note":null,"members":[336369,2766877,9837195,9897998,10755984,27944249,28066831,29552709,34109611,36331074,46044841,54455435,65277087,72439556,82422049,83544697,84766279,91449144,91662792,91822647],"member_names":["ガスタのつむじ風","ガスタの交信","ガスタの巫女 ウィンダ","ガスタの希望 カムイ","ガスタの疾風 リーズ","ガスタの神官 ムスト","ガスタの賢者 ウィンダール","ガスタの静寂 カーム","ガスタへの祈り","ガスタ・イグル","ガスタ・ガルド","ガスタ・コドル","ガスタ・サンボルト","ガスタ・スクイレル","ガスタ・ファルコ","ダイガスタ・イグルス","ダイガスタ・ガルドス","ダイガスタ・スフィアード","ダイガスタ・ファルコス","ダイガスタ・フェニクス"]},"GENEX":{"jp":"ジェネクス","ruby":null,"setcode_exact":true,"setcode":4141,"basis":"完全一致","ads":"EDOPro Genex と一致","note":null,"members":[1533292,4904812,6256844,6588580,10178757,15605085,16828633,17760003,19182751,20127343,24432029,27827903,30399511,32744558,33972299,38049541,38354937,43925870,46572756,47421985,51827737,52222372,52709508,53944920,56511382,57238939,63211608,64034255,65149697,66165755,67483216,68450517,68505803,73483491,73783043,83500096,89211486,89333528,91438994,93211836,93882364,94622638],"member_names":["A・ジェネクス・アクセル","A・ジェネクス・クラッシャー","A・ジェネクス・ケミストリ","A・ジェネクス・ソリッド","A・ジェネクス・チェンジャー","A・ジェネクス・トライアーム","A・ジェネクス・トライフォース","A・ジェネクス・ドゥルダーク","A・ジェネクス・バードマン","A・ジェネクス・パワーコール","A・ジェネクス・ベルフレイム","A・ジェネクス・ボルキャノン","A・ジェネクス・リバイバー","A・ジェネクス・リモート","アーミー・ジェネクス","ウィンドファーム・ジェネクス","サーマル・ジェネクス","ジェネクス・ウンディーネ","ジェネクス・ガイア","ジェネクス・コントローラー","ジェネクス・サーチャー","ジェネクス・ドクター","ジェネクス・ニュートロン","ジェネクス・パワー・プランナー","ジェネクス・ヒート","ジェネクス・ブラスト","ジェネクス・ワーカー","ジオ・ジェネクス","スペア・ジェネクス","ソーラー・ジェネクス","タービン・ジェネクス","ハイドロ・ジェネクス","リサイクル・ジェネクス","レアル・ジェネクス・アクセラレーター","レアル・ジェネクス・ウルティマム","レアル・ジェネクス・オラクル","レアル・ジェネクス・クラッシャー","レアル・ジェネクス・クロキシアン","レアル・ジェネクス・コーディネイター","レアル・ジェネクス・ターボ","レアル・ジェネクス・マグナ","レアル・ジェネクス・ヴィンディカイト"]}}};
 /* =========================================================================
    System P4 — SetcodeAuthority（named predicate membership）
    -------------------------------------------------------------------------
@@ -4640,7 +4714,9 @@ function p3BeginEffectContextV3(player){
 function p3EndEffectContextV3(){ P3_EFFECT_CONTEXT = null; }
 /* 自動付与する移動 Action。ここを増やすときは必ずテストも足す。 */
 /* S03-U146: FX_WIPE_ZONE (mass destruction) too — its destroyed cards get moveProvenance and graveInfo.byPlayer like FX_TO_GRAVE */
-const P3_AUTO_MOVE_TYPES = Object.freeze(['FX_TO_GRAVE','FX_DISCARD','FX_MILL','FX_MILL_TOP','FX_HAND_SEND_GRAVE','FX_WIPE_ZONE']);
+/* S03-U162: FX_BOUNCE / FX_RETURN_DECK too — 「相手のカードの効果によってフィールド上から離れた場合」 (マイン・モール) must know the cause
+   of every departure by an effect, decided inside the action (replayed from the stamp, not from the live context) */
+const P3_AUTO_MOVE_TYPES = Object.freeze(['FX_TO_GRAVE','FX_DISCARD','FX_MILL','FX_MILL_TOP','FX_HAND_SEND_GRAVE','FX_WIPE_ZONE','FX_BOUNCE','FX_RETURN_DECK']);
 function p3StampMoveProvenanceV3(a){
   if(!a || a.p3 !== undefined) return a;              // 明示指定があれば尊重する
   if(P3_AUTO_MOVE_TYPES.indexOf(a.type) < 0) return a;
@@ -9364,7 +9440,9 @@ function protectionRecordV21(gs, card, ctx){
   for(const r of recs){
     if(c.cause==='battle' && !r.battle) continue;
     if(c.cause==='effect' && !r.effect) continue;
-    if(r.sourceKind){
+    /* S03-U168: the source kind limits effect destruction only — a record that also carries a battle protection (異次元竜
+       トワイライトゾーンドラゴン: 「…魔法・罠カードの効果では破壊されない。また、…戦闘では破壊されない」) must not lose it */
+    if(r.sourceKind && c.cause==='effect'){
       /* 単一の種類でも、「魔法・罠」のような複数指定でもよい。 */
       const want = Array.isArray(r.sourceKind) ? r.sourceKind : [r.sourceKind];
       if(want.indexOf(c.sourceKind) < 0) continue;
@@ -9432,14 +9510,23 @@ function destroyerTargetingV21(gs){
   return !!((Array.isArray(t)&&t.length) || (Array.isArray(s)&&s.length));
 }
 /* 効果破壊の判定コンテキストを組み立てる */
-function effectDestroyCtxV21(gs, a){
+function effectDestroyCtxV21(gs, a, card){
   gs = gs || gameState;
+  /* S03-U168: 「対象を取らない効果では破壊されない」 — did the destroying effect target THIS card? From the action's source stamp
+     (a.srcS03.tg, the resolving link's targeted uids; empty/absent = not targeting). destroyerTargetingV21 read the top of gs.chain,
+     which is empty while a link resolves (always false in the real path). */
+  const src = a && a.srcS03;
+  const targeting = src ? (Array.isArray(src.tg) && (card && card.uid!=null ? src.tg.indexOf(card.uid)>=0 : src.tg.length>0))
+                        : destroyerTargetingV21(gs);
   return {
     cause:'effect',
     byPlayer: (a && a.byPlayer!=null) ? a.byPlayer : null,
     reason: (a && a.reason) || null,
-    sourceKind: destroyerKindV21(gs),
-    targeting: destroyerTargetingV21(gs)
+    /* S03-U167: the resolving link has already left gs.chain when its effect destroys (destroyerKindV21 always saw an empty chain in
+       the real DUEL path, so 「罠カードの効果では破壊されない」 / 「魔法・罠カードの効果では破壊されない」 never applied). The action's
+       source stamp a.srcS03.k (engine/1ZG, written when the action is committed, replayed with it) is authoritative. */
+    sourceKind: (a && a.srcS03 && a.srcS03.k) ? a.srcS03.k : destroyerKindV21(gs),
+    targeting: targeting
   };
 }
 
@@ -10049,8 +10136,24 @@ function beginLinkResolutionS03(link, sc){
     uid: link.uid!=null ? link.uid : null,
     /* S03-U131: 発動したゾーン（「墓地で発動する効果」の判定。ネクロバレー） */
     from: link.from || null,
-    chainLinkOne: !!(typeof gameState!=='undefined' && gameState && Array.isArray(gameState.chain) && gameState.chain.length===0)
+    chainLinkOne: !!(typeof gameState!=='undefined' && gameState && Array.isArray(gameState.chain) && gameState.chain.length===0),
+    /* S03-U168: the uids this link targets (only for a targeting script, targets:true — the same rule as the target immunity check).
+       Carried into the affecting actions' source stamp (engine/1ZG a.srcS03.tg) for 「対象を取らない効果では破壊されない」. */
+    targetUids: linkTargetUidsS03(link)
   } : null;
+}
+function linkTargetUidsS03(link){
+  const sc = (link && typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[link.name] : null;
+  if(!sc || sc.targets!==true) return [];
+  const out = [];
+  (function walk(v, d){
+    if(!v || typeof v!=='object' || d>6) return;
+    if(Array.isArray(v)){ v.forEach(x=>walk(x, d+1)); return; }
+    if(v[CHAIN_CARD_REF_V2] && v.ref && v.ref.uid!=null){ if(out.indexOf(v.ref.uid)<0) out.push(v.ref.uid); return; }
+    if(v.card && v.card.uid!=null){ if(out.indexOf(v.card.uid)<0) out.push(v.card.uid); return; }
+    Object.keys(v).forEach(k=>walk(v[k], d+1));
+  })(link.targets || link.selection || [], 0);
+  return out;
 }
 function endLinkResolutionS03(){ RESOLVING_LINK_S03 = null; }
 /* true / false で判定を返す。null なら従来の規則に任せる。 */
@@ -10444,6 +10547,8 @@ function resolutionChoiceWaitS03(){
 function resumeAfterResolutionChoiceS03(){
   if(typeof PLAY_MODE === 'undefined' || PLAY_MODE !== PLAY_MODES.DUEL) return false;
   if(!gameState || gameState.pendingChoice) return false;
+  /* S03-U173: destructions deferred during this resolution open their substitute decision first (engine/1ZV) */
+  if(typeof flushDestroySubS03==='function' && flushDestroySubS03()) return false;
   const w = gameState.processorWaiting;
   if(!gameState.processorPaused || !w || w.type !== PROCESSOR_V27.SOLVE_CHAIN) return false;
   processorResumeV27();
@@ -10883,6 +10988,8 @@ function s03StampEffectSourceU115(a){
   if(!k && r.name && typeof findCardIndex==='function'){ const i=findCardIndex(r.name); if(i>=0 && CARD_DB[i]) k = CARD_DB[i].k; }
   if(!k) return a;
   a.srcS03 = {uid:r.uid, k};
+  /* S03-U168: the targeted uids of the resolving link (only when it targets), for the v21 non-targeting protections */
+  if(Array.isArray(r.targetUids) && r.targetUids.length) a.srcS03.tg = r.targetUids.slice();
   return a;
 }
 
@@ -11183,6 +11290,9 @@ function summonOnlyByS03(db){
       n[1].replace(/「([^」]+)」|このカード/g, (all, nm)=>{ names.push(nm || db.n); return all; });
       out = {byCards:names, label:n[1]+'の効果'};
     }
+    /* S03-U181: 「「X」以外の効果によって、このカードを特殊召喚する事はできない」 (剣闘獣スパルティクス / アレクサンデル) */
+    const x = !n && e.match(/「([^」]+)」以外の効果によって、?このカードを特殊召喚する事はできない/);
+    if(x) out = {byCards:[x[1]], label:`「${x[1]}」の効果`};
   }
   SUMMON_ONLY_CACHE_S03.set(db.n, out);
   return out;
@@ -11215,6 +11325,8 @@ function specialSummonMonsterKindS03(db){
   return null;
 }
 function properlySummonedReasonS03(card, summonKind, reason, from){
+  /* S03-U176: 「このカードは墓地からの特殊召喚はできない」 (engine/1ZX) */
+  if(typeof graveSpecialSummonBanReasonS03==='function'){ const gS03 = graveSpecialSummonBanReasonS03(card, from); if(gS03) return gS03; }
   /* only a Special Summon from the GY / banished zone requires the earlier proper summon (the well-established rule);
      hand / Deck / Extra Deck Special Summons by effects are left as before (限定解除, シンクロ・チェンジ …). */
   if(from!=null && from!=='grave' && from!=='banish') return '';
@@ -11319,7 +11431,8 @@ function fusionSpellPoolS03(p, prof){
   const P = gameState.players[p];
   const zones = (prof && prof.zones) || ['hand','mz'];
   const pool = [];
-  const push = (zone, c, i, lv, live)=>pool.push({i:pool.length, p, zone, index:i, card:c, c:live, db:dbOf(c), lv});
+  const push = (zone, c, i, lv, live)=>{ if(typeof cannotFusionMaterialS03==='function' && cannotFusionMaterialS03(c)) return;   /* S03-U174 */
+    pool.push({i:pool.length, p, zone, index:i, card:c, c:live, db:dbOf(c), lv}); };
   if(zones.indexOf('hand')>=0) (P.hand||[]).forEach((c,i)=>{
     if(!c || c.token) return; const db = dbOf(c); if(!db || db.k!=='m') return;
     push('hand', c, i, db.lv||0, c);
@@ -11682,6 +11795,8 @@ function forcedAttackTargetS03(attackingPlayer){
 }
 /* '' = this target is allowed; target = a card, or null for a direct attack */
 function forcedAttackTargetReasonS03(attackingPlayer, target){
+  /* S03-U160: continuous 「相手は…を攻撃対象に選択できない」 (engine/1ZU) — checked at the same three points */
+  if(target && typeof attackTargetForbiddenReasonS03==='function'){ const w = attackTargetForbiddenReasonS03(attackingPlayer, target); if(w) return w; }
   const f = forcedAttackTargetS03(attackingPlayer);
   if(!f) return '';
   if(target && target===f) return '';
@@ -11782,6 +11897,10 @@ function pendingAttackNegatorsS03(attackingPlayer){
      spec.lpCost   LP paid as the activation cost (パンダボーグ 800)
      spec.extra    fn(ctx) → '' or a reason: an additional activation condition
      spec.before   fn(ctx) — an effect applied at resolution before the Deck part (素早いモモンガ: +1000 LP; 「さらに」)
+     spec.continuous  the card's continuous effects (the usual continuous object: scope / from / apply / protectV21 / …)
+     spec.summonFlag  {key} — a zone-local turn mark set on each monster this effect Special Summons (プチトマボー: 「このターン、この効果で
+                   特殊召喚したモンスターはシンクロ素材にできない」 → noSynchroMaterialTurnS03)
+     spec.toOpponent  true — Special Summoned to the opponent's field (素早いムササビ 「相手フィールド上に」), from the player's Deck
    ■ Resolution (the regular path: trigger → activation → chain → resolution): the Deck is examined at RESOLUTION (it is not a
      target). No candidate → the effect resolves doing nothing more (the Deck is shuffled). Summon: needs a free Monster Zone to be
      activated; the monster is Special Summoned by API.specialSummon (summon conditions, 「特殊召喚できない」 and SS locks apply;
@@ -11862,7 +11981,7 @@ function declareDeckTriggerS03(name, spec){
   const reasonWhen = S.when==='battleToGrave' ? 'このカードが戦闘によって破壊され墓地へ送られた時に発動します' : 'このカードがフィールドから墓地へ送られた時に発動します';
   const canActivate = (ctx)=>{
     if(!deckTriggerHappenedS03(ctx, S)){ ctx.reason = reasonWhen; return false; }
-    if(summon && S.summonNeedsZone!==false && !hasMonsterZoneSpace(ctx.player)){ ctx.reason = 'モンスターゾーンが一杯です'; return false; }
+    if(summon && S.summonNeedsZone!==false && !hasMonsterZoneSpace(S.toOpponent ? ctx.opponent : ctx.player)){ ctx.reason = 'モンスターゾーンが一杯です'; return false; }
     if(S.lpCost && API.me(ctx).lp < S.lpCost){ ctx.reason = `${S.lpCost}ライフポイントを払えません`; return false; }
     if(typeof S.extra==='function'){ const w = S.extra(ctx); if(w){ ctx.reason = w; return false; } }
     return true;
@@ -11873,21 +11992,22 @@ function declareDeckTriggerS03(name, spec){
     selectTargets(ctx, done){ done([]); },
     resolve(ctx){
       if(typeof S.before==='function') S.before(ctx);
-      if(summon && S.summonNeedsZone!==false && !hasMonsterZoneSpace(ctx.player)){ API.log(`${name}：モンスターゾーンが空いていない`); return; }
+      if(summon && S.summonNeedsZone!==false && !hasMonsterZoneSpace(S.toOpponent ? ctx.opponent : ctx.player)){ API.log(`${name}：モンスターゾーンが空いていない`); return; }
       const pool = deckTriggerPoolS03(name, S, ctx.player);
       if(!pool.length){
         if((S.from||['deck']).indexOf('deck')>=0) API.shuffle(ctx.player);
         API.log(`${name}：条件を満たすカードがデッキに無い（デッキをシャッフル）`);
         return;
       }
-      const room = summon ? Math.max(0, ZONE_LIMITS.mz - API.me(ctx).mz.length) : 99;
+      const room = summon ? Math.max(0, ZONE_LIMITS.mz - gameState.players[S.toOpponent ? ctx.opponent : ctx.player].mz.length) : 99;
       if(!room){ API.log(`${name}：モンスターゾーンが空いていない`); return; }
       const max = Math.max(1, Math.min(S.max||1, pool.length, room));
       const min = S.minPick===0 ? 0 : 1;
       API.requestChoice({player:ctx.player, kind:'card',
         title:`${name}：${summon?'特殊召喚する':'手札に加える'}カード${max>1?`（${max}枚まで）`:''}`,
         candidates:pool, min, max, cancelable:false,
-        resume:{handler:'s03u156.deck-trigger', args:{player:ctx.player, name, action:S.action, pos:S.pos||'atk'}},
+        resume:{handler:'s03u156.deck-trigger', args:Object.assign({player:ctx.player, name, action:S.action, pos:S.pos||'atk'},
+          S.summonFlag ? {flag:S.summonFlag.key} : {}, S.toOpponent ? {toOpponent:true} : {})},
         meta:{scriptName:name}});
     },
     afterResolve(){},
@@ -11899,6 +12019,8 @@ function declareDeckTriggerS03(name, spec){
   else if(S.optional) def.blocksIfNoDeckToHand = true;
   if(S.lpCost) def.cost = function(ctx, done){ if(API.me(ctx).lp < S.lpCost){ done(false); return; } API.payCost(ctx.player, S.lpCost); done(true); };
   if(S.when==='battleToGrave') def.dsTiming = 'leave';
+  /* S03-U167: a card's continuous effects declared next to its deck trigger (オシャレオン, ジェイドナイト, 機皇兵スキエル・アイン) */
+  if(S.continuous) def.continuous = S.continuous;
   return defineScript(name, Object.assign(def, S.script||{}));
 }
 registerChoiceHandlerV49('s03u156.deck-trigger', (answer, args)=>{
@@ -11910,10 +12032,13 @@ registerChoiceHandlerV49('s03u156.deck-trigger', (answer, args)=>{
     cards.forEach(c=>{ const h = locateCardAnyV4(c); if(h && h.zone==='deck') API.searchDeck(p, h.index, args.name); });
     return;
   }
+  const to = args.toOpponent ? (p===0?1:0) : p;
   const summonOne = (c, pos)=>{
-    const h = locateCardAnyV4(c); if(!h || (h.zone!=='deck' && h.zone!=='hand') || !hasMonsterZoneSpace(p)) return;
-    if(pos==='faceDownDef') API.specialSummon(p, h.zone, h.index, 'def', args.name, null, {faceDown:true});
-    else API.specialSummon(p, h.zone, h.index, pos==='def'?'def':'atk', args.name);
+    const h = locateCardAnyV4(c); if(!h || (h.zone!=='deck' && h.zone!=='hand') || !hasMonsterZoneSpace(to)) return;
+    if(pos==='faceDownDef') API.specialSummon(to, h.zone, h.index, 'def', args.name, args.toOpponent ? p : null, {faceDown:true});
+    else API.specialSummon(to, h.zone, h.index, pos==='def'?'def':'atk', args.name, args.toOpponent ? p : null);
+    /* S03-U169: the turn mark on the summoned monster (spec.summonFlag) */
+    if(args.flag){ const now = locateCardAnyV4(c); if(now && now.zone==='mz') API.setCardFlag(now, args.flag, gameState.turn, args.name, {silent:true}); }
   };
   if(args.pos==='faceUp' && cards.length===1){
     /* 「特殊召喚する」 with no position: face-up Attack or face-up Defense, the player's choice */
@@ -11931,6 +12056,699 @@ registerChoiceHandlerV49('s03u156.deck-trigger-pos', (answer, args)=>{
   if(!h || h.p!==args.player || (h.zone!=='deck' && h.zone!=='hand') || !hasMonsterZoneSpace(args.player)) return;
   API.specialSummon(args.player, h.zone, h.index, pos, args.name);
 });
+/* =========================================================================
+   S03-U160 — 「（このカードがフィールド上に表側表示で存在する限り、）相手は…を攻撃対象に選択できない」
+   -------------------------------------------------------------------------
+   A continuous declaration on the card: continuous.cannotBeAttackTarget(target, src) → true when the opponent of src's controller
+   may not choose `target` as an attack target. Reach is continuous.scope (ownMonsters etc.), as for the other continuous keys.
+   Checked where the attack target is decided: the target list (battleTargetsV29), the attack request, the replay pick — through
+   forcedAttackTargetReasonS03 (engine/1ZR). A direct attack is not an attack target and is not affected.
+   Cards: スカー・ウォリアー (other face-up Warriors). ========================================================================= */
+function attackTargetForbiddenReasonS03(attackingPlayer, target){
+  if(!target || typeof continuousSources!=='function') return '';
+  const loc = (typeof locateCard==='function') ? locateCard(target) : null;
+  if(!loc || loc.zone!=='mz' || loc.p===attackingPlayer) return '';
+  let why = '';
+  continuousSources().some(src=>{
+    const f = src.sc && src.sc.continuous && src.sc.continuous.cannotBeAttackTarget;
+    if(typeof f!=='function') return false;
+    if(src.p===attackingPlayer) return false;                     /* 「相手は」: only the source controller's opponent is restricted */
+    if(!continuousReaches(src.sc.continuous.scope||'self', src.p, loc, src.card, target)) return false;
+    let hit = false; try{ hit = !!f(target, src.card); }catch(e){ hit = false; }
+    if(hit) why = `「${cardName(src.card)}」の効果で「${cardName(target)}」は攻撃対象に選択できません`;
+    return hit;
+  });
+  return why;
+}
+/* =========================================================================
+   S03-U173 — optional destruction substitutes (「破壊される場合、代わりに〜できる」)
+   -------------------------------------------------------------------------
+   User decision (2026-09-26): at the destruction, pause and let the protected card's controller choose.
+   - A card script declares the substitute:
+       destroySubstituteS03:{kind:'destroyOwn', causes:['battle','effect'], filter(card)}   another own face-up monster
+       destroySubstituteS03:{kind:'detach',     causes:['battle','effect']}                 one of its own Xyz materials
+     The protected card must be face-up in a Monster Zone and its effects must not be negated.
+   - Effect destruction (API.destroy / API.destroyAll while a chain link resolves in DUEL): when a protected card with a usable
+     substitute would be destroyed, the destruction is not performed yet. It and every destruction after it in the same resolution
+     are collected (DESTROY_SUB_BATCH_S03, live only) and flushed when the resolution returns (processSolveChainV27) or when the
+     resolution's own choice has been answered (resumeAfterResolutionChoiceS03). Nothing moves until every decision is made.
+   - Battle destruction: the damage step cleanup stage waits before BATTLE_CLEANUP.
+   - Simultaneous destruction: the candidates are computed once from the board before anything moves; every card being destroyed in
+     the same event is excluded, and a card chosen as one substitute cannot be chosen again for another.
+   - Decision: one journaled registry choice per protected card (handler 's03u173.destroy-sub', JSON job in resume.args), not
+     cancelable (closing the sheet or tapping outside never declines). 「身代わりを使う：…」 per candidate + 「使わずに破壊する」,
+     asked even when there is only one candidate. Save / resume: the job is in the choice; the processor wait is rebuilt on load.
+     Replay: the answer and every resulting move are Actions.
+   - The substitute destruction is an effect destruction by the protected card's controller (source = the protected card) and is
+     not itself substitutable (2011 rulings; YGOPro REASON_REPLACE).
+   Limits (documented): destructions performed by a script's raw act() (not API.destroy / destroyAll), destruction as a cost and
+   destruction outside a chain link resolution are not intercepted; a script step that inspects the destroyed card right after
+   API.destroy in the same resolution sees the pre-decision board.
+   ========================================================================= */
+const DESTROY_SUB_HANDLER_S03 = 's03u173.destroy-sub';
+let DESTROY_SUB_BATCH_S03 = null;
+
+function destroySubDeclS03(card){
+  if(!card || typeof CARD_SCRIPTS==='undefined') return null;
+  const sc = CARD_SCRIPTS[cardName(card)];
+  return (sc && sc.destroySubstituteS03) || null;
+}
+
+/* The substitutes usable now by `card` (controlled by p) against a destruction of `cause`, excluding the uids in `excl`. */
+function destroySubOptionsS03(gs, card, p, cause, excl){
+  gs = gs || gameState; excl = excl || [];
+  const decl = destroySubDeclS03(card);
+  if(!decl || !card || card.face!=='up') return [];
+  if(Array.isArray(decl.causes) && decl.causes.indexOf(cause)<0) return [];
+  const loc = (card.uid!=null && typeof findCardByUidInState==='function') ? findCardByUidInState(gs, card.uid) : null;
+  if(!loc || loc.zone!=='mz') return [];
+  if(typeof effectNegated==='function' && effectNegated(card)) return [];
+  if(decl.kind==='detach'){
+    return (card.xyz||[]).map(m=>{ ensureCardUid(gs, m); return {kind:'detach', uid:m.uid, name:cardName(m)}; });
+  }
+  if(decl.kind==='destroyOwn'){
+    const src = {uid:card.uid, k:'m'};
+    const out = [];
+    (gs.players[p].mz||[]).forEach(c=>{
+      if(!c || c===card || c.face!=='up') return;
+      ensureCardUid(gs, c);
+      if(excl.indexOf(c.uid)>=0) return;
+      if(typeof decl.filter==='function' && !decl.filter(c)) return;
+      /* a card that this destruction could not destroy cannot be chosen */
+      if(typeof protectionRecordV21==='function'
+         && protectionRecordV21(gs, c, {cause:'effect', byPlayer:p, reason:cardName(card), sourceKind:'m', targeting:false})) return;
+      if(typeof s03UnaffectedByU115==='function' && s03UnaffectedByU115(gs, c, src)) return;
+      out.push({kind:'destroy', uid:c.uid, name:cardName(c)});
+    });
+    return out;
+  }
+  return [];
+}
+
+/* Would the effect destruction `a` (stamped FX_TO_GRAVE / FX_WIPE_ZONE shape) leave `card` on the field anyway? */
+function destroySubGuardedS03(gs, card, a){
+  if(typeof protectionRecordV21==='function' && typeof effectDestroyCtxV21==='function'
+     && protectionRecordV21(gs, card, effectDestroyCtxV21(gs, a, card))) return true;
+  if(a && a.srcS03 && typeof s03UnaffectedByU115==='function' && s03UnaffectedByU115(gs, card, a.srcS03)) return true;
+  return false;
+}
+
+/* Only while a chain link resolves in the DUEL processor (not a cost, not the manual board). */
+function destroySubContextS03(){
+  if(typeof PLAY_MODE==='undefined' || PLAY_MODE!==PLAY_MODES.DUEL || !gameState) return false;
+  if(typeof RESOLVING_LINK_S03==='undefined' || !RESOLVING_LINK_S03) return false;
+  if(typeof SCRIPT_PHASE!=='undefined' && SCRIPT_PHASE==='cost') return false;
+  if(gameState.__v44ReplayPreview) return false;
+  const cur = gameState.processorCurrent, w = gameState.processorWaiting;
+  return !!((cur && cur.type===PROCESSOR_V27.SOLVE_CHAIN) || (gameState.processorPaused && w && w.type===PROCESSOR_V27.SOLVE_CHAIN));
+}
+
+/* Bake the resolving effect's provenance into a deferred action now (the resolution context is gone when it is performed). */
+function destroySubStampS03(a){
+  if(typeof p3StampMoveProvenanceV3==='function') p3StampMoveProvenanceV3(a);
+  if(typeof s03StampEffectSourceU115==='function') s03StampEffectSourceU115(a);
+  if(a.p3===undefined) a.p3 = null;
+  if(a.srcS03===undefined) a.srcS03 = null;
+  return a;
+}
+function destroySubWipeCardsS03(gs, zone, players){
+  const out = [];
+  players.forEach(p=>{
+    const P = gs.players[p]; if(!P) return;
+    if(zone==='field'){ if(P.field) out.push({p, card:P.field}); return; }
+    (P[zone]||[]).forEach(c=>{ if(c) out.push({p, card:c}); });
+  });
+  out.forEach(x=>ensureCardUid(gs, x.card));
+  return out;
+}
+
+/* Called by API.destroy (kind 'destroy', act1 = the FX_TO_GRAVE action, r = the resolved target) and API.destroyAll
+   (kind 'wipe', spec = {zone, players, reason}). true = deferred (the caller must not act). */
+function destroySubInterceptS03(kind, x, r){
+  if(!destroySubContextS03()) return false;
+  const gs = gameState;
+  const chainKey = RESOLVING_LINK_S03 ? String(RESOLVING_LINK_S03.uid)+'/'+String(RESOLVING_LINK_S03.name) : '';
+  if(DESTROY_SUB_BATCH_S03 && DESTROY_SUB_BATCH_S03.chainKey!==chainKey){
+    /* left over from another resolution (should not happen): perform it without asking */
+    const stale = DESTROY_SUB_BATCH_S03; DESTROY_SUB_BATCH_S03 = null;
+    destroySubApplyS03({site:'effect', ops:stale.ops, items:[], pos:0, picks:[]});
+  }
+  let op = null;
+  if(kind==='destroy'){
+    if(!r || !r.card) return false;
+    ensureCardUid(gs, r.card);
+    const a = destroySubStampS03(Object.assign({}, x));
+    delete a.player; delete a.zone; delete a.index;
+    op = {t:'destroy', uid:r.card.uid, a};
+    if(!DESTROY_SUB_BATCH_S03){
+      if(!destroySubDeclS03(r.card)) return false;
+      const probe = Object.assign({}, a, {player:r.p, zone:r.zone, index:r.index});
+      if(destroySubGuardedS03(gs, r.card, probe)) return false;
+      if(!destroySubOptionsS03(gs, r.card, r.p, 'effect', [r.card.uid]).length) return false;
+    }
+  }else{
+    const a = destroySubStampS03({type:'FX_WIPE_ZONE', reason:x.reason});
+    delete a.type;
+    op = {t:'wipe', zone:x.zone, players:x.players.slice(), a};
+    if(!DESTROY_SUB_BATCH_S03){
+      const doomed = destroySubWipeCardsS03(gs, x.zone, x.players);
+      const excl = doomed.map(d=>d.card.uid);
+      const any = doomed.some(d=>destroySubDeclS03(d.card)
+        && !destroySubGuardedS03(gs, d.card, Object.assign({type:'FX_WIPE_ZONE', player:d.p, zone:x.zone}, a))
+        && destroySubOptionsS03(gs, d.card, d.p, 'effect', excl).length);
+      if(!any) return false;
+    }
+  }
+  if(!DESTROY_SUB_BATCH_S03) DESTROY_SUB_BATCH_S03 = {chainKey, ops:[]};
+  DESTROY_SUB_BATCH_S03.ops.push(op);
+  if(typeof trace==='function') trace(`破壊の身代わり：${kind==='destroy'?'破壊':'全体破壊'}を選択待ちへ`);
+  return true;
+}
+
+/* Turn the collected effect destructions into decisions. true = a choice is open (the processor must wait). */
+function flushDestroySubS03(){
+  const B = DESTROY_SUB_BATCH_S03;
+  if(!B || !gameState) return false;
+  if(gameState.pendingChoice) return false;          // the resolution's own choice first
+  DESTROY_SUB_BATCH_S03 = null;
+  const gs = gameState;
+  const doomed = [], perOp = [];
+  B.ops.forEach(op=>{
+    let list = [];
+    if(op.t==='destroy'){
+      const h = findCardByUidInState(gs, op.uid);
+      if(h && ['mz','sz','field'].indexOf(h.zone)>=0) list = [{p:h.p, card:h.card, a:Object.assign({}, op.a, {player:h.p, zone:h.zone, index:h.index})}];
+    }else{
+      list = destroySubWipeCardsS03(gs, op.zone, op.players).map(d=>({p:d.p, card:d.card, a:Object.assign({type:'FX_WIPE_ZONE', player:d.p, zone:op.zone}, op.a)}));
+    }
+    list.forEach(d=>{ if(doomed.indexOf(d.card.uid)<0) doomed.push(d.card.uid); });
+    perOp.push(list);
+  });
+  const items = [];
+  perOp.forEach(list=>list.forEach(d=>{
+    if(items.some(it=>it.uid===d.card.uid)) return;
+    if(!destroySubDeclS03(d.card) || destroySubGuardedS03(gs, d.card, d.a)) return;
+    const opts = destroySubOptionsS03(gs, d.card, d.p, 'effect', doomed);
+    if(opts.length) items.push({uid:d.card.uid, p:d.p, name:cardName(d.card), cause:'effect', opts});
+  }));
+  return destroySubNextS03({site:'effect', ops:B.ops, items, pos:0, picks:[]});
+}
+
+/* Battle: before BATTLE_CLEANUP. true = a choice is open (the cleanup stage waits and runs again after the decisions). */
+function destroySubBattleS03(b){
+  if(!b || b.subDoneS03 || typeof PLAY_MODE==='undefined' || PLAY_MODE!==PLAY_MODES.DUEL) return false;
+  const gs = gameState;
+  const doomed = [];
+  gs.players.forEach((P,p)=>(P.mz||[]).forEach(c=>{ if(c && c.battleDestroyed){ ensureCardUid(gs, c); doomed.push({p, card:c}); } }));
+  const excl = doomed.map(d=>d.card.uid);
+  const items = [];
+  doomed.forEach(d=>{
+    const opts = destroySubOptionsS03(gs, d.card, d.p, 'battle', excl);
+    if(opts.length) items.push({uid:d.card.uid, p:d.p, name:cardName(d.card), cause:'battle', opts});
+  });
+  if(!items.length) return false;
+  return destroySubNextS03({site:'battle', ops:[], items, pos:0, picks:[]});
+}
+
+function destroySubKeyS03(o){ return (o.kind==='detach' ? 'mat:' : 'sub:') + o.uid; }
+
+/* Ask the next protected card, or perform everything. true = a choice is open. */
+function destroySubNextS03(job){
+  const gs = gameState;
+  while(job.pos < job.items.length){
+    const item = job.items[job.pos];
+    const claimed = job.picks.filter(x=>x.use && x.kind==='destroy').map(x=>x.subUid);
+    const opts = item.opts.filter(o=>o.kind!=='destroy' || claimed.indexOf(o.uid)<0);
+    if(!opts.length){ job.picks.push({uid:item.uid, use:false}); job.pos++; continue; }
+    const cands = opts.map(o=>{
+      if(o.kind==='detach') return {key:destroySubKeyS03(o), label:`身代わりを使う：素材「${o.name}」を取り除く`, sub:`${item.name} のエクシーズ素材`};
+      const h = findCardByUidInState(gs, o.uid);
+      return {key:destroySubKeyS03(o), label:`身代わりを使う：「${o.name}」を破壊`, sub:`${nameOf(item.p)}・モンスターゾーン`,
+              uid:o.uid, p:h?h.p:null, zone:h?h.zone:null, index:h?h.index:null};
+    });
+    cands.push({key:'decline', label:'使わずに破壊する', sub:`${item.name} はそのまま破壊されます`});
+    const causeJp = item.cause==='battle' ? '戦闘' : '効果';
+    const opened = requestChoiceV49({
+      player:item.p, kind:'card',
+      title:`${item.name}：${causeJp}で破壊されます`,
+      note:`代わりに失うカード／素材を選ぶと、${item.name} は破壊されません。`,
+      candidates:cands, min:1, max:1, cancelable:false,
+      resume:{handler:DESTROY_SUB_HANDLER_S03, args:{job}},
+      meta:{scriptName:item.name}
+    });
+    if(opened) return true;
+    job.picks.push({uid:item.uid, use:false}); job.pos++;
+  }
+  destroySubApplyS03(job);
+  return false;
+}
+
+/* Perform the decisions and the collected destructions. */
+function destroySubApplyS03(job){
+  const gs = gameState;
+  const used = job.picks.filter(x=>x.use);
+  const spare = used.map(x=>x.uid);
+  if(job.items.length || job.site==='battle') act({type:'DESTROY_SUB_S03', site:job.site, picks:JSON.parse(JSON.stringify(job.picks))});
+  used.forEach(x=>{
+    const prot = findCardByUidInState(gs, x.uid);
+    const protName = prot ? cardName(prot.card) : '';
+    if(x.kind==='detach'){
+      if(prot && prot.zone==='mz') act({type:'FX_DETACH', player:prot.p, mzIndex:prot.index, materialUid:x.subUid,
+        reason:`${protName}（破壊の身代わり）`, srcS03:{uid:x.uid, k:'m'}});
+      return;
+    }
+    const s = findCardByUidInState(gs, x.subUid);
+    if(s && s.zone==='mz') act({type:'FX_TO_GRAVE', player:s.p, zone:'mz', index:s.index, reason:`${protName}の身代わり`, byDestroy:true,
+      byPlayer:x.p, p3:{reason:'effect', actingPlayer:x.p}, srcS03:{uid:x.uid, k:'m'}, destroySubS03:true});
+  });
+  if(job.site==='effect'){
+    job.ops.forEach(op=>{
+      if(op.t==='destroy'){
+        if(spare.indexOf(op.uid)>=0) return;
+        const h = findCardByUidInState(gs, op.uid);
+        if(!h || ['mz','sz','field'].indexOf(h.zone)<0) return;
+        act(Object.assign({}, op.a, {player:h.p, zone:h.zone, index:h.index}));
+      }else{
+        op.players.forEach(p=>act(Object.assign({type:'FX_WIPE_ZONE', player:p, zone:op.zone}, op.a, spare.length?{spareUidsS03:spare.slice()}:{})));
+      }
+    });
+  }
+}
+
+registerChoiceHandlerV49(DESTROY_SUB_HANDLER_S03, function(answer, args){
+  const job = JSON.parse(JSON.stringify((args && args.job) || {site:'effect', ops:[], items:[], pos:0, picks:[]}));
+  const item = job.items[job.pos];
+  const key = (answer && answer.keys && answer.keys[0]) || 'decline';
+  const o = (item && key!=='decline') ? item.opts.find(q=>destroySubKeyS03(q)===key) : null;
+  if(item) job.picks.push(o ? {uid:item.uid, use:true, kind:o.kind, subUid:o.uid, p:item.p} : {uid:item.uid, use:false});
+  job.pos++;
+  if(destroySubNextS03(job)) return;
+  if(job.site==='battle'){
+    const w = gameState.processorWaiting;
+    if(gameState.processorPaused && w && w.type===PROCESSOR_V27.DAMAGE_STEP) processorResumeV27();
+  }
+});
+
+/* Reducer part (engine/00 DESTROY_SUB_S03): the protected cards that used a substitute are not destroyed. */
+function destroySubReduceS03(gs, a){
+  const picks = Array.isArray(a.picks) ? a.picks : [];
+  picks.forEach(x=>{
+    const h = (typeof findCardByUidInState==='function') ? findCardByUidInState(gs, x.uid) : null;
+    const nm = h ? cardName(h.card) : '';
+    if(x.use){
+      if(a.site==='battle' && h && h.card) delete h.card.battleDestroyed;
+      logIt(gs, `${nm}：破壊される代わりに${x.kind==='detach'?'エクシーズ素材を1つ取り除く':'身代わりのモンスターを破壊する'}`);
+    }else if(h){
+      logIt(gs, `${nm}：身代わりを使わずに破壊される`);
+    }
+  });
+  if(a.site==='battle' && gs.battle) gs.battle.subDoneS03 = true;
+}
+
+/* Save / resume: rebuild the processor wait of a pending substitute decision. */
+function restoreDestroySubWaitAfterLoadS03(){
+  if(typeof PLAY_MODE==='undefined' || PLAY_MODE!==PLAY_MODES.DUEL || !gameState) return false;
+  const pc = gameState.pendingChoice;
+  if(!pc || !pc.resume || pc.resume.handler!==DESTROY_SUB_HANDLER_S03) return false;
+  const job = pc.resume.args && pc.resume.args.job;
+  if(!job) return false;
+  if(gameState.processorPaused || (gameState.processorQueue||[]).length) return false;
+  ensureProcessorStateV27();
+  let rest, wait;
+  if(job.site==='battle'){
+    if(!gameState.battle) return false;
+    rest = [{type:PROCESSOR_V27.DAMAGE_STEP, payload:{stage:'cleanup'}}];
+    wait = PROCESSOR_V27.DAMAGE_STEP;
+  }else{
+    rest = (gameState.chain||[]).length
+      ? [{type:PROCESSOR_V27.ADJUST, payload:{reason:'chainLink'}}, {type:PROCESSOR_V27.SOLVE_CHAIN, payload:{}}]
+      : [{type:PROCESSOR_V27.ADJUST, payload:{reason:'chainEnd'}}, {type:PROCESSOR_V27.CHAIN_END, payload:{}}, {type:PROCESSOR_V27.DRAIN_EVENTS, payload:{}}];
+    wait = PROCESSOR_V27.SOLVE_CHAIN;
+  }
+  enqueueProcessorListFrontV27(rest);
+  gameState.processorPaused = true;
+  gameState.processorWaiting = {id:++gameState.processorSeq, type:wait, payload:{}, turn:gameState.turn, phase:gameState.phase};
+  return true;
+}
+
+/* UI: the protected card shown at the top of the sheet. */
+function destroySubSheetInfoS03(pc){
+  if(!pc || !pc.resume || pc.resume.handler!==DESTROY_SUB_HANDLER_S03) return null;
+  const job = pc.resume.args && pc.resume.args.job;
+  const item = job && job.items && job.items[job.pos];
+  if(!item) return null;
+  return {uid:item.uid, name:item.name, cause:item.cause};
+}
+/* =========================================================================
+   S03-U174 — contact fusion (「上記のカードを(デッキに戻した｜除外した｜墓地へ送った)場合のみ、EXデッキから特殊召喚できる
+   (「融合」は必要としない)」)
+   -------------------------------------------------------------------------
+   Before: no EX monster of this kind could be summoned in DUEL (the EX deck sheet refused every fusion with 「融合召喚は融合魔法・
+   カード効果の解決から行います」), yet E・HERO グラン・ネオス was TESTED with only its bounce effect.
+   Contract (2011 texts; yugioh-wiki コンタクト融合):
+   - The materials and their destination come from the card's own text: line 1 = the materials (parseMaterialSpec), line 2 = the
+     destination (デッキ｜除外｜墓地) and the fields (自分フィールド / 自分・相手フィールド).
+   - It is a special summon by the card's own procedure (summonProcedure from 'ex'): no chain block, the summon negation window,
+     「正規の方法」 (properly summoned, summonKind 'procedure'); it is NOT a Fusion Summon (no fusion flags).
+   - Face-down monsters can be used; they are revealed (logged) and then moved. Fusion-substitute monsters cannot be used (the
+     material slots only accept the named cards).
+   - The materials move as the procedure's cost (before the summon); 「デッキに戻す」 = FX_RETURN_DECK then SHUFFLE of the owner's Deck
+     (S03-U176: the U174 version left them on top of the Deck).
+   - procedureDataS03 {n} = number of materials; a script may read it in summonProcedure.afterSummonS03
+     (キメラテック・フォートレス・ドラゴン: 「融合素材としたモンスターの数×1000」).
+   Declared per card with declareContactFusionS03(name) — only for cards whose other effects are implemented.
+   ========================================================================= */
+
+function contactSpecS03(db){
+  if(!db || !db.ex) return null;
+  const lines = String(db.e||'').split('\n');
+  const l2 = lines[1] || '';
+  const m = l2.match(/上記の?カードを(デッキに戻した|除外した|墓地へ送った)場合のみ/);
+  if(!m) return null;
+  const dest = m[1]==='デッキに戻した' ? 'deck' : (m[1]==='除外した' ? 'banish' : 'grave');
+  const both = /自分・相手フィールド/.test(l2);
+  const spec = (typeof parseMaterialSpec==='function') ? parseMaterialSpec(db) : null;
+  if(!spec || spec.permissive || !Array.isArray(spec.slots) || !spec.slots.length) return null;
+  return {slots:spec.slots, dest, both, raw:spec.raw};
+}
+
+/* Monsters on the field(s) usable as materials (face-up or face-down). */
+function contactCandidatesS03(p, cs){
+  const out = [];
+  (cs.both ? [p, p===0?1:0] : [p]).forEach(q=>{
+    (gameState.players[q].mz||[]).forEach(c=>{
+      if(!c) return;
+      const db = dbOf(c); if(!db || db.k!=='m') return;
+      if(cannotFusionMaterialS03(c)) return;
+      ensureCardUid(gameState, c);
+      out.push({i:out.length, c, db, lv:curLV(c), tuner:isTuner(db), p:q, uid:c.uid});
+    });
+  });
+  return out;
+}
+/* S03-U175: with a full Monster Zone only the sets that take at least one of the player's own monsters leave a zone for the summon
+   (the materials leave before the summon) */
+function contactCombosS03(p, cs){
+  const cands = contactCandidatesS03(p, cs);
+  const full = !hasMonsterZoneSpace(p);
+  return findMaterialCombos(cands, {slots:cs.slots}, null, 60).filter(set=>!full || set.some(x=>x.p===p)).map(set=>({
+    uids: set.map(x=>x.uid),
+    label: set.map(x=>`${x.db.n}${x.c.face==='down'?'（裏側）':''}${x.p!==p?'（相手）':''}`).join(' ＋ ')
+  }));
+}
+
+const CONTACT_DEST_JP_S03 = {deck:'デッキに戻す', banish:'除外する', grave:'墓地へ送る'};
+
+function contactProcedureS03(name){
+  return {
+    from:'ex', positions:['atk','def'], contactS03:true,
+    condition(ctx){
+      const cs = contactSpecS03(dbOf(ctx.card));
+      if(!cs){ ctx.reason = '特殊召喚の手順を読み取れません'; return false; }
+      if(!contactCombosS03(ctx.player, cs).length){ ctx.reason = `素材：${cs.raw}`; return false; }
+      return true;
+    },
+    cost(ctx, done){
+      const cs = contactSpecS03(dbOf(ctx.card));
+      const combos = cs ? contactCombosS03(ctx.player, cs) : [];
+      if(!combos.length){ done(false); return; }
+      const pay = (combo)=>{
+        const reason = `${name}（特殊召喚の手順）`;
+        combo.uids.forEach(u=>{
+          const h = findCardByUid(u);
+          if(!h || h.zone!=='mz') return;
+          if(h.card.face==='down') logIt(gameState, `${name}：裏側表示の ${cardName(h.card)} を公開`);
+          if(cs.dest==='deck') API.returnToDeck(h, false, reason);
+          else if(cs.dest==='banish') API.banish(h, reason);
+          else API.sendToGrave(h, reason);
+        });
+        /* S03-U176: 「デッキに戻す」 shuffles them into the Deck (FX_RETURN_DECK puts a card on top) */
+        if(cs.dest==='deck'){
+          const owners = [];
+          combo.uids.forEach(u=>{ const h=findCardByUid(u); if(h && h.zone==='deck' && owners.indexOf(h.p)<0) owners.push(h.p); });
+          owners.forEach(q=>act({type:'SHUFFLE', player:q}));
+        }
+        const moved = combo.uids.every(u=>{ const h=findCardByUid(u); return !h || h.zone!=='mz'; });
+        if(!moved){ done(false); return; }
+        ctx.procedureDataS03 = {n:combo.uids.length};
+        done(true);
+      };
+      if(combos.length===1){ pay(combos[0]); return; }
+      const ok = requestChoiceV49({
+        player:ctx.player, kind:'declare',
+        title:`${name}：${CONTACT_DEST_JP_S03[cs.dest]}モンスターを選ぶ`,
+        note:`素材：${cs.raw}`,
+        candidates:combos.map((c,i)=>({key:'k'+i, label:c.label, value:i})),
+        min:1, max:1, cancelable:true,
+        legacy:{onPick:(x)=>{ const c=combos[x && x.value!=null ? x.value : 0]; if(c) pay(c); else done(false); }, onCancel:()=>done(false)}
+      });
+      if(!ok) done(false);
+    }
+  };
+}
+
+/* Attach the contact procedure to an already defined script (keeps a procedure-specific afterSummonS03). */
+function declareContactFusionS03(name, extra){
+  const sc = CARD_SCRIPTS[name];
+  if(!sc) throw new Error('declareContactFusionS03: no script for '+name);
+  sc.summonProcedure = Object.assign(contactProcedureS03(name), extra||{});
+  return sc;
+}
+
+/* 「エンドフェイズ時、このカードはエクストラデッキに戻る」 — a forced trigger effect of the E・HERO ネオス fusions (v4 effect entry). */
+function endPhaseReturnExEffectS03(name){
+  return {
+    key:'ep-return-ex', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, targetRange:LOCATION.MZONE, targetSide:'self',
+    speed:1, events:['onEndPhase'], forced:true,
+    condition(ctx){ return ctx.zone==='mz' && ctx.card.face==='up'; },
+    operation(ctx){
+      const h = findCardByUid(ensureCardUid(gameState, ctx.card));
+      if(!h || h.zone!=='mz') return;
+      /* S03-U179: the action is marked so that 「この効果によってエクストラデッキに戻った時」 can recognise it */
+      act({type:'FX_RETURN_DECK', player:h.p, zone:h.zone, index:h.index, toBottom:false, reason:`${name}（エンドフェイズ）`, epReturnS03:true});
+    },
+    afterResolve(){}
+  };
+}
+
+/* EX Deck sheet (engine/20 openExDeck): null = not a contact fusion card; else the procedure's legality {ok, reason}. */
+function contactProcRowS03(p, i, db){
+  const sc = db && CARD_SCRIPTS[db.n];
+  if(!sc || !sc.summonProcedure || !sc.summonProcedure.contactS03) return null;
+  return strictSummonProcedureLegality(db.n, p, 'ex', i);
+}
+
+/* 「このカードは融合素材にできない」 — declared on the script (cannotFusionMaterialS03:true); read by the fusion spells (engine/1ZL),
+   超融合 and contact fusion. */
+function cannotFusionMaterialS03(card){
+  const sc = card && typeof CARD_SCRIPTS!=='undefined' ? CARD_SCRIPTS[cardName(card)] : null;
+  return !!(sc && sc.cannotFusionMaterialS03===true);
+}
+
+/* engine/40 strictSummonProcedureLegality: with a full Monster Zone, can this procedure still summon (a material set frees a zone)? */
+function summonProcedureFreesZoneS03(name, p, sp){
+  if(!sp || !sp.contactS03) return false;
+  const i = findCardIndex(name);
+  const cs = i>=0 ? contactSpecS03(CARD_DB[i]) : null;
+  return !!cs && contactCombosS03(p, cs).length>0;
+}
+
+/* S03-U179: 「この効果によってこのカードがエクストラデッキに戻った時、…」 (E・HERO ストーム・ネオス / マグマ・ネオス) — a forced trigger
+   of the card in the EX Deck on its own End Phase return (onLeaveField scans the EX Deck; the return action marked it). */
+function epReturnedTriggerS03(ctx){
+  const e = ctx.event || {};
+  return ctx.zone==='ex' && e.uid!=null && e.uid===ctx.card.uid && e.fromZone==='mz' && ctx.card.epReturnedS03===gameState.turn;
+}
+/* =========================================================================
+   S03-U176 — 「相手の手札をランダムに1枚選んで破壊する」 and 「このカードは墓地からの特殊召喚はできない」
+   -------------------------------------------------------------------------
+   - HAND_DESTROY_RANDOM_S03 {player (whose hand), byPlayer, reason}: the random card is drawn INSIDE the Action (duelRandomInt with the
+     state's RNG), so Replay destroys the same card. The card goes to its owner's GY as destroyed (graveInfo byDestroy, from 'hand');
+     it is not a discard (no 暗黒界 discard event). onSendToGrave is queued.
+   - destroyRandomHandCardS03(victim, reason, byPlayer): script entry point.
+   - Script flag noGraveSpecialSummonS03:true — a summon condition read with the other conditions (engine/1ZK
+     properlySummonedReasonS03): no Special Summon from the GY (「召喚条件を無視して」 still ignores it).
+   ========================================================================= */
+function destroyRandomHandCardS03(victim, reason, byPlayer){
+  const H = (gameState.players[victim]||{}).hand||[];
+  if(!H.length){ trace(`destroyRandomHand: 手札がありません`, false); return false; }
+  const a = {type:'HAND_DESTROY_RANDOM_S03', player:victim, reason:reason||'効果'};
+  if(byPlayer===0 || byPlayer===1) a.byPlayer = byPlayer;
+  act(a);
+  return true;
+}
+function handDestroyRandomReduceS03(gs, a){
+  const P = gs.players[a.player]; if(!P) return;
+  const H = P.hand||[];
+  if(!H.length){ logIt(gs, `${a.reason||'効果'}：${nameOf(a.player)}の手札がありません`); return; }
+  const i = (typeof duelRandomInt==='function') ? duelRandomInt(H.length, gs) : 0;
+  const card = removeFrom(P, 'hand', i);
+  if(!card) return;
+  const owner = cardOwnerIndex(gs, card, a.player), G = gs.players[owner];
+  pushZone(G.grave, card);
+  const put = G.grave[G.grave.length-1];
+  const byP = (a.byPlayer===0 || a.byPlayer===1) ? a.byPlayer : null;
+  if(put){
+    put.graveInfo = {turn:gs.turn, from:'hand', byDestroy:true, byPlayer:byP};
+    if(typeof applyMoveProvenanceP3==='function') applyMoveProvenanceP3(put, a, 'hand');
+  }
+  logIt(gs, `${a.reason||'効果'}：${nameOf(a.player)}の手札から ${cardName(card)} をランダムに選んで破壊`);
+  if(put && typeof queueDeferredEventV2==='function' && typeof PLAY_MODE!=='undefined' && PLAY_MODE===PLAY_MODES.DUEL)
+    queueDeferredEventV2('onSendToGrave', {player:a.player, card:put, reason:'destroy', from:'hand', byPlayer:byP});
+}
+function graveSpecialSummonBanReasonS03(card, from){
+  if(from!=='grave' || !card) return '';
+  const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
+  return (sc && sc.noGraveSpecialSummonS03===true) ? `${cardName(card)}は墓地からの特殊召喚はできません` : '';
+}
+/* =========================================================================
+   S03-U177 — 「このカードがフィールド上に表側表示で存在する限り、選択したモンスターの効果は無効化される」 (a monster source)
+   -------------------------------------------------------------------------
+   effectNegated() only read negation from Spell / Trap sources (スキルドレイン, デモンズ・チェーン); a monster that negates one selected
+   monster while it stays face-up (E・HERO ブラック・ネオス) had no way to express it.
+   - The link is two zone-local marks set by Actions (FX_CARD_FLAG_V46): the target's negLinkS03 = source uid and the source's
+     negLinkTargetS03 = target uid. Either card leaving the field drops its mark → the link ends.
+   - The target is negated while the source is a face-up monster, still linked to it, and not negated itself (guarded recursion).
+   - linkNegateTargetS03(src, target, reason): script entry point (replaces the source's previous link).
+   ========================================================================= */
+let LINKED_NEG_GUARD_S03 = false;
+function linkedNegationActiveS03(card){
+  if(!card || card.negLinkS03==null || LINKED_NEG_GUARD_S03) return false;
+  const src = (typeof findCardByUid==='function') ? findCardByUid(card.negLinkS03) : null;
+  if(!src || src.zone!=='mz' || src.card.face!=='up' || src.card.negLinkTargetS03!==card.uid) return false;
+  LINKED_NEG_GUARD_S03 = true;
+  try{ return !effectNegated(src.card); } finally { LINKED_NEG_GUARD_S03 = false; }
+}
+/* the uid of the monster this source currently negates (null when the link has ended) */
+function linkedNegationTargetS03(src){
+  if(!src || src.negLinkTargetS03==null) return null;
+  const t = findCardByUid(src.negLinkTargetS03);
+  return (t && t.zone==='mz' && t.card.negLinkS03===src.uid) ? src.negLinkTargetS03 : null;
+}
+function linkNegateTargetS03(src, target, reason){
+  const s = findCardByUid(ensureCardUid(gameState, src));
+  const t = resolveTarget(target);
+  if(!s || s.zone!=='mz' || !t || t.zone!=='mz') return false;
+  ensureCardUid(gameState, t.card);
+  act({type:'FX_CARD_FLAG_V46', player:s.p, zone:'mz', index:s.index, flag:'negLinkTargetS03', value:t.card.uid, reason});
+  const t2 = findCardByUid(t.card.uid);
+  act({type:'FX_CARD_FLAG_V46', player:t2.p, zone:'mz', index:t2.index, flag:'negLinkS03', value:s.card.uid, reason});
+  logIt(gameState, `${reason}：${cardName(t2.card)} の効果を無効化（${cardName(s.card)} が表側表示で存在する限り）`);
+  return true;
+}
+/* =========================================================================
+   S03-U180 — 剣闘獣 (Gladiator Beast) common mechanism
+   -------------------------------------------------------------------------
+   2011 texts share three shapes:
+   1. 「このカードが戦闘を行ったバトルフェイズ終了時にこのカードをデッキ（融合デッキ）に戻す事で、デッキから「X」以外の「剣闘獣」と名のついた
+      モンスターN体を特殊召喚する」 — an optional trigger at the end of any Battle Phase in which this card battled; the return is the cost.
+   2. 「このカードが「剣闘獣」と名のついたモンスターの効果によって特殊召喚に成功した時／場合、…」 — the summoned card carries
+      gladiatorSummonedS03 (zone-local, set by FX_SPECIAL_SUMMON when a gladiator monster's effect summons it: action flag gladiatorS03).
+   3. 「戦闘を行った」 = went through damage calculation this turn: card.battledTurnS03 (stamped by the ATTACK action on both monsters;
+      zone-local).
+   Summons from the Deck use journaled registry choices (card(s), then face-up Attack / Defense for each), so save / resume and Replay
+   work; FX_SPECIAL_SUMMON from the Deck shuffles it.
+   ========================================================================= */
+/* 「剣闘獣」と名のついたカード: the P4 set code authority (SETCODE.GLADIATOR_BEAST), not a name prefix */
+function isGladiatorCardDbS03(d){ return !!d && (typeof isSetCardV4==='function' ? isSetCardV4(d, SETCODE.GLADIATOR_BEAST) : String(d.n||'').indexOf('剣闘獣')>=0); }
+function isGladiatorMonsterS03(card){ const d = card && dbOf(card); return !!(d && d.k==='m' && isGladiatorCardDbS03(d)); }
+function gladiatorDeckPoolS03(p, exclude, reason){
+  return API.pileCards(p, 'deck', x=>isGladiatorMonsterS03(x.card) && x.db.n!==exclude
+    && (typeof canEffectSpecialSummonS03!=='function' || canEffectSpecialSummonS03(x.card, 'deck', reason)));
+}
+function gladiatorBattledS03(card){ return !!card && card.battledTurnS03===gameState.turn; }
+function gladiatorSummonedS03(card){ return !!(card && card.gladiatorSummonedS03); }
+function gladiatorSpecialLockedS03(p){
+  const f = gameState.players[p].temporaryFlags;
+  return !!(f && f.noSpecialSummon);
+}
+
+/* Open the summon: pick exactly `count` gladiator monsters from the Deck (none if fewer are available / not enough zones). */
+function gladiatorSummonFromDeckS03(p, name, exclude, count){
+  const pool = gladiatorDeckPoolS03(p, exclude, name);
+  const room = ZONE_LIMITS.mz - gameState.players[p].mz.length;
+  if(pool.length < count || room < count || gladiatorSpecialLockedS03(p)){
+    API.shuffle(p);
+    API.log(`${name}：特殊召喚できる「剣闘獣」がデッキに${count}体ない（デッキをシャッフル）`);
+    return false;
+  }
+  return API.requestChoice({player:p, kind:'card', title:`${name}：特殊召喚する「剣闘獣」${count>1?`（${count}体）`:''}`,
+    candidates:pool, min:count, max:count, cancelable:false,
+    resume:{handler:'s03u180.glad-pick', args:{player:p, name}}, meta:{scriptName:name}});
+}
+function gladiatorNextPosS03(p, name, queue){
+  while(queue.length){
+    const h = findCardByUid(queue[0]);
+    if(h && h.p===p && h.zone==='deck' && hasMonsterZoneSpace(p)) break;
+    queue.shift();
+  }
+  if(!queue.length) return;
+  API.requestChoice({player:p, kind:'declare', title:`${name}：${cardName(findCardByUid(queue[0]).card)} の表示形式`,
+    candidates:[{key:'atk', label:'表側攻撃表示', value:'atk'},{key:'def', label:'表側守備表示', value:'def'}], min:1, max:1, cancelable:false,
+    resume:{handler:'s03u180.glad-pos', args:{player:p, name, queue}}, meta:{scriptName:name}});
+}
+registerChoiceHandlerV49('s03u180.glad-pick', (answer, args)=>{
+  if(!answer || answer.cancelled || !args) return;
+  const uids = (answer.cards||[]).filter(y=>y && !y.stale && y.uid!=null).map(y=>y.uid);
+  gladiatorNextPosS03(args.player, args.name, uids);
+});
+registerChoiceHandlerV49('s03u180.glad-pos', (answer, args)=>{
+  if(!args || !Array.isArray(args.queue) || !args.queue.length) return;
+  const pick = answer && answer.cards && answer.cards[0];
+  const pos = (pick && pick.value==='def') ? 'def' : 'atk';
+  const queue = args.queue.slice();
+  const h = findCardByUid(queue.shift());
+  if(h && h.p===args.player && h.zone==='deck' && hasMonsterZoneSpace(args.player))
+    API.specialSummon(args.player, 'deck', h.index, pos, args.name, null, {gladiatorS03:true});
+  gladiatorNextPosS03(args.player, args.name, queue);
+});
+
+/* Shape 1 — the tag-out (v4 trigger effect). opts: {count:1, exclude:name, requireGladiatorSummoned:false, forcedStay:false} */
+function gladiatorTagOutEffectS03(name, opts){
+  const o = Object.assign({count:1, exclude:name}, opts||{});
+  const roomAfter = (ctx)=>ZONE_LIMITS.mz - gameState.players[ctx.player].mz.length + (o.stay ? 0 : 1);
+  return {
+    key:'tag-out', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, targetRange:LOCATION.DECK, targetSide:'self',
+    speed:1, events:['onBattlePhaseEnd'], forced:!!o.stay,
+    condition(ctx){
+      if(ctx.zone!=='mz' || ctx.card.face!=='up' || !gladiatorBattledS03(ctx.card)) return false;
+      if(o.requireGladiatorSummoned && !gladiatorSummonedS03(ctx.card)) return false;
+      if(gladiatorSpecialLockedS03(ctx.player)) return false;
+      if(!o.stay && gladiatorDeckPoolS03(ctx.player, o.exclude, name).length < o.count) return false;
+      return roomAfter(ctx) >= o.count;
+    },
+    cost: o.stay ? null : function(ctx, done){
+      const h = findCardByUid(ensureCardUid(gameState, ctx.card));
+      if(!h || h.zone!=='mz'){ done(false); return; }
+      const owner = cardOwnerIndex(gameState, h.card, h.p);
+      act({type:'FX_RETURN_DECK', player:h.p, zone:'mz', index:h.index, toBottom:false, reason:`${name}（コスト）`});
+      const now = findCardByUid(h.card.uid);
+      if(now && now.zone==='deck') act({type:'SHUFFLE', player:owner});
+      done(!!now && (now.zone==='deck' || now.zone==='ex'));
+    },
+    operation(ctx){ gladiatorSummonFromDeckS03(ctx.player, name, o.exclude, o.count); },
+    afterResolve(){}
+  };
+}
+/* Shape 2 — 「剣闘獣」の効果によって特殊召喚に成功した時 (v4 trigger effect) */
+function gladiatorOnSummonEffectS03(key, spec){
+  return Object.assign({
+    key, type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:['onSpecialSummon'], forced:!!spec.forced,
+    condition(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && gladiatorSummonedS03(ctx.card) && (!spec.cond || spec.cond(ctx)); },
+    afterResolve(){}
+  }, spec.effect);
+}
+/* the card-level passive for both events */
+function gladiatorPassiveS03(effects){
+  const has = ev=>effects.some(e=>(e.events||[]).indexOf(ev)>=0);
+  const p = {};
+  if(has('onBattlePhaseEnd')) p.onBattlePhaseEnd = ctx=>effects.some(e=>(e.events||[]).indexOf('onBattlePhaseEnd')>=0 && e.condition(ctx));
+  if(has('onSpecialSummon')) p.onSpecialSummon = ctx=>effects.some(e=>(e.events||[]).indexOf('onSpecialSummon')>=0 && e.condition(ctx));
+  return p;
+}
+function defineGladiatorS03(name, effects, meta){
+  return defineUnifiedCardV4(name, effects, Object.assign({type:'monster', priority:1, passive:gladiatorPassiveS03(effects)}, meta||{}));
+}
 /* =========================================================================
    RENDER — gameState を読んで描画するだけ
    ========================================================================= */
@@ -11978,8 +12796,12 @@ function render(){
   ).join("") || (notStarted
     ? `<div class="hand-empty">
         <span>手札なし</span>
-        <button class="he-btn" onclick="startRabbitOpponentDuel()">兎ラギアと対戦開始</button>
-        <button class="he-btn ghost" onclick="openDeckLoad('saved')">デッキを読み込む</button>
+        ${(typeof selectedDeckNameS03==='function' && selectedDeckNameS03(0) && selectedDeckNameS03(1))
+          ? `<button class="he-btn" onclick="deckStartConfirmS03('')">選択デッキで開始</button>` : ''}
+        <button class="he-btn${(typeof selectedDeckNameS03==='function' && selectedDeckNameS03(0) && selectedDeckNameS03(1))?' ghost':''}" onclick="startRabbitOpponentDuel()">兎ラギアと対戦開始</button>
+        <button class="he-btn ghost" onclick="openDeckLoad('saved')">デッキを選ぶ</button>
+        ${(typeof selectedDeckNameS03==='function' && (selectedDeckNameS03(0)||selectedDeckNameS03(1)))
+          ? `<span>P1：${selectedDeckLabelS03(0)} / P2：${selectedDeckLabelS03(1)}</span>` : ''}
       </div>`
     : `<div class="hand-empty"><span>手札なし</span></div>`);
 
@@ -13023,6 +13845,8 @@ function materialCandidates(p, kind){
     const db = dbOf(c), sc=CARD_SCRIPTS[db.n];
     // v3.6.1: 「S素材にできない」等を素材候補の入口で除外する。
     if(kind==='synchro' && sc && sc.cannotSynchroMaterial===true) return;
+    /* S03-U169: 「このターン、…シンクロ素材にできない」 (プチトマボー's summons): a zone-local turn mark */
+    if(kind==='synchro' && c.noSynchroMaterialTurnS03===gameState.turn) return;
     const baseLv=curLV(c);
     let levels=[baseLv];
     // System v3.8.0: 《チューニング・サポーター》のようにS素材時だけ複数のレベルとして扱えるカード。
@@ -13057,8 +13881,17 @@ function buildMaterialNameSet(){
 
 /* --- 1スロット分の条件を解析する --- */
 function parseSlot(text){
-  const s = String(text).trim();
+  let s = String(text).trim();
   if(!s) return null;
+  /* S03-U174: a slot 「…モンスター×2」 inside an 「A＋B×2」 line (剣闘獣ヘラクレイノス) is two materials of that kind (was read as one) */
+  let mulS03 = null;
+  const mm = s.match(/^(.*\S)\s*×\s*(\d+)$/);
+  if(mm){ s = mm[1]; mulS03 = +mm[2]; }
+  const qS03 = parseSlotBodyS03(s);
+  if(qS03 && mulS03) qS03.count = {min:mulS03, max:mulS03};
+  return qS03;
+}
+function parseSlotBodyS03(s){
   if(MAT_NAMES && MAT_NAMES.has(s)) return { count:{min:1,max:1}, nameExact:s };
   const q = { count:{min:1, max:1} };
   let m;
@@ -13145,7 +13978,8 @@ function buildMaterialSpec(db){
   if(!line) return null;
 
   // 「×N」形式（エクシーズ・一部融合）→ 同一条件をN個
-  let m = line.match(/^(.*?)\s*[×x]\s*(\d+)\s*(体以上)?\s*$/);
+  /* S03-U174: only a line without 「＋」 is 「A×N」 as a whole (「A＋B×2」 = A and two B, parsed per slot below) */
+  let m = (line.indexOf('＋')<0 && line.indexOf('+')<0) ? line.match(/^(.*?)\s*[×x]\s*(\d+)\s*(体以上)?\s*$/) : null;
   if(m){
     const q = parseSlot(m[1]);
     if(!q) return null;
@@ -13198,13 +14032,17 @@ function findMaterialCombos(cands, spec, totalLv, limit){
 
 /* --- EX召喚の候補を統一的に求める ---
    戻り値 {permissive, combos:[{materials:[mzIndex], label}]} */
-function exCombos(p, db){
+function exCombos(p, db, onlyIdxS03){
   const spec = parseMaterialSpec(db);
   if(!spec) return {permissive:true, combos:[], why:"EXモンスターではありません"};
   if(spec.permissive) return {permissive:true, combos:[], spec};
   const kind = spec.type;
   const totalLv = (kind === 'synchro') ? (db.lv||0) : null;
-  let sets = findMaterialCombos(materialCandidates(p, kind), spec, totalLv);
+  /* S03-U163: onlyIdxS03 — restrict the candidates to the given materials (legality check of one chosen set, not capped by the
+     combination limit) */
+  let candsS03 = materialCandidates(p, kind);
+  if(Array.isArray(onlyIdxS03)) candsS03 = candsS03.filter(x=>onlyIdxS03.indexOf(x.i)>=0);
+  let sets = findMaterialCombos(candsS03, spec, totalLv);
   if(kind==='synchro'){
     sets = sets.filter(set=>set.every(src=>{
       const sc=CARD_SCRIPTS[src.db.n];
@@ -13219,6 +14057,17 @@ function exCombos(p, db){
       label: set.map(x=>`${x.db.n}(Lv${x.lv})`).join(" ＋ ")
     }))
   };
+}
+
+/* S03-U163: are exactly these materials a legal set for this Synchro / Xyz Monster? (the UI only offers exCombos, but the summon
+   entry points did not check what they were given — a test Synchro Summoned ゴヨウ・ガーディアン with a DARK Tuner) */
+function exMaterialsLegalS03(p, exDb, materials){
+  const spec = parseMaterialSpec(exDb);
+  if(!spec || spec.permissive) return true;
+  const want = Array.isArray(materials) ? materials.slice() : [];
+  if(!want.length || new Set(want).size!==want.length) return false;
+  const key = a=>a.slice().sort((x,y)=>x-y).join(',');
+  return exCombos(p, exDb, want).combos.some(c=>key(c.materials)===key(want));
 }
 
 function combinations(arr, k){
@@ -13259,6 +14108,11 @@ function openExDeck(p){
       || ((PLAY_MODE===PLAY_MODES.DUEL&&kind==='synchro'&&typeof synchroSummonLockReasonS03==='function')?synchroSummonLockReasonS03(p):'');   /* S03-U139 */
     if(summonBlock){
       ok=false; why=summonBlock;
+    }else if(PLAY_MODE===PLAY_MODES.DUEL && kind==='fusion' && contactProcRowS03(p,i,db)){
+      /* S03-U174: contact fusion — the card's own procedure from the EX Deck (engine/1ZW) */
+      const L=contactProcRowS03(p,i,db); ok=L.ok; why=L.reason||'';
+      if(ok) return `<div class="act pick-row" onclick="closeSheet();runSummonProcedure(${jsStr(db.n)},${p},'ex',${i})">
+      <span class="pk-nm">${db.n}</span><span class="pk-sub">融合（コンタクト融合：${CONTACT_DEST_JP_S03[contactSpecS03(db).dest]}） Lv${db.lv||'-'} 攻${db.atk??'-'}</span></div>`;
     }else if(PLAY_MODE===PLAY_MODES.DUEL && kind==='fusion'){
       ok=false; why='融合召喚は融合魔法・カード効果の解決から行います';
     }else if(res.permissive){
@@ -13936,7 +14790,11 @@ function processPhaseV27(pl){
     seq.push({type:PROCESSOR_V27.END_PHASE,payload:{turn:gameState.turn}});
   }
   seq.push({type:PROCESSOR_V27.ADJUST,payload:{reason:'phase:'+to}});
-  if(to==='battle') seq.push({type:PROCESSOR_V27.BATTLE_COMMAND,payload:{reason:'battlePhaseStart'}});
+  /* S03-U170: the Start Step of the Battle Phase — both players may activate Quick Effects / Traps before the first attack
+     (威嚇する咆哮 in the opponent's Battle Phase, サイクロン on a set card …). A POINT with the turn player's priority; when both pass
+     (or nobody has a response) the battle command follows, as before. */
+  if(to==='battle') seq.push({type:PROCESSOR_V27.POINT,payload:{kind:'battleStart',label:'バトルフェイズ開始時（スタートステップ）',
+    priority:gameState.activePlayer,passes:0,action:'BATTLE_START_S03',after:{type:PROCESSOR_V27.BATTLE_COMMAND,payload:{reason:'battlePhaseStart'}}}});
   enqueueProcessorListFrontV27(seq); return PROC_V27_DONE;
 }
 function processTurnV27(pl){
@@ -14052,8 +14910,10 @@ function processEventBatchV28(pl){
     const uid=c.card?ensureCardUid(gameState,c.card):`${c.p}:${c.zone}:${c.index}`;
     const k=`${uid}:${c.name}`; if(seen.has(k)) return; seen.add(k); cands.push(c);
   });
-  if(!cands.length) return PROC_V27_DONE;
-  EVT_AFTER=()=>processorResumeV27();
+  /* S03-U159: a batch that includes a summon success keeps the post-summon fast window after its chain (processEventV27 does the same) */
+  const postS03=pl.postPointS03||null;
+  if(!cands.length){ if(postS03) enqueueProcessorV27(PROCESSOR_V27.POINT,postS03,false); return PROC_V27_DONE; }
+  EVT_AFTER=()=>{ if(postS03) enqueueProcessorV27(PROCESSOR_V27.POINT,postS03,false); processorResumeV27(); };
   startEventChainV2('batch',{label:pl.label||'同時誘発'},cands);
   return PROC_V27_WAIT;
 }
@@ -14546,6 +15406,11 @@ function processDamageStepV27(pl){
     return PROC_V27_DONE;
   }
   if(stage==='cleanup'){
+    /* S03-U173: optional destruction substitutes (engine/1ZV) — wait for the decisions, then run this stage again */
+    if(typeof destroySubBattleS03==='function' && destroySubBattleS03(b)){
+      enqueueProcessorListFrontV27([{type:PROCESSOR_V27.DAMAGE_STEP,payload:{stage:'cleanup'}}]);
+      return PROC_V27_WAIT;
+    }
     b.step='leave';
     const destroyed=[];
     gameState.players.forEach((P,p)=>(P.mz||[]).forEach(c=>{ if(c&&c.battleDestroyed){ ensureCardUid(gameState,c); destroyed.push({p,uid:c.uid}); }}));
@@ -14672,6 +15537,8 @@ function processSolveChainV27(){
   }
   const link=gameState.chain[gameState.chain.length-1];
   act({type:'CHAIN_RESOLVE_TOP'}); resolveOnePreparedLinkV27(link);
+  /* S03-U173: destructions deferred for an optional substitute decision (engine/1ZV) */
+  if(typeof flushDestroySubS03==='function') flushDestroySubS03();
   if(gameState.chain.length){
     enqueueProcessorListFrontV27([
       {type:PROCESSOR_V27.ADJUST,payload:{reason:'chainLink'}},
@@ -14763,9 +15630,15 @@ function processEndPhaseV30(){
    cards is dispatched as one EVENT_BATCH (as the battle cleanup does). Before, ナチュル・クリフ Tributed together with ガスタ・ガルド was
    only checked after ガスタ・ガルド's chain had resolved (and filled the last zone). A single card's events keep the one-by-one path. */
 const LEAVE_BATCH_EVENTS_S03=['onDestroy','onSendToGrave','onRemove','onLeaveField'];
+/* S03-U159: a summon that Tributed monsters (Tribute Summon, or a summon whose cost sends monsters from the field) queues the
+   Tributes' leave-field events and then the summon success. Both happened at the same time: the summon-success event right
+   after the leave run is part of the same batch (one SEGOC: 「リリースされた時」 and 「召喚に成功した時」 triggers together).
+   The post-summon fast window (summonFast) still follows the batch's chain, as on the one-event path. */
+const SUMMON_BATCH_EVENTS_S03=['onNormalSummon','onSpecialSummon'];
 function leaveBatchRunS03(q){
   let n=0; const uids=new Set();
   while(n<q.length && q[n] && LEAVE_BATCH_EVENTS_S03.indexOf(q[n].eventName)>=0){ if(q[n].evt&&q[n].evt.uid!=null) uids.add(Number(q[n].evt.uid)); n++; }
+  if(n>0 && q[n] && SUMMON_BATCH_EVENTS_S03.indexOf(q[n].eventName)>=0) return n+1;
   return uids.size>=2 ? n : 0;
 }
 function processDrainEventsV27(){
@@ -14773,9 +15646,11 @@ function processDrainEventsV27(){
   const runS03=leaveBatchRunS03(q);
   if(runS03){
     const items=q.slice(0,runS03).map(it=>({eventName:it.eventName,evt:JSON.parse(JSON.stringify(it.evt||{}))}));
+    const sumS03=items.find(it=>SUMMON_BATCH_EVENTS_S03.indexOf(it.eventName)>=0);
+    const postPointS03=sumS03?postSummonFastPointV321(sumS03.eventName,restoreEventRefsV27(sumS03.evt||{})):null;
     for(let k=0;k<runS03;k++) commitAutomaticActionV44({type:'EVENT_DEQUEUE_V31'});
     enqueueProcessorListFrontV27([
-      {type:PROCESSOR_V27.EVENT_BATCH,payload:{label:'同時に場を離れたカード',events:items}},
+      {type:PROCESSOR_V27.EVENT_BATCH,payload:{label:sumS03?'リリースと召喚成功':'同時に場を離れたカード',events:items,postPointS03}},
       {type:PROCESSOR_V27.DRAIN_EVENTS,payload:{}}
     ]);
     return PROC_V27_DONE;
@@ -15789,7 +16664,8 @@ function strictSummonProcedureLegality(name,p,zone,index){
   if(!from.includes(zone)) return {ok:false,reason:`${from.map(zoneJp).join('・')}から特殊召喚します`};
   if(p!==gameState.activePlayer) return {ok:false,reason:'自分のターンに行います'};
   if(!rules().exSummon) return {ok:false,reason:`${phaseJp(gameState.phase)}ではこの特殊召喚を行えません`};
-  if(!hasMonsterZoneSpace(p)) return {ok:false,reason:'モンスターゾーンが一杯です'};
+  /* S03-U175: a procedure whose cost removes one of the player's own monsters (contact fusion, engine/1ZW) frees a zone */
+  if(!hasMonsterZoneSpace(p) && !(typeof summonProcedureFreesZoneS03==='function' && summonProcedureFreesZoneS03(name,p,sp))) return {ok:false,reason:'モンスターゾーンが一杯です'};
   // 既存v3.4回帰の明示ガードを保持し、その後v4.6の常時制約も確認する。
   if(gameState.players[p].temporaryFlags && gameState.players[p].temporaryFlags.noSpecialSummon)
     return {ok:false,reason:'このターンは特殊召喚できません'};
@@ -16303,10 +17179,13 @@ const API = {
     trace(`destroy: ${labelOf(r.card)}`);
     const act1={type:"FX_TO_GRAVE", player:r.p, zone:r.zone, index:r.index, reason, byDestroy:true};
     if(byPlayer===0||byPlayer===1) act1.byPlayer=byPlayer;
+    /* S03-U173: an optional destruction substitute may apply — decided by its controller before anything moves (engine/1ZV) */
+    if(typeof destroySubInterceptS03==='function' && destroySubInterceptS03('destroy', act1, r)) return;
     act(act1); },
   destroyAll(zone, player, reason){
     trace(`destroyAll: ${zoneJp(zone)}${player!=null?`(${nameOf(player)})`:"(両者)"}`);
     const ps = player!=null ? [player] : [0,1];
+    if(typeof destroySubInterceptS03==='function' && destroySubInterceptS03('wipe', {zone, players:ps, reason})) return;   /* S03-U173 */
     ps.forEach(p=>act({type:"FX_WIPE_ZONE", player:p, zone, reason}));
   },
   sendToGrave(t, reason){ const r=resolveTarget(t); if(!r){ trace(`sendToGrave: 対象が場にない`, false); return; }
@@ -21485,6 +22364,7 @@ function antiqueGearLock(){
 /* ---- キメラテック・フォートレス・ドラゴン ----
    元々の攻撃力は、融合素材としたモンスターの数×1000になる。 */
 defineScript("キメラテック・フォートレス・ドラゴン", {
+  cannotFusionMaterialS03:true,   /* S03-U174: 「このカードは融合素材にできない」 (engine/1ZW) */
   continuous:{
     scope:'self', from:['mz'],
     apply(target, self){
@@ -21592,7 +22472,7 @@ API.registerChoiceHandler('s03u133.superpoly-pos', (answer, args)=>{
 function superPolyOptions(p){
   const P = gameState.players[p];
   const pool = [];
-  API.fieldCards({zone:'mz', filter:x=>x.card && x.card.face==='up'}).forEach(x=>{
+  API.fieldCards({zone:'mz', filter:x=>x.card && x.card.face==='up' && !cannotFusionMaterialS03(x.card)}).forEach(x=>{   /* S03-U174 */
     pool.push({i:pool.length, p:x.p, zone:'mz', index:x.index,
                card:x.card, db:x.db, lv:curLV(x.card)});
   });
@@ -24144,6 +25024,8 @@ defineScript("A・O・J カタストル", {
 
 /* ---- ガチガチガンテツ：自分フィールドのモンスターを素材の数×200強化 ---- */
 defineScript("ガチガチガンテツ", {
+  /* S03-U173 (engine/1ZV): 「このカードが破壊される場合、代わりにこのカードのエクシーズ素材を1つ取り除く事ができる」 — chosen at the destruction */
+  destroySubstituteS03:{kind:'detach', causes:['battle','effect']},
   continuous:{
     scope:'ownMonsters', from:['mz'],
     apply(target, self){
@@ -24883,7 +25765,8 @@ function v350EndBattlePhase(reason){
 /* ============================== 六武衆 ============================== */
 
 defineScript("真六武衆－シエン", {
-  auditNote:"①魔法・罠の発動無効＋破壊を自動化。②六武衆による破壊代替は未自動化",
+  auditNote:"①魔法・罠の発動無効＋破壊を自動化。②戦闘・効果で破壊される場合の「六武衆」による身代わりは、破壊の時点でコントローラーが選ぶ（S03-U173）",
+  destroySubstituteS03:{kind:'destroyOwn', causes:['battle','effect'], filter:c=>v350Six(c)},   /* S03-U173 (engine/1ZV): chosen by its controller at the destruction */
   type:'synchro', priority:2, quickEffect:true, countLimit:1,
   condition(ctx){
     if(ctx.zone!=='mz'){ctx.reason='フィールドで発動します';return false;}
@@ -24922,7 +25805,8 @@ function v350MasterDestroyedByFoeS03(ctx){
 }
 
 defineScript("六武衆－ヤイチ", {
-  auditNote:"セット魔法・罠破壊と攻撃禁止を自動化。六武衆による破壊代替は未自動化",
+  auditNote:"セット魔法・罠破壊と攻撃禁止を自動化。表側表示のこのカードが破壊される場合の「六武衆」による身代わりは、破壊の時点でコントローラーが選ぶ（S03-U173）",
+  destroySubstituteS03:{kind:'destroyOwn', causes:['battle','effect'], filter:c=>v350Six(c)},   /* S03-U173 (engine/1ZV): chosen by its controller at the destruction */
   type:'monster',priority:1,countLimit:1,targets:true,timing:['mainPhase'],
   condition(ctx){
     if(ctx.zone!=='mz'||ctx.player!==gameState.activePlayer){ctx.reason='自分メインフェイズに発動します';return false;}
@@ -24935,7 +25819,8 @@ defineScript("六武衆－ヤイチ", {
 });
 
 defineScript("六武衆－ザンジ", {
-  auditNote:"他の六武衆がいる時の攻撃対象破壊を自動化。六武衆による破壊代替は未自動化",
+  auditNote:"他の六武衆がいる時の攻撃対象破壊を自動化。表側表示のこのカードが破壊される場合の「六武衆」による身代わりは、破壊の時点でコントローラーが選ぶ（S03-U173）",
+  destroySubstituteS03:{kind:'destroyOwn', causes:['battle','effect'], filter:c=>v350Six(c)},   /* S03-U173 (engine/1ZV): chosen by its controller at the destruction */
   type:'monster',priority:1,forced:true,dsTiming:'end',
   condition(ctx){const b=ctx.battle||{};if(!v350SixOwn(ctx.player,ctx.card).length)return false;return b.atkCard===ctx.card&&b.target!=='direct'&&!!b.defCard;},
   resolve(ctx){const b=ctx.battle||{};if(b.defCard)API.destroy({card:b.defCard},'六武衆－ザンジ');},afterResolve(){},
@@ -32775,7 +33660,8 @@ defineUnifiedCardV4('氷弾使いレイス',[],{type:'monster',priority:1,battle
 defineUnifiedCardV4('異次元竜 トワイライトゾーンドラゴン',[],{type:'monster',priority:1,battleProof:false,
   protectV21:{key:'v21.twilight',
     battle:(target,src,ctx)=>v21FoeATK(ctx)<=1900,
-    effect:true,sourceKind:null,nonTargetingOnly:true,
+    /* S03-U168: 「対象を指定しない魔法・罠カードの効果」 — Spells / Traps only (sourceKind was null = any source, monsters included) */
+    effect:true,sourceKind:['s','t'],nonTargetingOnly:true,
     label:'異次元竜 トワイライトゾーンドラゴン'}});
 
 /* =====================================================================
@@ -59635,7 +60521,10 @@ defineUnifiedCardV4('E・HERO グラン・ネオス',[{
   condition(ctx){return API.fieldCards({player:ctx.opponent,zone:'mz'}).length>0;},
   target(ctx,done){API.selectCard('E・HERO グラン・ネオス：手札へ戻す相手モンスター',API.fieldCards({player:ctx.opponent,zone:'mz'}),t=>done([t]));},
   operation(ctx){const t=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(t)API.returnToHand(t,'E・HERO グラン・ネオス');},afterResolve(){}
-}],{type:'fusion',priority:1,countLimit:1,timing:['mainPhase'],targets:true});
+},endPhaseReturnExEffectS03('E・HERO グラン・ネオス')],   /* S03-U174: 「エンドフェイズ時、このカードはエクストラデッキに戻る」 */
+{type:'fusion',priority:1,countLimit:{n:1,effects:['bounce-opponent-monster']},timing:['mainPhase'],targets:true,
+ passive:{onEndPhase(ctx){return ctx.zone==='mz'&&ctx.card.face==='up';}}});
+declareContactFusionS03('E・HERO グラン・ネオス');   /* S03-U174: contact fusion (engine/1ZW) */
 })();
 /* Astra System 01 validation. Historical 1103 card effects, independently written.
    Equipment movement belongs to v31; card predicates/costs/targets live here.
@@ -62982,6 +63871,1075 @@ declareDeckTriggerS03('ボタニティ・ガール', {when:'fieldToGrave', actio
 /* ===== D. 「このカードがフィールド上から墓地へ送られた時、デッキから…特殊召喚」 ===== */
 declareDeckTriggerS03('ガスタ・ガルド', {when:'fieldToGrave', action:'summon', optional:true, pos:'faceUp', filter:{group:GROUP.GUSTO, lvmax:2}});
 declareDeckTriggerS03('ナチュル・クリフ', {when:'fieldToGrave', action:'summon', optional:true, pos:'atk', filter:{set:SETCODE.NATURIA, lvmax:4}});
+/* S03-U160: monsters whose battle protection is conditional (their text used to be read as unconditional until S03-U158).
+   Both are continuous effects only (no activation). */
+
+/* 薄幸の乙女 (2011):
+   「このカードは表側攻撃表示で存在する限り戦闘によっては破壊されない。このカードが表側攻撃表示でフィールド上に存在する限り、
+   このカードと戦闘を行ったモンスターは表示形式の変更と攻撃ができなくなる。」
+   「このカードと戦闘を行ったモンスター」: the battle record written by the ATTACK action on both monsters (engine/00
+   battledWithS03, zone-local — a monster that left the field since, or a 乙女 that left and came back, is not that monster). */
+defineScript('薄幸の乙女', {
+  type:'monster', priority:1,
+  condition(ctx){ ctx.reason = '永続効果のみのカードです'; return false; },
+  resolve(){}, afterResolve(){},
+  continuous:{
+    scope:'allMonsters', from:['mz'],
+    apply(){ return null; },
+    protectV21:{ key:'薄幸の乙女', label:'薄幸の乙女', scope:'self',
+      battle:(target, self)=> target===self && self.face==='up' && self.pos==='atk' },
+    cannotAttack:(card, self)=> card!==self && self.face==='up' && self.pos==='atk' && battledTogetherS03(card, self),
+    cannotChangePosition:(card, self)=> card!==self && self.face==='up' && self.pos==='atk' && battledTogetherS03(card, self)
+  }
+});
+
+/* スカー・ウォリアー (2011):
+   「このカードがフィールド上に表側表示で存在する限り、相手は表側表示で存在する他の戦士族モンスターを攻撃対象に選択する事は
+   できない。また、このカードは1ターンに1度だけ、戦闘では破壊されない。」 (Synchro Summon procedure: the existing Synchro rules.) */
+defineScript('スカー・ウォリアー', {
+  type:'monster', priority:1,
+  condition(ctx){ ctx.reason = '永続効果のみのカードです'; return false; },
+  resolve(){}, afterResolve(){},
+  continuous:{
+    scope:'ownMonsters', from:['mz'],
+    apply(){ return null; },
+    cannotBeAttackTarget:(target, self)=> target!==self && target.face==='up' && self.face==='up' && currentRaceV17(target)==='戦士',
+    protectV21:{ key:'スカー・ウォリアー', label:'スカー・ウォリアー', scope:'self', perTurn:1,
+      battle:(target, self)=> target===self }
+  }
+});
+/* S03-U161: monsters whose battle protection depends on a condition (read as unconditional from the text until S03-U158),
+   implemented with their full 2011 texts. */
+
+/* イレカエル (2011): 「自分フィールド上に存在するモンスター1体を生け贄に捧げる。自分のデッキから「ガエル」と名のついたモンスター1体を
+   選択し、自分フィールド上に特殊召喚する。このカードがフィールド上に存在する限り、「ガエル」と名のついたモンスターは戦闘によっては
+   破壊されない。」
+   - Ignition effect; the Tribute is the cost (any own monster, this card included). The Deck is examined at resolution (no target)
+     through the shared deck-trigger choice (engine/1ZT handler), 「特殊召喚する」 without a position → face-up, the player's choice.
+   - 「ガエル」と名のついた = GROUP.GAERU (P4 overlay, S03-U161: 10 cards; イレカエル / サシカエル / 粋カエル are not members).
+   - The protection applies to every 「ガエル」 monster on the field (both players) while this card is face-up (a face-down monster
+     applies no continuous effect). */
+const IREKAERU_SPEC_S03 = {action:'summon', from:['deck'], filter:{group:'GAERU'}};
+/* a monster on the field belongs to a named group also when its name is treated as a member's (粋カエル 「フィールド上に表側表示で
+   存在する限り『デスガエル』として扱う」): the canonical passcode (canonicalCardCodeV4) is checked as well */
+function groupMemberNowS03(card, key){
+  if(isCardInGroupV4(card, key)) return true;
+  const can = (typeof canonicalCardCodeV4==='function') ? canonicalCardCodeV4(card) : 0;
+  return !!can && can!==cardCodeOfV4(card) && isCardInGroupV4(can, key);
+}
+defineScript('イレカエル', {
+  type:'monster', priority:1, activateFrom:['mz'],
+  condition(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason = 'フィールドの表側表示のこのカードの効果です'; return false; }
+    if(!API.fieldCards({zone:'mz', player:ctx.player, filter:x=>!x.card.cannotTribute}).length){ ctx.reason = 'リリースできるモンスターがいません'; return false; }
+    return true;
+  },
+  cost(ctx, done){
+    API.selectCard('イレカエル：リリースする自分のモンスター', API.fieldCards({zone:'mz', player:ctx.player, filter:x=>!x.card.cannotTribute}), t=>{
+      API.sendToGrave(t, 'イレカエル（リリース）'); done(true);
+    });
+  },
+  selectTargets(ctx, done){ done([]); },
+  resolve(ctx){
+    if(!hasMonsterZoneSpace(ctx.player)){ API.log('イレカエル：モンスターゾーンが空いていない'); return; }
+    const pool = deckTriggerPoolS03('イレカエル', IREKAERU_SPEC_S03, ctx.player);
+    if(!pool.length){ API.shuffle(ctx.player); API.log('イレカエル：「ガエル」と名のついたモンスターがデッキに無い（デッキをシャッフル）'); return; }
+    API.requestChoice({player:ctx.player, kind:'card', title:'イレカエル：特殊召喚する「ガエル」', candidates:pool, min:1, max:1, cancelable:false,
+      resume:{handler:'s03u156.deck-trigger', args:{player:ctx.player, name:'イレカエル', action:'summon', pos:'faceUp'}}, meta:{scriptName:'イレカエル'}});
+  },
+  afterResolve(){},
+  includesSpecialSummon:true, blocksIfNoSpecialSummon:true,
+  continuous:{
+    scope:'allMonsters', from:['mz'],
+    apply(){ return null; },
+    protectV21:{ key:'イレカエル', label:'イレカエル',
+      battle:(target, self)=> self.face==='up' && groupMemberNowS03(target, GROUP.GAERU) }
+  }
+});
+
+/* エレキーウィ (2011): 「このカードがフィールド上に表側表示で存在する限り、自分フィールド上に存在する「エレキ」と名のついたモンスターが
+   攻撃する場合、攻撃モンスターは戦闘では破壊されない。」
+   「エレキ」 = GROUP.WATT (P4 overlay, 24 cards, this card included). Only the attacking side: the battle-destruction check passes
+   battleRole (engine/00 S03-U161). */
+defineScript('エレキーウィ', {
+  type:'monster', priority:1,
+  condition(ctx){ ctx.reason = '永続効果のみのカードです'; return false; },
+  resolve(){}, afterResolve(){},
+  continuous:{
+    scope:'ownMonsters', from:['mz'],
+    apply(){ return null; },
+    protectV21:{ key:'エレキーウィ', label:'エレキーウィ',
+      battle:(target, self, pctx)=> self.face==='up' && !!pctx && pctx.battleRole==='attacker' && groupMemberNowS03(target, GROUP.WATT) }
+  }
+});
+
+/* 万力魔神バイサー・デス (2011): 「①:このカードの召喚に成功した場合、相手フィールドのモンスター1体を対象として発動する。発動後、3回目の
+   自分スタンバイフェイズに対象のモンスターを破壊する。②:このカードの①の効果の対象のモンスターがフィールドに存在している限り、このカードは
+   戦闘では破壊されない。」
+   - ① forced trigger on its Normal Summon, targeting at activation. At resolution the target gets the zone-local mark
+     u161ViceMarkedBy = this card's uid and this card gets u161ViceTargetUid = the target's uid; the destruction is scheduled for the
+     3rd own Standby Phase after activation (own turn T → turn T+6). It happens even if this card has left the field (the effect
+     has resolved), but only to that same monster (the mark is zone-local).
+   - ② while both still carry the link (neither has left the field since), this card is not destroyed by battle. */
+function viceTargetOnFieldS03(self){
+  if(!self || self.u161ViceTargetUid==null) return false;
+  const h = findCardByUid(self.u161ViceTargetUid);
+  return !!(h && h.zone==='mz' && h.card.u161ViceMarkedBy===self.uid);
+}
+defineScript('万力魔神バイサー・デス', {
+  type:'monster', priority:1, forced:true, activateFrom:['mz'],
+  condition(ctx){
+    if(ctx.zone!=='mz' || (ctx.eventName && ctx.eventName!=='onNormalSummon') || !eventIsSelfS03(ctx)){ ctx.reason = 'このカードの召喚に成功した時に発動します'; return false; }
+    if(!API.fieldCards({zone:'mz', player:ctx.opponent}).length){ ctx.reason = '相手フィールドにモンスターがいません'; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    API.selectCard('万力魔神バイサー・デス：対象にする相手モンスター', API.fieldCards({zone:'mz', player:ctx.opponent}), t=>done([t]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets && ctx.selectedTargets[0];
+    const r = t && resolveTarget(t);
+    if(!r || r.zone!=='mz'){ API.log('万力魔神バイサー・デス：対象のモンスターがフィールドにいない'); return; }
+    const me = locateCard(ctx.card);
+    ensureCardUid(gameState, r.card); ensureCardUid(gameState, ctx.card);
+    API.setCardFlag(r, 'u161ViceMarkedBy', ctx.card.uid, '万力魔神バイサー・デス', {silent:true});
+    if(me && me.zone==='mz') API.setCardFlag(me, 'u161ViceTargetUid', r.card.uid, '万力魔神バイサー・デス', {silent:true});
+    API.schedule({at:'standbyPhase', turns:(gameState.activePlayer===ctx.player?6:5), player:ctx.player, handler:'s03u161.vice-destroy',
+      args:{uid:r.card.uid, by:ctx.card.uid, player:ctx.player}, note:'万力魔神バイサー・デス（3回目の自分スタンバイフェイズに破壊）'});
+    API.log(`万力魔神バイサー・デス：${cardName(r.card)} は3回目の自分スタンバイフェイズに破壊される`);
+  },
+  afterResolve(){},
+  passive:{ onNormalSummon(ctx){ return ctx.zone==='mz' && eventIsSelfS03(ctx); } },
+  continuous:{
+    scope:'self', from:['mz'],
+    apply(){ return null; },
+    protectV21:{ key:'万力魔神バイサー・デス', label:'万力魔神バイサー・デス',
+      battle:(target, self)=> target===self && viceTargetOnFieldS03(self) }
+  }
+});
+API.registerScheduleHandler('s03u161.vice-destroy', (args)=>{
+  const h = args && args.uid!=null ? findCardByUid(args.uid) : null;
+  if(!h || h.zone!=='mz' || h.card.u161ViceMarkedBy!==args.by){ API.log('万力魔神バイサー・デス：対象のモンスターはもうフィールドにいない'); return; }
+  API.destroy({p:h.p, zone:h.zone, index:h.index, card:h.card}, '万力魔神バイサー・デス', args.player);
+});
+/* S03-U162: マイン・モール (2011):
+   「このカードは1ターンに1度だけ、戦闘では破壊されない。このカードが獣族モンスターのシンクロ召喚の素材として墓地へ送られた場合、
+   自分のデッキからカードを1枚ドローする。このカードは相手のカードの効果によってフィールド上から離れた場合、ゲームから除外される。」
+   - once-per-turn battle protection: System v21 protectV21 (perTurn 1).
+   - Synchro material for a Beast (獣族) Synchro Monster: forced trigger from the GY on the material event (engine/00 queues onSendToGrave
+     {reason:'synchroMaterial', summonUid}); the Synchro Monster's current Type is checked when the trigger is collected.
+   - leaves the field by the opponent's card effect → banished instead (engine/00 banishWhenLeavesByOpponentEffectS03, from the move
+     action's P3 stamp: destruction, sending to the GY, returning to the hand or the Deck by an effect whose controller is the
+     opponent). Battle, costs and materials are not 「効果によって」. */
+function mineMoleSynchroS03(ctx){
+  if(!ctx || !ctx.card || ctx.zone!=='grave' || !eventIsSelfS03(ctx)) return false;
+  const e = ctx.event || {};
+  if(e.reason!=='synchroMaterial' || e.summonUid==null) return false;
+  const h = findCardByUid(e.summonUid);
+  return !!(h && h.card && currentRaceV17(h.card)==='獣');
+}
+defineScript('マイン・モール', {
+  type:'monster', priority:1, forced:true, activateFrom:['grave'],
+  banishIfLeavesByOpponentEffectS03:true,
+  condition(ctx){
+    if(!mineMoleSynchroS03(ctx)){ ctx.reason = '獣族モンスターのシンクロ召喚の素材として墓地へ送られた時に発動します'; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){ done([]); },
+  resolve(ctx){ API.draw(ctx.player, 1); },
+  afterResolve(){},
+  passive:{ onSendToGrave(ctx){ return mineMoleSynchroS03(ctx); } },
+  continuous:{
+    scope:'self', from:['mz'],
+    apply(){ return null; },
+    protectV21:{ key:'マイン・モール', label:'マイン・モール', perTurn:1, battle:(target, self)=> target===self }
+  }
+});
+/* S03-U164: デュアル・サモナー (2011):
+   「相手のエンドフェイズ時に1度だけ500ライフポイントを払って発動する事ができる。手札または自分フィールド上に表側表示で存在する
+   デュアルモンスター1体を通常召喚する。また、このカードは1ターンに1度だけ、戦闘では破壊されない。」
+   - Offered at the opponent's End Phase (the onEndPhase event: the controller of this face-up card, not the turn player, may activate
+     it once; engine note: represented as an optional effect of that event — the End Phase gives the non-turn player one chance).
+     Cost: 500 LP.
+   - Resolution: a Normal Summon by the effect (NORMAL_SUMMON prepaid — the player's own Normal Summon is not used; a summon made
+     during a resolution has no summon-negation window). The Gemini monster is chosen at resolution (journaled choice):
+       · from the hand — face-up Attack Position; Lv5-6 needs 1 Tribute, Lv7+ 2 (tributesNeeded), chosen at resolution;
+       · a face-up Gemini monster on its controller's field that is not yet an Effect Monster — the Gemini Summon (GEMINI_SUMMON_S03).
+     Then the onNormalSummon event, as for any Normal Summon.
+   - once-per-turn battle protection: protectV21. */
+function dualSummonerCandidatesS03(p){
+  const P = gameState.players[p];
+  const out = [];
+  const tribs = tributeCandidates(p).length;
+  P.hand.forEach((c,i)=>{
+    if(!c || !isGeminiS03(c)) return;
+    const need = tributesNeeded(dbOf(c), p);
+    if(need===0 ? !hasMonsterZoneSpace(p) : tribs < need) return;
+    const lock = (typeof v46FaceUpSummonRestrictionReason==='function') ? v46FaceUpSummonRestrictionReason(p, dbOf(c)) : '';
+    if(lock) return;
+    out.push(Object.assign(v17Handle(p,'hand',i,c), {need}));
+  });
+  P.mz.forEach((c,i)=>{
+    if(!c || !isGeminiS03(c) || c.face!=='up' || c.dualUp) return;
+    out.push(Object.assign(v17Handle(p,'mz',i,c), {need:0}));
+  });
+  return out;
+}
+defineScript('デュアル・サモナー', {
+  type:'monster', priority:1, activateFrom:['mz'],
+  condition(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason = 'フィールドの表側表示のこのカードの効果です'; return false; }
+    if(gameState.phase!=='end' || gameState.activePlayer===ctx.player){ ctx.reason = '相手のエンドフェイズ時に発動できます'; return false; }
+    if(API.me(ctx).lp < 500){ ctx.reason = '500ライフポイントを払えません'; return false; }
+    if(!dualSummonerCandidatesS03(ctx.player).length){ ctx.reason = '通常召喚できるデュアルモンスターがいません'; return false; }
+    return true;
+  },
+  countLimit:1,
+  cost(ctx, done){ if(API.me(ctx).lp < 500){ done(false); return; } API.payCost(ctx.player, 500); done(true); },
+  selectTargets(ctx, done){ done([]); },
+  resolve(ctx){
+    const cands = dualSummonerCandidatesS03(ctx.player);
+    if(!cands.length){ API.log('デュアル・サモナー：通常召喚できるデュアルモンスターがいない'); return; }
+    API.requestChoice({player:ctx.player, kind:'card', title:'デュアル・サモナー：通常召喚するデュアルモンスター', candidates:cands, min:1, max:1, cancelable:false,
+      resume:{handler:'s03u164.dual-summoner', args:{player:ctx.player}}, meta:{scriptName:'デュアル・サモナー'}});
+  },
+  afterResolve(){},
+  passive:{ onEndPhase(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && gameState.activePlayer!==ctx.player; } },
+  continuous:{
+    scope:'self', from:['mz'],
+    apply(){ return null; },
+    protectV21:{ key:'デュアル・サモナー', label:'デュアル・サモナー', perTurn:1, battle:(target, self)=> target===self }
+  }
+});
+registerChoiceHandlerV49('s03u164.dual-summoner', (answer, args)=>{
+  const pick = answer && answer.cards && answer.cards[0];
+  if(!pick || pick.uid==null || !args) return;
+  const p = args.player, h = findCardByUid(pick.uid);
+  if(!h || h.p!==p || !isGeminiS03(h.card)) return;
+  if(h.zone==='mz'){
+    if(h.card.face!=='up' || h.card.dualUp) return;
+    act({type:'GEMINI_SUMMON_S03', player:p, zone:'mz', index:h.index, uid:h.card.uid});
+    const now = findCardByUid(pick.uid);
+    if(now) queueDeferredEventV2('onNormalSummon', {player:p, name:cardName(now.card), card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー'});
+    return;
+  }
+  if(h.zone!=='hand') return;
+  const need = tributesNeeded(dbOf(h.card), p);
+  if(need===0){ dualSummonerNormalSummonS03(p, pick.uid, []); return; }
+  const tr = tributeCandidates(p);
+  if(tr.length < need) return;
+  API.requestChoice({player:p, kind:'card', title:`デュアル・サモナー：リリースするモンスター（${need}体）`, candidates:tr, min:need, max:need, cancelable:false,
+    resume:{handler:'s03u164.dual-summoner-tribute', args:{player:p, uid:pick.uid}}, meta:{scriptName:'デュアル・サモナー'}});
+});
+registerChoiceHandlerV49('s03u164.dual-summoner-tribute', (answer, args)=>{
+  if(!args) return;
+  const uids = (answer && answer.cards || []).map(y=>y && y.uid).filter(u=>u!=null);
+  dualSummonerNormalSummonS03(args.player, args.uid, uids);
+});
+function dualSummonerNormalSummonS03(p, uid, tributeUids){
+  const tribs = [];
+  tributeUids.forEach(u=>{
+    const t = findCardByUid(u);
+    if(!t || t.zone!=='mz' || t.p!==p) return;
+    tribs.push(typeof snapshotCardV3==='function' ? snapshotCardV3(t.card,['atk','def','level','attribute','race','owner','originalAtk']) : null);
+    act({type:'FX_TO_GRAVE', player:t.p, zone:t.zone, index:t.index, reason:'デュアル・サモナー（アドバンス召喚のリリース）', byDestroy:false,
+      p3:{reason:'tribute', actingPlayer:p, fromZone:'mz'}});
+  });
+  const h = findCardByUid(uid);
+  if(!h || h.zone!=='hand' || !hasMonsterZoneSpace(p)) return;
+  act({type:'NORMAL_SUMMON', player:p, handIndex:h.index, pos:'atk', tributes:tributeUids.length, tributeValue:tributeUids.length, prepaid:true,
+    p3Materials:tribs.filter(Boolean)});
+  const summoned = lastSummonedCard(p);
+  if(summoned) queueDeferredEventV2('onNormalSummon', {player:p, name:cardName(summoned), card:summoned, byEffectS03:'デュアル・サモナー'});
+}
+/* S03-U165: more monsters whose battle protection is conditional (read as unconditional from the text until S03-U158),
+   with their full 2011 texts. */
+
+/* デュアル・ソルジャー (2011, Gemini): 「…再度召喚する事で、このカードは効果モンスター扱いとなり以下の効果を得る。
+   ●このカードは1ターンに1度だけ、戦闘では破壊されない。このカードが戦闘を行う場合、そのダメージ計算後に自分のデッキから
+   「デュアル・ソルジャー」以外のレベル4以下のデュアルモンスター1体を自分フィールド上に特殊召喚する事ができる。」
+   - defineGeminiS03 gates the condition / passive; protectV21 is an object (not wrapped), so its predicate checks geminiActiveS03.
+   - The Special Summon: optional trigger after damage calculation (dsTiming 'after') of a battle this card took part in; the Deck
+     is examined at resolution (shared engine/1ZT choice, 「特殊召喚する」 without a position → face-up, the player's choice). */
+function dualSoldierPoolS03(p){
+  return API.pileCards(p, 'deck', x=>x.db && x.db.k==='m' && !x.db.ex && isGeminiS03(x.card) && Number(x.db.lv||0)<=4
+    && x.db.n!=='デュアル・ソルジャー' && canEffectSpecialSummonS03(x.card, 'deck', 'デュアル・ソルジャー'));
+}
+function dualSoldierBattledS03(ctx){
+  const b = ctx.battle || {};
+  return ctx.zone==='mz' && (b.atkCard===ctx.card || b.defCard===ctx.card);
+}
+defineGeminiS03('デュアル・ソルジャー', {
+  type:'monster', priority:1, activateFrom:['mz'], dsTiming:'after',
+  condition(ctx){
+    if(!dualSoldierBattledS03(ctx)){ ctx.reason = 'このカードが戦闘を行ったダメージ計算後に発動できます'; return false; }
+    if(!hasMonsterZoneSpace(ctx.player)){ ctx.reason = 'モンスターゾーンが一杯です'; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){ done([]); },
+  resolve(ctx){
+    if(!hasMonsterZoneSpace(ctx.player)){ API.log('デュアル・ソルジャー：モンスターゾーンが空いていない'); return; }
+    const pool = dualSoldierPoolS03(ctx.player);
+    if(!pool.length){ API.shuffle(ctx.player); API.log('デュアル・ソルジャー：条件を満たすデュアルモンスターがデッキに無い（デッキをシャッフル）'); return; }
+    API.requestChoice({player:ctx.player, kind:'card', title:'デュアル・ソルジャー：特殊召喚するデュアルモンスター', candidates:pool, min:1, max:1, cancelable:false,
+      resume:{handler:'s03u156.deck-trigger', args:{player:ctx.player, name:'デュアル・ソルジャー', action:'summon', pos:'faceUp'}}, meta:{scriptName:'デュアル・ソルジャー'}});
+  },
+  afterResolve(){},
+  includesSpecialSummon:true, blocksIfNoSpecialSummon:true,
+  passive:{ onDamageStep(ctx){ return dualSoldierBattledS03(ctx); } },
+  continuous:{
+    scope:'self', from:['mz'],
+    apply(){ return null; },
+    protectV21:{ key:'デュアル・ソルジャー', label:'デュアル・ソルジャー', perTurn:1, battle:(target, self)=> target===self && geminiActiveS03(self) }
+  }
+});
+
+/* 幻獣サンダーペガス (2011): 「相手モンスターの攻撃宣言時、墓地のこのカードをゲームから除外し、自分フィールド上の「幻獣」と名のついた
+   モンスター1体を選択して発動できる。このターン、選択した自分のモンスターは戦闘では破壊されない。」
+   - Quick effect from the GY in the attack-declaration window of an opponent's attack (engine/1Y); cost: banish itself; target: a
+     face-up 「幻獣」 monster it controls (GROUP.PHANTOM_BEAST). Resolution: a System v21 protection grant until the end of the turn. */
+function thunderPegasusWindowS03(ctx){
+  if(ctx.eventName==='onAttackDeclare'){ const e = ctx.event || {}; return e.player===ctx.opponent; }
+  const a = (typeof attackDeclareWindowS03==='function') ? attackDeclareWindowS03() : null;
+  return !!(a && a.player===ctx.opponent);
+}
+function phantomBeastsS03(p){
+  return API.fieldCards({zone:'mz', player:p, filter:x=>x.card.face==='up' && isCardInGroupV4(x.card, GROUP.PHANTOM_BEAST)});
+}
+defineScript('幻獣サンダーペガス', {
+  type:'monster', priority:2, quickEffect:true, activateFrom:['grave'], targets:true,
+  condition(ctx){
+    if(ctx.zone!=='grave'){ ctx.reason = '墓地で発動します'; return false; }
+    if(!thunderPegasusWindowS03(ctx)){ ctx.reason = '相手モンスターの攻撃宣言時に発動できます'; return false; }
+    if(!phantomBeastsS03(ctx.player).length){ ctx.reason = '自分フィールドに表側表示の「幻獣」モンスターがいません'; return false; }
+    return true;
+  },
+  cost(ctx, done){
+    const me = locateCardAnyV4(ctx.card);
+    if(!me || me.zone!=='grave'){ done(false); return; }
+    API.banish(me, '幻獣サンダーペガス（コスト）'); done(true);
+  },
+  selectTargets(ctx, done){
+    API.selectCard('幻獣サンダーペガス：戦闘では破壊されなくする「幻獣」モンスター', phantomBeastsS03(ctx.player), t=>done([t]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets && ctx.selectedTargets[0];
+    const r = t && resolveTarget(t);
+    if(!r || r.zone!=='mz' || r.p!==ctx.player || r.card.face!=='up'){ API.log('幻獣サンダーペガス：対象のモンスターがいない'); return; }
+    API.grantProtection(r, {key:'幻獣サンダーペガス', label:'幻獣サンダーペガス', battle:true, until:'endTurn', turn:gameState.turn});
+  },
+  afterResolve(){}
+});
+
+/* E・HERO テンペスター (2011): 「…このモンスターは融合召喚でしか特殊召喚できない。このカード以外の自分フィールド上のカード1枚を墓地に
+   送り、自分フィールド上のモンスター1体を選択する。このカードがフィールド上に表側表示で存在する限り、選択したモンスターは戦闘によっては
+   破壊されない。（ダメージ計算は適用する）」
+   - Ignition effect (Main Phase); cost: send another card on its controller's field to the GY; target: a monster on its
+     controller's field (this card included). No once-per-turn: each activation selects one more monster.
+   - The link is zone-local on both sides: the target gets u165TempesterBy = this card's uid, this card lists the target's uid in
+     u165TempesterUids. While this card is face-up, a linked monster is not destroyed by battle (protectV21, own monsters).
+   - 「融合召喚でしか特殊召喚できない」 is read from the text by engine/1ZK. */
+defineScript('E・HERO テンペスター', {
+  type:'monster', priority:1, activateFrom:['mz'], targets:true,
+  condition(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason = 'フィールドの表側表示のこのカードの効果です'; return false; }
+    const me = API.me(ctx);
+    const others = me.mz.filter(c=>c && c!==ctx.card).length + me.sz.length + (me.field?1:0);
+    if(!others){ ctx.reason = '墓地へ送る他の自分のカードがありません'; return false; }
+    return true;
+  },
+  cost(ctx, done){
+    const me = API.me(ctx), list = [];
+    me.mz.forEach((c,i)=>{ if(c && c!==ctx.card) list.push(v17Handle(ctx.player,'mz',i,c)); });
+    me.sz.forEach((c,i)=>{ if(c) list.push(v17Handle(ctx.player,'sz',i,c)); });
+    if(me.field) list.push(v17Handle(ctx.player,'field',0,me.field));
+    API.selectCard('E・HERO テンペスター：墓地へ送るこのカード以外の自分のカード', list, t=>{ API.sendToGrave(t, 'E・HERO テンペスター（コスト）'); done(true); });
+  },
+  selectTargets(ctx, done){
+    API.selectCard('E・HERO テンペスター：戦闘では破壊されなくする自分のモンスター', API.fieldCards({zone:'mz', player:ctx.player}), t=>done([t]));
+  },
+  resolve(ctx){
+    const t = ctx.selectedTargets && ctx.selectedTargets[0];
+    const r = t && resolveTarget(t);
+    const me = locateCard(ctx.card);
+    if(!r || r.zone!=='mz' || r.p!==ctx.player || !me || me.zone!=='mz'){ API.log('E・HERO テンペスター：対象のモンスターがいない'); return; }
+    ensureCardUid(gameState, r.card); ensureCardUid(gameState, ctx.card);
+    API.setCardFlag(r, 'u165TempesterBy', ctx.card.uid, 'E・HERO テンペスター', {silent:true});
+    const list = (Array.isArray(ctx.card.u165TempesterUids) ? ctx.card.u165TempesterUids : []).concat([r.card.uid]);
+    API.setCardFlag(me, 'u165TempesterUids', list, 'E・HERO テンペスター', {silent:true});
+    API.log(`E・HERO テンペスター：${cardName(r.card)} は戦闘では破壊されない`);
+  },
+  afterResolve(){},
+  continuous:{
+    scope:'ownMonsters', from:['mz'],
+    apply(){ return null; },
+    protectV21:{ key:'E・HERO テンペスター', label:'E・HERO テンペスター',
+      battle:(target, self)=> self.face==='up' && target.u165TempesterBy===self.uid && Array.isArray(self.u165TempesterUids) && self.u165TempesterUids.indexOf(target.uid)>=0 }
+  }
+});
+/* S03-U166: D・ステープラン (2011):
+   「このカードはこのカードの表示形式によって以下の効果を得る。
+   ●攻撃表示:このカードがフィールド上に表側表示で存在する限り、相手は他のモンスターを攻撃対象に選択できない。このカードが戦闘によって
+   破壊された場合、このカードを破壊したモンスターの攻撃力は300ポイントダウンする。
+   ●守備表示:このカードは戦闘では破壊されない。このカードが攻撃された場合、そのダメージ計算後に相手フィールド上に表側攻撃表示で存在する
+   モンスター1体を選択して守備表示にし、このカードの表示形式を攻撃表示にする。」
+   - Attack Position: continuous cannotBeAttackTarget for its controller's other monsters (engine/1ZU); a forced trigger from the GY
+     when destroyed by battle in Attack Position (graveInfo.pos) — the monster that destroyed it (the other side of that battle,
+     gameState.lastBattle) loses 300 ATK (not a target).
+   - Defense Position: protectV21 (battle); a forced trigger after damage calculation (dsTiming 'after') when it was attacked while in
+     Defense Position (battle.defPosAtCalc): target a face-up Attack Position monster of the opponent → Defense Position, and this
+     card → Attack Position. */
+function staplerDestroyerS03(ctx){
+  const lb = gameState.lastBattle;
+  const me = ctx.card && ctx.card.uid;
+  if(!lb || me==null) return null;
+  const other = lb.attackerUidV6===me ? lb.defenderUidV6 : (lb.defenderUidV6===me ? lb.attackerUidV6 : null);
+  if(other==null) return null;
+  const h = findCardByUid(other);
+  return (h && h.zone==='mz' && h.card.face==='up') ? h : null;
+}
+function staplerAttackedInDefS03(ctx){
+  const b = ctx.battle || {}, gb = gameState.battle;   /* defPosAtCalc lives on the live battle (engine/30), not in battleContextV28 */
+  return ctx.zone==='mz' && b.defCard===ctx.card && !!gb && gb.defPosAtCalc==='def';
+}
+function staplerOppAtkTargetsS03(ctx){
+  return API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+}
+defineScript('D・ステープラン', {
+  type:'monster', priority:1, forced:true, activateFrom:['mz','grave'], dsTiming:'after',
+  condition(ctx){
+    if(ctx.zone==='grave'){
+      const g = ctx.card.graveInfo;
+      if(ctx.eventName!=='onBattleDestroy' || !eventIsSelfS03(ctx) || !g || g.pos!=='atk'){ ctx.reason = '攻撃表示のこのカードが戦闘で破壊された時に発動します'; return false; }
+      if(!staplerDestroyerS03(ctx)){ ctx.reason = 'このカードを破壊したモンスターがフィールドにいません'; return false; }
+      return true;
+    }
+    if(!staplerAttackedInDefS03(ctx)){ ctx.reason = '守備表示のこのカードが攻撃されたダメージ計算後に発動します'; return false; }
+    if(!staplerOppAtkTargetsS03(ctx).length){ ctx.reason = '相手フィールドに表側攻撃表示のモンスターがいません'; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){
+    if(ctx.zone==='grave'){ done([]); return; }
+    API.selectCard('D・ステープラン：守備表示にする相手の表側攻撃表示モンスター', staplerOppAtkTargetsS03(ctx), t=>done([t]));
+  },
+  resolve(ctx){
+    if(ctx.zone==='grave'){
+      const h = staplerDestroyerS03(ctx);
+      if(!h){ API.log('D・ステープラン：破壊したモンスターがフィールドにいない'); return; }
+      API.modAtk({p:h.p, zone:h.zone, index:h.index, card:h.card}, -300, 0, 'permanent', 'D・ステープラン');
+      return;
+    }
+    const t = ctx.selectedTargets && ctx.selectedTargets[0];
+    const r = t && resolveTarget(t);
+    if(r && r.zone==='mz' && r.card.face==='up' && r.card.pos==='atk') API.changePosition(r, 'def', 'D・ステープラン');
+    const me = locateCard(ctx.card);
+    if(me && me.zone==='mz' && ctx.card.face==='up' && ctx.card.pos!=='atk') API.changePosition(me, 'atk', 'D・ステープラン');
+  },
+  afterResolve(){},
+  passive:{
+    onDamageStep(ctx){ return staplerAttackedInDefS03(ctx); },
+    onBattleDestroy(ctx){ const g = ctx.card && ctx.card.graveInfo; return ctx.zone==='grave' && eventIsSelfS03(ctx) && !!g && g.pos==='atk'; }
+  },
+  continuous:{
+    scope:'ownMonsters', from:['mz'],
+    apply(){ return null; },
+    cannotBeAttackTarget:(target, self)=> target!==self && self.face==='up' && self.pos==='atk',
+    protectV21:{ key:'D・ステープラン', label:'D・ステープラン', scope:'self',
+      battle:(target, self)=> target===self && self.face==='up' && self.pos==='def' }
+  }
+});
+/* S03-U167: AUTO-table recruiters / searchers whose texts also have a continuous effect (left out of S03-U156), on the shared
+   deck-trigger engine (engine/1ZT; spec.continuous), and バイオファルコン (a trigger on another monster's battle destruction). */
+
+/* オシャレオン (2011): 「このカードが自分フィールド上に表側攻撃表示で存在する限り、相手は「オシャレオン」以外のモンスターを攻撃対象に選択する
+   事はできない。このカードが戦闘によって破壊され墓地へ送られた時、自分のデッキから攻撃力500以下の爬虫類族モンスター1体を手札に加える事が
+   できる。」 */
+declareDeckTriggerS03('オシャレオン', {when:'battleToGrave', action:'search', optional:true, filter:{ra:'爬虫類', atkmax:500},
+  continuous:{ scope:'ownMonsters', from:['mz'], apply(){ return null; },
+    cannotBeAttackTarget:(target, self)=> self.face==='up' && self.pos==='atk' && !deckTriggerNamedS03(dbOf(target), target, 'オシャレオン') }});
+
+/* ジェイドナイト (2011): 「このカードがフィールド上に表側攻撃表示で存在する限り、自分フィールド上の攻撃力1200以下の機械族モンスターは罠カードの
+   効果では破壊されない。フィールド上に表側表示で存在するこのカードが戦闘によって破壊され墓地へ送られた時、デッキから機械族・光属性・レベル4の
+   モンスター1体を手札に加える事ができる。」
+   The protection is System v21 (cause effect, sourceKind 't'); ATK and Type are the current ones. */
+declareDeckTriggerS03('ジェイドナイト', {when:'battleToGrave', faceUp:true, action:'search', optional:true, filter:{ra:'機械', at:'光', lv:4},
+  continuous:{ scope:'ownMonsters', from:['mz'], apply(){ return null; },
+    protectV21:{ key:'ジェイドナイト', label:'ジェイドナイト', sourceKind:'t',
+      effect:(target, self)=> self.face==='up' && self.pos==='atk' && target.face==='up' && currentRaceV17(target)==='機械' && curATK(target)<=1200 } }});
+
+/* 機皇兵スキエル・アイン (2011): 「このカードの攻撃力は、このカード以外のフィールド上に表側表示で存在する「機皇」と名のついたモンスターの数×200
+   ポイントアップする。このカードが戦闘によって破壊され墓地へ送られた時、自分のデッキから「機皇兵」と名のついたモンスター1体を特殊召喚する事が
+   できる。」 (「機皇」 = GROUP.MEKLORD, 「機皇兵」 = GROUP.MEKLORD_ARMY; the Deck pool is monsters only) */
+declareDeckTriggerS03('機皇兵スキエル・アイン', {when:'battleToGrave', action:'summon', optional:true, pos:'faceUp', filter:{group:'MEKLORD_ARMY'},
+  continuous:{ scope:'self', from:['mz'],
+    apply(card, self){
+      if(card!==self) return null;
+      let n = 0;
+      [0,1].forEach(p=>(gameState.players[p].mz||[]).forEach(c=>{ if(c && c!==self && c.face==='up' && isCardInGroupV4(c, GROUP.MEKLORD)) n++; }));
+      return n ? {atk:n*200} : null;
+    } }});
+
+/* バイオファルコン (2011): 「このカードがフィールド上に表側表示で存在する場合に自分フィールド上の機械族モンスターが戦闘によって破壊され墓地へ送ら
+   れた時、デッキから攻撃力1000以下の機械族モンスター1体を手札に加える事ができる。」
+   An optional trigger of this face-up card on the battle destruction of another Machine monster its controller controlled (the
+   battle record graveInfo.byPlayer is the opponent of the destroyed card's controller). The Deck is examined at resolution. */
+const BIO_FALCON_SPEC_S03 = {action:'search', from:['deck'], filter:{ra:'機械', atkmax:1000}};
+function bioFalconEventS03(ctx){
+  if(!ctx || ctx.zone!=='mz' || !ctx.card || ctx.card.face!=='up') return false;
+  const e = ctx.event || {};
+  const h = e.uid!=null ? findCardByUid(e.uid) : null;
+  if(!h || h.card===ctx.card || h.zone!=='grave') return false;
+  const g = h.card.graveInfo;
+  return !!g && g.byPlayer===ctx.opponent && dbOf(h.card).ra==='機械';
+}
+defineScript('バイオファルコン', {
+  type:'monster', priority:1, activateFrom:['mz'],
+  condition(ctx){
+    if(ctx.eventName!=='onBattleDestroy' || !bioFalconEventS03(ctx)){ ctx.reason = '自分の機械族モンスターが戦闘で破壊され墓地へ送られた時に発動できます'; return false; }
+    return true;
+  },
+  selectTargets(ctx, done){ done([]); },
+  resolve(ctx){
+    const pool = deckTriggerPoolS03('バイオファルコン', BIO_FALCON_SPEC_S03, ctx.player);
+    if(!pool.length){ API.shuffle(ctx.player); API.log('バイオファルコン：条件を満たすカードがデッキに無い（デッキをシャッフル）'); return; }
+    API.requestChoice({player:ctx.player, kind:'card', title:'バイオファルコン：手札に加える機械族モンスター', candidates:pool, min:1, max:1, cancelable:false,
+      resume:{handler:'s03u156.deck-trigger', args:{player:ctx.player, name:'バイオファルコン', action:'search'}}, meta:{scriptName:'バイオファルコン'}});
+  },
+  afterResolve(){},
+  blocksIfNoDeckToHand:true,
+  dsTiming:'leave',
+  passive:{ onBattleDestroy(ctx){ return bioFalconEventS03(ctx); } }
+});
+/* S03-U169: more recruiters on the shared deck-trigger engine (engine/1ZT; spec.summonFlag / spec.toOpponent, S03-U169). */
+
+/* ナチュル・チェリー (2011): 「このカードが相手によってフィールド上から墓地へ送られた場合、自分のデッキから「ナチュル・チェリー」を2体まで
+   裏側守備表示で特殊召喚する事ができる。」
+   「相手によって」: destroyed by battle with an opponent's monster, or sent / destroyed by an effect of the opponent — the battle
+   record graveInfo.byPlayer, or the move provenance (P3 stamp) of an effect. */
+function sentByOpponentS03(card, me){
+  const opp = me===0 ? 1 : 0;
+  const g = card && card.graveInfo, m = card && card.moveProvenance;
+  if(g && g.byPlayer===opp) return true;
+  return !!(m && m.reason==='effect' && m.actingPlayer===opp);
+}
+declareDeckTriggerS03('ナチュル・チェリー', {when:'fieldToGrave', action:'summon', optional:true, pos:'faceDownDef', max:2, filter:{name:'ナチュル・チェリー'},
+  extra(ctx){ return sentByOpponentS03(ctx.card, ctx.player) ? '' : '相手によってフィールドから墓地へ送られた時に発動できます'; }});
+
+/* プチトマボー (2011): 「このカードが戦闘によって破壊され墓地へ送られた時、デッキから「トマボー」と名のついたモンスターを2体まで特殊召喚できる。
+   このターン、この効果で特殊召喚したモンスターはシンクロ素材にできない。」 (「トマボー」 = GROUP.TOMABO, P4-v7) */
+declareDeckTriggerS03('プチトマボー', {when:'battleToGrave', action:'summon', optional:true, pos:'atk', max:2, filter:{group:'TOMABO'},
+  summonFlag:{key:'noSynchroMaterialTurnS03'}});
+
+/* 素早いムササビ (2011): 「このカードが戦闘によって破壊され墓地へ送られた時、相手ライフに500ポイントダメージを与える。さらに自分のデッキから
+   「素早いムササビ」を任意の数だけ相手フィールド上に表側攻撃表示で特殊召喚する事ができる。このカードはアドバンス召喚のためにはリリースできない。」
+   Forced (the damage); the Special Summon to the opponent's field is optional within the resolution (0 or more). */
+declareDeckTriggerS03('素早いムササビ', {when:'battleToGrave', action:'summon', optional:false, pos:'atk', max:99, minPick:0, toOpponent:true,
+  summonNeedsZone:false, filter:{name:'素早いムササビ'},
+  before(ctx){ API.damageLP(ctx.opponent, 500); },
+  script:{ noAdvanceTributeS03:true }});
+/* S03-U170: 威嚇する咆哮 (2011): 「このターン相手は攻撃宣言をする事ができない。」 (Normal Trap)
+   Resolution: a turn-stamped player flag on the opponent (temporaryFlags.noAttackDeclareS03 = this turn; the per-turn flags are
+   reset at the turn change), read by cannotAttackNow (engine/00, S03-U170) — no monster of that player can declare an attack
+   this turn. Typically activated at the Start Step of the opponent's Battle Phase (S03-U170 POINT kind 'battleStart'). */
+defineScript('威嚇する咆哮', {
+  type:'trap', priority:2, quickEffect:true,
+  condition(ctx){ return true; },
+  selectTargets(ctx, done){ done([]); },
+  resolve(ctx){
+    API.setFlag(ctx.opponent, 'noAttackDeclareS03', gameState.turn, true);
+    API.log('威嚇する咆哮：このターン、相手は攻撃宣言できない');
+  },
+  afterResolve(){}
+});
+/* S03-U171: 和睦の使者 (2011): 「このターン、自分のモンスターは戦闘では破壊されず、自分が受ける戦闘ダメージは0になる。」 (Normal Trap)
+   - 「自分のモンスターは戦闘では破壊されず」: a turn-stamped flag on its controller (temporaryFlags.noBattleDestroyS03 = this turn),
+     read by battleProof (engine/00) — every monster that player controls this turn, including monsters that arrive later.
+   - 「自分が受ける戦闘ダメージは0」: a System v18 LP rule (cause 'battle', mode 'prevent', this turn) for its controller. */
+defineScript('和睦の使者', {
+  type:'trap', priority:2, quickEffect:true,
+  condition(ctx){ return true; },
+  selectTargets(ctx, done){ done([]); },
+  resolve(ctx){
+    API.setFlag(ctx.player, 'noBattleDestroyS03', gameState.turn, true);
+    addLpRuleV18({player:ctx.player, cause:'battle', mode:'prevent', turns:0, label:'和睦の使者'});
+    API.log('和睦の使者：このターン、自分のモンスターは戦闘では破壊されず、戦闘ダメージは0になる');
+  },
+  afterResolve(){}
+});
+/* =========================================================================
+   S03-U174 — contact fusion (engine/1ZW) for cards whose other effects are implemented here.
+   Texts (2011 carddata):
+   E・HERO エアー・ネオス  「E・HERO ネオス」＋「N・エア・ハミングバード」 / デッキに戻した場合のみ… / 自分のライフポイントが相手の
+     ライフポイントよりも少ない場合、その数値だけこのカードの攻撃力がアップする。 / エンドフェイズ時にこのカードは融合デッキに戻る。
+   E・HERO フレア・ネオス 「E・HERO ネオス」＋「N・フレア・スカラベ」 / … / このカードの攻撃力は、フィールド上の魔法・罠カードの数×400
+     ポイントアップする。 / また、エンドフェイズ時、このカードはエクストラデッキに戻る。
+   キメラテック・フォートレス・ドラゴン 「サイバー・ドラゴン」＋機械族モンスター1体以上 / 自分・相手フィールドの上記カードを墓地へ送った
+     場合のみ… / 元々の攻撃力は、このカードの融合素材としたモンスターの数×1000になる（continuous in cards/10_themes_a.js）.
+   (E・HERO グラン・ネオス: cards/G8_auto_cycle66.js.)
+   ========================================================================= */
+defineUnifiedCardV4('E・HERO エアー・ネオス',[endPhaseReturnExEffectS03('E・HERO エアー・ネオス')],{
+  type:'fusion', priority:1,
+  passive:{onEndPhase(ctx){return ctx.zone==='mz'&&ctx.card.face==='up';}},
+  continuous:{scope:'self', from:['mz'], apply(target, self, info){
+    const p = info && info.p!=null ? info.p : 0, me = gameState.players[p].lp, op = gameState.players[p===0?1:0].lp;
+    return me < op ? {atk:op-me} : null;
+  }}
+});
+declareContactFusionS03('E・HERO エアー・ネオス');
+
+/* 「フィールド上の魔法・罠カード」: every card in both players' Spell & Trap Zones (face-up or set) and Field Zones */
+function flareNeosSpellTrapCountS03(){
+  let n = 0;
+  gameState.players.forEach(P=>{ n += (P.sz||[]).filter(Boolean).length; if(P.field) n++; });
+  return n;
+}
+defineUnifiedCardV4('E・HERO フレア・ネオス',[endPhaseReturnExEffectS03('E・HERO フレア・ネオス')],{
+  type:'fusion', priority:1,
+  passive:{onEndPhase(ctx){return ctx.zone==='mz'&&ctx.card.face==='up';}},
+  continuous:{scope:'self', from:['mz'], apply(){ const n=flareNeosSpellTrapCountS03(); return n ? {atk:n*400} : null; }}
+});
+declareContactFusionS03('E・HERO フレア・ネオス');
+
+declareContactFusionS03('キメラテック・フォートレス・ドラゴン', {
+  afterSummonS03(h, data){
+    if(h && data && data.n) API.setCardFlag(h, 'fusionMaterialCount', data.n, 'キメラテック・フォートレス・ドラゴン', {silent:true});
+  }
+});
+/* =========================================================================
+   S03-U176 — more contact-fusion cards (engine/1ZW) with their whole texts.
+   E・HERO アクア・ネオス: 1ターンに1度、手札を1枚捨てる事で、相手の手札をランダムに1枚選んで破壊する。 / エンドフェイズ時、エクストラデッキに戻る。
+   E・HERO マリン・ネオス: 相手の手札1枚をランダムに選択し破壊する。この効果は1ターンに1度しか使用できない。 (no End Phase return)
+   XY－ドラゴン・キャノン / XZ－キャタピラー・キャノン / YZ－キャタピラー・ドラゴン / XYZ－ドラゴン・キャノン: 墓地からの特殊召喚はできない。
+     ①:手札を1枚捨て、相手フィールドの（表側表示の魔法・罠｜裏側表示の魔法・罠｜裏側表示モンスター｜カード）1枚を対象として発動できる。破壊する。
+   VW－タイガー・カタパルト: ①:手札を1枚捨て、相手フィールドのモンスター1体を対象として発動できる。表示形式を変更する（リバースモンスターの効果は
+     発動しない）。
+   The random hand card is drawn inside the Action (engine/1ZX).
+   ========================================================================= */
+function u176DiscardCost(name){
+  return function(ctx, done){
+    API.selectCard(`${name}：捨てる手札`, API.pileCards(ctx.player,'hand'), t=>{
+      const r = resolveTarget(t); if(!r){ done(false); return; }
+      API.discard(ctx.player, r.index, `${name}（コスト）`, {byEffect:false}); done(true);
+    });
+  };
+}
+function u176HandDestroyEffect(name, withCost){
+  return {
+    key:'hand-destroy', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, targetRange:LOCATION.HAND, targetSide:'opponent',
+    speed:1, events:['activate'],
+    condition(ctx){
+      if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason='フィールドで表側表示の時に発動します'; return false; }
+      if(!API.foe(ctx).hand.length){ ctx.reason='相手の手札がありません'; return false; }
+      if(withCost && !API.me(ctx).hand.length){ ctx.reason='捨てる手札がありません'; return false; }
+      return true;
+    },
+    cost: withCost ? u176DiscardCost(name) : null,
+    operation(ctx){ destroyRandomHandCardS03(ctx.opponent, name, ctx.player); },
+    afterResolve(){}
+  };
+}
+defineUnifiedCardV4('E・HERO アクア・ネオス',[u176HandDestroyEffect('E・HERO アクア・ネオス', true), endPhaseReturnExEffectS03('E・HERO アクア・ネオス')],{
+  type:'fusion', priority:1, countLimit:{n:1, effects:['hand-destroy']}, timing:['mainPhase'],
+  passive:{onEndPhase(ctx){return ctx.zone==='mz'&&ctx.card.face==='up';}}
+});
+declareContactFusionS03('E・HERO アクア・ネオス');
+
+defineUnifiedCardV4('E・HERO マリン・ネオス',[u176HandDestroyEffect('E・HERO マリン・ネオス', false)],{
+  type:'fusion', priority:1, countLimit:{n:1, effects:['hand-destroy']}, timing:['mainPhase']
+});
+declareContactFusionS03('E・HERO マリン・ネオス');
+
+function u176CannonScript(name, what, filter, graveBan){
+  const def = {
+    type:'fusion', priority:1, targets:true, timing:['mainPhase'],
+    condition(ctx){
+      if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason='フィールドで表側表示の時に発動します'; return false; }
+      if(!API.me(ctx).hand.length){ ctx.reason='捨てる手札がありません'; return false; }
+      if(!API.fieldCards({player:ctx.opponent, filter}).length){ ctx.reason=`相手フィールドに${what}がありません`; return false; }
+      return true;
+    },
+    cost: u176DiscardCost(name),
+    selectTargets(ctx, done){ API.selectCard(`${name}：対象にする${what}`, API.fieldCards({player:ctx.opponent, filter}), t=>done([t])); },
+    resolve(ctx){
+      const t = ctx.selectedTargets && ctx.selectedTargets[0];
+      const r = t && resolveTarget(t);
+      if(r && r.p===ctx.opponent && filter(r)) API.destroy(r, name);
+    }
+  };
+  if(graveBan) def.noGraveSpecialSummonS03 = true;
+  defineScript(name, def);
+  declareContactFusionS03(name);
+}
+u176CannonScript('XY－ドラゴン・キャノン', '表側表示の魔法・罠カード', x=>(x.zone==='sz'||x.zone==='field') && x.card.face==='up', true);
+u176CannonScript('XZ－キャタピラー・キャノン', '裏側表示の魔法・罠カード', x=>(x.zone==='sz'||x.zone==='field') && x.card.face==='down', true);
+u176CannonScript('YZ－キャタピラー・ドラゴン', '裏側表示モンスター', x=>x.zone==='mz' && x.card.face==='down', true);
+u176CannonScript('XYZ－ドラゴン・キャノン', 'カード', x=>true, true);
+
+defineScript('VW－タイガー・カタパルト', {
+  type:'fusion', priority:1, targets:true, timing:['mainPhase'],
+  condition(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason='フィールドで表側表示の時に発動します'; return false; }
+    if(!API.me(ctx).hand.length){ ctx.reason='捨てる手札がありません'; return false; }
+    if(!API.fieldCards({player:ctx.opponent, zone:'mz'}).length){ ctx.reason='相手フィールドにモンスターがいません'; return false; }
+    return true;
+  },
+  cost: u176DiscardCost('VW－タイガー・カタパルト'),
+  selectTargets(ctx, done){ API.selectCard('VW－タイガー・カタパルト：表示形式を変更する相手モンスター', API.fieldCards({player:ctx.opponent, zone:'mz'}), t=>done([t])); },
+  resolve(ctx){
+    const t = ctx.selectedTargets && ctx.selectedTargets[0];
+    const r = t && resolveTarget(t);
+    if(!r || r.p!==ctx.opponent || r.zone!=='mz') return;
+    /* face-down Defense → face-up Attack without the flip effect (no v10FlipEffect mark: no onFlip); face-up ↔ the other position */
+    if(r.card.face==='down') act({type:'FX_SET_STATE', player:r.p, zone:'mz', index:r.index, face:'up', pos:'atk', reason:'VW－タイガー・カタパルト'});
+    else API.changePosition(r, r.card.pos==='def' ? 'atk' : 'def', 'VW－タイガー・カタパルト');
+  }
+});
+declareContactFusionS03('VW－タイガー・カタパルト');
+/* =========================================================================
+   S03-U177 — contact fusion (engine/1ZW) with the whole texts.
+   剣闘獣ヘラクレイノス: 「剣闘獣ラクエル」＋「剣闘獣」と名のついたモンスター×2 / デッキに戻した場合のみ… / このカードがフィールド上に表側表示で
+     存在する限り、手札を1枚捨てる事で、魔法・罠カードの発動を無効にし破壊する。 (either player's Spell / Trap card activation; no limit)
+   E・HERO ブラック・ネオス: フィールド上の効果モンスター1体を選択して発動できる。このカードがフィールド上に表側表示で存在する限り、選択した
+     モンスターの効果は無効化される(この効果で選択できるモンスターは1体まで)。 / エンドフェイズ時、このカードはエクストラデッキに戻る。
+   ========================================================================= */
+defineScript('剣闘獣ヘラクレイノス', {
+  type:'fusion', priority:2, quickEffect:true,
+  condition(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason='フィールドで表側表示の時に発動します'; return false; }
+    const top = gameState.chain.length ? gameState.chain[gameState.chain.length-1] : null;
+    const d = top ? (CARD_DB[top.cardId]||{}) : {};
+    if(!top || (d.k!=='s' && d.k!=='t') || top.cardActivationS03!==true){ ctx.reason='魔法・罠カードの発動にチェーンします'; return false; }
+    if(!API.me(ctx).hand.length){ ctx.reason='捨てる手札がありません'; return false; }
+    return true;
+  },
+  cost: u176DiscardCost('剣闘獣ヘラクレイノス'),
+  resolve(){ negatePreviousChainLinkV2('剣闘獣ヘラクレイノス', true, 'activation'); }, afterResolve(){}
+});
+declareContactFusionS03('剣闘獣ヘラクレイノス');
+
+function u177EffectMonster(x){ return x.zone==='mz' && x.card.face==='up' && (x.db.st||[]).indexOf('効果')>=0; }
+defineUnifiedCardV4('E・HERO ブラック・ネオス',[{
+  key:'link-negate', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, targetRange:LOCATION.MZONE, targetSide:'both',
+  speed:1, events:['activate'],
+  condition(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason='フィールドで表側表示の時に発動します'; return false; }
+    if(linkedNegationTargetS03(ctx.card)!=null){ ctx.reason='既に選択したモンスターの効果を無効化しています（1体まで）'; return false; }
+    if(!API.fieldCards({zone:'mz', filter:x=>u177EffectMonster(x) && x.card!==ctx.card}).length){ ctx.reason='フィールドに表側表示の効果モンスターがいません'; return false; }
+    return true;
+  },
+  target(ctx, done){ API.selectCard('E・HERO ブラック・ネオス：効果を無効にする効果モンスター', API.fieldCards({zone:'mz', filter:x=>u177EffectMonster(x) && x.card!==ctx.card}), t=>done([t])); },
+  operation(ctx){
+    const t = ctx.selectedTargets && resolveTarget(ctx.selectedTargets[0]);
+    const me = findCardByUid(ensureCardUid(gameState, ctx.card));
+    if(!t || !me || me.zone!=='mz' || me.card.face!=='up' || t.card.face!=='up') return;
+    linkNegateTargetS03(me.card, t, 'E・HERO ブラック・ネオス');
+  },
+  afterResolve(){}
+}, endPhaseReturnExEffectS03('E・HERO ブラック・ネオス')],{
+  type:'fusion', priority:1, timing:['mainPhase'], targets:true,
+  passive:{onEndPhase(ctx){return ctx.zone==='mz'&&ctx.card.face==='up';}}
+});
+declareContactFusionS03('E・HERO ブラック・ネオス');
+/* =========================================================================
+   S03-U178 — contact fusion (engine/1ZW) with the whole texts.
+   VWXYZ－ドラゴン・カタパルトキャノン: 「VW－タイガー・カタパルト」＋「XYZ－ドラゴン・キャノン」 / 除外した場合のみ… /
+     ①:1ターンに1度、相手フィールドのカード1枚を対象として発動できる。その相手のカードを除外する。
+     ②:このカードが相手モンスターに攻撃宣言した時、その攻撃対象モンスター1体を対象として発動できる。その攻撃対象モンスターの表示形式を変更
+       する。この時、リバースモンスターの効果は発動しない。
+   混沌幻魔アーミタイル: 「神炎皇ウリア」＋「降雷皇ハモン」＋「幻魔皇ラビエル」 / 除外した場合のみ… / ①:このカードの攻撃力は自分ターンの間10000
+     アップする。 ②:このカードは戦闘では破壊されない。
+   ========================================================================= */
+function u178AttackTarget(ctx){
+  const a = gameState.pendingAttack;
+  if(!a || a.attackerUid!==ctx.card.uid || a.targetUid==null) return null;
+  const h = findCardByUid(a.targetUid);
+  return (h && h.zone==='mz' && h.p===ctx.opponent) ? h : null;
+}
+defineUnifiedCardV4('VWXYZ－ドラゴン・カタパルトキャノン',[{
+  key:'banish', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, targetRange:LOCATION.ONFIELD, targetSide:'opponent',
+  speed:1, events:['activate'],
+  condition(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason='フィールドで表側表示の時に発動します'; return false; }
+    if(!API.fieldCards({player:ctx.opponent}).length){ ctx.reason='相手フィールドにカードがありません'; return false; }
+    return true;
+  },
+  target(ctx, done){ API.selectCard('VWXYZ－ドラゴン・カタパルトキャノン：除外する相手のカード', API.fieldCards({player:ctx.opponent}), t=>done([t])); },
+  operation(ctx){ const r = ctx.selectedTargets && resolveTarget(ctx.selectedTargets[0]); if(r && r.p===ctx.opponent) API.banish(r, 'VWXYZ－ドラゴン・カタパルトキャノン'); },
+  afterResolve(){}
+},{
+  key:'attack-position', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, targetRange:LOCATION.MZONE, targetSide:'opponent',
+  speed:1, events:['onAttackDeclare'],
+  condition(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && !!u178AttackTarget(ctx); },
+  target(ctx, done){ const h = u178AttackTarget(ctx); done(h ? [h] : []); },
+  operation(ctx){
+    const r = ctx.selectedTargets && resolveTarget(ctx.selectedTargets[0]);
+    if(!r || r.zone!=='mz' || r.p!==ctx.opponent) return;
+    if(r.card.face==='down') act({type:'FX_SET_STATE', player:r.p, zone:'mz', index:r.index, face:'up', pos:'atk', reason:'VWXYZ－ドラゴン・カタパルトキャノン'});
+    else API.changePosition(r, r.card.pos==='def' ? 'atk' : 'def', 'VWXYZ－ドラゴン・カタパルトキャノン');
+  },
+  afterResolve(){}
+}],{
+  type:'fusion', priority:1, targets:true, timing:['mainPhase'], countLimit:{n:1, effects:['banish']},
+  passive:{onAttackDeclare(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && !!u178AttackTarget(ctx); }}
+});
+declareContactFusionS03('VWXYZ－ドラゴン・カタパルトキャノン');
+
+defineScript('混沌幻魔アーミタイル', {
+  type:'fusion', priority:1, battleProof:true,
+  continuous:{scope:'self', from:['mz'], apply(target, self, info){
+    const p = info && info.p!=null ? info.p : null;
+    return (p!=null && gameState.activePlayer===p) ? {atk:10000} : null;
+  }}
+});
+declareContactFusionS03('混沌幻魔アーミタイル');
+/* =========================================================================
+   S03-U179 — E・HERO ストーム・ネオス / E・HERO マグマ・ネオス (contact fusion, engine/1ZW).
+   ストーム・ネオス: 1ターンに1度、自分のメインフェイズ時にフィールド上の魔法・罠カードを全て破壊できる。 / エンドフェイズ時、エクストラデッキに
+     戻る。 / この効果によってこのカードがエクストラデッキに戻った時、フィールド上のカードを全て持ち主のデッキに戻す。
+   マグマ・ネオス: 攻撃力は、フィールド上のカードの数×400ポイントアップする。 / エンドフェイズ時、エクストラデッキに戻る。 / この効果によって
+     このカードがエクストラデッキに戻った時、フィールド上のカードを全て持ち主の手札に戻す。
+   The follow-up is a separate forced trigger of the card in the EX Deck (epReturnedTriggerS03), as in the 2011 rulings / ocgcore.
+   ========================================================================= */
+function u179FieldCards(){ return API.fieldCards({}); }
+function u179AfterReturnEffect(name, dest){
+  return {
+    key:'after-return', type:EFFECT_TYPE.TRIGGER, range:LOCATION.EXTRA, targetRange:LOCATION.ONFIELD, targetSide:'both',
+    speed:1, events:['onLeaveField'], forced:true,
+    condition(ctx){ return epReturnedTriggerS03(ctx); },
+    operation(){
+      const uids = u179FieldCards().map(x=>ensureCardUid(gameState, x.card));
+      const decks = [];
+      uids.forEach(u=>{
+        const h = findCardByUid(u); if(!h || ['mz','sz','field'].indexOf(h.zone)<0) return;
+        if(dest==='deck'){ const owner = cardOwnerIndex(gameState, h.card, h.p); if(decks.indexOf(owner)<0) decks.push(owner); API.returnToDeck(h, false, name); }
+        else API.returnToHand(h, name);
+      });
+      decks.forEach(q=>act({type:'SHUFFLE', player:q}));
+    },
+    afterResolve(){}
+  };
+}
+defineUnifiedCardV4('E・HERO ストーム・ネオス',[{
+  key:'st-destroy', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, targetRange:LOCATION.ONFIELD, targetSide:'both',
+  speed:1, events:['activate'],
+  condition(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason='フィールドで表側表示の時に発動します'; return false; }
+    if(!API.fieldCards({filter:x=>x.zone==='sz'||x.zone==='field'}).length){ ctx.reason='フィールドに魔法・罠カードがありません'; return false; }
+    return true;
+  },
+  operation(){ API.destroyAll('sz', null, 'E・HERO ストーム・ネオス'); API.destroyAll('field', null, 'E・HERO ストーム・ネオス'); },
+  afterResolve(){}
+}, endPhaseReturnExEffectS03('E・HERO ストーム・ネオス'), u179AfterReturnEffect('E・HERO ストーム・ネオス','deck')],{
+  type:'fusion', priority:1, timing:['mainPhase'], countLimit:{n:1, effects:['st-destroy']}, activateFrom:['mz','ex'],
+  passive:{onEndPhase(ctx){return ctx.zone==='mz'&&ctx.card.face==='up';}, onLeaveField(ctx){ return epReturnedTriggerS03(ctx); }}
+});
+declareContactFusionS03('E・HERO ストーム・ネオス');
+
+defineUnifiedCardV4('E・HERO マグマ・ネオス',[endPhaseReturnExEffectS03('E・HERO マグマ・ネオス'), u179AfterReturnEffect('E・HERO マグマ・ネオス','hand')],{
+  type:'fusion', priority:1, activateFrom:['mz','ex'],
+  passive:{onEndPhase(ctx){return ctx.zone==='mz'&&ctx.card.face==='up';}, onLeaveField(ctx){ return epReturnedTriggerS03(ctx); }},
+  continuous:{scope:'self', from:['mz'], apply(){ const n=u179FieldCards().length; return n ? {atk:n*400} : null; }}
+});
+declareContactFusionS03('E・HERO マグマ・ネオス');
+/* =========================================================================
+   S03-U180 — 剣闘獣 (Gladiator Beast) monsters on the common mechanism (engine/1ZZ). 2011 texts.
+   ========================================================================= */
+function u180GyCards(ctx, pred){ return API.pileCards(ctx.player, 'grave', x=>pred(x)); }
+
+/* 剣闘獣ラクエル: 「剣闘獣」の効果で特殊召喚に成功した場合、元々の攻撃力は2100になる。 + tag-out */
+defineGladiatorS03('剣闘獣ラクエル', [gladiatorTagOutEffectS03('剣闘獣ラクエル')], {
+  continuous:{scope:'self', from:['mz'], apply(target, self){ return gladiatorSummonedS03(self) ? {setBaseAtk:2100} : null; }}
+});
+/* 剣闘獣ホプロムス: …元々の守備力は2400になる。 + tag-out */
+defineGladiatorS03('剣闘獣ホプロムス', [gladiatorTagOutEffectS03('剣闘獣ホプロムス')], {
+  continuous:{scope:'self', from:['mz'], apply(target, self){ return gladiatorSummonedS03(self) ? {setBaseDef:2400} : null; }}
+});
+/* 剣闘獣ディカエリィ: …1度のバトルフェイズ中に2回攻撃をする事ができる。 + tag-out */
+defineGladiatorS03('剣闘獣ディカエリィ', [gladiatorTagOutEffectS03('剣闘獣ディカエリィ')], {
+  attackLimit(card){ return gladiatorSummonedS03(card) ? 2 : 1; }
+});
+/* 剣闘獣エクイテ: …特殊召喚に成功した時、自分の墓地の「剣闘獣」と名のついたカード1枚を選択して手札に加える。 + tag-out */
+defineGladiatorS03('剣闘獣エクイテ', [gladiatorOnSummonEffectS03('gy-to-hand', {forced:true,
+  cond:ctx=>u180GyCards(ctx, x=>isGladiatorCardDbS03(x.db)).length>0,
+  effect:{
+    targetRange:LOCATION.GRAVE, targetSide:'self',
+    target(ctx, done){ API.selectCard('剣闘獣エクイテ：手札に加える「剣闘獣」カード', u180GyCards(ctx, x=>isGladiatorCardDbS03(x.db)), t=>done([t])); },
+    operation(ctx){ const r = ctx.selectedTargets && resolveTarget(ctx.selectedTargets[0]); if(r && r.zone==='grave' && r.p===ctx.player) API.returnToHand(r, '剣闘獣エクイテ'); }
+  }}), gladiatorTagOutEffectS03('剣闘獣エクイテ')], {targets:true});
+/* 剣闘獣ムルミロ: …特殊召喚に成功した時、フィールド上に表側表示で存在するモンスター1体を選択して破壊する。 + tag-out */
+defineGladiatorS03('剣闘獣ムルミロ', [gladiatorOnSummonEffectS03('destroy-monster', {forced:true,
+  cond:()=>API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}).length>0,
+  effect:{
+    targetRange:LOCATION.MZONE, targetSide:'both',
+    target(ctx, done){ API.selectCard('剣闘獣ムルミロ：破壊する表側表示モンスター', API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'}), t=>done([t])); },
+    operation(ctx){ const r = ctx.selectedTargets && resolveTarget(ctx.selectedTargets[0]); if(r && r.zone==='mz' && r.card.face==='up') API.destroy(r, '剣闘獣ムルミロ'); }
+  }}), gladiatorTagOutEffectS03('剣闘獣ムルミロ')], {targets:true});
+/* 剣闘獣レティアリィ: …特殊召喚に成功した時、相手の墓地のカード1枚を選択して除外できる。 + tag-out */
+defineGladiatorS03('剣闘獣レティアリィ', [gladiatorOnSummonEffectS03('banish-gy', {forced:false,
+  cond:ctx=>API.pileCards(ctx.opponent, 'grave').length>0,
+  effect:{
+    targetRange:LOCATION.GRAVE, targetSide:'opponent',
+    target(ctx, done){ API.selectCard('剣闘獣レティアリィ：除外する相手の墓地のカード', API.pileCards(ctx.opponent, 'grave'), t=>done([t])); },
+    operation(ctx){ const r = ctx.selectedTargets && resolveTarget(ctx.selectedTargets[0]); if(r && r.zone==='grave' && r.p===ctx.opponent) API.banish(r, '剣闘獣レティアリィ'); }
+  }}), gladiatorTagOutEffectS03('剣闘獣レティアリィ')], {targets:true});
+/* 剣闘獣ベストロウリィ: ①:「剣闘獣」モンスターの効果で特殊召喚に成功した場合、フィールドの魔法・罠カード1枚を対象として発動する。破壊する。
+   ②: tag-out */
+defineGladiatorS03('剣闘獣ベストロウリィ', [gladiatorOnSummonEffectS03('destroy-st', {forced:true,
+  cond:()=>API.fieldCards({filter:x=>x.zone==='sz'||x.zone==='field'}).length>0,
+  effect:{
+    targetRange:LOCATION.ONFIELD, targetSide:'both',
+    target(ctx, done){ API.selectCard('剣闘獣ベストロウリィ：破壊する魔法・罠カード', API.fieldCards({filter:x=>x.zone==='sz'||x.zone==='field'}), t=>done([t])); },
+    operation(ctx){ const r = ctx.selectedTargets && resolveTarget(ctx.selectedTargets[0]); if(r && (r.zone==='sz'||r.zone==='field')) API.destroy(r, '剣闘獣ベストロウリィ'); }
+  }}), gladiatorTagOutEffectS03('剣闘獣ベストロウリィ')], {targets:true});
+/* 剣闘獣セクトル: 「剣闘獣」…によって特殊召喚したこのカードが戦闘を行ったバトルフェイズ終了時、デッキから「剣闘獣セクトル」以外の「剣闘獣」2体を
+   特殊召喚する。 (forced, no cost — it stays) */
+defineGladiatorS03('剣闘獣セクトル', [gladiatorTagOutEffectS03('剣闘獣セクトル', {count:2, stay:true, requireGladiatorSummoned:true})]);
+/* 剣闘獣トラケス: 「剣闘獣」…によって特殊召喚に成功した場合、戦闘を行ったバトルフェイズ終了時にこのカードをデッキに戻す事で、デッキから1枚ドロー。 */
+(function(){
+  const e = gladiatorTagOutEffectS03('剣闘獣トラケス', {requireGladiatorSummoned:true});
+  e.key = 'return-draw'; e.targetRange = LOCATION.DECK;
+  const baseCond = e.condition;
+  e.condition = function(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up' || !gladiatorBattledS03(ctx.card) || !gladiatorSummonedS03(ctx.card)) return false;
+    return API.me(ctx).deck.length>0;
+  };
+  e.operation = function(ctx){ API.draw(ctx.player, 1); };
+  defineGladiatorS03('剣闘獣トラケス', [e]);
+})();
+/* 剣闘獣ティゲル: このカードは融合素材モンスターとして使用する事はできない。 / 「剣闘獣」…特殊召喚に成功した時、手札から「剣闘獣」と名のついた
+   カード1枚を捨てる事で、デッキから「剣闘獣」と名のついたモンスター1体を手札に加える。 */
+defineGladiatorS03('剣闘獣ティゲル', [gladiatorOnSummonEffectS03('discard-search', {forced:false,
+  cond:ctx=>API.pileCards(ctx.player,'hand',x=>isGladiatorCardDbS03(x.db)).length>0 && API.pileCards(ctx.player,'deck',x=>isGladiatorMonsterS03(x.card)).length>0,
+  effect:{
+    targetRange:LOCATION.DECK, targetSide:'self',
+    cost(ctx, done){ API.selectCard('剣闘獣ティゲル：捨てる「剣闘獣」カード', API.pileCards(ctx.player,'hand',x=>isGladiatorCardDbS03(x.db)), t=>{ const r=resolveTarget(t); if(!r){done(false);return;} API.discard(ctx.player, r.index, '剣闘獣ティゲル（コスト）', {byEffect:false}); done(true); }); },
+    operation(ctx){
+      const pool = API.pileCards(ctx.player,'deck',x=>isGladiatorMonsterS03(x.card));
+      if(!pool.length) return;
+      API.selectCard('剣闘獣ティゲル：手札に加える「剣闘獣」モンスター', pool, t=>{ const r=resolveTarget(t); if(r && r.zone==='deck') API.searchDeck(ctx.player, r.index, '剣闘獣ティゲル'); });
+    }
+  }})], {cannotFusionMaterialS03:true, blocksIfNoDeckToHand:true});
+/* =========================================================================
+   S03-U181 — 剣闘獣 stage 2 on the common mechanism (engine/1ZZ). 2011 texts.
+   ========================================================================= */
+function u181BattleKill(ctx){
+  const b = ctx.battle || {};
+  if(ctx.zone!=='mz' || ctx.card.face!=='up' || ctx.step!=='leave') return null;
+  let victim = null;
+  if(b.atkCard===ctx.card && b.destroyedDef) victim = b.defCard;
+  else if(b.defCard===ctx.card && b.destroyedAtk) victim = b.atkCard;
+  if(!victim) return null;
+  const h = findCardByUid(ensureCardUid(gameState, victim));
+  return (h && h.zone==='grave') ? {h, card:victim} : null;
+}
+
+/* 剣闘獣スパルティクス: 「剣闘獣ホプロムス」以外の効果によって特殊召喚できない (engine/1ZK). 特殊召喚に成功した時、デッキから「闘器」と名のついた
+   装備魔法カード1枚を手札に加える。 + tag-out */
+function u181ArmsPool(p){ return API.pileCards(p,'deck',x=>x.db.k==='s' && x.db.sub==='装備' && String(x.db.n||'').indexOf('闘器')>=0); }
+defineGladiatorS03('剣闘獣スパルティクス', [{
+  key:'arms-search', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, targetRange:LOCATION.DECK, targetSide:'self', speed:1,
+  events:['onSpecialSummon'], forced:true,
+  condition(ctx){ return ctx.zone==='mz' && u181ArmsPool(ctx.player).length>0; },
+  operation(ctx){
+    const pool = u181ArmsPool(ctx.player); if(!pool.length) return;
+    API.selectCard('剣闘獣スパルティクス：手札に加える「闘器」装備魔法', pool, t=>{ const r=resolveTarget(t); if(r && r.zone==='deck') API.searchDeck(ctx.player, r.index, '剣闘獣スパルティクス'); });
+  },
+  afterResolve(){}
+}, gladiatorTagOutEffectS03('剣闘獣スパルティクス')]);
+
+/* 剣闘獣アレクサンデル: 「剣闘獣ディカエリィ」以外の効果によって特殊召喚できない. 特殊召喚されたこのカードは自分フィールド上に表側表示で存在する限り、
+   魔法の効果を受けない。 + tag-out */
+defineGladiatorS03('剣闘獣アレクサンデル', [gladiatorTagOutEffectS03('剣闘獣アレクサンデル')], {
+  unaffectedByS03(card, src){
+    if(!src || src.k!=='s' || !card.specialSummoned || card.face!=='up') return false;
+    const h = findCardByUid(card.uid); return !!(h && h.zone==='mz');
+  }
+});
+
+/* 剣闘獣サムニテ: 「剣闘獣」…によって特殊召喚に成功した場合、このカードが戦闘によって相手モンスターを破壊し墓地へ送った時、デッキから「剣闘獣」と
+   名のついたカード1枚を手札に加える事ができる。 + tag-out */
+function u181SamniteOk(ctx){ const k = u181BattleKill(ctx); return !!k && k.h.p===ctx.opponent && gladiatorSummonedS03(ctx.card); }
+defineGladiatorS03('剣闘獣サムニテ', [{
+  key:'battle-search', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, targetRange:LOCATION.DECK, targetSide:'self', speed:1,
+  events:['onDamageStep'],
+  condition(ctx){ return u181SamniteOk(ctx) && API.pileCards(ctx.player,'deck',x=>isGladiatorCardDbS03(x.db)).length>0; },
+  operation(ctx){
+    const pool = API.pileCards(ctx.player,'deck',x=>isGladiatorCardDbS03(x.db)); if(!pool.length) return;
+    API.selectCard('剣闘獣サムニテ：手札に加える「剣闘獣」カード', pool, t=>{ const r=resolveTarget(t); if(r && r.zone==='deck') API.searchDeck(ctx.player, r.index, '剣闘獣サムニテ'); });
+  },
+  afterResolve(){}
+}, gladiatorTagOutEffectS03('剣闘獣サムニテ')], {dsTiming:'leave', blocksIfNoDeckToHand:true,
+  passive:{
+    onDamageStep(ctx){ return u181SamniteOk(ctx); },
+    onBattlePhaseEnd(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && gladiatorBattledS03(ctx.card); }
+  }});
+
+/* 剣闘獣オクタビウス: 「剣闘獣」…によって特殊召喚に成功した時、魔法&罠カードゾーンにセットされたカード1枚を破壊する。 / このカードが戦闘を行った
+   自分のバトルフェイズ終了時に、手札を1枚捨てるかこのカードをデッキに戻す。 (both forced) */
+function u181SetCards(){ return API.fieldCards({zone:'sz', filter:x=>x.card.face==='down'}); }
+function u181OctaviusBack(ctx){
+  const h = findCardByUid(ctx.card.uid);
+  if(!h || h.zone!=='mz') return;
+  const o = cardOwnerIndex(gameState, h.card, h.p);
+  API.returnToDeck(h, false, '剣闘獣オクタビウス');
+  API.shuffle(o);
+}
+defineGladiatorS03('剣闘獣オクタビウス', [gladiatorOnSummonEffectS03('destroy-set', {forced:true,
+  cond:()=>u181SetCards().length>0,
+  effect:{ targetRange:LOCATION.SZONE, targetSide:'both',
+    operation(ctx){
+      const pool = u181SetCards(); if(!pool.length) return;
+      API.selectCard('剣闘獣オクタビウス：破壊するセットされたカード', pool, t=>{ const r=resolveTarget(t); if(r && r.zone==='sz' && r.card.face==='down') API.destroy(r, '剣闘獣オクタビウス'); });
+    } }}),
+{
+  key:'upkeep', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:['onBattlePhaseEnd'], forced:true,
+  condition(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && gladiatorBattledS03(ctx.card) && gameState.activePlayer===ctx.player; },
+  operation(ctx){
+    if(!API.me(ctx).hand.length){ u181OctaviusBack(ctx); return; }
+    API.requestChoice({player:ctx.player, kind:'declare', title:'剣闘獣オクタビウス：手札を1枚捨てるか、このカードをデッキに戻す',
+      candidates:[{key:'discard', label:'手札を1枚捨てる', value:'discard'},{key:'return', label:'このカードをデッキに戻す', value:'return'}],
+      min:1, max:1, cancelable:false,
+      legacy:{onPick:(x)=>{
+        if(x && x.value==='discard') API.selectCard('剣闘獣オクタビウス：捨てる手札', API.pileCards(ctx.player,'hand'), t=>{ const r=resolveTarget(t); if(r) API.discard(ctx.player, r.index, '剣闘獣オクタビウス', {byEffect:true, byPlayer:ctx.player}); });
+        else u181OctaviusBack(ctx);
+      }}});
+  },
+  afterResolve(){}
+}]);
+
+/* 剣闘獣ゲオルディアス: 「剣闘獣スパルティクス」＋「剣闘獣」 / contact. このカードが戦闘によってモンスターを破壊し墓地へ送った時、破壊したモンスターの
+   守備力分のダメージを相手ライフに与える。 / 戦闘を行ったバトルフェイズ終了時にこのカードを融合デッキに戻す事で、デッキから「剣闘獣スパルティクス」以外の
+   「剣闘獣」2体を自分フィールド上に特殊召喚する。 (the damage uses the destroyed monster's printed DEF) */
+defineGladiatorS03('剣闘獣ゲオルディアス', [{
+  key:'burn', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:['onDamageStep'], forced:true,
+  condition(ctx){ return !!u181BattleKill(ctx); },
+  operation(ctx){ const k = u181BattleKill(ctx) || {}; const d = k.card ? (dbOf(k.card).def||0) : 0; if(d>0) API.damageLP(ctx.opponent, d, '剣闘獣ゲオルディアス'); },
+  afterResolve(){}
+}, gladiatorTagOutEffectS03('剣闘獣ゲオルディアス', {count:2, exclude:'剣闘獣スパルティクス'})], {type:'fusion', dsTiming:'leave',
+  passive:{
+    onDamageStep(ctx){ return !!u181BattleKill(ctx); },
+    onBattlePhaseEnd(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && gladiatorBattledS03(ctx.card); }
+  }});
+declareContactFusionS03('剣闘獣ゲオルディアス');
+
+/* 剣闘獣ガイザレス: 「剣闘獣ベストロウリィ」＋「剣闘獣」 / contact. ①:特殊召喚に成功した時、フィールドのカードを2枚まで対象として発動できる。
+   破壊する。 ②:戦闘を行ったバトルフェイズ終了時にこのカードを持ち主のEXデッキに戻して発動できる。デッキから「剣闘獣ベストロウリィ」以外の「剣闘獣」
+   2体を特殊召喚する。 */
+defineGladiatorS03('剣闘獣ガイザレス', [{
+  key:'destroy-two', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, targetRange:LOCATION.ONFIELD, targetSide:'both', speed:1,
+  events:['onSpecialSummon'],
+  condition(ctx){ return ctx.zone==='mz' && API.fieldCards({filter:x=>x.card!==ctx.card}).length>0; },
+  target(ctx, done){
+    const cands = API.fieldCards({filter:x=>x.card!==ctx.card});
+    const ok = requestChoiceV49({kind:'card', title:'剣闘獣ガイザレス：破壊するカード（2枚まで）', candidates:cands, min:1, max:2,
+      targeting:true, targetingPlayer:ctx.player, cancelable:true, player:ctx.player,
+      legacy:{onPick:(first, all)=>done((all||[first]).filter(x=>x && !x.stale)), onCancel:()=>done([])}});
+    if(!ok) done([]);
+  },
+  operation(ctx){ (ctx.selectedTargets||[]).map(t=>resolveTarget(t)).filter(Boolean).forEach(r=>API.destroy(r, '剣闘獣ガイザレス')); },
+  afterResolve(){}
+}, gladiatorTagOutEffectS03('剣闘獣ガイザレス', {count:2, exclude:'剣闘獣ベストロウリィ'})], {type:'fusion', targets:true});
+declareContactFusionS03('剣闘獣ガイザレス');
 /* S03-U77: C-S03-26 DRAW_REPLACEMENT の最後の枠 — フィールド魔法（Sin World）。
 
    Sin World（2011-02-24、フィールド魔法）
@@ -64039,6 +65997,8 @@ function beginExSummonV2(p,exIndex,materials,kind,pos){
   const slS03=(kind==='synchro'&&typeof synchroSummonLockReasonS03==='function')?synchroSummonLockReasonS03(p):'';
   if(slS03){ showToast(slS03); return; }
   if(P.mz.length-materials.length>=ZONE_LIMITS.mz){ showToast('モンスターゾーンが足りません'); return; }
+  /* S03-U163: the given materials must be a legal set (engine/20 exMaterialsLegalS03) */
+  if(typeof exMaterialsLegalS03==='function' && !exMaterialsLegalS03(p, dbOf(ex), materials)){ showToast('素材の条件を満たしていません'); return; }
   ensureCardUid(gameState,ex);
   act({type:'EX_SUMMON_PREPARE_V42',player:p,exIndex,materials:materials.slice(),kind,pos:pos||'atk'});
   const q=gameState.pendingExV2; if(!q) return;
@@ -64225,6 +66185,8 @@ function offerResumeDuel(){
   if(typeof reconcileChoiceAfterLoadV49==='function') reconcileChoiceAfterLoadV49(gameState);
   /* S03-U41 (C-S03-33): 効果解決中の選択のまま保存された局面は、チェーンの続きを待ちの状態で積み直す */
   if(typeof restoreResolutionChoiceWaitAfterLoadS03==='function') restoreResolutionChoiceWaitAfterLoadS03();
+  /* S03-U173: a pending destruction-substitute decision (battle cleanup / effect resolution) */
+  if(typeof restoreDestroySubWaitAfterLoadS03==='function') restoreDestroySubWaitAfterLoadS03();
   HISTORY.length = 0; REDO.length = 0;
   render();
   if(typeof refreshChoiceSheetV49==='function') refreshChoiceSheetV49();
@@ -65654,6 +67616,8 @@ function peekReturn(){
 veil.addEventListener("click", e=>{
   if(e.target !== veil) return;
   if(RESOLVE_ANCHOR != null) return;    // 解決中は幕タップを無視する
+  /* S03-U173: 取り消せない選択（破壊の身代わりなど）は幕タップで閉じない（閉じると選び直す手段が無く、不使用と誤解される） */
+  if(typeof pendingChoiceV49==='function' && pendingChoiceV49(gameState) && pendingChoiceV49(gameState).cancelable===false) return;
   closeSheet();
 });
 
@@ -65857,7 +67821,15 @@ function renderChoiceSheetV49(){
   const cancel = pc.cancelable
     ? `<button class="close" onclick="__choiceCancelV49()">やめる</button>` : '';
 
-  sheet.innerHTML = `<div class="grip"></div>
+  /* S03-U173: 破壊の身代わり — 守るカードを先頭に表示する */
+  let subHead = '';
+  const subInfo = (typeof destroySubSheetInfoS03==='function') ? destroySubSheetInfoS03(pc) : null;
+  if(subInfo){
+    const hit = (typeof findCardByUid==='function') ? findCardByUid(subInfo.uid) : null;
+    const db = hit && typeof dbOf==='function' ? dbOf(hit.card) : null;
+    subHead = `<div class="sheet-card" style="margin-bottom:6px">${db?cardThumb(db):''}<div class="sheet-info"><div class="meta">守るカード</div><h3>${subInfo.name}</h3></div></div>`;
+  }
+  sheet.innerHTML = `<div class="grip"></div>${subHead}
     <h3 style="margin-bottom:4px">${pc.title}</h3>
     <div class="meta" style="margin-bottom:10px">${head}${pc.note?`<br>${pc.note}`:''}</div>
     <div class="pick-list">${rows}</div>
@@ -66068,7 +68040,9 @@ function gearTownActive(){
 
 /* リリース候補（自分フィールドのモンスター） */
 function tributeCandidates(p){
-  return API.fieldCards({zone:'mz', player:p, filter:x=>x.card && !x.card.cannotTribute && !x.card.noAdvanceTributeS03});   /* S03-U129: 羊トークン */
+  /* S03-U129: 羊トークン (card flag); S03-U169: 「このカードはアドバンス召喚のためにはリリースできない」 declared by the script (素早いムササビ) */
+  return API.fieldCards({zone:'mz', player:p, filter:x=>x.card && !x.card.cannotTribute && !x.card.noAdvanceTributeS03
+    && !((CARD_SCRIPTS[cardName(x.card)]||{}).noAdvanceTributeS03)});
 }
 
 function doNormalSummon(i, pos){
@@ -67883,6 +69857,8 @@ function applyLoad(p, parsed, autostart){
   showToast(`${nameOf(p)}：メイン${main.length}枚 / EX${ex.length}枚 ${autostart?'読込':'選択'}${missN?`（未一致${missN}種）`:""}`);
   /* S03-U121: デッキビルダーからの起動動線中なら、次の画面（Player2 選択 / 先攻確認）へ進む（未一致カードはそこで表示） */
   if(!autostart && typeof builderLaunchAfterLoadS03==='function' && builderLaunchAfterLoadS03(p, [...new Set(miss)])) return;
+  /* S03-U172: the normal selection ends in the start confirmation too (Player2's chosen deck could not be started before) */
+  if(!autostart && typeof deckSelectAfterLoadS03==='function' && deckSelectAfterLoadS03(p, [...new Set(miss)])) return;
   if(missN){
     setTimeout(()=>{
       sheet.innerHTML = `<div class="grip"></div>
@@ -68274,6 +70250,75 @@ function rabbitRowPickS03(){
     return;
   }
   startRabbitOpponentDuel();
+}
+
+/* S03-U172 (user report: 「player2のデッキがサンプルの兎ラギアしか選ぶことができない。他のデッキを選ぶとデッキが空の状態でデュエルが
+   開始される」). Outside the builder flow, choosing a saved deck only set the next deck (SET_NEXT_DECK) and closed the sheet: the
+   home screen offered only 「兎ラギアと対戦開始」, and 「選択デッキで新規デュエル」 was hidden in the menu — so Player2's chosen deck
+   never became a duel, and advancing the phase on the empty board looked like a duel with no deck.
+   Now the normal deck selection ends in the same start confirmation as the builder flow (startSelectedDeckDuel), and the home
+   screen shows both selected decks with the start buttons. */
+function selectedDeckNameS03(p){
+  const d = gameState && gameState.players && gameState.players[p] && gameState.players[p].loadedDeckV32;
+  return (d && d.source==='user' && (d.main||[]).length) ? (d.name||'無題のデッキ') : '';
+}
+/* the home screen label (escaped) */
+function selectedDeckLabelS03(p){
+  const n = selectedDeckNameS03(p);
+  return n ? String(n).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '未選択';
+}
+function deckStartConfirmS03(extraHtml){
+  const escT = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  sheet.innerHTML = `<div class="grip"></div>
+    <h3 style="margin-bottom:8px">デュエル開始</h3>
+    <div class="meta" style="margin-bottom:8px">Player1：<b>${escT(selectedDeckNameS03(0))}</b><br>Player2：<b>${escT(selectedDeckNameS03(1))}</b></div>
+    ${extraHtml||''}
+    <div class="act-grid">
+      <div class="act fx" data-deck-start="0" onclick="deckStartS03(0)">自分が先攻で開始</div>
+      <div class="act" data-deck-start="1" onclick="deckStartS03(1)">相手が先攻で開始</div>
+    </div>
+    <div class="act-grid" style="margin-top:8px">
+      <div class="act" onclick="openDeckLoad('saved',0)">Player1のデッキを選び直す</div>
+      <div class="act" onclick="openDeckLoad('saved',1)">Player2のデッキを選び直す</div>
+    </div>
+    <button class="close" onclick="closeSheet()">あとで</button>`;
+  veil.classList.add('on');
+}
+function deckStartS03(firstPlayer){
+  const ok = startSelectedDeckDuel(firstPlayer===1 ? 1 : 0);
+  if(ok!==false) closeSheet();
+  return ok;
+}
+/* applyLoad (not autostart, not the builder flow): what to show after a deck was selected */
+function deckSelectAfterLoadS03(p, missNames){
+  const escT = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const missHtml = (missNames&&missNames.length)
+    ? `<div class="meta" style="margin:6px 0">次の${missNames.length}種はカードデータに見つからず、除外しました。</div><div class="eff">・${missNames.map(escT).join('<br>・')}</div>` : '';
+  if(selectedDeckNameS03(0) && selectedDeckNameS03(1)){ setTimeout(()=>deckStartConfirmS03(missHtml), 90); return true; }
+  if(p===0 && selectedDeckNameS03(0)){
+    setTimeout(()=>{
+      sheet.innerHTML = `<div class="grip"></div>
+        <h3 style="margin-bottom:8px">Player1：${escT(selectedDeckNameS03(0))}</h3>${missHtml}
+        <div class="act-grid">
+          <div class="act fx" onclick="openDeckLoad('saved',1)">Player2のデッキを選ぶ</div>
+          <div class="act" onclick="startRabbitOpponentDuel()">兎ラギアと対戦開始</div>
+        </div>
+        <button class="close" onclick="closeSheet()">あとで</button>`;
+      veil.classList.add('on');
+    }, 90);
+    return true;
+  }
+  if(p===1 && selectedDeckNameS03(1) && !selectedDeckNameS03(0)){
+    setTimeout(()=>{
+      sheet.innerHTML = `<div class="grip"></div>
+        <h3 style="margin-bottom:8px">Player2：${escT(selectedDeckNameS03(1))}</h3>${missHtml}
+        <div class="act-grid"><div class="act fx" onclick="openDeckLoad('saved',0)">Player1のデッキを選ぶ</div></div>
+        <button class="close" onclick="closeSheet()">あとで</button>`;
+      veil.classList.add('on');
+    }, 90);
+    return true;
+  }
+  return false;
 }
 /* =========================================================================
    起動
