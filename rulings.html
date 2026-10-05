@@ -397,4 +397,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <!-- v8.25 historicalMatch-purity audit: A=551, B=289, C=5781, D=202, X=595; UI functional code unchanged -->
 <!-- v8.26 historicalMatch-purity audit: A=551, B=288, C=5782, D=202, X=595; UI functional code unchanged -->
 <!-- v8.27 legacy-B audit: A=551, B=283, C=5787, D=202, X=595; UI functional code unchanged -->
-<!-- v8.28 B-purity regression complete: A=551, B=283, C=5787, D=202, X=595; UI functional code unchanged -->
+<!-- v8.29 C high-risk regression: A=551, B=283, C=5786, D=203, X=595; FID13590 C->D; UI functional code unchanged -->
+<!-- v8.30 C rule-generation regression: A=551, B=283, C=5786, D=203, X=595; FID7285 stale metadata repaired; UI functional code unchanged -->
+<!-- v8.31 false-polarity metadata regression: A=551, B=283, C=5786, D=203, X=595; 6 C/D-overlap false-polarity matches normalized; UI functional code unchanged -->
+<!-- v8.32 direct conflict audit: A=551, B=283, C=5785, D=204, X=595; FID7852 C->D; UI functional code unchanged -->
+<!-- v8.33 semantic agreement audit: A=556, B=288, C=5775, D=204, X=595; 5 C->A, 5 C->B; UI functional code unchanged -->
+<!-- v8.34 semantic identity continuation: A=557, B=292, C=5770, D=204, X=595; 1 C->A, 4 C->B; UI functional code unchanged -->
+<!-- v8.35 off-pool wrapper core audit: A=557, B=294, C=5768, D=204, X=595; 2 C->B; UI functional code unchanged -->
+<!-- v8.36 direct historical core audit: A=557, B=300, C=5762, D=204, X=595; 6 C->B; 4 C precision-retained; UI functional code unchanged -->
