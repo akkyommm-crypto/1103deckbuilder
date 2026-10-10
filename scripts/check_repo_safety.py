@@ -33,7 +33,12 @@ SECRET_PATTERNS = {
 
 def git(*args: str) -> list[str]:
     result = subprocess.run(
-        ["git", *args], cwd=ROOT, check=True, capture_output=True, text=True, encoding="utf-8"
+        ["git", "-c", f"safe.directory={ROOT.as_posix()}", *args],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
     )
     return [line for line in result.stdout.splitlines() if line]
 
