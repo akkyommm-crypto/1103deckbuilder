@@ -69,8 +69,12 @@ try {
     try {
         Invoke-PythonChecked @('tools/build.py')
 
+        # Windows PowerShell 5.1 turns native stderr (the recorded cycle32 caught-error output) into a terminating error under Stop; the exit code below is the verdict.
+        $previousEap = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
         & $PythonExecutable tools/check.py *> $gateLog
         $gateExit = $LASTEXITCODE
+        $ErrorActionPreference = $previousEap
         Add-Content -LiteralPath $gateLog -Value "GATE_EXIT=$gateExit"
         if ($gateExit -ne 0) {
             Get-Content -LiteralPath $gateLog -Tail 120
@@ -88,7 +92,8 @@ try {
 
     Invoke-Git add -- '.gitattributes' '.gitignore' 'AGENTS.md' 'CLAUDE.md' '.github' 'battle.html' 'battle-dev' 'docs' 'scripts'
     Invoke-PythonChecked @('scripts/check_repo_safety.py', '--mode', 'staged')
-    Invoke-Git diff --cached --check
+    # the generated artifacts keep their Windows CRLF line endings (.gitattributes: -text -eol), so a CR at end of line is not a whitespace error here
+    Invoke-Git -c core.whitespace=cr-at-eol diff --cached --check
 
     & git -C $repoRoot diff --cached --quiet
     if ($LASTEXITCODE -eq 0) {

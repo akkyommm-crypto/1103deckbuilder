@@ -12,7 +12,7 @@
 <!-- CURRENT:BEGIN -->
 - GitHub migration (2026-10-10): the published U302 clean checkpoint was imported byte-for-byte into `battle-dev/`; root `battle.html` now mirrors its verified `dist/battle.html`. The old GitHub artifact was U287. The migration branch must pass a fresh baseline gate before it is proposed to `main`.
 - Collaboration: Codex writes `codex/work`; Claude Code writes `claude/work`; `main` is PR-only. Separate Git worktrees are mandatory. Use repository-root `scripts/finish-work.ps1` for test -> commit -> push.
-- Preservation note: U303 recorded no source change. The U304 `tools/r1_duel_driver.js` change was described as unpublished but its scratch tree was not present during migration, so it is not included and must not be reported as recovered.
+- Preservation note: U303 recorded no source change. The U304 scratch tree was not recovered; its idea (duels with the real UI code) was re-implemented as U305 and is not claimed to reproduce U304 numbers.
 - Base (shared clean): S03-U302–U302 checkpoint `a155a076…` (18178 PASS / 0 FAIL), log `coordination/S03_U302_U302_BATCH10_PUBLICATION.md`.
 - Batch10: U302 — 霞の谷のファルコン, the attack-declaration cost of returning another own card (engine/1ZZQ). The Pearl / Falcon / 禁じられた聖杯 report was not reproduced (U300, 720+ cases); the Falcon had no script before.
 - Priority (user, 2026-10-09):
@@ -25,6 +25,9 @@
 - Open rulings: ゾーン・イーター / 異国の剣士, 終焉のカウントダウン, デルタ・アタッカー (PARTIAL), キャトルミューティレーション, インフェルニティ・デス・ドラゴン on a face-down monster.
 - U303 (Sonnet, no change): 13 mirror matches x 4 seed sets = 52 duels clean (incl. save / resume every stop).
 - U304 (Sonnet): sweeps with the real UI code running (`S/harness_ui.js`, `S/harness_ui2.js` browse mode): 338 duels clean, 0 UI exceptions, 0 soft findings. Only `tools/r1_duel_driver.js` changed (keeps the real showToast under `HARNESS_UI`); unpublished, goes into the next batch.
+- U305 / U306 (Sonnet, 2026-10-10, GitHub worktree `claude/work`; report `docs/S03_U305_U306_REPORT.md`): `HARNESS_UI=1` runs the real UI code in the R1 duels (`tools/astra_harness.js`, driver `ui` block; test `test_s03_u305_ui_harness.js` 16 / 0). Its first sweep found a real hang: オネスト was discarded only after resolution, so a responder could chain the same card forever; now the Graveyard send is the cost (`test_s03_u306_honest_cost.js` 8 / 0, negative control 3 FAIL on the old build). Sweep after the fix: 78 / 78 major-deck duels complete (Replay OK, 0 UI exceptions); random / save-resume-at-every-stop duels of 100+ turns need a longer harness timeout than the fixed 120 s, so they are slow, not stuck.
+- Baseline on the GitHub worktree: `python tools/check.py` 18178 PASS / 0 FAIL, GATE_EXIT=0, `dist/battle.html` b2f2a21b… (before U305 / U306). Expected after: 18178 + 16 + 8 = 18202.
+- Next: more sweeps with `HARNESS_UI=1` (use `R1_SAVELOAD_EVERY=N` for long duels), then the Open items above.
 - ドラゴエクィテス effect copy: 124 `CARD_SCRIPTS[...]` lookup sites; it needs both its own and the copied script. Deferred as engine design work.
 - Waiting on the user: C: disk space (about 0.5 GB free); the LP cost equal to the current LP (ruling); the auto-resume scheduled task (permission).
 <!-- CURRENT:END -->

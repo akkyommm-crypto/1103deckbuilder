@@ -340,6 +340,8 @@ CARD_TEST_FOCUS = {
         "ドレッド・ドラゴン", "バイオレット・ウィッチ", "悪魂邪苦止", "ガスタ・ガルド", "ナチュル・クリフ", "ボタニティ・ガール"},
     # CODEX-C02 uses the other named cards only as board, hand, battle, and draw fixtures.
     "test_codex_c02_cards.js": {"またたびキャット", "H－ヒートハート", "HERO’S ボンド", "ロスト", "いたずら好きな双子悪魔", "風林火山"},
+    # S03-U306 uses ライオウ / ワイト only as battle fixtures.
+    "test_s03_u306_honest_cost.js": {"オネスト"},
 }
 
 
