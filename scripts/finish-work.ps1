@@ -54,6 +54,13 @@ if ($branch -notmatch '^(codex|claude|integration)/') {
     throw "Unexpected branch '$branch'. Use codex/*, claude/*, or integration/*."
 }
 
+$pendingChanges = @(& git -C $repoRoot status --porcelain --untracked-files=normal)
+if ($LASTEXITCODE -ne 0) { throw 'Cannot inspect the current working tree.' }
+if ($pendingChanges.Count -eq 0) {
+    Write-Output 'No changes to verify, commit, or push.'
+    return
+}
+
 Push-Location $repoRoot
 try {
     Invoke-PythonChecked @('scripts/check_repo_safety.py', '--mode', 'working-tree')
