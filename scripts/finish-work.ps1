@@ -3,6 +3,8 @@ param(
     [ValidateNotNullOrEmpty()]
     [string]$Message,
 
+    [string]$PythonExecutable,
+
     [switch]$NoPush
 )
 
@@ -15,6 +17,23 @@ $publicBattle = Join-Path $repoRoot 'battle.html'
 $generatedBattle = Join-Path $battleRoot 'dist\battle.html'
 $gateLog = Join-Path ([System.IO.Path]::GetTempPath()) ("1103_gate_{0}.log" -f (Get-Date -Format 'yyyyMMdd_HHmmss'))
 
+if ([string]::IsNullOrWhiteSpace($PythonExecutable)) {
+    $bundledPython = Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+    if (Test-Path -LiteralPath $bundledPython) {
+        $PythonExecutable = $bundledPython
+    }
+    else {
+        $pythonCommand = Get-Command python -ErrorAction SilentlyContinue
+        if ($null -eq $pythonCommand) { throw 'Python was not found. Pass -PythonExecutable with a valid Python 3 path.' }
+        $PythonExecutable = $pythonCommand.Source
+    }
+}
+
+$bundledNodeDirectory = Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin'
+if (Test-Path -LiteralPath (Join-Path $bundledNodeDirectory 'node.exe')) {
+    $env:PATH = "$bundledNodeDirectory;$env:PATH"
+}
+
 function Invoke-Git {
     param([Parameter(ValueFromRemainingArguments = $true)][string[]]$Arguments)
     & git -C $repoRoot @Arguments
@@ -23,9 +42,9 @@ function Invoke-Git {
 
 function Invoke-PythonChecked {
     param([string[]]$Arguments)
-    & python @Arguments
+    & $PythonExecutable @Arguments
     $exitCode = $LASTEXITCODE
-    if ($exitCode -ne 0) { throw "python command failed ($exitCode): python $($Arguments -join ' ')" }
+    if ($exitCode -ne 0) { throw "python command failed ($exitCode): $PythonExecutable $($Arguments -join ' ')" }
 }
 
 $branch = (& git -C $repoRoot branch --show-current).Trim()
@@ -43,7 +62,7 @@ try {
     try {
         Invoke-PythonChecked @('tools/build.py')
 
-        & python tools/check.py *> $gateLog
+        & $PythonExecutable tools/check.py *> $gateLog
         $gateExit = $LASTEXITCODE
         Add-Content -LiteralPath $gateLog -Value "GATE_EXIT=$gateExit"
         if ($gateExit -ne 0) {
