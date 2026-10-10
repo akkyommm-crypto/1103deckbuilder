@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U295",
+  "category": "engine",
+  "mode": "opus-only",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Engine fix of S03-U290/U293 summaries: one summary per move group (chain link resolution / activation cost, journaled in the P3 stamp); a card may trigger once per summary in one batch; the activation descriptor keeps the summary lists; 「このカードの発動中」 = a card-activation link of the card; real-DUEL test; negative control; full pre-scan; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 2,
+  "later_defects": null,
+  "started_at": "2026-10-09T12:20:00+09:00",
+  "finished_at": null,
+  "gate_owner": "opus-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "Sonnet U292 ran at the same time"
+  },
+  "notes": "Found while planning 死霊の誘い: two links of one chain milling gave one パラライズ・チェーン trigger (published U290). Rework: the batch deduped one candidate per card; the descriptor dropped the summary lists; activationPending is also set by the card own trigger. Negative control on U294: 2 FAIL."
+}

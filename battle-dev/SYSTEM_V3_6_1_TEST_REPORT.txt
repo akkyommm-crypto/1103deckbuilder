@@ -1,0 +1,35 @@
+1103 ADS System v3.6.1 TEST REPORT
+====================================
+
+RESULT: PASS
+
+Build / syntax
+- Explicit card scripts: 240 unique
+- Embedded card DB: 4,996 cards
+- JavaScript syntax: PASS
+- Acode single-file build: PASS
+
+Full regression
+- tools/check.py aggregate PASS lines: 142 PASS
+- Device smoke scenarios: 10
+
+v3.6.1 Bottomless regression
+- Rescue Rabbit two summons are stored as one simultaneous special-summon event: PASS
+- Bottomless can activate on the batch: PASS
+- Bottomless is non-targeting: PASS
+- Both Sabersaurus are destroyed and banished: PASS
+- Pre-existing ATK 1500+ monster is not affected: PASS
+- Monster reduced below ATK 1500 before resolution is not destroyed/banished: PASS
+
+Major retained regressions
+- 1103 post-2011/03/19 summon timing: PASS
+- Laggia return to Extra Deck / Xyz material owner graveyard routing: PASS
+- Effect Veiler timing/cost/duration: PASS
+- noSpecialSummon / noBattlePhase: PASS
+- Six Samurai Asceticism delayed End Phase destruction: PASS
+- Green/Purple Herald counters: PASS
+- E HERO Voltic damage-step trigger: PASS
+- v3.6 UI checks: PASS
+
+NOTE
+- Android/Acode final tap behavior remains a device validation target.

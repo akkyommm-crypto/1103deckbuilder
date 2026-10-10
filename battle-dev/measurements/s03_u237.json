@@ -1,0 +1,38 @@
+{
+  "example": false,
+  "unit": "S03-U237",
+  "category": "reuse",
+  "mode": "mixed",
+  "scope": "NOT_STARTED 6 雲魔物 cards → TESTED with one shared helper; fresh Sonnet subagent implements from brief237.md; Opus reviews, negative control, declarations, full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "usage": {
+    "source": "Agent result for a fresh Sonnet subagent (subagent_tokens total, no input/output split); main-session Opus tokens not available",
+    "includes_all_agents": false,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": "not set (delegated from a session outside the tree)",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null,
+        "total_reported": 159663,
+        "tool_uses": 36,
+        "duration_ms": 301454
+      },
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "notes": "36/0 first hand-back, no rework. Fresh subagent (U235 used a resumed one: 258,571 tokens for 5 cards incl. carried context). Rulings chosen by the subagent were reviewed and kept (counters on face-up only; スモークボール in Attack Position). Gate: 15957 PASS / 0 FAIL (= U236 15921 + 36), pre-scan clean."
+}

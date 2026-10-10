@@ -1,0 +1,6 @@
+{
+ "list": "1103_MAJOR_DECKS_v1",
+ "baseline": "S03-U41 checkpoint e32a0182b35dcb7feb47ee0121b9dd224c0627a6e3112eaa1c59f5386497f7f2",
+ "note": "Known gaps on the fixed-list real-duel path. A gate case may tolerate ONLY these unsupported (manual-only) actions; anything else fails. Remove an entry when the card is implemented.",
+ "knownUnsupported": []
+}

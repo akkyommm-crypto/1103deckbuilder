@@ -1,0 +1,40 @@
+1103 Duel ADS System v4.7.0 CHANGELOG
+
+[Common engine / replay-safe support]
+- Added `specialSummonedFrom` and `specialSummonKind` provenance to effect/EX Special Summon state.
+- EX Summon commit and legacy FX_EX_SUMMON now retain summon provenance for Fusion/Synchro/Xyz trigger logic.
+- Added `API.unequip()` and strengthened FX_UNEQUIP cleanup for monster-as-Equip cards.
+- FX_MONSTER_EQUIP_V46 can now equip a monster to a face-up monster controlled by either player while retaining the Equip Card controller/owner model.
+- Added replay-safe End Phase reserve kind `flipUpAttackUids` for Wind-Up Zenmaister-style delayed position changes.
+- Added Number 30: Acid Golem controller-only Special Summon lock to the common Special Summon legality gate.
+- v4.7 zone-local flags and Special Summon provenance reset when a card leaves the field.
+
+[v4.7 Unified Effect batch: +15]
+- Armory Arm
+- Ancient Fairy Dragon (historical 1103 behavior)
+- Iron Chain Dragon
+- Wind-Up Zenmaister
+- Submersible Carrier Aero Shark
+- Number 30: Acid Golem of Destruction
+- Number 20: Giga-Brilliant
+- Number 34: Terror-Byte
+- Thunder End Dragon
+- Elemental HERO Great Tornado
+- Elemental HERO Gaia
+- Elemental HERO Nova Master
+- Ally of Justice Light Gazer
+- Avenging Knight Parshath
+- Fabled Valkyrus
+
+[Accuracy notes]
+- Ancient Fairy Dragon intentionally uses its historical 1103-era field-spell search behavior, not the later errata currently shown in modern card text.
+- Armory Arm battle burn handles the equipped monster destroying an opponent monster as either attacker or defender.
+- Elemental HERO Nova Master likewise triggers when it destroys an opponent monster by battle as attacker or defender.
+- Number 10: Illumiknight was intentionally deferred because its non-targeting hand-send choice occurs during resolution; v4.7 does not fake that choice as an activation target.
+
+[Compatibility]
+- Existing 299 unique legacy defineScript registrations are retained.
+- Unified Effect registry is now 57 unique cards total.
+- Total explicit scripted card names: 356 (299 legacy + 57 Unified).
+- carddata.json remains 4,996 cards; no metadata change was required for this batch.
+- Replay format remains v4 and existing v4.4-v4.6 replay hardening is retained.

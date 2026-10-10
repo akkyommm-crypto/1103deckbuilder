@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U290",
+  "category": "engine",
+  "mode": "opus-only",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Engine: grouped Deck-to-GY / discard summary events with count and provenance (engine/1ZZN); chain-activation costs stamped as cost; forced Spell / Trap triggers cannot be skipped; パラライズ・チェーン, 魔力の棘; real-DUEL test; negative controls; full pre-scan; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 2,
+  "later_defects": null,
+  "started_at": "2026-10-04T23:40:00+09:00",
+  "finished_at": null,
+  "gate_owner": "opus-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "Sonnet U288 ran at the same time"
+  },
+  "notes": "Opus engine unit from the gap queue. Rework: chain-path costs had no P3 stamp (would count as effects); forced S/T triggers were skippable (fixed engine-wide). Negative controls: U289 build 6 FAIL; stubs 2 FAIL."
+}

@@ -1,0 +1,30 @@
+# Local credentials and environment
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+*.key
+
+# Dependency and interpreter caches
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local validation output and scratch space
+*.log
+*.tmp
+*.temp
+artifacts/
+.artifacts/
+scratch/
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Migration backups stay outside the Git repository
+migration-backup/

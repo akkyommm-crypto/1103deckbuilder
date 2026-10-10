@@ -1,0 +1,18 @@
+{
+  "example": false,
+  "unit": "S03-U253",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "3 NOT_STARTED cards returned by Sonnet units U250 / U252 → TESTED; engine: per-turn activation record (1B), 「通常召喚できない。「X」の効果で特殊召喚できる」 summon condition (1ZK), both-players attack-target restriction (1ZU); real-DUEL test; rebased onto U252; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [{"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}]
+  },
+  "notes": "Rework 1 (test only): a response at the attack-declaration POINT must use pointActivateV27 (duelActivateResponseV2 there leaves the processor waiting), and a scenario re-baselined before an action-less attack (audit had no actions)."
+}

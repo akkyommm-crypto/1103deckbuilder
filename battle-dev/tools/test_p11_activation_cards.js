@@ -1,0 +1,44 @@
+/* P1.1 26-card individual positive/negative regression */
+const fs=require('fs'),vm=require('vm'),path=require('path');const ROOT=path.resolve(__dirname,'..');
+const html=fs.readFileSync(path.join(ROOT,'dist','battle.html'),'utf8');let js=html.slice(html.indexOf('<script>')+8,html.lastIndexOf('</script>'));js=js.replace(/\bboot\(\);\s*\/\* System v3\.1:/,'/* boot skipped */\n/* System v3.1:');
+const probe=String.raw`
+CARD_DB=globalThis.__DB__;NAME_INDEX=null;MAT_SPEC_CACHE.clear();buildMaterialNameSet();render=()=>{};showToast=()=>{};saveDuelSoon=()=>{};clearSavedDuel=()=>{};closeSheet=()=>{};openChainPriorityV2=()=>{};enforceExclusions=()=>{};enforceSinUpkeep=()=>{};
+let U=131000;function mk(n,p=0){const id=findCardIndex(n);if(id<0)throw Error('missing '+n);return{id,owner:p,controller:p,face:'up',pos:'atk',uid:U++};}function any(pred,skip){const d=CARD_DB.find(x=>x&&x.n!==skip&&pred(x));if(!d)throw Error('fixture');return mk(d.n);}function reset(){gameState=newGame();gameState.activePlayer=0;gameState.firstPlayer=0;gameState.phase='main1';gameState.rngState=77;PLAY_MODE=PLAY_MODES.DUEL;HISTORY.length=0;REDO.length=0;turnActions=[];resetChoiceStatsV49();v41ResetActionJournal(gameState);}function C(n,z='mz',ev){const c=(gameState.players[0][z]||[]).find(x=>cardName(x)===n)||gameState.players[0].field;return makeContext(0,c,z,(gameState.players[0][z]||[]).indexOf(c),'activate',ev||{});}const R=[],ok=(n,v,d='')=>R.push({name:n,ok:!!v,detail:d});
+const N=['お家おとりつぶし','エクスプレスロイド','ガジェット・トレーラー','ガスタのつむじ風','ジェム・エンハンス','フレムベル・ベビー','ミスター・ボンバー','ラヴァル・キャノン','ラヴァ・ドラゴン','リチュア・ビースト','レアル・ジェネクス・ウルティマム','創世の預言者','堕天使スペルビア','夜霧のスナイパー','奇跡の復活','急転直下','炎帝近衛兵','異次元の指名者','突風','竜の渓谷','竜の騎士','魔法除去細菌兵器','魔轟神クシャノ','魔轟神ソルキウス','魔轟神ディフ','黒羽を狩る者'];
+N.forEach(n=>{const s=CARD_SCRIPTS[n];ok(n+' positive: P1.1 script登録',!!s&&typeof s.activationV11==='function'&&typeof s.resolve==='function');ok(n+' negative: legacy activation callback不使用',!!s&&!s.cost&&!s.selectTargets);});
+
+/* Boundary negatives that caused the original ENGINE_GAP classifications. */
+reset();let s=mk('お家おとりつぶし');gameState.players[0].sz=[s];gameState.players[1].mz=[mk('ライオウ',1)];ok('お家おとりつぶし negative: 魔法コスト不足',!CARD_SCRIPTS['お家おとりつぶし'].condition(C('お家おとりつぶし','sz')));
+reset();s=mk('エクスプレスロイド');gameState.players[0].mz=[s];gameState.players[0].grave=[any(d=>isCardInGroupV4(d,GROUP.ROID),'エクスプレスロイド')];ok('エクスプレスロイド negative: exactly2不足',!CARD_SCRIPTS['エクスプレスロイド'].condition(C('エクスプレスロイド')));
+reset();s=mk('ガジェット・トレーラー');gameState.players[0].mz=[s];ok('ガジェット・トレーラー negative: 0枚コスト不可',!CARD_SCRIPTS['ガジェット・トレーラー'].condition(C('ガジェット・トレーラー')));
+reset();s=mk('ガスタのつむじ風');gameState.players[0].sz=[s];gameState.players[0].grave=[any(d=>isCardInGroupV4(d,GROUP.GUSTO))];ok('ガスタのつむじ風 negative: exactly2不足',!CARD_SCRIPTS['ガスタのつむじ風'].condition(C('ガスタのつむじ風','sz')));
+reset();s=mk('ジェム・エンハンス');gameState.players[0].sz=[s];ok('ジェム・エンハンス negative: リリース不足',!CARD_SCRIPTS['ジェム・エンハンス'].condition(C('ジェム・エンハンス','sz')));
+reset();s=mk('フレムベル・ベビー');gameState.players[0].hand=[s];ok('フレムベル・ベビー negative: 炎属性対象不足',!CARD_SCRIPTS['フレムベル・ベビー'].condition(C('フレムベル・ベビー','hand')));
+reset();s=mk('ミスター・ボンバー');gameState.players[0].mz=[s,any(d=>d.k==='m'&&(d.atk||9999)<=1000)];gameState.phase='standby';ok('ミスター・ボンバー negative: exactly2対象不足',!CARD_SCRIPTS['ミスター・ボンバー'].condition(C('ミスター・ボンバー')));
+reset();s=mk('ラヴァル・キャノン');gameState.players[0].mz=[s];ok('ラヴァル・キャノン negative: 除外ラヴァル不足',!CARD_SCRIPTS['ラヴァル・キャノン'].condition(C('ラヴァル・キャノン')));
+reset();s=mk('ラヴァ・ドラゴン');s.pos='atk';gameState.players[0].mz=[s];ok('ラヴァ・ドラゴン negative: 表側守備でない',!CARD_SCRIPTS['ラヴァ・ドラゴン'].condition(C('ラヴァ・ドラゴン')));
+reset();s=mk('リチュア・ビースト');gameState.players[0].mz=[s];ok('リチュア・ビースト negative: 墓地対象不足',!CARD_SCRIPTS['リチュア・ビースト'].condition(C('リチュア・ビースト')));
+reset();s=mk('レアル・ジェネクス・ウルティマム');s.graveInfo={byDestroy:false};gameState.players[0].grave=[s];ok('ウルティマム negative: 破壊由来でない',!CARD_SCRIPTS['レアル・ジェネクス・ウルティマム'].condition(C('レアル・ジェネクス・ウルティマム','grave')));
+reset();s=mk('創世の預言者');gameState.players[0].mz=[s];ok('創世の預言者 negative: 手札コスト不足',!CARD_SCRIPTS['創世の預言者'].condition(C('創世の預言者')));
+reset();s=mk('堕天使スペルビア');gameState.players[0].mz=[s];ok('堕天使スペルビア negative: 墓地蘇生でない',!CARD_SCRIPTS['堕天使スペルビア'].condition(C('堕天使スペルビア')));
+reset();s=mk('夜霧のスナイパー');gameState.players[0].sz=[s];s.declaration={kind:'cardName',value:'999',turn:1};ok('夜霧のスナイパー negative: 非一致召喚',!CARD_SCRIPTS['夜霧のスナイパー'].condition(C('夜霧のスナイパー','sz',{eventName:'onNormalSummon',event:{uid:mk('ライオウ',1).uid}})));
+reset();s=mk('奇跡の復活');gameState.players[0].sz=[s];gameState.players[0].grave=[mk('ブラック・マジシャン')];ok('奇跡の復活 negative: counter2不足',!CARD_SCRIPTS['奇跡の復活'].condition(C('奇跡の復活','sz')));
+reset();s=mk('急転直下');gameState.players[0].sz=[s];ok('急転直下 negative: 墓地target chain無し',!CARD_SCRIPTS['急転直下'].condition(C('急転直下','sz')));
+reset();s=mk('炎帝近衛兵');gameState.players[0].mz=[s];gameState.players[0].grave=[any(d=>d.k==='m'&&d.ra==='炎'),any(d=>d.k==='m'&&d.ra==='炎'),any(d=>d.k==='m'&&d.ra==='炎')];gameState.players[0].deck=[mk('ライオウ'),mk('青眼の白龍')];ok('炎帝近衛兵 negative: exactly4不足',!CARD_SCRIPTS['炎帝近衛兵'].condition(C('炎帝近衛兵')));
+reset();s=mk('異次元の指名者');gameState.players[0].sz=[s];const dd=C('異次元の指名者','sz'),desc=preparedActivationDescriptorV11('異次元の指名者',0,'sz',0,{},dd,s,dbOf(s),CARD_SCRIPTS['異次元の指名者'],1,false);CARD_SCRIPTS['異次元の指名者'].activationV11(dd,desc);ok('異次元の指名者 negative: 候補外宣言拒否',answerChoiceV49(['bad'])===false&&!!pendingChoiceV49(gameState));
+reset();s=mk('突風');s.graveInfo={from:'sz',byDestroy:false};gameState.players[0].grave=[s];ok('突風 negative: 効果破壊由来でない',!CARD_SCRIPTS['突風'].condition(C('突風','grave')));
+reset();s=mk('竜の渓谷');gameState.players[0].field=s;ok('竜の渓谷 negative: 手札コスト不足',!CARD_SCRIPTS['竜の渓谷'].condition(makeContext(0,s,'field',0,'activate',{})));
+reset();s=mk('竜の騎士');gameState.players[0].hand=[s];ok('竜の騎士 negative: 対象を持つ相手monster chain無し',!CARD_SCRIPTS['竜の騎士'].condition(C('竜の騎士','hand')));
+reset();s=mk('魔法除去細菌兵器');gameState.players[0].sz=[s];ok('魔法除去細菌兵器 negative: 0体リリース不可',!CARD_SCRIPTS['魔法除去細菌兵器'].condition(C('魔法除去細菌兵器','sz')));
+reset();s=mk('魔轟神クシャノ');gameState.players[0].grave=[s];ok('魔轟神クシャノ negative: 捨てる魔轟神不足',!CARD_SCRIPTS['魔轟神クシャノ'].condition(C('魔轟神クシャノ','grave')));
+reset();s=mk('魔轟神ソルキウス');gameState.players[0].grave=[s];gameState.players[0].hand=[mk('ライオウ')];ok('魔轟神ソルキウス negative: exactly2不足',!CARD_SCRIPTS['魔轟神ソルキウス'].condition(C('魔轟神ソルキウス','grave')));
+reset();s=mk('魔轟神ディフ');gameState.players[0].mz=[s];ok('魔轟神ディフ negative: hand由来魔轟神不足',!CARD_SCRIPTS['魔轟神ディフ'].condition(C('魔轟神ディフ')));
+reset();s=mk('黒羽を狩る者');gameState.players[0].mz=[s];gameState.players[0].hand=[mk('サイクロン')];gameState.players[1].mz=[mk('ライオウ',1),mk('青眼の白龍',1)];ok('黒羽を狩る者 negative: 相手種族不一致',!CARD_SCRIPTS['黒羽を狩る者'].condition(C('黒羽を狩る者')));
+
+/* Exact-N and any-number choice boundaries are enforced by P1 at activation. */
+function exactChoice(name,source,pool,min,max){reset();const s=mk(source);gameState.players[0].mz=[s];gameState.players[0].grave=pool;const d=preparedActivationDescriptorV11(name,0,'mz',0,{noPriority:true},C(source),s,dbOf(s),CARD_SCRIPTS[name],1,false);CARD_SCRIPTS[name].activationV11(C(source),d);const pc=pendingChoiceV49(gameState);return pc&&pc.min===min&&pc.max===max;}
+ok('エクスプレスロイド positive: exactly2 Choice',exactChoice('エクスプレスロイド','エクスプレスロイド',[any(d=>isCardInGroupV4(d,GROUP.ROID),'エクスプレスロイド'),any(d=>isCardInGroupV4(d,GROUP.ROID),'エクスプレスロイド')],2,2));
+/* All 26 use registry Choice only; no legacy callback was opened. */
+ok('P1.1 cards: legacy callback count remains zero',choiceStatsV49().legacy===0,'legacy='+choiceStatsV49().legacy);
+globalThis.__R=R;`;
+js+='\n'+probe;function stub(){return new Proxy({style:{},classList:{add(){},remove(){},toggle(){}},addEventListener(){},appendChild(){},remove(){},querySelector(){return stub()},querySelectorAll(){return[]}},{get:(t,p)=>p in t?t[p]:()=>{}})}const nodes=new Map(),document={getElementById(id){if(!nodes.has(id))nodes.set(id,stub());return nodes.get(id)},querySelector(){return stub()},querySelectorAll(){return[]},createElement(){return stub()},addEventListener(){},body:stub(),documentElement:stub()},store=new Map(),localStorage={getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)},c={console,__DB__:JSON.parse(fs.readFileSync(path.join(ROOT,'data','carddata.json'),'utf8')),document,localStorage,sessionStorage:localStorage,history:{pushState(){}},location:{reload(){}},navigator:{userAgent:'node'},addEventListener(){},removeEventListener(){},requestAnimationFrame:f=>f(),setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,prompt:()=>null,alert(){},Blob,structuredClone:global.structuredClone};c.window=c;c.globalThis=c;try{vm.runInNewContext(js,c,{timeout:30000});console.log(c.__R.map(x=>(x.ok?'PASS ':'FAIL ')+x.name+(x.detail?' — '+x.detail:'')).join('\n'));if(c.__R.some(x=>!x.ok))process.exit(2);}catch(e){console.error(e.stack||e);process.exit(1);}

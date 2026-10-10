@@ -1,0 +1,39 @@
+{
+  "example": true,
+  "unit": "実際の作業単位ID",
+  "category": "reuse",
+  "mode": "mixed",
+  "scope": "開始前に決めた対象と受入条件",
+  "outcome": "waiting",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": null,
+  "later_defects": null,
+  "usage": {
+    "source": null,
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "実際のモデルID",
+        "effort": "medium",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "notes": "コピー先でexampleをfalseにして実測を記録。outcomeはaccepted/failed/waiting/paused。modeはopus-only/mixed。categoryはreuse/engine/ui。 workflow_profileはlegacy-mixed-v2/delegation-expanded-v3/opus-only/transition-mixed。比較途中の条件変更を分離。quotaは実測のみ。",
+  "workflow_profile": "delegation-expanded-v3",
+  "started_at": null,
+  "finished_at": null,
+  "gate_owner": "sonnet",
+  "opus_review_minutes": null,
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  }
+}

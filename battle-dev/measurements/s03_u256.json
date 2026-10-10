@@ -1,0 +1,18 @@
+{
+  "example": false,
+  "unit": "S03-U256",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "5 LV-family cards (1 ENGINE_GAP + 4 NOT_STARTED) → TESTED; engine: FX_TO_GRAVE deckTopInsteadS03; real-DUEL test; 1 status-record test adjusted; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [{"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}]
+  },
+  "notes": "Rework 1: the first negative control showed two face-down destruction checks passing on the old build (a normal battle also destroys a face-down ワイト without damage) — strengthened to check the card was destroyed face-down. The tree was re-created from the rebased U255 (the pre-rebase base had been removed too early); changes reapplied by hand."
+}

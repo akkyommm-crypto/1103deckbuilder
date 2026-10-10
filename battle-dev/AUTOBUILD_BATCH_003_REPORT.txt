@@ -1,0 +1,27 @@
+1103 Duel ADS — Autobuild Batch 003 checkpoint
+Baseline: System v4.8.0 (not rolled back)
+
+Result
+- Quality gate: 657 PASS / 0 FAIL
+- Explicitly implemented and tested: 26 cards
+- Generic engine handling reviewed: 5 effectless Ritual Monsters
+- ENGINE_GAP recorded: 9 cards
+- Acode embedded database: 4,996 cards
+
+Reusable engine work
+- Script metadata can now declare an inherent per-turn attack limit.
+- Script metadata can now permit direct attacks while opposing monsters exist.
+- Both capabilities flow through the generic Battle Command/replay validation paths; no card-name branch was added.
+
+ENGINE_GAP
+- スペーシア・ギフト: authoritative Neo-Spacian archetype metadata missing.
+- ゼラの儀式 / チャクラの復活 / ドリアードの祈り / ローの祈り: first-class deterministic Ritual Summon pipeline missing.
+- ダブルトラップ: declarative Trap-negation category metadata missing.
+- ヒエログリフの石版: duel-duration hand-limit modifier and End Phase enforcement missing.
+- バスター・テレポート: authoritative /Buster archetype metadata missing.
+- メガトン魔導キャノン: replay-safe multi-source Spell Counter payment selection missing.
+
+Validation
+- python tools/check.py: PASS
+- python tools/build_acode.py data/carddata.json: PASS, cards=4996
+- python tools/script_coverage.py: PASS

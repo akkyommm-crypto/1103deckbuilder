@@ -1,0 +1,26 @@
+AUTOBUILD RESUME SESSION CHECKPOINT (batches 006-015)
+
+Baseline retained: System v4.8.0
+Batches completed this resumed session: 10
+Candidates processed: 400
+Explicit card scripts implemented and tested: 183
+Additional coverage promotion to TESTED from prior IMPLEMENTED review: 1
+Generic cards reviewed: 8
+New precise ENGINE_GAP classifications: 209
+
+Final quality gate:
+- 1224 PASS / 0 FAIL
+- Acode embedded cards: 4996
+- Coverage: TESTED 474 / IMPLEMENTED 200 / GENERIC_OK 643 / PARTIAL 182 / ENGINE_GAP 277 / NOT_STARTED 3220
+
+Reusable engine capabilities added:
+- canDirectAttackThroughMonstersV51 accepts boolean or function-valued declarative metadata.
+- attackLimitV48 accepts numeric or function-valued declarative metadata.
+
+ENGINE_GAP inventory:
+- Every current gap and its concrete missing primitive is recorded in data/script_status_overrides.json.
+- Current total: 277 (209 newly classified in batches 006-015).
+
+Continuation point:
+- Batch 016 is selected in data/next_script_batch.json.
+- docs/CODEX_CURRENT_TASK.md has been refreshed.

@@ -1,0 +1,13 @@
+AUTOBUILD batch033 checkpoint (v4.8.0 + P1 ChoiceRequest v4.9.0 baseline)
+
+- Processed the selected 40 NOT_STARTED cards.
+- Added 24 accurate implementations in cards/82_v82_autobuild_batch33.js.
+- Added no shared-engine changes and no carddata.json changes.
+- Used serializable P1 only for resolution-time card choices.
+- Deferred 16 cards as ENGINE_GAP with reusable primitive requirements.
+- ENGINE_GAP reasons distinguish activation-time Choice, resolution-time Choice,
+  target selection, activation cost selection and declaration where applicable.
+- Four new cards are classified as blocked by activation-time Choice:
+  魔轟神ガルバス, ガスタへの祈り, ダメージ・コンデンサー, フェイク・フェザー.
+- Activation-time information was not approximated with resolution-time P1.
+

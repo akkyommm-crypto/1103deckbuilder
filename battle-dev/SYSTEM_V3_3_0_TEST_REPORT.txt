@@ -1,0 +1,68 @@
+1103 ADS System v3.3.0 TEST REPORT
+==================================
+
+[Full regression]
+/mnt/data/1103_duel_v3_3_0_project/dist/battle.html
+7ad216d3e028d9d40dc3846d00eee2b6d77ac87fbea91e0ee46d2f3b25700472
+PASS 両者パス後に召喚成功応答窓を閉じる
+PASS 通常召喚成功後にSS2以上の応答窓を作る
+PASS 召喚成功直後の応答窓では起動効果を禁止
+PASS オープンなMain Phaseではレスキューラビット起動可
+PASS ラギアは手札ではなくEXデッキへ戻る — hand=0 ex=1
+PASS ラギアのX素材2枚は持ち主の墓地へ送られる — grave=2
+PASS 相手墓地のモンスターを自分フィールドへ蘇生できる — owner=1
+PASS 死者蘇生で奪った相手モンスターは相手の手札へ戻る — P0hand=0 P1hand=1
+PASS 相手所有EXモンスターは相手のEXへ戻る — P1ex=1
+PASS EXモンスターをデッキへ戻す効果でもEXへ戻る — deck=0 ex=1
+PASS 効果無効中でも発動リンクは作れるが効果は適用されない — resolved=0
+PASS 発動時個別無効のスナップショットを保持する — resolved=0
+PASS 通常状態の異次元の女戦士は効果解決する — resolved=1
+PASS 異次元の女戦士はダメージ計算後(after)に発動
+PASS ヴェーラーは相手Main Phase限定
+PASS ヴェーラーは手札→墓地をコストで払う
+PASS ヴェーラーはターン終了時までの無効
+PASS defineScriptは200枚 — count=200
+PASS v3.3.0追加16枚が全て登録 — added=16
+PASS 墓守の長槍兵の貫通500ダメージ — lp=7500
+PASS 極北のブリザードは死者蘇生でも特殊召喚不可
+PASS 特殊召喚可能モンスターは従来通り特殊召喚
+PASS ゲイルはチェーンに乗らない自己特殊召喚手順
+PASS カルートはダメージステップ合法
+PASS シュラはリクルート先の効果を無効
+PASS 墓守の石版はネクロバレーを無視
+PASS 天罰は発動無効としてチェーンリンクを無効化
+PASS systemVersion 3.3.0
+PASS embedded DB hook
+PASS AI pack tool
+PASS Acode build tool
+PASS Acode one-time DB import
+PASS processor self test
+PASS card scripts present
+PASS no direct ADS import
+PASS single inline script
+PASS Xyz owner detach
+PASS bounce owner/EX routing
+PASS return deck EX routing
+PASS first turn smart phase skip
+PASS resume clears stale fault
+PASS single visible random test deck
+PASS fresh random opening guard
+PASS developer presets hidden
+PASS rabbit test deck 22 monsters
+PASS post-summon fast window
+PASS ignition guard closes correctly
+PASS rabbit post-summon regression test
+PASS resume clears old summon timing
+PASS DD Warrior Lady correct damage timing
+PASS source effect negation on chain resolve
+PASS Effect Veiler opponent Main only
+PASS Effect Veiler cost before resolve
+
+[Acode standalone]
+PASS carddata embedded: 4,996 cards
+PASS standalone HTML generated
+PASS JavaScript syntax: node --check
+
+[Build hashes]
+7ad216d3e028d9d40dc3846d00eee2b6d77ac87fbea91e0ee46d2f3b25700472  /mnt/data/battle_ads_system_v3_3_0.html
+d8013b07f95b3413eaa5709f9aaca55a87610654c786d6478e427c90d687a7da  /mnt/data/battle_ads_system_v3_3_0_acode.html

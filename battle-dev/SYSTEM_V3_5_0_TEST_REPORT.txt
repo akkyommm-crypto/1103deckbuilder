@@ -1,0 +1,43 @@
+1103 ADS System v3.5.0 TEST REPORT
+====================================
+
+RESULT: PASS (automated suites)
+Automated PASS lines: 100
+Explicit card scripts: 240 unique
+Embedded Acode card DB: 4,996 cards
+Acode inline <script>: 1
+JavaScript syntax: PASS (normal build / Acode build)
+
+主要回帰確認
+- 2011/3/19以降の召喚成功後タイミング / 起動効果ガード: PASS
+- ラギア等EXモンスターのバウンス / デッキ戻し先: PASS
+- X素材の持ち主墓地送り: PASS
+- 死者蘇生した相手所有モンスターの持ち主手札帰還: PASS
+- 効果無効中の発動と解決時不適用: PASS
+- エフェクト・ヴェーラーの相手Main Phase / コスト / 期限: PASS
+- v3.3.0追加16枚: PASS
+- v3.4.0追加20枚 / SS禁止 / Battle禁止 / 遅延破壊: PASS
+
+v3.5.0専用確認
+- defineScript 240 unique: PASS
+- 追加20枚が全てカードDBに存在: PASS
+- 追加20枚は全て1103以前の収録日: PASS
+- 「場を離れたら除外」: 墓地 / 手札 / デッキの各移動でPASS
+- ゾンビキャリア banish-on-leave: PASS
+- 魔法都市エンディミオン: 発動時UID監視 / 魔法解決後カウンター / 破壊時移送: PASS
+- 効果無効でも「発動自体が成立」した魔法はカウンター対象: PASS
+- カラクリ大将軍 無零怒: 表示形式変更イベント / 1ターンドロー: PASS
+- BF－暁のシロッコ: 条件付き通常召喚method基盤: PASS
+- 真六武衆－シエン: 魔法・罠の発動無効宣言: PASS
+- バトルフェーダー: 特殊召喚 / Battle終了 / leave-field除外フラグ: PASS
+- トラゴエディア: 手札枚数×600: PASS
+- ブラック・ローズ・ドラゴン: S召喚時全体破壊: PASS
+- 帝 / 黄泉ガエル / X-Saber追加群の主要宣言: PASS
+- Android/Acode実機スモーク9シナリオ組み込み: PASS (static/build)
+
+ブラウザ / 実機について
+- コンテナ内Chromium CLIはDBus/UPower環境依存でプロセスが終了せず、DOM起動判定を完了できなかったためブラウザPASSには数えていない。
+- Chromium stderrには今回コード由来の SyntaxError / ReferenceError / TypeError は検出されなかった。
+- Android Acodeの実タップ操作は、DEVELOPER →「📱 実機スモークテスト v3.5.0」で確認対象。
+
+既知の部分自動化は SYSTEM_V3_5_0_CHANGELOG.txt の「現時点で部分自動化の主な残件」を参照。

@@ -1,0 +1,38 @@
+1103 ADS System v3.4.0 TEST REPORT
+====================================
+
+RESULT: PASS
+Automated checks: 72 PASS
+Explicit card scripts: 220 unique / 220 total
+Acode embedded card DB: 4,996 cards
+Acode inline <script>: 1
+JavaScript syntax: PASS (normal build / Acode build)
+
+主要回帰確認
+- 召喚成功後の起動効果タイミング: PASS
+- ラギアの手札バウンス→EX帰還: PASS
+- X素材の持ち主墓地送り: PASS
+- 死者蘇生で相手モンスター蘇生→強制脱出→持ち主手札: PASS
+- 効果無効中の異次元の女戦士: 発動可・効果不適用 PASS
+- エフェクト・ヴェーラーの相手Main Phase限定/コスト/期限: PASS
+- v3.3.0追加16枚の回帰: PASS
+
+v3.4.0専用確認
+- 追加20枚が全て登録: PASS
+- スクリプト名重複なし: PASS
+- noSpecialSummon が墓地蘇生を中央処理で停止: PASS
+- 制約解除後は同じ特殊召喚が成功: PASS
+- summonProcedure も特殊召喚禁止を事前拒否: PASS
+- 特殊召喚失敗時に誤った成功イベントを発火しない: PASS
+- noBattlePhase によりMain1→Endへスキップ: PASS
+- Battle Phase禁止の共通判定: PASS
+- UID + flagKey 遅延破壊: PASS
+- 六武衆の荒行のエンド破壊予約: PASS
+- 天空の宝札の特殊召喚/Battle両制約: PASS
+- 緑光の宣告者: 魔法カード発動へのカウンター処理: PASS
+- 紫光の宣告者: 罠カード発動へのカウンター処理: PASS
+- E・HERO ボルテック: ダメージ計算後・除外HERO特殊召喚宣言: PASS
+
+注意
+- 上記はNodeによる構文/ロジック回帰テストと静的宣言テスト。
+- Android Acode上の実タップ操作はユーザー実機での確認対象。

@@ -1,0 +1,35 @@
+1103 ADS System v4.0.0 TEST REPORT
+====================================
+
+RESULT: PASS
+
+Architecture checks
+- LOCATION masks: PASS
+- setcode / subtype setcode: PASS
+- alias canonical identity: PASS
+- RESET_LEAVE: PASS
+- RESET_END: PASS
+- RESET_DISABLE: PASS
+- runtimeEffects JSON serialization: PASS
+- Unified Effect condition -> cost -> target -> operation: PASS
+- v4EffectKey chain persistence: PASS
+- legacy adapter leaves existing CARD_SCRIPTS untouched: PASS
+
+Native v4 card checks
+- 黄金の歯車装置箱: +500/+1500 and RESET_END: PASS
+- 六武衆の理: cost card enters GY before target selection and can be targeted: PASS
+- 六武衆の理: revive selected Six Samurai: PASS
+- XX－セイバー レイジグラ: summon trigger / X-Saber recovery: PASS
+- セイバー・スラッシュ: exact target count / fixed-target destruction: PASS
+
+Compatibility
+- Full pre-v4 regression suite: PASS
+- v3.6.1 Bottomless simultaneous summon batch: PASS
+- v3.7 Frog / Fortress / Trago: PASS
+- v3.8 expansion tests: PASS
+- JavaScript syntax: PASS
+- Top-level duplicate function declarations: 0
+
+Notes
+- Existing 299 legacy scripts remain on the legacy execution path in v4.0.
+- Replay is intentionally deferred until remaining direct legacy state mutations are normalized.

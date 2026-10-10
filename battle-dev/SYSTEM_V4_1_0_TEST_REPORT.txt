@@ -1,0 +1,41 @@
+1103 ADS System v4.1.0 TEST REPORT
+====================================
+
+RESULT: PASS
+
+Architecture / regression
+- Full existing tools/check.py regression suite: PASS
+- JavaScript syntax: PASS
+- Top-level duplicate function declarations: 0
+- Existing legacy script baseline preserved: PASS
+- v4 LOCATION / setcode / alias / RESET / Unified Effect regression: PASS
+
+v4.1 deterministic RNG / replay audit
+- Same RNG seed reproduces identical sequence: PASS
+- LOAD_DECK -> SHUFFLE -> DRAW -> COIN_TOSS action journal: PASS
+- Action journal JSON serialization: PASS
+- Coin toss result recorded as action: PASS
+- Replay-audit action sequence reproduces every state digest checkpoint: PASS
+- Final digest equality: PASS
+- Replay execution does not recursively record itself: PASS
+- Journal kept outside gameState to avoid Undo snapshot growth: PASS
+
+v4.1 setcode migration
+- Six Samurai legacy helper via setcode: PASS
+- Blackwing legacy helper via setcode: PASS
+- Nordic extra-normal legality via setcode: PASS
+
+v4.1 Unified Effect cards
+- キラー・トマト: PASS
+- シャインエンジェル: PASS
+- 巨大ネズミ: PASS
+- グリズリーマザー: PASS
+- ドラゴンフライ: PASS
+- UFOタートル: PASS
+- Wrong Attribute / ATK-only Deck blocks recruiter activation: PASS
+- noSpecialSummon blocks recruiter activation: PASS
+
+Build
+- Acode standalone build with embedded card DB: PASS
+- Card DB: 4,996 entries
+- Single inline <script>: PASS

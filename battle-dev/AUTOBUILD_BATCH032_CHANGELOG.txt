@@ -1,0 +1,14 @@
+AUTOBUILD batch032 checkpoint (v4.8.0 + P1 ChoiceRequest v4.9.0 baseline)
+
+- Processed 40 NOT_STARTED cards.
+- Added 19 accurate card implementations in cards/81_v81_autobuild_batch32.js.
+- Added no shared-engine changes and no carddata.json changes.
+- Used serializable P1 only for resolution-time choices:
+  Painful Choice, Emergency Synthesis, Core Transport Unit, Batteryman AAA,
+  and Mist Valley Windmaster.
+- Deferred 21 cards as ENGINE_GAP with concrete reusable primitive requirements.
+- Activation-time choices/costs/targets are explicitly distinguished from
+  resolution-time choices in ENGINE_GAP reasons and were not approximated by P1.
+- Official Konami Q&A confirmed Painful Choice's five-card/opponent selection is
+  performed during effect resolution and Super Solar Nutrient's Plant release is
+  paid when the card is activated.

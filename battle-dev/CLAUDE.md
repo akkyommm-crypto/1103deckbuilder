@@ -1,0 +1,57 @@
+# 1103 battle 開発
+
+長期任務の本文は `coordination/CLAUDE_1103_LONG_RUNNING_MASTER_PROMPT.md`（以下マスタープロンプト）。旧OneDrive正本は移行バックアップとして保持し、通常作業ではGitHub上のこの文書を読む。
+このファイルは毎セッション読む常設ルールだけを置く。本文・数値・ログを転記しない。
+
+## 常に守ること
+- 現在のユーザー指示を最優先する。継続指示の範囲では、検証後に次の作業へ進む。停止指示には従う。
+- 正本は `coordination/LATEST.md`。作業前にこのツリーの `AGENTS.md`、`coordination/LATEST.md`、`coordination/CLAUDE_RESUME.md` を確認する。
+- 公開済み・ゲート待ち・作業中を区別する。番号やPASS数をここに固定しない。
+- 1103（2011-08-31以前）のテキスト・裁定を優先する。JSON保存・Replay・owner/controllerを維持する。
+- 失敗テストを消さない。期待値は1103テキストと矛盾する時だけ根拠付きで変える。部分実装をTESTEDにしない。
+
+## 担当（ワークフローv3・委譲拡大）
+- 通常作業：Sonnet 5.5（`battle-implementer`、effort medium）。既存の仕組みで書けるカード、通常の失敗調査・修正、専用/近接/対照テスト、宣言・監査・事前スキャン・全体ゲート、報告と測定記録。
+- 難所：Opus 5.5（`battle-engineer`、effort high）。共通エンジン、裁定の不明点、同時処理、保存再開、再現困難な不具合。
+- 機械処理：スクリプト。集計、ゲート実行、ログ抽出、パッケージ作成。
+- 2026-10-02の実測では `sonnet`→`claude-sonnet-5-5`、`opus`→`claude-opus-5-5`。
+  - 別環境や別日の場合は `/model`・`/agents`・`/tasks` で確かめる。
+  - 想定外のモデルへの置換を黙って受け入れない。
+- `effort` などの担当定義が効くのは、このツリーをプロジェクトとして開いたセッションだけ。
+  - 別のディレクトリで開いたセッションからは、モデル指定だけで委譲する。
+  - その場合、effortは未設定・未確認と記録する。
+- 書き手は1人（マスタープロンプトの単一writer原則）。
+  - 通常単位の実装・宣言・監査・全体ゲートはSonnetを担当者として一意に指定する。公開・LATEST更新はメインセッションだけが行う。
+  - 委譲先は指定ツリーの指定ファイルだけを編集し、同時に動く実装担当は1つまで。親は同じツリーに書き込まず、ゲートを重複起動しない。
+  - テスト中のツリーのdistを上書きしない。
+- 担当の振り分けは同じ作業の効率化のため。利用制限の回避にモデル切替を使わない（マスタープロンプト）。
+
+- 完全な担当境界は `WORKFLOW_V3.md`。既存テストの期待値変更はOpus判断。通常成果は要約・重要差分・対象hashとゲート証拠を確認し、正常成果の全面再読・再実装を標準にしない。
+
+## 検証・報告
+- 手順は `battle-dev` スキル（`.claude/skills/battle-dev`）。このプロジェクトの実運用は `references/validation.md` の末尾。
+- 単位ごとの必須事項：
+  - 専用テスト；
+  - 前ビルドでの対照確認（negative control）；
+  - `data/s03_status_changes.json` への宣言と監査；
+  - `test_s03_u135`；
+  - 事前スキャン（NONZERO / FAILFILE が0）；
+  - `python tools/check.py` → `GATE_EXIT=0`、PASS数は前回＋新規ちょうど。
+- 正常ログの全文を会話に流さない。終了コードと、失敗とその前後だけを読む。
+- 消費は実測だけを `measurements/` に記録する（1単位1JSON、親子・再試行・手戻りを含める）。取得できない値はnull。
+  - 比較のためだけに同じ実装を二重に行わない。
+  - A/B比較は開始条件にしない（マスタープロンプト）。
+- このファイルは開発の指針であり、公開・外部送信・権限変更を新たに許可するものではない。
+
+## 比較の識別
+- 新規単位から `mode: mixed`, `workflow_profile: delegation-expanded-v3`。旧分担は別集計。途中で混在した単位は `transition-mixed`。
+- 進行中の単位・ゲートを中断して適用しない。適用開始の単位と時刻を記録する。
+- checkpoint出力の集約（マスタープロンプト冒頭、2026-10-03）も併用する：通常は検証済み約3単位で1公開、測定は `workflow_profile: delegation-expanded-v3-batch3`。再開の正本は `coordination/CLAUDE_RESUME.md`。
+- 適用開始：S03-U270（2026-10-03）。U268〜U269は `transition-mixed`。
+
+## GitHub共同開発
+
+- Claude Codeは専用worktreeの `claude/work` だけへ書く。Codexのworktreeや `codex/work`、`main` へ直接書かない。
+- デッキビルダーと裁定DBのルート資産は対象外。battleのソース・テスト・進捗はこの `battle-dev/` 内に閉じる。
+- 区切りではworktreeルートへ移動し、`.\scripts\finish-work.ps1 -Message "type: summary"` を実行する。full gate成功後だけcommitされ、その後pushされる。
+- push失敗時はローカルcommitを保持し、resetやforce pushを行わない。

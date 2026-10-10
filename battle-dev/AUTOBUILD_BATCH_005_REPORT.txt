@@ -1,0 +1,22 @@
+1103 Duel ADS — Autobuild Batch 005 checkpoint
+Baseline: System v4.8.0
+
+Result
+- Quality gate: 745 PASS / 0 FAIL
+- Newly implemented and tested: 21 cards
+- Previously completed duplicate candidates confirmed: 2 cards
+- ENGINE_GAP recorded: 17 cards
+- Acode embedded database: 4,996 cards
+- Coverage: TESTED 290 / IMPLEMENTED 201 / GENERIC_OK 635 / PARTIAL 182 / ENGINE_GAP 68 / NOT_STARTED 3620
+
+Implementation notes
+- Reused canonical E-HERO setcode and alias/canonical identity comparison.
+- Reused direct-attack and inherent multi-attack metadata from batch 003.
+- Added positive/negative field-modifier regression coverage.
+- Added no card-name engine branch.
+
+Validation
+- python tools/check.py: 745 PASS / 0 FAIL
+- python tools/build_acode.py data/carddata.json: PASS, cards=4996
+- python tools/script_coverage.py: PASS
+- Next 40-card batch selected and written to data/next_script_batch.json.

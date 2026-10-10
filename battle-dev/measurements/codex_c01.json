@@ -1,0 +1,21 @@
+{
+  "unit": "CODEX-C01",
+  "mode": "codex-review-implementation",
+  "workflow_profile": "codex-astra-terra-single-worker-v1",
+  "baseline": "U287 ecc16f8445f869654049e76379255c642b9a51fa8c8ac2f6a2f24a3ed8aadac4",
+  "model": "GPT-5.6 Terra medium",
+  "review_model": "Astra",
+  "usage": null,
+  "gate_exit": 0,
+  "notes": "Usage telemetry unavailable; values intentionally null. Rework: Undo journal bookkeeping, upper-chain terminal stop, U10 bookkeeping-action filter. Final pre-scan/gate use direct UTF-8 byte capture after corrupt PowerShell logs were rejected.",
+  "gate_pass": 17732,
+  "gate_fail": 0,
+  "dedicated_pass": 18,
+  "prescan_files": 507,
+  "negative_control": {
+    "exit": 2,
+    "pass": 11,
+    "fail": 7
+  },
+  "integration_status": "standalone U287 base; Claude U288-U290 not merged"
+}

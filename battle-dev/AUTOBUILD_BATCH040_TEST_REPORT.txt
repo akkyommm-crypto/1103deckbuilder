@@ -1,0 +1,1 @@
+batch040: 40 processed; TESTED +0; ENGINE_GAP +40; dedicated 40 PASS; full 2552 PASS / 0 FAIL; coverage TESTED 856 / IMPLEMENTED 198 / GENERIC_OK 644 / PARTIAL 182 / ENGINE_GAP 896 / NOT_STARTED 2220; total 4996; Acode 4996 PASS; Replay/Undo/Redo/SaveLoad/Action Journal PASS.

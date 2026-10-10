@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U288",
+  "category": "reuse",
+  "mode": "mixed",
+  "scope": "ENGINE_GAP re-check 8: 森のざわめき, 機械複製術, 大波小波, ドラゴンを呼ぶ笛, バグ・ロード, 錬金生物 ホムンクルス; no engine change; test; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "none: the Sonnet agent stopped on its weekly usage limit (HTTP 429, resets 2026-10-09 06:00 JST) before its final report; no usage block was returned",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "notes": "Sonnet 5.5 battle-implementer delegated from the Opus session; no engine change. Sonnet finished code, test, negative control (U287: 89 FAIL), declarations, report and gate (GATE_EXIT=0, 17828 PASS) and then stopped on the weekly limit before returning. Opus review: 機械複製術 did not recheck the targeting condition at resolution — fixed with case M7b (116/0); the gate is rerun after the fix.",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "started_at": null,
+  "finished_at": null,
+  "gate_owner": "sonnet",
+  "opus_review_minutes": null,
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": true,
+    "other_activity": "Opus U290 engine work ran at the same time"
+  }
+}

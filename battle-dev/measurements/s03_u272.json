@@ -1,0 +1,51 @@
+{
+  "example": false,
+  "unit": "S03-U272",
+  "category": "reuse",
+  "mode": "mixed",
+  "scope": "4 of 6 ENGINE_GAP re-check cards (キックバック parked: a negated summon is cancelled by the engine to the GY, leaving it in the hand needs an engine change; ドッペル・ゲイナー parked: open ruling on a Continuous Trap with no 発動 wording) -> TESTED on the existing engine; Sonnet 5.5 battle-implementer owned implementation, negative control, declarations, status-record tests, audit, pre-scan and the gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": null,
+  "later_defects": null,
+  "usage": {
+    "source": "Agent result of the resumed run only (subagent_tokens / tool_uses / duration_ms); the first run stopped at the session limit and reported no usage; main-session Opus tokens not available",
+    "includes_all_agents": false,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": "not set (delegated from a session outside the tree)",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null,
+        "total_reported_resumed_run": 253283,
+        "tool_uses_resumed_run": 13,
+        "duration_ms_resumed_run": 1605689,
+        "first_run": null
+      },
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "notes": "Negative control on U271: 17 FAIL (22 PASS, no crash). Dedicated test 39 PASS / 0 FAIL. Rework: 2 (キックバック parked after the first run showed the engine sends the negated monster to the GY; ドッペル・ゲイナー removed again after the added TESTED acceptance rule, which required a second pre-scan and gate). Usage values left null. Interrupted by the session limit (first run), resumed after the reset. Opus review: 4 TESTED accepted (basis per card in the report); ドッペル・ゲイナー parked for a ruling (ruled: a Continuous Trap applying each time while face-up, forced — to be re-added in a later unit); キックバック parked (engine: a negated summon must return to the hand). Rebased onto the final U271 (fixed after the first U271 gate) by file merge; Sonnet’s gate 17225 was on the pre-fix base, so pre-scan + gate were re-run.",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "started_at": "2026-10-03T18:14:00+09:00",
+  "finished_at": null,
+  "gate_owner": "sonnet (first gate); opus-main re-ran pre-scan + gate after the rebase",
+  "opus_review_minutes": null,
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  }
+}

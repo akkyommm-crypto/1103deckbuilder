@@ -1,0 +1,53 @@
+1103 Duel ADS System — CODEX 4996 AUTOBUILD READY
+==================================================
+
+Base duel-engine checkpoint: v4.7.0
+Card DB: 4,996
+Historical cutoff: 2011-08-31
+Replay format: v4
+
+Autobuild additions (development tooling only):
+- tools/script_coverage.py
+- tools/select_script_batch.py
+- tools/autobuild_cycle.py
+- upgraded tools/index_cards.py (legacy + Unified + helper + auto-table coverage)
+- data/script_coverage.json
+- data/script_status_overrides.json
+- data/next_script_batch.json
+- docs/SCRIPT_COVERAGE.md
+- docs/NEXT_SCRIPT_BATCH.md
+- docs/CODEX_AUTOBUILD.md
+- docs/CODEX_CURRENT_TASK.md
+- CODEX_MASTER_PROMPT_4996.txt
+- START_HERE_CODEX_AUTOBUILD_JP.txt
+- AGENTS.md autobuild rules
+- tools/check.py coverage sanity gate
+
+Current coverage snapshot:
+- TESTED: 160
+- IMPLEMENTED: 203
+- GENERIC_OK: 628
+- PARTIAL: 182
+- ENGINE_GAP: 3
+- NOT_STARTED: 3820
+- OUT_OF_SCOPE: 0
+Total: 4996
+
+Static registrations found: 364
+AUTO_DECK_TABLE names: 201 (PARTIAL unless explicit script exists)
+
+Validation after autobuild-tool integration:
+- tools/check.py: 511 PASS / 0 FAIL
+- JavaScript syntax: PASS
+- duplicate top-level functions: 0
+- Acode build: PASS
+- embedded DB: 4,996 cards
+
+Codex entry point:
+1. Open this folder in Codex.
+2. Paste CODEX_MASTER_PROMPT_4996.txt.
+3. Codex first completes v4.8.0 multi-attack bootstrap from CODEX_PROMPT_V480.txt.
+4. Then it runs `python tools/autobuild_cycle.py --size 40` and repeats 30–50-card batches.
+
+Important completion rule:
+PARTIAL / ENGINE_GAP / NOT_STARTED are not complete. Do not trade correctness for script count.

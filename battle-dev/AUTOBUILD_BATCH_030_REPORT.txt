@@ -1,0 +1,30 @@
+AUTOBUILD BATCH 030 CHECKPOINT
+
+Baseline: System v4.8.0 (never rolled back)
+Selected: 40
+Implemented and tested: 13
+ENGINE_GAP: 27
+Shared engine changes: none
+
+Quality gates:
+- python tools/check.py: 1914 PASS / 0 FAIL
+- python tools/build_acode.py data/carddata.json: PASS, cards=4996
+- python tools/script_coverage.py: PASS
+
+Coverage after batch 030:
+- TESTED 701
+- IMPLEMENTED 198
+- GENERIC_OK 644
+- PARTIAL 182
+- ENGINE_GAP 651
+- NOT_STARTED 2620
+
+ENGINE_GAP aggregation:
+- docs/ENGINE_GAP_PRIMITIVE_REPORT_BATCH030.md
+- data/engine_gap_primitive_summary_batch030.json
+- Total classified: 651 / 651
+
+AUTOBUILD state:
+- PAUSED after batch 030 by direct user request.
+- Batch 031 was not selected.
+- data/next_script_batch.json remains the batch 030 selection checkpoint.

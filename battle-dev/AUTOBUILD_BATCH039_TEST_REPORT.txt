@@ -1,0 +1,1 @@
+batch039: 40 processed; TESTED +0; ENGINE_GAP +40; dedicated 40 PASS; full 2512 PASS / 0 FAIL; coverage TESTED 856 / ENGINE_GAP 856 / NOT_STARTED 2260; total 4996; Acode 4996 PASS.

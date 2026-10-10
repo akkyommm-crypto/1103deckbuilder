@@ -1,0 +1,5 @@
+AUTOBUILD is intentionally paused after batch 030.
+
+Do not run tools/autobuild_cycle.py until the user explicitly resumes AUTOBUILD.
+No batch 031 selection has been generated.
+The current data/next_script_batch.json is retained as the batch 030 selection checkpoint.

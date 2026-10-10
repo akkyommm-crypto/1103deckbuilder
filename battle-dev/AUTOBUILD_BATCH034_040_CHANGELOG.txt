@@ -1,0 +1,9 @@
+AUTOBUILD batches 034-040 checkpoint series
+
+- Processed 280 NOT_STARTED cards in seven consecutive 40-card batches.
+- Added 68 accurate implementations using existing card APIs and serializable P1 handlers.
+- Deferred 212 cards as ENGINE_GAP rather than approximating missing timing, provenance, battle, continuous-rule or scheduled-processing primitives.
+- Added no shared-engine changes and no carddata.json changes.
+- Activation-time information was never substituted with resolution-time P1.
+- Each batch passed coverage total 4996, full regression, Replay/Undo/Redo/SaveLoad/Journal checks and Acode embedding before the next batch was selected.
+

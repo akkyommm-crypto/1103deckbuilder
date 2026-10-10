@@ -1,0 +1,1380 @@
+[
+ {"path":"engine/1O_activation_event_continuation_v11.js"},
+ {
+  "path": "engine/00_state_actions.js",
+  "start_line": 1,
+  "end_line": 1983,
+  "lines": 1983
+ },
+ {
+  "path": "data/03_setcode_overlay_v4.js"
+ },
+ {
+  "path": "engine/04_setcode_authority_v4.js"
+ },
+ {
+  "path": "engine/12_provenance_v3.js"
+ },
+ {
+  "path": "engine/05_ads_architecture_core.js",
+  "start_line": 1984,
+  "end_line": 2189,
+  "lines": 206
+ },
+ {
+  "path": "engine/06_replay_rng_v41.js",
+  "start_line": 2190,
+  "end_line": 2451,
+  "lines": 262
+ },
+ {
+  "path": "engine/08_replay_runner_v44.js",
+  "start_line": 2452,
+  "end_line": 2646,
+  "lines": 195
+ },
+ {
+  "path": "engine/07_zone_events_v42.js",
+  "start_line": 2647,
+  "end_line": 2682,
+  "lines": 36
+ },
+ {
+  "path": "engine/09_choice_request_v49.js"
+ },
+ {
+  "path": "engine/10_activation_choice_v11.js"
+ },
+ {
+  "path": "engine/14_ritual_v5.js"
+ },
+ {
+  "path": "engine/15_battle_v6.js"
+ },
+ {
+  "path": "engine/16_scheduler_v7.js"
+ },
+ {
+  "path": "engine/17_draw_event_v8.js"
+ },
+ {
+  "path": "engine/18_leave_field_v9.js"
+ },
+ {
+  "path": "engine/19_position_v10.js"
+ },
+ {
+  "path": "engine/1A_token_v11.js"
+ },
+ {
+  "path": "engine/1B_activation_event_v12.js"
+ },
+ {
+  "path": "engine/1C_negation_v13.js"
+ },
+ {
+  "path": "engine/1D_stat_modifier_v14.js"
+ },
+ {
+  "path": "engine/1E_equip_v15.js"
+ },
+ {
+  "path": "engine/1N_grave_equip_v31.js"
+ },
+ {
+  "path": "engine/1F_level_modifier_v16.js"
+ },
+ {
+  "path": "engine/1G_characteristic_v17.js"
+ },
+ {
+  "path": "engine/1H_lp_change_v18.js"
+ },
+ {
+  "path": "engine/1I_effect_category_v19.js"
+ },
+ {
+  "path": "engine/1J_reveal_v20.js"
+ },
+ {
+  "path": "engine/1K_destruction_protection_v21.js"
+ },
+ {
+  "path": "engine/1L_counter_v22.js"
+ },
+ {
+  "path": "engine/1M_provenance_v30.js"
+ },
+ {
+  "path": "engine/1N_summon_counter_s03.js"
+ },
+ {
+  "path": "engine/1O_cost_selection_first_s03.js"
+ },
+ {
+  "path": "engine/1P_activation_response_s03.js"
+ },
+ {
+  "path": "engine/1Q_battle_context_replay_s03.js"
+ },
+ {
+  "path": "engine/1R_damage_step_resolution_s03.js"
+ },
+ {
+  "path": "engine/1S_battle_destroyed_negation_s03.js"
+ },
+ {
+  "path": "engine/1T_targeting_negation_s03.js"
+ },
+ {
+  "path": "engine/1U_negated_activation_grave_s03.js"
+ },
+ {
+  "path": "engine/1V_draw_replacement_s03.js"
+ },
+ {
+  "path": "engine/1W_activation_negated_release_s03.js"
+ },
+ {
+  "path": "engine/1X_interrupted_activation_s03.js"
+ },
+ {
+  "path": "engine/1Y_attack_declare_window_s03.js"
+ },
+ {
+  "path": "engine/1Z_resolution_choice_wait_s03.js"
+ },
+ {
+  "path": "engine/1ZB_trigger_forced_per_effect_s03.js"
+ },
+ {
+  "path": "engine/1ZC_shared_use_ss_negation_s03.js"
+ },
+ {
+  "path": "engine/1ZD_activation_type_lock_s03.js"
+ },
+ {
+  "path": "engine/1ZE_targeting_protection_s03.js"
+ },
+ {
+  "path": "engine/1ZF_xyz_detach_choice_s03.js"
+ },
+ {
+  "path": "engine/1ZG_unaffected_by_st_s03.js"
+ },
+ {
+  "path": "engine/1ZH_trap_negation_s03.js"
+ },
+ {
+  "path": "engine/1ZI_gemini_s03.js"
+ },
+ {
+  "path": "engine/1ZJ_effect_synchro_s03.js"
+ },
+ {
+  "path": "engine/1ZK_summon_only_s03.js"
+ },
+ {
+  "path": "engine/1ZL_fusion_spell_s03.js"
+ },
+ {
+  "path": "engine/1ZM_targeted_self_destroy_s03.js"
+ },
+ {
+  "path": "engine/1ZN_synchro_lock_s03.js"
+ },
+ {
+  "path": "engine/1ZO_attack_lock_s03.js"
+ },
+ {
+  "path": "engine/1ZP_self_event_s03.js"
+ },
+ {
+  "path": "engine/1ZQ_attack_all_s03.js"
+ },
+ {
+  "path": "engine/1ZR_forced_attack_target_s03.js"
+ },
+ {
+  "path": "engine/1ZS_end_battle_phase_s03.js"
+ },
+ {
+  "path": "engine/1ZT_deck_trigger_s03.js"
+ },
+ {
+  "path": "engine/1ZU_attack_target_restriction_s03.js"
+ },
+ {
+  "path": "engine/1ZV_destroy_substitute_s03.js"
+ },
+ {
+  "path": "engine/1ZW_contact_fusion_s03.js"
+ },
+ {
+  "path": "engine/1ZX_hand_destroy_random_s03.js"
+ },
+ {
+  "path": "engine/1ZY_linked_negation_s03.js"
+ },
+ {
+  "path": "engine/1ZZ_gladiator_s03.js"
+ },
+ {
+  "path": "engine/1ZZB_equip_substitute_arms_s03.js"
+ },
+ {
+  "path": "engine/1ZZD_sin_s03.js"
+ },
+ {
+  "path": "engine/1ZZE_lightsworn_mill_s03.js"
+ },
+ {
+  "path": "engine/1ZZF_field_dependent_s03.js"
+ },
+ {
+  "path": "engine/1ZZG_grave_redirect_s03.js"
+ },
+ {
+  "path": "engine/1ZZH_crystal_beast_s03.js"
+ },
+ {
+  "path": "engine/1ZZI_trap_monster_s03.js"
+ },
+ {
+  "path": "engine/1ZZJ_hand_limit_s03.js"
+ },
+ {
+  "path": "engine/1ZZK_ss_position_s03.js"
+ },
+ {
+  "path": "engine/1ZZL_special_win_s03.js"
+ },
+ {
+  "path": "engine/1ZZM_earthbound_s03.js"
+ },
+ {
+  "path": "engine/1ZZN_event_summary_s03.js"
+ },
+ {
+  "path": "engine/1ZZO_destroy_after_s03.js"
+ },
+ {
+  "path": "engine/1ZZP_resume_processor_s03.js"
+ },
+ {
+  "path": "engine/1ZZQ_attack_cost_s03.js"
+ },
+ {
+  "path": "ui/10_render_input.js",
+  "start_line": 2683,
+  "end_line": 3288,
+  "lines": 606
+ },
+ {
+  "path": "engine/20_effect_primitives_ex.js",
+  "start_line": 3289,
+  "end_line": 4434,
+  "lines": 1146
+ },
+ {
+  "path": "engine/30_processor_chain_battle.js",
+  "start_line": 4435,
+  "end_line": 5858,
+  "lines": 1424
+ },
+ {
+  "path": "engine/40_legal_script_engine.js",
+  "start_line": 5859,
+  "end_line": 7084,
+  "lines": 1226
+ },
+ {
+  "path": "engine/45_unified_effect_v4.js",
+  "start_line": 7085,
+  "end_line": 7241,
+  "lines": 157
+ },
+ {
+  "path": "cards/00_generic_core.js",
+  "start_line": 7242,
+  "end_line": 9316,
+  "lines": 2075
+ },
+ {
+  "path": "cards/10_themes_a.js",
+  "start_line": 9317,
+  "end_line": 10615,
+  "lines": 1299
+ },
+ {
+  "path": "cards/20_control_counter.js",
+  "start_line": 10616,
+  "end_line": 11839,
+  "lines": 1224
+ },
+ {
+  "path": "cards/30_themes_b.js",
+  "start_line": 11840,
+  "end_line": 12852,
+  "lines": 1013
+ },
+ {
+  "path": "cards/35_1103_expansion.js",
+  "start_line": 12853,
+  "end_line": 13207,
+  "lines": 355
+ },
+ {
+  "path": "cards/36_1103_expansion_v340.js",
+  "start_line": 13208,
+  "end_line": 13487,
+  "lines": 280
+ },
+ {
+  "path": "cards/37_1103_expansion_v350.js",
+  "start_line": 13488,
+  "end_line": 13863,
+  "lines": 376
+ },
+ {
+  "path": "cards/38_1103_expansion_v380.js",
+  "start_line": 13864,
+  "end_line": 14215,
+  "lines": 352
+ },
+ {
+  "path": "cards/39_1103_expansion_v380b.js",
+  "start_line": 14216,
+  "end_line": 14472,
+  "lines": 257
+ },
+ {
+  "path": "cards/41_v4_native.js",
+  "start_line": 14473,
+  "end_line": 14631,
+  "lines": 159
+ },
+ {
+  "path": "cards/42_v41_native.js",
+  "start_line": 14632,
+  "end_line": 14679,
+  "lines": 48
+ },
+ {
+  "path": "cards/43_v42_native.js",
+  "start_line": 14680,
+  "end_line": 14715,
+  "lines": 36
+ },
+ {
+  "path": "cards/44_v44_native.js",
+  "start_line": 14716,
+  "end_line": 14801,
+  "lines": 86
+ },
+ {
+  "path": "cards/45_v45_native.js",
+  "start_line": 14802,
+  "end_line": 15125,
+  "lines": 324
+ },
+ {
+  "path": "cards/46_v46_native.js",
+  "start_line": 15126,
+  "end_line": 15495,
+  "lines": 370
+ },
+ {
+  "path": "cards/47_v47_native.js",
+  "start_line": 15496,
+  "end_line": 15737,
+  "lines": 242
+ },
+ {
+  "path": "cards/48_v48_native.js"
+ },
+ {
+  "path": "cards/49_v49_autobuild_batch01.js"
+ },
+ {
+  "path": "cards/50_v50_autobuild_batch02.js"
+ },
+ {
+  "path": "cards/51_v51_autobuild_batch03.js"
+ },
+ {
+  "path": "cards/52_v52_autobuild_batch04.js"
+ },
+ {
+  "path": "cards/53_v53_autobuild_batch05.js"
+ },
+ {
+  "path": "cards/54_v54_autobuild_batch06.js"
+ },
+ {
+  "path": "cards/55_v55_autobuild_batch07.js"
+ },
+ {
+  "path": "cards/56_v56_autobuild_batch08.js"
+ },
+ {
+  "path": "cards/57_v57_autobuild_batch09.js"
+ },
+ {
+  "path": "cards/58_v58_autobuild_batch10.js"
+ },
+ {
+  "path": "cards/59_v59_autobuild_batch11.js"
+ },
+ {
+  "path": "cards/60_v60_autobuild_batch12.js"
+ },
+ {
+  "path": "cards/61_v61_autobuild_batch13.js"
+ },
+ {
+  "path": "cards/62_v62_autobuild_batch14.js"
+ },
+ {
+  "path": "cards/63_v63_autobuild_batch15.js"
+ },
+ {
+  "path": "cards/64_v64_autobuild_batch16.js"
+ },
+ {
+  "path": "cards/65_v65_autobuild_batch17.js"
+ },
+ {
+  "path": "cards/66_v66_autobuild_batch18.js"
+ },
+ {
+  "path": "cards/67_v67_autobuild_batch19.js"
+ },
+ {
+  "path": "cards/68_v68_autobuild_batch20.js"
+ },
+ {
+  "path": "cards/69_v69_autobuild_batch21.js"
+ },
+ {
+  "path": "cards/70_v70_autobuild_batch22.js"
+ },
+ {
+  "path": "cards/71_v71_autobuild_batch23.js"
+ },
+ {
+  "path": "cards/72_v72_autobuild_batch24.js"
+ },
+ {
+  "path": "cards/73_v73_autobuild_batch25.js"
+ },
+ {
+  "path": "cards/74_v74_autobuild_batch26.js"
+ },
+ {
+  "path": "cards/75_v75_autobuild_batch27.js"
+ },
+ {
+  "path": "cards/76_v76_autobuild_batch28.js"
+ },
+ {
+  "path": "cards/77_v77_autobuild_batch29.js"
+ },
+ {
+  "path": "cards/78_v78_autobuild_batch30.js"
+ },
+ {
+  "path": "cards/79_p1_choice_recovery_minibatch.js"
+ },
+ {
+  "path": "cards/80_v80_autobuild_batch31.js"
+ },
+ {
+  "path": "cards/81_v81_autobuild_batch32.js"
+ },
+ {
+  "path": "cards/82_v82_autobuild_batch33.js"
+ },
+ {
+  "path": "cards/83_v83_autobuild_batch34.js"
+ },
+ {
+  "path": "cards/84_v84_autobuild_batch35.js"
+ },
+ {
+  "path": "cards/85_v85_autobuild_batch36.js"
+ },
+ {
+  "path": "cards/86_v86_autobuild_batch37.js"
+ },
+ {
+  "path": "cards/87_p4_setcode_recovery.js"
+ },
+ {
+  "path": "cards/88_p3_provenance_recovery.js"
+ },
+ {
+  "path": "cards/89_p11_activation_choice_recovery.js"
+ },
+ {
+  "path": "cards/90_ritual_recovery.js"
+ },
+ {
+  "path": "cards/91_battle_recovery.js"
+ },
+ {
+  "path": "cards/92_scheduler_recovery.js"
+ },
+ {
+  "path": "cards/93_draw_event_recovery.js"
+ },
+ {
+  "path": "cards/94_leave_field_recovery.js"
+ },
+ {
+  "path": "cards/95_position_recovery.js"
+ },
+ {
+  "path": "cards/96_token_recovery.js"
+ },
+ {
+  "path": "cards/97_activation_recovery.js"
+ },
+ {
+  "path": "cards/98_negation_recovery.js"
+ },
+ {
+  "path": "cards/99_stat_modifier_recovery.js"
+ },
+ {
+  "path": "cards/9A_equip_recovery.js"
+ },
+ {
+  "path": "cards/9B_level_modifier_recovery.js"
+ },
+ {
+  "path": "cards/9C_characteristic_recovery.js"
+ },
+ {
+  "path": "cards/9D_lp_change_recovery.js"
+ },
+ {
+  "path": "cards/9E_effect_category_recovery.js"
+ },
+ {
+  "path": "cards/9F_reveal_recovery.js"
+ },
+ {
+  "path": "cards/9G_destruction_protection_recovery.js"
+ },
+ {
+  "path": "cards/9H_counter_recovery.js"
+ },
+ {
+  "path": "cards/9I_class_a_recovery_01.js"
+ },
+ {
+  "path": "cards/9J_class_a_recovery_02.js"
+ },
+ {
+  "path": "cards/9K_class_a_recovery_03.js"
+ },
+ {
+  "path": "cards/9L_class_a_recovery_04.js"
+ },
+ {
+  "path": "cards/9M_class_a_recovery_05.js"
+ },
+ {
+  "path": "cards/9N_class_a2_recovery_06.js"
+ },
+ {
+  "path": "cards/9P_p23_material_filter_unlocked.js"
+ },
+ {
+  "path": "cards/9Q_p24_ritual_registry_unlocked.js"
+ },
+ {
+  "path": "cards/9R_p26_control_unlocked.js"
+ },
+ {
+  "path": "cards/9S_class_a_pierce_bulk.js"
+ },
+ {
+  "path": "cards/9T_class_a_recruit_bulk.js"
+ },
+ {
+  "path": "cards/9U_class_a_attack_bulk.js"
+ },
+ {
+  "path": "cards/9V_class_a_flip_bulk.js"
+ },
+ {
+  "path": "cards/9W_class_a_bulk50_b2.js"
+ },
+ {
+  "path": "cards/9X_class_a_bulk50_b3.js"
+ },
+ {
+  "path": "cards/9Y_engine_e123_unlocked.js"
+ },
+ {
+  "path": "cards/9Z_ready25_b1.js"
+ },
+ {
+  "path": "cards/A0_ready25_b2.js"
+ },
+ {
+  "path": "cards/A1_ready25_b3.js"
+ },
+ {
+  "path": "cards/A2_engine_b123_unlocked.js"
+ },
+ {
+  "path": "cards/A3_auto_cycle01.js"
+ },
+ {
+  "path": "cards/A4_auto_cycle02.js"
+ },
+ {
+  "path": "cards/A5_auto_cycle03.js"
+ },
+ {
+  "path": "cards/A6_auto_cycle04.js"
+ },
+ {
+  "path": "cards/A7_auto_cycle05.js"
+ },
+ {
+  "path": "cards/A8_auto_cycle06.js"
+ },
+ {
+  "path": "cards/A9_auto_cycle07.js"
+ },
+ {
+  "path": "cards/B0_auto_cycle08.js"
+ },
+ {
+  "path": "cards/B1_auto_cycle09.js"
+ },
+ {
+  "path": "cards/B2_auto_cycle10.js"
+ },
+ {
+  "path": "cards/B3_auto_cycle11.js"
+ },
+ {
+  "path": "cards/B4_auto_cycle12.js"
+ },
+ {
+  "path": "cards/B5_auto_cycle13.js"
+ },
+ {
+  "path": "cards/B6_auto_cycle14.js"
+ },
+ {
+  "path": "cards/B7_auto_cycle15.js"
+ },
+ {
+  "path": "cards/B8_auto_cycle16.js"
+ },
+ {
+  "path": "cards/B9_auto_cycle17.js"
+ },
+ {
+  "path": "cards/C0_auto_cycle18.js"
+ },
+ {
+  "path": "cards/C1_auto_cycle19.js"
+ },
+ {
+  "path": "cards/C2_auto_cycle20.js"
+ },
+ {
+  "path": "cards/C3_auto_cycle21.js"
+ },
+ {
+  "path": "cards/C4_auto_cycle22.js"
+ },
+ {
+  "path": "cards/C5_auto_cycle23.js"
+ },
+{
+  "path": "cards/C6_auto_cycle24.js"
+ },
+{
+  "path": "cards/C7_auto_cycle25.js"
+ },
+{
+  "path": "cards/C8_auto_cycle26.js"
+ },
+{
+  "path": "cards/C9_auto_cycle27.js"
+ },
+{
+  "path": "cards/D0_auto_cycle28.js"
+ },
+{
+  "path": "cards/D1_auto_cycle29.js"
+ },
+{
+  "path": "cards/D2_auto_cycle30.js"
+ },
+{
+  "path": "cards/D3_auto_cycle31.js"
+ },
+{
+  "path": "cards/D4_auto_cycle32.js"
+ },
+{
+  "path": "cards/D5_auto_cycle33.js"
+ },
+{
+  "path": "cards/D6_auto_cycle34.js"
+ },
+{
+  "path": "cards/D7_auto_cycle35.js"
+ },
+{
+  "path": "cards/D8_auto_cycle36.js"
+ },
+{
+  "path": "cards/D9_auto_cycle37.js"
+ },
+{
+  "path": "cards/E0_auto_cycle38.js"
+ },
+{
+  "path": "cards/E1_auto_cycle39.js"
+ },
+{
+  "path": "cards/E2_auto_cycle40.js"
+ },
+{
+  "path": "cards/E3_auto_cycle41.js"
+ },
+{
+  "path": "cards/E4_auto_cycle42.js"
+ },
+{
+  "path": "cards/E5_auto_cycle43.js"
+},
+{
+  "path": "cards/E6_auto_cycle44.js"
+},
+{
+  "path": "cards/E7_auto_cycle45.js"
+},
+{
+  "path": "cards/E8_auto_cycle46.js"
+},
+{
+  "path": "cards/E9_auto_cycle47.js"
+},
+{
+  "path": "cards/F0_auto_cycle48.js"
+},
+{
+  "path": "cards/F1_auto_cycle49.js"
+},
+{
+  "path": "cards/F2_auto_cycle50.js"
+},
+{
+  "path": "cards/F3_auto_cycle51.js"
+},
+{
+  "path": "cards/F4_auto_cycle52.js"
+},
+{
+  "path": "cards/F5_auto_cycle53.js"
+},
+{
+  "path": "cards/F6_auto_cycle54.js"
+},
+{
+  "path": "cards/F7_auto_cycle55.js"
+},
+{
+  "path": "cards/F8_auto_cycle56.js"
+},
+{
+  "path": "cards/F9_auto_cycle57.js"
+},
+{
+  "path": "cards/G0_auto_cycle58.js"
+},
+{
+  "path": "cards/G1_auto_cycle59.js"
+},
+{
+  "path": "cards/G2_auto_cycle60.js"
+},
+ {
+  "path": "cards/G3_auto_cycle61.js"
+ },
+ {
+  "path": "cards/G4_auto_cycle62.js"
+ },
+ {
+  "path": "cards/G5_auto_cycle63.js"
+ },
+ {
+  "path": "cards/G6_auto_cycle64.js"
+ },
+ {
+  "path": "cards/G7_auto_cycle65.js"
+ },
+ {
+  "path": "cards/G8_auto_cycle66.js"
+ },
+ {
+  "path": "cards/F9_astra_system01.js"
+ },
+ {
+  "path": "cards/H0_astra_system02.js"
+ },
+ {
+  "path": "cards/H1_claude_s03_dragunity.js"
+ },
+ {
+  "path": "cards/H2_claude_s03_card_activation.js"
+ },
+ {
+  "path": "cards/H3_claude_s03_bushido.js"
+ },
+ {
+  "path": "cards/H4_claude_s03_cost_selection.js"
+ },
+ {
+  "path": "cards/H5_claude_s03_activation_response.js"
+ },
+ {
+  "path": "cards/H6_claude_s03_battle_destroyed_negation.js"
+ },
+ {
+  "path": "cards/H7_claude_s03_targeting_negation.js"
+ },
+ {
+  "path": "cards/H8_claude_s03_u43_dragunity_aklys.js"
+ },
+ {
+  "path": "cards/H9_claude_s03_u46_royal_oppression.js"
+ },
+ {
+  "path": "cards/HA_claude_s03_u47_special_summon_effect_decl.js"
+ },
+ {
+  "path": "cards/HB_claude_s03_u50_gorz.js"
+ },
+ {
+  "path": "cards/HC_claude_s03_u52_auto_triggers.js"
+ },
+ {
+  "path": "cards/HD_claude_s03_u53_instant_fusion.js"
+ },
+ {
+  "path": "cards/HE_claude_s03_u56_limit_reverse.js"
+ },
+ {
+  "path": "cards/H8_claude_s03_targeting_negation_2.js"
+ },
+ {
+  "path": "cards/H9_claude_s03_draw_replacement.js"
+ },
+ {
+  "path": "cards/H8B_claude_s03u66_dark_general_freed_protection.js"
+ },
+ {
+  "path": "cards/H8C_claude_s03u67_dezaado_counter.js"
+ },
+ {
+  "path": "cards/H8D_claude_s03u68_activation_negated_release_secondary.js"
+ },
+ {
+  "path": "cards/HF_claude_s03_u59_future_fusion.js"
+ },
+ {
+  "path": "cards/HG_claude_s03u65_draw_replacement_grave.js"
+ },
+ {
+  "path": "cards/HH_claude_s03u72_gadget_search.js"
+ },
+ {
+  "path": "cards/HI_claude_s03u73_reinforce_truth.js"
+ },
+ {
+  "path": "cards/HJ_claude_s03u74_worm_xex.js"
+ },
+ {
+  "path": "cards/HK_claude_s03u76_saigo_no_guardian_tyrannus.js"
+ },
+ {
+  "path": "cards/HL_claude_s03_u115_unaffected_consumers.js"
+ },
+ {
+  "path": "cards/HM_claude_s03_u116_karakuri_common.js"
+ },
+ {
+  "path": "cards/HN_claude_s03_u118_jinzo.js"
+ },
+ {
+  "path": "cards/HO_claude_s03_u119_gemini.js"
+ },
+ {
+  "path": "cards/HQ_claude_s03_u122_gemini2.js"
+ },
+ {
+  "path": "cards/HR_claude_s03_u126_absolute_zero.js"
+ },
+ {
+  "path": "cards/HS_claude_s03_u130_fusion.js"
+ },
+ {
+  "path": "cards/HT_claude_s03_u135_auto_table_fixes.js"
+ },
+ {
+  "path": "cards/HU_claude_s03_u136_worm.js"
+ },
+ {
+  "path": "cards/HV_claude_s03_u138_fixed_singles.js"
+ },
+ {
+  "path": "cards/HW_claude_s03_u139_highlander.js"
+ },
+ {
+  "path": "cards/HX_claude_s03_u140_quasar.js"
+ },
+ {
+  "path": "cards/HY_claude_s03_u141_kagemusha.js"
+ },
+ {
+  "path": "cards/HZ_claude_s03_u144_attack_lock.js"
+ },
+ {
+  "path": "cards/HZB_claude_s03_u145_attack_lock2.js"
+ },
+ {
+  "path": "cards/HZC_claude_s03_u147_triforce.js"
+ },
+ {
+  "path": "cards/HZD_claude_s03_u148_gemini3.js"
+ },
+ {
+  "path": "cards/HZE_claude_s03_u149_attack_all.js"
+ },
+ {
+  "path": "cards/HZF_claude_s03_u153_manual_notes.js"
+ },
+ {
+  "path": "cards/HZG_claude_s03_u156_deck_triggers.js"
+ },
+ {
+  "path": "cards/HZH_claude_s03_u160_battle_conditions.js"
+ },
+ {
+  "path": "cards/HZI_claude_s03_u161_protections.js"
+ },
+ {
+  "path": "cards/HZJ_claude_s03_u162_mine_mole.js"
+ },
+ {
+  "path": "cards/HZK_claude_s03_u164_dual_summoner.js"
+ },
+ {
+  "path": "cards/HZL_claude_s03_u165_protections3.js"
+ },
+ {
+  "path": "cards/HZM_claude_s03_u166_d_stapler.js"
+ },
+ {
+  "path": "cards/HZN_claude_s03_u167_deck_triggers2.js"
+ },
+ {
+  "path": "cards/HZO_claude_s03_u169_deck_triggers3.js"
+ },
+ {
+  "path": "cards/HZP_claude_s03_u170_threatening_roar.js"
+ },
+ {
+  "path": "cards/HZQ_claude_s03_u171_peace_messenger.js"
+ },
+ {
+  "path": "cards/HZR_claude_s03_u174_contact_fusion.js"
+ },
+ {
+  "path": "cards/HZS_claude_s03_u176_contact2.js"
+ },
+ {
+  "path": "cards/HZT_claude_s03_u177_contact3.js"
+ },
+ {
+  "path": "cards/HZU_claude_s03_u178_contact4.js"
+ },
+ {
+  "path": "cards/HZV_claude_s03_u179_storm_magma.js"
+ },
+ {
+  "path": "cards/HZW_claude_s03_u180_gladiators.js"
+ },
+ {
+  "path": "cards/HZX_claude_s03_u181_gladiators2.js"
+ },
+ {
+  "path": "cards/HZY_claude_s03_u182_glow_chaos_neos.js"
+ },
+ {
+  "path": "cards/HZZ_claude_s03_u183_gladiator_arms.js"
+ },
+ {
+  "path": "cards/HZZA_claude_s03_u184_gladiators3.js"
+ },
+ {
+  "path": "cards/HZZB_claude_s03_u185_mixed_triggers.js"
+ },
+ {
+  "path": "cards/HZZC_claude_s03_u186_sample_deck_fixes.js"
+ },
+ {
+  "path": "cards/HZZD_claude_s03_u187_sin.js"
+ },
+ {
+  "path": "cards/HZZE_claude_s03_u197_partial1.js"
+ },
+ {
+  "path": "cards/HZZF_claude_s03_u198_partial2.js"
+ },
+ {
+  "path": "cards/HZZG_claude_s03_u199_partial3.js"
+ },
+ {
+  "path": "cards/HZZH_claude_s03_u200_partial4.js"
+ },
+ {
+  "path": "cards/HZZI_claude_s03_u201_partial5.js"
+ },
+ {
+  "path": "cards/HZZJ_claude_s03_u202_partial6.js"
+ },
+ {
+  "path": "cards/HZZK_claude_s03_u203_battle_loss_traps.js"
+ },
+ {
+  "path": "cards/HZZL_claude_s03_u204_partial7.js"
+ },
+ {
+  "path": "cards/HZZM_claude_s03_u205_partial8.js"
+ },
+ {
+  "path": "cards/HZZN_claude_s03_u206_partial9.js"
+ },
+ {
+  "path": "cards/HZZO_claude_s03_u207_partial10.js"
+ },
+ {
+  "path": "cards/HZZP_claude_s03_u208_ns1.js"
+ },
+ {
+  "path": "cards/HZZQ_claude_s03_u209_ns2.js"
+ },
+ {
+  "path": "cards/HZZR_claude_s03_u210_ns3.js"
+ },
+ {
+  "path": "cards/HZZS_claude_s03_u211_ns4.js"
+ },
+ {
+  "path": "cards/HZZT_claude_s03_u212_ns5.js"
+ },
+ {
+  "path": "cards/HZZU_claude_s03_u213_ns6.js"
+ },
+ {
+  "path": "cards/HZZV_claude_s03_u214_grave_redirect.js"
+ },
+ {
+  "path": "cards/HZZW_claude_s03_u215_ns7.js"
+ },
+ {
+  "path": "cards/HZZX_claude_s03_u216_ns8.js"
+ },
+ {
+  "path": "cards/HZZY_claude_s03_u217_ns9.js"
+ },
+ {
+  "path": "cards/HZZZ_claude_s03_u218_ns10.js"
+ },
+ {
+  "path": "cards/HZZZA_claude_s03_u219_counters.js"
+ },
+ {
+  "path": "cards/HZZZB_claude_s03_u220_locks.js"
+ },
+ {
+  "path": "cards/HZZZC_claude_s03_u221_ns13.js"
+ },
+ {
+  "path": "cards/HZZZD_claude_s03_u222_ns14.js"
+ },
+ {
+  "path": "cards/HZZZE_claude_s03_u223_ns15.js"
+ },
+ {
+  "path": "cards/HZZZF_claude_s03_u224_ns16.js"
+ },
+ {
+  "path": "cards/HZZZG_claude_s03_u225_ns17.js"
+ },
+ {
+  "path": "cards/HZZZH_claude_s03_u226_ns18.js"
+ },
+ {
+  "path": "cards/HZZZI_claude_s03_u227_ns19.js"
+ },
+ {
+  "path": "cards/HZZZJ_claude_s03_u228_ns20.js"
+ },
+ {
+  "path": "cards/HZZZK_claude_s03_u229_ns21.js"
+ },
+ {
+  "path": "cards/HZZZL_claude_s03_u230_ns22.js"
+ },
+ {
+  "path": "cards/HZZZM_claude_s03_u231_ns23.js"
+ },
+ {
+  "path": "cards/HZZZN_claude_s03_u232_ns24.js"
+ },
+ {
+  "path": "cards/HZZZO_claude_s03_u233_ns25.js"
+ },
+ {
+  "path": "cards/HZZZP_claude_s03_u235_ns26.js"
+ },
+ {
+  "path": "cards/HZZZQ_claude_s03_u237_ns27.js"
+ },
+ {
+  "path": "cards/HZZZR_claude_s03_u238_fortune_lady.js"
+ },
+ {
+  "path": "cards/HZZZS_claude_s03_u239_ns28.js"
+ },
+ {
+  "path": "cards/HZZZT_claude_s03_u240_crystal_beast.js"
+ },
+ {
+  "path": "cards/HZZZU_claude_s03_u241_ns29.js"
+ },
+ {
+  "path": "cards/HZZZV_claude_s03_u242_crystal_beast2.js"
+ },
+ {
+  "path": "cards/HZZZW_claude_s03_u243_ns30.js"
+ },
+ {
+  "path": "cards/HZZZX_claude_s03_u244_spirits.js"
+ },
+ {
+  "path": "cards/HZZZZ_claude_s03_u246_possessed.js"
+ },
+ {
+  "path": "cards/HZZZZA_claude_s03_u247_level_mods.js"
+ },
+ {
+  "path": "cards/HZZZZB_claude_s03_u248_trap_monsters.js"
+ },
+ {
+  "path": "cards/HZZZZC_claude_s03_u249_unaffected.js"
+ },
+ {
+  "path": "cards/HZZZZD_claude_s03_u250_ns32.js"
+ },
+ {
+  "path": "cards/HZZZZE_claude_s03_u251_lv.js"
+ },
+ {
+  "path": "cards/HZZZZF_claude_s03_u252_ns33.js"
+ },
+ {
+  "path": "cards/HZZZZG_claude_s03_u253_activation_log.js"
+ },
+ {
+  "path": "cards/HZZZZH_claude_s03_u254_ns34.js"
+ },
+ {
+  "path": "cards/HZZZZI_claude_s03_u255_lv2.js"
+ },
+ {
+  "path": "cards/HZZZZJ_claude_s03_u256_lv3.js"
+ },
+ {
+  "path": "cards/HZZZZK_claude_s03_u257_linger.js"
+ },
+ {
+  "path": "cards/HZZZZL_claude_s03_u258_ns35.js"
+ },
+ {
+  "path": "cards/HZZZZM_claude_s03_u259_locks.js"
+ },
+ {
+  "path": "cards/HZZZZN_claude_s03_u260_unlocks.js"
+ },
+ {
+  "path": "cards/HZZZZO_claude_s03_u261_ns36.js"
+ },
+ {
+  "path": "cards/HZZZZP_claude_s03_u262_forced.js"
+ },
+ {
+  "path": "cards/HZZZZQ_claude_s03_u264_hooks.js"
+ },
+ {
+  "path": "cards/HZZZZR_claude_s03_u265_ns37.js"
+ },
+ {
+  "path": "cards/HZZZZS_claude_s03_u266_unlocks2.js"
+ },
+ {
+  "path": "cards/HZZZZT_claude_s03_u267_ns38.js"
+ },
+ {
+  "path": "cards/HZZZZU_claude_s03_u268_equip_instead.js"
+ },
+ {
+  "path": "cards/HZZZZW_claude_s03_u269_gap1.js"
+ },
+ {
+  "path": "cards/HZZZZX_claude_s03_u270_gap2.js"
+ },
+ {
+  "path": "cards/HZZZZY_claude_s03_u271_damage_origin.js"
+ },
+ {
+  "path": "cards/HZZZZZ_claude_s03_u272_gap3.js"
+ },
+ {
+  "path": "cards/HZZZZZB_claude_s03_u273_hand_limit.js"
+ },
+ {
+  "path": "cards/HZZZZZC_claude_s03_u274_extra_normal.js"
+ },
+ {
+  "path": "cards/HZZZZZD_claude_s03_u275_add_to_hand.js"
+ },
+ {
+  "path": "cards/HZZZZZE_claude_s03_u276_gap4.js"
+ },
+ {
+  "path": "cards/HZZZZZF_claude_s03_u277_kickback.js"
+ },
+ {
+  "path": "cards/HZZZZZG_claude_s03_u279_special_win.js"
+ },
+ {
+  "path": "cards/HZZZZZH_claude_s03_u280_gap5.js"
+ },
+ {
+  "path": "cards/HZZZZZI_claude_s03_u281_gap6.js"
+ },
+ {
+  "path": "cards/HZZZZZJ_claude_s03_u282_earthbound.js"
+ },
+ {
+  "path": "cards/HZZZZZK_claude_s03_u284_earthbound2.js"
+ },
+ {
+  "path": "cards/HZZZZZL_claude_s03_u285_gap7.js"
+ },
+ {
+  "path": "cards/HZZZZZM_claude_s03_u286_earthbound3.js"
+ },
+ {
+  "path": "cards/HZZZZZN_claude_s03_u287_hand_discard.js"
+ },
+ {
+  "path": "cards/HZZZZZO_claude_s03_u288_gap8.js"
+ },
+ {
+  "path": "cards/HZZZZZP_claude_s03_u290_event_summary.js"
+ },
+ {
+  "path": "cards/HZZZY_claude_s03_u245_ns31.js"
+ },
+ {
+  "path": "cards/HL_claude_s03u77_sin_world.js"
+ },
+ {
+  "path": "cards/HM_claude_s03u79_dragunity_arms_levateinn.js"
+ },
+ {
+  "path": "cards/HN_claude_s03u80_jurrac_velophnyx.js"
+ },
+ {
+  "path": "cards/HO_claude_s03u81_bf_silverwind.js"
+ },
+ {
+  "path": "cards/HP_claude_s03u82_aoj_decisive_armor.js"
+ },
+ {
+  "path": "cards/HZZZZZO_codex_c02_cards.js"
+ },
+ {
+  "path": "cards/HZZZZZQ_claude_s03_u292_gap9.js"
+ },
+ {
+  "path": "cards/HZZZZZR_claude_s03_u293_field_to_grave.js"
+ },
+ {
+  "path": "cards/HZZZZZS_claude_s03_u302_falcon.js"
+ },
+ {
+  "path": "cards/40_auto_interpreter.js",
+  "start_line": 15738,
+  "end_line": 16474,
+  "lines": 737
+ },
+ {
+  "path": "runtime/50_actions_save.js",
+  "start_line": 16475,
+  "end_line": 17502,
+  "lines": 1028
+ },
+ {
+  "path": "engine/60_damage_segoc_ui_helpers.js",
+  "start_line": 17503,
+  "end_line": 18128,
+  "lines": 626
+ },
+ {
+  "path": "ui/11_choice_ui_v49.js"
+ },
+ {
+  "path": "engine/70_summon_procedures.js",
+  "start_line": 18129,
+  "end_line": 19138,
+  "lines": 1010
+ },
+ {
+  "path": "data/80_test_decks.js",
+  "start_line": 19139,
+  "end_line": 19901,
+  "lines": 763
+ },
+ {
+  "path": "data/81_device_smoke_v351.js",
+  "start_line": 19902,
+  "end_line": 20114,
+  "lines": 213
+ },
+ {
+  "path": "data/82_builder_launch_s03.js"
+ },
+ {
+  "path": "runtime/90_boot.js",
+  "start_line": 20115,
+  "end_line": 20264,
+  "lines": 150
+ }
+]

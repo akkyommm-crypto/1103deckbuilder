@@ -1,0 +1,18 @@
+{
+  "example": false,
+  "unit": "S03-U260",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "5 ENGINE_GAP cards with outdated reasons → TESTED; engine: card-activation record, flip-summon turn, opt-in S/T effect locks; real-DUEL test; overrides removed; rebased onto the rebased U259; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [{"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}]
+  },
+  "notes": "Rework 1 (test only): a Normal Summon method is chosen through openPick (overridden in the test), and the legality of a Spell in the hand needs the logicalZone / prospectiveIndex options."
+}

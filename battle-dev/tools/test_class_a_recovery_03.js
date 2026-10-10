@@ -1,0 +1,52 @@
+/* Existing-engine Class A recovery, sub-batch 3: positive/negative/ruling tests. */
+const fs=require('fs'),vm=require('vm'),path=require('path');const ROOT=path.resolve(__dirname,'..');
+const html=fs.readFileSync(path.join(ROOT,'dist','battle.html'),'utf8');let js=html.slice(html.indexOf('<script>')+8,html.lastIndexOf('</script>')).replace(/\bboot\(\);\s*\/\* System v3\.1:/,'/* boot skipped */\n/* System v3.1:');
+js+=String.raw`
+CARD_DB=globalThis.__DB__;NAME_INDEX=null;MAT_SPEC_CACHE.clear();buildMaterialNameSet();render=()=>{};showToast=()=>{};saveDuelSoon=()=>{};clearSavedDuel=()=>{};closeSheet=()=>{};openChainPriorityV2=()=>{};enforceExclusions=()=>{};enforceSinUpkeep=()=>{};
+let U=323000;function mk(n,p=0){const id=findCardIndex(n);if(id<0)throw Error('missing '+n);return{id,owner:p,controller:p,face:'up',pos:'atk',uid:U++};}
+function dyn(pred,skip){const d=CARD_DB.find(x=>x&&x.n!==skip&&pred(x));if(!d)throw Error('fixture');return mk(d.n);}
+function resetT(){gameState=newGame();gameState.activePlayer=0;gameState.firstPlayer=0;gameState.phase='main1';gameState.turn=7;PLAY_MODE=PLAY_MODES.DUEL;HISTORY.length=0;REDO.length=0;turnActions=[];resetChoiceStatsV49();v41ResetActionJournal(gameState);}
+function cx(n,z='mz',extra){const a=z==='field'?[gameState.players[0].field]:(gameState.players[0][z]||[]),c=a.find(x=>x&&cardName(x)===n);return Object.assign(makeContext(0,c,z,a.indexOf(c),'activate',{}),extra||{});}
+function answer(n=1){const p=pendingChoiceV49(gameState);if(!p)throw Error('no pending');return answerChoiceV49(p.candidates.slice(0,n).map(x=>x.key));}
+const R=[],ok=(n,v,d='')=>R.push({name:n,ok:!!v,detail:d});const N=['シンクロ・バリアー','暗黒大要塞鯱','インフェルニティ・ビートル','フレムベル・アーチャー','ドラグニティ－ブラックスピア','エレメンタルバースト','マザー・ブレイン','ミストデーモン','E－HERO マリシャス・エッジ'];
+N.forEach(n=>ok(n+' positive: script登録',!!CARD_SCRIPTS[n]));
+
+/* シンクロ・バリアー: 全damageのみを次の自分standbyまで0、回復とcostは通す。 */
+resetT();let c=mk('シンクロ・バリアー');gameState.players[0].sz=[c];let sc=CARD_SCRIPTS['シンクロ・バリアー'];sc.resolve(cx('シンクロ・バリアー','sz',{chainLink:{chainId:77}}));
+ok('シンクロ・バリアー positive: effect damageを0',resolveLpChangeV18(gameState,{player:0,delta:-500,cause:'effect'})===0);
+ok('シンクロ・バリアー ruling: battle damageも0',resolveLpChangeV18(gameState,{player:0,delta:-800,cause:'battle'})===0);
+ok('シンクロ・バリアー negative: 回復は妨げない',resolveLpChangeV18(gameState,{player:0,delta:600,cause:'recover'})===600&&resolveLpChangeV18(gameState,{player:0,delta:-300,cause:'cost'})===-300);
+ok('シンクロ・バリアー ruling: 次の自分standby予約',API.schedules('classa3.clear-lp-rule').length===1&&API.schedules('classa3.clear-lp-rule')[0].turnAbs===9);
+resetT();c=mk('シンクロ・バリアー');gameState.players[0].sz=[c];gameState.players[0].mz=[dyn(d=>d.k==='m'&&d.k!=='s')];ok('シンクロ・バリアー negative: Synchro costなし',!sc.condition(cx('シンクロ・バリアー','sz')));
+
+/* 暗黒大要塞鯱: canonical costごとに対象種別を固定。 */
+resetT();c=mk('暗黒大要塞鯱');let tor=mk('魚雷魚'),mon=dyn(d=>d.k==='m','暗黒大要塞鯱');mon.owner=mon.controller=1;gameState.players[0].mz=[c,tor];gameState.players[1].mz=[mon];let od={player:0,uid:c.uid,name:'暗黒大要塞鯱',from:'mz',index:0,ss:1,event:{},keep:true,noPriority:true};beginCostSnapshotsV3(gameState);CARD_SCRIPTS['暗黒大要塞鯱'].activationV11(cx('暗黒大要塞鯱'),od);answer();answer();ok('暗黒大要塞鯱 ruling: 魚雷魚modeはmonsterだけ対象',pendingChoiceV49(gameState).candidates.every(x=>x.zone==='mz'));answer();
+resetT();c=mk('暗黒大要塞鯱');let st=mk('サイクロン',1);gameState.players[0].mz=[c];gameState.players[1].sz=[st];CARD_SCRIPTS['暗黒大要塞鯱'].resolve(cx('暗黒大要塞鯱','mz',{selectedTargets:[{card:st}]}));ok('暗黒大要塞鯱 positive: 対象魔法罠を破壊',findCardByUid(st.uid).zone==='grave');
+resetT();c=mk('暗黒大要塞鯱');gameState.players[0].mz=[c];ok('暗黒大要塞鯱 negative: canonical costなし',!CARD_SCRIPTS['暗黒大要塞鯱'].condition(cx('暗黒大要塞鯱')));
+
+/* インフェルニティ・ビートル: hand 0、解決時1～2、空き枠制限。 */
+resetT();c=mk('インフェルニティ・ビートル');let b1=mk('インフェルニティ・ビートル'),b2=mk('インフェルニティ・ビートル');gameState.players[0].mz=[];gameState.players[0].deck=[b1,b2];CARD_SCRIPTS['インフェルニティ・ビートル'].resolve(makeContext(0,c,'grave',-1,'resolve',{}));ok('インフェルニティ・ビートル ruling: min1 max2',pendingChoiceV49(gameState).min===1&&pendingChoiceV49(gameState).max===2);answer(2);ok('インフェルニティ・ビートル positive: 同名2体特殊召喚',gameState.players[0].mz.length===2);
+resetT();c=mk('インフェルニティ・ビートル');gameState.players[0].mz=[c];gameState.players[0].hand=[dyn(d=>d.k==='m')];gameState.players[0].deck=[mk('インフェルニティ・ビートル')];ok('インフェルニティ・ビートル negative: 手札あり',!CARD_SCRIPTS['インフェルニティ・ビートル'].condition(cx('インフェルニティ・ビートル')));
+
+/* フレムベル・アーチャー: 両陣営FLAMVELLのみ、endPhase期限。 */
+resetT();c=mk('フレムベル・アーチャー');let f1=mk('フレムベル・グルニカ'),f2=mk('フレムベル・ベビー',1),other=dyn(d=>d.k==='m'&&!isSetCardV4(d,SETCODE.FLAMVELL));other.owner=other.controller=1;gameState.players[0].mz=[c,f1];gameState.players[1].mz=[f2,other];const a1=curATK(f1),a2=curATK(f2),ao=curATK(other);CARD_SCRIPTS['フレムベル・アーチャー'].resolve(cx('フレムベル・アーチャー'));ok('フレムベル・アーチャー positive: 双方FLAMVELL +800',curATK(f1)===a1+800&&curATK(f2)===a2+800);ok('フレムベル・アーチャー ruling: 非FLAMVELL不変',curATK(other)===ao);resetT();c=mk('フレムベル・アーチャー');let nonPyro=dyn(d=>d.k==='m'&&d.ra!=='炎');gameState.players[0].mz=[c,nonPyro];let fd={player:0,uid:c.uid,name:'フレムベル・アーチャー',from:'mz',index:0,ss:1,event:{},keep:true};CARD_SCRIPTS['フレムベル・アーチャー'].activationV11(cx('フレムベル・アーチャー'),fd);ok('フレムベル・アーチャー negative: 非炎族はcost候補外',pendingChoiceV49(gameState).candidates.every(x=>x.uid!==nonPyro.uid));
+
+/* ブラックスピア: Dragunity AND Dragon、墓地Winged Beast lv4以下。 */
+resetT();c=mk('ドラグニティ－ブラックスピア');let wing=dyn(d=>d.k==='m'&&d.ra==='鳥獣'&&d.lv<=4);gameState.players[0].mz=[c];gameState.players[0].grave=[wing];CARD_SCRIPTS['ドラグニティ－ブラックスピア'].resolve(cx('ドラグニティ－ブラックスピア','mz',{selectedTargets:[{card:wing}]}));ok('ドラグニティ－ブラックスピア positive: lv4以下鳥獣を蘇生',findCardByUid(wing.uid).zone==='mz');resetT();c=mk('ドラグニティ－ブラックスピア');gameState.players[0].mz=[c];gameState.players[0].grave=[dyn(d=>d.k==='m'&&d.ra==='鳥獣'&&d.lv>4)];ok('ドラグニティ－ブラックスピア negative: lv5以上だけでは不可',!CARD_SCRIPTS['ドラグニティ－ブラックスピア'].condition(cx('ドラグニティ－ブラックスピア')));ok('ドラグニティ－ブラックスピア ruling: OPT',CARD_SCRIPTS['ドラグニティ－ブラックスピア'].countLimit===1);
+
+/* エレメンタルバースト: 4属性exact cost、v21経由のdestroy。 */
+resetT();c=mk('エレメンタルバースト');gameState.players[0].sz=[c];gameState.players[0].mz=['風','水','炎','地'].map(a=>dyn(d=>d.k==='m'&&d.at===a));let foe=dyn(d=>d.k==='m');foe.owner=foe.controller=1;gameState.players[1].mz=[foe];ok('エレメンタルバースト ruling: 4属性各1でlegal',CARD_SCRIPTS['エレメンタルバースト'].condition(cx('エレメンタルバースト','sz')));CARD_SCRIPTS['エレメンタルバースト'].resolve(cx('エレメンタルバースト','sz'));ok('エレメンタルバースト positive: opponent fieldを破壊',findCardByUid(foe.uid).zone==='grave');resetT();c=mk('エレメンタルバースト');gameState.players[0].sz=[c];gameState.players[0].mz=['風','水','炎','炎'].map(a=>dyn(d=>d.k==='m'&&d.at===a));ok('エレメンタルバースト negative: 地不足を炎で代用不可',!CARD_SCRIPTS['エレメンタルバースト'].condition(cx('エレメンタルバースト','sz')));
+
+/* マザー・ブレイン: canonical summon costとWATER discard、set限定。 */
+resetT();c=mk('マザー・ブレイン');let keeper=mk('オーシャンズ・オーパー'),water=dyn(d=>d.k==='m'&&d.at==='水'),set=mk('サイクロン',1);set.face='down';gameState.players[0].hand=[water];gameState.players[0].mz=[keeper,c];gameState.players[1].sz=[set];ok('マザー・ブレイン ruling: canonical Keeper召喚手順',CARD_SCRIPTS['マザー・ブレイン'].summonProcedure.condition({player:0}));ok('マザー・ブレイン positive: WATER+setで効果legal',CARD_SCRIPTS['マザー・ブレイン'].condition(cx('マザー・ブレイン')));CARD_SCRIPTS['マザー・ブレイン'].resolve(cx('マザー・ブレイン','mz',{selectedTargets:[{card:set}]}));ok('マザー・ブレイン positive: set cardを破壊',findCardByUid(set.uid).zone==='grave');resetT();c=mk('マザー・ブレイン');let up=mk('サイクロン',1);gameState.players[0].mz=[c];gameState.players[0].hand=[dyn(d=>d.k==='m'&&d.at==='水')];gameState.players[1].sz=[up];ok('マザー・ブレイン negative: 表側カードだけでは不可',!CARD_SCRIPTS['マザー・ブレイン'].condition(cx('マザー・ブレイン')));
+
+/* ミストデーモン: no-tribute methodだけend self-destruct+1000。 */
+resetT();c=mk('ミストデーモン');c.normalSummonMethod='mistNoTribute';gameState.players[0].mz=[c];let mc=cx('ミストデーモン','mz',{eventName:'onEndPhase'}),lp=gameState.players[0].lp;ok('ミストデーモン ruling: 妥協召喚だけend trigger',CARD_SCRIPTS['ミストデーモン'].condition(mc));CARD_SCRIPTS['ミストデーモン'].resolve(mc);ok('ミストデーモン positive: 自壊+1000 damage',findCardByUid(c.uid).zone==='grave'&&gameState.players[0].lp===lp-1000);resetT();c=mk('ミストデーモン');c.normalSummonMethod='standard';gameState.players[0].mz=[c];ok('ミストデーモン negative: 正規召喚はend効果なし',!CARD_SCRIPTS['ミストデーモン'].condition(cx('ミストデーモン','mz',{eventName:'onEndPhase'})));
+
+/* Malicious Edge: opponent monster時だけ1 tribute、piercingは1経路。 */
+resetT();c=mk('E－HERO マリシャス・エッジ');let enemy=dyn(d=>d.k==='m');enemy.owner=enemy.controller=1;gameState.players[0].mz=[dyn(d=>d.k==='m')];gameState.players[1].mz=[enemy];let meth=CARD_SCRIPTS['E－HERO マリシャス・エッジ'].normalSummonProcedure.methods[0];ok('マリシャス・エッジ positive: opponent monster時1 tribute',meth.tributes===1&&meth.condition({player:0}));enemy.pos='def';ok('マリシャス・エッジ ruling: Battle v6 piercing',CARD_SCRIPTS['E－HERO マリシャス・エッジ'].continuous.piercingDamage({self:c,atkCard:c,defCard:enemy})===Math.max(0,curATK(c)-curDEF(enemy)));gameState.players[1].mz=[];ok('マリシャス・エッジ negative: opponent monster 0で代替不可',!meth.condition({player:0}));
+ok('sub-batch3: legacy Choice未使用',choiceStatsV49().legacy===0,'legacy='+choiceStatsV49().legacy);globalThis.__R=R;`;
+function stub(){return new Proxy({style:{},classList:{add(){},remove(){},toggle(){}},addEventListener(){},appendChild(){},remove(){},querySelector(){return stub()},querySelectorAll(){return[]}},{get:(t,p)=>p in t?t[p]:()=>{}})}
+const nodes=new Map(),document={getElementById(id){if(!nodes.has(id))nodes.set(id,stub());return nodes.get(id)},querySelector(){return stub()},querySelectorAll(){return[]},createElement(){return stub()},addEventListener(){},body:stub(),documentElement:stub()},store=new Map(),localStorage={getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
+const c={console,__DB__:JSON.parse(fs.readFileSync(path.join(ROOT,'data','carddata.json'),'utf8')),document,localStorage,sessionStorage:localStorage,history:{pushState(){}},location:{reload(){}},navigator:{userAgent:'node'},addEventListener(){},removeEventListener(){},requestAnimationFrame:f=>f(),setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,prompt:()=>null,alert(){},Blob,structuredClone:global.structuredClone};c.window=c;c.globalThis=c;
+try{vm.runInNewContext(js,c,{timeout:60000});console.log(c.__R.map(x=>(x.ok?'PASS ':'FAIL ')+x.name+(x.detail?' — '+x.detail:'')).join('\n'));if(c.__R.some(x=>!x.ok))process.exit(2);}catch(e){console.error(e.stack||e);process.exit(1);}

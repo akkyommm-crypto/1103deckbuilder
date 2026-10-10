@@ -1,0 +1,50 @@
+{
+  "example": false,
+  "unit": "S03-U276",
+  "category": "reuse",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "ENGINE_GAP re-check 4: 6 cards (ドッペル・ゲイナー, クリボーを呼ぶ笛, ダーク・アイズ・イリュージョニスト, エレキトンボ, マジック・キャンセラー, デルタ・アタッカー) → TESTED with existing engine only; real-DUEL test with Replay audits and negatives; negative control on U275; 6 status-record tests; pre-scan; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-03T22:45:00+09:00",
+  "finished_at": "2026-10-03T23:54:00+09:00",
+  "gate_owner": "sonnet (first gate); opus-main re-gated after the review change",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "Agent result for the fresh Sonnet subagent (subagent_tokens / tool_uses / duration_ms); main-session Opus tokens not available",
+    "includes_all_agents": false,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": "not set (delegated from a session outside the tree)",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null,
+        "total_reported": 336223,
+        "tool_uses": 131,
+        "duration_ms": 4098109
+      },
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "Gate chains for U272-U275 ran in other trees at the same time"
+  },
+  "notes": "Battle-implementer subagent delegated from a session outside the tree, so the effort field was not applied (null = not set / not verified). Negative control on U275: 46 FAIL (no crash). Opus review: 5 TESTED accepted; デルタ・アタッカー declared PARTIAL instead (the 4-or-more same-name case is an open ruling; Sonnet had flagged its exactly-3 reading as its own call); v580 record check adjusted (count unchanged); re-gated."
+}

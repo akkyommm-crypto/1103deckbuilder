@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U293",
+  "category": "engine",
+  "mode": "opus-only",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Engine: onFieldToGraveBatchS03 summary (graveInfo attribute / controller on the field; battle cleanup batch); summaries inserted after their group and batched with the per-card leave events (one SEGOC); 死の演算盤, バックファイア; real-DUEL test; negative controls; full pre-scan; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-09T10:40:00+09:00",
+  "finished_at": null,
+  "gate_owner": "opus-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "Sonnet U292 ran at the same time"
+  },
+  "notes": "Opus engine unit, built on U291 while Sonnet U292 ran; rebased onto U292 before the gate. Negative controls: U291 build 8 FAIL; leave-batch stub 1 FAIL."
+}

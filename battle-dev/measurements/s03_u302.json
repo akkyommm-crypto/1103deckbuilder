@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U302",
+  "category": "engine",
+  "mode": "opus-only",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Engine: attack-declaration cost of returning another own card (engine/1ZZQ, requestAttackS03, canDeclareAttackV48, ATTACK payload costPaidS03); 霞の谷のファルコン; real battle path test incl. save / resume; negative control; gate",
+  "outcome": "waiting",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "started_at": "2026-10-10T04:30:00+09:00",
+  "finished_at": null,
+  "gate_owner": "opus-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Opus engine unit after the Sonnet S03-U301 report (engine-core). Rework: the post-payment attack was refused by the no-other-card check; the paid flag now travels in the ATTACK payload. ドラゴエクィテス left NOT_STARTED (effect copy is engine-core)."
+}

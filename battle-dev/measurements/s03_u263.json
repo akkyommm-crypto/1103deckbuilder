@@ -1,0 +1,18 @@
+{
+  "example": false,
+  "unit": "S03-U263",
+  "category": "reuse",
+  "mode": "opus-only",
+  "scope": "3 TESTED cards whose DUEL activation never committed (null-resume declaration) fixed; 幻惑の巻物 also chooses its equip target; real-DUEL test; negative control; full gate (no status change)",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [{"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}]
+  },
+  "notes": "Category corrected from fix (not a valid category) to reuse in S03-U270. Defect found during the U261 review (later_defects of S03-U-era work on cards/9C). Rework 1: an assertion was vacuous on the old build (chain empty) — strengthened with the persisted declaration."
+}

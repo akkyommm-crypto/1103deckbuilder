@@ -1,0 +1,86 @@
+{
+  "baseline": {
+    "ENGINE_GAP": 620,
+    "GENERIC_OK": 644,
+    "IMPLEMENTED": 198,
+    "NOT_STARTED": 1310,
+    "PARTIAL": 182,
+    "TESTED": 2042
+  },
+  "current": {
+    "ENGINE_GAP": 617,
+    "GENERIC_OK": 644,
+    "IMPLEMENTED": 198,
+    "NOT_STARTED": 1308,
+    "PARTIAL": 182,
+    "TESTED": 2047
+  },
+  "status_changes": [
+    {
+      "name": "ザ・キックマン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED"
+    },
+    {
+      "name": "トラックロイド",
+      "before": "ENGINE_GAP",
+      "after": "TESTED"
+    },
+    {
+      "name": "ドラグニティ－ドゥクス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED"
+    },
+    {
+      "name": "ドラグニティ－レギオン",
+      "before": "NOT_STARTED",
+      "after": "TESTED"
+    },
+    {
+      "name": "凶悪犯－チョップマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED"
+    }
+  ],
+  "off_target_status_changes": [],
+  "registration_misses": [],
+  "fixture_false_positive_registrations": [],
+  "card_pool_unchanged": true,
+  "targets": {
+    "ドラグニティ－ドゥクス": [
+      {
+        "kind": "unified",
+        "source": "cards\\F9_astra_system01.js",
+        "line": 21
+      }
+    ],
+    "ザ・キックマン": [
+      {
+        "kind": "unified",
+        "source": "cards\\F9_astra_system01.js",
+        "line": 27
+      }
+    ],
+    "トラックロイド": [
+      {
+        "kind": "unified",
+        "source": "cards\\F9_astra_system01.js",
+        "line": 47
+      }
+    ],
+    "凶悪犯－チョップマン": [
+      {
+        "kind": "unified",
+        "source": "cards\\F9_astra_system01.js",
+        "line": 32
+      }
+    ],
+    "ドラグニティ－レギオン": [
+      {
+        "kind": "unified",
+        "source": "cards\\F9_astra_system01.js",
+        "line": 70
+      }
+    ]
+  }
+}

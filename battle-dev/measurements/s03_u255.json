@@ -1,0 +1,18 @@
+{
+  "example": false,
+  "unit": "S03-U255",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "10 LV-family cards (2 ENGINE_GAP + 8 NOT_STARTED) → TESTED; engine: effect-kill record, destroyer-side battle banish, battle-destroyed negation reaching banished victims, summonSrcS03 passed by LV-ups; real-DUEL test; 1 status-record test adjusted; rebased onto U254; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [{"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}]
+  },
+  "notes": "33/0 on the first run. Status-record adjustment after the rebase (batch16)."
+}

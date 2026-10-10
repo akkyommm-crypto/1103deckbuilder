@@ -1,0 +1,5358 @@
+{
+  "baseline_fixture": "data/system02_final_coverage.json",
+  "baseline_counts": {
+    "ENGINE_GAP": 616,
+    "GENERIC_OK": 644,
+    "IMPLEMENTED": 198,
+    "NOT_STARTED": 1307,
+    "PARTIAL": 182,
+    "TESTED": 2049
+  },
+  "current_counts": {
+    "ENGINE_GAP": 472,
+    "GENERIC_OK": 644,
+    "IMPLEMENTED": 3,
+    "NOT_STARTED": 920,
+    "PARTIAL": 30,
+    "TESTED": 2927
+  },
+  "delta": {
+    "ENGINE_GAP": -144,
+    "IMPLEMENTED": -195,
+    "NOT_STARTED": -387,
+    "PARTIAL": -152,
+    "TESTED": 878
+  },
+  "status_changes": [
+    {
+      "name": "A・O・J D.D.チェッカー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U211"
+    },
+    {
+      "name": "A・O・J カタストル",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U120"
+    },
+    {
+      "name": "A・O・J サイクロン・クリエイター",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U285"
+    },
+    {
+      "name": "A・O・J サウザンド・アームズ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U267"
+    },
+    {
+      "name": "A・O・J ディサイシブ・アームズ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U82"
+    },
+    {
+      "name": "A・ジェネクス・トライフォース",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U147"
+    },
+    {
+      "name": "BF－大旆のヴァーユ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U48"
+    },
+    {
+      "name": "BF－孤高のシルバー・ウィンド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U81"
+    },
+    {
+      "name": "BF－東雲のコチ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U212"
+    },
+    {
+      "name": "BF－蒼天のジェット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U257"
+    },
+    {
+      "name": "C・シューター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "C・チッキー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "C・ドルフィーナ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "C・パンテール",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "C・ピニー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "C・モーグ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "C・ラーバ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "D.D.クロウ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "D・ステープラン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U166"
+    },
+    {
+      "name": "D・バインド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U254"
+    },
+    {
+      "name": "D－HERO デビルガイ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U264"
+    },
+    {
+      "name": "D－HERO ドレッドサーヴァント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U209"
+    },
+    {
+      "name": "D－フォーチュン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U210"
+    },
+    {
+      "name": "E・HERO アイスエッジ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U235"
+    },
+    {
+      "name": "E・HERO アクア・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U176"
+    },
+    {
+      "name": "E・HERO アナザー・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U119"
+    },
+    {
+      "name": "E・HERO アブソルートZero",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U126"
+    },
+    {
+      "name": "E・HERO エアー・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U174"
+    },
+    {
+      "name": "E・HERO エスクリダオ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U138"
+    },
+    {
+      "name": "E・HERO カオス・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U182"
+    },
+    {
+      "name": "E・HERO キャプテン・ゴールド",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "E・HERO クノスペ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U211"
+    },
+    {
+      "name": "E・HERO グロー・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U182"
+    },
+    {
+      "name": "E・HERO ストーム・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U179"
+    },
+    {
+      "name": "E・HERO テンペスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U165"
+    },
+    {
+      "name": "E・HERO バブルマン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U193"
+    },
+    {
+      "name": "E・HERO フレア・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U174"
+    },
+    {
+      "name": "E・HERO ブラック・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U177"
+    },
+    {
+      "name": "E・HERO マグマ・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U179"
+    },
+    {
+      "name": "E・HERO マリン・ネオス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U176"
+    },
+    {
+      "name": "E・HERO ワイルドジャギーマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U149"
+    },
+    {
+      "name": "E・HERO ワイルドマン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U115"
+    },
+    {
+      "name": "E－HERO ワイルド・サイクロン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U145"
+    },
+    {
+      "name": "E－エマージェンシーコール",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U05"
+    },
+    {
+      "name": "HERO’S ボンド",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C02"
+    },
+    {
+      "name": "H－ヒートハート",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C02"
+    },
+    {
+      "name": "No.11 ビッグ・アイ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "No.16 色の支配者ショック・ルーラー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U51"
+    },
+    {
+      "name": "No.39 希望皇ホープ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U120"
+    },
+    {
+      "name": "No.56 ゴールドラット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U232"
+    },
+    {
+      "name": "N・グラン・モール",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U137"
+    },
+    {
+      "name": "RAI－MEI",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "R－ライトジャスティス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "Sin World",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U77"
+    },
+    {
+      "name": "Sin サイバー・エンド・ドラゴン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "Sin スターダスト・ドラゴン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U187"
+    },
+    {
+      "name": "Sin レインボー・ドラゴン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U187"
+    },
+    {
+      "name": "Sin 真紅眼の黒竜",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U187"
+    },
+    {
+      "name": "Sin 青眼の白龍",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U187"
+    },
+    {
+      "name": "TG カタパルト・ドラゴン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U195"
+    },
+    {
+      "name": "TG サイバー・マジシャン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U106"
+    },
+    {
+      "name": "TG ジェット・ファルコン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U195"
+    },
+    {
+      "name": "TG ストライカー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U87"
+    },
+    {
+      "name": "TG ハイパー・ライブラリアン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U121"
+    },
+    {
+      "name": "TG パワー・グラディエイター",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U121"
+    },
+    {
+      "name": "TG ラッシュ・ライノ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U106"
+    },
+    {
+      "name": "TG ワンダー・マジシャン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U121"
+    },
+    {
+      "name": "TG ワーウルフ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U87"
+    },
+    {
+      "name": "TG1－EM1",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U107"
+    },
+    {
+      "name": "TGX300",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U195"
+    },
+    {
+      "name": "TG－SX1",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U218"
+    },
+    {
+      "name": "VWXYZ－ドラゴン・カタパルトキャノン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U178"
+    },
+    {
+      "name": "VW－タイガー・カタパルト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U176"
+    },
+    {
+      "name": "W星雲隕石",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U136"
+    },
+    {
+      "name": "XX－セイバー ガルセム",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U205"
+    },
+    {
+      "name": "XYZ－ドラゴン・キャノン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U176"
+    },
+    {
+      "name": "XY－ドラゴン・キャノン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U176"
+    },
+    {
+      "name": "XZ－キャタピラー・キャノン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U176"
+    },
+    {
+      "name": "X－セイバー アクセル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U209"
+    },
+    {
+      "name": "X－セイバー パロムロ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U209"
+    },
+    {
+      "name": "YZ－キャタピラー・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U176"
+    },
+    {
+      "name": "いたずら好きな双子悪魔",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C02"
+    },
+    {
+      "name": "おろかな埋葬",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U58"
+    },
+    {
+      "name": "おジャマジック",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U205"
+    },
+    {
+      "name": "おジャマトリオ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U195"
+    },
+    {
+      "name": "かつて神と呼ばれた亀",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U217"
+    },
+    {
+      "name": "きつね火",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U266"
+    },
+    {
+      "name": "またたびキャット",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C02"
+    },
+    {
+      "name": "アタック・リフレクター・ユニット",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "アテナ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U212"
+    },
+    {
+      "name": "アトランティスの戦士",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "アポピスの化神",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U248"
+    },
+    {
+      "name": "アマゾネスの剣士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U227"
+    },
+    {
+      "name": "アルティメット・インセクト LV1",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "アルティメット・インセクト LV3",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "アルティメット・インセクト LV5",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "アルティメット・インセクト LV7",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "アーカナイト・マジシャン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U138"
+    },
+    {
+      "name": "アーケイン・ファイロ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "アームズ・ホール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U265"
+    },
+    {
+      "name": "アームド・ドラゴン LV10",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "アームド・ドラゴン LV3",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U205"
+    },
+    {
+      "name": "アームド・ドラゴン LV5",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "アームド・ドラゴン LV7",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "イエロー・ガジェット",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U72"
+    },
+    {
+      "name": "イビー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U285"
+    },
+    {
+      "name": "イレカエル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U161"
+    },
+    {
+      "name": "インフィニティ・ダーク",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U122"
+    },
+    {
+      "name": "インフェルニティガン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U241"
+    },
+    {
+      "name": "インフェルニティ・インフェルノ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U206"
+    },
+    {
+      "name": "インフェルニティ・ビースト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U144"
+    },
+    {
+      "name": "インフェルニティ・ブレイク",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U209"
+    },
+    {
+      "name": "インヴェルズの歩哨",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U259"
+    },
+    {
+      "name": "インヴェルズを呼ぶ者",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U205"
+    },
+    {
+      "name": "インヴェルズ・ギラファ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U215"
+    },
+    {
+      "name": "インヴェルズ・ローチ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U120"
+    },
+    {
+      "name": "イーグル・アイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U213"
+    },
+    {
+      "name": "ウィクトーリア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U231"
+    },
+    {
+      "name": "ウィード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U265"
+    },
+    {
+      "name": "ウェポンサモナー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "ウォール・シャドウ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U209"
+    },
+    {
+      "name": "エクシーズエフェクト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U218"
+    },
+    {
+      "name": "エクストリオの牙",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U231"
+    },
+    {
+      "name": "エクスプローシブ・マジシャン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U239"
+    },
+    {
+      "name": "エネミーコントローラー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U155"
+    },
+    {
+      "name": "エネルギー吸収板",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U267"
+    },
+    {
+      "name": "エレキトンボ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U276"
+    },
+    {
+      "name": "エレキリン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U260"
+    },
+    {
+      "name": "エレキーウィ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U161"
+    },
+    {
+      "name": "エレキーパー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U218"
+    },
+    {
+      "name": "エレクトリック・ワーム",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U193"
+    },
+    {
+      "name": "エレメント・ソルジャー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U264"
+    },
+    {
+      "name": "エレメント・ヴァルキリー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U260"
+    },
+    {
+      "name": "エンジェルO7",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U259"
+    },
+    {
+      "name": "エヴォルダー・ディプロドクス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U281"
+    },
+    {
+      "name": "エヴォルド・ゲフィロス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U209"
+    },
+    {
+      "name": "エーリアン・サイコ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U265"
+    },
+    {
+      "name": "オシャレオン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U167"
+    },
+    {
+      "name": "オーバーロード・フュージョン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U132"
+    },
+    {
+      "name": "オーバー・レンチ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U68"
+    },
+    {
+      "name": "オーロラ・アンギラス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "カイザー・シーホース",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "カウンター・カウンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U209"
+    },
+    {
+      "name": "カオス・ソーサラー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U93"
+    },
+    {
+      "name": "カオス・マジシャン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U32"
+    },
+    {
+      "name": "カバリスト",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "カラクリ兵 弐参六",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U52"
+    },
+    {
+      "name": "カラクリ参謀 弐四八",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U116"
+    },
+    {
+      "name": "カラクリ守衛 参壱参",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U71"
+    },
+    {
+      "name": "カラクリ将軍 無零",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U123"
+    },
+    {
+      "name": "カラクリ小町 弐弐四",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U101"
+    },
+    {
+      "name": "カラクリ忍者 九壱九",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U116"
+    },
+    {
+      "name": "カラクリ忍者 参参九",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U243"
+    },
+    {
+      "name": "カラクリ解体新書",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U102"
+    },
+    {
+      "name": "カードガンナー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U113"
+    },
+    {
+      "name": "カーム・マジック",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U267"
+    },
+    {
+      "name": "ガスタの賢者 ウィンダール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U210"
+    },
+    {
+      "name": "ガスタ・イグル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ガスタ・ガルド",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ガスタ・サンボルト",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U185"
+    },
+    {
+      "name": "ガスタ・スクイレル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "ガスタ・ファルコ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U209"
+    },
+    {
+      "name": "ガチガチガンテツ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U173"
+    },
+    {
+      "name": "ガリトラップ－ピクシーの輪－",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U252"
+    },
+    {
+      "name": "ガルドスの羽根ペン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U269"
+    },
+    {
+      "name": "キックバック",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U277"
+    },
+    {
+      "name": "キメラテック・フォートレス・ドラゴン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U174"
+    },
+    {
+      "name": "キラーザウルス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "キングゴブリン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U226"
+    },
+    {
+      "name": "キングス・ナイト",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "キーマウス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ギガプラント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U122"
+    },
+    {
+      "name": "クリボーを呼ぶ笛",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U276"
+    },
+    {
+      "name": "グランド・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U226"
+    },
+    {
+      "name": "グリーン・ガジェット",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U72"
+    },
+    {
+      "name": "グレイヴ・オージャ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U225"
+    },
+    {
+      "name": "グローアップ・バルブ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U138"
+    },
+    {
+      "name": "コアキメイルの鋼核",
+      "before": "NOT_STARTED",
+      "after": "PARTIAL",
+      "unit": "S03-U65"
+    },
+    {
+      "name": "コアキメイル・ロック",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U135"
+    },
+    {
+      "name": "コア転送ユニット",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U207"
+    },
+    {
+      "name": "コダロス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U292"
+    },
+    {
+      "name": "コピー・プラント",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U247"
+    },
+    {
+      "name": "コマンド・ナイト",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U193"
+    },
+    {
+      "name": "コンバート・コンタクト",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U206"
+    },
+    {
+      "name": "コール・リゾネーター",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "ゴキポン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ゴッドバードアタック",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U111"
+    },
+    {
+      "name": "ゴブリンゾンビ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U64"
+    },
+    {
+      "name": "ゴーレム・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "サイバー・ラーバァ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U185"
+    },
+    {
+      "name": "サイレント・ソードマン LV3",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U251"
+    },
+    {
+      "name": "サイレント・ソードマン LV5",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U251"
+    },
+    {
+      "name": "サイレント・ソードマン LV7",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U251"
+    },
+    {
+      "name": "サイレント・マジシャン LV4",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U256"
+    },
+    {
+      "name": "サイレント・マジシャン LV8",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U252"
+    },
+    {
+      "name": "サシカエル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U231"
+    },
+    {
+      "name": "サボウ・クローザー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "サンダー・ブレイク",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U111"
+    },
+    {
+      "name": "サンライズ・ガードナー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U122"
+    },
+    {
+      "name": "サーチライトメン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U266"
+    },
+    {
+      "name": "シャインエルフ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U243"
+    },
+    {
+      "name": "シャドウ・ダイバー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U122"
+    },
+    {
+      "name": "シャブティのお守り",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U257"
+    },
+    {
+      "name": "シャーク・ザ・クルー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U281"
+    },
+    {
+      "name": "シューティング・クェーサー・ドラゴン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U140"
+    },
+    {
+      "name": "ショット・ガン・シャッフル",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U270"
+    },
+    {
+      "name": "シンクロ・フュージョニスト",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "ジェイドナイト",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U167"
+    },
+    {
+      "name": "ジェネクス・ウンディーネ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U196"
+    },
+    {
+      "name": "ジェネクス・ガイア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U265"
+    },
+    {
+      "name": "ジェネクス・サーチャー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ジェネクス・ニュートロン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "ジェネクス・パワー・プランナー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "ジェネクス・ブラスト",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "ジェネラルデーモン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "ジェムタートル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "ジェムナイト・アレキサンド",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "ジェムナイト・エメラル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U241"
+    },
+    {
+      "name": "ジェムナイト・フュージョン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U133"
+    },
+    {
+      "name": "ジェムナイト・マディラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U144"
+    },
+    {
+      "name": "ジェムレシス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "ジャンクBOX",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U209"
+    },
+    {
+      "name": "ジャンク・ウォリアー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U193"
+    },
+    {
+      "name": "ジャンク・ブレーダー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U225"
+    },
+    {
+      "name": "ジュラック・グアイバ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U100"
+    },
+    {
+      "name": "ジュラック・デイノ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U250"
+    },
+    {
+      "name": "ジュラック・ヘレラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U210"
+    },
+    {
+      "name": "ジュラック・ヴェルヒプト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U80"
+    },
+    {
+      "name": "ジュラック・ヴェロー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U52"
+    },
+    {
+      "name": "スカル・ナイト",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U205"
+    },
+    {
+      "name": "スカル・フレイム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U65 / S03-U207"
+    },
+    {
+      "name": "スカー・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U160"
+    },
+    {
+      "name": "スクラップ・エリア",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U05"
+    },
+    {
+      "name": "スクラップ・コング",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U208"
+    },
+    {
+      "name": "スクラップ・サーチャー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U196"
+    },
+    {
+      "name": "スクラップ・スコール",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "スクラップ・ハンター",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "スクラップ・ビースト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U243"
+    },
+    {
+      "name": "スクラップ・リサイクラー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "スクラップ・ワーム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U210"
+    },
+    {
+      "name": "スケイルモース",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U223"
+    },
+    {
+      "name": "スケープ・ゴート",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U129"
+    },
+    {
+      "name": "スネーク・ホイッスル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U203"
+    },
+    {
+      "name": "スピリット・バーナー",
+      "before": "NOT_STARTED",
+      "after": "PARTIAL",
+      "unit": "S03-U65"
+    },
+    {
+      "name": "スポーア",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U103"
+    },
+    {
+      "name": "スモール・ピース・ゴーレム",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "スレイブタイガー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U184"
+    },
+    {
+      "name": "スレイブ・エイプ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ソニックジャマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U227"
+    },
+    {
+      "name": "ソードハンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U258"
+    },
+    {
+      "name": "ソーラー・エクスチェンジ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "ゾンビ・マスター",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U196"
+    },
+    {
+      "name": "タイムパッセージ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U247"
+    },
+    {
+      "name": "ダスト・シュート",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U90"
+    },
+    {
+      "name": "ダニポン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ダブルコストン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "ダメージ・ワクチンΩMAX",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U272"
+    },
+    {
+      "name": "ダーク・アイズ・イリュージョニスト",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U276"
+    },
+    {
+      "name": "ダーク・エルフ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U212"
+    },
+    {
+      "name": "ダーク・ジェネラル フリード",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U66"
+    },
+    {
+      "name": "ダーク・スパイダー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U247"
+    },
+    {
+      "name": "ダーク・フュージョン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U130"
+    },
+    {
+      "name": "チューニング・サポーター",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U193"
+    },
+    {
+      "name": "チューンド・マジシャン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U119"
+    },
+    {
+      "name": "ツタン仮面",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U219"
+    },
+    {
+      "name": "ツバメ返し",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U223"
+    },
+    {
+      "name": "テラ・フォーミング",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U01"
+    },
+    {
+      "name": "ディザーム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U219"
+    },
+    {
+      "name": "デコイロイド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "デステニー・シグナル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U203"
+    },
+    {
+      "name": "デステニー・ドロー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "デスハムスター",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U199"
+    },
+    {
+      "name": "デス・ウォンバット",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U270"
+    },
+    {
+      "name": "デブリ・ドラゴン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U113"
+    },
+    {
+      "name": "デモニック・モーター・Ω",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U239"
+    },
+    {
+      "name": "デモンズ・チェーン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "デュアルスパーク",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U98"
+    },
+    {
+      "name": "デュアル・サモナー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U164"
+    },
+    {
+      "name": "デュアル・ソルジャー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U165"
+    },
+    {
+      "name": "デュアル・ランサー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U119"
+    },
+    {
+      "name": "デルタ・アタッカー",
+      "before": "ENGINE_GAP",
+      "after": "PARTIAL",
+      "unit": "S03-U276"
+    },
+    {
+      "name": "デルタ・クロウ－アンチ・リバース",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "デーモンとの駆け引き",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U206"
+    },
+    {
+      "name": "デーモンの雄叫び",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U218"
+    },
+    {
+      "name": "トゥルース・リインフォース",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U73"
+    },
+    {
+      "name": "トゥーンのもくじ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "トライクラー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "トライワイトゾーン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U269"
+    },
+    {
+      "name": "トラップ・イーター",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U193"
+    },
+    {
+      "name": "トラップ・ジャマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U219"
+    },
+    {
+      "name": "トラップ・スタン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U118"
+    },
+    {
+      "name": "トラップ処理班 Aチーム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U252"
+    },
+    {
+      "name": "トラファスフィア",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U249"
+    },
+    {
+      "name": "トロイホース",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "ドッペル・ウォリアー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U128"
+    },
+    {
+      "name": "ドッペル・ゲイナー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U276"
+    },
+    {
+      "name": "ドラグニティアームズ－レヴァテイン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U79"
+    },
+    {
+      "name": "ドラグニティナイト－ガジャルグ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U03"
+    },
+    {
+      "name": "ドラグニティナイト－バルーチャ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U03"
+    },
+    {
+      "name": "ドラグニティナイト－ヴァジュランダ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U03"
+    },
+    {
+      "name": "ドラグニティ－アキュリス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U43"
+    },
+    {
+      "name": "ドラグニティ－ジャベリン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U268"
+    },
+    {
+      "name": "ドラグニティ－トリブル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "ドラゴニック・ガード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U241"
+    },
+    {
+      "name": "ドラゴニック・タクティクス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "ドラゴンに乗るワイバーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U211"
+    },
+    {
+      "name": "ドラゴンを呼ぶ笛",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U288"
+    },
+    {
+      "name": "ドレッド・ドラゴン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ナチュラル・ディザスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U241"
+    },
+    {
+      "name": "ナチュル・クリフ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ナチュル・サンフラワー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U258"
+    },
+    {
+      "name": "ナチュル・スパイダーファング",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U253"
+    },
+    {
+      "name": "ナチュル・チェリー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U169"
+    },
+    {
+      "name": "ナチュル・ナーブ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U258"
+    },
+    {
+      "name": "ナチュル・バンブーシュート",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U259"
+    },
+    {
+      "name": "ナチュル・パルキオン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U86"
+    },
+    {
+      "name": "ナチュル・マロン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U208"
+    },
+    {
+      "name": "ナーガ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U199"
+    },
+    {
+      "name": "ニトロ・シンクロン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U254"
+    },
+    {
+      "name": "ネオフレムベル・ガルーダ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U265"
+    },
+    {
+      "name": "ネクロ・ガードナー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U153"
+    },
+    {
+      "name": "ネクロ・ディフェンダー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U264"
+    },
+    {
+      "name": "ネクロ・リンカー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U231"
+    },
+    {
+      "name": "ネフティスの導き手",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U198"
+    },
+    {
+      "name": "ハネクリボー LV10",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U256"
+    },
+    {
+      "name": "ハンター・アウル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U227"
+    },
+    {
+      "name": "ハンディキャップマッチ!",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U184"
+    },
+    {
+      "name": "ハーピィ・レディ三姉妹",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U253"
+    },
+    {
+      "name": "バイオファルコン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U167"
+    },
+    {
+      "name": "バイオレット・ウィッチ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "バグ・ロード",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U288"
+    },
+    {
+      "name": "バスター・カウンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "バスター・ビースト",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U198"
+    },
+    {
+      "name": "バックファイア",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U293"
+    },
+    {
+      "name": "バフォメット",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "バード・フェイス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "パペット・プラント",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U193"
+    },
+    {
+      "name": "パラライズ・チェーン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U290"
+    },
+    {
+      "name": "パリィ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U219"
+    },
+    {
+      "name": "パルキオンのうろこ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U258"
+    },
+    {
+      "name": "パワー・ボンド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U133"
+    },
+    {
+      "name": "パンダボーグ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ヒエラコスフィンクス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U217"
+    },
+    {
+      "name": "ヒエログリフの石版",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U273"
+    },
+    {
+      "name": "ヒーローズルール2",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U230"
+    },
+    {
+      "name": "ヒーロー・キッズ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U198"
+    },
+    {
+      "name": "ヒーロー・シグナル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U203"
+    },
+    {
+      "name": "ヒーロー・ブラスト",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U99"
+    },
+    {
+      "name": "ヒーロー・ヘイロー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U264"
+    },
+    {
+      "name": "ヒーロー逆襲",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U241"
+    },
+    {
+      "name": "ビーストライカー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U198"
+    },
+    {
+      "name": "ピラミッド・タートル",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U64"
+    },
+    {
+      "name": "フェアリー・アーチャー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U227"
+    },
+    {
+      "name": "フェザー・ウィンド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "フェザー・ウィンド・アタック",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U206"
+    },
+    {
+      "name": "フォトン・ケルベロス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U217"
+    },
+    {
+      "name": "フォースフィールド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U219"
+    },
+    {
+      "name": "フォーチュンレディ・アーシー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U238"
+    },
+    {
+      "name": "フォーチュンレディ・ウインディー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U238"
+    },
+    {
+      "name": "フォーチュンレディ・ウォーテリー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U238"
+    },
+    {
+      "name": "フォーチュンレディ・ダルキー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U238"
+    },
+    {
+      "name": "フォーチュンレディ・ファイリー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U238"
+    },
+    {
+      "name": "フォーチュンレディ・ライティー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U238"
+    },
+    {
+      "name": "フォーミュラ・シンクロン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U121"
+    },
+    {
+      "name": "フルエルフ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U247"
+    },
+    {
+      "name": "フレンドッグ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U212"
+    },
+    {
+      "name": "ブラック・サンダー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U218"
+    },
+    {
+      "name": "ブラック・ホール",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U83"
+    },
+    {
+      "name": "ブリザード・プリンセス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U260"
+    },
+    {
+      "name": "ブルーメンブラット",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "プチトマボー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U169"
+    },
+    {
+      "name": "プロミネンス・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U231"
+    },
+    {
+      "name": "ヘルカイザー・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U119"
+    },
+    {
+      "name": "ヘル・セキュリティ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ベビケラサウルス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "ベビー・トラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U243"
+    },
+    {
+      "name": "ホルスの黒炎竜 LV4",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U251"
+    },
+    {
+      "name": "ホルスの黒炎竜 LV6",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U251"
+    },
+    {
+      "name": "ホルスの黒炎竜 LV8",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U251"
+    },
+    {
+      "name": "ホーリーライフバリアー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U270"
+    },
+    {
+      "name": "ボタニティ・ガール",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "マインドクラッシュ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U154"
+    },
+    {
+      "name": "マイン・モール",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U162"
+    },
+    {
+      "name": "マクロコスモス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U214"
+    },
+    {
+      "name": "マシュマロン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U193"
+    },
+    {
+      "name": "マシュマロンのメガネ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U250"
+    },
+    {
+      "name": "マシンナーズ・ギアフレーム",
+      "before": "TESTED",
+      "after": "PARTIAL",
+      "unit": "S03-U143"
+    },
+    {
+      "name": "マシンナーズ・スナイパー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U253"
+    },
+    {
+      "name": "マシンナーズ・ディフェンダー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "マシンナーズ・フォートレス",
+      "before": "TESTED",
+      "after": "PARTIAL",
+      "unit": "S03-U143"
+    },
+    {
+      "name": "マジカルフィシアリスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U211"
+    },
+    {
+      "name": "マジカル・コンダクター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U239"
+    },
+    {
+      "name": "マジシャンズ・ヴァルキリア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U217"
+    },
+    {
+      "name": "マジックブラスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U65"
+    },
+    {
+      "name": "マジック・キャンセラー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U276"
+    },
+    {
+      "name": "マーダーサーカス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U285"
+    },
+    {
+      "name": "ミスティック・ソードマン LV4",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U256"
+    },
+    {
+      "name": "ミスティック・ソードマン LV6",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U256"
+    },
+    {
+      "name": "ミッド・ピース・ゴーレム",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "ミラクル・フュージョン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U96"
+    },
+    {
+      "name": "ミラージュ・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U217"
+    },
+    {
+      "name": "ミラー・レディバグ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U243"
+    },
+    {
+      "name": "メカウサー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U185"
+    },
+    {
+      "name": "メカニカル・ハウンド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U217"
+    },
+    {
+      "name": "メタモルポット",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U137"
+    },
+    {
+      "name": "メタル・リフレクト・スライム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U248"
+    },
+    {
+      "name": "メテオ・プロミネンス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U65"
+    },
+    {
+      "name": "メテオ・レイン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U264"
+    },
+    {
+      "name": "モロコシーナ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U292"
+    },
+    {
+      "name": "モンスターゲート",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "ユーフォロイド",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ライトニング・ボルテックス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "ライトロード・ウォリアー ガロス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U190"
+    },
+    {
+      "name": "ライトロード・サモナー ルミナス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U190"
+    },
+    {
+      "name": "ライトロード・シーフ ライニャン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U190"
+    },
+    {
+      "name": "ライトロード・ハンター ライコウ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U94"
+    },
+    {
+      "name": "ライトロード・ビースト ウォルフ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U190"
+    },
+    {
+      "name": "ライトロード・プリースト ジェニス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U190"
+    },
+    {
+      "name": "ライトロード・マジシャン ライラ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U137"
+    },
+    {
+      "name": "ライトロード・レイピア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U250"
+    },
+    {
+      "name": "ライト・オブ・デストラクション",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U292"
+    },
+    {
+      "name": "ライバル登場!",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U280"
+    },
+    {
+      "name": "ランドオルスのヒカリゴケ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U259"
+    },
+    {
+      "name": "ラヴァルの炎車回し",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U208"
+    },
+    {
+      "name": "ラヴァルバル・ドラグーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U03"
+    },
+    {
+      "name": "ラヴァル・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U222"
+    },
+    {
+      "name": "ラヴァル・ガンナー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U235"
+    },
+    {
+      "name": "ラヴァル炎樹海の妖女",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U222"
+    },
+    {
+      "name": "ラヴァル炎火山の侍女",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "リチュア・アビス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "リチュア・エリアル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "リチュア・ノエリア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U235"
+    },
+    {
+      "name": "リビングデッドの呼び声",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U89"
+    },
+    {
+      "name": "リフレクト・ネイチャー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U271"
+    },
+    {
+      "name": "リミッター解除",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U154"
+    },
+    {
+      "name": "リミット・リバース",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U56"
+    },
+    {
+      "name": "レアル・ジェネクス・クラッシャー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "レアル・ジェネクス・ターボ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "レアル・ジェネクス・マグナ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "レインボー・ライフ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U242"
+    },
+    {
+      "name": "レスキューロイド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U239"
+    },
+    {
+      "name": "レッド・ガジェット",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U72"
+    },
+    {
+      "name": "レプティレス・ガードナー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "レプティレス・スポーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U239"
+    },
+    {
+      "name": "ロスト",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C02"
+    },
+    {
+      "name": "ロード・ウォリアー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U206"
+    },
+    {
+      "name": "ローンファイア・ブロッサム",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U63"
+    },
+    {
+      "name": "ワタポン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U275"
+    },
+    {
+      "name": "ワンショット・キャノン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U243"
+    },
+    {
+      "name": "ワンショット・ブースター",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U266"
+    },
+    {
+      "name": "ワン・フォー・ワン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U58"
+    },
+    {
+      "name": "ワーム・イーロキン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U254"
+    },
+    {
+      "name": "ワーム・カルタロス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U52"
+    },
+    {
+      "name": "ワーム・コール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U228"
+    },
+    {
+      "name": "ワーム・ゼクス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U74"
+    },
+    {
+      "name": "ワーム・テンタクルス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U212"
+    },
+    {
+      "name": "ワーム・ヤガン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U136"
+    },
+    {
+      "name": "ヴァリュアブル・アーマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U149"
+    },
+    {
+      "name": "ヴィークラー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "ヴェノム・スネーク",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U261"
+    },
+    {
+      "name": "ヴェノム・スワンプ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U267"
+    },
+    {
+      "name": "ヴェノム・ボア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U261"
+    },
+    {
+      "name": "ヴォルカニック・カウンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U230"
+    },
+    {
+      "name": "ヴォルカニック・バレット",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "ヴォルカニック・リボルバー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U212"
+    },
+    {
+      "name": "一族の掟",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U261"
+    },
+    {
+      "name": "万力魔神バイサー・デス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U161"
+    },
+    {
+      "name": "万能地雷グレイモヤ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "万華鏡－華麗なる分身－",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "不意打ち又佐",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U252"
+    },
+    {
+      "name": "不死之炎鳥",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U244"
+    },
+    {
+      "name": "不死王リッチー",
+      "before": "NOT_STARTED",
+      "after": "PARTIAL",
+      "unit": "S03-U67"
+    },
+    {
+      "name": "二重召喚",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U274"
+    },
+    {
+      "name": "人造人間－サイコ・ショッカー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U118"
+    },
+    {
+      "name": "仮面竜",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "伝説の白石",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "侵略の手段",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U221"
+    },
+    {
+      "name": "侵略の炎",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U213"
+    },
+    {
+      "name": "借カラクリ整備蔵",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "偉大天狗",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U244"
+    },
+    {
+      "name": "停戦協定",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "儀式の準備",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "充電池メン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U198"
+    },
+    {
+      "name": "光の召集",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U190"
+    },
+    {
+      "name": "光の援軍",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U05"
+    },
+    {
+      "name": "光の護封壁",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "光の追放者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U214"
+    },
+    {
+      "name": "光帝クライス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U189"
+    },
+    {
+      "name": "光神化",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U269"
+    },
+    {
+      "name": "八俣大蛇",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U244"
+    },
+    {
+      "name": "八汰烏",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U244"
+    },
+    {
+      "name": "六武の門",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U14"
+    },
+    {
+      "name": "六武ノ書",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "六武衆の影武者",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U141"
+    },
+    {
+      "name": "六武衆の結束",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U14"
+    },
+    {
+      "name": "六武院",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U14"
+    },
+    {
+      "name": "共同戦線",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "共鳴虫",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U197"
+    },
+    {
+      "name": "円盤ムスキー",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U33"
+    },
+    {
+      "name": "再機動",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U292"
+    },
+    {
+      "name": "冥府の使者ゴーズ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U50"
+    },
+    {
+      "name": "冥界の使者",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U199"
+    },
+    {
+      "name": "凶暴化の仮面",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U250"
+    },
+    {
+      "name": "切り込み隊長",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U227"
+    },
+    {
+      "name": "剣闘獣の底力",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U183"
+    },
+    {
+      "name": "剣闘獣の戦車",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U183"
+    },
+    {
+      "name": "剣闘獣の闘器グラディウス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U183"
+    },
+    {
+      "name": "剣闘獣の闘器デーモンズシールド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U183"
+    },
+    {
+      "name": "剣闘獣の闘器ハルバード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U183"
+    },
+    {
+      "name": "剣闘獣の闘器マニカ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U183"
+    },
+    {
+      "name": "剣闘獣アレクサンデル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U181"
+    },
+    {
+      "name": "剣闘獣エクイテ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U180"
+    },
+    {
+      "name": "剣闘獣オクタビウス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U181"
+    },
+    {
+      "name": "剣闘獣ガイザレス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U181"
+    },
+    {
+      "name": "剣闘獣ゲオルディアス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U181"
+    },
+    {
+      "name": "剣闘獣サムニテ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U181"
+    },
+    {
+      "name": "剣闘獣スパルティクス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U181"
+    },
+    {
+      "name": "剣闘獣ダリウス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U184"
+    },
+    {
+      "name": "剣闘獣ティゲル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U180"
+    },
+    {
+      "name": "剣闘獣ディカエリィ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U180"
+    },
+    {
+      "name": "剣闘獣トラケス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U180"
+    },
+    {
+      "name": "剣闘獣ヘラクレイノス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U177"
+    },
+    {
+      "name": "剣闘獣ベストロウリィ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U180"
+    },
+    {
+      "name": "剣闘獣ホプロムス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U180"
+    },
+    {
+      "name": "剣闘獣ムルミロ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U180"
+    },
+    {
+      "name": "剣闘獣ラクエル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U180"
+    },
+    {
+      "name": "剣闘獣ラニスタ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U184"
+    },
+    {
+      "name": "剣闘獣レティアリィ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U180"
+    },
+    {
+      "name": "剣闘訓練所",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U184"
+    },
+    {
+      "name": "創造の代行者 ヴィーナス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U63"
+    },
+    {
+      "name": "力の代行者 マーズ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U115"
+    },
+    {
+      "name": "勝利の導き手フレイヤ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "化石発掘",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U245"
+    },
+    {
+      "name": "反撃の毒牙",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U281"
+    },
+    {
+      "name": "古代の機械兵士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U144"
+    },
+    {
+      "name": "古代の機械工兵",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U145"
+    },
+    {
+      "name": "古代の機械巨人",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U144"
+    },
+    {
+      "name": "古代の機械巨竜",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U144"
+    },
+    {
+      "name": "古代の機械掌",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U261"
+    },
+    {
+      "name": "古代の機械爆弾",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U281"
+    },
+    {
+      "name": "古代の機械獣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U145"
+    },
+    {
+      "name": "古代の機械砲台",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U259"
+    },
+    {
+      "name": "古代の機械究極巨人",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U145"
+    },
+    {
+      "name": "古代の機械騎士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U144"
+    },
+    {
+      "name": "召喚制限－パワーフィルター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "召喚師のスキル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "可変機獣 ガンナードラゴン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "同族感染ウィルス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U272"
+    },
+    {
+      "name": "名推理",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U154"
+    },
+    {
+      "name": "呪術抹消",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U231"
+    },
+    {
+      "name": "味方殺しの女騎士",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U264"
+    },
+    {
+      "name": "和睦の使者",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U171"
+    },
+    {
+      "name": "四次元の墓",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U269"
+    },
+    {
+      "name": "因幡之白兎",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U266"
+    },
+    {
+      "name": "因果切断",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "地割れ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U62"
+    },
+    {
+      "name": "地獄からの使い",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U258"
+    },
+    {
+      "name": "地獄の門番イル・ブラッド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U148"
+    },
+    {
+      "name": "地砕き",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "地縛大神官",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U282"
+    },
+    {
+      "name": "地縛波",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "地縛神 Aslla piscu",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U284"
+    },
+    {
+      "name": "地縛神 Ccapac Apu",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U282"
+    },
+    {
+      "name": "地縛神 Ccarayhua",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U284"
+    },
+    {
+      "name": "地縛神 Chacu Challhua",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U286"
+    },
+    {
+      "name": "地縛神 Cusillu",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U286"
+    },
+    {
+      "name": "地縛神 Uru",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U284"
+    },
+    {
+      "name": "地縛神 Wiraqocha Rasca",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U284"
+    },
+    {
+      "name": "地縛神の咆哮",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U230"
+    },
+    {
+      "name": "地縛神の復活",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U292"
+    },
+    {
+      "name": "墓守の司令官",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U05"
+    },
+    {
+      "name": "墓守の巫女",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U196"
+    },
+    {
+      "name": "墓守の従者",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U271"
+    },
+    {
+      "name": "墓守の暗殺者",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U196"
+    },
+    {
+      "name": "墓穴の道連れ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U92"
+    },
+    {
+      "name": "増幅する悪意",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U213"
+    },
+    {
+      "name": "増援",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U01"
+    },
+    {
+      "name": "夜薔薇の騎士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U227"
+    },
+    {
+      "name": "大天使クリスティア",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U110"
+    },
+    {
+      "name": "大嵐",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "大波小波",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U288"
+    },
+    {
+      "name": "大神官デ・ザード",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U67"
+    },
+    {
+      "name": "天下人 紫炎",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U249"
+    },
+    {
+      "name": "天刑王 ブラック・ハイランダー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U139"
+    },
+    {
+      "name": "天界王 シナト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U222"
+    },
+    {
+      "name": "天空の使者 ゼラディアス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U196"
+    },
+    {
+      "name": "女王の選択",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U221"
+    },
+    {
+      "name": "女王親衛隊",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U224"
+    },
+    {
+      "name": "始祖の守護者ティラス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U76"
+    },
+    {
+      "name": "威嚇する咆哮",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U170"
+    },
+    {
+      "name": "守護神エクゾード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U230"
+    },
+    {
+      "name": "宝玉の双璧",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U241"
+    },
+    {
+      "name": "宝玉の導き",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "宝玉の恵み",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U240"
+    },
+    {
+      "name": "宝玉の樹",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U242"
+    },
+    {
+      "name": "宝玉の氾濫",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U242"
+    },
+    {
+      "name": "宝玉の解放",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U240"
+    },
+    {
+      "name": "宝玉獣 アメジスト・キャット",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U240"
+    },
+    {
+      "name": "宝玉獣 アンバー・マンモス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U240"
+    },
+    {
+      "name": "宝玉獣 エメラルド・タートル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U240"
+    },
+    {
+      "name": "宝玉獣 コバルト・イーグル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U240"
+    },
+    {
+      "name": "宝玉獣 サファイア・ペガサス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U240"
+    },
+    {
+      "name": "宝玉獣 トパーズ・タイガー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U240"
+    },
+    {
+      "name": "宝玉獣 ルビー・カーバンクル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U240"
+    },
+    {
+      "name": "寡黙なるサイコプリースト",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U245"
+    },
+    {
+      "name": "対抗魔術",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U222"
+    },
+    {
+      "name": "封印されしエクゾディア",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U279"
+    },
+    {
+      "name": "封印の黄金櫃",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U64"
+    },
+    {
+      "name": "巨人ゴーグル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U122"
+    },
+    {
+      "name": "干ばつの結界像",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "平穏の賢者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "幸運の笛吹き",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U119"
+    },
+    {
+      "name": "幻影の魔術士",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "幻獣サンダーペガス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U165"
+    },
+    {
+      "name": "底なし流砂",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U245"
+    },
+    {
+      "name": "強制接収",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U292"
+    },
+    {
+      "name": "強制転移",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "強引な安全協定",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "強欲で謙虚な壺",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U01"
+    },
+    {
+      "name": "強烈なはたき落とし",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U275"
+    },
+    {
+      "name": "心鎮壷",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U267"
+    },
+    {
+      "name": "忍び寄るデビルマンタ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U213"
+    },
+    {
+      "name": "怒れる類人猿",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U292"
+    },
+    {
+      "name": "怨霊の湿地帯",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U260"
+    },
+    {
+      "name": "悪夢の拷問部屋",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U272"
+    },
+    {
+      "name": "悪魂邪苦止",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "憑依装着－アウス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U246"
+    },
+    {
+      "name": "憑依装着－ウィン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U246"
+    },
+    {
+      "name": "憑依装着－エリア",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U246"
+    },
+    {
+      "name": "憑依装着－ヒータ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U246"
+    },
+    {
+      "name": "成金ゴブリン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "手札抹殺",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U112"
+    },
+    {
+      "name": "打ち出の小槌",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U153"
+    },
+    {
+      "name": "抹殺の使徒",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "拘束解除",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U204"
+    },
+    {
+      "name": "摩天楼2－ヒーローシティ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U215"
+    },
+    {
+      "name": "救急救命",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U269"
+    },
+    {
+      "name": "旋風剣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U261"
+    },
+    {
+      "name": "明鏡止水の心",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U233"
+    },
+    {
+      "name": "智天使ハーヴェスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U215"
+    },
+    {
+      "name": "暗黒の侵略者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "暗黒の眠りを誘うルシファー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U258"
+    },
+    {
+      "name": "暗黒界に続く結界通路",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U265"
+    },
+    {
+      "name": "暗黒界の取引",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U62"
+    },
+    {
+      "name": "暗黒界の尖兵 ベージ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U54"
+    },
+    {
+      "name": "暗黒界の斥候 スカー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "暗黒界の武神 ゴルド",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U54"
+    },
+    {
+      "name": "暗黒界の狩人 ブラウ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U54"
+    },
+    {
+      "name": "暗黒界の術師 スノウ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U54"
+    },
+    {
+      "name": "暗黒界の軍神 シルバ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U54"
+    },
+    {
+      "name": "暗黒界の門",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U112"
+    },
+    {
+      "name": "暗黒界の雷",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U112"
+    },
+    {
+      "name": "暗黒界の龍神 グラファ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U54"
+    },
+    {
+      "name": "暴君の威圧",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U249"
+    },
+    {
+      "name": "暴君の暴飲暴食",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U227"
+    },
+    {
+      "name": "月の書",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U85"
+    },
+    {
+      "name": "未来サムライ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U122"
+    },
+    {
+      "name": "未来融合－フューチャー・フュージョン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U59"
+    },
+    {
+      "name": "朱光の宣告者",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U91"
+    },
+    {
+      "name": "棘の妖精",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U254"
+    },
+    {
+      "name": "森のざわめき",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U288"
+    },
+    {
+      "name": "業火の結界像",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "極星天ミーミル",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U191"
+    },
+    {
+      "name": "極星天ヴァルキュリア",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U191"
+    },
+    {
+      "name": "極星將テュール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U230"
+    },
+    {
+      "name": "極星獣ガルム",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U191"
+    },
+    {
+      "name": "極星獣グルファクシ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U191"
+    },
+    {
+      "name": "極星獣タングニョースト",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U64"
+    },
+    {
+      "name": "極星獣タングリスニ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U64"
+    },
+    {
+      "name": "極星霊デックアールヴ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U191"
+    },
+    {
+      "name": "極星霊ドヴェルグ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U191"
+    },
+    {
+      "name": "極星霊リョースアールヴ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U191"
+    },
+    {
+      "name": "機動砦 ストロング・ホールド",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U248"
+    },
+    {
+      "name": "機動砦のギア・ゴーレム",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U292"
+    },
+    {
+      "name": "機械複製術",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U288"
+    },
+    {
+      "name": "機皇兵グランエル・アイン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U232"
+    },
+    {
+      "name": "機皇兵スキエル・アイン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U167"
+    },
+    {
+      "name": "機皇兵ワイゼル・アイン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U233"
+    },
+    {
+      "name": "機皇帝の賜与",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U228"
+    },
+    {
+      "name": "次元の裂け目",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U214"
+    },
+    {
+      "name": "次元幽閉",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U40"
+    },
+    {
+      "name": "死のマジック・ボックス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "死の演算盤",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U293"
+    },
+    {
+      "name": "死の花－ネクロ・フルール",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U205"
+    },
+    {
+      "name": "死霊ゾーマ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U248"
+    },
+    {
+      "name": "死霊騎士デスカリバー・ナイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U262"
+    },
+    {
+      "name": "水面のアレサ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U148"
+    },
+    {
+      "name": "氷帝メビウス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U189"
+    },
+    {
+      "name": "氷結界の交霊師",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U260"
+    },
+    {
+      "name": "氷結界の守護陣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U225"
+    },
+    {
+      "name": "氷結界の武士",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U270"
+    },
+    {
+      "name": "氷結界の決起隊",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "氷結界の紋章",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "氷結界の虎将 ガンターラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U215"
+    },
+    {
+      "name": "氷結界の虎将 グルナード",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U274"
+    },
+    {
+      "name": "氷結界の術者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U225"
+    },
+    {
+      "name": "氷結界の龍 トリシューラ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U62"
+    },
+    {
+      "name": "氷結界の龍 ブリューナク",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U120"
+    },
+    {
+      "name": "沈黙のサイコウィザード",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U245"
+    },
+    {
+      "name": "沼地の魔神王",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U134"
+    },
+    {
+      "name": "泉の精霊",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U264"
+    },
+    {
+      "name": "波動キャノン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U216"
+    },
+    {
+      "name": "洗脳－ブレインコントロール",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "深海のディーヴァ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U198"
+    },
+    {
+      "name": "深海の戦士",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U280"
+    },
+    {
+      "name": "深淵の結界像",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "混沌幻魔アーミタイル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U178"
+    },
+    {
+      "name": "漆黒の戦士 ワーウルフ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "漆黒の魔王 LV6",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "漆黒の魔王 LV8",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "激流葬",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U84"
+    },
+    {
+      "name": "火之迦具土",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U244"
+    },
+    {
+      "name": "灼熱工の巨匠カエン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U215"
+    },
+    {
+      "name": "灼熱王パイロン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U119"
+    },
+    {
+      "name": "炎塵爆発",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U216"
+    },
+    {
+      "name": "炎妖蝶ウィルプス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U148"
+    },
+    {
+      "name": "炎帝テスタロス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U189"
+    },
+    {
+      "name": "炎熱刀プロミネンス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "炸裂装甲",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "烈風の結界像",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "無敗将軍 フリード",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U33"
+    },
+    {
+      "name": "無欲な壺",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U68"
+    },
+    {
+      "name": "無視加護",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U210"
+    },
+    {
+      "name": "無限の手札",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U273"
+    },
+    {
+      "name": "熟練の白魔導師",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U232"
+    },
+    {
+      "name": "熟練の黒魔術師",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U232"
+    },
+    {
+      "name": "燃え盛るヒータ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "猛吹雪",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U216"
+    },
+    {
+      "name": "猛毒の風",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U225"
+    },
+    {
+      "name": "獣神機王バルバロスUr",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U228"
+    },
+    {
+      "name": "王宮のお触れ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U118"
+    },
+    {
+      "name": "王宮の弾圧",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U46"
+    },
+    {
+      "name": "王虎ワンフー",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U193"
+    },
+    {
+      "name": "生者の書－禁断の呪術－",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "異次元からの埋葬",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "異次元からの帰還",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U155"
+    },
+    {
+      "name": "異次元の狂獣",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U255"
+    },
+    {
+      "name": "異次元グランド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U233"
+    },
+    {
+      "name": "畳返し",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U223"
+    },
+    {
+      "name": "疾風!凶殺陣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U245"
+    },
+    {
+      "name": "痛魂の呪術",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U267"
+    },
+    {
+      "name": "白兵戦",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U221"
+    },
+    {
+      "name": "白銀のバリア－シルバーフォース－",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U267"
+    },
+    {
+      "name": "盗賊の七つ道具",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U86"
+    },
+    {
+      "name": "真六武衆－シナイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U235"
+    },
+    {
+      "name": "真空イタチ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U221"
+    },
+    {
+      "name": "真紅眼の不死竜",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U222"
+    },
+    {
+      "name": "督戦官コヴィントン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U206"
+    },
+    {
+      "name": "砂塵の大竜巻",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U88"
+    },
+    {
+      "name": "砲弾ヤリ貝",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U280"
+    },
+    {
+      "name": "神の宣告",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U68"
+    },
+    {
+      "name": "神の居城－ヴァルハラ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U05"
+    },
+    {
+      "name": "神の桎梏グレイプニル",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U05"
+    },
+    {
+      "name": "神の警告",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U46"
+    },
+    {
+      "name": "神獣王バルバロス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U55"
+    },
+    {
+      "name": "神罰",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U252"
+    },
+    {
+      "name": "神聖なる森",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U231"
+    },
+    {
+      "name": "禁じられた聖杯",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "禁じられた聖槍",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U116"
+    },
+    {
+      "name": "究極宝玉神 レインボー・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U242"
+    },
+    {
+      "name": "究極恐獣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U226"
+    },
+    {
+      "name": "突進",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "竜の尖兵",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U212"
+    },
+    {
+      "name": "竜影魚レイ・ブロント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U148"
+    },
+    {
+      "name": "簡易融合",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U53"
+    },
+    {
+      "name": "精神操作",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U117"
+    },
+    {
+      "name": "精神統一",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "素早いビッグハムスター",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U199"
+    },
+    {
+      "name": "素早いマンタ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U199"
+    },
+    {
+      "name": "素早いムササビ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U169"
+    },
+    {
+      "name": "素早いモモンガ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "紫炎の道場",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U14"
+    },
+    {
+      "name": "終末の騎士",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U64"
+    },
+    {
+      "name": "終焉の焔",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "絶対服従魔人",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U254"
+    },
+    {
+      "name": "絶対魔法禁止区域",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U285"
+    },
+    {
+      "name": "緊急鋼核処分",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U200"
+    },
+    {
+      "name": "罰ゲーム!",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U261"
+    },
+    {
+      "name": "聖なるバリア －ミラーフォース－",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U40"
+    },
+    {
+      "name": "聖なる輝き",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "能力調整",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U264"
+    },
+    {
+      "name": "苦痛の回廊",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U259"
+    },
+    {
+      "name": "英雄変化－リフレクター・レイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U221"
+    },
+    {
+      "name": "荒ぶるアウス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "荒野の女戦士",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "華麗なる潜入工作員",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U215"
+    },
+    {
+      "name": "薄幸の乙女",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U160"
+    },
+    {
+      "name": "虚無の統括者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "蛇神降臨",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U203"
+    },
+    {
+      "name": "蜃気楼の筒",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U225"
+    },
+    {
+      "name": "融合",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U130"
+    },
+    {
+      "name": "融合賢者",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U202"
+    },
+    {
+      "name": "血の代償",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U104"
+    },
+    {
+      "name": "衰弱の霧",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U273"
+    },
+    {
+      "name": "裁きの龍",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "裏ガエル",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U269"
+    },
+    {
+      "name": "補充要員",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U269"
+    },
+    {
+      "name": "言語道断侍",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "調律",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U05"
+    },
+    {
+      "name": "豊穣のアルテミス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U196"
+    },
+    {
+      "name": "豪雨の結界像",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "貫ガエル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U208"
+    },
+    {
+      "name": "賢者の宝石",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U201"
+    },
+    {
+      "name": "超伝導恐獣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U226"
+    },
+    {
+      "name": "超古代恐獣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U211"
+    },
+    {
+      "name": "超古代生物の墓場",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U259"
+    },
+    {
+      "name": "超融合",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U97"
+    },
+    {
+      "name": "軍荼利",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U244"
+    },
+    {
+      "name": "軍隊竜",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "迷宮変化",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U207"
+    },
+    {
+      "name": "逆巻くエリア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "通行税",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U221"
+    },
+    {
+      "name": "速攻のかかし",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U152"
+    },
+    {
+      "name": "連鎖旋風",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U281"
+    },
+    {
+      "name": "進化する翼",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U256"
+    },
+    {
+      "name": "道連れ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U216"
+    },
+    {
+      "name": "邪神機－獄炎",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U226"
+    },
+    {
+      "name": "野生の咆哮",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U221"
+    },
+    {
+      "name": "金剛真力",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U228"
+    },
+    {
+      "name": "錬金生物 ホムンクルス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U288"
+    },
+    {
+      "name": "閃光の結界像",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U220"
+    },
+    {
+      "name": "閃光の追放者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U214"
+    },
+    {
+      "name": "闇の幻影",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U222"
+    },
+    {
+      "name": "闇の誘惑",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U129"
+    },
+    {
+      "name": "闇・道化師のペーテン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U198"
+    },
+    {
+      "name": "闇竜の黒騎士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U217"
+    },
+    {
+      "name": "闇紅の魔導師",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U232"
+    },
+    {
+      "name": "防御輪",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U272"
+    },
+    {
+      "name": "阿修羅",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U266"
+    },
+    {
+      "name": "降霊の儀式",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "限定解除",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U68"
+    },
+    {
+      "name": "陽動作戦",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U218"
+    },
+    {
+      "name": "雲魔物－アイ・オブ・ザ・タイフーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U237"
+    },
+    {
+      "name": "雲魔物－アシッド・クラウド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U237"
+    },
+    {
+      "name": "雲魔物－アルトス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U237"
+    },
+    {
+      "name": "雲魔物－キロスタス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U237"
+    },
+    {
+      "name": "雲魔物－ストーム・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U237"
+    },
+    {
+      "name": "雲魔物－タービュランス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U237"
+    },
+    {
+      "name": "雷帝ザボルグ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U189"
+    },
+    {
+      "name": "雷帝神",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U244"
+    },
+    {
+      "name": "雷電娘々",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U270"
+    },
+    {
+      "name": "電池メン－ボタン型",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U185"
+    },
+    {
+      "name": "電池メン－単一型",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U225"
+    },
+    {
+      "name": "霞の谷のファルコン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U302"
+    },
+    {
+      "name": "霞の谷の神風",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U207"
+    },
+    {
+      "name": "霞の谷の雷鳥",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U258"
+    },
+    {
+      "name": "静寂の聖者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U229"
+    },
+    {
+      "name": "非常食",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "風林火山",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C02"
+    },
+    {
+      "name": "風雲カラクリ城",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U245"
+    },
+    {
+      "name": "馬頭鬼",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U186"
+    },
+    {
+      "name": "魂の氷結",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U280"
+    },
+    {
+      "name": "魂を削る死霊",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U137"
+    },
+    {
+      "name": "魔力の棘",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U290"
+    },
+    {
+      "name": "魔力掌握",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U68"
+    },
+    {
+      "name": "魔宮の賄賂",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "魔導獣 ケルベロス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U232"
+    },
+    {
+      "name": "魔族召喚師",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U148"
+    },
+    {
+      "name": "魔法の筒",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U188"
+    },
+    {
+      "name": "魔法族の結界",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U239"
+    },
+    {
+      "name": "魔法族の里",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U228"
+    },
+    {
+      "name": "魔法都市エンディミオン",
+      "before": "TESTED",
+      "after": "PARTIAL",
+      "unit": "S03-U143"
+    },
+    {
+      "name": "魔界の足枷",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U233"
+    },
+    {
+      "name": "魔轟神ガルバス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U269"
+    },
+    {
+      "name": "魔轟神クルス",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U196"
+    },
+    {
+      "name": "魔轟神グリムロ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U05"
+    },
+    {
+      "name": "魔轟神ミーズトージ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U211"
+    },
+    {
+      "name": "魔轟神ルリー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U287"
+    },
+    {
+      "name": "魔轟神レイジオン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U138"
+    },
+    {
+      "name": "魔轟神レイヴン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U138"
+    },
+    {
+      "name": "魔轟神レヴュアタン",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U138"
+    },
+    {
+      "name": "魔轟神獣ガナシア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U235"
+    },
+    {
+      "name": "魔轟神獣キャシー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U287"
+    },
+    {
+      "name": "魔轟神獣ケルベラル",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U196"
+    },
+    {
+      "name": "魔轟神獣コカトル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U217"
+    },
+    {
+      "name": "魔轟神獣ペガラサス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U206"
+    },
+    {
+      "name": "魚雷魚",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U280"
+    },
+    {
+      "name": "鳳翼の爆風",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U192"
+    },
+    {
+      "name": "鹵獲装置",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U194"
+    },
+    {
+      "name": "黒いペンダント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U233"
+    },
+    {
+      "name": "黒き森のウィッチ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U156"
+    },
+    {
+      "name": "黒光りするG",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U223"
+    },
+    {
+      "name": "黒羽の宝札",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U68"
+    },
+    {
+      "name": "黒蠍団召集",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U281"
+    },
+    {
+      "name": "黒蠍－棘のミーネ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U223"
+    },
+    {
+      "name": "黒魔導の執行官",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U230"
+    },
+    {
+      "name": "黒魔術のカーテン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U206"
+    },
+    {
+      "name": "龍の鏡",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U132"
+    }
+  ],
+  "off_target_status_changes": 0,
+  "card_pool_total": 4996
+}

@@ -1,0 +1,57 @@
+PASS Astra01 positive: grave monster equip
+PASS Astra01 atomic: exactly one move action
+PASS Astra01 state: same object, monster identity and symmetric UID link
+PASS Astra01 not Special Summon
+PASS Astra01 not Spell activation
+PASS Astra01 event: owner/controller/source/zone/turn
+PASS Astra01 event: only JSON scalar identities
+PASS Astra01 Replay attach :: {"ok":true,"count":1,"finalDigest":"4fb75a77"}
+PASS Astra01 Undo: exact pre-attach digest
+PASS Astra01 Redo: exact attached digest
+PASS Astra01 SaveLoad: links readable
+PASS Astra01 SaveLoad: restore complete Journal
+PASS Astra01 Replay save/load and redo :: {"ok":true,"count":1,"finalDigest":"4fb75a77"}
+PASS Astra01 digest: altered equip source provenance rejected
+PASS Astra01 negative full: reject atomically
+PASS Astra01 negative face-down: reject atomically
+PASS Astra01 negative hand: reject atomically
+PASS Astra01 negative spell-not-equip: reject atomically
+PASS Astra01 negative missing-host: reject atomically
+PASS Astra01 negative wrong-from-player: reject atomically
+PASS Astra01 negative wrong-equipment-uid: reject atomically
+PASS Astra01 negative: existing equipSpec enforced
+PASS Astra01 positive: grave Equip Spell
+PASS Astra01 Equip Spell retains spell representation
+PASS Astra01 consumer: existing Equip Spell stat effect works
+PASS Astra01 lifecycle: source negation keeps relation
+PASS Astra01 Replay spell and negation :: {"ok":true,"count":2,"finalDigest":"a30efca4"}
+PASS Astra01 owner/controller differ
+PASS Astra01 control: host query follows UID
+PASS Astra01 face-down: equip routes to original owner grave
+PASS Astra01 face-down: no ghost links
+PASS Astra01 rule cleanup: not opponent effect
+PASS Astra01 rule cleanup: grave arrival emitted
+PASS Astra01 Replay cross-owner/control/face-down :: {"ok":true,"count":3,"finalDigest":"be07f3da"}
+PASS Astra01 departure host FX_TO_GRAVE: relations clear
+PASS Astra01 departure host FX_TO_GRAVE: owner retained
+PASS Astra01 Replay host FX_TO_GRAVE :: {"ok":true,"count":2,"finalDigest":"69e13bd4"}
+PASS Astra01 departure host FX_BOUNCE: relations clear
+PASS Astra01 departure host FX_BOUNCE: owner retained
+PASS Astra01 Replay host FX_BOUNCE :: {"ok":true,"count":2,"finalDigest":"e939b496"}
+PASS Astra01 departure host FX_BANISH: relations clear
+PASS Astra01 departure host FX_BANISH: owner retained
+PASS Astra01 Replay host FX_BANISH :: {"ok":true,"count":2,"finalDigest":"67f84d9f"}
+PASS Astra01 departure equipment FX_TO_GRAVE: relations clear
+PASS Astra01 departure equipment FX_TO_GRAVE: owner retained
+PASS Astra01 Replay equipment FX_TO_GRAVE :: {"ok":true,"count":2,"finalDigest":"c7552ac6"}
+PASS Astra01 departure equipment FX_BOUNCE: relations clear
+PASS Astra01 departure equipment FX_BOUNCE: owner retained
+PASS Astra01 Replay equipment FX_BOUNCE :: {"ok":true,"count":2,"finalDigest":"7d0625cf"}
+PASS Astra01 departure equipment FX_BANISH: relations clear
+PASS Astra01 departure equipment FX_BANISH: owner retained
+PASS Astra01 Replay equipment FX_BANISH :: {"ok":true,"count":2,"finalDigest":"f33d23b7"}
+PASS Astra01 explicit detach: same sz card unlinked
+PASS Astra01 detached monster resumes monster representation
+PASS Astra01 Replay detach and summon action :: {"ok":true,"count":3,"finalDigest":"b9bf393a"}
+PASS Astra01 serialization: existing v15 checker
+PASS Astra01 no independent mutable registry

@@ -1,0 +1,31 @@
+1103 ADS System v4.2.0 CHANGELOG
+
+[Replay-safe summon pipeline]
+- DUEL S/X summon attempts are now split into serializable actions:
+  EX_SUMMON_PREPARE_V42 -> summon-negation window -> EX_SUMMON_COMMIT_V42 / EX_SUMMON_CANCEL_V42.
+- Synchro materials are sent to GY at summon-attempt timing; a negated Synchro Summon does not restore materials.
+- Xyz material candidates are kept in pending state and go to GY if the Xyz Summon is negated.
+- Selected ATK/DEF position is preserved through the whole path.
+- Summon-negation window state itself is now actionized: OPEN / NEGATE / CLOSE.
+
+[Removed-zone / LOCATION]
+- Added engine/07_zone_events_v42.js.
+- Central banish transition metadata: card.banishInfo {turn,from,face,pos,reason,byPlayer}.
+- onRemove is emitted centrally for normal banish transitions instead of card-specific patches.
+- Event handler collection now scans the banished zone.
+- locationOfCardV4 now resolves HAND/DECK/MZONE/SZONE/GRAVE/REMOVED/EXTRA/FIELD, not only field cards.
+
+[Unified Effect cards]
+- 異次元の偵察機: if banished this turn, mandatory End Phase return in Attack Position.
+- 異次元の生還者: only if it was face-up in MZONE when banished, mandatory End Phase return in Attack Position.
+
+[Replay format v2]
+- State digest now includes pendingSummon, pendingExV2 and deferredEvents.
+- PLAYER_FLAG_SET_V42 replaces API.setFlag direct mutation.
+- Legacy cross-owner Monster Reborn path now uses FX_SPECIAL_SUMMON with fromPlayer.
+- Legacy Pot of Avarice path now uses FX_RETURN_DECK + SHUFFLE + DRAW actions.
+
+[Compatibility]
+- Existing v4.0/v4.1 architecture and legacy card scripts remain enabled.
+- EX summon position-selection fix (askExSummonPos -> doExSummon(pos)) remains intact.
+- No ygopro/ocgcore/CardScripts source code copied.

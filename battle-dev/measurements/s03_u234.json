@@ -1,0 +1,27 @@
+{
+  "example": false,
+  "unit": "S03-U234",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "Engine defect from the U232 subagent report: v4 unified TRIGGER effects without passive never fire in a DUEL (31 TESTED cards); derive the passives in defineUnifiedCardV4; drain onPositionChange after a manual TOGGLE_POS; real-DUEL test of 5 representative cards; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "notes": "Rework 1 = after the passive fix ブレードラビット still did not fire; traced to a second defect (manual TOGGLE_POS never drained deferred events) and fixed in engine/70. Test-setup corrections: deck size for 4 pots, duelActivateFromHand index, posSnapV10 baseline order. A defect found by the cheaper model was confirmed and generalized by the stronger one — an example of the routing working as intended. Gate: 15891 PASS / 0 FAIL (= U233 15876 + 15); pre-scan: only the new test differs (no behaviour change seen in other tests)."
+}

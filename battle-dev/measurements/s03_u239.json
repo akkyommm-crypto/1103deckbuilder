@@ -1,0 +1,38 @@
+{
+  "example": false,
+  "unit": "S03-U239",
+  "category": "reuse",
+  "mode": "mixed",
+  "scope": "NOT_STARTED 6 cards (マジカル・コンダクター, エクスプローシブ・マジシャン, 魔法族の結界, デモニック・モーター・Ω, レスキューロイド, レプティレス・スポーン) → TESTED; fresh Sonnet subagent from brief239.md; Opus review, negative control, declarations, full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "Agent result for the fresh Sonnet subagent (retry; the first run was stopped at the usage limit with no files written and no usage figure reported); main-session Opus tokens not available",
+    "includes_all_agents": false,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": "not set (delegated from a session outside the tree)",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null,
+        "total_reported": 174915,
+        "tool_uses": 46,
+        "duration_ms": 368722
+      },
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "notes": "55/0 first hand-back. Rework 1 (parent): 「ロイド」 / 「レプティレス」 name-substring matches replaced by GROUP.ROID / GROUP.REPTILIANNE. The stopped first run consumed an unknown amount (killed before reporting usage). Gate: 16032 PASS / 0 FAIL (= U238 15977 + 55), pre-scan clean."
+}

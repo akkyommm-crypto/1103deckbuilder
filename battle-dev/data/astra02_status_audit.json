@@ -1,0 +1,35 @@
+{
+  "baseline": {
+    "ENGINE_GAP": 617,
+    "GENERIC_OK": 644,
+    "IMPLEMENTED": 198,
+    "NOT_STARTED": 1308,
+    "PARTIAL": 182,
+    "TESTED": 2047
+  },
+  "current": {
+    "ENGINE_GAP": 616,
+    "GENERIC_OK": 644,
+    "IMPLEMENTED": 198,
+    "NOT_STARTED": 1307,
+    "PARTIAL": 182,
+    "TESTED": 2049
+  },
+  "status_changes": [
+    {
+      "name": "ドラグニティ－ブランディストック",
+      "before": "ENGINE_GAP",
+      "after": "TESTED"
+    },
+    {
+      "name": "閃光の双剣－トライス",
+      "before": "NOT_STARTED",
+      "after": "TESTED"
+    }
+  ],
+  "off_target_status_changes": 0,
+  "fixture_false_positives": 0,
+  "registration_misses": 0,
+  "protected_changes": 0,
+  "card_pool_total": 4996
+}

@@ -1,0 +1,38 @@
+1103 ADS System v4.1.0 CHANGELOG
+====================================
+
+1. Replay / deterministic RNG groundwork
+- Duel randomness now uses a serializable xorshift RNG state stored in gameState.
+- SHUFFLE, coin toss, and known random hand-discard effects use the common RNG path.
+- act() commits a JSON-safe action journal entry with RNG cursor and state digest.
+- The action journal is intentionally stored outside gameState so Undo snapshots do not grow O(n^2).
+- Autosave stores the replay package separately and restores it with the duel.
+- Undo/Redo synchronizes or branches the journal from the restored state digest.
+- Developer menu adds "Replay / RNG 診断 v4.1" and JSON export.
+- Full playback UI is intentionally deferred until remaining direct-state legacy paths are actionized.
+
+2. setcode migration
+- Legacy Six Samurai helpers now prefer SETCODE.SIX_SAMURAI metadata.
+- Legacy Blackwing helpers now prefer SETCODE.BLACKWING metadata.
+- Nordic extra-normal legality now prefers SETCODE.NORDIC metadata.
+- Existing name matching remains only as a fallback when the v4 metadata layer is unavailable.
+
+3. Unified Effect migration batch A (+6)
+- キラー・トマト
+- シャインエンジェル
+- 巨大ネズミ
+- グリズリーマザー
+- ドラゴンフライ
+- UFOタートル
+
+All six use the v4 condition -> target -> operation pipeline and summon an ATK 1500 or lower monster of the matching Attribute from the Deck after being destroyed by battle.
+
+4. Replay-friendly first-player selection
+- Manual first-player selection is now SET_FIRST_PLAYER action.
+- Coin toss is now COIN_TOSS action; RNG consumption happens inside applyAction.
+- This removes another direct-state mutation path from normal duel operation.
+
+5. Compatibility
+- Existing legacy card scripts remain in place.
+- v4.0 Unified Effect cards remain unchanged.
+- EX summon position-selection fix (askExSummonPos -> doExSummon(pos)) remains intact.

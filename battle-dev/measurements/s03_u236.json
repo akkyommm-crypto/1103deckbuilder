@@ -1,0 +1,27 @@
+{
+  "example": false,
+  "unit": "S03-U236",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "Engine defect from the U232 subagent report: onBattlePhaseEnd reads an attack record already cleared by BATTLE_PHASE_V6 finish; keep the finished phase's record; real-DUEL tests of 3 cards; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "notes": "Test passed 10/0 on first run. Worked in parallel with the Sonnet U235 implementation (separate tree, merged after). Gate: 15921 PASS / 0 FAIL (= U235 15911 + 10), pre-scan clean."
+}

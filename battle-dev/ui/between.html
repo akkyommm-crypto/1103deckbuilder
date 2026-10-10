@@ -1,0 +1,38 @@
+</style>
+</head>
+<body>
+
+<!-- 盤面が主役。上部の常時表示は極小のステータスバー1本だけ -->
+<div class="statusbar" id="statusbar" onclick="toggleDock()"></div>
+
+<div class="board" id="board"></div>
+
+<!-- チェーンは積まれている間ずっと見える -->
+<div class="chainstack" id="chainstack" hidden></div>
+
+<div class="handbar">
+  <div class="hand" id="hand"></div>
+</div>
+
+<!-- ===== 下部ドック：既定は折りたたみ。タップで展開 ===== -->
+<div class="dock collapsed" id="dock">
+  <!-- 常時見えるのはこの1行だけ（フェーズ＋次へ＋戻す） -->
+  <div class="dock-bar" id="dockBar"></div>
+  <!-- 展開時に出る詳細 -->
+  <div class="dock-body" id="dockBody">
+    <div class="phase-rail" id="phaseRail"></div>
+    <div class="dock-actions" id="dockActions"></div>
+    <div class="guide" id="guide"></div>
+    <div class="turnlog" id="turnlog"></div>
+    <button class="log-toggle" id="logToggle" onclick="toggleLog()">ログを開く ▾</button>
+    <div class="log" id="log" hidden></div>
+  </div>
+</div>
+
+<!-- action modal -->
+<div class="veil" id="veil"><div class="sheet" id="sheet"></div></div>
+<div class="peek-bar" id="peekBar" onclick="peekReturn()">
+  <span>盤面を確認中</span><b>選択に戻る ▸</b>
+</div>
+
+<script>

@@ -1,0 +1,73 @@
+name: Battle verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "battle.html"
+      - "battle-dev/**"
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - "scripts/**"
+      - ".github/workflows/battle-ci.yml"
+  push:
+    branches:
+      - "codex/**"
+      - "claude/**"
+      - "integration/**"
+    paths:
+      - "battle.html"
+      - "battle-dev/**"
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - "scripts/**"
+      - ".github/workflows/battle-ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: battle-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-battle:
+    name: verify-battle
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Repository safety scan
+        run: python scripts/check_repo_safety.py --mode tracked
+
+      - name: Build battle artifact
+        working-directory: battle-dev
+        run: python tools/build.py
+
+      - name: Run full battle gate
+        working-directory: battle-dev
+        run: python tools/check.py
+
+      - name: Build Acode artifact
+        working-directory: battle-dev
+        run: python tools/build_acode.py data/carddata.json
+
+      - name: Verify published battle artifact
+        shell: pwsh
+        run: |
+          $published = (Get-FileHash -Algorithm SHA256 -LiteralPath battle.html).Hash
+          $generated = (Get-FileHash -Algorithm SHA256 -LiteralPath battle-dev/dist/battle.html).Hash
+          if ($published -ne $generated) {
+            throw "battle.html is not synchronized with battle-dev/dist/battle.html"
+          }
+          Write-Output "battle.html SHA256=$published"

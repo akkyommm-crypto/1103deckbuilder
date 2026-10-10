@@ -1,0 +1,18 @@
+{
+  "example": false,
+  "unit": "S03-U259",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "7 NOT_STARTED cards → TESTED; engine/1ZD: activationLockS03 covers monster effect activations and lingering sources; real-DUEL test; rebased onto U258; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [{"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}]
+  },
+  "notes": "Rework 1 (test only): one scenario audited after a re-baseline followed only by a refused attack (no actions) — the audit was moved before the re-baseline."
+}

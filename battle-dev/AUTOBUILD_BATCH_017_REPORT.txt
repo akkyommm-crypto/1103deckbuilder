@@ -1,0 +1,21 @@
+AUTOBUILD BATCH 017 CHECKPOINT
+
+Baseline: System v4.8.0 (never rolled back)
+Selected: 40
+Implemented and tested: 23
+ENGINE_GAP: 17
+
+Quality gates:
+- python tools/check.py: 1319 PASS / 0 FAIL
+- python tools/build_acode.py data/carddata.json: PASS, cards=4996
+- python tools/script_coverage.py: PASS
+
+Coverage after batch 017:
+- TESTED 512
+- IMPLEMENTED 199
+- GENERIC_OK 643
+- PARTIAL 182
+- ENGINE_GAP 320
+- NOT_STARTED 3140
+
+Next batch: data/next_script_batch.json (batch 018, 40 cards)

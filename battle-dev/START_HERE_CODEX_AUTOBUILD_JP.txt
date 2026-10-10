@@ -1,0 +1,27 @@
+【PCでの開始手順 — 4996枚自動実装版】
+
+1. このZIPをフォルダへ展開する。
+2. Codexで展開したフォルダ全体を開く。
+3. 最初に `CODEX_MASTER_PROMPT_4996.txt` の全文をCodexへ貼る。
+4. Codexに作業を続行させる。
+
+最初はv4.8.0の「複数回攻撃共通エンジン」を完成させ、その後は自動Coverage管理へ移る。
+
+Coverage確認:
+  python tools/script_coverage.py
+
+次の40枚を自動選択:
+  python tools/autobuild_cycle.py --size 40
+
+全テスト:
+  python tools/check.py
+
+Acode版生成:
+  python tools/build_acode.py data/carddata.json
+
+重要:
+- PARTIALは完成扱いしない。
+- 正確に作れないカードはENGINE_GAPへ逃がして次へ進む。
+- ADS/EDOProは挙動の参考のみ。ソースコードをコピーしない。
+- carddata.jsonはスクリプト追加のたびには変更しない。
+- バグが出たら、Codexのエラーログ・ failing test・diff・関係JSをChatGPTへ渡して修正方針を詰める。

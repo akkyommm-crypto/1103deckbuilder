@@ -1,0 +1,34 @@
+1103 DUEL ADS System v4.3.0 — TEST REPORT
+
+RESULT: PASS
+Automated PASS lines: 319
+Automated FAIL lines: 0
+Card DB: 4,996
+Legacy defineScript unique cards: 299
+Top-level function declarations in Acode build: 717
+Duplicate top-level function declarations: 0
+Direct snapshot() call sites outside act(): 0
+Total snapshot() call sites in engine/runtime: 1 (act() only)
+
+v4.3 dedicated regression coverage:
+PASS manual normal-summon-right toggle is an Action
+PASS manual attacked-flag reset is an Action
+PASS redraw hand is a single Action
+PASS redraw hand produces a five-card hand
+PASS rngBefore is recorded before the action
+PASS rngBefore reproduces a random action after RNG was consumed outside act()
+PASS identical board states can have distinct action sequence IDs
+PASS Undo restores the exact sequence ID
+PASS Undo restores the intended intermediate state rather than a later equal digest
+PASS journal >2000 entries reports truncated=true
+PASS truncated package exposes retained firstSeq/lastSeq range
+PASS replay recording disables localStorage-dependent test-opening rerolls
+PASS Pot of Avarice leaves an unselected monster in the GY
+PASS Pot of Avarice requests five explicit selections
+
+Full legacy/v3/v4 regression suite: PASS
+JavaScript syntax: PASS
+Acode standalone build: PASS
+Embedded card DB: PASS
+Single inline script: PASS
+EX summon ATK/DEF selection fix: retained
