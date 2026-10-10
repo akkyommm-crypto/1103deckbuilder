@@ -1,0 +1,11 @@
+AUTOBUILD batch031 checkpoint (v4.8.0 + P1 ChoiceRequest v4.9.0 baseline)
+
+- Processed 40 NOT_STARTED cards.
+- Added 28 accurate card implementations in cards/80_v80_autobuild_batch31.js.
+- Added serializable P1 resolution choices for Psychic recovery, Time Wizard declaration,
+  Bronn discard, and Ice Barrier Strategist hand selection.
+- Added no shared-engine changes and no carddata.json changes.
+- Deferred 12 cards as ENGINE_GAP with concrete reusable primitive requirements.
+- Official Konami text confirmed activation-time selection for Dance Princess of the
+  Ice Barrier and Abyssal Designator; both were deliberately deferred rather than
+  approximated as resolution-time P1 choices.

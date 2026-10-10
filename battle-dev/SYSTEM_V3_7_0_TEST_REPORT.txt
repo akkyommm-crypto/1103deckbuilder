@@ -1,0 +1,53 @@
+1103 ADS System v3.7.0 TEST REPORT
+====================================
+
+RESULT: PASS
+Total automated PASS lines: 177
+Explicit card scripts: 240 unique
+Embedded card DB: 4,996 cards
+JavaScript syntax: PASS (normal build / Acode build)
+Acode inline <script>: 1
+
+v3.7.0 behavior regression
+- 鬼ガエル③: PASS
+  - バウンスコスト
+  - 通常召喚権使用済み時の追加召喚表示
+  - 追加召喚実行と権利消費
+- マシンナーズ・フォートレス①: PASS
+  - 手札から召喚手順合法判定
+  - 自身を捨てた後、墓地から特殊召喚
+- トラゴエディア③: PASS
+  - 手札モンスターをコストで墓地へ
+  - 同レベル相手モンスターのコントロール奪取
+  - noSpecialSummon中でもフィールド効果は合法
+- トラゴエディア④: PASS
+  - 墓地モンスターのレベルコピー
+  - End Phaseに元レベルへ復元
+- DUEL墓地: PASS
+  - フォートレスの正規特殊召喚手順を表示
+  - 任意のMANUAL移動をDUELでは非表示
+
+v3.7.0 UI regression
+- FIELD横長バー: PASS
+- 6フェイズレール: PASS
+- 空チェーン領域の完全非表示: PASS
+- チェーン1タップPASS: PASS
+- 合法アクションのカード強調: PASS
+- 対象選択カード画像: PASS
+- CHAINモード1タップ切替: PASS
+- DUEL墓地/除外の合法操作限定: PASS
+- DUELデッキ任意閲覧禁止: PASS
+
+Existing critical regressions retained
+- 1103召喚成功タイミング / 起動効果優先権: PASS
+- ラギアのEX帰還 / X素材の持ち主墓地: PASS
+- 相手所有モンスターの蘇生→バウンス先: PASS
+- エフェクト・ヴェーラー: PASS
+- 天空の宝札 noSS/noBattle: PASS
+- 緑光/紫光の宣告者: PASS
+- 六武衆の荒行 End破壊: PASS
+- E・HERO ボルテック: PASS
+- レスキューラビット同時2体SS→奈落2体除外: PASS
+
+Device smoke scenarios: 13
+Android/Acodeの実タップ操作はユーザー実機で最終確認対象。

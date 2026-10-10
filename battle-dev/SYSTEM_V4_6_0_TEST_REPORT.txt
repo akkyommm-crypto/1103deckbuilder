@@ -1,0 +1,49 @@
+1103 Duel ADS System v4.6.0 TEST REPORT
+
+RESULT: PASS
+
+Automated regression
+- PASS: 467
+- FAIL: 0
+- python tools/check.py: PASS
+- Dedicated v4.5 card tests: PASS
+- Dedicated v4.6 card/common-legality tests: PASS
+
+Build integrity
+- systemVersion: 4.6.0
+- card DB: 4,996 cards
+- legacy defineScript: 299 unique
+- Unified Effect cards: 42 unique
+- v4.5 additions: 15
+- v4.6 additions: 15
+- duplicate top-level functions: 0
+
+v4.6 focus checks
+- Gozen Match pre-summon Attribute restriction: PASS
+- Rivalry of Warlords pre-summon Race restriction: PASS
+- Vanity's Emptiness pending activation does not apply early: PASS
+- Vanity/Pachycephalo/Fiend common Special Summon lock: PASS
+- Stardust negate + End Phase return: PASS
+- Merrowgeist battle replacement: PASS
+- Vylon Disigma monster-equip + Attribute battle destroy: PASS
+- Goyo Guardian capture: PASS
+- Dark End Dragon stat reduction/send: PASS
+- Red Dragon Archfiend battle/End Phase destruction: PASS
+- Infernity Doom Dragon attack oath + burn: PASS
+- Gungnir discard/target count: PASS
+- Gishilnodon level snapshot trigger: PASS
+- Tempest Magician Spell Counter/burn: PASS
+- Fossil Dyna Special-Summoned wipe: PASS
+- Vanity's Emptiness self-destruction: PASS
+- Scrap Twin Dragon bounce/revive: PASS
+- Thought Ruler Archfiend heal/target-negate: PASS
+
+Regression safeguards retained
+- owner/EX return routing: PASS
+- summon/chain timing: PASS
+- Effect Veiler/negation: PASS
+- Bottomless simultaneous summon batch: PASS
+- v4 LOCATION/setcode/RESET/Unified Effect: PASS
+- deterministic RNG + Action Journal + Replay Runner: PASS
+- EX summon prepare/commit/cancel: PASS
+- no duplicate top-level function declarations: PASS

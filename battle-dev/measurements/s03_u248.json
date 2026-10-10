@@ -1,0 +1,18 @@
+{
+  "example": false,
+  "unit": "S03-U248",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "Trap-Monster primitive (engine/1ZZI + dbOf + zone-local data) and 4 cards (2 ENGINE_GAP, 2 NOT_STARTED); real-DUEL test; 2 status-record tests adjusted; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [{"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}]
+  },
+  "notes": "Test 16/0 on first run. During this unit the CRLF conversion by Windows Python text writes (U242–U248) was found and repaired with normalize_eol.py in U246–U248 (U243–U245 after their current work)."
+}

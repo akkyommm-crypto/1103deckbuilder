@@ -1,0 +1,45 @@
+1103 Duel ADS System v4.7.0 TEST REPORT
+
+RESULT: PASS
+
+Automated regression
+- PASS: 508
+- FAIL: 0
+- python tools/check.py: PASS
+- JavaScript syntax (development build): PASS
+
+Build integrity
+- systemVersion: 4.7.0
+- card DB: 4,996 cards
+- legacy defineScript: 299 unique
+- Unified Effect cards: 57 unique
+- total explicit scripted card names: 356
+- v4.7 Unified batch: 15 unique
+
+v4.7 dedicated coverage
+- Armory Arm: cross-player equip, +1000 ATK, original-ATK battle burn, unequip/Special Summon: PASS
+- Ancient Fairy Dragon: hand Special Summon/Battle Phase lock and historical Field Spell replacement/search: PASS
+- Iron Chain Dragon: C-monster grave banish boost and 3-card mill: PASS
+- Wind-Up Zenmaister: material ATK bonus, set target, End Phase flip-up Attack: PASS
+- Aero Shark: detach + banished-monster burn: PASS
+- Number 30 Acid Golem: Standby detach/2000 damage, no-material attack lock, controller Special Summon lock: PASS
+- Number 20 Giga-Brilliant: field-wide +300 ATK: PASS
+- Number 34 Terror-Byte: temporary control: PASS
+- Thunder End Dragon: all-other-monster destruction: PASS
+- Great Tornado: Fusion provenance trigger and opponent ATK/DEF halving: PASS
+- Elemental HERO Gaia: Fusion provenance trigger, target halve + self gain: PASS
+- Elemental HERO Nova Master: battle-destroy draw as attacker or defender: PASS
+- Ally of Justice Light Gazer: opposing LIGHT grave count stat layer: PASS
+- Avenging Knight Parshath: position change + piercing: PASS
+- Fabled Valkyrus: Fiend discard + draw: PASS
+- Special Summon provenance serialization: PASS
+
+Regression safeguards retained
+- Summon timing / summon-negation windows: PASS
+- Xyz material owner routing: PASS
+- Effect Veiler / effect negation: PASS
+- Bottomless simultaneous summon batch: PASS
+- Gozen Match / Rivalry / Special Summon locks: PASS
+- Replay Runner / Action Journal / deterministic RNG: PASS
+- v4 LOCATION / setcode / RESET / Unified Effect architecture: PASS
+- duplicate top-level function declarations: 0

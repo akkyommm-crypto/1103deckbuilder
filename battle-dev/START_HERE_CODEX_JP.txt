@@ -1,0 +1,14 @@
+Codexへ渡す手順
+
+1. `1103_duel_ADS_system_v4_7_0_CODEX_READY.zip` をPCで展開する。
+2. 展開したフォルダをCodexのプロジェクトとして開く。
+3. まず `python tools/check.py` を実行できる環境にする（Python + Node.js）。
+4. Codexに `CODEX_PROMPT_V480.txt` の内容をそのまま貼る。
+5. Codexは `AGENTS.md` と `docs/CODEX_HANDOFF_V470.md` を読む前提で作ってある。
+6. v4.8が全PASSしたら `docs/CODEX_BACKLOG.md` の次タスクへ1つずつ進める。
+
+重要:
+- dist HTMLを直接編集しない。
+- carddata.jsonはカード追加のたびに変更しない。
+- 1103当時と現行エラッタが違うカードは1103当時を優先。
+- ADS/EDOProのコードをコピーせず、挙動だけ参考に独自実装する。

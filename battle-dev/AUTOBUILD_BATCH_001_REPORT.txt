@@ -1,0 +1,16 @@
+1103 Duel ADS — Autobuild Batch 001
+====================================
+
+Selected: 40
+Explicitly implemented/reviewed: 34
+ENGINE_GAP with precise primitive: 6
+
+Shared implementation:
+- v49Spell / v49Heal / v49Burn / v49DestroyRace / v49SummonFromHand registration helpers
+- Coverage scanner now follows nested registration helpers transitively
+
+Quality gate:
+- 566 PASS / 0 FAIL before the Coverage scanner regression assertion
+- JavaScript syntax PASS
+- duplicate top-level functions: 0
+- Acode embedded DB: 4,996

@@ -1,0 +1,27 @@
+{
+  "example": false,
+  "unit": "S03-U242",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "宝玉獣 2 (宝玉の樹, 究極宝玉神 レインボー・ドラゴン, 宝玉の氾濫 [ENGINE_GAP], レインボー・ライフ) + engine: placement event, damageToRecover LP mode, direct-attack battle damage through the v18 LP rules; real-DUEL test; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 2,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "notes": "Rework 1 = first run: レインボー・ドラゴン's cost also sent itself (the project setcode 0x1021 covers 究極宝玉神) → 宝玉獣 predicate changed to the name rule (also fixed in U240 before its gate). Rework 2 = レインボー・ライフ did not convert battle damage: direct attacks skipped the LP rules and the monster-battle path dropped the sign — engine fix. Test-driver fix: choices with max > 1 answered via answerChoiceV49. Gate: 16143 PASS / 0 FAIL (= U241 16124 + 19), pre-scan clean."
+}

@@ -1,0 +1,41 @@
+{
+  "example": false,
+  "unit": "S03-U298",
+  "category": "duel-completion",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Duel completion: 78-pair random-policy sweeps x 5 new seed sets (save / resume at every stop x 2, maxTurns 150 x 2, respond 0.9 x 1); forced Flip trigger of a monster that left the field (eventPickV2 logical zone); TG ワーウルフ hand-effect check; gate",
+  "outcome": "waiting",
+  "gate_exit": null,
+  "elapsed_minutes": 181.6,
+  "rework_cycles": null,
+  "later_defects": null,
+  "started_at": "2026-10-09T21:02:00+09:00",
+  "finished_at": null,
+  "gate_owner": "sonnet",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "task-notification usage block",
+    "includes_all_agents": true,
+    "total_tokens": 210303,
+    "tool_uses": 99,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Sonnet unit. 390 duels: 1 blocker (fixed), 2 slow save / resume duels clean on re-run. Gate 18144 PASS."
+}

@@ -1,0 +1,84 @@
+P1 ChoiceRequest v4.9.0 / batch030 integration report
+=====================================================
+
+Integration base
+----------------
+- Codex v4.8.0 batch030 checkpoint
+- AUTOBUILD remains paused after batch030.
+- batch031 was not selected or started.
+- cards/78_v78_autobuild_batch30.js and tools/test_v780_batch30.js were retained.
+- Claude files were not used to replace the batch030 tree. P1 changes were applied as a differential integration.
+
+Integrated P1 modules
+---------------------
+- engine/09_choice_request_v49.js
+- ui/11_choice_ui_v49.js
+- tools/test_p1_choice_request.js
+
+Patched existing modules
+------------------------
+- engine/00_state_actions.js
+- engine/06_replay_rng_v41.js
+- engine/40_legal_script_engine.js
+- runtime/50_actions_save.js
+- docs/CODEX_BACKLOG.md
+- build_manifest.json: added only the two P1 runtime entries; batch030 entries retained.
+- tools/check.py: added only the P1 test invocation; batch030 test invocation retained.
+
+Quality gates
+-------------
+- Build: PASS
+- P1 ChoiceRequest test: 83 PASS / 0 FAIL
+- Full regression: 1997 PASS / 0 FAIL
+- Pre-integration regression baseline: 1914 PASS / 0 FAIL
+- Existing regression loss: 0
+- Replay / Undo / Redo / Action Journal / Save-Load P1 regressions: PASS
+- Acode embedded cards: 4,996
+- dist/battle.html SHA256: 4d2968a517814d35ecfe431c92506ade4352313149d20408c07786da492c4c47
+- dist/battle_acode.html SHA256: c4b148db51287232358ef4b196d10dc935e21cf7353f299795a847e49c6289ac
+
+Coverage after P1 candidate reassessment
+----------------------------------------
+- TESTED: 701
+- IMPLEMENTED: 198
+- GENERIC_OK: 644
+- PARTIAL: 182
+- ENGINE_GAP: 635
+- NOT_STARTED: 2636
+- Total: 4,996
+
+P1-only ENGINE_GAP candidates reassessed
+----------------------------------------
+The following 16 cards no longer have a ChoiceRequest-only engine blocker. Their
+ENGINE_GAP overrides were removed. They are now NOT_STARTED, not completed; card
+scripts and card-specific positive/negative tests must still be implemented in a
+future AUTOBUILD pass before promotion to IMPLEMENTED or TESTED.
+
+- No.10 白輝士イルミネーター
+- 罰則金
+- ご隠居の猛毒薬
+- 天使の施し
+- 謙虚な壺
+- 陽気な葬儀屋
+- D－スピリッツ
+- 狩猟本能
+- 隠れ兵
+- アポート
+- ガスタの希望 カムイ
+- サンダー・ドラゴン
+- ジェネクス・ワーカー
+- センジュ・ゴッド
+- ソニックバード
+- ミイラの呼び声
+
+Cards whose reasons include additional missing primitives remain ENGINE_GAP.
+Historical batch tests were adjusted only where they asserted the obsolete
+ChoiceRequest-only ENGINE_GAP classification; the replacement assertions verify
+that those overrides stay removed.
+
+Checkpoint state
+----------------
+- data/script_status_overrides.json: updated for the 16 reassessed candidates.
+- data/script_coverage.json: regenerated.
+- data/next_script_batch.json: preserved; no batch031 selection was performed.
+- docs/CODEX_CURRENT_TASK.md: preserved.

@@ -1,0 +1,41 @@
+{
+  "example": false,
+  "unit": "S03-U292",
+  "category": "reuse",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "ENGINE_GAP re-check 9: ライト・オブ・デストラクション, 強制接収, 怒れる類人猿, 機動砦のギア・ゴーレム, モロコシーナ, コダロス, 地縛神の復活, 再機動 (new script file, one dedicated test, status records of 6 existing tests, declarations); acceptance: real DUEL paths, one Replay audit per action scenario, at least one negative per card, negative control on U291, full pre-scan and gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": 47.8,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": null,
+  "finished_at": null,
+  "gate_owner": "sonnet",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "task-notification usage block of the Sonnet agent (subagent_tokens, tool_uses, duration_ms; no input/output split)",
+    "includes_all_agents": true,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ],
+    "total_tokens": 311494,
+    "tool_uses": 138
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "Opus U293-U295 engine work ran at the same time"
+  },
+  "notes": "Sonnet battle-implementer ran the whole unit (implementation, test, negative control, declarations, pre-scan, gate). Usage values were not measurable from inside the subagent and are left null. Opus review (TESTED rule): accepted. 怒れる類人猿 uses the existing mustAttack model (as the TESTED カラクリ cards). The two traps use the bare activationPending check; converted to cardBeingActivatedS03 by S03-U295 (rebased onto this unit)."
+}

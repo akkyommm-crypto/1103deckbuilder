@@ -1,0 +1,18 @@
+{
+  "example": false,
+  "unit": "S03-U231",
+  "category": "reuse",
+  "mode": "opus-only",
+  "scope": "NOT_STARTED 7 cards (プロミネンス・ドラゴン, エクストリオの牙, 呪術抹消, 神聖なる森, ネクロ・リンカー, サシカエル, ウィクトーリア) → TESTED; test 17 asserts; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "usage": {
+    "source": "none: the main session's per-unit tokens are not available (get_usage gives plan % only); recorded before workflow v2",
+    "includes_all_agents": null,
+    "by_model": [{"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}]
+  },
+  "notes": "Baseline unit before workflow v2 (main session alone). Gate 15824 PASS / 0 FAIL = U230 15807 + 17. Published 2026-10-02."
+}

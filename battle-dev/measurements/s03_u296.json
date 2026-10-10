@@ -1,0 +1,41 @@
+{
+  "example": false,
+  "unit": "S03-U296",
+  "category": "duel-completion",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Duel completion with save / resume: R1 driver R1_SAVELOAD mode; 78-pair sweeps; 7 causes fixed (trigger selection, POINT window, legacy choice release / resolution choice resume, SEGOC peer spell speed, battle refs, Hope self-chain); gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": 185.4,
+  "rework_cycles": null,
+  "later_defects": null,
+  "started_at": "2026-10-09T11:35:00+09:00",
+  "finished_at": null,
+  "gate_owner": "sonnet",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "task-notification usage block (subagent_tokens, tool_uses, duration_ms)",
+    "includes_all_agents": true,
+    "total_tokens": 460526,
+    "tool_uses": 235,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "Opus sweeps and the U293-U295 gates ran at the same time"
+  },
+  "notes": "Sonnet unit under the 2026-10-09 user priority. Save / resume sweep 0/78 -> 78/78 clean. Usage from the task notification."
+}

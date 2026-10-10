@@ -1,0 +1,22 @@
+1103 Duel ADS — Autobuild Batch 009 checkpoint
+Baseline: System v4.8.0
+
+Result
+- Quality gate: 933 PASS / 0 FAIL
+- Explicitly implemented and tested in batch 009: 18 cards
+- GENERIC_OK reviewed: 4 cards
+- ENGINE_GAP recorded: 18 cards
+- Three batch-008 cards promoted from ENGINE_GAP to TESTED using the existing tributeValue primitive.
+- Acode embedded database: 4,996 cards
+- Coverage: TESTED 368 / IMPLEMENTED 200 / GENERIC_OK 640 / PARTIAL 182 / ENGINE_GAP 146 / NOT_STARTED 3460
+
+Implementation notes
+- Added conditional zero-Tribute Normal Summon declarations for Cyber Shark and Genex Heat.
+- Added canonical double-Tribute handling for Darkframe and corrected the prior Invellz/Wind/Gaia Frame gaps.
+- Added conditional hand Special Summon procedures, continuous stat calculations and simple Flip effects without core card-name branches.
+
+Validation
+- python tools/check.py: 933 PASS / 0 FAIL
+- python tools/build_acode.py data/carddata.json: PASS, cards=4996
+- python tools/script_coverage.py: PASS
+- Next 40-card batch generated.

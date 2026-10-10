@@ -1,0 +1,37 @@
+1103 DUEL ADS System v4.3.0
+Replay Hardening / Direct Mutation Cleanup
+
+1. Replay journal format v3
+- Each committed action stores rngBefore and rngState.
+- gameState.__v41Seq stores the exact committed action sequence number.
+- Undo/Redo journal synchronization uses __v41Seq, not digest search.
+- State digest remains as a verification checksum only.
+- Replay package exposes truncated, firstSeq, and lastSeq.
+- If the 2000-action retention limit is exceeded, truncated=true is permanently reported for that journal branch.
+
+2. Direct state mutation cleanup
+All remaining UI snapshot()+direct-mutation paths identified in the v4.1 review were actionized:
+- RESET_GAME_V43
+- REDRAW_HAND_V43
+- MANUAL_TOGGLE_NORMAL_RIGHT_V43
+- MANUAL_CLEAR_ATTACKED_V43
+The only remaining direct call to snapshot() is inside act().
+Previously actionized in v4.2 and retained:
+- opponent-GY Monster Reborn movement
+- Pot of Avarice movement/shuffle/draw primitives
+- player flag writes
+
+3. Deterministic test opening
+shuffleFreshTestOpening() no longer consults/rerolls from localStorage while replay recording is active.
+Exactly one deterministic shuffle is performed from the serialized RNG state.
+
+4. Pot of Avarice correction
+The legacy effect primitive no longer chooses the oldest five monsters automatically.
+The player explicitly selects five GY monsters, one by one, before resolution.
+The selected cards are returned through Actions, followed by Action-based shuffle and draw 2.
+
+5. Version / diagnostics
+- systemVersion: 4.3.0
+- replayVersion: 3
+- Replay/RNG developer diagnostic updated to v4.3 and shows TRUNCATED when applicable.
+- Existing EX summon position fix, v4 architecture, summon-window actions, removed-zone events, and native effects remain intact.

@@ -1,0 +1,37 @@
+1103 Duel ADS System v4.4.0 CHANGELOG
+
+[Replay Runner]
+- Replay format upgraded to v4 with captured initialState / initialDigest.
+- Added executable Replay Runner: full audit, preview from start, step +1/+10, one-step back, seek to end, exit/restore.
+- Added branch-from-replay: adopts the exact journal prefix and continues as a new duel branch.
+- Replay applies each Action with entry.rngBefore and verifies post-action RNG + State Digest.
+- Replay preview blocks normal act()/Undo/Redo and cannot overwrite autosave.
+- Truncated (>2000 retained actions) journals are explicitly rejected as complete from-start replays.
+
+[Replay correctness / activation]
+- Count-limit consumption is now serialized into CHAIN_ADD (v44CountConsume) instead of mutating state before act().
+- Continuous/Field/Equip activationPending is now committed by CHAIN_ADD.
+- CHAIN_RESOLVE_TOP now clears activationPending or persists activationNegated when activation is negated.
+- Added state-local UID lookup for applyAction replay states.
+- Legacy manual count-limit consumption is journaled through EFFECT_COUNT_CONSUME_V44 without adding a new Undo checkpoint.
+- Automatic rule actions remain journaled without creating illegal intermediate Undo states.
+
+[State Digest]
+- Card digest now includes primitive card flags automatically.
+- Includes gameplay compound state: mods, counters, graveInfo, banishInfo, procedure base stats, summon material metadata and token metadata.
+- Chain digest now includes source UID/location, targets/selection, effect key/class and negation state.
+- This detects replay divergence even when visible board placement is identical.
+
+[Unified Effect additions]
+- Penguin Soldier
+- Man-Eater Bug
+- Magician of Faith
+- Mask of Darkness
+- Naturia Beast
+- Naturia Landoise
+
+[Compatibility]
+- Existing legacy defineScript set remains intact (299 unique legacy scripts).
+- Existing v4 Unified Effect cards remain intact; 12 unique Unified cards total.
+- EX summon position fix (askExSummonPos -> doExSummon(..., pos)) retained.
+- Built HTML remains generated only from build_manifest.json sources.

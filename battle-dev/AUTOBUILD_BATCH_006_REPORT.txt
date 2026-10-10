@@ -1,0 +1,22 @@
+1103 Duel ADS — Autobuild Batch 006 checkpoint
+Baseline: System v4.8.0
+
+Result
+- Quality gate: 791 PASS / 0 FAIL
+- Explicitly implemented and tested: 18 cards
+- ENGINE_GAP recorded: 22 cards
+- Acode embedded database: 4,996 cards
+- Coverage: TESTED 308 / IMPLEMENTED 201 / GENERIC_OK 635 / PARTIAL 182 / ENGINE_GAP 90 / NOT_STARTED 3580
+
+Implementation notes
+- Deterministic three-die and single-die Trap effects reuse duel RNG.
+- Attack declaration effects use the common pending-attack and negate-attack APIs.
+- Temporary stat changes use replay-safe runtime modifiers and RESET_END.
+- Permanent Reverse World stat swaps use serializable runtime modifiers and correct leave/face-down resets.
+- Canonical HERO/Core identity metadata is used instead of theme-name matching.
+
+Validation
+- python tools/check.py: 791 PASS / 0 FAIL
+- python tools/build_acode.py data/carddata.json: PASS, cards=4996
+- python tools/script_coverage.py: PASS
+- Next 40-card batch generated.

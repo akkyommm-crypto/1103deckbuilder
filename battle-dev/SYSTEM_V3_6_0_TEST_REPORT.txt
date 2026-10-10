@@ -1,0 +1,48 @@
+1103 ADS System v3.6.0 TEST REPORT
+====================================
+
+RESULT: PASS
+
+Build / syntax
+- Acode embedded card DB: 4,996 cards
+- Acode inline <script>: 1
+- JavaScript syntax: PASS
+- Explicit card scripts: 240 unique / 240 total
+
+Regression
+- tools/check.py: 132 PASS
+- v3.6 UI checks: 9 PASS
+- v3.5/v3.6 script expansion checks: 26 PASS
+- device-path checks: 17 PASS
+- device smoke checks: 9 PASS
+
+v3.6.0 UI checks
+- FIELD横長バー: PASS
+- FIELDカード画像 + カウンター: PASS
+- 6フェイズレール: PASS
+- 合法フェイズ遷移のみ操作: PASS
+- 特殊召喚禁止 / BP不可バッジ: PASS
+- チェーンリボン -> 優先権確認: PASS
+- チェーンリボンから直接解決しない: PASS
+- 墓地 / 除外の画像付きリスト: PASS
+- デッキTOP表示: PASS
+
+Card script improvements
+- 粋カエル: cannotSynchroMaterial hook: PASS
+- ブラック・ローズ・ドラゴン②: cost / target / position / ATK0 declaration: PASS
+- XX－セイバー ヒュンレイ: up to 3 selections declaration: PASS
+
+Major retained regressions
+- 召喚成功後の1103後期タイミング: PASS
+- ラギア EX帰還 / X素材持ち主墓地: PASS
+- 死者蘇生で相手モンスターを蘇生 -> 持ち主へ戻る: PASS
+- 効果無効 / Effect Veiler: PASS
+- noSpecialSummon / noBattlePhase: PASS
+- 六武衆の荒行 End Phase遅延破壊: PASS
+- 緑光 / 紫光の宣告者: PASS
+- E・HERO ボルテック: PASS
+- v3.5.1 実機スモーク9シナリオ: PASS
+
+NOTE
+- Android Acodeでの最終的なタップ感・画面密度は実機確認対象。
+- エンジン/構文/回帰テスト上はPASS。

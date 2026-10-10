@@ -1,0 +1,22 @@
+1103 Duel ADS — Autobuild Batch 007 checkpoint
+Baseline: System v4.8.0
+
+Result
+- Quality gate: 837 PASS / 0 FAIL
+- Explicitly implemented and tested: 19 cards
+- ENGINE_GAP recorded: 21 cards
+- Acode embedded database: 4,996 cards
+- Coverage: TESTED 327 / IMPLEMENTED 201 / GENERIC_OK 635 / PARTIAL 182 / ENGINE_GAP 111 / NOT_STARTED 3540
+
+Implementation notes
+- Added a generic script-metadata hand Special Summon procedure for AOJ Cosmic Closer.
+- Reused canonical E-HERO metadata for The Heat.
+- Reused deterministic duel RNG for random discard.
+- Reused attack-window, counter, runtime stat, owner return and position APIs.
+- No card-name branch was added to the core engine.
+
+Validation
+- python tools/check.py: 837 PASS / 0 FAIL
+- python tools/build_acode.py data/carddata.json: PASS, cards=4996
+- python tools/script_coverage.py: PASS
+- Next 40-card batch generated.

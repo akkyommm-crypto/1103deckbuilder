@@ -1,0 +1,24 @@
+const fs=require('fs'),path=require('path');
+const ROOT=path.resolve(__dirname,'..');
+const ui=fs.readFileSync(path.join(ROOT,'ui','10_render_input.js'),'utf8');
+const css=fs.readFileSync(path.join(ROOT,'styles','app.css'),'utf8');
+const pref=fs.readFileSync(path.join(ROOT,'ui','prefix.html'),'utf8')+fs.readFileSync(path.join(ROOT,'ui','between.html'),'utf8');
+const pile=fs.readFileSync(path.join(ROOT,'engine','70_summon_procedures.js'),'utf8');
+const ok=(n,v)=>{if(!v)throw new Error('FAIL '+n);console.log('PASS '+n)};
+ok('FIELD横長バー',/function pileRowHTML[\s\S]*?fieldbar[\s\S]*?FIELD ACTIVE/.test(ui));
+ok('FIELDカード画像＋カウンター',/IMG_BASE/.test(ui)&&/field-thumb/.test(ui)&&/field-state/.test(ui));
+ok('6フェイズレール',/phaseRailHTMLV360/.test(ui)&&/repeat\(6/.test(css)&&/id="phaseRail"/.test(pref));
+ok('合法フェイズだけ操作',/legalPhaseTransitionV28\(gs\.phase,ph\.id\)/.test(ui));
+ok('特殊召喚禁止・BP不可バッジ',/特殊召喚禁止/.test(ui)&&/BP不可/.test(ui));
+ok('チェーンリボンは優先権確認へ',/chainRibbonActionV360[\s\S]*?openChainPriorityV2/.test(ui));
+ok('チェーンリボンから直接解決しない',!/chainRibbonActionV360[\s\S]{0,400}resolveChainStep/.test(ui));
+ok('墓地・除外を画像付きリスト表示',/pile-row/.test(pile)&&/pile-thumb2/.test(pile)&&/新しいカードを上に表示/.test(pile));
+ok('デッキトップ表示',/TOP/.test(pile)&&/デッキトップを上に表示/.test(pile));
+
+ok('空チェーン欄は完全非表示',/\.chainstack\[hidden\]\{display:none!important\}/.test(css)&&/if\(!gs\.chain\.length\)\{el\.hidden=true;el\.innerHTML="";return;\}/.test(ui));
+ok('チェーン中1タップPASS',/class="cs-pass"/.test(ui)&&/chainPassV2\(\)/.test(ui));
+ok('発動可能カードを盤面で強調',/duelReadyClassV370/.test(ui)&&/ready-fx/.test(css)&&/ready-act/.test(css));
+ok('対象選択にカード画像',/pk-thumb/.test(css)&&/it\.card/.test(fs.readFileSync(path.join(ROOT,'engine','20_effect_primitives_ex.js'),'utf8')));
+ok('ADSチェーンモードをドックから1タップ切替',/cycleAdsChainModeV370/.test(ui)&&/CHAIN \$\{adsChainModeShortV370\(\)\}/.test(ui));
+ok('DUEL墓地・除外は合法操作だけ',/function pileDuelActionsV370/.test(pile)&&/DUELモードでは任意のゾーン移動を非表示/.test(pile));
+ok('DUELではデッキ内容を任意閲覧しない',/DUELモードではデッキ内容は非公開/.test(pile));

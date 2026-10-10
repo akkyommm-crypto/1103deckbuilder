@@ -1,0 +1,31 @@
+1103 Duel ADS System v4.8.0 — Test Report
+============================================
+
+Baseline before edits:
+- python tools/check.py: PASS
+- Coverage: TESTED 160 / IMPLEMENTED 203 / GENERIC_OK 628 / PARTIAL 182 / ENGINE_GAP 3 / NOT_STARTED 3820
+
+v4.8 dedicated coverage:
+- ordinary monster cannot attack twice
+- Phoenix allowance permits exactly two attacks and expires at turn reset
+- Kachi Kochi receives exactly one additional consecutive attack
+- attack restrictions override additional allowance
+- new fields affect the deterministic replay digest
+- both cards have native target/timing/material-detach declarations
+
+Final coverage:
+- TESTED 162
+- IMPLEMENTED 203
+- GENERIC_OK 628
+- PARTIAL 182
+- ENGINE_GAP 3
+- NOT_STARTED 3818
+- OUT_OF_SCOPE 0
+- Total 4996
+
+Quality gate:
+- Python build: PASS
+- Full regression: 522 PASS / 0 FAIL
+- JavaScript syntax: PASS
+- Duplicate top-level declarations: 0
+- Acode single-file build with 4,996 embedded cards: PASS

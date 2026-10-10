@@ -1,0 +1,41 @@
+{
+  "example": false,
+  "unit": "S03-U299",
+  "category": "duel-completion",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Hand-activated trigger audit of the 13 major decks; TG ワーウルフ hand effect as a real optional trigger (Opus ruling); オネスト offered in the Damage Step; sweep (78 pairs random policy); gate",
+  "outcome": "pass",
+  "gate_exit": 0,
+  "elapsed_minutes": 74.7,
+  "rework_cycles": null,
+  "later_defects": null,
+  "started_at": "2026-10-10T00:00:00+09:00",
+  "finished_at": null,
+  "gate_owner": "sonnet",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "task-notification usage block",
+    "includes_all_agents": true,
+    "total_tokens": 214079,
+    "tool_uses": 108,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Sweeps 78/78 clean x2 (plain, save/resume every 3). Sonnet unit. 2 causes fixed (TG ワーウルフ hand trigger, オネスト quickEffect). u87 A and u297 B changed per Opus ruling (check counts unchanged). Opus review: the change of test_s03_u297_tg_werewolf_speed B (old non-trigger model, same count and intent) is accepted under the same ruling as u87 A."
+}

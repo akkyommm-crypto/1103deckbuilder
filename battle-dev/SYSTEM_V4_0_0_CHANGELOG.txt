@@ -1,0 +1,35 @@
+1103 ADS System v4.0.0 CHANGELOG
+====================================
+
+1. ADS Architecture Layer（設計概念の独立実装）
+- LOCATION bit mask を導入。
+- carddata.json に setcode / alias メタデータを付与。
+- isSetCardV4 / canonicalCardCodeV4 により、名前文字列依存の判定から段階移行可能にした。
+- ocgcore / ygopro のコードは取り込まず、設計概念のみを独自JSで実装。
+
+2. RESET lifetime engine
+- runtimeEffects をJSONシリアライズ可能な状態データとして追加。
+- RESET_LEAVE / TO_GRAVE / TURN_SET / SELF_TURN / OPPO_TURN / END / DISABLE / PHASE を導入。
+- 攻守計算レイヤーと「効果がいつ消えるか」を分離。
+- v4RegisterStatModifier() を既存の setBase/set/update/setFinal 計算へ接続。
+
+3. Unified Effect API v1
+- Effect object を type / range / targetRange / condition / cost / target / operation に統一。
+- 発動時の順序を condition -> cost -> target とし、operation は解決時のみ実行。
+- chain link に v4EffectKey を保持し、発動元が移動しても解決する効果を固定。
+- legacyScriptToEffectsV4() により旧299スクリプトを変更せず共通の読み取りモデルへ接続。
+
+4. v4 Native cards
+- 黄金の歯車装置箱：setcode + RESET_END による攻500/守1500上昇。
+- 六武衆の理：コスト送墓 -> 対象決定 -> 墓地特殊召喚を新Effect時系列で実装。
+- XX－セイバー レイジグラ：召喚誘発でX－セイバーを墓地から回収。
+- セイバー・スラッシュ：表側攻撃表示X－セイバー数と同数の対象を発動時に固定して破壊。
+
+5. 既存互換性
+- 既存299枚のCARD_SCRIPTSは書き換えず維持。
+- EX召喚表示形式の askExSummonPos / doExSummon 分離修正を維持。
+- ビルド後トップレベル関数重複 0件。
+
+6. Replay
+- v4.0では未実装。
+- 一部旧カードに act()/Processor 外の直接状態変更が残るため、完全な入力ログReplayはv4.1以降で正規化後に導入する。

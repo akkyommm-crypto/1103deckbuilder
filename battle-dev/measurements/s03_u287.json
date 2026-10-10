@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U287",
+  "category": "engine",
+  "mode": "opus-only",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Engine fix: drain the hand-size discard events before the turn ends (later defect of S03-U273, found by Sonnet U285); 魔轟神ルリー and 魔轟神獣キャシー (scripts by Sonnet) ENGINE_GAP → TESTED; test; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "started_at": "2026-10-04T22:10:00+09:00",
+  "finished_at": null,
+  "gate_owner": "opus-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "Sonnet U270 and other gates ran at the same time"
+  },
+  "notes": "Opus fix of a defect found by the Sonnet unit U285; the two cards and their scenarios were written by Sonnet. Rework 1: test setup issues when lifting the sections (hand created before the reset; baseline before extra setup; manual position flag). Negative control on U286: 9 FAIL; drain-only revert: 2 FAIL."
+}

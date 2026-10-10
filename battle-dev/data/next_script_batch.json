@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "requested_size": 30,
+  "max_complexity": 45,
+  "selected_count": 30,
+  "selection_rule": "prefer test-deck cards, then lower static complexity; Codex must re-evaluate correctness before implementation",
+  "cards": [
+    {
+      "code": 82693042,
+      "name": "混沌球体",
+      "kind": "monster",
+      "date": "2008-05-21",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 22991179,
+      "name": "無視加護",
+      "kind": "spell",
+      "date": "2009-07-18",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 55696885,
+      "name": "疫病狼",
+      "kind": "monster",
+      "date": "2007-02-15",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 22996376,
+      "name": "百獣王 ベヒーモス",
+      "kind": "monster",
+      "date": "2004-11-25",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 99659159,
+      "name": "竜操術",
+      "kind": "spell",
+      "date": "2010-06-19",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 47436247,
+      "name": "紫炎の道場",
+      "kind": "spell",
+      "date": "2011-02-11",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 24668830,
+      "name": "細菌感染",
+      "kind": "spell",
+      "date": "2000-01-27",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 73680966,
+      "name": "終わりの始まり",
+      "kind": "spell",
+      "date": "2007-11-23",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 7953868,
+      "name": "蒼血鬼",
+      "kind": "monster",
+      "date": "2011-04-16",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 27618634,
+      "name": "薄幸の乙女",
+      "kind": "monster",
+      "date": "2004-06-01",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 56052205,
+      "name": "貫ガエル",
+      "kind": "monster",
+      "date": "2008-02-23",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 6849042,
+      "name": "超古代恐獣",
+      "kind": "monster",
+      "date": "2008-02-23",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 67934141,
+      "name": "超熱血球児",
+      "kind": "monster",
+      "date": "2004-05-27",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 9817927,
+      "name": "逆ギレパンダ",
+      "kind": "monster",
+      "date": "2002-11-21",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 40240595,
+      "name": "進化の繭",
+      "kind": "monster",
+      "date": "1999-07-22",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 21888494,
+      "name": "選ばれし者",
+      "kind": "spell",
+      "date": "2001-04-19",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 45462639,
+      "name": "闇紅の魔導師",
+      "kind": "monster",
+      "date": "2006-08-19",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 57610714,
+      "name": "雲魔物－アイ・オブ・ザ・タイフーン",
+      "kind": "monster",
+      "date": "2007-07-21",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 99173029,
+      "name": "霊子エネルギー固定装置",
+      "kind": "spell",
+      "date": "2001-11-29",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 5758500,
+      "name": "魂の解放",
+      "kind": "spell",
+      "date": "1999-09-23",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 5371656,
+      "name": "魂喰らいの魔刀",
+      "kind": "spell",
+      "date": "2004-02-26",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 49674183,
+      "name": "魔天使ローズ・ソーサラー",
+      "kind": "monster",
+      "date": "2010-12-18",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 17896384,
+      "name": "魔法族の結界",
+      "kind": "spell",
+      "date": "2008-11-15",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 8316661,
+      "name": "魔轟神ミーズトージ",
+      "kind": "monster",
+      "date": "2009-04-14",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 6,
+      "in_test_decks": false
+    },
+    {
+      "code": 23639291,
+      "name": "アグレッシブ・クラウディアン",
+      "kind": "trap",
+      "date": "2008-02-23",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 55256016,
+      "name": "アヌビスの裁き",
+      "kind": "trap",
+      "date": "2003-02-20",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 16678947,
+      "name": "カース・サイキック",
+      "kind": "trap",
+      "date": "2009-11-14",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 55465441,
+      "name": "ギブ&テイク",
+      "kind": "trap",
+      "date": "2008-10-18",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 86871614,
+      "name": "クローン複製",
+      "kind": "trap",
+      "date": "2003-04-08",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    },
+    {
+      "code": 91597389,
+      "name": "ゲットライド!",
+      "kind": "trap",
+      "date": "2005-08-11",
+      "extra": false,
+      "status": "NOT_STARTED",
+      "complexity_score": 7,
+      "in_test_decks": false
+    }
+  ]
+}

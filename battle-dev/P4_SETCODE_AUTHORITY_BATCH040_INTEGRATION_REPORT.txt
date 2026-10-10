@@ -1,0 +1,24 @@
+P4 SetcodeAuthority / batch040 live integration checkpoint
+Date: 2026-08-30
+
+PHASE 1
+- P4 authority test: 81 PASS / 0 FAIL
+- Full regression after P4 merge: 2633 PASS / 0 FAIL
+- Coverage remained: TESTED 856 / IMPLEMENTED 198 / GENERIC_OK 644 / PARTIAL 182 / ENGINE_GAP 896 / NOT_STARTED 2220 / total 4996
+- Acode embedded cards: 4996
+
+PHASE 2 — P4-only recovery candidates
+- Reviewed: 13
+- TESTED: 12
+- ENGINE_GAP retained: 1 (リゾネーター・エンジン)
+- Recovery-specific test: 56 PASS / 0 FAIL
+- Final full regression: 2676 PASS / 0 FAIL
+- Final Coverage: TESTED 868 / IMPLEMENTED 198 / GENERIC_OK 644 / PARTIAL 182 / ENGINE_GAP 884 / NOT_STARTED 2220 / total 4996
+- Final Acode embedded cards: 4996
+
+Remaining gap
+- リゾネーター・エンジン: P4 supplies authoritative Resonator membership, but exact resolution still needs an atomic primitive that adds one Level 4 monster from Deck and returns the surviving activation-time Graveyard targets simultaneously, followed by one deterministic Deck shuffle.
+
+Safety
+- Replay / Undo / Redo / SaveLoad / Action Journal / digest regressions: PASS
+- batch041 selected_count=40 and implementation not started

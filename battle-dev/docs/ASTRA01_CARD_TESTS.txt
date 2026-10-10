@@ -1,0 +1,76 @@
+PASS Dux normal summon enters optional SEGOC
+PASS Dux targets own grave via registry
+PASS Dux loaded target choice completes SEGOC
+PASS Dux real resolution equips without summoning
+PASS Dux stat counts itself and equipped Dragunity :: 1900
+PASS Dux saved chain resumes normal Main Phase
+PASS Dux attach provenance has resolving chain id
+PASS Dux selection/save/resolve Replay nonempty :: {"ok":true,"count":15,"finalDigest":"4c8ee474"}
+PASS Phalanx equipped ignition legal
+PASS Dux -> Phalanx actual self Special Summon
+PASS Dux -> Phalanx -> Gae Bulg legal Synchro
+PASS Dragunity Synchro Replay nonempty :: {"ok":true,"count":32,"finalDigest":"e7de17f3"}
+PASS Dux negative empty
+PASS Dux negative wrong-race
+PASS Dux negative level4
+PASS Dux negative special
+PASS Dux resolve negative target-gone
+PASS Dux resolve negative host-down
+PASS Dux resolve negative full-at-resolution
+PASS Dux resolve negative negated
+PASS Dux cancel returns to optional SEGOC
+PASS Dux skip resumes duel
+PASS Dux source control change before resolution keeps self equip
+PASS Dux chain control change Replay nonempty :: {"ok":true,"count":17,"finalDigest":"cccadb0d"}
+PASS Kick Man Reborn triggers Special Summon SEGOC
+PASS Kick Man recovered Equip Spell applies +800 :: 2100
+PASS Kick Man equip is not second Spell activation
+PASS Kick Man Replay nonempty :: {"ok":true,"count":20,"finalDigest":"7e38b905"}
+PASS Kick Man no normal summon trigger
+PASS Chopman real flip summon produces trigger
+PASS Chopman resolves Equip Spell :: 1900
+PASS Chopman battle flip excluded
+PASS Chopman Replay nonempty :: {"ok":true,"count":15,"finalDigest":"89e5c526"}
+PASS Legion equip branch is not destruction category
+PASS Legion equip resolved
+PASS Legion ignition legal
+PASS Legion cost paid before target choice
+PASS Legion cost snapshot on chain
+PASS Legion destroy branch is destruction category
+PASS Legion target destroyed
+PASS Legion no further activation without cost
+PASS Legion equip/cost/destroy Replay nonempty :: {"ok":true,"count":33,"finalDigest":"e6e0861a"}
+PASS Truck false real battle reaches mandatory trigger
+PASS Truck absorbs without targeting or destruction effect
+PASS Truck false false false resolution :: 1300
+PASS Truck false false Replay nonempty :: {"ok":true,"count":13,"finalDigest":"e9475a7b"}
+PASS Truck true real battle reaches mandatory trigger
+PASS Truck absorbs without targeting or destruction effect
+PASS Truck true false false resolution :: 1300
+PASS Truck true false Replay nonempty :: {"ok":true,"count":13,"finalDigest":"4007ff45"}
+PASS Truck false real battle reaches mandatory trigger
+PASS Truck absorbs without targeting or destruction effect
+PASS Truck false true false resolution :: 1000
+PASS Truck false true Replay nonempty :: {"ok":true,"count":13,"finalDigest":"2c2b7a89"}
+PASS Truck false real battle reaches mandatory trigger
+PASS Truck absorbs without targeting or destruction effect
+PASS Truck false false true resolution :: 1000
+PASS Truck false false Replay nonempty :: {"ok":true,"count":11,"finalDigest":"77d54f67"}
+PASS Truck false real battle reaches mandatory trigger
+PASS Truck absorbs without targeting or destruction effect
+PASS Truck false false false resolution :: 1300
+PASS Truck false false Replay nonempty :: {"ok":true,"count":13,"finalDigest":"c5495aaf"}
+PASS Truck negation suspends gain and retains attachment
+PASS Truck continuous negation Replay nonempty :: {"ok":true,"count":14,"finalDigest":"cf93687f"}
+PASS Truck mutual battle destruction does not trigger
+PASS ザ・キックマン negative empty
+PASS ザ・キックマン negative non-equip
+PASS ザ・キックマン negative full
+PASS 凶悪犯－チョップマン negative empty
+PASS 凶悪犯－チョップマン negative non-equip
+PASS 凶悪犯－チョップマン negative full
+PASS Legion negated: cost remains paid, target not destroyed
+PASS Legion negated Replay nonempty :: {"ok":true,"count":29,"finalDigest":"28f1680e"}
+PASS Legion target-down: cost remains paid, target not destroyed
+PASS Legion target-down Replay nonempty :: {"ok":true,"count":30,"finalDigest":"b01d6547"}
+PASS Astra01 no lost registry continuation

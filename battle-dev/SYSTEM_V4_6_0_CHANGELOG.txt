@@ -1,0 +1,55 @@
+1103 Duel ADS System v4.6.0 CHANGELOG
+
+[ADS-style common legality]
+- Gozen Match / Rivalry of Warlords now prohibit illegal face-up Normal/Special/Flip Summons before the summon is committed.
+- Face-down monster Set remains legal under those restrictions.
+- Common Special Summon lock checks now include temporary turn locks, Vanity's Fiend, Fossil Dyna Pachycephalo and Vanity's Emptiness.
+- EX Deck selection, summon procedures, effect Special Summons and flip/normal summon routes re-check common legality.
+- Continuous Trap restrictions do not apply while activation is still pending/negated.
+
+[Common state/action support]
+- Added explicit specialSummoned field-state tracking for effect/EX/ritual/token Special Summons.
+- Added FX_MONSTER_EQUIP_V46 for monster-as-Equip behavior without circular references.
+- Equip cleanup now routes equipped monster cards to their owner correctly.
+- Added replay-safe FX_CARD_FLAG_V46 explicit state set/delete action.
+- graveInfo now retains field level/face and destroying player where available.
+
+[v4.5 Unified Effect batch: +15]
+- Magical Android
+- Dewloren, Tiger King of the Ice Barrier
+- Leviair the Sea Dragon
+- The Warrior Returning Alive
+- Krebons
+- Night Assailant
+- Magical Merchant
+- Elemental HERO The Shining
+- Vision HERO Adoration
+- Mist Wurm
+- Colossal Fighter
+- Flamvell Uruquizas
+- Blackwing - Armed Wing
+- Grenosaurus
+- Number 17: Leviathan Dragon
+
+[v4.6 Unified Effect batch: +15]
+- Stardust Dragon
+- Evigishki Merrowgeist
+- Vylon Disigma
+- Goyo Guardian
+- Dark End Dragon
+- Red Dragon Archfiend
+- Infernity Doom Dragon
+- Gungnir, Dragon of the Ice Barrier
+- Sea Dragon Lord Gishilnodon
+- Tempest Magician
+- Fossil Dyna Pachycephalo
+- Vanity's Fiend
+- Vanity's Emptiness
+- Scrap Twin Dragon
+- Thought Ruler Archfiend
+
+[Compatibility]
+- Existing 299 unique legacy defineScript registrations are retained.
+- Unified Effect registry is now 42 unique cards total (12 existing + 30 new).
+- carddata.json remains 4,996 cards; no metadata change was required for this batch.
+- Replay format remains v4 and existing v4.4 replay hardening is retained.

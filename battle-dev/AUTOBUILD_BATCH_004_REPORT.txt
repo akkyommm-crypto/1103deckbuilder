@@ -1,0 +1,32 @@
+1103 Duel ADS — Autobuild Batch 004 checkpoint
+Baseline: System v4.8.0
+
+Result
+- Quality gate: 703 PASS / 0 FAIL
+- Explicitly implemented and tested: 21 cards
+- ENGINE_GAP recorded: 19 cards
+- Acode embedded database: 4,996 cards
+- Coverage: TESTED 267 / IMPLEMENTED 201 / GENERIC_OK 635 / PARTIAL 182 / ENGINE_GAP 51 / NOT_STARTED 3660
+
+Implementation notes
+- Reused canonical setcode metadata for Crystal Beast handling.
+- Reused deterministic duel RNG and serializable RESET_END stat modifiers for Angel Dice.
+- Added no card-name branch to the engine.
+- Positive and negative regression checks cover Field modifiers and opponent-only Burden of the Mighty behavior.
+
+ENGINE_GAP categories
+- Ritual Summon pipeline: 6
+- Private-information reveal UI: 2
+- Effect-source immunity/category processing: 2
+- Resolution-time choice / opponent choice: 2
+- Deck orientation or direct Field activation lifecycle: 2
+- Archetype metadata: 1
+- Hand-limit system: 1
+- Battle-scoped relational modifier: 1
+- Scheduled alternate-win condition: 1
+- Canonical Chain source/effect replacement: 1
+
+Validation
+- python tools/check.py: 703 PASS / 0 FAIL
+- python tools/build_acode.py data/carddata.json: PASS, cards=4996
+- python tools/script_coverage.py: PASS

@@ -1,0 +1,75 @@
+P1 ChoiceRequest v4.9.0 recovery mini-batch report
+=================================================
+
+Scope
+-----
+- Started from the accepted 1997 PASS / 0 FAIL, Acode 4,996-card P1 baseline.
+- Implemented only the 16 P1-only recovery candidates.
+- Did not select or start batch031.
+- No shared-engine redesign or new engine primitive was added.
+
+Implementation
+--------------
+- Added cards/79_p1_choice_recovery_minibatch.js.
+- Added six reusable card-layer ChoiceRequest continuation handlers.
+- Every selection uses API.requestChoice with a registered, stable handler name
+  and JSON-only resume arguments.
+- The new card source contains no API.selectCard call and no legacy callback.
+- Added tools/test_p1_choice_recovery_minibatch.js and registered it in
+  tools/check.py.
+
+Cards promoted to TESTED (16)
+-----------------------------
+- No.10 白輝士イルミネーター
+- 罰則金
+- ご隠居の猛毒薬
+- 天使の施し
+- 謙虚な壺
+- 陽気な葬儀屋
+- D－スピリッツ
+- 狩猟本能
+- 隠れ兵
+- アポート
+- ガスタの希望 カムイ
+- サンダー・ドラゴン
+- ジェネクス・ワーカー
+- センジュ・ゴッド
+- ソニックバード
+- ミイラの呼び声
+
+ENGINE_GAP result
+-----------------
+- Returned to ENGINE_GAP: 0
+- Additional missing primitives discovered: none
+
+Validation
+----------
+- Dedicated card/P1 regression: 67 PASS / 0 FAIL
+- Full regression: 2064 PASS / 0 FAIL
+- Previous baseline retained: 1997 existing PASS / 0 regression FAIL
+- Card-level Replay / Undo / Redo / SaveLoad / Action Journal: PASS
+- P1 dedicated run: migrated 17 / legacy 0
+  (16 card activations plus one additional persistence/replay scenario)
+- Acode embedded cards: 4,996
+- Coverage total: 4,996
+
+Coverage
+--------
+- TESTED: 717
+- IMPLEMENTED: 198
+- GENERIC_OK: 644
+- PARTIAL: 182
+- ENGINE_GAP: 635
+- NOT_STARTED: 2620
+
+Generated artifacts
+-------------------
+- dist/battle.html SHA256:
+  0c85aabfb9ca674336f9ace2e13de006753c28bec4b9abdfba19c416a20eba3c
+- dist/battle_acode.html SHA256:
+  c5df1ee2c532be039604634fd2b455090fecfd52dffd76131032c86251244336
+
+Stop condition
+--------------
+- P1 recovery mini-batch completed.
+- AUTOBUILD remains paused before batch031.

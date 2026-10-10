@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U273",
+  "category": "engine",
+  "mode": "opus-only",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Engine: the hand size limit rule at the end of the turn (DUEL had none) with modifiers (player flag, continuous hook); 3 ENGINE_GAP cards → TESTED (衰弱の霧, ヒエログリフの石版, 無限の手札); real-DUEL test; negative control; full pre-scan (turn-end behaviour change); full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 2,
+  "later_defects": 1,
+  "started_at": "2026-10-03T17:40:00+09:00",
+  "finished_at": null,
+  "gate_owner": "opus-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "Sonnet U270 and other gates ran at the same time"
+  },
+  "notes": "Engine unit kept by Opus under workflow v3. Rework 2: the continuous hook had to live under `continuous` (continuousSources only collects scripts with a continuous block); test fixes (a mutated hand array, an explicit normal draw). Later defect (found in S03-U285, fixed in S03-U287): the hand-size discard events were never drained, so 「捨てられた時」 triggers did not fire."
+}

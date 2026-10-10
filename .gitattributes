@@ -1,0 +1,18 @@
+* text=auto
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.ps1 text eol=crlf
+*.png binary
+*.webp binary
+*.zip binary
+
+# Preserve the validated U302 import byte-for-byte, including its historical
+# mixed line endings. New collaboration files above keep explicit endings.
+battle.html -text -eol
+battle-dev/** -text -eol

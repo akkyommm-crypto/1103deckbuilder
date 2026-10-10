@@ -1,0 +1,18 @@
+{
+  "example": false,
+  "unit": "S03-U244",
+  "category": "engine",
+  "mode": "opus-only",
+  "scope": "7 ENGINE_GAP Spirit monsters → TESTED via an engine flip-turn record and draw-phase flags; real-DUEL test; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [{"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}]
+  },
+  "notes": "Picked by clustering ENGINE_GAP reasons (7 cards, one missing record). Rework 1 = the first test run passed the draw-skip checks vacuously (no normal draw happens in this harness unless requested in the Draw Phase) — tests changed to request the draw and a control added; a direct call of a card-file helper in the test made the negative control crash — replaced by field checks. cycle13's SKIP assertions for the 7 adjusted (premise removed)."
+}

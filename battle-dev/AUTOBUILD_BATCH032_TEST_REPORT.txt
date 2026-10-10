@@ -1,0 +1,9 @@
+AUTOBUILD batch032 test report
+
+- Dedicated batch032 regression: 74 PASS / 0 FAIL.
+- Full regression: 2202 PASS / 0 FAIL.
+- Coverage: TESTED 764 / IMPLEMENTED 198 / GENERIC_OK 644 / PARTIAL 182 /
+  ENGINE_GAP 668 / NOT_STARTED 2540 (total 4996).
+- Acode build: 4996 cards embedded successfully.
+- Replay / Undo / Redo / SaveLoad / Action Journal regression suite: PASS.
+- Acode SHA256: fab6a38b7f140e1b087286eb0f54e21aefff36f5f48b925c7f168a6716774823

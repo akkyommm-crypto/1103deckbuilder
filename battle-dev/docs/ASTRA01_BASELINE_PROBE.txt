@@ -1,0 +1,11 @@
+OBSERVE baseline equip events []
+OBSERVE baseline control host lookup false {"p":0,"uid":1}
+OBSERVE baseline face-down source zone sz
+PASS Cycle66 historical ドラグニティ－ドゥクス: both existing APIs reject grave source
+PASS Cycle66 historical ドラグニティ－ドゥクス: no move/action occurred
+PASS Cycle66 historical ザ・キックマン: both existing APIs reject grave source
+PASS Cycle66 historical ザ・キックマン: no move/action occurred
+PASS Cycle66 historical トラックロイド: both existing APIs reject grave source
+PASS Cycle66 historical トラックロイド: no move/action occurred
+PASS Cycle66 historical v46 field equip works
+PASS Cycle66 historical existing equip state fields exist

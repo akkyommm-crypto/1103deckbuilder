@@ -1,0 +1,21 @@
+{
+  "example": false,
+  "unit": "S03-U254",
+  "category": "reuse",
+  "mode": "mixed",
+  "scope": "5 NOT_STARTED cards → TESTED (7 implemented by the subagent; 2 removed by the parent after the pre-scan); fresh Sonnet subagent from brief254.md; Opus review, declarations, full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "usage": {
+    "source": "Agent result for the fresh Sonnet subagent; main-session Opus tokens not available",
+    "includes_all_agents": false,
+    "by_model": [
+      {"model": "claude-sonnet-5-5", "effort": "not set (delegated from a session outside the tree)", "input": null, "output": null, "cache_read": null, "cache_creation": null, "total_reported": 195717, "tool_uses": 69, "duration_ms": 541569},
+      {"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}
+    ]
+  },
+  "notes": "58/0 first hand-back, negative control 26 FAIL (by the subagent). Rework 1 (parent, after a failed pre-scan): a helper name clashed with a global (overrode スクラップ・ワーム's) — renamed; シャブティのお守り / BF－蒼天のジェット exceeded the System v29 GY-source budget — removed from the unit (NOT_STARTED). Final 44/0, negative control 21 FAIL. Lesson: briefs must ask for unique helper names (check for existing globals)."
+}

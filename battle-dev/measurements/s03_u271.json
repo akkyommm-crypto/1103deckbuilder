@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U271",
+  "category": "engine",
+  "mode": "opus-only",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "Engine: LP rule origin player (originPlayerS03) and battle damage treated as effect damage (battleDamageAsEffectS03); 2 ENGINE_GAP cards → TESTED (リフレクト・ネイチャー, 墓守の従者); real-DUEL test; negative control (full + engine-only); full gate; also corrects 2 S03-U270 cards found in the Opus review (ホーリーライフバリアー origin, 氷結界の武士 draw only after destruction); effect Special Summon position choice helper (engine/1ZZK) applied to the S03-U269 summoning cards; damage treated as effect damage bypasses the battle-damage layer",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 3,
+  "later_defects": null,
+  "started_at": "2026-10-03T17:31:00+09:00",
+  "finished_at": null,
+  "gate_owner": "opus-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: main-session per-unit tokens not available",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "Sonnet U270 and the U268 / U269 gates ran at the same time"
+  },
+  "notes": "Engine unit kept by Opus under workflow v3, built in parallel with the Sonnet unit U270 on U269, then rebased onto U270 (status-record test re-applied by script). Rework 2: a test step mutated state after the Replay baseline; a mistaken copy of U270 engine files during a check was reverted from s03_u271_orig and verified identical. Negative control on U270: 13 FAIL; engine-only revert: 7 FAIL. Rework 3 (2026-10-03 「TESTED判定」 review before publication): the first gate (17186) passed, but 墓守の従者's damage still went through the battle-damage filters, and the S03-U269 summons were Attack-only — fixed, test 27 → 37, re-gated."
+}

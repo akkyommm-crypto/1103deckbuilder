@@ -1,0 +1,60 @@
+You are taking over the 1103 Duel ADS System repository as the primary implementation agent.
+
+First read, in this order:
+1. AGENTS.md
+2. docs/CODEX_HANDOFF_V470.md
+3. docs/CODEX_AUTOBUILD.md
+4. docs/CODEX_CURRENT_TASK.md
+5. docs/CODEX_BACKLOG.md
+
+Mission:
+Build accurate behavior coverage for all 4,996 cards in data/carddata.json using this project's independent engine and card APIs. ADS/EDOPro/Project Ignis may be used only to understand behavior, timing, categories, and edge cases. Do not copy their source code.
+
+Critical rule:
+Never optimize for the number of script registrations. An inaccurate script is worse than ENGINE_GAP. PARTIAL does not count as complete.
+
+Baseline:
+- v4.7.0 checkpoint
+- 4,996-card database
+- 508 PASS / 0 FAIL at handoff
+- deterministic Action Journal / Replay Runner v4
+- legacy + Unified Effect architecture already coexists
+
+Start procedure:
+1. Run `python tools/check.py` before editing. Fix nothing else if the baseline itself does not pass; report the environment/baseline failure clearly.
+2. Run `python tools/script_coverage.py` and inspect `docs/SCRIPT_COVERAGE.md`.
+3. Complete the current v4.8.0 bootstrap task in `CODEX_PROMPT_V480.txt` and `docs/CODEX_CURRENT_TASK.md` first. This adds the reusable multi-attack core.
+4. Run the full quality gate and create the v4.8 checkpoint.
+5. Then run `python tools/autobuild_cycle.py --size 40`.
+6. From that point onward, autonomously repeat the batch loop described in `docs/CODEX_AUTOBUILD.md`.
+
+For each card in a generated batch:
+- verify historical 1103 behavior when modern errata could differ;
+- inspect existing local helpers/analogous cards;
+- use common engine primitives rather than card-name patches;
+- implement independently with defineUnifiedCardV4/API/action/runtime-effect architecture where appropriate;
+- add focused positive/negative tests;
+- preserve cost -> target -> operation timing and Damage Step legality;
+- preserve owner/controller routing, summon provenance, count limits, resets, Undo/Redo and Replay;
+- if the engine cannot model the effect correctly, add/update an ENGINE_GAP entry with a precise reusable primitive requirement and continue with the remaining cards.
+
+At the end of every batch:
+- run `python tools/check.py`;
+- run `python tools/build_acode.py data/carddata.json`;
+- fix all failures;
+- run `python tools/script_coverage.py`;
+- update changelog/test report and README checkpoint summary;
+- if git already exists, commit the passing checkpoint;
+- run `python tools/autobuild_cycle.py --size 40` and continue with the next batch.
+
+Do not stop merely because one selected card is difficult. Defer that card as ENGINE_GAP with an exact reason and continue. Stop only for an unrecoverable environment problem, a requirement that needs user/legal clarification, or when the coverage completion criteria in docs/CODEX_AUTOBUILD.md are satisfied.
+
+Do not edit generated dist HTML directly. Do not blindly rewrite carddata.json. Do not use modern card behavior where it conflicts with the 1103 historical version.
+
+When you do stop, report:
+- exact coverage counts by status;
+- exact global PASS/FAIL totals;
+- files changed;
+- new reusable engine primitives;
+- ENGINE_GAP cards and the primitive blocking each one;
+- the next generated batch if work remains.

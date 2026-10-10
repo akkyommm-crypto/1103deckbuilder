@@ -1,0 +1,43 @@
+Read `AGENTS.md`, `docs/CODEX_HANDOFF_V470.md`, and `docs/CODEX_BACKLOG.md` first.
+
+Task: implement **v4.8.0 — multi-attack core** on top of the current v4.7.0 baseline.
+
+Baseline requirements:
+- First run `python tools/check.py`. It must start from 508 PASS / 0 FAIL.
+- Do not edit generated `dist/*.html` directly.
+- Keep strict 1103 cutoff (2011-08-31) and historical card behavior.
+- ADS/EDOPro/Project Ignis may be used only as behavioral/ruling reference. Do not copy their source code.
+
+Scope for v4.8.0:
+1. Inspect the current attack state in `engine/00_state_actions.js` and the Battle Command / Damage Step flow in `engine/30_processor_chain_battle.js`.
+2. Replace or extend the current boolean-only `card.attacked` model with a **replay-safe, serializable attack allowance/count model** that supports exactly one additional attack granted by an effect.
+3. Preserve all existing restrictions: first-turn Battle Phase rules, `cannotAttackNow`, `cannotDirectAttackNow`, `v350OnlyAttackerUid`, attack replay when defenders change, Damage Step flow, Undo/Redo, Action Journal and replay audit.
+4. Do not give arbitrary monsters unlimited attacks. Default remains one attack per Battle Phase.
+5. Add a small public API/helper for card effects to grant an additional attack for the current turn/Battle Phase without direct `gameState` mutation.
+6. Implement these two cards in a new `cards/48_v48_native.js` using Unified Effect APIs:
+   - `ダイガスタ・フェニクス`: once per turn detach 1 Xyz Material, target 1 face-up WIND monster you control; that monster can attack twice during this turn's Battle Phase.
+   - `カチコチドラゴン`: when it destroys an opponent monster by battle and sends it to GY, once per turn it may detach 1 Xyz Material to make one additional consecutive attack. Respect battle timing and do not allow the extra attack if the card cannot legally attack.
+7. Add focused regression tests in `tools/test_v480_native_cards.js`. Tests must cover at least:
+   - normal monster cannot declare a second attack;
+   - Phoenix target can declare exactly a second attack but not a third;
+   - Phoenix does not grant extra attacks after its grant expires/resets;
+   - Kachi Kochi only grants the additional attack after the correct battle-destroy event and material detach;
+   - attack restrictions still override extra-attack allowance;
+   - serialized state/replay digest includes any new gameplay fields needed for deterministic replay.
+8. Add `cards/48_v48_native.js` to `build_manifest.json` in the correct source order.
+9. Update version strings to `4.8.0`, create `SYSTEM_V4_8_0_CHANGELOG.txt` and `SYSTEM_V4_8_0_TEST_REPORT.txt`, and update the top of README without deleting historical notes.
+10. Run:
+   - `python tools/build.py`
+   - `python tools/check.py`
+   - `python tools/build_acode.py data/carddata.json`
+
+Definition of done:
+- all pre-existing tests remain PASS;
+- all v4.8 tests PASS;
+- JavaScript syntax PASS;
+- zero duplicate top-level function declarations;
+- Acode one-file build succeeds with 4,996 embedded cards;
+- no source copied from ADS/EDOPro/Project Ignis;
+- report the exact PASS/FAIL totals and list every modified file.
+
+Before editing, give a concise implementation plan based on the existing attack code. Then implement the whole task; do not stop after the plan.

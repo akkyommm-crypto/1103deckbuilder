@@ -1,0 +1,72 @@
+1103 Duel ADS System v4.4.0 TEST REPORT
+
+RESULT: PASS
+
+Automated regression
+- PASS: 368
+- FAIL: 0
+- python tools/check.py: PASS
+- JavaScript syntax (development build): PASS
+- JavaScript syntax (Acode inline build): PASS
+
+Build integrity
+- systemVersion: 4.4.0
+- card DB: 4,996 cards
+- Acode inline <script>: 1
+- legacy defineScript: 299 unique
+- Unified Effect cards: 12 unique
+- top-level functions in Acode build: 742
+- duplicate top-level function names: 0
+
+Replay Runner v4.4
+- initialState / initialDigest capture: PASS
+- full Action replay audit: PASS
+- rngBefore restore per Action: PASS
+- exact seq cursor: PASS
+- step / back / end: PASS
+- preview blocks normal act(): PASS
+- exit restores exact live duel + journal: PASS
+- branch adopts exact journal prefix: PASS
+- digest tamper detection: PASS
+- truncated journal rejection: PASS
+- automatic rule Action journal without extra Undo point: PASS
+
+Activation replay hardening
+- count-limit consumption committed inside CHAIN_ADD: PASS
+- count-limit state included in replay digest: PASS
+- Continuous/Field/Equip activationPending committed inside CHAIN_ADD: PASS
+- CHAIN_RESOLVE_TOP clears activationPending: PASS
+- activation-negated resolution preserves activationNegated: PASS
+- activation pending/negated replay audit: PASS
+
+Rich State Digest
+- primitive per-card gameplay flags: covered
+- attacked / negation / count-limit state: covered
+- mods / counters: covered
+- graveInfo / banishInfo: covered
+- procedure/summon material metadata: covered
+- chain source / targets / selection / effect key / negation: covered
+
+Unified Effect v4.4 cards
+- Penguin Soldier: PASS
+- Man-Eater Bug: PASS
+- Magician of Faith: PASS
+- Mask of Darkness: PASS
+- Naturia Beast: PASS
+- Naturia Landoise: PASS
+
+Regression safeguards retained
+- EX summon position askExSummonPos -> doExSummon(..., pos): PASS
+- Synchro DEF summon: PASS
+- Xyz negate/material routing: PASS
+- Bottomless simultaneous summon batch: PASS
+- Effect Veiler timing/cost/expiry: PASS
+- v4 LOCATION/setcode/RESET/Unified Effect: PASS
+- v4.1 deterministic RNG/journal: PASS
+- v4.2 EX/removed events: PASS
+- v4.3 seq/rngBefore/truncation: PASS
+
+Exact duplicate-function check on built Acode HTML:
+  grep -oE '^function [A-Za-z_$][A-Za-z0-9_$]*' battle_ads_system_v4_4_0_acode.html \
+    | awk '{print $2}' | sort | uniq -d
+Result: 0 lines

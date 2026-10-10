@@ -1,0 +1,24 @@
+1103 ADS System v4.2.0 TEST REPORT
+
+RESULT: PASS
+
+Full tools/check.py: 299 PASS lines / 0 FAIL.
+Top-level duplicate function declarations: 0.
+JavaScript syntax: PASS.
+Embedded card DB: 4,996 cards.
+Runtime card scripts: 311 (299 legacy + 12 v4-native registrations).
+
+v4.2 dedicated regression:
+- EX pending state JSON serializable: PASS
+- Synchro materials sent to GY at PREPARE: PASS
+- Synchro DEF position preserved at COMMIT: PASS
+- Xyz negate sends candidate materials + attempted Xyz monster to GY: PASS
+- EX PREPARE/COMMIT recorded in Action Journal: PASS
+- Summon window OPEN/CLOSE recorded in Action Journal: PASS
+- Central onRemove event queued once: PASS
+- Scout Plane End Phase return: PASS
+- D.D. Survivor face-up-field requirement: PASS
+- Banished-zone event collection: PASS
+- LOCATION.REMOVED resolution: PASS
+
+Existing regression suites (summon timing, owner routing, effect negation, v3.3-v3.8, v4 architecture, v4.1 replay/RNG/native recruiters): PASS.

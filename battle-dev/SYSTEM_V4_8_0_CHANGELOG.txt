@@ -1,0 +1,13 @@
+1103 Duel ADS System v4.8.0
+================================
+
+- Added serializable per-card attackCount / attackLimit / attackLimitTurn state.
+- Added replay-journal actions ATTACK_DECLARE_V48 and GRANT_EXTRA_ATTACK_V48.
+- Added canDeclareAttackV48(), attackCountV48(), attackLimitV48().
+- Added API.grantAdditionalAttack() for card scripts.
+- Preserved legacy attacked compatibility and all existing attack restrictions.
+- Added native Unified Effects for ダイガスタ・フェニクス and カチコチドラゴン.
+- Added consecutive-attacker enforcement for カチコチドラゴン.
+- Updated visible/system version strings to 4.8.0.
+
+No ADS/EDOPro/Project Ignis source was copied.

@@ -1,0 +1,51 @@
+{
+  "example": false,
+  "unit": "S03-U280",
+  "category": "reuse",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "ENGINE_GAP re-check 5: 深海の戦士, 砲弾ヤリ貝, 魚雷魚, ライバル登場!, 魂の氷結 ENGINE_GAP -> TESTED (キャトルミューティレーション parked: Level ruling); real-DUEL test; negative control; full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": null,
+  "later_defects": null,
+  "started_at": null,
+  "finished_at": null,
+  "gate_owner": "sonnet",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "Agent result of the resumed run only (the first run stopped with a usage-limit error and reported no usage); main-session Opus tokens not available",
+    "includes_all_agents": false,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": "not set (delegated from a session outside the tree)",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null,
+        "total_reported_resumed_run": 239303,
+        "tool_uses_resumed_run": 4,
+        "duration_ms_resumed_run": 56796,
+        "first_run": null
+      },
+      {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": "U276-U279 gate chains ran in other trees at the same time"
+  },
+  "notes": "Sonnet subagent owned the unit under workflow v3 batch3 (delegated from a session outside the tree, so the effort field was not applied and is null). Negative control on U279: 36 FAIL (67 asserts). First run stopped at a usage-limit error after its gate failed at the status audit (forEach registrations invisible to the coverage scanner → rewritten as literal defineScript calls); the retry resumed it. Opus review: 5 TESTED accepted; キャトルミューティレーション parked (Level basis is an open ruling). Finding: the U278 position heuristic misses sentences where 表示 belongs to another clause (queued as an Opus fix)."
+}

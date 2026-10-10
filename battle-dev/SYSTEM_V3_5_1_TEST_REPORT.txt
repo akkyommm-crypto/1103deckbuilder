@@ -1,0 +1,43 @@
+1103 ADS System v3.5.1 TEST REPORT
+====================================
+
+RESULT: PASS
+Automated checks: 129 PASS
+Explicit card scripts: 240 unique
+Acode embedded card DB: 4,996 cards
+Acode inline <script>: 1
+JavaScript syntax: PASS
+
+v3.5.1重点実行確認
+- 実機スモーク開始時にDUELモードへ切替: PASS
+- 実機スモーク終了時に元モードへ復帰: PASS
+- 9シナリオ全て初動LEGAL ACTIONあり: PASS
+- 天空の宝札 noSpecialSummon: PASS
+- 天空の宝札 noBattlePhase: PASS
+- 特殊召喚禁止中の死者蘇生に発動ボタンを出さない: PASS
+- 天空の宝札 2ドロー: PASS
+- 緑光の宣告者がサイクロンへの応答候補になる: PASS
+- 緑光＋オネストのコスト処理: PASS
+- 緑光でサイクロン発動無効・対象罠残存: PASS
+- 紫光の宣告者が強制脱出装置への応答候補になる: PASS
+- 紫光＋オネストのコスト処理: PASS
+- 紫光で強制脱出装置発動無効・対象モンスター残存: PASS
+- 荒行でザンジ特殊召喚: PASS
+- 荒行のEnd破壊予約にflagKeyを保存: PASS
+- 荒行End Phaseで対象キザンだけ破壊: PASS
+- ボルテックの攻撃開始合法: PASS
+- ボルテックのダメージ計算後誘発条件: PASS
+- ボルテックで除外エアーマン特殊召喚: PASS
+
+主要既存回帰
+- 1103後期の召喚成功後起動効果タイミング: PASS
+- X素材を素材カードの持ち主の墓地へ送る: PASS
+- EXモンスターのバウンス先を持ち主EXへ補正: PASS
+- 死者蘇生した相手所有モンスターのバウンス先: PASS
+- 効果無効と発動無効の分離: PASS
+- エフェクト・ヴェーラーの相手Main限定/コスト/期限: PASS
+- v3.3 / v3.4 / v3.5追加カード群: PASS
+
+注意
+- Android Acodeの実タップそのものは端末固有UIのためユーザー実機確認対象。
+- ただしv3.5.1では、最初の5シナリオについて盤面セットから主要チェーン解決結果までNode VM上で実行回帰テストを追加済み。

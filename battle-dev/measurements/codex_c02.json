@@ -1,0 +1,57 @@
+{
+  "unit": "CODEX-C02",
+  "mode": "codex-review-implementation",
+  "workflow_profile": "codex-astra-sol-batch-v1",
+  "baseline": "U287 + CODEX-C01",
+  "model": "GPT-5.6 Sol",
+  "review_model": "Astra",
+  "usage": null,
+  "focused_exit": 0,
+  "dedicated_pass": 40,
+  "dedicated_fail": 0,
+  "nearby": {
+    "test_s03_u233_ns25.js": {
+      "pass": 26,
+      "fail": 0,
+      "exit": 0
+    },
+    "test_s03_u278_ss_position.js": {
+      "pass": 11,
+      "fail": 0,
+      "exit": 0
+    },
+    "test_s03_u135_auto_table_filters.js": {
+      "pass": 12,
+      "fail": 0,
+      "exit": 0
+    }
+  },
+  "negative_control": {
+    "baseline": "unchanged CODEX-C01",
+    "exit": 2,
+    "pass": 26,
+    "fail": 14,
+    "crash": false,
+    "test": "evidence/c02_negative_control/test_codex_c02_cards.js",
+    "harness": "evidence/c02_negative_control/astra_harness.js",
+    "log": "evidence/codex_c02_negative_control.log"
+  },
+  "coverage_before": {
+    "TESTED": 2902,
+    "ENGINE_GAP": 496
+  },
+  "coverage_after": {
+    "TESTED": 2908,
+    "ENGINE_GAP": 490
+  },
+  "status_delta": {
+    "TESTED": 6,
+    "ENGINE_GAP": -6
+  },
+  "integration_status": "standalone U287 + CODEX-C01 base; Claude U288-U290 not merged",
+  "notes": "Usage telemetry unavailable; values intentionally null. Planning and partial Terra rework were completed by fixing Bond's shifting hand indexes, Twins' nonexistent LP helper, focused DUEL/Replay coverage, status declarations, and historical assertions. Root owns final scan/gate/Acode/package.",
+  "gate_exit": 0,
+  "gate_pass": 17772,
+  "gate_fail": 0,
+  "prescan_files": 508
+}

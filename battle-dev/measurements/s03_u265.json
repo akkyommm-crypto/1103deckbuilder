@@ -1,0 +1,21 @@
+{
+  "example": false,
+  "unit": "S03-U265",
+  "category": "reuse",
+  "mode": "mixed",
+  "scope": "6 NOT_STARTED cards → TESTED (7 candidates; ドラグニティ－ジャベリン returned as needing a new destruction-substitute kind); fresh Sonnet subagent from brief265.md; Opus review, declarations, full gate",
+  "outcome": "accepted",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "usage": {
+    "source": "Agent result for the fresh Sonnet subagent; main-session Opus tokens not available",
+    "includes_all_agents": false,
+    "by_model": [
+      {"model": "claude-sonnet-5-5", "effort": "not set (delegated from a session outside the tree)", "input": null, "output": null, "cache_read": null, "cache_creation": null, "total_reported": 190687, "tool_uses": 55, "duration_ms": 523946},
+      {"model": "claude-opus-5-5", "effort": "high", "input": null, "output": null, "cache_read": null, "cache_creation": null}
+    ]
+  },
+  "notes": "61/0, negative control 27 FAIL (by the subagent). All 6 accepted on review."
+}

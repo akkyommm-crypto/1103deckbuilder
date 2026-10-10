@@ -1,0 +1,2867 @@
+{
+  "schema_version": 1,
+  "checkpoint": "v4.8.0 / batch030",
+  "classification": "one primary missing-primitive family per ENGINE_GAP; dependencies capture common secondary needs",
+  "total_engine_gap": 651,
+  "categories": [
+    {
+      "key": "ritual_pipeline",
+      "label": "儀式召喚パイプライン",
+      "count": 36,
+      "representative_cards": [
+        "ジャベリンビートルの契約",
+        "スカルライダーの復活",
+        "ゼラの儀式",
+        "チャクラの復活",
+        "ドリアードの祈り"
+      ],
+      "dependencies": "手札・場の素材選択、レベル計算、召喚条件無視、召喚由来、特殊召喚制約",
+      "commonization_potential": "高：多数の儀式魔法・儀式モンスターへ横断適用可能",
+      "cards": [
+        {
+          "name": "ジャベリンビートルの契約",
+          "reason": "Needs a first-class Ritual Summon pipeline with hand/field material selection, exact Level requirement, provenance and replay-safe summon processing."
+        },
+        {
+          "name": "スカルライダーの復活",
+          "reason": "Needs a first-class Ritual Summon pipeline with hand/field material selection, exact Level requirement, provenance and replay-safe summon processing."
+        },
+        {
+          "name": "ゼラの儀式",
+          "reason": "Needs a first-class Ritual Summon pipeline with hand/field material selection, Level accounting, provenance and replay-safe summon processing."
+        },
+        {
+          "name": "チャクラの復活",
+          "reason": "Needs a first-class Ritual Summon pipeline with hand/field material selection, Level accounting, provenance and replay-safe summon processing."
+        },
+        {
+          "name": "ドリアードの祈り",
+          "reason": "Needs a first-class Ritual Summon pipeline with hand/field material selection, Level accounting, provenance and replay-safe summon processing."
+        },
+        {
+          "name": "ローの祈り",
+          "reason": "Needs a first-class Ritual Summon pipeline with hand/field material selection, Level accounting, provenance and replay-safe summon processing."
+        },
+        {
+          "name": "合成魔術",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "大邪神の儀式",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "奇跡の方舟",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "悪魔鏡の儀式",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "灼熱の試練",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "白竜降臨",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "要塞クジラの誓い",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "イリュージョンの儀式",
+          "reason": "Needs a first-class Ritual Summon pipeline with hand/field material selection, Level accounting, provenance and replay-safe processing."
+        },
+        {
+          "name": "エンド・オブ・ザ・ワールド",
+          "reason": "Needs a first-class Ritual Summon pipeline supporting exact-Level recipes for either of two canonical Ritual Monsters."
+        },
+        {
+          "name": "カオスの儀式",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "カオス－黒魔術の儀式",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "ガルマソードの誓い",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "センジュ・ゴッド",
+          "reason": "Needs replay-safe resolution-time Deck selection for a non-targeting Ritual Monster search after Normal/Flip Summon."
+        },
+        {
+          "name": "マンジュ・ゴッド",
+          "reason": "Needs replay-safe resolution-time Deck selection across Ritual Monster and Ritual Spell categories after Normal/Flip Summon."
+        },
+        {
+          "name": "ライオンの儀式",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "儀式の供物",
+          "reason": "Needs a first-class Ritual material-value override for DARK Ritual Monsters integrated with material selection and provenance."
+        },
+        {
+          "name": "大地讃頌",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical exact-Level material accounting for this generic EARTH Ritual Spell and replay-safe processing."
+        },
+        {
+          "name": "精霊術師 ドリアード",
+          "reason": "Needs a first-class Ritual Summon pipeline plus a multi-Attribute identity model shared by effect filters, legality, rendering and replay."
+        },
+        {
+          "name": "終焉の王デミス",
+          "reason": "Needs a first-class Ritual Summon pipeline before its LP-cost ignition wipe can be considered a complete, legally summonable card implementation."
+        },
+        {
+          "name": "覚醒の証",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and replay-safe processing."
+        },
+        {
+          "name": "闇の支配者との契約",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and exact canonical Ritual Monster binding."
+        },
+        {
+          "name": "イビリチュア・ガストクラーケ",
+          "reason": "Needs a first-class Ritual Summon pipeline plus private random inspection of up to two opponent hand cards and resolution-time Deck return choice."
+        },
+        {
+          "name": "仮面魔獣の儀式",
+          "reason": "Needs a first-class Ritual Summon pipeline with historical at-least Level material accounting and exact canonical Ritual Monster binding."
+        },
+        {
+          "name": "奈落との契約",
+          "reason": "Needs a first-class Ritual Summon pipeline with exact-Level material accounting, DARK Ritual selection, legality, UI, save and replay."
+        },
+        {
+          "name": "破滅の女神ルイン",
+          "reason": "Needs a first-class Ritual Summon pipeline plus a serializable battle-destruction extra-attack grant integrated with the multi-attack core."
+        },
+        {
+          "name": "イビリチュア・ソウルオーガ",
+          "reason": "Needs a first-class Ritual Summon pipeline and a replay-safe Gishki-hand discard cost for targeted face-up Deck return."
+        },
+        {
+          "name": "リチュアに伝わりし禁断の秘術",
+          "reason": "Needs a first-class Ritual Summon pipeline supporting both fields as tribute sources, exact Level totals, Battle Phase prohibition and a summon-linked half-ATK modifier."
+        },
+        {
+          "name": "ヴィジョン・リチュア",
+          "reason": "Needs the Ritual pipeline's single-material full-Level substitution for WATER Ritual Monsters in addition to its hand discard search effect."
+        },
+        {
+          "name": "破滅の魔王ガーランドルフ",
+          "reason": "Needs the Ritual Summon pipeline, summon-method provenance, simultaneous DEF-threshold destruction and a count-based permanent ATK modifier from successful destructions."
+        },
+        {
+          "name": "伝説の爆炎使い",
+          "reason": "Needs the reusable Ritual Summon pipeline, per-source Spell-activation counter accumulation, and a three-counter cost for mass destruction excluding itself."
+        }
+      ]
+    },
+    {
+      "key": "hidden_information",
+      "label": "非公開情報・宣言・乱数選択",
+      "count": 99,
+      "representative_cards": [
+        "いたずら好きな双子悪魔",
+        "古代の遠眼鏡",
+        "旧神の印",
+        "グラディアル・チェンジ",
+        "コザッキーの研究成果"
+      ],
+      "dependencies": "決定的RNG、閲覧権限、Action Journal、Replayマスキング、選択UI",
+      "commonization_potential": "高：手札確認・デッキトップ確認・宣言・ランダム処理を共通化可能",
+      "cards": [
+        {
+          "name": "いたずら好きな双子悪魔",
+          "reason": "Needs deterministic random opponent-hand discard followed by a replay-safe opponent resolution-time choice for the second discard."
+        },
+        {
+          "name": "古代の遠眼鏡",
+          "reason": "Needs replay-safe private-information reveal UI for up to five ordered opponent Deck cards without changing their order."
+        },
+        {
+          "name": "旧神の印",
+          "reason": "Needs replay-safe private-information reveal UI for all opponent set cards without changing their state."
+        },
+        {
+          "name": "グラディアル・チェンジ",
+          "reason": "Needs a replay-safe mandatory opponent hand choice at resolution after a canonical Gladiator Beast Special Summon event."
+        },
+        {
+          "name": "コザッキーの研究成果",
+          "reason": "Needs replay-safe private Deck inspection and arbitrary ordering of the top three cards without exposing them to the opponent."
+        },
+        {
+          "name": "翡翠の蟲笛",
+          "reason": "Needs a replay-safe mandatory opponent Deck selection with private information, shuffle, then selected-card topdeck processing."
+        },
+        {
+          "name": "闇の指名者",
+          "reason": "Needs a replay-safe card-name declaration UI and opponent Deck identity lookup without leaking unrelated private information."
+        },
+        {
+          "name": "マインド・ハック",
+          "reason": "Needs replay-safe private-information reveal UI for an opponent's complete hand and all set field cards without changing state."
+        },
+        {
+          "name": "ラッキー・チャンス!",
+          "reason": "Needs declarative coin-toss effect metadata, activation-time prediction choice, and a post-toss result event tied to that effect."
+        },
+        {
+          "name": "リバースダイス",
+          "reason": "Needs a once-this-turn replay-safe interception point allowing a player to choose whether to reroll an effect's die result."
+        },
+        {
+          "name": "強制接収",
+          "reason": "Needs a central discard event with exact count/provenance and replay-safe mandatory opponent hand choices at each resolution."
+        },
+        {
+          "name": "魔の取引",
+          "reason": "Needs a central opponent Spell activation response event retaining controller identity before a replay-safe random hand discard."
+        },
+        {
+          "name": "うごめく影",
+          "reason": "Needs a replay-safe action and private UI for shuffling/reordering face-down Defense Position monsters without revealing their identities."
+        },
+        {
+          "name": "サイバー・エスパー",
+          "reason": "Needs a draw-event information reveal model that exposes only the opponent's newly drawn card while this monster is face-up Attack Position."
+        },
+        {
+          "name": "パワーカプセル",
+          "reason": "Needs replay-safe activation-time mode selection plus a reusable way to invoke one declared effect mode of a canonical source monster."
+        },
+        {
+          "name": "凡骨の意地",
+          "reason": "Needs a normal Draw Phase draw event, reveal UI and repeatable optional draw loop tied to the exact newly drawn Normal Monster."
+        },
+        {
+          "name": "厳格な老魔術師",
+          "reason": "Needs replay-safe private-information reveal UI for every set field card without changing face, position or ownership state."
+        },
+        {
+          "name": "同族感染ウィルス",
+          "reason": "Needs a replay-safe monster-Race declaration UI persisted on the Chain Link before destroying every monster of that Race."
+        },
+        {
+          "name": "大王目玉",
+          "reason": "Needs replay-safe private inspection and arbitrary reordering UI for up to the top five Deck cards without revealing them to the opponent."
+        },
+        {
+          "name": "盗み見ゴブリン",
+          "reason": "Needs private opponent-Deck top-three reveal, one-card bottom selection and replay-safe arbitrary ordering of the other two cards."
+        },
+        {
+          "name": "錬金生物 ホムンクルス",
+          "reason": "Needs replay-safe Attribute declaration and a persistent once-per-turn Attribute override shared by filters, rendering, reset and replay."
+        },
+        {
+          "name": "魔の試着部屋",
+          "reason": "Needs a replay-safe top-four reveal transaction, selective simultaneous summons of eligible Normal Monsters and deterministic shuffle-back of the remainder."
+        },
+        {
+          "name": "DNA改造手術",
+          "reason": "Needs replay-safe Race declaration plus a continuous all-face-up-monster Race override shared by filters, rendering, legality and replay."
+        },
+        {
+          "name": "DNA移植手術",
+          "reason": "Needs replay-safe Attribute declaration plus a continuous all-face-up-monster Attribute override shared by filters, rendering, legality and replay."
+        },
+        {
+          "name": "マジシャンズ・サークル",
+          "reason": "Needs simultaneous per-player replay-safe Deck selections and summons of ATK-2000-or-lower Spellcasters during an attack-declaration Chain."
+        },
+        {
+          "name": "地殻変動",
+          "reason": "Needs two-step replay-safe Attribute declaration by different players before destroying all face-up monsters of the opponent-chosen Attribute."
+        },
+        {
+          "name": "徴兵令",
+          "reason": "Needs opponent-Deck top reveal and ownership-preserving Special Summon to the controller's field, with fallback movement to the opponent's hand."
+        },
+        {
+          "name": "生命力吸収魔術",
+          "reason": "Needs simultaneous no-Flip-effect reveal of all face-down Defense monsters followed by accurate effect-monster counting and recovery."
+        },
+        {
+          "name": "神速の具足",
+          "reason": "Needs exact normal Draw Phase drawn-card provenance, private reveal UI and an optional hand Special Summon trigger using Six Samurai metadata."
+        },
+        {
+          "name": "逆転する運命",
+          "reason": "Needs authoritative Arcana Force metadata and persistent coin-result effect-state inversion shared by each card's active effect dispatcher."
+        },
+        {
+          "name": "闇の取引",
+          "reason": "Needs source-aware Normal Spell Chain response timing and a generic resolving-effect replacement that substitutes the opponent's effect with random discard."
+        },
+        {
+          "name": "闘争本能",
+          "reason": "Needs replay-safe resolution-time hand selection of a Level-4-or-lower Beast after an opponent direct attack declaration."
+        },
+        {
+          "name": "さまようミイラ",
+          "reason": "Needs replay-safe hidden-zone permutation of all own face-down Defense monsters without exposing their identities or changing card states."
+        },
+        {
+          "name": "ウェザー・レポート",
+          "reason": "Needs a serializable extra Battle Phase grant for the next own turn after successfully destroying canonical Swords of Revealing Light."
+        },
+        {
+          "name": "カードを狩る死神",
+          "reason": "Needs private set-card inspection during resolution that conditionally destroys only Traps while restoring set Spells unchanged."
+        },
+        {
+          "name": "ジャイアントマミー",
+          "reason": "Needs a facedown defender battle trigger that compares the attacker's current ATK with this card's DEF after reveal, destroys the attacker at the historically correct Damage Step boundary, and remains replay deterministic."
+        },
+        {
+          "name": "トラップ・マスター",
+          "reason": "Needs private set-card inspection during resolution that conditionally destroys only Traps while restoring set Spells unchanged without leaking hidden information."
+        },
+        {
+          "name": "パトロイド",
+          "reason": "Needs replay-safe private inspection of one opponent set card followed by restoration without leaking its identity into public logs, UI, save or replay."
+        },
+        {
+          "name": "フレグランス・ストーム",
+          "reason": "Needs draw-result provenance, public reveal of a drawn Plant and a separate replay-safe optional second-draw decision after successful target destruction."
+        },
+        {
+          "name": "リチュア・ディバイナー",
+          "reason": "Needs replay-safe arbitrary card-name declaration plus top-card public reveal and canonical identity comparison without exposing hidden Deck state early."
+        },
+        {
+          "name": "ルーレットボマー",
+          "reason": "Needs replay-safe selection between two deterministic die results before targeting a face-up monster of exactly the selected Level."
+        },
+        {
+          "name": "光神テテュス",
+          "reason": "Needs per-card draw-result provenance, public reveal and optional repeatable draw chaining while this source remains face-up."
+        },
+        {
+          "name": "半蛇人サクズィー",
+          "reason": "Needs replay-safe private inspection of every opponent set Spell/Trap followed by restoration without leaking hidden identities into public state or logs."
+        },
+        {
+          "name": "地雷蜘蛛",
+          "reason": "Needs replay-safe coin-result declaration at attack declaration and an attack-cost hook that halves LP on a miss while allowing the same attack to continue."
+        },
+        {
+          "name": "朽ち果てた武将",
+          "reason": "Needs both replay-safe resolution-time exact Zombie Tiger hand selection and a direct-battle-damage success event for the mandatory random discard effect."
+        },
+        {
+          "name": "水晶の占い師",
+          "reason": "Needs a blocking top-two reveal transaction with replay-safe resolution-time choice, one card to hand and the other moved to Deck bottom."
+        },
+        {
+          "name": "氷結界の三方陣",
+          "reason": "Needs exact three-distinct-name hand reveal as activation cost, fixed opponent-card targeting, then a separate replay-safe resolution-time Ice Barrier hand summon choice."
+        },
+        {
+          "name": "漆黒の豹戦士パンサーウォリアー",
+          "reason": "Needs a mandatory attack-declaration tribute-cost hook integrated with Battle Command, cancellation, legal attack recalculation and replay."
+        },
+        {
+          "name": "爆弾かめ虫",
+          "reason": "Needs private facedown-monster inspection, conditional effect-monster destruction and explicit Flip-effect suppression without leaking hidden identity."
+        },
+        {
+          "name": "魔法除去",
+          "reason": "Needs private inspection of a targeted set Spell/Trap and conditional destruction only when it is a Spell, restoring a set Trap without leaking hidden information."
+        },
+        {
+          "name": "ギャンブル",
+          "reason": "Needs replay-safe coin-result declaration plus a serializable entire-next-turn skip rule integrated with turn transition, save and replay."
+        },
+        {
+          "name": "成功確率0%",
+          "reason": "Needs deterministic hidden opponent Extra Deck random selection of exactly two Fusion Monsters with journaled RNG and simultaneous Graveyard movement."
+        },
+        {
+          "name": "旅人の試練",
+          "reason": "Needs private deterministic random opponent-hand selection, replay-safe card-type declaration, controlled reveal and conditional attacker hand return."
+        },
+        {
+          "name": "波動障壁",
+          "reason": "Needs attack-declaration Synchro tribute cost, simultaneous opponent position conversion and a resolution-time attacking-monster DEF snapshot for damage."
+        },
+        {
+          "name": "硫酸のたまった落とし穴",
+          "reason": "Needs private facedown-monster reveal without firing Flip effects, conditional DEF-based destruction, and legal restoration to the prior facedown position."
+        },
+        {
+          "name": "連鎖破壊",
+          "reason": "Needs summon-event target provenance plus hidden hand/Deck canonical-copy search and simultaneous destruction without incorrectly destroying the summoned monster."
+        },
+        {
+          "name": "闇霊術－「欲」",
+          "reason": "Needs tribute-cost handling plus a private opponent optional Spell reveal decision whose result conditionally prevents the controller's two-card draw."
+        },
+        {
+          "name": "魔のデッキ破壊ウイルス",
+          "reason": "Needs current-ATK-qualified DARK tribute cost and a three-opponent-turn persistent private hand/draw inspection-and-destroy replacement effect."
+        },
+        {
+          "name": "A・ジェネクス・ケミストリ",
+          "reason": "Needs a replay-safe Attribute declaration and a turn-duration Attribute override consumed consistently by all effect and summon legality checks."
+        },
+        {
+          "name": "きまぐれの女神",
+          "reason": "Needs replay-safe coin-face declaration, deterministic coin resolution and a precise until-End-Phase doubled-or-halved current ATK modifier."
+        },
+        {
+          "name": "サイバーポッド",
+          "reason": "Needs a blocking simultaneous five-card reveal transaction for both players, mass destruction, per-monster position choices and simultaneous summon grouping."
+        },
+        {
+          "name": "リチュア・チェイン",
+          "reason": "Needs a blocking top-three private reveal, optional Ritual card selection, hand movement and replay-safe arbitrary ordering of every remaining card on Deck top."
+        },
+        {
+          "name": "友情 YU－JYO",
+          "reason": "Needs a replay-safe opponent handshake decision, mandatory Unity reveal override and deterministic half-total LP assignment including odd-total rounding rules."
+        },
+        {
+          "name": "古の森",
+          "reason": "Needs activation-time facedown reveal with Flip-effect suppression plus Battle-Phase-end destruction scheduling for every monster that attacked while the Field Spell remained active."
+        },
+        {
+          "name": "封神鏡",
+          "reason": "Needs private opponent-hand inspection and conditional Spirit selection/discard without leaking unrelated hidden card identities to logs or replay UI."
+        },
+        {
+          "name": "幸運を告げるフクロウ",
+          "reason": "Needs private Deck Field Spell selection and an optional destination choice between Deck top and hand when canonical Necrovalley exists on the field."
+        },
+        {
+          "name": "幻惑の巻物",
+          "reason": "Needs a replay-safe Attribute declaration and persistent Equip-linked Attribute override consumed by every effect, battle and summon legality query."
+        },
+        {
+          "name": "手札断殺",
+          "reason": "Needs blocking private exact-two hand selection by each player, simultaneous send-to-Grave and simultaneous draw while preserving replay secrecy and deterministic ordering."
+        },
+        {
+          "name": "暴れ牛鬼",
+          "reason": "Needs replay-safe coin-face declaration before deterministic coin resolution and once-per-turn damage routing based on declaration correctness."
+        },
+        {
+          "name": "検閲",
+          "reason": "Needs an optional opponent-Standby payment loop with deterministic private random hand inspection and no leakage of unrelated hidden hand state."
+        },
+        {
+          "name": "氷結界の虎将 ライホウ",
+          "reason": "Needs a resolution-time private opponent discard decision for every opponent field-activated monster effect, with conditional negation of that exact Chain link."
+        },
+        {
+          "name": "浅すぎた墓穴",
+          "reason": "Needs one private Graveyard choice per player followed by simultaneous facedown Defense Position Special Summons and grouped summon-event handling."
+        },
+        {
+          "name": "盗人の煙玉",
+          "reason": "Needs destruction source/equip-state provenance plus private opponent-hand inspection and discard selection without leaking hidden cards to replay UI."
+        },
+        {
+          "name": "赤い忍者",
+          "reason": "Needs private set Spell/Trap reveal, conditional Trap-only destruction and restoration without hidden identity leakage when the inspected card is a Spell."
+        },
+        {
+          "name": "野望のゴーファー",
+          "reason": "Needs replay-safe selection of up to two opponent monsters plus a private opponent optional monster reveal decision that conditionally negates the effect."
+        },
+        {
+          "name": "青い忍者",
+          "reason": "Needs private set Spell/Trap reveal, conditional Spell-only destruction and restoration without hidden identity leakage when the inspected card is a Trap."
+        },
+        {
+          "name": "魔轟神トピー",
+          "reason": "Needs hand-size differential legality, private Fabled reveal, self-tribute cost and replay-safe exact-two opponent Spell/Trap targeting and simultaneous destruction."
+        },
+        {
+          "name": "DNA定期健診",
+          "reason": "Needs private facedown-monster inspection, replay-safe opponent declaration of two distinct Attributes and conditional two-card draw without leaking identity."
+        },
+        {
+          "name": "はたき落とし",
+          "reason": "Needs a normal Draw Phase draw event retaining exact newly drawn card identity and a response that sends that exact private hand card to Graveyard."
+        },
+        {
+          "name": "バブル・クラッシュ",
+          "reason": "Needs blocking private arbitrary hand/field selections by each affected player until exactly five total cards remain, with simultaneous Graveyard movement."
+        },
+        {
+          "name": "ピケルの読心術",
+          "reason": "Needs a serializable duration through the opponent's second End Phase and central private draw reveal handling for every draw event during that interval."
+        },
+        {
+          "name": "反撃準備",
+          "reason": "Needs attack-declaration coin-face declaration, deterministic toss, conditional target position change and alternate reflected-difference damage calculation."
+        },
+        {
+          "name": "墓場からの誘い",
+          "reason": "Needs a marked face-up card inside a shuffled private Deck and a future exact-card draw replacement that sends it directly to Graveyard."
+        },
+        {
+          "name": "水霊術－「葵」",
+          "reason": "Needs WATER tribute cost plus private opponent-hand inspection and discard selection without leaking unrelated hidden cards to logs or replay UI."
+        },
+        {
+          "name": "追い剥ぎゴブリン",
+          "reason": "Needs post-battle-damage controller provenance plus deterministic private random opponent-hand discard with journaled RNG and hidden-state safety."
+        },
+        {
+          "name": "闇のデッキ破壊ウイルス",
+          "reason": "Needs DARK tribute current-ATK provenance, replay-safe card-type declaration, private inspection and a three-opponent-turn draw destruction rule."
+        },
+        {
+          "name": "風林火山",
+          "reason": "Needs four-Attribute validation plus a replay-safe four-mode choice including private deterministic random two-card hand discard."
+        },
+        {
+          "name": "N・アクア・ドルフィン",
+          "reason": "Needs private opponent-hand inspection and selection, current field ATK comparison and conditional discard/damage."
+        },
+        {
+          "name": "くノ一ウォリアー",
+          "reason": "Needs a central control-change event and deterministic private random discard by the new controller."
+        },
+        {
+          "name": "インフェルニティ・リローダー",
+          "reason": "Needs private draw-and-reveal handling, card-type branching and Level-derived damage."
+        },
+        {
+          "name": "エレキンギョ",
+          "reason": "Needs direct-battle-damage provenance and a private opponent-selected hand discard response."
+        },
+        {
+          "name": "エレキンメダイ",
+          "reason": "Needs direct-battle-damage provenance and deterministic private random opponent-hand discard."
+        },
+        {
+          "name": "ダミー・ゴーレム",
+          "reason": "Needs a private opponent monster choice and atomic control swap with this card during Flip-effect resolution."
+        },
+        {
+          "name": "ダーク・リペアラー",
+          "reason": "Needs private Deck-top inspection and replay-safe top-or-bottom choice without exposing hidden identity outside the controller."
+        },
+        {
+          "name": "ブリザード・ウォリアー",
+          "reason": "Needs battle-destruction provenance and private opponent Deck-top inspection with replay-safe top-or-bottom choice."
+        },
+        {
+          "name": "ヴァイロン・ソルジャー",
+          "reason": "Needs attack-declaration equipment-count provenance and replay-safe selection of zero through N field monsters for simultaneous position changes."
+        },
+        {
+          "name": "代打バッター",
+          "reason": "Needs field-to-Grave trigger provenance plus an optional resolution-time private hand selection and Insect Special Summon without treating the selected card as an activation target."
+        },
+        {
+          "name": "儀水鏡との交信",
+          "reason": "Needs controller-private inspection of all opponent set Spell/Trap cards, private Deck-top-two inspection and deterministic reorder, with two-mode resolution selection."
+        },
+        {
+          "name": "大逆転クイズ",
+          "reason": "Needs atomic send of the controller's entire hand and field, private card-type declaration, private Deck-top reveal/verification and replay-safe LP swap."
+        }
+      ]
+    },
+    {
+      "key": "battle_provenance",
+      "label": "戦闘イベント・戦闘ダメージ由来",
+      "count": 117,
+      "representative_cards": [
+        "不運なリポート",
+        "エレキー",
+        "紫炎の霞城",
+        "アストラルバリア",
+        "ホーリーライフバリアー"
+      ],
+      "dependencies": "攻撃側/守備側、戦闘破壊確定、ダメージ種別、直接攻撃、Damage Step時点",
+      "commonization_potential": "高：戦闘誘発・貫通・耐性・ダメージ置換の共通基盤になる",
+      "cards": [
+        {
+          "name": "不運なリポート",
+          "reason": "Needs a replay-safe per-turn Battle Phase count/second-Battle-Phase phase-transition primitive."
+        },
+        {
+          "name": "エレキー",
+          "reason": "Needs a generic temporary direct-attack permission that also exposes direct attack in Battle Command while opposing monsters exist."
+        },
+        {
+          "name": "紫炎の霞城",
+          "reason": "Needs a generic battle-scoped continuous modifier that relates the current attacker to a canonical setcode-qualified attack target."
+        },
+        {
+          "name": "アストラルバリア",
+          "reason": "Needs a replay-safe Battle Step choice and generic attack-target redirection from a monster to a direct attack."
+        },
+        {
+          "name": "ホーリーライフバリアー",
+          "reason": "Needs a serializable player-scoped all-damage prevention replacement lasting through the current turn and covering battle/effect damage."
+        },
+        {
+          "name": "地縛霊の誘い",
+          "reason": "Needs a replay-safe Battle Step target-redirection choice integrated with attack replay and legal-target recalculation."
+        },
+        {
+          "name": "威風堂々",
+          "reason": "Needs declarative monster-effect source metadata and Battle Phase response legality for generic effect negation and source destruction."
+        },
+        {
+          "name": "絶体絶命",
+          "reason": "Needs a player-scoped turn-duration attack-target rule forcing all opponent attacks to become direct attacks with replay validation."
+        },
+        {
+          "name": "緊急同調",
+          "reason": "Needs a first-class replay-safe Synchro Summon processor callable during either Battle Phase, including material choice and summon response timing."
+        },
+        {
+          "name": "ジェット・ロイド",
+          "reason": "Needs a Battle Step processor path for activating a Trap directly from hand while this monster is the selected attack target."
+        },
+        {
+          "name": "ジュラック・モノロフ",
+          "reason": "Needs per-opponent-target attack accounting that permits one attack against each monster without permitting direct or repeated attacks."
+        },
+        {
+          "name": "ゾーン・イーター",
+          "reason": "Needs battle-participant provenance plus a serializable five-turn delayed destruction counter attached to the attacked monster."
+        },
+        {
+          "name": "ダーク・アイズ・イリュージョニスト",
+          "reason": "Needs a source-linked persistent cannot-attack restriction that expires when this face-up source leaves or is turned face-down/negated."
+        },
+        {
+          "name": "デス・カンガルー",
+          "reason": "Needs a post-damage-calculation battle event retaining attacker/defender positions and calculation-time ATK/DEF for conditional destruction."
+        },
+        {
+          "name": "デルタ・アタッカー",
+          "reason": "Needs a serializable turn-duration direct-attack grant for three selected same-canonical Normal Monsters, integrated with Battle Command and replay."
+        },
+        {
+          "name": "ノーブル・ド・ノワール",
+          "reason": "Needs controller-selected opponent attack targets integrated with Battle Command, replay target validation and legal-target recalculation."
+        },
+        {
+          "name": "威圧する魔眼",
+          "reason": "Needs a serializable turn-duration direct-attack grant attached to one targeted Zombie, integrated with Battle Command, target identity and replay."
+        },
+        {
+          "name": "悪シノビ",
+          "reason": "Needs a central attack-target-selected event that retains the selected face-up Attack Position defender and opens its optional trigger window before damage processing."
+        },
+        {
+          "name": "悪魔の知恵",
+          "reason": "Needs a central position-change event retaining old and new positions so the mandatory Deck shuffle triggers only for Attack to face-up Defense changes."
+        },
+        {
+          "name": "暗黒ステゴ",
+          "reason": "Needs a central attack-target-selected event and an immediate source position change before replay-safe attack-target revalidation."
+        },
+        {
+          "name": "氷結界の武士",
+          "reason": "Needs a central position-change event retaining old and new positions, then mandatory self-destruction and draw when Attack changes to face-up Defense."
+        },
+        {
+          "name": "異国の剣士",
+          "reason": "Needs battle-participant provenance plus a serializable five-turn delayed destruction counter attached to the monster attacked by this card."
+        },
+        {
+          "name": "虚栄巨影",
+          "reason": "Needs a Battle-Phase-end reset boundary for a targeted 1000 ATK modifier, distinct from the existing end-of-turn reset."
+        },
+        {
+          "name": "記憶破壊者",
+          "reason": "Needs a direct-battle-damage success event retaining the attacking source and the opponent Extra Deck count at trigger resolution."
+        },
+        {
+          "name": "財宝への隠し通路",
+          "reason": "Needs a serializable turn-duration direct-attack grant attached to the targeted low-ATK monster and enforced by Battle Command and replay."
+        },
+        {
+          "name": "闇の芸術家",
+          "reason": "Needs attack-target provenance and a persistent original/current DEF-halving modifier applied only after being attacked by a LIGHT monster."
+        },
+        {
+          "name": "D・スクランブル",
+          "reason": "Needs replay-safe resolution-time hand selection for a canonical Morphtronic Special Summon after negating a direct attack."
+        },
+        {
+          "name": "キッズ・ガード",
+          "reason": "Needs replay-safe resolution-time Deck selection for a canonical Elemental HERO search after tributing an exact Hero Kid and negating an attack."
+        },
+        {
+          "name": "ディフェンダーズ・クロス",
+          "reason": "Needs a persistent effect-negation modifier for every opponent Defense Position monster changed to face-up Attack Position during resolution."
+        },
+        {
+          "name": "ディフェンド・スライム",
+          "reason": "Needs controller-selected attack-target redirection integrated with Battle Command, replay validation and legal-target recalculation."
+        },
+        {
+          "name": "トゥーン・ディフェンス",
+          "reason": "Needs an attack-target-to-direct-attack redirection primitive integrated with Battle Command, damage processing and replay validation."
+        },
+        {
+          "name": "ミョルニルの魔槌",
+          "reason": "Needs a serializable turn-duration two-attack grant attached to one canonical Aesir monster and integrated with Battle Command and replay."
+        },
+        {
+          "name": "モンスターレリーフ",
+          "reason": "Needs replay-safe sequential selection to return one own monster and then Special Summon a Level 4 monster from hand during an attack Chain."
+        },
+        {
+          "name": "召喚制限－猛突するモンスター",
+          "reason": "Needs a serializable mandatory-attack rule for each newly Special Summoned monster integrated with Battle Command and legal-target selection."
+        },
+        {
+          "name": "断頭台の惨劇",
+          "reason": "Needs a central opponent position-change event retaining old Attack and new face-up Defense positions before the Defense-monster wipe."
+        },
+        {
+          "name": "誘惑のシャドウ",
+          "reason": "Needs a central opponent Set-monster event and a no-Flip-effect face-up Attack transition for that exact set monster."
+        },
+        {
+          "name": "魂の氷結",
+          "reason": "Needs a serializable opponent next-Battle-Phase skip flag integrated with phase transition, save, replay, Undo and Redo."
+        },
+        {
+          "name": "A・O・J リサーチャー",
+          "reason": "Needs a no-Flip-effect face-up Attack transition for one targeted face-down Defense monster, centrally suppressing its Flip effect."
+        },
+        {
+          "name": "スピード・ウォリアー",
+          "reason": "Needs a Battle-Phase-end reset boundary distinct from end-of-turn for the optional summon-turn Battle Step original-ATK doubling modifier."
+        },
+        {
+          "name": "ディスカバード・アタック",
+          "reason": "Needs exact canonical Genocide King Archfiend identity plus a serializable turn-duration direct-attack grant integrated with Battle Command and replay."
+        },
+        {
+          "name": "ドリーム・ピエロ",
+          "reason": "Needs a central position-change event retaining old Attack and new face-up Defense state for this exact card before replay-safe opponent-monster targeting."
+        },
+        {
+          "name": "ヒーローハート",
+          "reason": "Needs a serializable turn-duration two-attack grant and Battle-Phase-end ATK-halving reset integrated with Battle Command and replay."
+        },
+        {
+          "name": "マーダーサーカス",
+          "reason": "Needs a central position-change event retaining old face-up Defense and new face-up Attack state before replay-safe opponent-monster targeting."
+        },
+        {
+          "name": "ワーム・ノーブル",
+          "reason": "Needs attack-source provenance on the Flip event and a current attacker-ATK snapshot at the historically correct Damage Step trigger boundary."
+        },
+        {
+          "name": "怒れる類人猿",
+          "reason": "Needs continuous self-destruction enforcement on entering face-up Defense Position and a mandatory-attack rule integrated with Battle Command and legal attack availability."
+        },
+        {
+          "name": "機動砦のギア・ゴーレム",
+          "reason": "Needs an exact Main Phase 1 timing gate and a serializable turn-duration direct-attack grant integrated with Battle Command, save and replay."
+        },
+        {
+          "name": "鬼神の連撃",
+          "reason": "Needs correct target-before-cost handling where all Xyz materials are detached from the targeted monster as activation cost before a turn-duration two-attack grant."
+        },
+        {
+          "name": "魔導サイエンティスト",
+          "reason": "Needs replay-safe Extra Deck Fusion selection, non-Fusion Special Summon, direct-attack prohibition and a serializable End Phase Extra Deck return schedule."
+        },
+        {
+          "name": "魔霧雨",
+          "reason": "Needs activation legality that proves the Battle Phase has not already occurred, then a turn-duration Battle Phase prohibition plus target current-ATK snapshot for the opponent DEF wipe."
+        },
+        {
+          "name": "シフトチェンジ",
+          "reason": "Needs source-aware Spell/Trap targeting and attack-target events plus controller-selected legal target redirection integrated with Chain and Battle Command."
+        },
+        {
+          "name": "ハーフorストップ",
+          "reason": "Needs a replay-safe opponent resolution choice between ending the current Battle Phase and applying a Battle-Phase-end-reset half-ATK modifier to all their monsters."
+        },
+        {
+          "name": "ラスト・リゾート",
+          "reason": "Needs replay-safe Deck activation of an exact Field Spell during an attack Chain plus opponent optional draw when replacing their active Field Spell."
+        },
+        {
+          "name": "六武派二刀流",
+          "reason": "Needs replay-safe exact-two opponent-field selection after proving the controller has exactly one face-up Attack Position Six Samurai monster, followed by simultaneous hand return."
+        },
+        {
+          "name": "反撃の毒牙",
+          "reason": "Needs authoritative Venom archetype metadata plus an attack-negation transaction that ends the Battle Phase and adds a Venom Counter to the attacking monster."
+        },
+        {
+          "name": "念導力",
+          "reason": "Needs battle-destruction provenance identifying the opposing attacker and a resolution-time snapshot of that surviving monster's current ATK for LP recovery."
+        },
+        {
+          "name": "挑発",
+          "reason": "Needs a serializable turn-duration mandatory attack-target restriction integrated with Battle Command legality, attack replay and the no-legal-attacker case."
+        },
+        {
+          "name": "破壊神の系譜",
+          "reason": "Needs same-turn battle-destruction provenance proving the target destroyed a Defense Position monster and a serializable two-attacks-on-monsters grant."
+        },
+        {
+          "name": "立ちはだかる強敵",
+          "reason": "Needs a serializable Battle Phase mandatory attack-target restriction for every opposing face-up Attack Position monster with legal-attack recalculation."
+        },
+        {
+          "name": "BF－熱風のギブリ",
+          "reason": "Needs a direct-attack response window for hand Special Summon plus a serializable until-End-Phase base-ATK/base-DEF swap modifier."
+        },
+        {
+          "name": "エーリアン・ベーダー",
+          "reason": "Needs explicit five-column Monster Zone topology, adjacent-zone movement and column-aware direct-attack legality covering opposing Monster and Spell/Trap zones."
+        },
+        {
+          "name": "ガーディアン・ケースト",
+          "reason": "Needs central summon-legality restriction bound to an exact Equip Spell, complete Spell-effect immunity and exclusion from opponent attack-target candidates."
+        },
+        {
+          "name": "シールド・ウィング",
+          "reason": "Needs central per-turn battle-destruction replacement counters with exactly two consumptions and deterministic reset at turn transition."
+        },
+        {
+          "name": "セベクの祝福",
+          "reason": "Needs a post-damage direct-attack event retaining the exact battle-damage amount and attacker/controller provenance for the recovery response window."
+        },
+        {
+          "name": "ダーク・リゾネーター",
+          "reason": "Needs a central once-per-turn battle-destruction replacement counter whose consumption and turn reset are included in save, Undo and replay."
+        },
+        {
+          "name": "ポイズン・ファング",
+          "reason": "Needs a post-battle-damage event retaining attacker Race and controller provenance so every qualifying Beast damage event creates one mandatory 500-damage trigger."
+        },
+        {
+          "name": "光学迷彩アーマー",
+          "reason": "Needs Level-1-only Equip targeting plus a source-linked direct-attack permission consumed by Battle Command and removed when the Equip relation ends."
+        },
+        {
+          "name": "城壁壊しの大槍",
+          "reason": "Needs an Equip-source-linked Damage Step modifier triggered only when the equipped monster attacks a facedown Defense Position monster and reset after damage calculation."
+        },
+        {
+          "name": "断層地帯",
+          "reason": "Needs a central pre-damage battle modifier detecting an attacked Defense Position Rock and doubling only reflected battle damage to the attacking monster's controller."
+        },
+        {
+          "name": "氷弾使いレイス",
+          "reason": "Needs a central battle-destruction replacement predicate comparing the opposing monster's effective Level at destruction time."
+        },
+        {
+          "name": "流星の弓－シール",
+          "reason": "Needs Equip-linked -1000 ATK plus central direct-attack permission that is added and removed atomically with the Equip relation."
+        },
+        {
+          "name": "騎士道精神",
+          "reason": "Needs a central battle-destruction replacement comparing both monsters' effective ATK at the destruction step for every controlled monster."
+        },
+        {
+          "name": "アマゾネスの弩弓隊",
+          "reason": "Needs canonical Amazoness metadata, Flip-effect-suppressed mass position change, turn-duration ATK reduction and mandatory-all-monsters attack scheduling."
+        },
+        {
+          "name": "クレイ・チャージ",
+          "reason": "Needs attack-target provenance including facedown canonical Clayman verification, simultaneous destruction of attacker and target, then conditional fixed damage."
+        },
+        {
+          "name": "ゴーゴンの眼",
+          "reason": "Needs turn-duration central negation of every Defense Position monster's effects with immediate updates when battle position changes."
+        },
+        {
+          "name": "スピリットバリア",
+          "reason": "Needs a central battle-damage replacement setting controller damage to zero only while at least one controlled monster exists at damage calculation."
+        },
+        {
+          "name": "ディメンション・ウォール",
+          "reason": "Needs attack-specific battle-damage recipient redirection retained through Battle Step replay, target changes and damage calculation."
+        },
+        {
+          "name": "デスカウンター",
+          "reason": "Needs a post-direct-battle-damage event retaining exact attacker identity and mandatory destruction of that surviving attacker."
+        },
+        {
+          "name": "ピケルの魔法陣",
+          "reason": "Needs a turn-duration central effect-damage prevention layer distinguished from battle damage, costs and LP-setting operations."
+        },
+        {
+          "name": "二重の落とし穴",
+          "reason": "Needs battle-destruction provenance retaining a Gemini monster's second-summoned state and a response window before mass opponent-monster destruction."
+        },
+        {
+          "name": "和睦の使者",
+          "reason": "Needs turn-duration central battle-destruction immunity for controlled monsters and battle-damage prevention for the controller."
+        },
+        {
+          "name": "暴走闘君",
+          "reason": "Needs authoritative Token identity, continuous +1000 ATK for Attack Position Tokens and central battle-destruction immunity while the source remains face-up."
+        },
+        {
+          "name": "竜の血族",
+          "reason": "Needs a turn-duration Race override setting all currently controlled monsters to Dragon and shared by every effect, battle and summon legality query."
+        },
+        {
+          "name": "D・ラジカッセン",
+          "reason": "Needs position-dependent multiattack permission and once-per-turn attack negation protecting a controlled Morphtronic."
+        },
+        {
+          "name": "E・HERO エッジマン",
+          "reason": "Needs central piercing battle-damage calculation for this attacker against Defense Position monsters."
+        },
+        {
+          "name": "アステカの石像",
+          "reason": "Needs an attacked-defender battle-damage modifier doubling reflected damage dealt to the attacking controller."
+        },
+        {
+          "name": "アマゾネスの格闘戦士",
+          "reason": "Needs source-specific central prevention of battle damage received by this card's controller from its battles."
+        },
+        {
+          "name": "アマゾネス女王",
+          "reason": "Needs authoritative Amazoness metadata and continuous battle-destruction immunity for controlled Amazoness monsters."
+        },
+        {
+          "name": "インフェルニティ・ガーディアン",
+          "reason": "Needs hand-empty-dependent battle and effect destruction immunity updating immediately with hand size."
+        },
+        {
+          "name": "エレキュア",
+          "reason": "Needs post-battle-damage attacker Race and exact damage provenance for Thunder-monster recovery."
+        },
+        {
+          "name": "エーリアン・ハンター",
+          "reason": "Needs battle-destruction provenance retaining A-Counter state and an additional-attack grant."
+        },
+        {
+          "name": "カラクリ忍者 七七四九",
+          "reason": "Needs mandatory-attack scheduling, attack-target position change and optional summon-time Karakuri draw count."
+        },
+        {
+          "name": "カラクリ武者 六参壱八",
+          "reason": "Needs mandatory-attack scheduling, attack-target position change and Karakuri destruction events for +400 ATK."
+        },
+        {
+          "name": "クロック・リゾネーター",
+          "reason": "Needs a shared once-per-turn destruction replacement counter covering either battle or card-effect destruction while in face-up Defense Position."
+        },
+        {
+          "name": "グリード・グラード",
+          "reason": "Needs same-turn destruction provenance proving the controller destroyed an opponent face-up Synchro by battle or effect."
+        },
+        {
+          "name": "ゴゴゴゴーレム",
+          "reason": "Needs a central once-per-turn battle-destruction replacement counter active only while this card is in Defense Position."
+        },
+        {
+          "name": "サイバー・ジラフ",
+          "reason": "Needs self-tribute cost and a turn-duration central effect-damage prevention layer distinct from battle damage."
+        },
+        {
+          "name": "ジュラック・ブラキス",
+          "reason": "Needs continuous battle-destruction immunity conditional on another canonical Jurrac anywhere on the field."
+        },
+        {
+          "name": "セイバー・ビートル",
+          "reason": "Needs central piercing battle-damage calculation for this attacker against Defense Position monsters."
+        },
+        {
+          "name": "タイム・イーター",
+          "reason": "Needs battle-destruction provenance and a serializable next-opponent-turn Main Phase 1 skip rule."
+        },
+        {
+          "name": "ダークシー・フロート",
+          "reason": "Needs effect-destruction and Graveyard-arrival provenance excluding battle destruction before the mandatory draw."
+        },
+        {
+          "name": "ダーク・ヴァージャー",
+          "reason": "Needs a Plant Tuner Normal Summon event and optional self-revival from Graveyard with attack-position enforcement."
+        },
+        {
+          "name": "ドラグニティ－ブランディストック",
+          "reason": "Needs Equip-monster state plus a source-linked two-attacks permission for the equipped monster in Battle Command."
+        },
+        {
+          "name": "ハーフ・シャット",
+          "reason": "Needs turn-duration half-ATK modification paired with source-specific central battle-destruction immunity."
+        },
+        {
+          "name": "バイトロン",
+          "reason": "Needs central piercing battle-damage calculation for this attacker against Defense Position monsters."
+        },
+        {
+          "name": "ビッグ・ジョーズ",
+          "reason": "Needs attack participation provenance and a Battle Phase-end self-banish schedule only for a turn in which this card attacked."
+        },
+        {
+          "name": "フェイク・ヒーロー",
+          "reason": "Needs hand Elemental HERO summon selection, a turn attack prohibition and End Phase owner-hand return linked to that summoned card."
+        },
+        {
+          "name": "マスクド・チョッパー",
+          "reason": "Needs battle-destruction provenance confirming an opponent monster was destroyed before mandatory 2000 damage."
+        },
+        {
+          "name": "マッシブ・ウォリアー",
+          "reason": "Needs source-specific battle-damage prevention and a central once-per-turn battle-destruction replacement counter."
+        },
+        {
+          "name": "モンク・ファイター",
+          "reason": "Needs source-specific central prevention of battle damage received by this card's controller from its battles."
+        },
+        {
+          "name": "ランサー・ドラゴニュート",
+          "reason": "Needs central piercing battle-damage calculation for this attacker against Defense Position monsters."
+        },
+        {
+          "name": "ランス・リンドブルム",
+          "reason": "Needs central piercing battle-damage calculation for this attacker against Defense Position monsters."
+        },
+        {
+          "name": "リボーン・ゾンビ",
+          "reason": "Needs hand-empty-dependent central battle-destruction immunity active only in Attack Position."
+        },
+        {
+          "name": "ロードランナー",
+          "reason": "Needs source-specific conditional battle-destruction immunity that compares the opposing monster's current ATK against 1900 at damage calculation; battleProof is currently unconditional."
+        },
+        {
+          "name": "仮面魔道士",
+          "reason": "Needs post-battle-damage provenance identifying that this exact monster dealt positive battle damage to the opponent before the optional draw trigger."
+        },
+        {
+          "name": "原子ホタル",
+          "reason": "Needs battle-destruction provenance identifying the controller of the monster that destroyed this face-up card before mandatory 1000 effect damage."
+        },
+        {
+          "name": "墓守の従者",
+          "reason": "Needs a battle-damage classification replacement that marks damage dealt by this exact monster as effect damage and feeds effect-damage event consumers without changing the amount."
+        },
+        {
+          "name": "大盤振舞侍",
+          "reason": "Needs post-battle-damage provenance for this exact attacker and a mandatory opponent draw-until-seven operation that handles deck exhaustion deterministically."
+        }
+      ]
+    },
+    {
+      "key": "effect_damage_lp",
+      "label": "効果ダメージ・LP置換",
+      "count": 17,
+      "representative_cards": [
+        "シモッチによる副作用",
+        "油断大敵",
+        "デス・ウォンバット",
+        "一時休戦",
+        "神秘の中華なべ"
+      ],
+      "dependencies": "効果源メタデータ、置換順序、チェーン、戦闘ダメージとの区別",
+      "commonization_potential": "高：ダメージ無効・反射・回復変換・LP交換へ再利用可能",
+      "cards": [
+        {
+          "name": "シモッチによる副作用",
+          "reason": "Needs a generic LP-recovery replacement layer that converts recovery for one player into effect damage before the LP action commits."
+        },
+        {
+          "name": "油断大敵",
+          "reason": "Needs a central LP-recovery event retaining player, amount and provenance so an optional post-recovery Trap trigger can be offered."
+        },
+        {
+          "name": "デス・ウォンバット",
+          "reason": "Needs a generic controller-scoped effect-damage prevention replacement centrally enforced before LP damage actions commit."
+        },
+        {
+          "name": "一時休戦",
+          "reason": "Needs a serializable both-player all-damage prevention replacement lasting until the end of the opponent's next turn."
+        },
+        {
+          "name": "神秘の中華なべ",
+          "reason": "Needs cost-time released-monster current ATK/DEF snapshots plus replay-safe activation-time choice of which value will determine LP recovery."
+        },
+        {
+          "name": "サイコ・ソウル",
+          "reason": "Needs cost-time released-monster Level provenance serialized on the Chain Link before resolving Level-times-300 LP recovery."
+        },
+        {
+          "name": "トークン謝肉祭",
+          "reason": "Needs a central Token Special Summon event plus successful-destruction counting before applying count-times-300 effect damage."
+        },
+        {
+          "name": "女神の加護",
+          "reason": "Needs a generic continuous-card leave-field event covering grave, hand, Deck and banish routes before applying mandatory 3000 effect damage."
+        },
+        {
+          "name": "暗黒の呪縛",
+          "reason": "Needs a central successful Spell activation event with activating-player provenance for mandatory 1000 effect damage."
+        },
+        {
+          "name": "火霊術－「紅」",
+          "reason": "Needs cost-time released FIRE monster original-ATK provenance serialized on the Chain Link before effect damage resolution."
+        },
+        {
+          "name": "黒板消しの罠",
+          "reason": "Needs source-aware effect-damage Chain response timing, one-effect damage negation and opponent-selected hand discard at resolution."
+        },
+        {
+          "name": "カタパルト・タートル",
+          "reason": "Needs cost-time released-monster current-ATK provenance serialized on the Chain Link before resolving half-ATK effect damage."
+        },
+        {
+          "name": "ハネワタ",
+          "reason": "Needs a serializable player-scoped turn-duration effect-damage prevention rule enforced centrally by every effect-damage action."
+        },
+        {
+          "name": "ビッグバンガール",
+          "reason": "Needs a central LP-recovery event with recovering-player provenance, including recovery performed during Chain resolution and replay."
+        },
+        {
+          "name": "古代の機械爆弾",
+          "reason": "Needs authoritative reusable Ancient Gear archetype metadata plus destruction-time original-ATK provenance before applying half that value as effect damage."
+        },
+        {
+          "name": "堕天使ナース－レフィキュル",
+          "reason": "Needs a central source-linked replacement converting only the opponent's LP recovery into effect damage across every recovery action, Chain, save and replay path."
+        },
+        {
+          "name": "G・コザッキー",
+          "reason": "Needs continuous self-destruction tied to canonical Kozaky presence and destruction-event controller provenance for original-ATK effect damage."
+        }
+      ]
+    },
+    {
+      "key": "summon_pipeline",
+      "label": "召喚手順・素材・召喚由来",
+      "count": 159,
+      "representative_cards": [
+        "二重召喚",
+        "クリボーを呼ぶ笛",
+        "メガトン魔導キャノン",
+        "痛み分け",
+        "キックバック"
+      ],
+      "dependencies": "ゾーン容量、召喚制約、素材履歴、同時召喚イベント、成功/無効タイミング",
+      "commonization_potential": "高：特殊召喚・アドバンス召喚・素材参照を横断的に共通化可能",
+      "cards": [
+        {
+          "name": "二重召喚",
+          "reason": "Needs a generic replay-safe additional Normal Summon allowance consumed by all summon/set paths, rather than the existing card-specific Frog flag."
+        },
+        {
+          "name": "クリボーを呼ぶ笛",
+          "reason": "Needs replay-safe resolution-time choice between adding to hand and Special Summoning, followed by Deck card selection."
+        },
+        {
+          "name": "メガトン魔導キャノン",
+          "reason": "Needs replay-safe player selection of a ten-Spell-Counter payment distributed across multiple eligible cards."
+        },
+        {
+          "name": "痛み分け",
+          "reason": "Needs a replay-safe mandatory opponent choice at resolution and a generic opponent-selected Tribute operation."
+        },
+        {
+          "name": "キックバック",
+          "reason": "Needs a generic Summon/Flip Summon negation response that restores the negated monster to its owner's hand through the summon-window processor."
+        },
+        {
+          "name": "超進化薬",
+          "reason": "Needs replay-safe resolution-time hand selection after a Reptile Tribute cost for a non-targeting Dinosaur Special Summon."
+        },
+        {
+          "name": "デビリアン・ソング",
+          "reason": "Needs a generic continuous monster-Level modifier applied by legality, material and display calculations without mutating database Level."
+        },
+        {
+          "name": "レベル・リチューナー",
+          "reason": "Needs a replay-safe activation-time choice of one or two plus a persistent monster-Level modifier consumed by all material/legality paths."
+        },
+        {
+          "name": "D－スピリッツ",
+          "reason": "Needs replay-safe resolution-time hand selection for a non-targeting D-HERO Special Summon after checking the field state."
+        },
+        {
+          "name": "HERO’S ボンド",
+          "reason": "Needs replay-safe resolution-time selection and simultaneous Special Summon of exactly two eligible E-HERO monsters from hand."
+        },
+        {
+          "name": "Sin パラレルギア",
+          "reason": "Needs first-class hand Synchro material support plus a canonical Sin-only partner restriction in Synchro legality and processing."
+        },
+        {
+          "name": "狩猟本能",
+          "reason": "Needs replay-safe resolution-time hand selection for a non-targeting Dinosaur Special Summon after an opponent summon event."
+        },
+        {
+          "name": "隠れ兵",
+          "reason": "Needs replay-safe resolution-time hand selection for a non-targeting Level-4-or-lower DARK Special Summon after an opponent summon event."
+        },
+        {
+          "name": "アドバンス・フォース",
+          "reason": "Needs a generic continuous Tribute Summon requirement modifier integrated with every summon/set legality and processing path."
+        },
+        {
+          "name": "アポート",
+          "reason": "Needs replay-safe resolution-time hand selection for a non-targeting Psychic Special Summon after the LP activation cost."
+        },
+        {
+          "name": "インフェルニティ・ビートル",
+          "reason": "Needs replay-safe resolution-time Deck selection for up to two same-identity monsters after this card is Tributed as cost."
+        },
+        {
+          "name": "エクシーズ・ギフト",
+          "reason": "Needs replay-safe player selection of two Xyz Material payments distributed across multiple eligible Xyz Monsters."
+        },
+        {
+          "name": "エヴォルド・ウェストロ",
+          "reason": "Needs replay-safe resolution-time Deck selection for a non-targeting canonical Evolsaur Special Summon after a Flip effect."
+        },
+        {
+          "name": "エヴォルド・オドケリス",
+          "reason": "Needs replay-safe resolution-time hand selection for a non-targeting canonical Evolsaur Special Summon after Normal Summon."
+        },
+        {
+          "name": "カイザー・サクリファイス",
+          "reason": "Needs Tribute material provenance linked to the successful Advance Summon and a post-summon owner-hand return trigger for that material."
+        },
+        {
+          "name": "ガスタの希望 カムイ",
+          "reason": "Needs replay-safe resolution-time Deck selection for a non-targeting canonical Gusto Tuner Special Summon after a Flip effect."
+        },
+        {
+          "name": "サイキックブレイク",
+          "reason": "Needs a replay-safe optional summon trigger plus a persistent monster-Level modifier shared by material, legality and display calculations."
+        },
+        {
+          "name": "シャインナイト",
+          "reason": "Needs a continuous conditional monster-Level override integrated with material, legality, display and replay calculations."
+        },
+        {
+          "name": "ジェネクス・ワーカー",
+          "reason": "Needs replay-safe resolution-time hand selection for a non-targeting canonical Genex Special Summon after this card is Tributed as cost."
+        },
+        {
+          "name": "スター・チェンジャー",
+          "reason": "Needs replay-safe activation-time mode selection plus a persistent monster-Level modifier shared by all legality and material paths."
+        },
+        {
+          "name": "スワローズ・ネスト",
+          "reason": "Needs cost-time Level provenance and replay-safe resolution-time Deck selection for a non-targeting same-Level Winged Beast Special Summon."
+        },
+        {
+          "name": "ソニックバード",
+          "reason": "Needs replay-safe resolution-time Deck selection for a non-targeting Ritual Spell search after Normal/Flip Summon."
+        },
+        {
+          "name": "ゾルガ",
+          "reason": "Needs Tribute material provenance linked to a successful Advance Summon and a post-summon trigger owned by the Tributed card."
+        },
+        {
+          "name": "デイブレーカー",
+          "reason": "Needs replay-safe resolution-time hand selection of a same-canonical-identity monster after this card is Special Summoned."
+        },
+        {
+          "name": "デュアル・スコーピオン",
+          "reason": "Needs replay-safe resolution-time hand selection for a non-targeting Level-4-or-lower Gemini Special Summon after this card is Summoned."
+        },
+        {
+          "name": "トライデント・ウォリアー",
+          "reason": "Needs replay-safe resolution-time hand selection for a non-targeting Level-3 monster Special Summon after Normal Summon."
+        },
+        {
+          "name": "ドラゴンを呼ぶ笛",
+          "reason": "Needs replay-safe resolution-time hand selection and simultaneous Special Summon of up to two Dragon monsters."
+        },
+        {
+          "name": "ナチュラル・チューン",
+          "reason": "Needs a source-linked persistent Tuner-status modifier integrated with Synchro material legality, display, leave/face-down reset and replay."
+        },
+        {
+          "name": "ナチュル・アントジョー",
+          "reason": "Needs replay-safe resolution-time Deck selection for a non-targeting Level-3-or-lower Naturia Special Summon after an opponent summon."
+        },
+        {
+          "name": "ナチュル・ハイドランジー",
+          "reason": "Needs a central own Naturia monster-effect activation event and a serializable turn flag exposed to hand Special Summon procedures."
+        },
+        {
+          "name": "バグ・ロード",
+          "reason": "Needs simultaneous per-player optional resolution-time hand choices and Special Summons constrained by each player's selected field Level."
+        },
+        {
+          "name": "フレア・リゾネーター",
+          "reason": "Needs Synchro material provenance and a material-granted persistent ATK modifier applied to the resulting Synchro Monster."
+        },
+        {
+          "name": "ブラッド・オーキス",
+          "reason": "Needs replay-safe resolution-time hand selection of a same-canonical Death Dendle after this card is Normal Summoned."
+        },
+        {
+          "name": "ミイラの呼び声",
+          "reason": "Needs replay-safe resolution-time hand selection for a once-per-turn non-targeting Zombie Special Summon from a Continuous Spell."
+        },
+        {
+          "name": "ライトニング・チューン",
+          "reason": "Needs a source-linked persistent Tuner-status modifier integrated with Synchro material legality, display, leave/face-down reset and replay."
+        },
+        {
+          "name": "レアル・ジェネクス・コーディネイター",
+          "reason": "Needs replay-safe resolution-time hand selection for a non-targeting Level-3-or-lower canonical Genex Special Summon."
+        },
+        {
+          "name": "ワタポン",
+          "reason": "Needs a central on-add-to-hand event with exact card identity and effect provenance plus an optional hand Special Summon trigger."
+        },
+        {
+          "name": "偉大魔獣 ガーゼット",
+          "reason": "Needs Tribute material provenance and original ATK snapshots linked to the Advance Summoned monster for a base ATK calculation."
+        },
+        {
+          "name": "創世者の化身",
+          "reason": "Needs replay-safe resolution-time hand selection of a canonical Creator after this card is Tributed as activation cost."
+        },
+        {
+          "name": "合成魔獣 ガーゼット",
+          "reason": "Needs Tribute material provenance and original ATK snapshots for exactly two materials linked to the Advance Summoned monster."
+        },
+        {
+          "name": "大波小波",
+          "reason": "Needs resolution-time successful-destruction counting followed by replay-safe selection and simultaneous Special Summon of up to that many WATER monsters from hand."
+        },
+        {
+          "name": "機械複製術",
+          "reason": "Needs replay-safe resolution-time Deck selection of up to two same-canonical monsters and simultaneous Special Summon with zone-capacity handling."
+        },
+        {
+          "name": "疾風鳥人ジョー",
+          "reason": "Needs Tribute material identity and Attribute provenance linked to a successful Advance Summon before its mandatory all-Spell/Trap owner-hand return trigger."
+        },
+        {
+          "name": "突然変異",
+          "reason": "Needs cost-time released-monster Level provenance and a restricted non-Fusion-Summon Extra Deck procedure for a Fusion Monster of exactly that Level."
+        },
+        {
+          "name": "竜宮の白タウナギ",
+          "reason": "Needs declarative source-specific Synchro material companion restrictions integrated with material enumeration, UI, legality and replay."
+        },
+        {
+          "name": "首領亀",
+          "reason": "Needs replay-safe resolution-time selection of any number of same-canonical cards from hand and simultaneous Special Summon with zone-capacity handling."
+        },
+        {
+          "name": "魔轟神獣チャワ",
+          "reason": "Needs a replay-safe in-hand ignition Special Summon procedure whose activation cost selects and discards another canonical Fabled monster."
+        },
+        {
+          "name": "キャトルミューティレーション",
+          "reason": "Needs returned-monster Level provenance plus replay-safe resolution-time hand selection of a same-Level Beast for Special Summon."
+        },
+        {
+          "name": "セイバー・ホール",
+          "reason": "Needs a generic summon-negation Counter Trap interface integrated with the summon window, batch summons, Chain legality and replay."
+        },
+        {
+          "name": "トロイの剣闘獣",
+          "reason": "Needs replay-safe hand selection and owner-to-opponent-field Special Summon routing for a canonical Gladiator Beast before drawing."
+        },
+        {
+          "name": "ブローニング・パワー",
+          "reason": "Needs one generic Counter Trap interface spanning Spell/Trap activation negation and Normal/Special Summon negation after a Psychic tribute cost."
+        },
+        {
+          "name": "ポリノシス",
+          "reason": "Needs one generic Counter Trap interface spanning Spell/Trap activation negation and Normal/Special Summon negation after a Plant tribute cost."
+        },
+        {
+          "name": "ライバル登場!",
+          "reason": "Needs replay-safe resolution-time hand selection of a monster matching the targeted opponent monster's Level for Special Summon."
+        },
+        {
+          "name": "宇宙の収縮",
+          "reason": "Needs a continuous per-player total field-card cap integrated with every summon, set, activation, movement, UI and replay path."
+        },
+        {
+          "name": "物理分身",
+          "reason": "Needs replay-safe target selection, dynamic Token stat/Race/Attribute cloning and a serializable end-turn destruction schedule."
+        },
+        {
+          "name": "狭き通路",
+          "reason": "Needs a continuous per-player two-monster field cap integrated with every Normal Summon, Special Summon, movement, UI and replay path."
+        },
+        {
+          "name": "王宮の弾圧",
+          "reason": "Needs shared-controller ignition access plus generic Special Summon and summon-containing-effect negation across summon windows and Chains."
+        },
+        {
+          "name": "竹頭木屑",
+          "reason": "Needs owner-to-opponent-field simultaneous Token creation after a Plant tribute cost, including zone capacity and replay routing."
+        },
+        {
+          "name": "誘発召喚",
+          "reason": "Needs simultaneous per-player optional hand selections and Special Summons of Level 4 or lower monsters after an opponent Special Summon."
+        },
+        {
+          "name": "おジャマ・レッド",
+          "reason": "Needs replay-safe resolution-time selection of zero to four canonical Ojama monsters from hand and simultaneous Special Summon with zone handling."
+        },
+        {
+          "name": "アルティメット・インセクト LV7",
+          "reason": "Needs Special Summon effect-source provenance linking this card to Ultimate Insect LV5 before enabling its continuous opponent stat reduction."
+        },
+        {
+          "name": "アーミー・ジェネクス",
+          "reason": "Needs Tribute material canonical setcode provenance linked to this successful Advance Summon before optional opponent-field targeting."
+        },
+        {
+          "name": "インヴェルズの門番",
+          "reason": "Needs successful Advance Summon material/setcode provenance and a serializable conditional extra Normal Summon grant for the current turn."
+        },
+        {
+          "name": "インヴェルズ・モース",
+          "reason": "Needs Tribute material canonical setcode provenance plus replay-safe resolution-time selection of up to two opponent cards after paying 1000 LP."
+        },
+        {
+          "name": "エナジー・ブレイブ",
+          "reason": "Needs generic effect-destruction immunity for own second-summoned Gemini monsters, enforced in the central destruction action layer."
+        },
+        {
+          "name": "エヴォルダー・ディプロドクス",
+          "reason": "Needs Special Summon effect-source provenance proving the summoning effect came from a canonical Evoltile before optional Spell/Trap targeting."
+        },
+        {
+          "name": "コンタクト・アウト",
+          "reason": "Needs a first-class Fusion material recipe/provenance pipeline to identify and simultaneously summon the exact listed material set from Deck."
+        },
+        {
+          "name": "ゴブリンドバーグ",
+          "reason": "Needs replay-safe resolution-time hand selection for a Level-4-or-lower Special Summon followed by mandatory source position change."
+        },
+        {
+          "name": "シャーク・ザ・クルー",
+          "reason": "Needs destruction-source provenance proving the opponent's card effect destroyed this card plus replay-safe selection and simultaneous Special Summon of up to two Level-4-or-lower WATER monsters from Deck."
+        },
+        {
+          "name": "タイガードラゴン",
+          "reason": "Needs successful Advance Summon material Race provenance plus replay-safe selection of up to two opponent set Spell/Trap cards."
+        },
+        {
+          "name": "ターレット・ウォリアー",
+          "reason": "Needs an in-hand Special Summon procedure with Warrior tribute selection and cost-time original-ATK provenance transferred into a persistent self modifier."
+        },
+        {
+          "name": "ディメンション・マジック",
+          "reason": "Needs replay-safe resolution-time hand selection for a Spellcaster Special Summon followed by a separate optional field-card destruction choice."
+        },
+        {
+          "name": "トマボー",
+          "reason": "Needs a central opponent Spell/Trap targeting event retaining the targeted Plant, source controller and Chain timing before the self-tribute cost and draw-two resolution."
+        },
+        {
+          "name": "トラファスフィア",
+          "reason": "Needs a Normal Summon procedure restricted to Winged Beast tribute materials plus central immunity to all Trap effects during targeting and resolution."
+        },
+        {
+          "name": "ナチュル・パンプキン",
+          "reason": "Needs replay-safe resolution-time hand selection of a canonical Naturia monster after the opponent-field-conditioned Normal Summon trigger."
+        },
+        {
+          "name": "バイス・ドラゴン",
+          "reason": "Needs a hand Special Summon procedure that records its exact procedure identity and applies replay-safe original ATK/DEF halving only when summoned by that procedure."
+        },
+        {
+          "name": "マシンナーズ・ソルジャー",
+          "reason": "Needs replay-safe resolution-time hand selection of another canonical Machina monster after the empty-own-field Normal Summon trigger."
+        },
+        {
+          "name": "人投げトロール",
+          "reason": "Needs a central tribute event distinguishing non-token Normal Monster tributes and retaining this face-up source for each mandatory 800-damage trigger."
+        },
+        {
+          "name": "六武院",
+          "reason": "Needs a central per-monster successful summon event for simultaneous summons so Bushido counters are added once for each canonical Six Samurai without undercounting."
+        },
+        {
+          "name": "大皇帝ペンギン",
+          "reason": "Needs replay-safe resolution-time selection and simultaneous Special Summon of up to two non-self canonical Penguin monsters from Deck."
+        },
+        {
+          "name": "投石部隊",
+          "reason": "Needs cost-time source current-ATK provenance serialized before a Warrior tribute, including when this source itself is tributed, for subsequent target legality."
+        },
+        {
+          "name": "氷結界の虎将 グルナード",
+          "reason": "Needs a metadata-driven conditional extra Normal Summon grant limited to canonical Ice Barrier monsters, replacing the current card-name-specific extra-summon hook."
+        },
+        {
+          "name": "薔薇の妖精",
+          "reason": "Needs an add-to-hand event with source-zone and effect provenance plus a replay-safe optional self Special Summon from hand after being added from Deck by an effect."
+        },
+        {
+          "name": "降格処分",
+          "reason": "Needs a first-class serializable Level modifier shared by summon legality, UI, save, replay and Equip reset processing."
+        },
+        {
+          "name": "静寂虫",
+          "reason": "Needs summon-time mandatory Defense Position enforcement and central continuous negation of all Continuous Spell/Trap effects while retaining their face-up state."
+        },
+        {
+          "name": "黒蠍団召集",
+          "reason": "Needs authoritative Black Scorpion archetype metadata plus replay-safe resolution-time selection and simultaneous summon of all chosen differently named hand monsters."
+        },
+        {
+          "name": "アポピスの化神",
+          "reason": "Needs a replay-safe Trap-Monster primitive occupying both Trap identity and Monster Zone state with printed Race, Attribute, Level and statistics."
+        },
+        {
+          "name": "救出劇",
+          "reason": "Needs source-aware targeting detection for an Archetype monster, hand-return resolution, then a separate replay-safe resolution-time hand Special Summon choice."
+        },
+        {
+          "name": "玉砕指令",
+          "reason": "Needs target-before-cost handling for a face-up Level 2-or-lower Normal Monster, tribute payment, then replay-safe selection of up to two opponent Spells/Traps."
+        },
+        {
+          "name": "発条の巻き戻し",
+          "reason": "Needs canonical Wind-Up metadata plus target hand return followed by a distinct replay-safe resolution-time hand summon choice constrained to the returned Level."
+        },
+        {
+          "name": "インヴェルズ・ガザス",
+          "reason": "Needs tribute-material archetype provenance retained through Tribute Summon and a replay-safe resolution choice between destroying all other monsters or all Spells/Traps."
+        },
+        {
+          "name": "インヴェルズ・ホーン",
+          "reason": "Needs retained tribute-material archetype provenance so the ignition effect exists only when this card was Tribute Summoned using an Invellz monster."
+        },
+        {
+          "name": "エーリアン・ドッグ",
+          "reason": "Needs an optional hand Special Summon response to another canonical Alien Normal Summon and a post-summon replay-safe opponent-monster A-Counter target."
+        },
+        {
+          "name": "ガーディアン・グラール",
+          "reason": "Needs central summon-legality restriction bound to an exact Equip Spell identity across Normal, Flip and Special Summon plus its one-card-hand summon procedure."
+        },
+        {
+          "name": "コクーン・パーティ",
+          "reason": "Needs authoritative Neo-Spacian and Chrysalis metadata mapping plus replay-safe resolution-time selection and simultaneous Deck Special Summons by distinct Graveyard kinds."
+        },
+        {
+          "name": "タイムパッセージ",
+          "reason": "Needs a first-class turn-duration Level modifier and canonical Fortune Lady targeting integrated with summon legality, UI, save and replay."
+        },
+        {
+          "name": "ダーク・ボルテニス",
+          "reason": "Needs a Counter Trap activation-success event, optional DARK tribute response from hand, then a distinct summon-success destruction trigger with replay-safe targeting."
+        },
+        {
+          "name": "トライワイトゾーン",
+          "reason": "Needs exact-three Graveyard targeting and a single simultaneous Special Summon event with complete pre-resolution Monster Zone capacity validation."
+        },
+        {
+          "name": "ドングリス",
+          "reason": "Needs opponent Special Summon event-group counting plus an ignition counter cost and replay-safe targeted destruction from accumulated source counters."
+        },
+        {
+          "name": "ナチュル・ホーストニードル",
+          "reason": "Needs opponent Special Summon event-group provenance and tribute-cost response targeting exactly the monster or simultaneous summon group that triggered it."
+        },
+        {
+          "name": "ハ・デスの使い魔",
+          "reason": "Needs a persistent source-independent +700 ATK/DEF relation that survives this source's tribute but expires when the selected Fiend becomes facedown or leaves."
+        },
+        {
+          "name": "ハーピィの狩場",
+          "reason": "Needs mandatory trigger ownership by the player who summoned a canonical Harpie, including canonical alias handling and that player's replay-safe Spell/Trap target choice."
+        },
+        {
+          "name": "ファントム・ドラゴン",
+          "reason": "Needs an optional hand response to an opponent Special Summon event plus a persistent two-zone Monster Zone capacity reduction while this card remains face-up."
+        },
+        {
+          "name": "ミスト・コンドル",
+          "reason": "Needs a special-summon procedure whose bounced Mist Valley cost is retained as summon-method provenance and applies a leave-reset base-ATK override only for that summon."
+        },
+        {
+          "name": "レアル・ジェネクス・アクセラレーター",
+          "reason": "Needs an add-to-hand event with Deck source and canonical Genex provenance plus a replay-safe optional Special Summon of that exact newly added hand card."
+        },
+        {
+          "name": "レベル・ウォリアー",
+          "reason": "Needs summon-method-specific Level identity for a Level 2 Normal Summon and Level 4 Special Summon, shared by legality, UI, save and replay."
+        },
+        {
+          "name": "ワーム・キング",
+          "reason": "Needs a filtered one-tribute Normal Summon procedure for canonical Reptile Worms plus a replay-safe tribute-cost targeted destruction ignition effect."
+        },
+        {
+          "name": "悪魔への貢物",
+          "reason": "Needs targeted send-to-Grave of a Special Summoned monster followed by a separate replay-safe resolution-time hand selection and Special Summon of a low-Level Normal Monster."
+        },
+        {
+          "name": "暗黒大要塞鯱",
+          "reason": "Needs two canonical tribute-cost modes tied to exact Fish archetype identities and replay-safe target selection across Monster versus Spell/Trap zones."
+        },
+        {
+          "name": "次元融合",
+          "reason": "Needs both-player simultaneous mass Special Summon from banishment, per-player position choices, zone-capacity truncation and one grouped summon event."
+        },
+        {
+          "name": "氷結界の大僧正",
+          "reason": "Needs mandatory Defense Position enforcement on Normal/Flip Summon and source-aware continuous Spell/Trap destruction protection for canonical Ice Barrier monsters."
+        },
+        {
+          "name": "波動共鳴",
+          "reason": "Needs a first-class turn-duration Level-set modifier shared by summon legality, UI, save, replay, Undo and Redo."
+        },
+        {
+          "name": "能力調整",
+          "reason": "Needs a first-class turn-duration Level decrement for every controlled face-up monster, shared by summon legality, UI, save and replay."
+        },
+        {
+          "name": "裁きを下す者－ボルテニス",
+          "reason": "Needs Counter Trap success provenance, mass tribute hand-summon procedure, retained Fairy tribute count and replay-safe up-to-count opponent-card destruction."
+        },
+        {
+          "name": "輪廻転生",
+          "reason": "Needs a Ritual-tribute destination replacement that sends every released material to its owner's Deck and schedules one deterministic shuffle per affected owner."
+        },
+        {
+          "name": "魔轟神獣ノズチ",
+          "reason": "Needs a hand discard Special Summon procedure with Fabled discard provenance followed by a separate replay-safe optional Level-2-or-lower Fabled hand summon."
+        },
+        {
+          "name": "コピー・ナイト",
+          "reason": "Needs a replay-safe Trap-Monster primitive occupying both Trap and Monster state with copied canonical name and Level while retaining printed Race, Attribute and zero stats."
+        },
+        {
+          "name": "メサイアの蟻地獄",
+          "reason": "Needs summon-method and summon-turn provenance plus End Phase scheduling that destroys every face-up Level-3-or-lower monster Normal or Flip Summoned that turn."
+        },
+        {
+          "name": "リミッター・ブレイク",
+          "reason": "Needs a zone-agnostic sent-to-Grave event plus replay-safe exact canonical Speed Warrior selection across hand, Deck and Graveyard for Special Summon."
+        },
+        {
+          "name": "忍法 変化の術",
+          "reason": "Needs Ninja tribute-Level provenance, hand/Deck multi-zone summon selection and a persistent Continuous Trap relation that destroys the summoned monster when the source leaves."
+        },
+        {
+          "name": "惑星汚染ウイルス",
+          "reason": "Needs canonical Alien tribute cost, A-Counter-aware mass destruction and a three-opponent-turn summon-event counter-placement rule serialized across replay."
+        },
+        {
+          "name": "星蝕－レベル・クライム－",
+          "reason": "Needs Synchro summon-event targeting, Token creation and two first-class linked Level-set modifiers shared by legality, UI, save and replay."
+        },
+        {
+          "name": "暗闇を吸い込むマジック・ミラー",
+          "reason": "Needs central activation and resolution negation for DARK monster effects activated on field or in Graveyard, keyed by effect source location and Attribute."
+        },
+        {
+          "name": "運命のドラ",
+          "reason": "Needs opponent-turn target Level snapshot, next-own-turn delayed Normal Summon matching and one-shot burn scheduling serialized across replay."
+        },
+        {
+          "name": "閃光を吸い込むマジック・ミラー",
+          "reason": "Needs central activation and resolution negation for LIGHT monster effects activated on field or in Graveyard, keyed by effect source location and Attribute."
+        },
+        {
+          "name": "E・HERO ネクロダークマン",
+          "reason": "Needs a Graveyard-bound once-only no-tribute Normal Summon procedure for high-Level Elemental HERO monsters."
+        },
+        {
+          "name": "NEX",
+          "reason": "Needs authoritative Neo-Spacian transformation metadata, Extra Deck mapping and a nonstandard Fusion Special Summon pipeline."
+        },
+        {
+          "name": "アイス・ブリザード・マスター",
+          "reason": "Needs exact-two WATER tribute summon procedure, counter placement and self-tribute Ice-Counter mass destruction."
+        },
+        {
+          "name": "インフェルニティ・デーモン",
+          "reason": "Needs exact newly drawn card identity, optional hand summon, empty-hand checks and Infernity Deck search."
+        },
+        {
+          "name": "キューキューロイド",
+          "reason": "Needs an add-to-hand event with Graveyard source and canonical Roid provenance plus optional summon of that exact newly added card."
+        },
+        {
+          "name": "コクーン・リボーン",
+          "reason": "Needs authoritative Chrysalis-to-Neo-Spacian mapping metadata, tribute cost and mapped Graveyard Special Summon."
+        },
+        {
+          "name": "コロボックリ",
+          "reason": "Needs an exact canonical Matsubokkuru hand-send cost and summon-method provenance for self Special Summon."
+        },
+        {
+          "name": "コンタクト",
+          "reason": "Needs authoritative Chrysalis-to-Neo-Spacian mapping and simultaneous mass send followed by hand/Deck summon selection."
+        },
+        {
+          "name": "サルベージ・ウォリアー",
+          "reason": "Needs Tribute Summon provenance and replay-safe hand-or-Graveyard Tuner selection for optional Special Summon."
+        },
+        {
+          "name": "スペシャル・デュアル・サモン",
+          "reason": "Needs Gemini second-summon state mutation and an End Phase hand-return schedule linked to the selected monster."
+        },
+        {
+          "name": "ダーク・スパイダー",
+          "reason": "Needs a first-class turn-duration Level +2 modifier shared by summon legality, UI, save and replay."
+        },
+        {
+          "name": "トラスト・マインド",
+          "reason": "Needs retained tribute Level provenance followed by replay-safe Graveyard Tuner selection constrained to half that Level."
+        },
+        {
+          "name": "ドラグニティ－ファランクス",
+          "reason": "Needs an Equip-monster-to-Monster-Zone self-summon primitive preserving identity, attachment cleanup and once-per-turn state."
+        },
+        {
+          "name": "バブル・シャッフル",
+          "reason": "Needs exact Bubbleman/opponent position targets, tribute-after-position processing and replay-safe hand Elemental HERO summon selection."
+        },
+        {
+          "name": "ピクシーガーディアン",
+          "reason": "Needs same-turn opponent-caused Spell Graveyard provenance, self-tribute cost and eligible Deck-bottom recovery selection."
+        },
+        {
+          "name": "フォトン・ジェネレーター・ユニット",
+          "reason": "Needs exact-two canonical Cyber Dragon tribute selection and multi-zone canonical Laser Dragon Special Summon."
+        },
+        {
+          "name": "フォース・リリース",
+          "reason": "Needs Gemini second-summon state mutation for all controlled Gemini monsters and End Phase facedown scheduling."
+        },
+        {
+          "name": "フルール・シンクロン",
+          "reason": "Needs Synchro-material send provenance and replay-safe optional Level-2-or-lower hand Special Summon."
+        },
+        {
+          "name": "ブランチ",
+          "reason": "Needs Fusion destruction provenance and retained exact Fusion-material identities for optional Graveyard revival."
+        },
+        {
+          "name": "ボンディング－H2O",
+          "reason": "Needs exact named three-monster tribute validation and multi-zone canonical Water Dragon Special Summon selection."
+        },
+        {
+          "name": "レベルアップ!",
+          "reason": "Needs authoritative LV evolution mapping metadata and a summon-condition-ignoring hand/Deck Special Summon pipeline."
+        },
+        {
+          "name": "ワーム・クィーン",
+          "reason": "Needs a one-Worm Reptile Tribute Summon procedure plus a once-per-turn retained tribute-Level primitive and resolution-time Deck Special Summon constrained by that Level."
+        },
+        {
+          "name": "光と闇の洗礼",
+          "reason": "Needs an exact canonical Dark Magician tribute cost and a non-targeting resolution-time hand/Deck/Graveyard selection for Dark Magician of Chaos Special Summon."
+        },
+        {
+          "name": "光神化",
+          "reason": "Needs non-targeting resolution-time Fairy hand selection, Special Summon-linked half-ATK state and a serializable End Phase destruction schedule bound to that summoned card."
+        },
+        {
+          "name": "共振装置",
+          "reason": "Needs exact-two face-up target validation by current Race/Attribute and a first-class turn-duration Level-set modifier consumed consistently by summon legality, UI and replay."
+        },
+        {
+          "name": "剣闘獣の檻－コロッセウム",
+          "reason": "Needs Deck-origin Special Summon event counting, canonical Gladiator Beast continuous stat scaling, and same-canonical-card discard destruction replacement for a Field Spell."
+        },
+        {
+          "name": "味方殺しの女騎士",
+          "reason": "Needs a mandatory Standby maintenance choice that tributes another controlled monster when possible and otherwise destroys this card, with correct non-chain maintenance handling."
+        },
+        {
+          "name": "始祖神鳥シムルグ",
+          "reason": "Needs Gemini hand Normal-Monster identity, WIND-only tribute reduction/provenance and replay-safe non-targeting selection of up to two opponent cards after Tribute Summon."
+        },
+        {
+          "name": "宝札雲",
+          "reason": "Needs same-turn summon-history grouping by canonical Cloudian identity, counting two or more copies summoned, followed by a scheduled optional End Phase draw-two trigger."
+        }
+      ]
+    },
+    {
+      "key": "chain_effect_metadata",
+      "label": "チェーン・効果カテゴリ・無効化",
+      "count": 83,
+      "representative_cards": [
+        "スターダスト・ドラゴン",
+        "防御輪",
+        "魔力倹約術",
+        "罰則金",
+        "ご隠居の猛毒薬"
+      ],
+      "dependencies": "対象/非対象、効果源ID、カード種別、コスト/対象/解決、発動無効と効果無効",
+      "commonization_potential": "高：無効化・コピー・置換・耐性の判定をカード名依存から分離可能",
+      "cards": [
+        {
+          "name": "スターダスト・ドラゴン",
+          "reason": "Needs declarative effect-category metadata for reliable destruction-effect negation; do not use card-name heuristics."
+        },
+        {
+          "name": "防御輪",
+          "reason": "Needs effect-damage event/replacement metadata and a chain-time primitive to make one Trap effect's damage become zero."
+        },
+        {
+          "name": "魔力倹約術",
+          "reason": "Needs a generic activation-cost modifier layer for LP costs of Spell Card activations."
+        },
+        {
+          "name": "罰則金",
+          "reason": "Needs a replay-safe resolution-time multi-card hand selection primitive; the two discards are effect processing, not activation cost."
+        },
+        {
+          "name": "ご隠居の猛毒薬",
+          "reason": "Needs activation-time effect-mode selection persisted on the Chain Link; choosing heal versus damage at resolution is inaccurate."
+        },
+        {
+          "name": "カオス・マジシャン",
+          "reason": "Needs declarative effect source/type and single-target metadata so monster effects targeting only this card can be negated generically."
+        },
+        {
+          "name": "ショット・ガン・シャッフル",
+          "reason": "Needs activation-time player/Deck selection persisted with a once-per-turn ignition effect on a Continuous Spell."
+        },
+        {
+          "name": "ダブルトラップ",
+          "reason": "Needs declarative effect-negation category/capability metadata to identify cards that negate Trap effects without text or card-name matching."
+        },
+        {
+          "name": "壺盗み",
+          "reason": "Needs canonical Chain Link source identity queries plus a reusable replace-specific-Spell-effect resolution primitive."
+        },
+        {
+          "name": "天下人 紫炎",
+          "reason": "Needs declarative effect-source card-type immunity enforced centrally across Trap targeting and non-targeting resolution paths."
+        },
+        {
+          "name": "天使の施し",
+          "reason": "Needs replay-safe resolution-time hand selection after drawing; the two discards are effect processing, not activation cost."
+        },
+        {
+          "name": "終焉の地",
+          "reason": "Needs a first-class activate-Field-Spell-from-Deck operation that runs replacement, activation and resolution lifecycle correctly."
+        },
+        {
+          "name": "絶対魔法禁止区域",
+          "reason": "Needs declarative effect-source card-type immunity centrally enforced for face-up non-Effect Monsters against all Spell effects."
+        },
+        {
+          "name": "グリフォンの翼",
+          "reason": "Needs canonical Chain Link source identity queries plus a reusable replace-specific-Spell-effect resolution primitive."
+        },
+        {
+          "name": "謙虚な壺",
+          "reason": "Needs replay-safe resolution-time selection of two hand cards; returning them is effect processing rather than activation cost."
+        },
+        {
+          "name": "魔法吸収",
+          "reason": "Needs a central post-Spell-activation event emitted once per activation, including negated resolutions and replay-safe trigger ordering."
+        },
+        {
+          "name": "ダメージ・ポラリライザー",
+          "reason": "Needs declarative effect-damage category metadata and a generic activation-negation response that can then draw once for both players."
+        },
+        {
+          "name": "ドラゴンの宝珠",
+          "reason": "Needs declarative Trap-effect targeting metadata and central effect-resolution negation/destruction for a Dragon target."
+        },
+        {
+          "name": "世界の平定",
+          "reason": "Needs a central Field Spell activation event and a temporary effect-negation layer for the active Field card through End Phase."
+        },
+        {
+          "name": "反魔鏡",
+          "reason": "Needs declarative Spell subtype metadata on Chain Links and a response event specifically for an opponent Quick-Play Spell activation."
+        },
+        {
+          "name": "地獄の扉越し銃",
+          "reason": "Needs declarative effect-damage category metadata and a chain-scoped replacement redirecting that damage to the opponent."
+        },
+        {
+          "name": "墓場からの呼び声",
+          "reason": "Needs canonical Chain Link source identity queries and a generic resolution-negation primitive for one referenced Spell activation."
+        },
+        {
+          "name": "天使の手鏡",
+          "reason": "Needs Chain Link target metadata plus replay-safe retargeting constrained by the original Spell effect's legal target predicate."
+        },
+        {
+          "name": "悪魔の手鏡",
+          "reason": "Needs Chain Link target metadata plus replay-safe retargeting constrained by the original Spell effect's legal S/T target predicate."
+        },
+        {
+          "name": "E・HERO ワイルドマン",
+          "reason": "Needs declarative effect-source card-type immunity centrally enforced against targeting and non-targeting Trap effects."
+        },
+        {
+          "name": "爆導索",
+          "reason": "Needs an explicit field-column model mapping monster and Spell/Trap zones across both players, including serialization and legal activation checks."
+        },
+        {
+          "name": "王宮の号令",
+          "reason": "Needs declarative Flip-effect metadata plus central activation prohibition and effect negation for all Flip monster effects."
+        },
+        {
+          "name": "王宮の陥落",
+          "reason": "Needs a central Continuous Trap activation event and generic activation/effect negation with source destruction."
+        },
+        {
+          "name": "精霊の鏡",
+          "reason": "Needs Chain Link player-target metadata and replay-safe replacement of the targeted player while preserving the original Spell operation."
+        },
+        {
+          "name": "連鎖炸薬",
+          "reason": "Needs a central Trap Card activation event with activating player identity and correct trigger ordering for continuous post-activation damage."
+        },
+        {
+          "name": "金属探知器",
+          "reason": "Needs a Continuous Trap activation event and a temporary generic effect-negation layer for every face-up Continuous Trap through End Phase."
+        },
+        {
+          "name": "魔力終了宣告",
+          "reason": "Needs a central Continuous Spell activation event and generic activation/effect negation with source destruction."
+        },
+        {
+          "name": "魔法探査の石版",
+          "reason": "Needs a Continuous Spell activation event and a temporary generic effect-negation layer for every face-up Continuous Spell through End Phase."
+        },
+        {
+          "name": "ウィングド・ライノ",
+          "reason": "Needs a central Trap Card activation event with trigger ordering so this face-up monster may optionally return itself to hand."
+        },
+        {
+          "name": "サンダー・ドラゴン",
+          "reason": "Needs replay-safe resolution-time Deck selection for up to two same-canonical-identity cards after discarding this card as activation cost."
+        },
+        {
+          "name": "トライアングル・X・スパーク",
+          "reason": "Needs a player-scoped Trap activation prohibition and generic Trap effect-negation layer lasting through the current turn."
+        },
+        {
+          "name": "トラップ・リアクター・RR",
+          "reason": "Needs a central opponent Trap activation event with Chain Link source identity for once-per-turn source destruction and damage."
+        },
+        {
+          "name": "ポルターガイスト",
+          "reason": "Needs declarative activation/effect unnegatability enforced by Chain response legality and resolution, not a card-name exception."
+        },
+        {
+          "name": "マジック・キャンセラー",
+          "reason": "Needs generic Spell activation prohibition plus central negation of all face-up Spell effects while the source remains active."
+        },
+        {
+          "name": "深海の戦士",
+          "reason": "Needs source-conditional monster immunity to all Spell effects while canonical Umi is active, enforced centrally during target legality and resolution."
+        },
+        {
+          "name": "瓶亀",
+          "reason": "Needs a central successful card-activation event exposing exact canonical source identity so each face-up copy can trigger when Pot of Greed is activated."
+        },
+        {
+          "name": "砲弾ヤリ貝",
+          "reason": "Needs source-conditional monster immunity to all Spell effects while canonical Umi is active, enforced centrally during targeting and resolution."
+        },
+        {
+          "name": "連弾の魔術師",
+          "reason": "Needs a central successful Normal Spell activation event with activating-player provenance for a mandatory 400-damage trigger."
+        },
+        {
+          "name": "魚雷魚",
+          "reason": "Needs source-conditional monster immunity to all Spell effects while canonical Umi is active, enforced centrally during targeting and resolution."
+        },
+        {
+          "name": "バーストブレス",
+          "reason": "Needs cost-time released Dragon current-ATK provenance serialized on the Chain Link before the global DEF-threshold destruction."
+        },
+        {
+          "name": "ホワイト・ホール",
+          "reason": "Needs exact source-aware Chain response timing and a one-resolving-effect destruction replacement protecting only the controller's monsters from Dark Hole."
+        },
+        {
+          "name": "人造天使",
+          "reason": "Needs a central Counter Trap activation event and a replay-safe Token creation primitive for its mandatory continuous trigger."
+        },
+        {
+          "name": "埋蔵金の地図",
+          "reason": "Needs exact source-aware Chain response timing when a set copy is targeted by an effect that will return it to hand."
+        },
+        {
+          "name": "蛇神の勅命",
+          "reason": "Needs authoritative Venom archetype metadata plus a generic Spell activation-and-effect negation Counter Trap interface."
+        },
+        {
+          "name": "エーリアン・マーズ",
+          "reason": "Needs a source-linked continuous monster-effect negation layer for all other effect monsters carrying A Counters."
+        },
+        {
+          "name": "ナチュル・ビートル",
+          "reason": "Needs a central successful Spell activation event plus a persistent replay-safe swap of this card's original ATK and DEF on every activation."
+        },
+        {
+          "name": "ネイビィロイド",
+          "reason": "Needs source-aware Chain response timing when this face-up card is targeted by a Spell/Trap that would destroy it, plus generic activation/effect negation after replay-safe self-discard."
+        },
+        {
+          "name": "マジック・リアクター・AID",
+          "reason": "Needs a central opponent Spell activation event with source-card provenance and precise destroy-without-negating semantics before applying 800 damage."
+        },
+        {
+          "name": "モーム",
+          "reason": "Needs cost-time released EARTH monster current-ATK provenance serialized on the Chain Link before the global face-up DEF-threshold destruction."
+        },
+        {
+          "name": "人造人間－サイコ・ショッカー",
+          "reason": "Needs central continuous Trap activation prohibition and Trap-effect negation enforced across legality, Chain construction, resolution, UI, AI, save and replay."
+        },
+        {
+          "name": "力の代行者 マーズ",
+          "reason": "Needs central immunity to Spell effects enforced during targeting and resolution; its Sanctuary-dependent LP-difference statistics alone would be incomplete."
+        },
+        {
+          "name": "強欲な壺の精霊",
+          "reason": "Needs a central successful exact-source Spell activation event plus replay-safe optional extra draw offered to that Spell's activating player."
+        },
+        {
+          "name": "戦士ラーズ",
+          "reason": "Needs a blocking replay-safe resolution-time Deck selection transaction that moves a non-self Level-4-or-lower Warrior to the top without advancing the Chain early."
+        },
+        {
+          "name": "氷結界の御庭番",
+          "reason": "Needs source/controller-aware continuous targeting immunity for canonical Ice Barrier monsters against only opponent monster effects during Chain construction."
+        },
+        {
+          "name": "辺境の大賢者",
+          "reason": "Needs source/controller-aware continuous targeting immunity and resolution negation for Spell effects that target the controller's face-up Warrior monsters."
+        },
+        {
+          "name": "黒曜岩竜",
+          "reason": "Needs source/controller-aware continuous targeting immunity and resolution negation for Spell/Trap effects targeting the controller's DARK monsters."
+        },
+        {
+          "name": "黒翼の魔術師",
+          "reason": "Needs a generic same-turn Trap activation permission override bound to exact canonical Assault Mode while this source remains face-up."
+        },
+        {
+          "name": "ブレンD",
+          "reason": "Needs authoritative Morphtronic identity for the activation condition, exact two-card opponent-field selection and a replay-safe opponent choice of which selected card is destroyed."
+        },
+        {
+          "name": "悲劇の引き金",
+          "reason": "Needs source-aware effect-target redirection during Chain construction, restricted to one correct controller-owned field target and a legal opponent substitute."
+        },
+        {
+          "name": "暴君の威圧",
+          "reason": "Needs original-owner-aware continuous Trap immunity for face-up monsters the controller owns, enforced centrally at activation and resolution."
+        },
+        {
+          "name": "裸の王様",
+          "reason": "Needs central continuous negation of all Equip Spell effects while preserving Equip attachment, destruction rules and source visibility."
+        },
+        {
+          "name": "7カード",
+          "reason": "Needs Machine-only Equip targeting and a replay-safe persistent activation-mode choice between exactly +700 ATK and exactly +700 DEF."
+        },
+        {
+          "name": "六武衆の影武者",
+          "reason": "Needs source-aware Spell, Trap and monster-effect target redirection during Chain construction for a targeted canonical Six Samurai monster."
+        },
+        {
+          "name": "墓地封印",
+          "reason": "Needs a turn-duration central negation rule for all effects activated in Graveyards, enforced at Chain activation and resolution without blocking non-activated continuous state."
+        },
+        {
+          "name": "天空聖者メルティウス",
+          "reason": "Needs a Counter Trap activation event for either player, mandatory recovery and a conditional replay-safe opponent-field destruction choice when Sanctuary is active."
+        },
+        {
+          "name": "罠封印の呪符",
+          "reason": "Needs exact canonical Meisei presence gating, central Trap activation prohibition, continuous Trap-effect negation and automatic source destruction when Meisei leaves."
+        },
+        {
+          "name": "連続魔法",
+          "reason": "Needs source-aware response to the controller's Normal Spell, all-hand discard cost and a serializable copy of the referenced Chain link's complete effect operation and targets."
+        },
+        {
+          "name": "王立魔法図書館",
+          "reason": "Needs a central Spell activation event for either player, capped counter accumulation and a replay-safe three-counter ignition cost integrated with Chain timing."
+        },
+        {
+          "name": "ガラスの鎧",
+          "reason": "Needs a central Equip attachment event and turn-duration negation of all Equip card effects without breaking attachment or leave-field destruction rules."
+        },
+        {
+          "name": "バベル・タワー",
+          "reason": "Needs a central Spell activation event retaining activating player, capped fourth-counter destruction and damage routing to that exact player."
+        },
+        {
+          "name": "レアメタル化・魔法反射装甲",
+          "reason": "Needs a persistent Trap-to-monster target relation, one-use targeted Spell-effect negation and automatic source destruction when that Machine target leaves."
+        },
+        {
+          "name": "魔法封印の呪符",
+          "reason": "Needs canonical Meisei gating, central Spell activation prohibition, Spell-effect negation and automatic source destruction."
+        },
+        {
+          "name": "カラクリ大暴走",
+          "reason": "Needs canonical Karakuri targeting and turn-duration source-specific effect negation paired with +1000 ATK."
+        },
+        {
+          "name": "ガオドレイクのタテガミ",
+          "reason": "Needs canonical Naturia targeting plus a turn-duration source-specific effect negation paired with an ATK set-to-3000 modifier."
+        },
+        {
+          "name": "ブラッド・マジシャン－煉獄の魔術師－",
+          "reason": "Needs central Spell activation events, arbitrary counter-cost selection and ATK-threshold targeted destruction."
+        },
+        {
+          "name": "二重魔法",
+          "reason": "Needs a generic replay-safe arbitrary Spell-effect copy/use pipeline from the opponent Graveyard, including activation legality, costs, targets and resolution identity."
+        },
+        {
+          "name": "幻影のゴラ亀",
+          "reason": "Needs chain-time source-target identity and central negation of opponent-controlled Spell/Trap effects only when that effect targets this face-up monster."
+        },
+        {
+          "name": "幻獣クロスウィング",
+          "reason": "Needs authoritative Phantom Beast archetype metadata and a Graveyard continuous stat source that remains replay-safe and is disabled by Graveyard effect negation."
+        }
+      ]
+    },
+    {
+      "key": "destruction_replacement",
+      "label": "破壊耐性・置換・破壊由来",
+      "count": 39,
+      "representative_cards": [
+        "始祖の守護者ティラス",
+        "コザッキーの自爆装置",
+        "リフレクト・ネイチャー",
+        "エレキトンボ",
+        "トークン復活祭"
+      ],
+      "dependencies": "破壊原因、責任プレイヤー、回数制限、身代わり選択、離脱イベント",
+      "commonization_potential": "高：戦闘/効果破壊耐性と身代わり処理を一本化可能",
+      "cards": [
+        {
+          "name": "始祖の守護者ティラス",
+          "reason": "Needs generic effect-destruction immunity/replacement support."
+        },
+        {
+          "name": "コザッキーの自爆装置",
+          "reason": "Needs central destruction provenance containing the responsible player and the source's set/face state before leaving the field."
+        },
+        {
+          "name": "リフレクト・ネイチャー",
+          "reason": "Needs an opponent-effect-damage replacement layer that redirects damage to the effect controller for the rest of the turn."
+        },
+        {
+          "name": "エレキトンボ",
+          "reason": "Needs central destruction provenance identifying the opponent plus replay-safe resolution-time Deck selection of a canonical Watt monster."
+        },
+        {
+          "name": "トークン復活祭",
+          "reason": "Needs resolution-time counting of successfully destroyed Tokens followed by replay-safe selection of up to that many field cards."
+        },
+        {
+          "name": "ブレードラビット",
+          "reason": "Needs a central position-change event retaining old/new face and position so an optional post-change destruction target can be selected."
+        },
+        {
+          "name": "地縛大神官",
+          "reason": "Needs declarative self-destruction provenance/category and a source-linked replacement preventing only Earthbound Immortal self-destruction."
+        },
+        {
+          "name": "機雷化",
+          "reason": "Needs resolution-time successful-destruction counting across canonical Kuriboh and Kuriboh Tokens, then replay-safe selection of up to that many opponent cards."
+        },
+        {
+          "name": "死者への供物",
+          "reason": "Needs a serializable player-scoped next-own-Draw-Phase skip replacement that is consumed exactly once and preserved by save, replay, undo and redo."
+        },
+        {
+          "name": "深海王デビルシャーク",
+          "reason": "Needs a once-per-turn non-targeting effect-destruction replacement with destruction provenance, reset timing and replay-safe consumption."
+        },
+        {
+          "name": "雷電娘々",
+          "reason": "Needs a central continuous self-destruction enforcement loop that reacts deterministically whenever a face-up non-LIGHT monster appears on its controller's field."
+        },
+        {
+          "name": "機限爆弾",
+          "reason": "Needs authoritative reusable Meklord archetype metadata and exact two-target destruction without card-name matching."
+        },
+        {
+          "name": "毒蛇の供物",
+          "reason": "Needs exact three-target selection of one own Reptile and two opponent cards followed by simultaneous destruction."
+        },
+        {
+          "name": "連鎖旋風",
+          "reason": "Needs a central effect-destruction event with source category provenance plus exact replay-safe selection of two Spell/Trap cards."
+        },
+        {
+          "name": "「A」細胞培養装置",
+          "reason": "Needs a central counter-removal event plus destruction-time counter snapshot and replay-safe redistribution of all stored A Counters."
+        },
+        {
+          "name": "「A」細胞散布爆弾",
+          "reason": "Needs destruction-time Level provenance and replay-safe distribution of exactly that many A Counters among opponent face-up monsters."
+        },
+        {
+          "name": "本気ギレパンダ",
+          "reason": "Needs a central per-monster destruction event with Race provenance and persistent replay-safe accumulation of 500 ATK for every destroyed Beast."
+        },
+        {
+          "name": "火炎鳥",
+          "reason": "Needs a central per-monster destruction event with Race provenance and persistent replay-safe accumulation of 500 ATK for every destroyed Winged Beast."
+        },
+        {
+          "name": "鉄壁の布陣",
+          "reason": "Needs a persistent continuous-Trap target relation, conditional +700 DEF while every controlled monster is Defense Position, and source self-destruction when that target leaves."
+        },
+        {
+          "name": "閃光の宝札",
+          "reason": "Needs continuous Spell/Trap-zone capacity reduction plus an optional replacement of the controller's normal Draw Phase draw when another face-up canonical copy exists."
+        },
+        {
+          "name": "BF－マイン",
+          "reason": "Needs set-card destruction source provenance proving an opponent effect destroyed this card, while preserving the face-up canonical Blackwing condition for burn and draw."
+        },
+        {
+          "name": "グレイモヤ不発弾",
+          "reason": "Needs a persistent two-target Continuous Trap relation, source self-destruction when either target leaves, and destruction of both surviving targets when the source is destroyed."
+        },
+        {
+          "name": "ポールポジション",
+          "reason": "Needs dynamically recomputed highest-ATK Spell immunity with tie handling plus a leave-field trigger that destroys all then-highest face-up monsters without feedback loops."
+        },
+        {
+          "name": "ミニチュアライズ",
+          "reason": "Needs a first-class Level modifier plus a persistent Continuous Trap target relation and source self-destruction when the target leaves."
+        },
+        {
+          "name": "アイヴィ・ウォール",
+          "reason": "Needs opponent-controlled Token creation from a Flip effect plus source-linked token identity and mandatory damage when that exact token is destroyed."
+        },
+        {
+          "name": "エア・サーキュレーター",
+          "reason": "Needs replay-safe exact-two hand selection and simultaneous Deck return plus a central destruction event that triggers the draw for every valid destruction source."
+        },
+        {
+          "name": "コトダマ",
+          "reason": "Needs a central uniqueness continuous rule based on canonical identity, ordered later-arrival destruction and simultaneous-event handling that destroys every duplicate."
+        },
+        {
+          "name": "ワーム・イリダン",
+          "reason": "Needs a central card-set event for both Monster and Spell/Trap zones plus replay-safe counter accumulation and targeted destruction counter cost."
+        },
+        {
+          "name": "ナイトメア・デーモンズ",
+          "reason": "Needs opponent-controlled simultaneous three-Token creation with zone-capacity legality plus source-linked Token destruction damage provenance."
+        },
+        {
+          "name": "バックファイア",
+          "reason": "Needs destruction and Graveyard-arrival event grouping retaining face-up FIRE status and controller provenance for one mandatory 500-damage trigger per monster."
+        },
+        {
+          "name": "同姓同名同盟条約",
+          "reason": "Needs canonical-identity grouping excluding Tokens, exact group-count mode selection and replay-safe one-target versus mass Spell/Trap destruction."
+        },
+        {
+          "name": "暴風雨",
+          "reason": "Needs current-ATK reduction cost modes on a canonical Cloudian and replay-safe one versus exact-two opponent field target selection and destruction."
+        },
+        {
+          "name": "D・コード",
+          "reason": "Needs Morphtronic-only Equip legality, an equipped-monster position-change event and replay-safe Spell/Trap destruction."
+        },
+        {
+          "name": "D・レトロエンジン",
+          "reason": "Needs Morphtronic-only Equip legality and destruction/equip provenance for simultaneous original-ATK damage."
+        },
+        {
+          "name": "Z－ONE",
+          "reason": "Needs set-card destruction and Graveyard-arrival provenance plus replay-safe Continuous or Field Spell recovery."
+        },
+        {
+          "name": "インフェルニティ・ナイト",
+          "reason": "Needs destruction-to-Grave provenance and a replay-safe exact-two hand discard cost before self-revival."
+        },
+        {
+          "name": "コカローチ・ナイト",
+          "reason": "Needs a mandatory any-zone sent-to-Grave replacement/trigger that returns this exact card to Deck top without recursion."
+        },
+        {
+          "name": "スパークガン",
+          "reason": "Needs exact canonical Sparkman Equip legality, three-use persistent counter and replay-safe position changes before self-destruction."
+        },
+        {
+          "name": "六武式三段衝",
+          "reason": "Needs replay-safe resolution mode selection among three legal mass-destruction operations after canonical Six Samurai field-count validation."
+        }
+      ]
+    },
+    {
+      "key": "resolution_selection",
+      "label": "解決時選択・複数同時処理",
+      "count": 41,
+      "representative_cards": [
+        "No.10 白輝士イルミネーター",
+        "運命の火時計",
+        "エクスチェンジ",
+        "天変地異",
+        "闇をかき消す光"
+      ],
+      "dependencies": "非対象選択、候補再評価、複数枚の原子性、相手選択、Replay入力",
+      "commonization_potential": "高：対象を取らない効果と複数枚処理の共通UI/APIにできる",
+      "cards": [
+        {
+          "name": "No.10 白輝士イルミネーター",
+          "reason": "Needs resolution-time non-targeting choice support."
+        },
+        {
+          "name": "運命の火時計",
+          "reason": "Needs generic serializable turn-counter metadata and an API for advancing the selected card's counter without card-name branches."
+        },
+        {
+          "name": "エクスチェンジ",
+          "reason": "Needs simultaneous cross-player hand-selection and replay-safe hand ownership/control transfer actions."
+        },
+        {
+          "name": "天変地異",
+          "reason": "Needs a player Deck face-orientation model integrated with rendering, draws, searches, shuffles, serialization and replay digest."
+        },
+        {
+          "name": "闇をかき消す光",
+          "reason": "Needs a generic simultaneous flip-face-up action that emits correct Flip events and preserves positions through the processor."
+        },
+        {
+          "name": "正々堂々",
+          "reason": "Needs a turn-dependent hand-visibility model integrated with rendering, AI information boundaries, save/load and replay."
+        },
+        {
+          "name": "セレモニーベル",
+          "reason": "Needs a continuous hand-visibility model integrated with rendering, AI information boundaries, save/load and replay."
+        },
+        {
+          "name": "マインド・オン・エア",
+          "reason": "Needs a controller-specific continuous hand-visibility model integrated with rendering, AI information boundaries, save/load and replay."
+        },
+        {
+          "name": "ヤドカリュー",
+          "reason": "Needs a central position-change event and replay-safe resolution-time selection of any number of hand cards to return to the Deck bottom."
+        },
+        {
+          "name": "孵化",
+          "reason": "Needs cost-time released-monster Level provenance and replay-safe resolution-time Deck selection of an Insect exactly one Level higher."
+        },
+        {
+          "name": "尾も白い黒猫",
+          "reason": "Needs replay-safe exact multi-target selection of two opponent monsters and one own monster, followed by simultaneous owner-hand returns."
+        },
+        {
+          "name": "森のざわめき",
+          "reason": "Needs replay-safe optional secondary resolution selection for one Field Spell after setting the targeted opponent monster face-down Defense Position."
+        },
+        {
+          "name": "派手ハネ",
+          "reason": "Needs replay-safe selection of zero to three field monsters and simultaneous owner-hand returns during Flip-effect resolution."
+        },
+        {
+          "name": "魔草 マンドラゴラ",
+          "reason": "Needs authoritative reusable metadata identifying every face-up card legally able to hold Spell Counters before applying counters simultaneously."
+        },
+        {
+          "name": "エレメンタルバースト",
+          "reason": "Needs replay-safe exact four-card cost selection enforcing one WIND, WATER, FIRE and EARTH monster before the opponent-field wipe."
+        },
+        {
+          "name": "バスター・モード",
+          "reason": "Needs authoritative /Buster identity metadata and a replay-safe Deck selection pipeline matching the released Synchro Monster's canonical name."
+        },
+        {
+          "name": "暗黒の謀略",
+          "reason": "Needs simultaneous two-card hand selections by both players plus a replay-safe opponent optional extra-discard veto before drawing."
+        },
+        {
+          "name": "黒羽の導き",
+          "reason": "Needs a central effect-damage-received event plus replay-safe resolution-time hand selection of a Level-4-or-lower canonical Blackwing."
+        },
+        {
+          "name": "A・O・J サイクロン・クリエイター",
+          "reason": "Needs exact tuner-count target accounting and replay-safe selection of that many Spell/Trap cards before simultaneous owner-hand returns."
+        },
+        {
+          "name": "クラスター・ペンデュラム",
+          "reason": "Needs resolution-time opponent monster counting and replay-safe simultaneous creation of that many Pendulum Tokens with zone-capacity handling."
+        },
+        {
+          "name": "チュウボーン",
+          "reason": "Needs replay-safe simultaneous creation of exactly three owner-correct Jr. Tokens on the opponent's field with zone-capacity handling."
+        },
+        {
+          "name": "テールスイング",
+          "reason": "Needs replay-safe selection of up to two opponent monsters while enforcing the mixed facedown-or-lower-Level eligibility rule against one targeted Level-5-or-higher Dinosaur."
+        },
+        {
+          "name": "フォトン・ベール",
+          "reason": "Needs replay-safe exact three-card hand cost selection followed by up-to-three Deck searches with the conditional same-canonical-name constraint."
+        },
+        {
+          "name": "借カラクリ蔵",
+          "reason": "Needs replay-safe Deck selection of a Level-4-or-lower canonical Karakuri followed by mandatory position change of the fixed target."
+        },
+        {
+          "name": "陽気な葬儀屋",
+          "reason": "Needs a blocking replay-safe resolution-time selection of one to three monster cards from hand followed by their ordered discard."
+        },
+        {
+          "name": "カード・フリッパー",
+          "reason": "Needs simultaneous position change for all opposing monsters, including legal facedown-to-faceup transitions and the resulting Flip-effect event group."
+        },
+        {
+          "name": "ガルドスの羽根ペン",
+          "reason": "Needs target-before-cost handling with exact-two WIND Graveyard targets returned and shuffled as cost before selecting a separate field card to bounce."
+        },
+        {
+          "name": "ストーム・シューター",
+          "reason": "Needs column topology, adjacent-zone movement, front-column target discovery and a replay-safe once-per-turn choice between its two ignition modes."
+        },
+        {
+          "name": "ツーマンセルバトル",
+          "reason": "Needs optional per-player End Phase windows, Level 4 Normal Monster hand selection and one-use-per-own-End-Phase state for a shared Continuous Spell."
+        },
+        {
+          "name": "パワー・サプライヤー",
+          "reason": "Needs a persistent selected-target stat relation tied to this source remaining face-up, with target/source leave and facedown reset behavior serialized for replay."
+        },
+        {
+          "name": "四次元の墓",
+          "reason": "Needs authoritative LV-monster series metadata and replay-safe exact-two Graveyard target selection followed by simultaneous Deck return and shuffle."
+        },
+        {
+          "name": "移り気な仕立屋",
+          "reason": "Needs a generic Equip legality query for arbitrary Equip cards and a replay-safe two-stage selection that atomically transfers an existing Equip relation."
+        },
+        {
+          "name": "裏ガエル",
+          "reason": "Needs a once-per-turn self-set ignition action plus replay-safe selection of up to the current canonical Frog count for simultaneous opponent-monster bounce."
+        },
+        {
+          "name": "黒魔力の精製者",
+          "reason": "Needs authoritative spell-counter-capable metadata plus a once-per-turn position-change cost and replay-safe target selection for counter placement."
+        },
+        {
+          "name": "ヴォルカニック・チャージ",
+          "reason": "Needs authoritative Volcanic archetype metadata plus replay-safe selection of one to three Graveyard monsters and simultaneous Deck return and shuffle."
+        },
+        {
+          "name": "亜空間ジャンプ装置",
+          "reason": "Needs replay-safe two-sided target selection and an atomic control swap between a controlled monster and an opponent monster carrying an A-Counter."
+        },
+        {
+          "name": "コダロス",
+          "reason": "Needs a canonical Umi identity cost and replay-safe selection of up to two opponent field cards for simultaneous send-to-Grave."
+        },
+        {
+          "name": "サイコパス",
+          "reason": "Needs replay-safe selection of one or two banished Psychic monsters after an 800 LP cost and simultaneous hand return."
+        },
+        {
+          "name": "リゾネーター・エンジン",
+          "reason": "Needs exact-two canonical Resonator Graveyard targets, Deck Level-4 selection and ordered simultaneous return/shuffle."
+        },
+        {
+          "name": "地縛神の復活",
+          "reason": "Needs authoritative Earthbound Immortal metadata and replay-safe simultaneous selection of one such monster plus one Field Spell from Graveyard after a discard cost."
+        },
+        {
+          "name": "宝玉の恵み",
+          "reason": "Needs replay-safe selection of one or two canonical Crystal Beast monsters in Graveyard and monster-to-Continuous-Spell placement preserving identity and zone capacity."
+        }
+      ]
+    },
+    {
+      "key": "identity_metadata",
+      "label": "setcode・alias・canonical identity・対応表",
+      "count": 21,
+      "representative_cards": [
+        "スペーシア・ギフト",
+        "バスター・テレポート",
+        "機動要塞フォルテシモ",
+        "D・ゲイザー",
+        "強烈なはたき落とし"
+      ],
+      "dependencies": "carddata移行、alias正規化、カテゴリ境界、1103時点の同名/系列定義",
+      "commonization_potential": "高：正しいメタデータ追加後は多数の場当たり的文字列判定を除去可能",
+      "cards": [
+        {
+          "name": "スペーシア・ギフト",
+          "reason": "Needs authoritative Neo-Spacian archetype metadata; the 1103 card database has no reusable setcode and card-name matching is forbidden."
+        },
+        {
+          "name": "バスター・テレポート",
+          "reason": "Needs authoritative /Buster archetype metadata; the 1103 card database has no reusable setcode and card-name matching is forbidden."
+        },
+        {
+          "name": "機動要塞フォルテシモ",
+          "reason": "Needs authoritative Meklord Army archetype metadata; the database has no reusable setcode and card-name matching is forbidden."
+        },
+        {
+          "name": "D・ゲイザー",
+          "reason": "Needs authoritative metadata for the historical name-fragment D monster family; database setcodes do not represent this predicate and name matching is forbidden."
+        },
+        {
+          "name": "強烈なはたき落とし",
+          "reason": "Needs a central on-add-to-hand event retaining exact added-card identity and provenance across draws and searches."
+        },
+        {
+          "name": "D・スピードユニット",
+          "reason": "Needs authoritative metadata for the historical name-fragment D monster family; database setcodes cannot represent the required hand predicate."
+        },
+        {
+          "name": "バスター・バースト",
+          "reason": "Needs authoritative /Buster archetype metadata; the database has no reusable setcode and card-name matching is forbidden."
+        },
+        {
+          "name": "プロト・サイバー・ドラゴン",
+          "reason": "Needs a source-state-dependent canonical-name override used by all identity queries while this card is face-up on the field."
+        },
+        {
+          "name": "地縛旋風",
+          "reason": "Needs authoritative Earthbound Immortal archetype metadata; the database has no reusable setcode and card-name matching is forbidden."
+        },
+        {
+          "name": "Sin Claw Stream",
+          "reason": "Needs authoritative reusable Sin archetype metadata; the current SETCODE layer does not expose Sin and card-name matching is forbidden."
+        },
+        {
+          "name": "カラクリ屋敷",
+          "reason": "Needs a central position-change event retaining the changed card's canonical Karakuri metadata before replay-safe field targeting."
+        },
+        {
+          "name": "スーパーチャージ",
+          "reason": "Needs authoritative reusable Roid archetype metadata so the all-controlled-monsters-are-Machine-Roid condition can be evaluated without card-name matching."
+        },
+        {
+          "name": "バスター・スラッシュ",
+          "reason": "Needs authoritative /Buster archetype metadata; the database lacks a reusable setcode and card-name substring matching is forbidden."
+        },
+        {
+          "name": "レプティレス・ポイズン",
+          "reason": "Needs authoritative reusable Reptilianne archetype metadata; the current SETCODE layer and card database do not expose it and card-name matching is forbidden."
+        },
+        {
+          "name": "封印されしエクゾディア",
+          "reason": "Needs a central automatic alternate-win condition checked after every hand mutation using exact canonical identities and serialized as a terminal duel action."
+        },
+        {
+          "name": "海神の巫女",
+          "reason": "Needs a source-linked virtual Field identity override that treats the field as canonical Umi only while no face-up Field Spell exists, shared by all Umi-dependent effects."
+        },
+        {
+          "name": "D－タイム",
+          "reason": "Needs a central leave-field event retaining the departed canonical Elemental HERO's Level before replay-safe Deck search for an eligible Destiny HERO."
+        },
+        {
+          "name": "古代の整備場",
+          "reason": "Needs authoritative Ancient Gear setcode or alias metadata; card-name substring matching is intentionally rejected for the Graveyard recovery target."
+        },
+        {
+          "name": "黄金色の竹光",
+          "reason": "Needs authoritative Bamboo Sword archetype metadata for Equip Spell presence; card-name substring matching is intentionally rejected."
+        },
+        {
+          "name": "マツボックル",
+          "reason": "Needs exact source-effect send-to-Grave provenance from canonical Korobokkuru and optional self-revival."
+        },
+        {
+          "name": "再機動",
+          "reason": "Needs authoritative Meklord setcode metadata and an atomic hand-to-Deck cost followed by canonical Meklord Graveyard recovery with correct shuffle timing."
+        }
+      ]
+    },
+    {
+      "key": "level_stat",
+      "label": "レベル・ランク・攻守の永続/一時レイヤー",
+      "count": 9,
+      "representative_cards": [
+        "コストダウン",
+        "覚醒",
+        "闇の破神剣",
+        "無謀な欲張り",
+        "ガードペナルティ"
+      ],
+      "dependencies": "素材/召喚合法性、表示、リセット、元々の数値、効果無効、Replay digest",
+      "commonization_potential": "高：レベル変更・攻守固定/倍化/半減を統一レイヤー化可能",
+      "cards": [
+        {
+          "name": "コストダウン",
+          "reason": "Needs a player-level temporary hand-monster Level modifier applied consistently to current and subsequently added hand cards."
+        },
+        {
+          "name": "覚醒",
+          "reason": "Needs a first-class Equip Spell target relationship and continuous stat modifier lifecycle with equip legality and replay serialization."
+        },
+        {
+          "name": "闇の破神剣",
+          "reason": "Needs a first-class Equip Spell target relationship and continuous stat modifier lifecycle with equip legality and replay serialization."
+        },
+        {
+          "name": "無謀な欲張り",
+          "reason": "Needs a replay-safe player-level counter for skipping the next two normal Draw Phases across turns, save/load and Undo/Redo."
+        },
+        {
+          "name": "ガードペナルティ",
+          "reason": "Needs a serializable watched-target position-change event lasting through the turn and drawing only when that target becomes Defense Position."
+        },
+        {
+          "name": "デルタフライ",
+          "reason": "Needs a first-class serializable Level modifier shared by Synchro/Xyz legality, UI, save, replay and reset processing."
+        },
+        {
+          "name": "ハウリング・ウォリアー",
+          "reason": "Needs a first-class serializable Level modifier shared by Synchro/Xyz legality, UI, save, replay and reset processing."
+        },
+        {
+          "name": "シンクロ・ヒーロー",
+          "reason": "Needs the first-class serializable Level modifier shared by Synchro/Xyz legality, UI, save, replay and Equip leave-field reset processing."
+        },
+        {
+          "name": "あまのじゃくの呪い",
+          "reason": "Needs a turn-duration central inversion layer for every ATK/DEF increase and decrease while preserving set-value, swap and halving semantics."
+        }
+      ]
+    },
+    {
+      "key": "equip_attachment",
+      "label": "装備・モンスター装備・付着関係",
+      "count": 1,
+      "representative_cards": [
+        "竜魂の力"
+      ],
+      "dependencies": "装備対象合法性、関係UID、ゾーン移動、破壊時処理、装備回数",
+      "commonization_potential": "高：装備魔法とモンスター装備の共通ライフサイクルにできる",
+      "cards": [
+        {
+          "name": "竜魂の力",
+          "reason": "Needs Warrior-only Equip targeting plus a persistent Equip-linked Race override to Dragon shared by all engine legality queries and reset processing."
+        }
+      ]
+    },
+    {
+      "key": "zone_movement",
+      "label": "ゾーン移動イベント・移動由来",
+      "count": 10,
+      "representative_cards": [
+        "パラライズ・チェーン",
+        "ライト・オブ・デストラクション",
+        "棺桶売り",
+        "死の演算盤",
+        "死霊の誘い"
+      ],
+      "dependencies": "owner/controller、移動前状態、効果/コスト区別、同時移動、イベント束ね",
+      "commonization_potential": "高：全ゾーン遷移の共通イベントとprovenanceへ統合可能",
+      "cards": [
+        {
+          "name": "パラライズ・チェーン",
+          "reason": "Needs Deck-to-Grave event provenance distinguishing effect movement from costs and rules, with one mandatory 300-damage trigger per qualifying event group."
+        },
+        {
+          "name": "ライト・オブ・デストラクション",
+          "reason": "Needs Deck-to-Grave event provenance proving an opponent effect moved cards from their Deck and one mandatory follow-up three-card mill per event group."
+        },
+        {
+          "name": "棺桶売り",
+          "reason": "Needs opponent-Graveyard arrival event grouping restricted to monster cards with controller provenance for one mandatory 300-damage trigger per card."
+        },
+        {
+          "name": "死の演算盤",
+          "reason": "Needs field-to-Grave event grouping retaining original owner for every monster and damage routing of 500 per card to that owner."
+        },
+        {
+          "name": "死霊の誘い",
+          "reason": "Needs all-zone Graveyard arrival event grouping retaining original owner for every card and damage routing of 300 per card to that owner."
+        },
+        {
+          "name": "魔力の棘",
+          "reason": "Needs opponent-hand discard event grouping and one mandatory 500-per-card damage trigger distinct from send-to-Grave."
+        },
+        {
+          "name": "イビー",
+          "reason": "Needs opponent-effect discard provenance and a mandatory 1000-damage trigger excluding costs and own effects."
+        },
+        {
+          "name": "エレクトリック・スネーク",
+          "reason": "Needs opponent-effect discard provenance and a mandatory two-card draw trigger excluding costs and own effects."
+        },
+        {
+          "name": "ネコマネキング",
+          "reason": "Needs opponent-turn opponent-effect send-to-Grave provenance and an immediate serializable forced turn termination action."
+        },
+        {
+          "name": "再生ミイラ",
+          "reason": "Needs opponent-effect hand-to-Grave provenance distinguishing effect processing from costs, then a mandatory self-return trigger for the exact moved card."
+        }
+      ]
+    },
+    {
+      "key": "phase_scheduler",
+      "label": "ターン・フェイズ・遅延スケジューラ",
+      "count": 12,
+      "representative_cards": [
+        "刻の封印",
+        "衰弱の霧",
+        "ヒエログリフの石版",
+        "無限の手札",
+        "終焉のカウントダウン"
+      ],
+      "dependencies": "ターン所有者、発動元UID、リセット、フェイズ遷移、Undo/Redo/Replay",
+      "commonization_potential": "高：遅延破壊・帰還・フェイズスキップ・勝利条件へ共通利用可能",
+      "cards": [
+        {
+          "name": "刻の封印",
+          "reason": "Needs a replay-safe scheduled next-opponent-turn normal Draw Phase skip primitive."
+        },
+        {
+          "name": "衰弱の霧",
+          "reason": "Needs a generic continuous hand-size-limit modifier integrated with End Phase discard enforcement."
+        },
+        {
+          "name": "ヒエログリフの石版",
+          "reason": "Needs a generic duel-duration hand-size-limit modifier integrated with deterministic End Phase discard enforcement."
+        },
+        {
+          "name": "無限の手札",
+          "reason": "Needs a generic continuous hand-size-limit modifier integrated with deterministic End Phase discard enforcement."
+        },
+        {
+          "name": "終焉のカウントダウン",
+          "reason": "Needs a serializable scheduled alternate-win condition counted by turn boundaries and enforced through replay/Undo/Redo."
+        },
+        {
+          "name": "端末世界",
+          "reason": "Needs a continuous both-player Main Phase 2 skip rule integrated with phase transition, manual controls, AI, save and replay."
+        },
+        {
+          "name": "便乗",
+          "reason": "Needs draw-event provenance distinguishing Draw Phase draws plus a persistent armed state for subsequent opponent non-Draw-Phase draws."
+        },
+        {
+          "name": "モロコシーナ",
+          "reason": "Needs a replay-safe Token creation primitive and an exact Main Phase 2 timing gate before paying 500 LP."
+        },
+        {
+          "name": "ソロモンの律法書",
+          "reason": "Needs a serializable next-own-Standby-Phase skip flag integrated with phase transition, save, replay, Undo and Redo."
+        },
+        {
+          "name": "生命吸収装置",
+          "reason": "Needs persistent per-turn LP-cost accounting distinguished from damage and LP loss, then next-own-Standby half-total recovery with deterministic rounding."
+        },
+        {
+          "name": "リトル・ウィンガード",
+          "reason": "Needs an optional once-per-own-End-Phase position-change window and per-turn usage state."
+        },
+        {
+          "name": "ワーム・リンクス",
+          "reason": "Needs a Flip-granted persistent End Phase trigger whose lifetime follows the same physical field presence, suspends while face-down and resets correctly on leaving the field."
+        }
+      ]
+    },
+    {
+      "key": "position_attack_rules",
+      "label": "表示形式・攻撃コマンド制約",
+      "count": 2,
+      "representative_cards": [
+        "レベル制限B地区",
+        "レベル制限A地区"
+      ],
+      "dependencies": "Battle Command表示、攻撃対象選択、強制変更、効果による変更可否、リセット",
+      "commonization_potential": "中〜高：攻撃権限と表示形式強制を中央ルール化可能",
+      "cards": [
+        {
+          "name": "レベル制限B地区",
+          "reason": "Needs a reusable continuous position-coercion rule that is enforced after every relevant state change and blocks illegal manual/Effect position changes while active."
+        },
+        {
+          "name": "レベル制限A地区",
+          "reason": "Needs a reusable continuous position-coercion rule enforced after every relevant state change while the Trap remains active."
+        }
+      ]
+    },
+    {
+      "key": "control_ownership",
+      "label": "コントロール・所有者・交換",
+      "count": 3,
+      "representative_cards": [
+        "エレメントの泉",
+        "ドッペル・ゲイナー",
+        "聖なる守り手"
+      ],
+      "dependencies": "owner/controller分離、ゾーン容量、終了時復帰、同時交換、移動先補正",
+      "commonization_potential": "高：奪取・交換・返却の原子的処理に共通化可能",
+      "cards": [
+        {
+          "name": "エレメントの泉",
+          "reason": "Needs a central onReturnToHand event emitted for all owner-corrected bounce paths."
+        },
+        {
+          "name": "ドッペル・ゲイナー",
+          "reason": "Needs effect-damage provenance containing source card, controller and amount, plus a replay-safe post-damage trigger event."
+        },
+        {
+          "name": "聖なる守り手",
+          "reason": "Needs first target Deck-top return followed by a conditional optional second distinct face-up target for hand return when the controller has a Warrior."
+        }
+      ]
+    },
+    {
+      "key": "player_rule_modifiers",
+      "label": "プレイヤー単位ルール変更",
+      "count": 1,
+      "representative_cards": [
+        "バブルイリュージョン"
+      ],
+      "dependencies": "召喚/発動/攻撃の中央合法性、期間、消費、複数効果の合成",
+      "commonization_potential": "高：手札上限・追加召喚・行動禁止をplayer modifierへ集約可能",
+      "cards": [
+        {
+          "name": "バブルイリュージョン",
+          "reason": "Needs a serializable turn-duration permission and processor/UI path to activate exactly one Trap directly from hand."
+        }
+      ]
+    },
+    {
+      "key": "deck_order",
+      "label": "デッキ順序・トップ/ボトム操作",
+      "count": 1,
+      "representative_cards": [
+        "神の恵み"
+      ],
+      "dependencies": "非公開情報、順序配列、シャッフル、公開範囲、Replay",
+      "commonization_potential": "高：デッキ閲覧・並べ替え・トップ固定を共通操作にできる",
+      "cards": [
+        {
+          "name": "神の恵み",
+          "reason": "Needs a central draw event with exact draw batches and replay-safe optional/mandatory trigger ordering after each draw action."
+        }
+      ]
+    }
+  ]
+}
