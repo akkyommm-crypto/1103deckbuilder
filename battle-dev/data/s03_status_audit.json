@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 918,
+    "NOT_STARTED": 914,
     "PARTIAL": 30,
-    "TESTED": 2929
+    "TESTED": 2933
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -389,
+    "NOT_STARTED": -393,
     "PARTIAL": -152,
-    "TESTED": 880
+    "TESTED": 884
   },
   "status_changes": [
     {
@@ -1063,6 +1063,12 @@
       "unit": "S03-U276"
     },
     {
+      "name": "クロス・アタック",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U308"
+    },
+    {
       "name": "グランド・ドラゴン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2041,6 +2047,12 @@
       "unit": "S03-U293"
     },
     {
+      "name": "バトル・テレポーテーション",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U308"
+    },
+    {
       "name": "バフォメット",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -2405,6 +2417,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U276"
+    },
+    {
+      "name": "マジック・ホール・ゴーレム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U308"
     },
     {
       "name": "マーダーサーカス",
@@ -2867,6 +2885,12 @@
       "before": "NOT_STARTED",
       "after": "PARTIAL",
       "unit": "S03-U67"
+    },
+    {
+      "name": "中央突破",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U308"
     },
     {
       "name": "二重召喚",

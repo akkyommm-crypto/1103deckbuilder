@@ -8913,6 +8913,46 @@
         "tools/test_s03_u307_gem_duals.js"
       ],
       "evidence": "Text (carddata): デュアル. ●1ターンに1度、手札から「ジェムナイト」と名のついたカード1枚を墓地へ送って発動できる。ゲームから除外されている自分のモンスター1体を選択して手札に戻す。 New script (S03-U307, cards/HZZZZZT, defineGeminiS03) + P4-v8 GROUP.GEMKNIGHT. Covered by tools/test_s03_u307_gem_duals.js: Gemini-only activation, hand 「ジェムナイト」 cost (Spell allowed), own banished monster target (not a Spell, not the opponent banished), once per turn, refusals, Replay audit. No known deviation."
+    },
+    {
+      "name": "バトル・テレポーテーション",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U308",
+      "tests": [
+        "tools/test_s03_u308_direct_grant.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上に表側表示で存在するサイキック族モンスターが1体のみの場合、そのモンスター1体を選択して発動する。このターン選択したモンスターは相手プレイヤーに直接攻撃する事ができる。このターンのバトルフェイズ終了時、選択したモンスターのコントロールを相手に移す。 New script (S03-U308, cards/HZZZZZU): condition = exactly one face-up Psychic of mine; API.grantDirectAttack; scheduler battlePhaseEnd → API.changeControl (skipped when the opponent has no free Monster Zone). Test: activation, direct attack with an opposing monster present, control at the end of the Battle Phase, refusals (two / none / face-down), full opponent zone, Replay audit. No known deviation."
+    },
+    {
+      "name": "マジック・ホール・ゴーレム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U308",
+      "tests": [
+        "tools/test_s03_u308_direct_grant.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、自分フィールド上に表側表示で存在するモンスター1体を選択して発動する事ができる。選択したモンスターはエンドフェイズ時まで攻撃力が半分になり、このターン相手プレイヤーに直接攻撃する事ができる。この効果を発動するターン、選択したモンスター以外のモンスターは攻撃する事ができない。 New script (S03-U308): ATK halved (modAtk endTurn), grantDirectAttack, and a lingering lock (API.lingerS03 + continuous.cannotAttack on all monsters except the chosen one) that also covers monsters arriving later and outlives the Golem. Test: halving + direct attack + only the chosen monster attacks, once per turn, later Normal Summon, Golem gone, expiry next turn, Replay audit. Engine note: modAtk until endTurn lasts through the End Phase (existing convention for all cards)."
+    },
+    {
+      "name": "クロス・アタック",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U308",
+      "tests": [
+        "tools/test_s03_u308_direct_grant.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上に表側攻撃表示で存在する、同じ攻撃力を持つモンスター2体を選択して発動する。このターン、選択したモンスター1体は相手プレイヤーに直接攻撃する事ができる。もう1体のモンスターは攻撃する事ができない。 New script (S03-U308): both monsters are chosen on activation in the order direct attacker / the one that cannot attack; grantDirectAttack + cannotAttackTurn. Test: both orders, the third monster unaffected, refusals (different ATK, Defense Position, face-down, single monster), Replay audit. No known deviation."
+    },
+    {
+      "name": "中央突破",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U308",
+      "tests": [
+        "tools/test_s03_u308_direct_grant.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上に表側表示で存在する「六武衆」と名のついたモンスター1体を選択して発動する。このターンのバトルフェイズ中、選択したモンスターが相手モンスターを戦闘によって破壊した場合、自分フィールド上に存在する「大将軍 紫炎」または「六武衆」と名のついたモンスターは相手プレイヤーに直接攻撃する事ができる。 New script (S03-U308) + engine record gameState.battleKillsS03 (engine/00 BATTLE_CLEANUP: uids of the turn battle destroyers) so the condition survives the destroyer leaving the field; lingering continuous.grantsDirectAttack (GROUP.SIX_SAMURAI_NAMED, 大将軍 紫炎 by name). Test: kill by the selected monster grants, by another does not, destroyer gone, no activation, refusal, Replay audit. No known deviation."
     }
   ],
   "restored_to_baseline": [

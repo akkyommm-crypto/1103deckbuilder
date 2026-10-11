@@ -344,6 +344,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u306_honest_cost.js": {"オネスト"},
     # S03-U307 names ワイト / ジェム monsters only as fixtures (the two cards under test are the Gemini duals).
     "test_s03_u307_gem_duals.js": {"ジェムナイト・アイオーラ", "ジェムナイト・アンバー"},
+    # S03-U308 names ライオウ / ワイト / ウォールクリエイター / 六武衆 monsters only as fixtures.
+    "test_s03_u308_direct_grant.js": {"バトル・テレポーテーション", "マジック・ホール・ゴーレム", "クロス・アタック", "中央突破"},
 }
 
 

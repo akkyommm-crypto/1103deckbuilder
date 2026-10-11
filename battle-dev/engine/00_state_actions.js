@@ -1134,6 +1134,12 @@ function applyActionBodyV31(gs, a){
           /* S03-U251: 「このカードがモンスターを戦闘によって破壊したターン」 — the destroyer still in the Monster Zone records the turn (zone-local) */
           { const lbK = gs.lastBattle, vu = c.uid;
             const kU = (!lbK || vu == null) ? null : (lbK.defenderUidV6 === vu ? lbK.attackerUidV6 : (lbK.attackerUidV6 === vu ? lbK.defenderUidV6 : null));
+            /* S03-U308: the uids of this turn's battle destroyers, wherever they are afterwards (中央突破: 「選択したモンスターが…戦闘によって破壊した場合」
+               stays true if that monster leaves the field later; battleKillTurnS03 below is zone-local) */
+            if(kU != null){
+              if(!gs.battleKillsS03 || gs.battleKillsS03.turn !== gs.turn) gs.battleKillsS03 = {turn:gs.turn, uids:[]};
+              if(gs.battleKillsS03.uids.indexOf(kU) < 0) gs.battleKillsS03.uids.push(kU);
+            }
             const hK = (kU != null && typeof findCardByUidInState==='function') ? findCardByUidInState(gs, kU) : null;
             if(hK && hK.zone==='mz' && hK.card){
               hK.card.battleKillTurnS03 = gs.turn;
