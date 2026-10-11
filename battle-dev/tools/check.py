@@ -597,6 +597,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u299_honest_damage_step.js')],ch
 subprocess.run(['node',str(ROOT/'tools/test_s03_u302_falcon_attack_cost.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u305_ui_harness.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u306_honest_cost.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u307_gem_duals.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

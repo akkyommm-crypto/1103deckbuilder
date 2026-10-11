@@ -8893,6 +8893,26 @@
         "tools/test_s03_u302_falcon_attack_cost.js"
       ],
       "evidence": "Text (carddata): このカードは、このカード以外の自分フィールド上のカード1枚を手札に戻さなければ攻撃宣言できない。 New script + engine (S03-U302, engine/1ZZQ): the attack-declaration cost. Every UI attack request (battlePickTargetV29, battleDirectV29, doAttack) asks its controller to return another own card (Monster / Spell & Trap / Field Zone) to the hand first (registry choice, cancelable = no attack), then requests the attack by uid. canDeclareAttackV48 refuses it with no other own card. Test: F1-F5 (target, alone, cancel, direct, save / resume during the cost choice). Replay audited. Negative control (the cost hook disabled): see the S03-U302 report."
+    },
+    {
+      "name": "ジェムナイト・アイオーラ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U307",
+      "tests": [
+        "tools/test_s03_u307_gem_duals.js"
+      ],
+      "evidence": "Text (carddata): デュアル. ●1ターンに1度、自分の墓地の「ジェム」と名のついたモンスター1体をゲームから除外して発動できる。自分の墓地の「ジェムナイト」と名のついたカード1枚を選択して手札に加える。 New script (S03-U307, cards/HZZZZZT, defineGeminiS03) + P4-v8 groups GROUP.GEM (24) / GROUP.GEMKNIGHT (17), by passcode. Covered by tools/test_s03_u307_gem_duals.js: Gemini-only activation, cost (a 「ジェム」 monster banished) and a different 「ジェムナイト」 target, Spell target, Fusion target returns to the Extra Deck, once per turn, refusals (same card as cost and target, ジェム・エンハンス / カウンター・ジェム not counted, opponent GY), Replay audit. No known deviation."
+    },
+    {
+      "name": "ジェムナイト・アンバー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U307",
+      "tests": [
+        "tools/test_s03_u307_gem_duals.js"
+      ],
+      "evidence": "Text (carddata): デュアル. ●1ターンに1度、手札から「ジェムナイト」と名のついたカード1枚を墓地へ送って発動できる。ゲームから除外されている自分のモンスター1体を選択して手札に戻す。 New script (S03-U307, cards/HZZZZZT, defineGeminiS03) + P4-v8 GROUP.GEMKNIGHT. Covered by tools/test_s03_u307_gem_duals.js: Gemini-only activation, hand 「ジェムナイト」 cost (Spell allowed), own banished monster target (not a Spell, not the opponent banished), once per turn, refusals, Replay audit. No known deviation."
     }
   ],
   "restored_to_baseline": [

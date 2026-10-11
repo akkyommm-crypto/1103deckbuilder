@@ -1330,6 +1330,9 @@
   "path": "cards/HZZZZZS_claude_s03_u302_falcon.js"
  },
  {
+  "path": "cards/HZZZZZT_claude_s03_u307_gem_duals.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

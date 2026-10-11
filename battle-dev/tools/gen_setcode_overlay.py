@@ -102,6 +102,12 @@ SPEC = [
  dict(key="GAERU", jp="ガエル", ruby=None, rule="name", arg="ガエル",
       basis="S03-U161: 「ガエル」と名のついたモンスター（イレカエル）。イレカエル・サシカエル・粋カエル・フロッグ・バリアは名前に「ガエル」を含まず非member",
       ads="EDOPro Frog(setcode 0x1029) は カエル 系と魔法を含む上位集合なので代用できない"),
+ dict(key="GEM", jp="ジェム", ruby=None, rule="name", arg="ジェム",
+      basis="S03-U307: 「ジェム」と名のついたカード。名前にジェムを含む24枚（ジェムナイト各種・ジェムエレファント・ジェムタートル・ジェムレシス・ジェム・マーチャント・ジェム・エンハンス・ジェムフラッシュエナジー・カウンター・ジェム）。ジェムナイトは名前にジェムを含むので member",
+      ads="EDOPro Gem- は同系統。setcode 0x100f はジェムナイト用で、ジェム・エンハンス／輝石融合／パーティカル・フュージョンを含むため代用できない"),
+ dict(key="GEMKNIGHT", jp="ジェムナイト", ruby=None, rule="name", arg="ジェムナイト",
+      basis="S03-U307: 「ジェムナイト」と名のついたカード（モンスター16枚＋ジェムナイト・フュージョン）。setcode 0x100f(20枚)から名前にジェムナイトを含まないジェム・エンハンス・輝石融合・パーティカル・フュージョンを除外",
+      ads="EDOPro Gem-Knight と同系統だが setcode は上位集合のため名前で定義"),
  dict(key="RESONATOR", jp="リゾネーター", ruby=None, rule="name", arg="リゾネーター",
       basis="カタカナ", ads="EDOPro Resonator と一致"),
  dict(key="PENGUIN", jp="ペンギン", ruby=None, rule="name", arg="ペンギン",
@@ -170,7 +176,7 @@ def build():
     overlay_uniq = sorted({p for g in groups.values() if not g["setcode_exact"] for p in g["members"]})
     payload = {
         "schema_version": 1,
-        "authority_version": "P4-v7",   # S03-U161: +GAERU (10 passcodes); S03-U169: +TOMABO (2)
+        "authority_version": "P4-v8",   # S03-U161: +GAERU (10 passcodes); S03-U169: +TOMABO (2); S03-U307: +GEM (24), +GEMKNIGHT (17)
         "generated_from": "data/carddata.json (read-only)",
         "rule": "membership は passcode でのみ表現する。実行時に名前一致・ruby推測を行わない。",
         "predicate_count": len(groups),

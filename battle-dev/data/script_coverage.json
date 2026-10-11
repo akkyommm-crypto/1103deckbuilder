@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 920,
+    "NOT_STARTED": 918,
     "PARTIAL": 30,
-    "TESTED": 2927
+    "TESTED": 2929
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -50,7 +50,7 @@
     "helper:defineForcedFlipSearchS03": 2,
     "helper:defineFortuneLadyS03": 6,
     "helper:defineFusionSpellS03": 5,
-    "helper:defineGeminiS03": 18,
+    "helper:defineGeminiS03": 20,
     "helper:definePeaceGolemS03": 2,
     "helper:defineReleaseRecruitS03": 5,
     "helper:defineSpiritS03": 7,
@@ -106,7 +106,7 @@
     "sin": 5,
     "unified": 1036
   },
-  "static_registration_name_count": 2938,
+  "static_registration_name_count": 2940,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -27041,12 +27041,20 @@
       "subtype": null,
       "date": "2011-04-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:defineGeminiS03",
+          "source": "cards\\HZZZZZT_claude_s03_u307_gem_duals.js",
+          "line": 29
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u307_gem_duals.js"
+      ]
     },
     {
       "index": 1261,
@@ -27109,12 +27117,20 @@
       "subtype": null,
       "date": "2011-04-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:defineGeminiS03",
+          "source": "cards\\HZZZZZT_claude_s03_u307_gem_duals.js",
+          "line": 59
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u307_gem_duals.js"
+      ]
     },
     {
       "index": 1265,
