@@ -104,8 +104,8 @@ try {
     Invoke-Git commit -m $Message
     $commit = (& git -C $repoRoot rev-parse HEAD).Trim()
 
-    $passCount = (Select-String -LiteralPath $gateLog -Pattern '\bPASS\b').Count
-    $failCount = (Select-String -LiteralPath $gateLog -Pattern '\bFAIL\b').Count
+    $passCount = @(Select-String -LiteralPath $gateLog -Pattern '\bPASS\b').Count
+    $failCount = @(Select-String -LiteralPath $gateLog -Pattern '\bFAIL\b').Count
     Write-Output "Committed $commit on $branch (PASS lines: $passCount; FAIL lines: $failCount; GATE_EXIT=0)."
 
     if ($NoPush) {
