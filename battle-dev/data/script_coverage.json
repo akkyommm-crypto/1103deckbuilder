@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 856,
+    "NOT_STARTED": 850,
     "PARTIAL": 30,
-    "TESTED": 2991
+    "TESTED": 2997
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -106,11 +106,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1452,
+    "legacy": 1456,
     "sin": 5,
-    "unified": 1051
+    "unified": 1053
   },
-  "static_registration_name_count": 3002,
+  "static_registration_name_count": 3008,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -40168,12 +40168,20 @@
       "subtype": null,
       "date": "2010-07-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 23,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZH_claude_s03_u320_naturia.js",
+          "line": 130
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u320_naturia.js"
+      ]
     },
     {
       "index": 1892,
@@ -40532,12 +40540,20 @@
       "subtype": null,
       "date": "2009-07-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZH_claude_s03_u320_naturia.js",
+          "line": 99
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u320_naturia.js"
+      ]
     },
     {
       "index": 1908,
@@ -40547,12 +40563,20 @@
       "subtype": null,
       "date": "2010-01-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZH_claude_s03_u320_naturia.js",
+          "line": 163
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u320_naturia.js"
+      ]
     },
     {
       "index": 1909,
@@ -40625,12 +40649,20 @@
       "subtype": null,
       "date": "2010-04-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 23,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZH_claude_s03_u320_naturia.js",
+          "line": 28
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u320_naturia.js"
+      ]
     },
     {
       "index": 1913,
@@ -40688,12 +40720,20 @@
       "subtype": null,
       "date": "2009-10-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZH_claude_s03_u320_naturia.js",
+          "line": 66
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u320_naturia.js"
+      ]
     },
     {
       "index": 1916,
@@ -40720,12 +40760,20 @@
       "subtype": null,
       "date": "2008-12-04",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZH_claude_s03_u320_naturia.js",
+          "line": 47
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u320_naturia.js"
+      ]
     },
     {
       "index": 1918,

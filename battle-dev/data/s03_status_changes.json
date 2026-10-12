@@ -9533,6 +9533,66 @@
         "tools/test_s03_u319_bf.js"
       ],
       "evidence": "Text (carddata): 墓地に存在し、相手モンスターの直接攻撃で2000以上の戦闘ダメージを受けた時、墓地のレベル3以下の「BF」1体とこのカードを特殊召喚する（効果は無効化）。デュエル中に1度。 Trigger from the Graveyard on a 3000 direct hit: both summoned, effects negated; 1800 hit, a monster battle, no Lv3- BF: nothing; the second copy cannot (once per Duel, player flag). Test: tools/test_s03_u319_bf.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ナチュル・モスキート",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U320",
+      "tests": [
+        "tools/test_s03_u320_naturia.js"
+      ],
+      "evidence": "Text (carddata): 他の表側表示の「ナチュル」が存在する限り攻撃対象に選択されない。他の「ナチュル」の戦闘で自分が受ける戦闘ダメージは代わりに相手が受ける。 Attack targets exclude it only while another face-up ナチュル exists; redirect for battles of the other ナチュル, not for its own battle nor for a non-ナチュル. Test: tools/test_s03_u320_naturia.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ナチュル・ローズウィップ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U320",
+      "tests": [
+        "tools/test_s03_u320_naturia.js"
+      ],
+      "evidence": "Text (carddata): 表側表示で存在する限り、相手は1ターンに1度しか魔法・罠カードを発動できない。 activationLockS03 on the per-turn card activation record: the first Spell is legal, the second not; legal without it. Test: tools/test_s03_u320_naturia.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ナチュル・レディバグ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U320",
+      "tests": [
+        "tools/test_s03_u320_naturia.js"
+      ],
+      "evidence": "Text (carddata): 自分が「ナチュル」のシンクロ召喚に成功した時に墓地から特殊召喚できる。メインフェイズにリリースして「ナチュル」1体の攻撃力をエンドフェイズ時まで1000アップ。 Graveyard trigger on a Naturia Synchro Summon (not on a non-Naturia Synchro); ignition release → +1000 ATK until the end of the turn, unavailable alone. Test: tools/test_s03_u320_naturia.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ナチュル・フライトフライ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U320",
+      "tests": [
+        "tools/test_s03_u320_naturia.js"
+      ],
+      "evidence": "Text (carddata): 相手モンスターの攻撃力・守備力は自分の「ナチュル」の数×300ダウン。1ターンに1度、相手の守備力0のモンスター1体のコントロールをエンドフェイズ時まで得る。 Continuous reduction (600 with two Naturia, own monsters not reduced); control change of a DEF 0 monster until the End Phase, once per turn, unavailable with no DEF 0 target. Test: tools/test_s03_u320_naturia.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ナチュル・スタッグ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U320",
+      "tests": [
+        "tools/test_s03_u320_naturia.js"
+      ],
+      "evidence": "Text (carddata): 攻撃を行うバトルステップ・ダメージステップ時に相手が魔法・罠・効果モンスターの効果を発動した時、墓地の「ナチュル」1体を特殊召喚できる。1ターンに1度。 Declared activation response during its own attack (opponent's trap) revives a Naturia from my Graveyard; not offered outside its attack. Test: tools/test_s03_u320_naturia.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ナチュル・ホワイトオーク",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U320",
+      "tests": [
+        "tools/test_s03_u320_naturia.js"
+      ],
+      "evidence": "Text (carddata): 相手のカードの効果の対象になった時、このカードを墓地へ送りデッキからレベル4以下の「ナチュル」2体を特殊召喚する。攻撃宣言できず、自分のエンドフェイズ時に破壊される。 Declared response when the opponent's effect targets it (read from the chain link targets, wrapper entries included); another monster targeted → not offered; both summoned with cannotAttack and destroyed at my own next End Phase (scheduled). Test: tools/test_s03_u320_naturia.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

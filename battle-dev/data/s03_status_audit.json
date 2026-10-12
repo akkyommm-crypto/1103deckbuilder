@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 856,
+    "NOT_STARTED": 850,
     "PARTIAL": 30,
-    "TESTED": 2991
+    "TESTED": 2997
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -451,
+    "NOT_STARTED": -457,
     "PARTIAL": -152,
-    "TESTED": 942
+    "TESTED": 948
   },
   "status_changes": [
     {
@@ -2089,6 +2089,12 @@
       "unit": "S03-U258"
     },
     {
+      "name": "ナチュル・スタッグ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
       "name": "ナチュル・スパイダーファング",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2119,10 +2125,40 @@
       "unit": "S03-U86"
     },
     {
+      "name": "ナチュル・フライトフライ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
+      "name": "ナチュル・ホワイトオーク",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
       "name": "ナチュル・マロン",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U208"
+    },
+    {
+      "name": "ナチュル・モスキート",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
+      "name": "ナチュル・レディバグ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
+      "name": "ナチュル・ローズウィップ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
     },
     {
       "name": "ナーガ",
