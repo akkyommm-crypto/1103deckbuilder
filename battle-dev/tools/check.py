@@ -621,6 +621,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u327_icebarrier.js')],check=True
 subprocess.run(['node',str(ROOT/'tools/test_s03_u328_battleship.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u329_shien.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u330_vylon.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u331_zenmai.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

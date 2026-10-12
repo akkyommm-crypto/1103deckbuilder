@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 811,
+    "NOT_STARTED": 806,
     "PARTIAL": 30,
-    "TESTED": 3036
+    "TESTED": 3041
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -109,9 +109,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1457,
     "sin": 5,
-    "unified": 1086
+    "unified": 1091
   },
-  "static_registration_name_count": 3047,
+  "static_registration_name_count": 3052,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -31896,12 +31896,19 @@
       "subtype": null,
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZS_claude_s03_u331_zenmai.js",
+          "line": 32
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u331_zenmai.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
     },
@@ -31983,12 +31990,20 @@
       "subtype": null,
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZS_claude_s03_u331_zenmai.js",
+          "line": 49
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u331_zenmai.js"
+      ]
     },
     {
       "index": 1491,
@@ -32021,12 +32036,20 @@
       "subtype": null,
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZS_claude_s03_u331_zenmai.js",
+          "line": 58
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u331_zenmai.js"
+      ]
     },
     {
       "index": 1493,
@@ -32036,12 +32059,20 @@
       "subtype": null,
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZS_claude_s03_u331_zenmai.js",
+          "line": 80
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u331_zenmai.js"
+      ]
     },
     {
       "index": 1494,
@@ -32074,12 +32105,20 @@
       "subtype": null,
       "date": "2011-04-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZS_claude_s03_u331_zenmai.js",
+          "line": 104
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u331_zenmai.js"
+      ]
     },
     {
       "index": 1496,

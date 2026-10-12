@@ -9983,6 +9983,56 @@
         "tools/test_s03_u330_vylon.js"
       ],
       "evidence": "Text (carddata): 1ターンに1度、自分の装備カード扱いの「ヴァイロン」モンスター1枚を選択し、表側守備表示で特殊召喚できる。離れた場合除外。 Equipped ステラ Special Summoned face-up Defense, no longer an Equip Card; leaves the field → banished (banishWhenLeavesField); once per turn; unavailable without an equipped Vylon. Test: tools/test_s03_u330_vylon.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ゼンマイウォリアー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U331",
+      "tests": [
+        "tools/test_s03_u331_zenmai.js"
+      ],
+      "evidence": "Text (carddata): 表側表示の「ゼンマイ」1体を選択して発動、エンドフェイズ時までレベル+1・攻撃力+600。 「このカードがフィールド上に表側表示で存在する限り1度しか使用できない」 = a zone-local card flag (second use unavailable). Chosen ゼンマイバット / itself: Lv+1, ATK+600, restored at the turn's end; ワイト not a candidate. Test: tools/test_s03_u331_zenmai.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ゼンマイナイト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U331",
+      "tests": [
+        "tools/test_s03_u331_zenmai.js"
+      ],
+      "evidence": "Text (carddata): 自分の表側表示の「ゼンマイ」が攻撃対象に選択された時、その攻撃を無効にできる。 「このカードがフィールド上に表側表示で存在する限り1度しか使用できない」 = a zone-local card flag (second use unavailable). Attack on ゼンマイウォリアー negated (no damage); the second attack goes through; an attack on a non-ゼンマイ is not negated. Test: tools/test_s03_u331_zenmai.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ゼンマイハンター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U331",
+      "tests": [
+        "tools/test_s03_u331_zenmai.js"
+      ],
+      "evidence": "Text (carddata): メインフェイズ、他の表側表示の「ゼンマイ」1体をリリースして発動、相手の手札をランダムに1枚墓地へ送る。 「このカードがフィールド上に表側表示で存在する限り1度しか使用できない」 = a zone-local card flag (second use unavailable). Release cost (not another ハンター / none → unavailable); one random card of the hand to the Graveyard (replay-safe random). Test: tools/test_s03_u331_zenmai.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ゼンマイバット",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U331",
+      "tests": [
+        "tools/test_s03_u331_zenmai.js"
+      ],
+      "evidence": "Text (carddata): メインフェイズ、表側攻撃表示のこのカードを表側守備表示に変更し、墓地の「ゼンマイ」1体を選択して手札に加える。 「このカードがフィールド上に表側表示で存在する限り1度しか使用できない」 = a zone-local card flag (second use unavailable). Position change + chosen add; unavailable in Defense Position or without a ゼンマイ in the Graveyard. Test: tools/test_s03_u331_zenmai.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ゼンマイマジシャン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U331",
+      "tests": [
+        "tools/test_s03_u331_zenmai.js"
+      ],
+      "evidence": "Text (carddata): マジシャン以外の「ゼンマイ」モンスターの効果が発動した場合、デッキからレベル4以下の「ゼンマイ」1体を表側守備表示で特殊召喚できる。 「このカードがフィールド上に表側表示で存在する限り1度しか使用できない」 = a zone-local card flag (second use unavailable). After ゼンマイウォリアー used its effect → ゼンマイナイト summoned in face-up Defense; a Spell activation does not trigger it. Test: tools/test_s03_u331_zenmai.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

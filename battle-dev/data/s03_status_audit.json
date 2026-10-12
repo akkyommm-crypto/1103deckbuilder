@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 811,
+    "NOT_STARTED": 806,
     "PARTIAL": 30,
-    "TESTED": 3036
+    "TESTED": 3041
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -496,
+    "NOT_STARTED": -501,
     "PARTIAL": -152,
-    "TESTED": 987
+    "TESTED": 992
   },
   "status_changes": [
     {
@@ -1685,6 +1685,36 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U156"
+    },
+    {
+      "name": "ゼンマイウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
+    },
+    {
+      "name": "ゼンマイナイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
+    },
+    {
+      "name": "ゼンマイハンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
+    },
+    {
+      "name": "ゼンマイバット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
+    },
+    {
+      "name": "ゼンマイマジシャン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
     },
     {
       "name": "ソニックジャマー",
