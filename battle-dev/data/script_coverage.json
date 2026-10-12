@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 892,
+    "NOT_STARTED": 883,
     "PARTIAL": 30,
-    "TESTED": 2955
+    "TESTED": 2964
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -38,6 +38,7 @@
     "helper:caSearch": 3,
     "helper:d8KoakiNegator": 2,
     "helper:d9Koaki": 5,
+    "helper:declareUnionS03": 9,
     "helper:defineAdeptS03": 2,
     "helper:defineBattleLossTrapS03": 2,
     "helper:defineChrysalisS03": 6,
@@ -109,7 +110,7 @@
     "sin": 5,
     "unified": 1040
   },
-  "static_registration_name_count": 2966,
+  "static_registration_name_count": 2975,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -10615,12 +10616,20 @@
       "subtype": null,
       "date": "2007-10-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
+          "line": 168
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u313_union.js"
+      ]
     },
     {
       "index": 477,
@@ -15092,12 +15101,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
+          "line": 198
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u313_union.js"
+      ]
     },
     {
       "index": 694,
@@ -21631,12 +21648,20 @@
       "subtype": null,
       "date": "2002-09-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
+          "line": 119
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u313_union.js"
+      ]
     },
     {
       "index": 1009,
@@ -32294,17 +32319,24 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
+          "line": 158
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_class_a_bulk50_b1.js",
         "tools\\test_class_a_bulk50_b2.js",
         "tools\\test_class_a_bulk50_b3.js",
         "tools\\test_engine_e123_unlocked.js",
-        "tools\\test_provenance_v30.js"
+        "tools\\test_provenance_v30.js",
+        "tools\\test_s03_u313_union.js"
       ]
     },
     {
@@ -37642,12 +37674,20 @@
       "subtype": null,
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 24,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
+          "line": 183
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u313_union.js"
+      ]
     },
     {
       "index": 1781,
@@ -38353,12 +38393,20 @@
       "subtype": null,
       "date": "2005-05-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
+          "line": 116
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u313_union.js"
+      ]
     },
     {
       "index": 1815,
@@ -64428,12 +64476,20 @@
       "subtype": null,
       "date": "2007-07-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
+          "line": 208
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u313_union.js"
+      ]
     },
     {
       "index": 3066,
@@ -84123,12 +84179,20 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
+          "line": 127
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u313_union.js"
+      ]
     },
     {
       "index": 4009,
@@ -101053,12 +101117,20 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
+          "line": 135
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u313_union.js"
+      ]
     },
     {
       "index": 4823,

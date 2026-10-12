@@ -9173,6 +9173,96 @@
         "tools/test_s03_u312_limited_equips.js"
       ],
       "evidence": "Text (carddata): 「ヴァイロン」と名のついたモンスターにのみ装備可能。装備モンスターが攻撃する場合、相手はダメージステップ終了時まで魔法・罠カードを発動する事ができない。フィールド上に表側表示で存在するこのカードが墓地へ送られた場合、自分のデッキから「ヴァイロン」と名のついた魔法カード1枚を手札に加える事ができる。 declareAttackLockS03 for an Equip Spell (engine/1ZO equipAttackLockS03); the same optional search trigger. The lock lasts while the Equip Spell stays on the field (a host destroyed in the battle takes it away). Script (S03-U312, cards/HZZZZZY, unified Equip Spell on the equip pattern of S03-U233): host restriction by P4 group (passcode), continuous stat / hook while equipped. Test: tools/test_s03_u312_limited_equips.js (real activation from the hand, host choice, Battle Phase attacks, サイクロン / ブラック・ホール, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "ドイツ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U313",
+      "tests": [
+        "tools/test_s03_u313_union.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度だけ自分のメインフェイズに装備カード扱いとして自分の「ソイツ」に装備、または装備を解除して表側攻撃表示で特殊召喚する事ができる。この効果で装備カード扱いになっている時のみ、装備モンスターの攻撃力は2500ポイントアップする。 Substitute: battle only. Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
+    },
+    {
+      "name": "コイツ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U313",
+      "tests": [
+        "tools/test_s03_u313_union.js"
+      ],
+      "evidence": "Text (carddata): … 「アイツ」に装備 … 攻撃力は3000ポイントアップする。守備表示モンスターを攻撃した時にその守備力を攻撃力が越えていれば、その数値だけ相手に戦闘ダメージを与える。 Substitute: battle only; piercing while equipped. Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
+    },
+    {
+      "name": "騎竜",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U313",
+      "tests": [
+        "tools/test_s03_u313_union.js"
+      ],
+      "evidence": "Text (carddata): … 「闇魔界の戦士 ダークソード」に装備 … 攻撃力・守備力は900ポイントアップする。装備状態のこのカードを生け贄に捧げる事で、装備モンスターはこのターン相手プレイヤーに直接攻撃ができる。 Substitute: battle only; the release effect reads the host recorded on the card when the cost is paid. Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
+    },
+    {
+      "name": "漆黒の闘龍",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U313",
+      "tests": [
+        "tools/test_s03_u313_union.js"
+      ],
+      "evidence": "Text (carddata): … 「闇魔界の戦士 ダークソード」に装備 … 攻撃力・守備力は400ポイントアップする。守備表示モンスターを攻撃した時にその守備力を攻撃力が越えていれば、その数値だけ相手に戦闘ダメージを与える。 Substitute: battle only; piercing while equipped. Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
+    },
+    {
+      "name": "ゾンビタイガー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U313",
+      "tests": [
+        "tools/test_s03_u313_union.js"
+      ],
+      "evidence": "Text (carddata): … 「朽ち果てた武将」に装備 … 攻撃力・守備力は500ポイントアップする。装備モンスターが戦闘によって相手モンスターを破壊する度に、相手は手札からランダムにカードを1枚捨てる。 Substitute: battle only; forced trigger on the destruction (Damage Step leave). Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
+    },
+    {
+      "name": "アーマー・ブレイカー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U313",
+      "tests": [
+        "tools/test_s03_u313_union.js"
+      ],
+      "evidence": "Text (carddata): … 自分フィールド上の戦士族モンスターに装備 … 装備モンスターが相手ライフに戦闘ダメージを与えた時、フィールド上に存在するカード1枚を破壊する。 Substitute: battle only; forced trigger on battle damage, the card chosen on resolution. Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
+    },
+    {
+      "name": "トライゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U313",
+      "tests": [
+        "tools/test_s03_u313_union.js"
+      ],
+      "evidence": "Text (carddata): … 自分フィールド上の機械族モンスターに装備 … 装備モンスターが戦闘によって相手モンスターを破壊した場合、自分の墓地から機械族・光属性・レベル4以下のモンスター1体を選択して特殊召喚する。 Substitute: every destruction (the text says 破壊される場合); targeted forced trigger. Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
+    },
+    {
+      "name": "オイルメン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U313",
+      "tests": [
+        "tools/test_s03_u313_union.js"
+      ],
+      "evidence": "Text (carddata): … 自分フィールド上の機械族モンスターに装備 … 装備モンスターが戦闘によって相手モンスターを破壊した場合、デッキからカードを1枚ドローする。 Substitute: every destruction. Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
+    },
+    {
+      "name": "六武衆の御霊代",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U313",
+      "tests": [
+        "tools/test_s03_u313_union.js"
+      ],
+      "evidence": "Text (carddata): … 自分フィールド上の「六武衆」と名のついたモンスターに装備 … 攻撃力・守備力は500ポイントアップする。装備モンスターが戦闘によって相手モンスターを破壊した場合、自分はデッキからカードを1枚ドローする。 GROUP.SIX_SAMURAI_NAMED host; substitute: every destruction. Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

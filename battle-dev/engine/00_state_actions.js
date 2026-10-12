@@ -1127,7 +1127,7 @@ function applyActionBodyV31(gs, a){
           const c = PP.mz[i];
           if(!c || !c.battleDestroyed) continue;
           /* S03-U183: an equip destroyed instead (engine/1ZZB) */
-          if(typeof equipSubstituteDestroyS03==='function' && equipSubstituteDestroyS03(gs, c)){ delete c.battleDestroyed; continue; }
+          if(typeof equipSubstituteDestroyS03==='function' && equipSubstituteDestroyS03(gs, c, 'battle')){ delete c.battleDestroyed; continue; }
           dropXyzMaterials(PP, c, gs); dropEquips(PP, c, gs);
           PP.mz.splice(i,1);
           delete c.battleDestroyed;

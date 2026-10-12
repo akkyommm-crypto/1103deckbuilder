@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 892,
+    "NOT_STARTED": 883,
     "PARTIAL": 30,
-    "TESTED": 2955
+    "TESTED": 2964
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -415,
+    "NOT_STARTED": -424,
     "PARTIAL": -152,
-    "TESTED": 906
+    "TESTED": 915
   },
   "status_changes": [
     {
@@ -625,6 +625,12 @@
       "unit": "S03-U202"
     },
     {
+      "name": "アーマー・ブレイカー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
+    },
+    {
       "name": "アームズ・ホール",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -851,6 +857,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U265"
+    },
+    {
+      "name": "オイルメン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "オシャレオン",
@@ -1115,6 +1127,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U207"
+    },
+    {
+      "name": "コイツ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "コダロス",
@@ -1555,6 +1573,12 @@
       "unit": "S03-U192"
     },
     {
+      "name": "ゾンビタイガー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
+    },
+    {
       "name": "ゾンビ・マスター",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -1819,6 +1843,12 @@
       "unit": "S03-U156"
     },
     {
+      "name": "トライゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
+    },
+    {
       "name": "トライワイトゾーン",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -1859,6 +1889,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U186"
+    },
+    {
+      "name": "ドイツ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "ドッペル・ウォリアー",
@@ -3101,6 +3137,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U141"
+    },
+    {
+      "name": "六武衆の御霊代",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "六武衆の結束",
@@ -4417,6 +4459,12 @@
       "unit": "S03-U220"
     },
     {
+      "name": "漆黒の闘龍",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
+    },
+    {
       "name": "漆黒の魔王 LV6",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5297,6 +5345,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U186"
+    },
+    {
+      "name": "騎竜",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "魂の氷結",
