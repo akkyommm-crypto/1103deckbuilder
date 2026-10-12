@@ -1221,10 +1221,6 @@
       "status": "ENGINE_GAP",
       "reason": "battle / target selection: needs exact opponent-monster battle-destruction provenance followed by an optional activation-time target among opponent set cards."
     },
-    "スクラップ・ゴーレム": {
-      "status": "ENGINE_GAP",
-      "reason": "target selection / resolution-time Choice: needs Graveyard Scrap activation target plus a serializable choice of which player's Monster Zone receives it, with capacity validation."
-    },
     "スター・ブラスト": {
       "status": "ENGINE_GAP",
       "reason": "declaration / activation-time Choice / damage/LP: needs numeric 500-multiple LP declaration, hand-or-field monster target, and generic turn-duration Level reduction."

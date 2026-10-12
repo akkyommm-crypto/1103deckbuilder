@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 472,
+    "ENGINE_GAP": 471,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 806,
+    "NOT_STARTED": 802,
     "PARTIAL": 30,
-    "TESTED": 3041
+    "TESTED": 3046
   },
   "delta": {
-    "ENGINE_GAP": -144,
+    "ENGINE_GAP": -145,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -501,
+    "NOT_STARTED": -505,
     "PARTIAL": -152,
-    "TESTED": 992
+    "TESTED": 997
   },
   "status_changes": [
     {
@@ -1597,10 +1597,34 @@
       "unit": "S03-U05"
     },
     {
+      "name": "スクラップ・オルトロス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U332"
+    },
+    {
+      "name": "スクラップ・カウンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U332"
+    },
+    {
       "name": "スクラップ・コング",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U208"
+    },
+    {
+      "name": "スクラップ・ゴブリン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U332"
+    },
+    {
+      "name": "スクラップ・ゴーレム",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U332"
     },
     {
       "name": "スクラップ・サーチャー",
@@ -1613,6 +1637,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U194"
+    },
+    {
+      "name": "スクラップ・ソルジャー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U332"
     },
     {
       "name": "スクラップ・ハンター",

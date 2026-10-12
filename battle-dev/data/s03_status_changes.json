@@ -10033,6 +10033,56 @@
         "tools/test_s03_u331_zenmai.js"
       ],
       "evidence": "Text (carddata): マジシャン以外の「ゼンマイ」モンスターの効果が発動した場合、デッキからレベル4以下の「ゼンマイ」1体を表側守備表示で特殊召喚できる。 「このカードがフィールド上に表側表示で存在する限り1度しか使用できない」 = a zone-local card flag (second use unavailable). After ゼンマイウォリアー used its effect → ゼンマイナイト summoned in face-up Defense; a Spell activation does not trigger it. Test: tools/test_s03_u331_zenmai.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スクラップ・ゴブリン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U332",
+      "tests": [
+        "tools/test_s03_u332_scrap.js"
+      ],
+      "evidence": "Text (carddata): 表側守備表示のこのカードが攻撃対象に選択された場合、バトルフェイズ終了時に破壊。「スクラップ」カードの効果で破壊され墓地へ送られた場合、他の墓地の「スクラップ」モンスター1体を手札に加えられる。戦闘では破壊されない。 Not destroyed by 青眼; Defense Position targeted → destroyed at the end of the Battle Phase (not in Attack Position); destroyed by スクラップ・オルトロス' effect → recovers スクラップ・ハンター; not after ブラック・ホール. Test: tools/test_s03_u332_scrap.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スクラップ・ソルジャー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U332",
+      "tests": [
+        "tools/test_s03_u332_scrap.js"
+      ],
+      "evidence": "Text (carddata): the Defense / recovery clauses as ゴブリン (no battle indestructibility); Synchro Material only for 「スクラップ」 Synchro Monsters. Recovery after オルトロス destroyed it; exCombos exclude it for a non-スクラップ Synchro (ガイアナイト) while a normal Tuner pair still works. Test: tools/test_s03_u332_scrap.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スクラップ・ゴーレム",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U332",
+      "tests": [
+        "tools/test_s03_u332_scrap.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、墓地のレベル4以下の「スクラップ」1体を自分または相手フィールドに特殊召喚できる。 Revived on my field and (second scenario) on the opponent's field (the activation target + a serializable registry choice of the field, capacity checked) — the recorded ENGINE_GAP (data/script_status_overrides.json) is lifted because both pieces now exist; once per turn; not offered with only a Lv8 Synchro スクラップ. Test: tools/test_s03_u332_scrap.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スクラップ・オルトロス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U332",
+      "tests": [
+        "tools/test_s03_u332_scrap.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。自分フィールドに「スクラップ」がいる場合に特殊召喚できる。①:この方法で特殊召喚に成功した場合、自分の「スクラップ」1体を対象に破壊。②:「スクラップ」カードの効果で破壊され墓地へ送られた場合、他の墓地の「スクラップ」1体を手札に加える。 Procedure legal only with a スクラップ on the field, no Normal Summon method; forced destruction of the chosen own スクラップ; it may target itself and then recovers (キマイラ). Test: tools/test_s03_u332_scrap.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スクラップ・カウンター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U332",
+      "tests": [
+        "tools/test_s03_u332_scrap.js"
+      ],
+      "evidence": "Text (carddata): 守備表示の「スクラップ」が攻撃された場合のダメージ計算時に発動、そのモンスターの守備力+2000、バトルフェイズ終了時に破壊。 Used at the calculation (ゴーレム DEF 1400+2000 survives 青眼 3000, 青眼 takes 400), the boosted monster destroyed at the end of the Battle Phase; not usable when the attacked monster is not a スクラップ. Test: tools/test_s03_u332_scrap.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

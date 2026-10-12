@@ -1405,6 +1405,9 @@
   "path": "cards/HZZZZZZS_claude_s03_u331_zenmai.js"
  },
  {
+  "path": "cards/HZZZZZZT_claude_s03_u332_scrap.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
