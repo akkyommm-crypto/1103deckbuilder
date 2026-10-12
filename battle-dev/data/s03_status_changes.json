@@ -9953,6 +9953,36 @@
         "tools/test_s03_u329_shien.js"
       ],
       "evidence": "Text (carddata): 1ターンに1度、メインフェイズ時、墓地の「ヴォルカニック」の数×200ダメージ。発動ターン攻撃できない。 Two in the Graveyard → 400 damage, cannot attack, once per turn. Test: tools/test_s03_u329_shien.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・ステラ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U330",
+      "tests": [
+        "tools/test_s03_u330_vylon.js"
+      ],
+      "evidence": "Text (carddata): モンスターカードゾーン上から墓地へ送られた場合、500LPを払い、自分のモンスター1体に装備カード扱いとして装備。 Destroyed in battle (Monster Zone → Graveyard) → 500 LP paid, equipped to my ワイト through API.equipFromGrave (equipTo.sourceUid = the card); not when no other monster of mine / below 500 LP. Equipped: the monster the host battled is destroyed at the end of the Damage Step (a surviving ガスタ・スクイレル destroyed). Test: tools/test_s03_u330_vylon.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・プリズム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U330",
+      "tests": [
+        "tools/test_s03_u330_vylon.js"
+      ],
+      "evidence": "Text (carddata): モンスターカードゾーン上から墓地へ送られた場合、500LPを払い、自分のモンスター1体に装備カード扱いとして装備。 Destroyed in battle (Monster Zone → Graveyard) → 500 LP paid, equipped to my ワイト through API.equipFromGrave (equipTo.sourceUid = the card); not when no other monster of mine / below 500 LP. Equipped: +1000 ATK for the host in the Damage Step (300 → 1300: ワイト destroyed, 1000 damage), 300 outside battle. Test: tools/test_s03_u330_vylon.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・ハプト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U330",
+      "tests": [
+        "tools/test_s03_u330_vylon.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、自分の装備カード扱いの「ヴァイロン」モンスター1枚を選択し、表側守備表示で特殊召喚できる。離れた場合除外。 Equipped ステラ Special Summoned face-up Defense, no longer an Equip Card; leaves the field → banished (banishWhenLeavesField); once per turn; unavailable without an equipped Vylon. Test: tools/test_s03_u330_vylon.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

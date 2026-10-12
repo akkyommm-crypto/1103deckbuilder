@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 814,
+    "NOT_STARTED": 811,
     "PARTIAL": 30,
-    "TESTED": 3033
+    "TESTED": 3036
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -493,
+    "NOT_STARTED": -496,
     "PARTIAL": -152,
-    "TESTED": 984
+    "TESTED": 987
   },
   "status_changes": [
     {
@@ -3169,16 +3169,34 @@
       "unit": "S03-U312"
     },
     {
+      "name": "ヴァイロン・ステラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U330"
+    },
+    {
       "name": "ヴァイロン・テセラクト",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U314"
     },
     {
+      "name": "ヴァイロン・ハプト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U330"
+    },
+    {
       "name": "ヴァイロン・フィラメント",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U312"
+    },
+    {
+      "name": "ヴァイロン・プリズム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U330"
     },
     {
       "name": "ヴァイロン・ペンタクロ",

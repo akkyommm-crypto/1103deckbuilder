@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 814,
+    "NOT_STARTED": 811,
     "PARTIAL": 30,
-    "TESTED": 3033
+    "TESTED": 3036
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -109,9 +109,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1457,
     "sin": 5,
-    "unified": 1083
+    "unified": 1086
   },
-  "static_registration_name_count": 3044,
+  "static_registration_name_count": 3047,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -60852,12 +60852,20 @@
       "subtype": null,
       "date": "2010-12-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZR_claude_s03_u330_vylon.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u330_vylon.js"
+      ]
     },
     {
       "index": 2868,
@@ -61029,12 +61037,20 @@
       "subtype": null,
       "date": "2010-12-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZR_claude_s03_u330_vylon.js",
+          "line": 77
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u330_vylon.js"
+      ]
     },
     {
       "index": 2877,
@@ -61067,12 +61083,20 @@
       "subtype": null,
       "date": "2010-12-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 22,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZR_claude_s03_u330_vylon.js",
+          "line": 65
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u330_vylon.js"
+      ]
     },
     {
       "index": 2879,
