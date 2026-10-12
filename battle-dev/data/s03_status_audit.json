@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 866,
+    "NOT_STARTED": 861,
     "PARTIAL": 30,
-    "TESTED": 2981
+    "TESTED": 2986
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -441,
+    "NOT_STARTED": -446,
     "PARTIAL": -152,
-    "TESTED": 932
+    "TESTED": 937
   },
   "status_changes": [
     {
@@ -1003,6 +1003,12 @@
       "unit": "S03-U267"
     },
     {
+      "name": "ガスタの神官 ムスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
+    },
+    {
       "name": "ガスタの賢者 ウィンダール",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1613,6 +1619,30 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U247"
+    },
+    {
+      "name": "ダイガスタ・イグルス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
+    },
+    {
+      "name": "ダイガスタ・ガルドス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
+    },
+    {
+      "name": "ダイガスタ・スフィアード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
+    },
+    {
+      "name": "ダイガスタ・ファルコス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
     },
     {
       "name": "ダスト・シュート",

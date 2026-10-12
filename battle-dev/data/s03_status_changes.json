@@ -9433,6 +9433,56 @@
         "tools/test_s03_u317_six2.js"
       ],
       "evidence": "Text (carddata): 自分フィールド上に「六武衆－ヤリザ」以外の「六武衆」と名のついたモンスターが存在する場合、このカードは相手プレイヤーに直接攻撃できる。 canDirectAttack while another 六武衆 is on my field. Optional substitute: 「このカードが破壊される場合、代わりに…「六武衆」1体を破壊できる」 = destroySubstituteS03 destroyOwn (engine/1ZV, S03-U173), chosen by the controller at the destruction. Test: tools/test_s03_u317_six2.js (real attacks, effects, the substitute prompt, Replay audit). No known deviation."
+    },
+    {
+      "name": "ダイガスタ・ファルコス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U318",
+      "tests": [
+        "tools/test_s03_u318_gusto.js"
+      ],
+      "evidence": "Text (carddata): シンクロ召喚に成功した時、フィールド上の全ての「ガスタ」と名のついたモンスターの攻撃力は600ポイントアップする。 Real Synchro Summon (ファルコ+ウィンダ); +600 permanent on every face-up 「ガスタ」 of both players, face-down and non-ガスタ and later arrivals unchanged; not applied without a Synchro Summon. Test: tools/test_s03_u318_gusto.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ダイガスタ・スフィアード",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U318",
+      "tests": [
+        "tools/test_s03_u318_gusto.js"
+      ],
+      "evidence": "Text (carddata): シンクロ召喚成功時に墓地の「ガスタ」カード1枚を手札に加える。表側表示で存在する限り、自分の「ガスタ」モンスターの戦闘で発生する自分への戦闘ダメージは代わりに相手が受ける。戦闘では破壊されない。 Real Synchro Summon with the GY recovery; battleDamageRedirect for battles involving my 「ガスタ」 (and not for non-ガスタ, nor for the opponent's copy); protectV21 battle protection. Test: tools/test_s03_u318_gusto.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ダイガスタ・ガルドス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U318",
+      "tests": [
+        "tools/test_s03_u318_gusto.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、自分の墓地の「ガスタ」モンスター2体をデッキに戻して発動できる（コスト）。相手フィールド上の表側表示モンスター1体を選択して破壊する。 Cost = two 「ガスタ」 monsters of my GY returned to the Deck; unavailable with fewer than two or without a face-up opponent monster; face-down not targetable; once per turn. Test: tools/test_s03_u318_gusto.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ダイガスタ・イグルス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U318",
+      "tests": [
+        "tools/test_s03_u318_gusto.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、自分のエンドフェイズ時に自分の墓地の風属性モンスター1体を除外して発動できる。相手フィールド上にセットされたカード1枚を破壊する。 Own End Phase trigger; cost banish a WIND monster from my GY; destroys a Set monster or Spell/Trap; nothing without a WIND monster or a Set card; not on the opponent's End Phase. Test: tools/test_s03_u318_gusto.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ガスタの神官 ムスト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U318",
+      "tests": [
+        "tools/test_s03_u318_gusto.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、自分のメインフェイズ時、墓地の「ガスタ」モンスター1体をデッキに戻し、フィールド上の表側表示モンスター1体の効果をエンドフェイズ時まで無効にする。 Returns the chosen 「ガスタ」 monster to the Deck and negates the chosen face-up monster until the end of the turn (negatedUntilTurn, ends with the turn); once per turn; unavailable without a 「ガスタ」 monster in the GY. Test: tools/test_s03_u318_gusto.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
