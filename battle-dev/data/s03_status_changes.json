@@ -9833,6 +9833,36 @@
         "tools/test_s03_u326_worm.js"
       ],
       "evidence": "Text (carddata): リバース:このカードを装備カード扱いとして相手モンスター1体に装備できる。お互いのスタンバイフェイズ毎に装備モンスターのコントローラーに400ダメージ。 Flipped by an attack → equipped to the opponent monster (my Spell & Trap Zone, even against a stronger attacker: the battle ends without damage); 400 damage to the opponent in my Standby Phase and again in his. Test: tools/test_s03_u326_worm.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷結界の封魔団",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U327",
+      "tests": [
+        "tools/test_s03_u327_icebarrier.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、手札の「氷結界」1体を墓地へ送って発動。表側表示で存在する限り次の自分のターンのエンドフェイズ時までお互いに魔法カードを発動できない。 Cost (hand 氷結界 to the GY), once per turn; both players' Spells locked through the End Phase of my next turn (card flag read by activationLockS03), lifted afterwards and when it leaves the field; unavailable without a 氷結界 in hand. Test: tools/test_s03_u327_icebarrier.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷結界の風水師",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U327",
+      "tests": [
+        "tools/test_s03_u327_icebarrier.js"
+      ],
+      "evidence": "Text (carddata): 手札を1枚捨て属性を1つ宣言して発動。宣言した属性のモンスターはこのカードを攻撃対象に選択できない。表側表示で存在する限り1度のみ。 Discard cost, declared Attribute (光): the 光 monster cannot choose it as an attack target, the 闇 monster can; second use unavailable; no discard → unavailable. Test: tools/test_s03_u327_icebarrier.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "墓守の監視者",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U327",
+      "tests": [
+        "tools/test_s03_u327_icebarrier.js"
+      ],
+      "evidence": "Text (carddata): 相手が自らの手札を捨てる効果を含むカードを発動した時、手札から墓地へ送ってその発動と効果を無効にしそのカードを破壊する。 Declared hand response against 手札抹殺 (nobody discards, the Spell is destroyed); not offered against サイクロン or for my own card. Known limitation: 「手札を捨てる効果を含む」 is read from the carddata wording (a first-sentence discard of a longer text = cost; one override for インフェルニティ・インフェルノ). Test: tools/test_s03_u327_icebarrier.js (Replay audit)."
     }
   ],
   "restored_to_baseline": [

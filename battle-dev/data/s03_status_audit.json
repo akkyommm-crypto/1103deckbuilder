@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 826,
+    "NOT_STARTED": 823,
     "PARTIAL": 30,
-    "TESTED": 3021
+    "TESTED": 3024
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -481,
+    "NOT_STARTED": -484,
     "PARTIAL": -152,
-    "TESTED": 972
+    "TESTED": 975
   },
   "status_changes": [
     {
@@ -3949,6 +3949,12 @@
       "unit": "S03-U196"
     },
     {
+      "name": "墓守の監視者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U327"
+    },
+    {
       "name": "墓穴の道連れ",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -4663,6 +4669,12 @@
       "unit": "S03-U225"
     },
     {
+      "name": "氷結界の封魔団",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U327"
+    },
+    {
       "name": "氷結界の武士",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -4697,6 +4709,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U225"
+    },
+    {
+      "name": "氷結界の風水師",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U327"
     },
     {
       "name": "氷結界の龍 トリシューラ",
