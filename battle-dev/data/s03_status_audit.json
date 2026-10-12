@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 910,
+    "NOT_STARTED": 905,
     "PARTIAL": 30,
-    "TESTED": 2937
+    "TESTED": 2942
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -397,
+    "NOT_STARTED": -402,
     "PARTIAL": -152,
-    "TESTED": 888
+    "TESTED": 893
   },
   "status_changes": [
     {
@@ -1777,6 +1777,30 @@
       "unit": "S03-U309"
     },
     {
+      "name": "トゥーン・デーモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
+    },
+    {
+      "name": "トゥーン・ドラゴン・エッガー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
+    },
+    {
+      "name": "トゥーン・ブラック・マジシャン・ガール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
+    },
+    {
+      "name": "トゥーン・マーメイド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
+    },
+    {
       "name": "トゥーン・仮面魔道士",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2285,6 +2309,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U260"
+    },
+    {
+      "name": "ブルーアイズ・トゥーン・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
     },
     {
       "name": "ブルーメンブラット",

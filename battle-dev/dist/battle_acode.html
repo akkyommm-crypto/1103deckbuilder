@@ -13296,6 +13296,9 @@ function cannotFusionMaterialS03(card){
 
 /* engine/40 strictSummonProcedureLegality: with a full Monster Zone, can this procedure still summon (a material set frees a zone)? */
 function summonProcedureFreesZoneS03(name, p, sp){
+  /* S03-U310: a procedure whose cost releases own monsters (トゥーン: 「自分フィールドのモンスター1体をリリースした場合に特殊召喚できる」) frees the zone it needs;
+     sp.freesZoneS03(p) says whether it can */
+  if(sp && typeof sp.freesZoneS03==='function'){ try{ return !!sp.freesZoneS03(p); }catch(err){ return false; } }
   if(!sp || !sp.contactS03) return false;
   const i = findCardIndex(name);
   const cs = i>=0 ? contactSpecS03(CARD_DB[i]) : null;
@@ -78602,15 +78605,24 @@ function toonWorldEffectS03(name){
     afterResolve(){}
   };
 }
-/* opts: {special:true → the ban is for Special Summons only (part 2), directWorld:true → ② needs the controller's トゥーン・ワールド}.
+/* opts: {special:true → the ban is for Special Summons only (S03-U310), noBan:true → no summon-turn ban (ブラック・マジシャン・ガール), directWorld:true → ② needs the controller's
+          トゥーン・ワールド, mustToon:true → 「存在する場合、トゥーンモンスターを攻撃対象に選択しなければならない」, lpCost:n → 「n LPを払わなければ攻撃宣言できない」 (attackLpCostS03)}.
    extra: {continuous:{…}, passive:{…}, …script fields} merged over the common ones. */
 function toonCommonS03(opts, extra){
-  const o = Object.assign({special:false, directWorld:true}, opts||{});
+  const o = Object.assign({special:false, noBan:false, directWorld:true, mustToon:false, lpCost:0}, opts||{});
   const x = extra || {};
   const cont = Object.assign({
     scope:'allMonsters', from:['mz'], apply(){ return null; },
-    cannotAttack(card, self){ return card===self && toonSummonTurnBanS03(card, o.special); }
-  }, x.continuous || {});
+    cannotAttack(card, self){ return !o.noBan && card===self && toonSummonTurnBanS03(card, o.special); }
+  }, o.mustToon ? {
+    /* S03-U310: engine/1ZU — the Toon (source) restricts its own attack targets: with a face-up Toon on the opposing field only Toon monsters may be chosen */
+    cannotBeAttackTargetBothS03:true,
+    cannotBeAttackedByS03(target, attacker, self){
+      if(!self || attacker!==self || !target) return false;
+      const h = locateCardAnyV4(self);
+      return !!h && toonFoeToonsS03(h.p).length>0 && !(target.face==='up' && toonDbS03(dbOf(target)));
+    }
+  } : {}, x.continuous || {});
   const passive = Object.assign({ onDestroy(ctx){ return toonWorldDestroyedS03(ctx); } }, x.passive || {});
   const d = Object.assign({
     type:'monster', priority:1,
@@ -78621,6 +78633,7 @@ function toonCommonS03(opts, extra){
       return toonFoeToonsS03(loc.p).length===0;
     }
   }, x);
+  if(o.lpCost>0) d.attackLpCostS03 = o.lpCost;
   d.continuous = cont; d.passive = passive;
   return d;
 }
@@ -78678,6 +78691,75 @@ defineUnifiedCardV4('トゥーン・仮面魔道士', [toonWorldEffectS03('ト�
   operation(ctx){ API.draw(ctx.player, 1); },
   afterResolve(){}
 }], toonCommonS03({}, { passive:{ onBattleDamage(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && a3DealtBattleDamage(ctx); } } }));
+/* S03-U310: トゥーン monsters, part 2 — the five with a Special Summon procedure (carddata texts), on `toonCommonS03` (cards/HZZZZZV, S03-U309).
+
+   Shared text: このカードは通常召喚できない。自分フィールドに「トゥーン・ワールド」が存在し、[自分フィールドのモンスターN体をリリースした場合に]特殊召喚できる。
+     ②（直接攻撃）相手フィールドにトゥーンモンスターが存在しない場合、このカードは直接攻撃できる。存在する場合、トゥーンモンスターを攻撃対象にしなければならない。
+     ③ フィールドの「トゥーン・ワールド」が破壊された時にこのカードは破壊される。
+   トゥーン・デーモン (Lv6)                   通常召喚できない。トゥーン・ワールドが自分フィールド上に存在する場合のみ特殊召喚できる(レベル5以上はリリースが必要)。特殊召喚したターンには攻撃できない。
+                                              500LPを払わなければ攻撃宣言できない。
+   トゥーン・マーメイド (Lv4)                  トゥーン・ワールドが自分フィールドに存在する場合に特殊召喚できる。特殊召喚したターンには攻撃できない。500LPを払わなければ攻撃宣言できない。
+   トゥーン・ドラゴン・エッガー (Lv7)          トゥーン・ワールド＋自分フィールドのモンスター2体をリリース。特殊召喚したターンには攻撃できない。攻撃宣言の際に500LPを払わなければならない。
+   トゥーン・ブラック・マジシャン・ガール (Lv6) トゥーン・ワールド＋自分フィールドのモンスター1体をリリース。攻撃力は、お互いの墓地の「ブラック・マジシャン」「マジシャン・オブ・ブラックカオス」の数×300アップする。
+                                              (no summon-turn ban, no LP cost in its text)
+   ブルーアイズ・トゥーン・ドラゴン (Lv8)     トゥーン・ワールド＋自分フィールドのモンスター2体をリリース。特殊召喚したターンには攻撃できない。攻撃宣言の際に500LPを払わなければならない。
+
+   Notes
+   - The procedure is the card's own summonProcedure (from the hand, no chain, summon negation window): the monsters to release are chosen first, then both are sent to the Graveyard
+     as the cost. A full Monster Zone is no obstacle when the procedure releases (sp.freesZoneS03, engine/1ZW, S03-U310).
+   - 「通常召喚できない」 is read from the text (engine/70, cannotNormalSummonS03); another effect may Special Summon it (Monster Reborn …) only after it was properly summoned (engine/1ZK).
+   - デーモン's 「(レベル5以上はリリースが必要)」 is read as the Tribute Summon count for its Level (Lv5-6: 1 monster) — recorded as the reading used.
+   - The attack LP cost is attackLpCostS03 (engine/00, paid at the declaration; an attacker with too little LP cannot declare). The attack-target rule is engine/1ZU (cannotBeAttackedByS03). */
+
+function u310Releasables(p){ return API.fieldCards({player:p, zone:'mz', filter:x=>!x.card.cannotTribute}); }
+function u310Procedure(name, n){
+  return {
+    from:'hand', positions:['atk','def'],
+    freesZoneS03(p){ return n>0 && toonWorldOwnS03(p) && u310Releasables(p).length>=n; },
+    condition(ctx){
+      if(!toonWorldOwnS03(ctx.player)){ ctx.reason = '自分フィールドに「トゥーン・ワールド」が存在しません'; return false; }
+      if(n>0 && u310Releasables(ctx.player).length<n){ ctx.reason = `リリースできるモンスターが${n}体必要です`; return false; }
+      return true;
+    },
+    cost(ctx, done){
+      if(n===0){ done(true); return; }
+      const picked = [];
+      const choose = ()=>{
+        const pool = u310Releasables(ctx.player).filter(x=>picked.indexOf(x.card)<0);
+        if(!pool.length){ done(false); return; }
+        API.selectCard(`${name}：リリースするモンスター（${picked.length+1}/${n}）`, pool, t=>{
+          const r = resolveTarget(t);
+          if(!r || r.zone!=='mz'){ done(false); return; }
+          picked.push(r.card);
+          if(picked.length<n){ choose(); return; }
+          picked.forEach(c=>{ const h = locateCardAnyV4(c); if(h && h.zone==='mz') API.sendToGrave(h, `${name}（リリース）`); });
+          done(true);
+        });
+      };
+      choose();
+    }
+  };
+}
+function u310Define(name, n, opts, extra){
+  return defineUnifiedCardV4(name, [toonWorldEffectS03(name)],
+    toonCommonS03(Object.assign({special:true, directWorld:false, mustToon:true, lpCost:500}, opts||{}),
+      Object.assign({summonProcedure:u310Procedure(name, n)}, extra||{})));
+}
+
+u310Define('トゥーン・デーモン', 1);
+u310Define('トゥーン・マーメイド', 0);
+u310Define('トゥーン・ドラゴン・エッガー', 2);
+u310Define('ブルーアイズ・トゥーン・ドラゴン', 2);
+
+/* ---- トゥーン・ブラック・マジシャン・ガール: ATK +300 per 「ブラック・マジシャン」 / 「マジシャン・オブ・ブラックカオス」 in both Graveyards ---- */
+function u310BmgCount(){
+  let n = 0;
+  gameState.players.forEach(P=>(P.grave||[]).forEach(c=>{ const nm = cardName(c); if(nm==='ブラック・マジシャン' || nm==='マジシャン・オブ・ブラックカオス') n++; }));
+  return n;
+}
+u310Define('トゥーン・ブラック・マジシャン・ガール', 1, {special:false, noBan:true, lpCost:0}, {
+  continuous:{ apply(card, self){ if(card!==self) return null; const n = u310BmgCount(); return n ? {atk:n*300} : null; } }
+});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

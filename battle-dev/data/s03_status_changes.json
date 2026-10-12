@@ -8993,6 +8993,56 @@
         "tools/test_s03_u309_toon.js"
       ],
       "evidence": "Text (carddata): common clauses + このカードが相手ライフに戦闘ダメージを与えた時、自分のデッキからカードを1枚ドローする。 Card effect: forced trigger on its battle damage, API.draw. Common clauses (toonCommonS03): no attack on the turn of Summon / Flip Summon / Special Summon; direct attack with the own トゥーン・ワールド and no opposing Toon monster (canDirectAttack); destroyed when a トゥーン・ワールド is destroyed (forced onDestroy trigger). Test: tools/test_s03_u309_toon.js (real Normal / Flip Summon, Battle Phase attacks, サイクロン on トゥーン・ワールド, Replay audit). No known deviation."
+    },
+    {
+      "name": "トゥーン・デーモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U310",
+      "tests": [
+        "tools/test_s03_u310_toon2.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。トゥーン・ワールドが自分フィールド上に存在する場合のみ特殊召喚できる(レベル5以上はリリースが必要)。特殊召喚したターンには攻撃できない。500ライフポイントを払わなければ攻撃宣言できない。… Script (S03-U310, cards/HZZZZZW on toonCommonS03 of S03-U309): own summonProcedure from the hand (no chain) with the release cost chosen first and paid together; a full Monster Zone is no obstacle when the procedure releases (sp.freesZoneS03, engine/1ZW); 通常召喚できない from the text; destroyed when a トゥーン・ワールド is destroyed; direct attack without an opposing Toon, otherwise only a Toon may be chosen (engine/1ZU cannotBeAttackedByS03). Test: tools/test_s03_u310_toon2.js (real procedure, Battle Phase attacks, サイクロン, Replay audit). No known deviation; ruling read: the 「レベル5以上はリリースが必要」 count follows the Tribute Summon count for its Level."
+    },
+    {
+      "name": "トゥーン・マーメイド",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U310",
+      "tests": [
+        "tools/test_s03_u310_toon2.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。自分フィールドにトゥーン・ワールドが存在する場合に特殊召喚できる。特殊召喚したターンには攻撃できない。500LPを払わなければ攻撃宣言できない。… Script (S03-U310, cards/HZZZZZW on toonCommonS03 of S03-U309): own summonProcedure from the hand (no chain) with the release cost chosen first and paid together; a full Monster Zone is no obstacle when the procedure releases (sp.freesZoneS03, engine/1ZW); 通常召喚できない from the text; destroyed when a トゥーン・ワールド is destroyed; direct attack without an opposing Toon, otherwise only a Toon may be chosen (engine/1ZU cannotBeAttackedByS03). Test: tools/test_s03_u310_toon2.js (real procedure, Battle Phase attacks, サイクロン, Replay audit). No known deviation; ruling read: the 「レベル5以上はリリースが必要」 count follows the Tribute Summon count for its Level."
+    },
+    {
+      "name": "トゥーン・ドラゴン・エッガー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U310",
+      "tests": [
+        "tools/test_s03_u310_toon2.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。トゥーン・ワールド＋自分フィールドのモンスター2体をリリースした場合に特殊召喚できる。特殊召喚したターンには攻撃できない。攻撃宣言の際に500LPを払わなければならない。… Script (S03-U310, cards/HZZZZZW on toonCommonS03 of S03-U309): own summonProcedure from the hand (no chain) with the release cost chosen first and paid together; a full Monster Zone is no obstacle when the procedure releases (sp.freesZoneS03, engine/1ZW); 通常召喚できない from the text; destroyed when a トゥーン・ワールド is destroyed; direct attack without an opposing Toon, otherwise only a Toon may be chosen (engine/1ZU cannotBeAttackedByS03). Test: tools/test_s03_u310_toon2.js (real procedure, Battle Phase attacks, サイクロン, Replay audit). No known deviation; ruling read: the 「レベル5以上はリリースが必要」 count follows the Tribute Summon count for its Level."
+    },
+    {
+      "name": "トゥーン・ブラック・マジシャン・ガール",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U310",
+      "tests": [
+        "tools/test_s03_u310_toon2.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。トゥーン・ワールド＋自分フィールドのモンスター1体をリリースした場合に特殊召喚できる。攻撃力は、お互いの墓地の「ブラック・マジシャン」「マジシャン・オブ・ブラックカオス」の数×300アップする。… Script (S03-U310, cards/HZZZZZW on toonCommonS03 of S03-U309): own summonProcedure from the hand (no chain) with the release cost chosen first and paid together; a full Monster Zone is no obstacle when the procedure releases (sp.freesZoneS03, engine/1ZW); 通常召喚できない from the text; destroyed when a トゥーン・ワールド is destroyed; direct attack without an opposing Toon, otherwise only a Toon may be chosen (engine/1ZU cannotBeAttackedByS03). Test: tools/test_s03_u310_toon2.js (real procedure, Battle Phase attacks, サイクロン, Replay audit). No known deviation; ruling read: the 「レベル5以上はリリースが必要」 count follows the Tribute Summon count for its Level. ATK: continuous apply {atk: n*300} by card name in both Graveyards."
+    },
+    {
+      "name": "ブルーアイズ・トゥーン・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U310",
+      "tests": [
+        "tools/test_s03_u310_toon2.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。トゥーン・ワールド＋自分フィールドのモンスター2体をリリースした場合に特殊召喚できる。特殊召喚したターンには攻撃できない。攻撃宣言の際に500LPを払わなければならない。… Script (S03-U310, cards/HZZZZZW on toonCommonS03 of S03-U309): own summonProcedure from the hand (no chain) with the release cost chosen first and paid together; a full Monster Zone is no obstacle when the procedure releases (sp.freesZoneS03, engine/1ZW); 通常召喚できない from the text; destroyed when a トゥーン・ワールド is destroyed; direct attack without an opposing Toon, otherwise only a Toon may be chosen (engine/1ZU cannotBeAttackedByS03). Test: tools/test_s03_u310_toon2.js (real procedure, Battle Phase attacks, サイクロン, Replay audit). No known deviation; ruling read: the 「レベル5以上はリリースが必要」 count follows the Tribute Summon count for its Level."
     }
   ],
   "restored_to_baseline": [

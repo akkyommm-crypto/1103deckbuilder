@@ -146,6 +146,9 @@ function cannotFusionMaterialS03(card){
 
 /* engine/40 strictSummonProcedureLegality: with a full Monster Zone, can this procedure still summon (a material set frees a zone)? */
 function summonProcedureFreesZoneS03(name, p, sp){
+  /* S03-U310: a procedure whose cost releases own monsters (トゥーン: 「自分フィールドのモンスター1体をリリースした場合に特殊召喚できる」) frees the zone it needs;
+     sp.freesZoneS03(p) says whether it can */
+  if(sp && typeof sp.freesZoneS03==='function'){ try{ return !!sp.freesZoneS03(p); }catch(err){ return false; } }
   if(!sp || !sp.contactS03) return false;
   const i = findCardIndex(name);
   const cs = i>=0 ? contactSpecS03(CARD_DB[i]) : null;

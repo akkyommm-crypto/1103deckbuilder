@@ -38,15 +38,24 @@ function toonWorldEffectS03(name){
     afterResolve(){}
   };
 }
-/* opts: {special:true → the ban is for Special Summons only (part 2), directWorld:true → ② needs the controller's トゥーン・ワールド}.
+/* opts: {special:true → the ban is for Special Summons only (S03-U310), noBan:true → no summon-turn ban (ブラック・マジシャン・ガール), directWorld:true → ② needs the controller's
+          トゥーン・ワールド, mustToon:true → 「存在する場合、トゥーンモンスターを攻撃対象に選択しなければならない」, lpCost:n → 「n LPを払わなければ攻撃宣言できない」 (attackLpCostS03)}.
    extra: {continuous:{…}, passive:{…}, …script fields} merged over the common ones. */
 function toonCommonS03(opts, extra){
-  const o = Object.assign({special:false, directWorld:true}, opts||{});
+  const o = Object.assign({special:false, noBan:false, directWorld:true, mustToon:false, lpCost:0}, opts||{});
   const x = extra || {};
   const cont = Object.assign({
     scope:'allMonsters', from:['mz'], apply(){ return null; },
-    cannotAttack(card, self){ return card===self && toonSummonTurnBanS03(card, o.special); }
-  }, x.continuous || {});
+    cannotAttack(card, self){ return !o.noBan && card===self && toonSummonTurnBanS03(card, o.special); }
+  }, o.mustToon ? {
+    /* S03-U310: engine/1ZU — the Toon (source) restricts its own attack targets: with a face-up Toon on the opposing field only Toon monsters may be chosen */
+    cannotBeAttackTargetBothS03:true,
+    cannotBeAttackedByS03(target, attacker, self){
+      if(!self || attacker!==self || !target) return false;
+      const h = locateCardAnyV4(self);
+      return !!h && toonFoeToonsS03(h.p).length>0 && !(target.face==='up' && toonDbS03(dbOf(target)));
+    }
+  } : {}, x.continuous || {});
   const passive = Object.assign({ onDestroy(ctx){ return toonWorldDestroyedS03(ctx); } }, x.passive || {});
   const d = Object.assign({
     type:'monster', priority:1,
@@ -57,6 +66,7 @@ function toonCommonS03(opts, extra){
       return toonFoeToonsS03(loc.p).length===0;
     }
   }, x);
+  if(o.lpCost>0) d.attackLpCostS03 = o.lpCost;
   d.continuous = cont; d.passive = passive;
   return d;
 }
