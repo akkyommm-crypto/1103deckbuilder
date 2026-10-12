@@ -1342,6 +1342,9 @@
   "path": "cards/HZZZZZW_claude_s03_u310_toon2.js"
  },
  {
+  "path": "cards/HZZZZZX_claude_s03_u311_revive_equips.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

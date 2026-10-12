@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 905,
+    "NOT_STARTED": 899,
     "PARTIAL": 30,
-    "TESTED": 2942
+    "TESTED": 2948
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -402,
+    "NOT_STARTED": -408,
     "PARTIAL": -152,
-    "TESTED": 893
+    "TESTED": 899
   },
   "status_changes": [
     {
@@ -143,6 +143,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U254"
+    },
+    {
+      "name": "D・リペアユニット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
     },
     {
       "name": "D－HERO デビルガイ",
@@ -3115,6 +3121,12 @@
       "unit": "S03-U292"
     },
     {
+      "name": "再融合",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
+    },
+    {
       "name": "冥府の使者ゴーズ",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -3631,6 +3643,12 @@
       "unit": "S03-U196"
     },
     {
+      "name": "契約の履行",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
+    },
+    {
       "name": "女王の選択",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3899,6 +3917,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U188"
+    },
+    {
+      "name": "戦線復活の代償",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
     },
     {
       "name": "手札抹殺",
@@ -4771,6 +4795,12 @@
       "unit": "S03-U285"
     },
     {
+      "name": "継承の印",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
+    },
+    {
       "name": "緊急鋼核処分",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -4799,6 +4829,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U264"
+    },
+    {
+      "name": "自律行動ユニット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
     },
     {
       "name": "苦痛の回廊",

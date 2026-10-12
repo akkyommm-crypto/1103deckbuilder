@@ -9043,6 +9043,66 @@
         "tools/test_s03_u310_toon2.js"
       ],
       "evidence": "Text (carddata): 通常召喚できない。トゥーン・ワールド＋自分フィールドのモンスター2体をリリースした場合に特殊召喚できる。特殊召喚したターンには攻撃できない。攻撃宣言の際に500LPを払わなければならない。… Script (S03-U310, cards/HZZZZZW on toonCommonS03 of S03-U309): own summonProcedure from the hand (no chain) with the release cost chosen first and paid together; a full Monster Zone is no obstacle when the procedure releases (sp.freesZoneS03, engine/1ZW); 通常召喚できない from the text; destroyed when a トゥーン・ワールド is destroyed; direct attack without an opposing Toon, otherwise only a Toon may be chosen (engine/1ZU cannotBeAttackedByS03). Test: tools/test_s03_u310_toon2.js (real procedure, Battle Phase attacks, サイクロン, Replay audit). No known deviation; ruling read: the 「レベル5以上はリリースが必要」 count follows the Tribute Summon count for its Level."
+    },
+    {
+      "name": "継承の印",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U311",
+      "tests": [
+        "tools/test_s03_u311_revive_equips.js"
+      ],
+      "evidence": "Text (carddata): 自分の墓地に同名モンスターカードが3枚存在する時に発動できる。そのモンスター1体を選択して自分フィールド上に特殊召喚し、このカードを装備する。このカードが破壊された時、装備モンスターを破壊する。 Link kind destroyIfDestroyed (only a destruction of the Equip Spell). Script (S03-U311, cards/HZZZZZX; the 早すぎた埋葬 pattern): cost, then target; API.specialSummon (a position the text does not give is chosen afterwards, engine/1ZZK), API.equipSpell, API.linkOnLeave. Test: tools/test_s03_u311_revive_equips.js (real activation from the hand, cost, target, the Equip Spell destroyed with サイクロン, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "戦線復活の代償",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U311",
+      "tests": [
+        "tools/test_s03_u311_revive_equips.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上の通常モンスター1体を墓地へ送り、自分または相手の墓地のモンスター1体を選択して発動できる。選択したモンスターを自分フィールド上に特殊召喚し、このカードを装備する。このカードがフィールド上から離れた時、装備モンスターを破壊する。 Cost: a face-up Normal Monster of mine sent to the GY (it may itself be the target); link kind destroy (any departure). Script (S03-U311, cards/HZZZZZX; the 早すぎた埋葬 pattern): cost, then target; API.specialSummon (a position the text does not give is chosen afterwards, engine/1ZZK), API.equipSpell, API.linkOnLeave. Test: tools/test_s03_u311_revive_equips.js (real activation from the hand, cost, target, the Equip Spell destroyed with サイクロン, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "自律行動ユニット",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U311",
+      "tests": [
+        "tools/test_s03_u311_revive_equips.js"
+      ],
+      "evidence": "Text (carddata): 1500LPを払い、相手の墓地のモンスター1体を対象として発動できる。そのモンスターを自分フィールドに攻撃表示で特殊召喚し、このカードを装備する。このカードがフィールドから離れた時にそのモンスターは破壊される。 Link kind destroy. Script (S03-U311, cards/HZZZZZX; the 早すぎた埋葬 pattern): cost, then target; API.specialSummon (a position the text does not give is chosen afterwards, engine/1ZZK), API.equipSpell, API.linkOnLeave. Test: tools/test_s03_u311_revive_equips.js (real activation from the hand, cost, target, the Equip Spell destroyed with サイクロン, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "契約の履行",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U311",
+      "tests": [
+        "tools/test_s03_u311_revive_equips.js"
+      ],
+      "evidence": "Text (carddata): 800ライフポイントを払う。自分の墓地から儀式モンスター1体を選択して自分フィールド上に特殊召喚し、このカードを装備する。このカードが破壊された時、装備モンスターをゲームから除外する。 Engine: link kind banishIfDestroyed (engine/18). A Ritual Monster in the GY must have been properly summoned (engine/1ZK). Script (S03-U311, cards/HZZZZZX; the 早すぎた埋葬 pattern): cost, then target; API.specialSummon (a position the text does not give is chosen afterwards, engine/1ZZK), API.equipSpell, API.linkOnLeave. Test: tools/test_s03_u311_revive_equips.js (real activation from the hand, cost, target, the Equip Spell destroyed with サイクロン, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "再融合",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U311",
+      "tests": [
+        "tools/test_s03_u311_revive_equips.js"
+      ],
+      "evidence": "Text (carddata): 800LPを払い、自分の墓地の融合モンスター1体を対象として発動できる。そのモンスターを特殊召喚し、このカードを装備する。このカードが破壊された時にそのモンスターは除外される。 Link kind banishIfDestroyed; a Fusion Monster in the GY must have been properly summoned (engine/1ZK). Script (S03-U311, cards/HZZZZZX; the 早すぎた埋葬 pattern): cost, then target; API.specialSummon (a position the text does not give is chosen afterwards, engine/1ZZK), API.equipSpell, API.linkOnLeave. Test: tools/test_s03_u311_revive_equips.js (real activation from the hand, cost, target, the Equip Spell destroyed with サイクロン, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "D・リペアユニット",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U311",
+      "tests": [
+        "tools/test_s03_u311_revive_equips.js"
+      ],
+      "evidence": "Text (carddata): 手札から「D」と名のついたモンスター1体を墓地へ送り、自分の墓地に存在する「D」と名のついたモンスター1体を選択して発動する。選択したモンスターを特殊召喚し、このカードを装備する。装備モンスターは表示形式を変更する事ができない。このカードがフィールド上に存在しなくなった時、装備モンスターを破壊する。 Cost: a 「D」 monster from the hand (it may itself be the target); continuous cannotChangePosition for the equipped monster; link kind destroy. 「D」 = card names starting with D・ / D－ (the 「D」 series). Script (S03-U311, cards/HZZZZZX; the 早すぎた埋葬 pattern): cost, then target; API.specialSummon (a position the text does not give is chosen afterwards, engine/1ZZK), API.equipSpell, API.linkOnLeave. Test: tools/test_s03_u311_revive_equips.js (real activation from the hand, cost, target, the Equip Spell destroyed with サイクロン, refusals, Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

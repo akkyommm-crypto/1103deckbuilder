@@ -31,7 +31,7 @@
 const FIELD_ZONES_V9 = Object.freeze(['mz','sz','field']);
 /* 相手側がいなくなったときに自分へ適用する処理 */
 /* System v26: コントロールを元の持ち主へ戻す 'controlReturn' を追加。 */
-const LINK_ON_GONE_V9 = Object.freeze(['destroy','banish','destroyBanish','toHand','none','controlReturn','toDeck','destroyIfDestroyed']);   /* S03-U184: toDeck; S03-U188: destroyIfDestroyed */
+const LINK_ON_GONE_V9 = Object.freeze(['destroy','banish','destroyBanish','toHand','none','controlReturn','toDeck','destroyIfDestroyed','banishIfDestroyed']);   /* S03-U184: toDeck; S03-U188: destroyIfDestroyed; S03-U311: banishIfDestroyed */
 
 /* ---- フィールドの直前状態 ---------------------------------------------- */
 function fieldSnapshotV9(gs){
@@ -234,6 +234,15 @@ function enforceLinkedLeaveV9(gs){
               if(wh && wh.zone === 'grave' && gi && gi.byDestroy && Number(gi.turn) === Number(gs.turn)){
                 commitAutomaticActionV44({type:'FX_TO_GRAVE', player:here.p, zone:here.zone,
                   index:here.index, reason, byDestroy:true});
+              }else{
+                commitAutomaticActionV44({type:'LINK_CLEAR_V9', player:here.p, zone:here.zone, index:here.index, reason});
+              }
+            }else if(hit.onGone === 'banishIfDestroyed'){
+              /* S03-U311: 「このカードが破壊された時、装備モンスターをゲームから除外する」 (契約の履行 / 再融合) — as destroyIfDestroyed, but the linked monster is banished */
+              const wh2 = (typeof findCardByUid === 'function') ? findCardByUid(hit.uid) : null;
+              const gi2 = wh2 && wh2.card && wh2.card.graveInfo;
+              if(wh2 && wh2.zone === 'grave' && gi2 && gi2.byDestroy && Number(gi2.turn) === Number(gs.turn)){
+                commitAutomaticActionV44({type:'FX_BANISH', player:here.p, zone:here.zone, index:here.index, reason});
               }else{
                 commitAutomaticActionV44({type:'LINK_CLEAR_V9', player:here.p, zone:here.zone, index:here.index, reason});
               }

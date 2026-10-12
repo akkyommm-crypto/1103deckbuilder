@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 905,
+    "NOT_STARTED": 899,
     "PARTIAL": 30,
-    "TESTED": 2942
+    "TESTED": 2948
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -68,6 +68,7 @@
     "helper:u176CannonScript": 4,
     "helper:u183DefineArms": 3,
     "helper:u310Define": 5,
+    "helper:u311Define": 6,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
@@ -107,7 +108,7 @@
     "sin": 5,
     "unified": 1040
   },
-  "static_registration_name_count": 2953,
+  "static_registration_name_count": 2959,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -3057,12 +3058,20 @@
       "subtype": "装備",
       "date": "2009-02-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u311Define",
+          "source": "cards\\HZZZZZX_claude_s03_u311_revive_equips.js",
+          "line": 108
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u311_revive_equips.js"
+      ]
     },
     {
       "index": 122,
@@ -64917,12 +64926,20 @@
       "subtype": "装備",
       "date": "2004-11-25",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u311Define",
+          "source": "cards\\HZZZZZX_claude_s03_u311_revive_equips.js",
+          "line": 100
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u311_revive_equips.js"
+      ]
     },
     {
       "index": 3089,
@@ -71427,12 +71444,20 @@
       "subtype": "装備",
       "date": "2004-11-25",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u311Define",
+          "source": "cards\\HZZZZZX_claude_s03_u311_revive_equips.js",
+          "line": 94
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u311_revive_equips.js"
+      ]
     },
     {
       "index": 3398,
@@ -76216,12 +76241,20 @@
       "subtype": "装備",
       "date": "2007-05-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u311Define",
+          "source": "cards\\HZZZZZX_claude_s03_u311_revive_equips.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u311_revive_equips.js"
+      ]
     },
     {
       "index": 3627,
@@ -91765,12 +91798,20 @@
       "subtype": "装備",
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u311Define",
+          "source": "cards\\HZZZZZX_claude_s03_u311_revive_equips.js",
+          "line": 70
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u311_revive_equips.js"
+      ]
     },
     {
       "index": 4383,
@@ -92624,12 +92665,20 @@
       "subtype": "装備",
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u311Define",
+          "source": "cards\\HZZZZZX_claude_s03_u311_revive_equips.js",
+          "line": 88
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u311_revive_equips.js"
+      ]
     },
     {
       "index": 4423,
