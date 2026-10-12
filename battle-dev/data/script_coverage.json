@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 471,
+    "ENGINE_GAP": 470,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 802,
+    "NOT_STARTED": 797,
     "PARTIAL": 30,
-    "TESTED": 3046
+    "TESTED": 3052
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -109,9 +109,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1458,
     "sin": 5,
-    "unified": 1095
+    "unified": 1101
   },
-  "static_registration_name_count": 3057,
+  "static_registration_name_count": 3063,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -1087,12 +1087,20 @@
       "subtype": null,
       "date": "2010-01-21",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZU_claude_s03_u333_genex.js",
+          "line": 30
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u333_genex.js"
+      ]
     },
     {
       "index": 29,
@@ -1125,12 +1133,19 @@
       "subtype": null,
       "date": "2010-01-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe Attribute declaration and a turn-duration Attribute override consumed consistently by all effect and summon legality checks.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZU_claude_s03_u333_genex.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u333_genex.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -1189,12 +1204,20 @@
       "subtype": null,
       "date": "2009-10-01",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZU_claude_s03_u333_genex.js",
+          "line": 116
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u333_genex.js"
+      ]
     },
     {
       "index": 34,
@@ -27703,12 +27726,20 @@
       "subtype": null,
       "date": "2008-09-22",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZU_claude_s03_u333_genex.js",
+          "line": 176
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u333_genex.js"
+      ]
     },
     {
       "index": 1284,
@@ -57744,12 +57775,20 @@
       "subtype": null,
       "date": "2009-04-14",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZU_claude_s03_u333_genex.js",
+          "line": 141
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u333_genex.js"
+      ]
     },
     {
       "index": 2728,
@@ -57829,12 +57868,20 @@
       "subtype": null,
       "date": "2009-07-01",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZU_claude_s03_u333_genex.js",
+          "line": 161
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u333_genex.js"
+      ]
     },
     {
       "index": 2732,

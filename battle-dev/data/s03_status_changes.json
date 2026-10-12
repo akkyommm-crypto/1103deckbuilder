@@ -10083,6 +10083,66 @@
         "tools/test_s03_u332_scrap.js"
       ],
       "evidence": "Text (carddata): 守備表示の「スクラップ」が攻撃された場合のダメージ計算時に発動、そのモンスターの守備力+2000、バトルフェイズ終了時に破壊。 Used at the calculation (ゴーレム DEF 1400+2000 survives 青眼 3000, 青眼 takes 400), the boosted monster destroyed at the end of the Battle Phase; not usable when the attacked monster is not a スクラップ. Test: tools/test_s03_u332_scrap.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "A・ジェネクス・アクセル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U333",
+      "tests": [
+        "tools/test_s03_u333_genex.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、手札を捨てて墓地のレベル4以下の機械族を特殊召喚、攻撃力倍、直接攻撃不可、エンドフェイズに除外。 Real Synchro Summon (Genex Tuner + Lv5 ヒート); discard サイクロン, サーチャー revived with ATK 1600 → 3200, cannotDirectAttack, banished at my End Phase; once per turn; unavailable without a Lv4- Machine. Test: tools/test_s03_u333_genex.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "A・ジェネクス・ケミストリ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U333",
+      "tests": [
+        "tools/test_s03_u333_genex.js"
+      ],
+      "evidence": "Text (carddata): 属性を宣言して手札から捨て、自分の「ジェネクス」1体をその属性にする（相手ターンでも）。 Hand Quick Effect: discarded, declared 光, my コントローラー became 光; illegal without a face-up ジェネクス. The recorded ENGINE_GAP (data/script_status_overrides.json: replay-safe Attribute declaration + an Attribute override) is lifted: the declaration is a registry choice (replay-audited) and the change is API.setAttribute. Test: tools/test_s03_u333_genex.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "A・ジェネクス・トライアーム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U333",
+      "tests": [
+        "tools/test_s03_u333_genex.js"
+      ],
+      "evidence": "Text (carddata): シンクロ素材にしたチューナー以外の属性により、1ターンに1度手札を捨てて: 風=相手の手札ランダム1枚を墓地へ／水=魔法・罠1枚破壊／闇=光属性モンスター1体破壊＋1ドロー。 Real Synchro Summons with ワーカー (風) / ウンディーネ (水) / ドクター (闇), each effect with its discard cost; shared once per turn. Attributes read from v380SummonMaterials (the materials recorded by the Synchro Summon). Test: tools/test_s03_u333_genex.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "レアル・ジェネクス・クロキシアン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U333",
+      "tests": [
+        "tools/test_s03_u333_genex.js"
+      ],
+      "evidence": "Text (carddata): シンクロ召喚に成功した時、相手フィールドのレベルが一番高いモンスター1体のコントロールを得る。 Real Synchro Summon (Tuner + two 闇): 青眼 (Lv8) taken, ワイト stays. Test: tools/test_s03_u333_genex.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "レアル・ジェネクス・ヴィンディカイト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U333",
+      "tests": [
+        "tools/test_s03_u333_genex.js"
+      ],
+      "evidence": "Text (carddata): 相手は攻撃対象に選択できない。戦闘で相手モンスターを破壊した場合、デッキから「ジェネクス」1体を手札に加えられる。 Not in the opponent's attack target list; battle kill → chosen ジェネクス (ヒート) added from the Deck. Test: tools/test_s03_u333_genex.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジオ・ジェネクス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U333",
+      "tests": [
+        "tools/test_s03_u333_genex.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、自分フィールドにレベル4以下の「ジェネクス」がいる限り、元々の攻撃力と守備力をエンドフェイズ時まで入れ替える。 Real Synchro Summon; with a Lv3 Genex on my field ATK/DEF 1800/2800 → 2800/1800, restored when the turn ends, once per turn; unavailable without a Lv4- Genex. Test: tools/test_s03_u333_genex.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 471,
+    "ENGINE_GAP": 470,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 802,
+    "NOT_STARTED": 797,
     "PARTIAL": 30,
-    "TESTED": 3046
+    "TESTED": 3052
   },
   "delta": {
-    "ENGINE_GAP": -145,
+    "ENGINE_GAP": -146,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -505,
+    "NOT_STARTED": -510,
     "PARTIAL": -152,
-    "TESTED": 997
+    "TESTED": 1003
   },
   "status_changes": [
     {
@@ -53,6 +53,24 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U82"
+    },
+    {
+      "name": "A・ジェネクス・アクセル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
+    },
+    {
+      "name": "A・ジェネクス・ケミストリ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U333"
+    },
+    {
+      "name": "A・ジェネクス・トライアーム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
     },
     {
       "name": "A・ジェネクス・トライフォース",
@@ -1523,6 +1541,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U200"
+    },
+    {
+      "name": "ジオ・ジェネクス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
     },
     {
       "name": "ジャンクBOX",
@@ -3079,6 +3103,12 @@
       "unit": "S03-U200"
     },
     {
+      "name": "レアル・ジェネクス・クロキシアン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
+    },
+    {
       "name": "レアル・ジェネクス・ターボ",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -3089,6 +3119,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U200"
+    },
+    {
+      "name": "レアル・ジェネクス・ヴィンディカイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
     },
     {
       "name": "レインボー・ライフ",

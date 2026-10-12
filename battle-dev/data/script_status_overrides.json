@@ -577,10 +577,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs current-ATK-qualified DARK tribute cost and a three-opponent-turn persistent private hand/draw inspection-and-destroy replacement effect."
     },
-    "A・ジェネクス・ケミストリ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe Attribute declaration and a turn-duration Attribute override consumed consistently by all effect and summon legality checks."
-    },
     "BF－熱風のギブリ": {
       "status": "ENGINE_GAP",
       "reason": "Needs a direct-attack response window for hand Special Summon plus a serializable until-End-Phase base-ATK/base-DEF swap modifier."
