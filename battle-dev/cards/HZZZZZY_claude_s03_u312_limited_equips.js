@@ -31,7 +31,7 @@ function u312EquipEffect(name, pred, own){
     target(ctx, done){ API.selectCard(`${name}：装備するモンスター`, u312Hosts(ctx, pred, own), t=>done([t])); },
     operation(ctx){
       const s = locateCardAnyV4(ctx.card), t = ctx.selectedTargets && resolveTarget(ctx.selectedTargets[0]);
-      if(s && t && t.zone==='mz' && t.card.face==='up' && (!own || t.p===ctx.player) && pred(t)) API.equipSpell(s, t, name);
+      if(s && t && t.zone==='mz' && t.card.face==='up' && (!own || t.p===ctx.player) && pred(Object.assign({db:dbOf(t.card)}, t))) API.equipSpell(s, t, name);   /* resolveTarget handles carry no db */
     },
     afterResolve(){}
   };

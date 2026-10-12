@@ -5,6 +5,7 @@
    S03-U169: authority P4-v7 = 上記 + TOMABO（「トマボー」と名のついた。トマボー／プチトマボー）→ predicate 36 / authority 486 / overlay 340 / 延べ491。
    S03-U307: authority P4-v8 = 上記 + GEM（「ジェム」と名のついた。名前にジェムを含む24枚）+ GEMKNIGHT（「ジェムナイト」と名のついた17枚。ジェム・エンハンス／輝石融合／パーティカル・フュージョンは非member）→ predicate 38 / authority 510 / overlay 364 / 延べ532。
    S03-U312: authority P4-v9 = 上記 + NINJA（「忍者」と名のついた。名前に忍者を含む11枚）+ VYLON（「ヴァイロン」と名のついた26枚）→ predicate 40 / authority 547 / overlay 401 / 延べ569。
+   S03-U315: authority P4-v10 = 上記 + XSABER（「X－セイバー」と名のついた。名前にX－セイバーを含む18枚、XX－セイバー8枚を含む）→ predicate 41 / authority 565 / overlay 419 / 延べ587。
    named predicate / setcode / alias / canonical identity の分離も検証する。 */
 const fs=require('fs'),vm=require('vm'),path=require('path');
 const ROOT=path.resolve(__dirname,'..');
@@ -26,19 +27,19 @@ const code=n=>byName[n]?byName[n].c:0;
 /* ---- 1. overlay 整合性 ---- */
 const audit=p4AuditV4();
 ok('P4 overlay: 自己診断がPASS',audit.ok,(audit.problems||[]).join(' / '));
-ok('P4 overlay: predicate総数=40',audit.predicates===40,'='+audit.predicates);
-ok('P4 overlay: GROUP定数が40件',Object.keys(GROUP).length===40,'='+Object.keys(GROUP).length);
+ok('P4 overlay: predicate総数=41',audit.predicates===41,'='+audit.predicates);
+ok('P4 overlay: GROUP定数が41件',Object.keys(GROUP).length===41,'='+Object.keys(GROUP).length);
 /* 件数3種の名前と値を固定する（混同防止） */
-ok('P4 件数: authority_unique_passcode_count=547',
-   audit.authorityUniquePasscodes===547 && OV.authority_unique_passcode_count===547,
+ok('P4 件数: authority_unique_passcode_count=565',
+   audit.authorityUniquePasscodes===565 && OV.authority_unique_passcode_count===565,
    'audit='+audit.authorityUniquePasscodes+' json='+OV.authority_unique_passcode_count);
-ok('P4 件数: overlay_unique_passcode_count=401',
-   audit.overlayUniquePasscodes===401 && OV.overlay_unique_passcode_count===401,
+ok('P4 件数: overlay_unique_passcode_count=419',
+   audit.overlayUniquePasscodes===419 && OV.overlay_unique_passcode_count===419,
    'audit='+audit.overlayUniquePasscodes+' json='+OV.overlay_unique_passcode_count);
-ok('P4 件数: total_membership_count=569',
-   audit.totalMembership===569 && OV.total_membership_count===569,
+ok('P4 件数: total_membership_count=587',
+   audit.totalMembership===587 && OV.total_membership_count===587,
    'audit='+audit.totalMembership+' json='+OV.total_membership_count);
-ok('P4 件数: 547(authority) と 401(overlay-only) は別物として保持されている',
+ok('P4 件数: 565(authority) と 419(overlay-only) は別物として保持されている',
    OV.authority_unique_passcode_count!==OV.overlay_unique_passcode_count &&
    typeof OV.count_glossary==='object');
 ok('P4 件数: 旧キー unique_passcode_count は残っていない',
@@ -52,7 +53,7 @@ Object.keys(OV.groups).forEach(k=>{
   (g.members||[]).forEach(c=>ovUniq.add(c));
 });
 ok('P4 overlay: setcode_exact群は5つ',setcodeExactGroups.length===5,setcodeExactGroups.join(','));
-ok('P4 overlay: overlay固有ユニークpasscode=401',ovUniq.size===401,'='+ovUniq.size);
+ok('P4 overlay: overlay固有ユニークpasscode=419',ovUniq.size===419,'='+ovUniq.size);
 let allExist=true,badCode=null;
 Object.keys(OV.groups).forEach(k=>(OV.groups[k].members||[]).forEach(c=>{ if(!byCode[c]){allExist=false;badCode=badCode||(k+':'+c);} }));
 ok('P4 overlay: 全memberがカードDBに実在する',allExist,badCode||'');

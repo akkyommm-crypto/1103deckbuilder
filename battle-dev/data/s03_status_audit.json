@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 877,
+    "NOT_STARTED": 874,
     "PARTIAL": 30,
-    "TESTED": 2970
+    "TESTED": 2973
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -430,
+    "NOT_STARTED": -433,
     "PARTIAL": -152,
-    "TESTED": 921
+    "TESTED": 924
   },
   "status_changes": [
     {
@@ -2833,6 +2833,12 @@
       "unit": "S03-U239"
     },
     {
+      "name": "ロケット・パイルダー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U315"
+    },
+    {
       "name": "ロスト",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -3055,6 +3061,12 @@
       "unit": "S03-U202"
     },
     {
+      "name": "伝説の黒帯",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U315"
+    },
+    {
       "name": "侵略の手段",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3233,6 +3245,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U227"
+    },
+    {
+      "name": "剣の煌き",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U315"
     },
     {
       "name": "剣闘獣の底力",

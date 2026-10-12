@@ -114,6 +114,9 @@ SPEC = [
  dict(key="VYLON", jp="ヴァイロン", ruby=None, rule="name", arg="ヴァイロン",
       basis="S03-U312: 「ヴァイロン」と名のついたカード（モンスター・魔法）。名前にヴァイロンを含む26枚",
       ads="EDOPro Vylon と一致"),
+ dict(key="XSABER", jp="X－セイバー", ruby=None, rule="name", arg="X－セイバー",
+      basis="S03-U315: 「X－セイバー」と名のついたカード。名前にX－セイバーを含む18枚（XX－セイバー〔名前の末尾にX－セイバーを含む〕を含む）",
+      ads="EDOPro X-Saber と一致"),
  dict(key="RESONATOR", jp="リゾネーター", ruby=None, rule="name", arg="リゾネーター",
       basis="カタカナ", ads="EDOPro Resonator と一致"),
  dict(key="PENGUIN", jp="ペンギン", ruby=None, rule="name", arg="ペンギン",
@@ -182,7 +185,7 @@ def build():
     overlay_uniq = sorted({p for g in groups.values() if not g["setcode_exact"] for p in g["members"]})
     payload = {
         "schema_version": 1,
-        "authority_version": "P4-v9",   # S03-U161: +GAERU (10 passcodes); S03-U169: +TOMABO (2); S03-U307: +GEM (24), +GEMKNIGHT (17); S03-U312: +NINJA, +VYLON
+        "authority_version": "P4-v10",   # S03-U161: +GAERU (10 passcodes); S03-U169: +TOMABO (2); S03-U307: +GEM (24), +GEMKNIGHT (17); S03-U312: +NINJA, +VYLON; S03-U315: +XSABER
         "generated_from": "data/carddata.json (read-only)",
         "rule": "membership は passcode でのみ表現する。実行時に名前一致・ruby推測を行わない。",
         "predicate_count": len(groups),

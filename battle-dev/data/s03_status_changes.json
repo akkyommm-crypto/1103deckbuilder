@@ -9323,6 +9323,36 @@
         "tools/test_s03_u314_union2.js"
       ],
       "evidence": "Text (carddata): 「氷岩魔獣」に装備 … 装備モンスターが相手プレイヤーに戦闘ダメージを与えた場合、フィールド上で表側表示の魔法または罠カード1枚を破壊する。 Forced; face-up Spell / Trap (Field Zone included); substitute: by battle only. Script (S03-U314, cards/HZZZZZZB) on declareUnionS03 (S03-U313): once per turn equip / release, host chosen on resolution, one Union per monster, stats and effects only while equipped, the substitute scope of the card own wording. Test: tools/test_s03_u314_union2.js (real equip / release across really passed turns, Battle Phase attacks, Replay audit). No known deviation."
+    },
+    {
+      "name": "伝説の黒帯",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U315",
+      "tests": [
+        "tools/test_s03_u315_equips3.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上の「格闘ねずみ チュー助」「モンク・ファイター」「マスターモンク」のみ装備可能。装備モンスターが戦闘によって相手モンスターを破壊し墓地へ送った時、破壊したモンスターの守備力分のダメージを相手ライフに与える。 Own listed monsters only; forced; damage = the printed DEF of the destroyed monster (it must be in the Graveyard). Script (S03-U315, cards/HZZZZZZC, u312Define equip pattern): host restriction by name / P4 group, effects read from the Equip Spell in the Spell & Trap Zone (Damage Step leave record). Test: tools/test_s03_u315_equips3.js (real activation, Battle Phase attacks, サイクロン, Graveyard effect, really passed turns, Replay audit). No known deviation."
+    },
+    {
+      "name": "剣の煌き",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U315",
+      "tests": [
+        "tools/test_s03_u315_equips3.js"
+      ],
+      "evidence": "Text (carddata): 「X－セイバー」と名のついたモンスターにのみ装備可能。装備モンスターが戦闘によって相手モンスターを破壊した場合、相手フィールド上に存在するカード1枚を破壊する事ができる。また、自分フィールド上に存在するモンスター1体をリリースする事で、自分の墓地に存在するこのカードをデッキの一番上に戻す。 GROUP.XSABER (new, P4-v10); optional trigger, the card chosen on resolution; Graveyard ignition: release a monster → the card on top of the Deck. Script (S03-U315, cards/HZZZZZZC, u312Define equip pattern): host restriction by name / P4 group, effects read from the Equip Spell in the Spell & Trap Zone (Damage Step leave record). Test: tools/test_s03_u315_equips3.js (real activation, Battle Phase attacks, サイクロン, Graveyard effect, really passed turns, Replay audit). No known deviation."
+    },
+    {
+      "name": "ロケット・パイルダー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U315",
+      "tests": [
+        "tools/test_s03_u315_equips3.js"
+      ],
+      "evidence": "Text (carddata): 装備モンスターが攻撃する場合、装備モンスターは戦闘では破壊されない。装備モンスターが攻撃を行ったダメージステップ終了時、装備モンスターの攻撃を受けたモンスターの攻撃力は、エンドフェイズ時まで装備モンスターの攻撃力分ダウンする。 protectV21 battle protection only while the host is the attacker (battleRole); the ATK reduction at the Damage Step end (the leave step delivered to the Spell & Trap Zone) on the attacked monster, until the turn ends. Script (S03-U315, cards/HZZZZZZC, u312Define equip pattern): host restriction by name / P4 group, effects read from the Equip Spell in the Spell & Trap Zone (Damage Step leave record). Test: tools/test_s03_u315_equips3.js (real activation, Battle Phase attacks, サイクロン, Graveyard effect, really passed turns, Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
