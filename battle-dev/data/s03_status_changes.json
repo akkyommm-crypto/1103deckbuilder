@@ -9913,6 +9913,46 @@
         "tools/test_s03_u328_battleship.js"
       ],
       "evidence": "Text (carddata): Counters: placed on Normal Summon (Mk－II: Special Summon only) — 3 / 2 (カバード・コア) / 3 / 3 / 3; indestructible in battle (attacked by 青眼 3000 it stays); at the end of the Damage Step of a battle with a monster one counter is removed, without a counter it is destroyed (after killing ワイト); a direct attack changes nothing. Mk－II: 3 counters on Special Summon success (死者蘇生 revive); Normal Summoned Tribute-free only when my field has no monster (and then it has no counters, as the text reads); the Tribute-free method is not offered with a monster on my field. Test: tools/test_s03_u328_battleship.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "紫炎の参謀",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U329",
+      "tests": [
+        "tools/test_s03_u329_shien.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上に「六武衆」が表側表示で存在する場合に召喚に成功した時、種族を宣言。宣言した種族のモンスターは攻撃宣言できず、お互い特殊召喚できない。 Normal Summon with ザンジ on my field → declared Race アンデット: my アンデット ワイト cannot attack, the Warrior ザンジ can, 死者蘇生 cannot revive the ワイト (control without 参謀 revives it); no 六武衆 → no declaration, no ban. Test: tools/test_s03_u329_shien.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "紫炎の寄子",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U329",
+      "tests": [
+        "tools/test_s03_u329_shien.js"
+      ],
+      "evidence": "Text (carddata): 自分の「六武衆」が戦闘を行う場合、そのダメージ計算時に手札から墓地へ送って発動。そのモンスターはこのターン戦闘では破壊されない。 Used at the calculation of 青眼 vs ザンジ → ザンジ survives, the damage is still dealt; a battle without a 六武衆 → not usable. Test: tools/test_s03_u329_shien.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "紫炎の老中 エニシ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U329",
+      "tests": [
+        "tools/test_s03_u329_shien.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。墓地の「六武衆」2体を除外した場合のみ特殊召喚。1ターンに1度、表側表示のモンスター1体を破壊。発動ターン攻撃宣言できない。 Hand procedure (two 六武衆 banished, not legal with one); destroys the chosen face-up monster, cannot attack that turn, once per turn. Test: tools/test_s03_u329_shien.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴォルカニック・ハンマー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U329",
+      "tests": [
+        "tools/test_s03_u329_shien.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、メインフェイズ時、墓地の「ヴォルカニック」の数×200ダメージ。発動ターン攻撃できない。 Two in the Graveyard → 400 damage, cannot attack, once per turn. Test: tools/test_s03_u329_shien.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

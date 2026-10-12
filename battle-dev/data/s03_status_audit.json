@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 818,
+    "NOT_STARTED": 814,
     "PARTIAL": 30,
-    "TESTED": 3029
+    "TESTED": 3033
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -489,
+    "NOT_STARTED": -493,
     "PARTIAL": -152,
-    "TESTED": 980
+    "TESTED": 984
   },
   "status_changes": [
     {
@@ -3223,6 +3223,12 @@
       "unit": "S03-U230"
     },
     {
+      "name": "ヴォルカニック・ハンマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U329"
+    },
+    {
       "name": "ヴォルカニック・バレット",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -5219,6 +5225,24 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U156"
+    },
+    {
+      "name": "紫炎の参謀",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U329"
+    },
+    {
+      "name": "紫炎の寄子",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U329"
+    },
+    {
+      "name": "紫炎の老中 エニシ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U329"
     },
     {
       "name": "紫炎の道場",

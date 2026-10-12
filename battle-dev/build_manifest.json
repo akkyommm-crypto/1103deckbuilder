@@ -1396,6 +1396,9 @@
   "path": "cards/HZZZZZZP_claude_s03_u328_battleship.js"
  },
  {
+  "path": "cards/HZZZZZZQ_claude_s03_u329_shien.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
