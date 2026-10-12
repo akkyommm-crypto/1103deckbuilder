@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 835,
+    "NOT_STARTED": 829,
     "PARTIAL": 30,
-    "TESTED": 3012
+    "TESTED": 3018
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -108,9 +108,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1456,
     "sin": 5,
-    "unified": 1068
+    "unified": 1074
   },
-  "static_registration_name_count": 3023,
+  "static_registration_name_count": 3029,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -56011,13 +56011,20 @@
       "subtype": null,
       "date": "2010-04-27",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZM_claude_s03_u325_laval.js",
+          "line": 144
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u222_ns14.js"
+        "tools\\test_s03_u222_ns14.js",
+        "tools\\test_s03_u325_laval.js"
       ]
     },
     {
@@ -56051,12 +56058,20 @@
       "subtype": null,
       "date": "2010-04-27",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZM_claude_s03_u325_laval.js",
+          "line": 46
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u325_laval.js"
+      ]
     },
     {
       "index": 2651,
@@ -56139,12 +56154,20 @@
       "subtype": null,
       "date": "2010-04-27",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 30,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZM_claude_s03_u325_laval.js",
+          "line": 66
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u325_laval.js"
+      ]
     },
     {
       "index": 2655,
@@ -56177,12 +56200,20 @@
       "subtype": null,
       "date": "2010-12-01",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 31,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZM_claude_s03_u325_laval.js",
+          "line": 78
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u325_laval.js"
+      ]
     },
     {
       "index": 2657,
@@ -56192,12 +56223,20 @@
       "subtype": null,
       "date": "2010-06-21",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZM_claude_s03_u325_laval.js",
+          "line": 99
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u325_laval.js"
+      ]
     },
     {
       "index": 2658,
@@ -56253,12 +56292,20 @@
       "subtype": null,
       "date": "2011-04-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZM_claude_s03_u325_laval.js",
+          "line": 117
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u325_laval.js"
+      ]
     },
     {
       "index": 2661,

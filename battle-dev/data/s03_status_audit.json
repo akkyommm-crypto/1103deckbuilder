@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 835,
+    "NOT_STARTED": 829,
     "PARTIAL": 30,
-    "TESTED": 3012
+    "TESTED": 3018
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -472,
+    "NOT_STARTED": -478,
     "PARTIAL": -152,
-    "TESTED": 963
+    "TESTED": 969
   },
   "status_changes": [
     {
@@ -2905,6 +2905,18 @@
       "unit": "S03-U03"
     },
     {
+      "name": "ラヴァルバル・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
+      "name": "ラヴァルロード・ジャッジメント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
       "name": "ラヴァル・ウォリアー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2917,10 +2929,34 @@
       "unit": "S03-U235"
     },
     {
+      "name": "ラヴァル・グレイター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
+      "name": "ラヴァル・ステライド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
+      "name": "ラヴァル・ツインスレイヤー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
       "name": "ラヴァル炎樹海の妖女",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U222"
+    },
+    {
+      "name": "ラヴァル炎湖畔の淑女",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
     },
     {
       "name": "ラヴァル炎火山の侍女",

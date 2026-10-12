@@ -9743,6 +9743,66 @@
         "tools/test_s03_u324_symphonic.js"
       ],
       "evidence": "Text (carddata): 1ターンに1度、フィールドの「音響戦士」1体のレベルをターン終了時まで手札の枚数分上げる。墓地のこのカードを除外して自分の「音響戦士」1体に同じ。 Hand-size Level rise (3 / 2 / 1), ends with the turn, the opponent's monster is a legal target of ①, ② only my own. Test: tools/test_s03_u324_symphonic.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ラヴァルロード・ジャッジメント",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U325",
+      "tests": [
+        "tools/test_s03_u325_laval.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、墓地の「ラヴァル」1体を除外して相手に1000ダメージ。発動するターン攻撃宣言できない。 Banish cost, 1000 damage, once per turn, cannotAttackTurn; unavailable without a Laval in the GY. Test: tools/test_s03_u325_laval.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ラヴァル・グレイター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U325",
+      "tests": [
+        "tools/test_s03_u325_laval.js"
+      ],
+      "evidence": "Text (carddata): シンクロ召喚成功時に手札を1枚墓地へ送る。カードの効果で破壊される場合、代わりに墓地の「ラヴァル」1体を除外できる。 Real Synchro Summon (炎湖畔の淑女 + 死神ブーメラン) with the chosen discard; effect destruction (ブラック・ホール) asks the substitute (engine/1ZV kind banishGrave, S03-U325): banish → it stays, decline → destroyed; not for battle destruction. Test: tools/test_s03_u325_laval.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ラヴァル・ステライド",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U325",
+      "tests": [
+        "tools/test_s03_u325_laval.js"
+      ],
+      "evidence": "Text (carddata): シンクロ召喚成功時に手札を1枚墓地へ送る。カードの効果の対象になった時、墓地の「ラヴァル」1体を除外してその発動を無効にし破壊する。 Synchro discard; declared activation response when エネミーコントローラー targets it (cost banish, negate + destroy); not offered when another monster is targeted. Test: tools/test_s03_u325_laval.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ラヴァル・ツインスレイヤー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U325",
+      "tests": [
+        "tools/test_s03_u325_laval.js"
+      ],
+      "evidence": "Text (carddata): 墓地の「ラヴァル」の数で効果を得る。2体以上:守備表示モンスターを攻撃した場合もう1度だけ続けて攻撃。3体以上:貫通ダメージ。 Real Synchro Summon; with 2 in the GY an extra attack after destroying a Defense Position monster (once per turn, no third), none with 1; with 3 piercing damage. Test: tools/test_s03_u325_laval.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ラヴァル炎湖畔の淑女",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U325",
+      "tests": [
+        "tools/test_s03_u325_laval.js"
+      ],
+      "evidence": "Text (carddata): 墓地の「ラヴァル」が3種類以上の場合、墓地のこのカードと「ラヴァル」1体を除外して発動。相手のセットされたカード1枚を破壊。 Graveyard ignition: three kinds, a Set opponent card; cost banishes itself + the chosen Laval; not offered with two kinds or without a Set card. Test: tools/test_s03_u325_laval.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ラヴァルバル・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U325",
+      "tests": [
+        "tools/test_s03_u325_laval.js"
+      ],
+      "evidence": "Text (carddata): 墓地の「ラヴァル」2体をデッキに戻し、相手のカード1枚を選択して発動。そのカードを持ち主の手札に戻す。 Cost returns two Laval monsters to the Deck (shuffled); the chosen opponent card returns to its owner's hand; unavailable with one in the GY. Test: tools/test_s03_u325_laval.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
