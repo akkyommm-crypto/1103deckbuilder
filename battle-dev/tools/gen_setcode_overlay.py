@@ -108,6 +108,12 @@ SPEC = [
  dict(key="GEMKNIGHT", jp="ジェムナイト", ruby=None, rule="name", arg="ジェムナイト",
       basis="S03-U307: 「ジェムナイト」と名のついたカード（モンスター16枚＋ジェムナイト・フュージョン）。setcode 0x100f(20枚)から名前にジェムナイトを含まないジェム・エンハンス・輝石融合・パーティカル・フュージョンを除外",
       ads="EDOPro Gem-Knight と同系統だが setcode は上位集合のため名前で定義"),
+ dict(key="NINJA", jp="忍者", ruby=None, rule="name", arg="忍者",
+      basis="S03-U312: 「忍者」と名のついたカード。名前に忍者を含む11枚（カラクリ忍者・女忍者ヤエなど）",
+      ads="EDOPro Ninja(0x2b) は忍者（ニンジャ）系の別述語。ここはカード名に「忍者」を含むもの"),
+ dict(key="VYLON", jp="ヴァイロン", ruby=None, rule="name", arg="ヴァイロン",
+      basis="S03-U312: 「ヴァイロン」と名のついたカード（モンスター・魔法）。名前にヴァイロンを含む26枚",
+      ads="EDOPro Vylon と一致"),
  dict(key="RESONATOR", jp="リゾネーター", ruby=None, rule="name", arg="リゾネーター",
       basis="カタカナ", ads="EDOPro Resonator と一致"),
  dict(key="PENGUIN", jp="ペンギン", ruby=None, rule="name", arg="ペンギン",
@@ -176,7 +182,7 @@ def build():
     overlay_uniq = sorted({p for g in groups.values() if not g["setcode_exact"] for p in g["members"]})
     payload = {
         "schema_version": 1,
-        "authority_version": "P4-v8",   # S03-U161: +GAERU (10 passcodes); S03-U169: +TOMABO (2); S03-U307: +GEM (24), +GEMKNIGHT (17)
+        "authority_version": "P4-v9",   # S03-U161: +GAERU (10 passcodes); S03-U169: +TOMABO (2); S03-U307: +GEM (24), +GEMKNIGHT (17); S03-U312: +NINJA, +VYLON
         "generated_from": "data/carddata.json (read-only)",
         "rule": "membership は passcode でのみ表現する。実行時に名前一致・ruby推測を行わない。",
         "predicate_count": len(groups),

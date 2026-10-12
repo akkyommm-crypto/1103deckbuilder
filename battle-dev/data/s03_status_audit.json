@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 899,
+    "NOT_STARTED": 892,
     "PARTIAL": 30,
-    "TESTED": 2948
+    "TESTED": 2955
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -408,
+    "NOT_STARTED": -415,
     "PARTIAL": -152,
-    "TESTED": 899
+    "TESTED": 906
   },
   "status_changes": [
     {
@@ -2731,6 +2731,12 @@
       "unit": "S03-U56"
     },
     {
+      "name": "レアゴールド・アーマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
+    },
+    {
       "name": "レアル・ジェネクス・クラッシャー",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -2855,6 +2861,18 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U136"
+    },
+    {
+      "name": "ヴァイロン・コンポーネント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
+    },
+    {
+      "name": "ヴァイロン・フィラメント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
     },
     {
       "name": "ヴァリュアブル・アーマー",
@@ -3353,6 +3371,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U144"
+    },
+    {
+      "name": "古代の機械戦車",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
     },
     {
       "name": "古代の機械掌",
@@ -4381,6 +4405,12 @@
       "unit": "S03-U178"
     },
     {
+      "name": "漆黒の名馬",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
+    },
+    {
       "name": "漆黒の戦士 ワーウルフ",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4637,6 +4667,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U280"
+    },
+    {
+      "name": "磁力の指輪",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
     },
     {
       "name": "神の宣告",
@@ -5249,6 +5285,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U245"
+    },
+    {
+      "name": "風魔手裏剣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
     },
     {
       "name": "馬頭鬼",

@@ -9103,6 +9103,76 @@
         "tools/test_s03_u311_revive_equips.js"
       ],
       "evidence": "Text (carddata): 手札から「D」と名のついたモンスター1体を墓地へ送り、自分の墓地に存在する「D」と名のついたモンスター1体を選択して発動する。選択したモンスターを特殊召喚し、このカードを装備する。装備モンスターは表示形式を変更する事ができない。このカードがフィールド上に存在しなくなった時、装備モンスターを破壊する。 Cost: a 「D」 monster from the hand (it may itself be the target); continuous cannotChangePosition for the equipped monster; link kind destroy. 「D」 = card names starting with D・ / D－ (the 「D」 series). Script (S03-U311, cards/HZZZZZX; the 早すぎた埋葬 pattern): cost, then target; API.specialSummon (a position the text does not give is chosen afterwards, engine/1ZZK), API.equipSpell, API.linkOnLeave. Test: tools/test_s03_u311_revive_equips.js (real activation from the hand, cost, target, the Equip Spell destroyed with サイクロン, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "漆黒の名馬",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U312",
+      "tests": [
+        "tools/test_s03_u312_limited_equips.js"
+      ],
+      "evidence": "Text (carddata): 「六武衆」と名のついたモンスターにのみ装備可能。装備モンスターの攻撃力と守備力は200ポイントアップする。装備モンスターが破壊される場合、代わりにこのカードを破壊する。 GROUP.SIX_SAMURAI_NAMED; +200/+200; equipSubstituteS03 (mandatory, every destruction). Script (S03-U312, cards/HZZZZZY, unified Equip Spell on the equip pattern of S03-U233): host restriction by P4 group (passcode), continuous stat / hook while equipped. Test: tools/test_s03_u312_limited_equips.js (real activation from the hand, host choice, Battle Phase attacks, サイクロン / ブラック・ホール, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "古代の機械戦車",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U312",
+      "tests": [
+        "tools/test_s03_u312_limited_equips.js"
+      ],
+      "evidence": "Text (carddata): 「アンティーク・ギア」と名のついたモンスターにのみ装備可能。装備モンスターの攻撃力は600ポイントアップする。このカードが破壊され墓地へ送られた時、相手ライフに600ポイントダメージを与える。 GROUP.ANCIENT_GEAR; +600; forced trigger from the GY only when the Equip Spell itself was destroyed (graveInfo.byDestroy), not when its host left. Script (S03-U312, cards/HZZZZZY, unified Equip Spell on the equip pattern of S03-U233): host restriction by P4 group (passcode), continuous stat / hook while equipped. Test: tools/test_s03_u312_limited_equips.js (real activation from the hand, host choice, Battle Phase attacks, サイクロン / ブラック・ホール, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "風魔手裏剣",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U312",
+      "tests": [
+        "tools/test_s03_u312_limited_equips.js"
+      ],
+      "evidence": "Text (carddata): 「忍者」という名のついたモンスターのみ装備可能。装備モンスターは攻撃力が700ポイントアップする。このカードがフィールド上から墓地に送られた時、相手ライフに700ポイントダメージを与える。 GROUP.NINJA (new, P4-v9); +700; 700 damage on any route from the field to the GY. Script (S03-U312, cards/HZZZZZY, unified Equip Spell on the equip pattern of S03-U233): host restriction by P4 group (passcode), continuous stat / hook while equipped. Test: tools/test_s03_u312_limited_equips.js (real activation from the hand, host choice, Battle Phase attacks, サイクロン / ブラック・ホール, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "磁力の指輪",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U312",
+      "tests": [
+        "tools/test_s03_u312_limited_equips.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上に存在するモンスターにのみ装備可能。装備モンスターの攻撃力・守備力は500ポイントダウンする。相手はこのカードの装備モンスターしか攻撃する事ができない。 Own monsters only; -500/-500; continuous cannotBeAttackTarget for the controller other monsters (engine/1ZU). Script (S03-U312, cards/HZZZZZY, unified Equip Spell on the equip pattern of S03-U233): host restriction by P4 group (passcode), continuous stat / hook while equipped. Test: tools/test_s03_u312_limited_equips.js (real activation from the hand, host choice, Battle Phase attacks, サイクロン / ブラック・ホール, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "レアゴールド・アーマー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U312",
+      "tests": [
+        "tools/test_s03_u312_limited_equips.js"
+      ],
+      "evidence": "Text (carddata): このカードを装備したモンスターをコントロールしている限り、相手は装備モンスター以外のモンスターには攻撃できない。 Any face-up monster; the protected side is the equipped monster controller (cannotBeAttackTargetBothS03). Script (S03-U312, cards/HZZZZZY, unified Equip Spell on the equip pattern of S03-U233): host restriction by P4 group (passcode), continuous stat / hook while equipped. Test: tools/test_s03_u312_limited_equips.js (real activation from the hand, host choice, Battle Phase attacks, サイクロン / ブラック・ホール, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・コンポーネント",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U312",
+      "tests": [
+        "tools/test_s03_u312_limited_equips.js"
+      ],
+      "evidence": "Text (carddata): 「ヴァイロン」と名のついたモンスターにのみ装備可能。装備モンスターが守備表示モンスターを攻撃した時、その守備力を攻撃力が超えていれば、その数値だけ相手ライフに戦闘ダメージを与える。フィールド上に表側表示で存在するこのカードが墓地へ送られた場合、デッキから「ヴァイロン」と名のついた魔法カード1枚を手札に加える事ができる。 GROUP.VYLON (new, P4-v9); piercingDamage; optional search trigger (engine/1ZT deckTriggerHappenedS03 + the shared choice handler), Spells of the group only. Script (S03-U312, cards/HZZZZZY, unified Equip Spell on the equip pattern of S03-U233): host restriction by P4 group (passcode), continuous stat / hook while equipped. Test: tools/test_s03_u312_limited_equips.js (real activation from the hand, host choice, Battle Phase attacks, サイクロン / ブラック・ホール, refusals, Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・フィラメント",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U312",
+      "tests": [
+        "tools/test_s03_u312_limited_equips.js"
+      ],
+      "evidence": "Text (carddata): 「ヴァイロン」と名のついたモンスターにのみ装備可能。装備モンスターが攻撃する場合、相手はダメージステップ終了時まで魔法・罠カードを発動する事ができない。フィールド上に表側表示で存在するこのカードが墓地へ送られた場合、自分のデッキから「ヴァイロン」と名のついた魔法カード1枚を手札に加える事ができる。 declareAttackLockS03 for an Equip Spell (engine/1ZO equipAttackLockS03); the same optional search trigger. The lock lasts while the Equip Spell stays on the field (a host destroyed in the battle takes it away). Script (S03-U312, cards/HZZZZZY, unified Equip Spell on the equip pattern of S03-U233): host restriction by P4 group (passcode), continuous stat / hook while equipped. Test: tools/test_s03_u312_limited_equips.js (real activation from the hand, host choice, Battle Phase attacks, サイクロン / ブラック・ホール, refusals, Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
