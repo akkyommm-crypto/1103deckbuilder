@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 841,
+    "NOT_STARTED": 838,
     "PARTIAL": 30,
-    "TESTED": 3006
+    "TESTED": 3009
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -466,
+    "NOT_STARTED": -469,
     "PARTIAL": -152,
-    "TESTED": 957
+    "TESTED": 960
   },
   "status_changes": [
     {
@@ -1301,6 +1301,24 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U224"
+    },
+    {
+      "name": "サイバー・ダーク・エッジ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U323"
+    },
+    {
+      "name": "サイバー・ダーク・キール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U323"
+    },
+    {
+      "name": "サイバー・ダーク・ホーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U323"
     },
     {
       "name": "サイバー・ラーバァ",

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 841,
+    "NOT_STARTED": 838,
     "PARTIAL": 30,
-    "TESTED": 3006
+    "TESTED": 3009
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -108,9 +108,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1456,
     "sin": 5,
-    "unified": 1062
+    "unified": 1065
   },
-  "static_registration_name_count": 3017,
+  "static_registration_name_count": 3020,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24011,12 +24011,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 32,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZK_claude_s03_u323_cyberdark.js",
+          "line": 50
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u323_cyberdark.js"
+      ]
     },
     {
       "index": 1113,
@@ -24026,12 +24034,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 24,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZK_claude_s03_u323_cyberdark.js",
+          "line": 64
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u323_cyberdark.js"
+      ]
     },
     {
       "index": 1114,
@@ -24041,12 +24057,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 24,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZK_claude_s03_u323_cyberdark.js",
+          "line": 74
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u323_cyberdark.js"
+      ]
     },
     {
       "index": 1115,

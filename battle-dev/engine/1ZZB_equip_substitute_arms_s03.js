@@ -18,9 +18,16 @@ function equipSubstituteDestroyS03(gs, monster, via){
       const eq = PP.sz[i];
       if(!eq || eq.face!=='up' || eq.equipUid==null || monster.equippedBy.indexOf(eq.equipUid)<0) continue;
       const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(eq)] : null;
-      if(!sc || (sc.equipSubstituteS03!==true && sc.equipSubstituteS03!=='battle')) continue;
-      if(sc.equipSubstituteS03==='battle' && via!=='battle') continue;
-      if(typeof effectNegated==='function' && effectNegated(eq)) continue;
+      let viaEq = !!sc && (sc.equipSubstituteS03===true || (sc.equipSubstituteS03==='battle' && via==='battle'));
+      /* S03-U323: the HOST declares it (equipHostSubstituteS03: true | 'battle', サイバー・ダーク): the monster it equipped itself (equipTo.sourceUid) is destroyed instead */
+      let viaHost = false;
+      if(!viaEq){
+        const hs = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(monster)] : null, hd = hs && hs.equipHostSubstituteS03;
+        viaHost = !!hd && (hd===true || via==='battle') && eq.v46MonsterEquip===true && !!eq.equipTo && eq.equipTo.sourceUid!=null && eq.equipTo.sourceUid===monster.uid
+          && monster.face==='up' && !(typeof effectNegated==='function' && effectNegated(monster));
+      }
+      if(!viaEq && !viaHost) continue;
+      if(viaEq && typeof effectNegated==='function' && effectNegated(eq)) continue;
       PP.sz.splice(i, 1);
       monster.equippedBy = monster.equippedBy.filter(u=>u!==eq.equipUid);
       const owner = cardOwnerIndex(gs, eq, pi);

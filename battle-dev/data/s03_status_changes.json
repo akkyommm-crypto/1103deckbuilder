@@ -9683,6 +9683,36 @@
         "tools/test_s03_u322_arcana.js"
       ],
       "evidence": "Text (carddata): 通常召喚できない。自分フィールド上のモンスター3体を墓地へ送って特殊召喚。コイントス:表=戦闘で相手モンスターを破壊した時、墓地のカード1枚を手札に加えられる。裏=このカードを対象にする発動を無効にし破壊、その度に攻撃力1000ダウン。 Hand procedure (not legal with two monsters), heads recovers the chosen Graveyard card after a battle kill, tails negates and destroys エネミーコントローラー targeting it and lowers its ATK by 1000. Engine: the targeting negator of S03-U28 now unwraps card-specific selection entries ({mode, t}). Test: tools/test_s03_u322_arcana.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイバー・ダーク・エッジ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U323",
+      "tests": [
+        "tools/test_s03_u323_cyberdark.js"
+      ],
+      "evidence": "Text (carddata): ①: Normal Summon → the chosen Lv3- Dragon of the Graveyard equipped (a Lv4 Dragon / a non-Dragon are not candidates; no candidate → nothing); ②: ATK + the printed ATK of the equipped Dragon; ④: in battle the equipped Dragon is destroyed instead (engine/1ZZB equipHostSubstituteS03:'battle'); not for an effect destruction, not without an equipped monster. ③: direct attack although the opponent has a monster; the ATK is halved at the damage calculation only (curStat mulFinalAtk, S03-U323) — damage floor(ATK/2), full ATK before and after; a battle with a monster uses the full ATK. Test: tools/test_s03_u323_cyberdark.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイバー・ダーク・キール",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U323",
+      "tests": [
+        "tools/test_s03_u323_cyberdark.js"
+      ],
+      "evidence": "Text (carddata): ①: Normal Summon → the chosen Lv3- Dragon of the Graveyard equipped (a Lv4 Dragon / a non-Dragon are not candidates; no candidate → nothing); ②: ATK + the printed ATK of the equipped Dragon; ④: in battle the equipped Dragon is destroyed instead (engine/1ZZB equipHostSubstituteS03:'battle'); not for an effect destruction, not without an equipped monster. ③: destroyed an opponent monster by battle → 300 damage (forced, Damage Step after-window); none for a direct attack. Test: tools/test_s03_u323_cyberdark.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイバー・ダーク・ホーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U323",
+      "tests": [
+        "tools/test_s03_u323_cyberdark.js"
+      ],
+      "evidence": "Text (carddata): ①: Normal Summon → the chosen Lv3- Dragon of the Graveyard equipped (a Lv4 Dragon / a non-Dragon are not candidates; no candidate → nothing); ②: ATK + the printed ATK of the equipped Dragon; ④: in battle the equipped Dragon is destroyed instead (engine/1ZZB equipHostSubstituteS03:'battle'); not for an effect destruction, not without an equipped monster. ③: piercing damage to a Defense Position monster (ATK − DEF). Test: tools/test_s03_u323_cyberdark.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

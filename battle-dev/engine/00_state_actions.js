@@ -3432,7 +3432,7 @@ function collectContinuous(card){
     if(r.setBaseAtk!=null || r.setBaseDef!=null) layers.setBase.push({...r, src:tag});
     if(r.setAtk!=null     || r.setDef!=null)     layers.set.push({...r, src:tag});
     if(r.atk!=null        || r.def!=null)        layers.update.push({...r, src:tag});
-    if(r.setFinalAtk!=null|| r.setFinalDef!=null)layers.setFinal.push({...r, src:tag});
+    if(r.setFinalAtk!=null|| r.setFinalDef!=null || r.mulFinalAtk!=null || r.mulFinalDef!=null)layers.setFinal.push({...r, src:tag});   /* S03-U323: mulFinalAtk / mulFinalDef — a factor applied (floor) on the value so far, last */
   });
   /* v4: RESET-managed modifiers share the same stat layers. */
   if(typeof v4RuntimeStatLayers==='function'){
@@ -3463,7 +3463,7 @@ function curStat(card, key){
   // 一時修正値（オネスト・突進など）は増減層に入る
   (card.mods||[]).forEach(m=>{ v += (m[key]||0); });
   L.update .forEach(l=>{ if(l[key]!=null) v += l[key]; });
-  L.setFinal.forEach(l=>{ if(l[Fin]!=null) v = l[Fin]; });
+  L.setFinal.forEach(l=>{ if(l[Fin]!=null) v = l[Fin]; const mf = key==='atk' ? l.mulFinalAtk : l.mulFinalDef; if(mf!=null) v = Math.floor(v*mf); });
   return Math.max(0, v);
 }
 function curATK(card){ return curStat(card, 'atk'); }

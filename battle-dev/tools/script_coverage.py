@@ -374,6 +374,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u321_koaki.js": {"コアキメイル・クルセイダー", "コアキメイル・ウルナイト", "コアキメイル・スピード", "コアキメイル・マキシマム", "コアキメイル・ルークロード", "コアキメイル・ヴァラファール"},
     # S03-U322 names アルカナフォースI－THE MAGICIAN / エネミーコントローラー / 青眼の白龍 / 死者蘇生 / 強欲な壺 / サイクロン / ワイト only as fixtures.
     "test_s03_u322_arcana.js": {"アルカナフォースIII－THE EMPRESS", "アルカナフォースXIV－TEMPERANCE", "アルカナフォースEX－THE LIGHT RULER"},
+    # S03-U323 names ブラック・ホール / 青眼の白龍 / ワイト and a generic Lv3 / Lv4 Dragon only as fixtures.
+    "test_s03_u323_cyberdark.js": {"サイバー・ダーク・エッジ", "サイバー・ダーク・キール", "サイバー・ダーク・ホーン"},
 }
 
 
