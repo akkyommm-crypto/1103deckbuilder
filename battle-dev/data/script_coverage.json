@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 870,
+    "NOT_STARTED": 866,
     "PARTIAL": 30,
-    "TESTED": 2977
+    "TESTED": 2981
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -106,11 +106,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1445,
+    "legacy": 1449,
     "sin": 5,
     "unified": 1044
   },
-  "static_registration_name_count": 2988,
+  "static_registration_name_count": 2992,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -64704,12 +64704,20 @@
       "subtype": null,
       "date": "2006-11-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZE_claude_s03_u317_six2.js",
+          "line": 25
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u317_six2.js"
+      ]
     },
     {
       "index": 3072,
@@ -64719,12 +64727,20 @@
       "subtype": null,
       "date": "2006-11-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 22,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZE_claude_s03_u317_six2.js",
+          "line": 35
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u317_six2.js"
+      ]
     },
     {
       "index": 3073,
@@ -64770,12 +64786,20 @@
       "subtype": null,
       "date": "2006-11-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZE_claude_s03_u317_six2.js",
+          "line": 55
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u317_six2.js"
+      ]
     },
     {
       "index": 3075,
@@ -64815,12 +64839,20 @@
       "subtype": null,
       "date": "2006-11-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZE_claude_s03_u317_six2.js",
+          "line": 65
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u317_six2.js"
+      ]
     },
     {
       "index": 3077,

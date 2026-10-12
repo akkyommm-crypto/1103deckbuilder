@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 870,
+    "NOT_STARTED": 866,
     "PARTIAL": 30,
-    "TESTED": 2977
+    "TESTED": 2981
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -437,
+    "NOT_STARTED": -441,
     "PARTIAL": -152,
-    "TESTED": 928
+    "TESTED": 932
   },
   "status_changes": [
     {
@@ -3209,6 +3209,30 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U14"
+    },
+    {
+      "name": "六武衆－イロウ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U317"
+    },
+    {
+      "name": "六武衆－カモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U317"
+    },
+    {
+      "name": "六武衆－ニサシ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U317"
+    },
+    {
+      "name": "六武衆－ヤリザ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U317"
     },
     {
       "name": "六武院",

@@ -9393,6 +9393,46 @@
         "tools/test_s03_u316_alien.js"
       ],
       "evidence": "Text (carddata): このカードが自分フィールド上に表側表示で存在する限り、相手フィールド上にモンスターが特殊召喚される度に、その時に特殊召喚されたモンスターにAカウンターを1つ置く。 + 「…戦闘する場合、Aカウンター1つにつき攻撃力と守備力が300ポイントダウンする」. Forced trigger on a Special Summon onto the opponent field (onOtherSummon). Script (S03-U316, cards/HZZZZZZD): the A Counter penalty as a continuous modifier of the face-up Alien card (a monster with A Counters in a battle against an 「エーリアン」 — P4 GROUP.ALIEN, new in P4-v11 — loses 300 ATK/DEF per counter while the Damage Step is open). Test: tools/test_s03_u316_alien.js (real attacks, Flip, destruction in battle, 死者蘇生, really passed turns, Replay audit). No known deviation; ruling read: every face-up copy applies its own penalty (they add up)."
+    },
+    {
+      "name": "六武衆－イロウ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U317",
+      "tests": [
+        "tools/test_s03_u317_six2.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上に「六武衆－イロウ」以外の「六武衆」と名のついたモンスターが存在し、このカードが裏側守備表示のモンスターを攻撃した場合、ダメージ計算を行わず裏側守備表示のままそのモンスターを破壊する。 Pre-damage destruction (a3DestroyBeforeDamage, as ミスティック・ソードマン LV2). Optional substitute: 「このカードが破壊される場合、代わりに…「六武衆」1体を破壊できる」 = destroySubstituteS03 destroyOwn (engine/1ZV, S03-U173), chosen by the controller at the destruction. Test: tools/test_s03_u317_six2.js (real attacks, effects, the substitute prompt, Replay audit). No known deviation."
+    },
+    {
+      "name": "六武衆－カモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U317",
+      "tests": [
+        "tools/test_s03_u317_six2.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上に「六武衆－カモン」以外の「六武衆」と名のついたモンスターが存在する場合、1ターンに1度、フィールド上に表側表示で存在する魔法・罠カード1枚を選択して破壊できる。この効果を発動するターン、このカードは攻撃宣言できない。 Ignition with a target; cannotAttackTurn for the turn. Optional substitute: 「このカードが破壊される場合、代わりに…「六武衆」1体を破壊できる」 = destroySubstituteS03 destroyOwn (engine/1ZV, S03-U173), chosen by the controller at the destruction. Test: tools/test_s03_u317_six2.js (real attacks, effects, the substitute prompt, Replay audit). No known deviation."
+    },
+    {
+      "name": "六武衆－ニサシ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U317",
+      "tests": [
+        "tools/test_s03_u317_six2.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上に「六武衆－ニサシ」以外の「六武衆」と名のついたモンスターが存在する場合、このカードは1度のバトルフェイズ中に2回攻撃する事ができる。 attackLimit 2 while another 六武衆 is on my field. Optional substitute: 「このカードが破壊される場合、代わりに…「六武衆」1体を破壊できる」 = destroySubstituteS03 destroyOwn (engine/1ZV, S03-U173), chosen by the controller at the destruction. Test: tools/test_s03_u317_six2.js (real attacks, effects, the substitute prompt, Replay audit). No known deviation."
+    },
+    {
+      "name": "六武衆－ヤリザ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U317",
+      "tests": [
+        "tools/test_s03_u317_six2.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上に「六武衆－ヤリザ」以外の「六武衆」と名のついたモンスターが存在する場合、このカードは相手プレイヤーに直接攻撃できる。 canDirectAttack while another 六武衆 is on my field. Optional substitute: 「このカードが破壊される場合、代わりに…「六武衆」1体を破壊できる」 = destroySubstituteS03 destroyOwn (engine/1ZV, S03-U173), chosen by the controller at the destruction. Test: tools/test_s03_u317_six2.js (real attacks, effects, the substitute prompt, Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
