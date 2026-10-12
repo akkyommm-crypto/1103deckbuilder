@@ -23,7 +23,9 @@ function applyTargetingNegatorsS03(){
   const link = chain[chain.length - 1];
   if(!link || link.negated || link.chainId == null || !link.targets) return false;
   const restored = (typeof deserializeChainSelectionV2 === 'function') ? deserializeChainSelectionV2(link.targets) : [];
-  const list = (Array.isArray(restored) ? restored : [restored]).filter(Boolean);
+  /* S03-U322: a card-specific selection entry may wrap the handle ({mode, t:handle}, エネミーコントローラー) — unwrap it so the target is seen
+     (a plain handle is unchanged) */
+  const list = [].concat(...(Array.isArray(restored) ? restored : [restored]).filter(Boolean).map(x=>(x && !x.card && x.t && x.t.card) ? [x.t] : [x]));
   const srcDb = (link.cardId != null && CARD_DB[link.cardId]) ? CARD_DB[link.cardId] : null;
   for(const t of list){
     const h = (t && t.card) ? locateCardAnyV4(t.card) : null;

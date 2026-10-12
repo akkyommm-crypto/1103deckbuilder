@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 844,
+    "NOT_STARTED": 841,
     "PARTIAL": 30,
-    "TESTED": 3003
+    "TESTED": 3006
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -108,9 +108,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1456,
     "sin": 5,
-    "unified": 1059
+    "unified": 1062
   },
-  "static_registration_name_count": 3014,
+  "static_registration_name_count": 3017,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -9905,12 +9905,20 @@
       "subtype": null,
       "date": "2007-05-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 29,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZJ_claude_s03_u322_arcana.js",
+          "line": 128
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u322_arcana.js"
+      ]
     },
     {
       "index": 440,
@@ -9920,13 +9928,20 @@
       "subtype": null,
       "date": "2008-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZJ_claude_s03_u322_arcana.js",
+          "line": 52
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u322_arcana.js"
       ]
     },
     {
@@ -10015,12 +10030,20 @@
       "subtype": null,
       "date": "2008-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZJ_claude_s03_u322_arcana.js",
+          "line": 79
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u322_arcana.js"
+      ]
     },
     {
       "index": 446,

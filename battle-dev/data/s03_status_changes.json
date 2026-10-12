@@ -9653,6 +9653,36 @@
         "tools/test_s03_u321_koaki.js"
       ],
       "evidence": "Text (carddata): 維持コスト＝鋼核を墓地へ送る（または破壊）。「コアキメイル」1体のリリースでアドバンス召喚できる。守備表示モンスターへの貫通ダメージ。罠カードの効果では破壊されない。 Upkeep (核 or destroyed — showing a warrior is not enough), one-Tribute method, piercing damage (2800 vs DEF 200), protectV21 against Trap effects only. Test: tools/test_s03_u321_koaki.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "アルカナフォースIII－THE EMPRESS",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U322",
+      "tests": [
+        "tools/test_s03_u322_arcana.js"
+      ],
+      "evidence": "Text (carddata): 召喚・反転召喚・特殊召喚に成功した時のコイントス。表:相手がモンスターの通常召喚に成功する度に手札から「アルカナフォース」を特殊召喚できる。裏:相手の通常召喚成功の度に手札1枚を墓地へ送る。 Both sides tested with seeded coins (replay-safe duelRandomInt): heads summons the Arcana from my hand on the opponent's Normal Summon, tails sends the chosen hand card to the Graveyard, my own summon does not trigger. Test: tools/test_s03_u322_arcana.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "アルカナフォースXIV－TEMPERANCE",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U322",
+      "tests": [
+        "tools/test_s03_u322_arcana.js"
+      ],
+      "evidence": "Text (carddata): 戦闘ダメージ計算時に手札から捨てて、その戦闘で自分が受けるダメージを0にする。コイントス:表=自分が受ける戦闘ダメージ半分、裏=相手が受ける戦闘ダメージ半分。 Tribute-summoned, heads halves my damage (1350), tails halves the opponent's (1500), the hand effect at the damage calculation zeroes only that battle (the next attack deals 2700). Test: tools/test_s03_u322_arcana.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "アルカナフォースEX－THE LIGHT RULER",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U322",
+      "tests": [
+        "tools/test_s03_u322_arcana.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。自分フィールド上のモンスター3体を墓地へ送って特殊召喚。コイントス:表=戦闘で相手モンスターを破壊した時、墓地のカード1枚を手札に加えられる。裏=このカードを対象にする発動を無効にし破壊、その度に攻撃力1000ダウン。 Hand procedure (not legal with two monsters), heads recovers the chosen Graveyard card after a battle kill, tails negates and destroys エネミーコントローラー targeting it and lowers its ATK by 1000. Engine: the targeting negator of S03-U28 now unwraps card-specific selection entries ({mode, t}). Test: tools/test_s03_u322_arcana.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

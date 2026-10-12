@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 844,
+    "NOT_STARTED": 841,
     "PARTIAL": 30,
-    "TESTED": 3003
+    "TESTED": 3006
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -463,
+    "NOT_STARTED": -466,
     "PARTIAL": -152,
-    "TESTED": 954
+    "TESTED": 957
   },
   "status_changes": [
     {
@@ -617,6 +617,24 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U227"
+    },
+    {
+      "name": "アルカナフォースEX－THE LIGHT RULER",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U322"
+    },
+    {
+      "name": "アルカナフォースIII－THE EMPRESS",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U322"
+    },
+    {
+      "name": "アルカナフォースXIV－TEMPERANCE",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U322"
     },
     {
       "name": "アルティメット・インセクト LV1",
