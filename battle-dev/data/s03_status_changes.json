@@ -9263,6 +9263,66 @@
         "tools/test_s03_u313_union.js"
       ],
       "evidence": "Text (carddata): … 自分フィールド上の「六武衆」と名のついたモンスターに装備 … 攻撃力・守備力は500ポイントアップする。装備モンスターが戦闘によって相手モンスターを破壊した場合、自分はデッキからカードを1枚ドローする。 GROUP.SIX_SAMURAI_NAMED host; substitute: every destruction. Script (S03-U313, cards/HZZZZZZ): declareUnionS03 — once per turn either the equip effect (host chosen on resolution; a monster carries one Union only) or, in the Spell & Trap Zone, the release (Special Summon in Attack Position); stats and card effects only while equipped; the substitute through engine/1ZZB equipSubstituteS03 ('battle' = only a destruction by battle, true = every destruction). Test: tools/test_s03_u313_union.js (real equip / release across real turns, Battle Phase attacks, battle destruction, Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・テセラクト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U314",
+      "tests": [
+        "tools/test_s03_u314_union2.js"
+      ],
+      "evidence": "Text (carddata): 「ヴァイロン」と名のついたモンスターに装備 … 装備モンスターが戦闘によって相手モンスターを破壊した場合、自分の墓地からレベル4以下の「ヴァイロン」と名のついたモンスター1体を選択して特殊召喚できる。 GROUP.VYLON host; optional targeted trigger; substitute: every destruction. Script (S03-U314, cards/HZZZZZZB) on declareUnionS03 (S03-U313): once per turn equip / release, host chosen on resolution, one Union per monster, stats and effects only while equipped, the substitute scope of the card own wording. Test: tools/test_s03_u314_union2.js (real equip / release across really passed turns, Battle Phase attacks, Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・ペンタクロ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U314",
+      "tests": [
+        "tools/test_s03_u314_union2.js"
+      ],
+      "evidence": "Text (carddata): 「ヴァイロン」と名のついたモンスターに装備 … 装備モンスターが戦闘によって相手モンスターを破壊した場合、相手フィールド上のカード1枚を選択して破壊できる。 Optional targeted trigger; substitute: every destruction. Script (S03-U314, cards/HZZZZZZB) on declareUnionS03 (S03-U313): once per turn equip / release, host chosen on resolution, one Union per monster, stats and effects only while equipped, the substitute scope of the card own wording. Test: tools/test_s03_u314_union2.js (real equip / release across really passed turns, Battle Phase attacks, Replay audit). No known deviation."
+    },
+    {
+      "name": "バスター・ショットマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U314",
+      "tests": [
+        "tools/test_s03_u314_union2.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上のモンスターに装備 … 装備モンスターの攻撃力・守備力は500ポイントダウンする。装備モンスターが戦闘によって相手モンスターを破壊した場合、フィールド上に表側表示で存在する、破壊したモンスターと同じ種族のモンスターを全て破壊する。 Forced; every face-up monster of that Race on the field (either player, the equipped monster included); substitute: every destruction. Script (S03-U314, cards/HZZZZZZB) on declareUnionS03 (S03-U313): once per turn equip / release, host chosen on resolution, one Union per monster, stats and effects only while equipped, the substitute scope of the card own wording. Test: tools/test_s03_u314_union2.js (real equip / release across really passed turns, Battle Phase attacks, Replay audit). No known deviation."
+    },
+    {
+      "name": "デス・デンドル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U314",
+      "tests": [
+        "tools/test_s03_u314_union2.js"
+      ],
+      "evidence": "Text (carddata): 「ブラッド・オーキス」に装備 … 装備モンスターが戦闘によってモンスターを破壊する度に「魔草トークン」(植物族・地・星1・攻/守800)を1体特殊召喚する。 Forced; API.createToken; substitute: by battle only. Script (S03-U314, cards/HZZZZZZB) on declareUnionS03 (S03-U313): once per turn equip / release, host chosen on resolution, one Union per monster, stats and effects only while equipped, the substitute scope of the card own wording. Test: tools/test_s03_u314_union2.js (real equip / release across really passed turns, Battle Phase attacks, Replay audit). No known deviation."
+    },
+    {
+      "name": "氷岩魔獣",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U314",
+      "tests": [
+        "tools/test_s03_u314_union2.js"
+      ],
+      "evidence": "Text (carddata): 「灼岩魔獣」に装備 … 装備モンスターが相手プレイヤーに戦闘ダメージを与えた場合、フィールド上で裏側表示の魔法または罠カード1枚を破壊する。 Forced; the card chosen on resolution among face-down Spell / Trap cards on the field; substitute: by battle only. Script (S03-U314, cards/HZZZZZZB) on declareUnionS03 (S03-U313): once per turn equip / release, host chosen on resolution, one Union per monster, stats and effects only while equipped, the substitute scope of the card own wording. Test: tools/test_s03_u314_union2.js (real equip / release across really passed turns, Battle Phase attacks, Replay audit). No known deviation."
+    },
+    {
+      "name": "灼岩魔獣",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U314",
+      "tests": [
+        "tools/test_s03_u314_union2.js"
+      ],
+      "evidence": "Text (carddata): 「氷岩魔獣」に装備 … 装備モンスターが相手プレイヤーに戦闘ダメージを与えた場合、フィールド上で表側表示の魔法または罠カード1枚を破壊する。 Forced; face-up Spell / Trap (Field Zone included); substitute: by battle only. Script (S03-U314, cards/HZZZZZZB) on declareUnionS03 (S03-U313): once per turn equip / release, host chosen on resolution, one Union per monster, stats and effects only while equipped, the substitute scope of the card own wording. Test: tools/test_s03_u314_union2.js (real equip / release across really passed turns, Battle Phase attacks, Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 883,
+    "NOT_STARTED": 877,
     "PARTIAL": 30,
-    "TESTED": 2964
+    "TESTED": 2970
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -424,
+    "NOT_STARTED": -430,
     "PARTIAL": -152,
-    "TESTED": 915
+    "TESTED": 921
   },
   "status_changes": [
     {
@@ -1711,6 +1711,12 @@
       "unit": "S03-U270"
     },
     {
+      "name": "デス・デンドル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
+    },
+    {
       "name": "デブリ・ドラゴン",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -2123,6 +2129,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U224"
+    },
+    {
+      "name": "バスター・ショットマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
     },
     {
       "name": "バスター・ビースト",
@@ -2905,10 +2917,22 @@
       "unit": "S03-U312"
     },
     {
+      "name": "ヴァイロン・テセラクト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
+    },
+    {
       "name": "ヴァイロン・フィラメント",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U312"
+    },
+    {
+      "name": "ヴァイロン・ペンタクロ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
     },
     {
       "name": "ヴァリュアブル・アーマー",
@@ -4327,6 +4351,12 @@
       "unit": "S03-U148"
     },
     {
+      "name": "氷岩魔獣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
+    },
+    {
       "name": "氷帝メビウス",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -4487,6 +4517,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U244"
+    },
+    {
+      "name": "灼岩魔獣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
     },
     {
       "name": "灼熱工の巨匠カエン",

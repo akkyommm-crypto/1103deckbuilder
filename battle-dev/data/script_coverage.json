@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 883,
+    "NOT_STARTED": 877,
     "PARTIAL": 30,
-    "TESTED": 2964
+    "TESTED": 2970
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -38,7 +38,7 @@
     "helper:caSearch": 3,
     "helper:d8KoakiNegator": 2,
     "helper:d9Koaki": 5,
-    "helper:declareUnionS03": 9,
+    "helper:declareUnionS03": 15,
     "helper:defineAdeptS03": 2,
     "helper:defineBattleLossTrapS03": 2,
     "helper:defineChrysalisS03": 6,
@@ -110,7 +110,7 @@
     "sin": 5,
     "unified": 1040
   },
-  "static_registration_name_count": 2975,
+  "static_registration_name_count": 2981,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -36170,13 +36170,20 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZB_claude_s03_u314_union2.js",
+          "line": 67
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_class_a_recruit_bulk.js"
+        "tools\\test_class_a_recruit_bulk.js",
+        "tools\\test_s03_u314_union2.js"
       ]
     },
     {
@@ -42673,12 +42680,20 @@
       "subtype": null,
       "date": "2011-02-11",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 22,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZB_claude_s03_u314_union2.js",
+          "line": 50
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u314_union2.js"
+      ]
     },
     {
       "index": 2016,
@@ -60599,12 +60614,20 @@
       "subtype": null,
       "date": "2011-04-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 24,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZB_claude_s03_u314_union2.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u314_union2.js"
+      ]
     },
     {
       "index": 2873,
@@ -60728,12 +60751,20 @@
       "subtype": null,
       "date": "2011-04-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZB_claude_s03_u314_union2.js",
+          "line": 36
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u314_union2.js"
+      ]
     },
     {
       "index": 2880,
@@ -82036,12 +82067,20 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZB_claude_s03_u314_union2.js",
+          "line": 90
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u314_union2.js"
+      ]
     },
     {
       "index": 3902,
@@ -84702,12 +84741,20 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZB_claude_s03_u314_union2.js",
+          "line": 91
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u314_union2.js"
+      ]
     },
     {
       "index": 4032,
