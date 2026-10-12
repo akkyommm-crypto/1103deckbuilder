@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 829,
+    "NOT_STARTED": 826,
     "PARTIAL": 30,
-    "TESTED": 3018
+    "TESTED": 3021
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -478,
+    "NOT_STARTED": -481,
     "PARTIAL": -152,
-    "TESTED": 969
+    "TESTED": 972
   },
   "status_changes": [
     {
@@ -3133,10 +3133,28 @@
       "unit": "S03-U74"
     },
     {
+      "name": "ワーム・ソリッド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U326"
+    },
+    {
       "name": "ワーム・テンタクルス",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U212"
+    },
+    {
+      "name": "ワーム・プリンス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U326"
+    },
+    {
+      "name": "ワーム・ミリディス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U326"
     },
     {
       "name": "ワーム・ヤガン",

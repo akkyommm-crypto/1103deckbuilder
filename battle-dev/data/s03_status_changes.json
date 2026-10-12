@@ -9803,6 +9803,36 @@
         "tools/test_s03_u325_laval.js"
       ],
       "evidence": "Text (carddata): 墓地の「ラヴァル」2体をデッキに戻し、相手のカード1枚を選択して発動。そのカードを持ち主の手札に戻す。 Cost returns two Laval monsters to the Deck (shuffled); the chosen opponent card returns to its owner's hand; unavailable with one in the GY. Test: tools/test_s03_u325_laval.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ワーム・ソリッド",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U326",
+      "tests": [
+        "tools/test_s03_u326_worm.js"
+      ],
+      "evidence": "Text (carddata): DEF + 100 × Worm Reptiles in my Graveyard. 攻撃され相手が戦闘ダメージを受けた場合、ダメージステップ終了時に相手の魔法・罠1枚を破壊。 DEF 1800 with two in the GY; attacked by a weaker monster (Attack and Defense Position) → the Set Spell/Trap destroyed at the end of the Damage Step; not when the opponent took no damage (ソリッド destroyed); nothing breaks without a Spell/Trap. Test: tools/test_s03_u326_worm.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ワーム・プリンス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U326",
+      "tests": [
+        "tools/test_s03_u326_worm.js"
+      ],
+      "evidence": "Text (carddata): 戦闘で相手モンスターを破壊した場合、デッキから「ワーム」爬虫類族1体を手札に加えられる。エンドフェイズ時、他の「ワーム」爬虫類族がいない場合破壊。 Battle-kill search (chosen card; none after a direct attack); End Phase destruction when alone (own and the opponent's End Phase), stays with another Worm Reptile. Test: tools/test_s03_u326_worm.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ワーム・ミリディス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U326",
+      "tests": [
+        "tools/test_s03_u326_worm.js"
+      ],
+      "evidence": "Text (carddata): リバース:このカードを装備カード扱いとして相手モンスター1体に装備できる。お互いのスタンバイフェイズ毎に装備モンスターのコントローラーに400ダメージ。 Flipped by an attack → equipped to the opponent monster (my Spell & Trap Zone, even against a stronger attacker: the battle ends without damage); 400 damage to the opponent in my Standby Phase and again in his. Test: tools/test_s03_u326_worm.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

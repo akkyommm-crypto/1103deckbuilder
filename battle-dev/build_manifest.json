@@ -1387,6 +1387,9 @@
   "path": "cards/HZZZZZZM_claude_s03_u325_laval.js"
  },
  {
+  "path": "cards/HZZZZZZN_claude_s03_u326_worm.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
