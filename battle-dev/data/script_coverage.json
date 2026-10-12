@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 874,
+    "NOT_STARTED": 870,
     "PARTIAL": 30,
-    "TESTED": 2973
+    "TESTED": 2977
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -108,9 +108,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1445,
     "sin": 5,
-    "unified": 1040
+    "unified": 1044
   },
-  "static_registration_name_count": 2984,
+  "static_registration_name_count": 2988,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -14807,12 +14807,20 @@
       "subtype": null,
       "date": "2006-05-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZD_claude_s03_u316_alien.js",
+          "line": 44
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u316_alien.js"
+      ]
     },
     {
       "index": 677,
@@ -14822,12 +14830,20 @@
       "subtype": null,
       "date": "2008-11-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZD_claude_s03_u316_alien.js",
+          "line": 116
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u316_alien.js"
+      ]
     },
     {
       "index": 678,
@@ -14837,13 +14853,20 @@
       "subtype": null,
       "date": "2006-05-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZD_claude_s03_u316_alien.js",
+          "line": 58
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle30.js"
+        "tools\\test_auto_cycle30.js",
+        "tools\\test_s03_u316_alien.js"
       ]
     },
     {
@@ -14913,12 +14936,20 @@
       "subtype": null,
       "date": "2007-07-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZD_claude_s03_u316_alien.js",
+          "line": 80
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u316_alien.js"
+      ]
     },
     {
       "index": 683,

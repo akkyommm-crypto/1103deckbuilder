@@ -606,6 +606,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u312_limited_equips.js')],check=
 subprocess.run(['node',str(ROOT/'tools/test_s03_u313_union.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u314_union2.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u315_equips3.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u316_alien.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

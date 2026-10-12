@@ -9353,6 +9353,46 @@
         "tools/test_s03_u315_equips3.js"
       ],
       "evidence": "Text (carddata): 装備モンスターが攻撃する場合、装備モンスターは戦闘では破壊されない。装備モンスターが攻撃を行ったダメージステップ終了時、装備モンスターの攻撃を受けたモンスターの攻撃力は、エンドフェイズ時まで装備モンスターの攻撃力分ダウンする。 protectV21 battle protection only while the host is the attacker (battleRole); the ATK reduction at the Damage Step end (the leave step delivered to the Spell & Trap Zone) on the attacked monster, until the turn ends. Script (S03-U315, cards/HZZZZZZC, u312Define equip pattern): host restriction by name / P4 group, effects read from the Equip Spell in the Spell & Trap Zone (Damage Step leave record). Test: tools/test_s03_u315_equips3.js (real activation, Battle Phase attacks, サイクロン, Graveyard effect, really passed turns, Replay audit). No known deviation."
+    },
+    {
+      "name": "エーリアン・ウォリアー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U316",
+      "tests": [
+        "tools/test_s03_u316_alien.js"
+      ],
+      "evidence": "Text (carddata): このカードが戦闘によって破壊され墓地へ送られた時、このカードを破壊したモンスターにAカウンターを2つ置く。 + the penalty clause (ダメージ計算時のみ). Forced trigger from the Graveyard; the destroyer read from gameState.lastBattle. Script (S03-U316, cards/HZZZZZZD): the A Counter penalty as a continuous modifier of the face-up Alien card (a monster with A Counters in a battle against an 「エーリアン」 — P4 GROUP.ALIEN, new in P4-v11 — loses 300 ATK/DEF per counter while the Damage Step is open). Test: tools/test_s03_u316_alien.js (real attacks, Flip, destruction in battle, 死者蘇生, really passed turns, Replay audit). No known deviation; ruling read: every face-up copy applies its own penalty (they add up)."
+    },
+    {
+      "name": "エーリアン・グレイ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U316",
+      "tests": [
+        "tools/test_s03_u316_alien.js"
+      ],
+      "evidence": "Text (carddata): リバース:相手フィールド上に表側表示で存在するモンスター1体を選択し、Aカウンターを1つ置く。また、リバースしたこのカードが戦闘によって破壊され墓地へ送られた時、デッキからカードを1枚ドローする。 + the penalty clause. Flip trigger with a target; the 「リバースした」 mark is a card flag set by the Flip trigger. Script (S03-U316, cards/HZZZZZZD): the A Counter penalty as a continuous modifier of the face-up Alien card (a monster with A Counters in a battle against an 「エーリアン」 — P4 GROUP.ALIEN, new in P4-v11 — loses 300 ATK/DEF per counter while the Damage Step is open). Test: tools/test_s03_u316_alien.js (real attacks, Flip, destruction in battle, 死者蘇生, really passed turns, Replay audit). No known deviation; ruling read: every face-up copy applies its own penalty (they add up)."
+    },
+    {
+      "name": "エーリアン・テレパス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U316",
+      "tests": [
+        "tools/test_s03_u316_alien.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、相手フィールド上のモンスターに乗っているAカウンターを1つ取り除いて発動できる。フィールド上の魔法・罠カード1枚を選択して破壊する。 + the penalty clause. Ignition: cost = remove 1 A Counter from an opponent monster, then the target. Script (S03-U316, cards/HZZZZZZD): the A Counter penalty as a continuous modifier of the face-up Alien card (a monster with A Counters in a battle against an 「エーリアン」 — P4 GROUP.ALIEN, new in P4-v11 — loses 300 ATK/DEF per counter while the Damage Step is open). Test: tools/test_s03_u316_alien.js (real attacks, Flip, destruction in battle, 死者蘇生, really passed turns, Replay audit). No known deviation; ruling read: every face-up copy applies its own penalty (they add up)."
+    },
+    {
+      "name": "エーリアン・キッズ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U316",
+      "tests": [
+        "tools/test_s03_u316_alien.js"
+      ],
+      "evidence": "Text (carddata): このカードが自分フィールド上に表側表示で存在する限り、相手フィールド上にモンスターが特殊召喚される度に、その時に特殊召喚されたモンスターにAカウンターを1つ置く。 + 「…戦闘する場合、Aカウンター1つにつき攻撃力と守備力が300ポイントダウンする」. Forced trigger on a Special Summon onto the opponent field (onOtherSummon). Script (S03-U316, cards/HZZZZZZD): the A Counter penalty as a continuous modifier of the face-up Alien card (a monster with A Counters in a battle against an 「エーリアン」 — P4 GROUP.ALIEN, new in P4-v11 — loses 300 ATK/DEF per counter while the Damage Step is open). Test: tools/test_s03_u316_alien.js (real attacks, Flip, destruction in battle, 死者蘇生, really passed turns, Replay audit). No known deviation; ruling read: every face-up copy applies its own penalty (they add up)."
     }
   ],
   "restored_to_baseline": [

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 874,
+    "NOT_STARTED": 870,
     "PARTIAL": 30,
-    "TESTED": 2973
+    "TESTED": 2977
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -433,
+    "NOT_STARTED": -437,
     "PARTIAL": -152,
-    "TESTED": 924
+    "TESTED": 928
   },
   "status_changes": [
     {
@@ -853,10 +853,34 @@
       "unit": "S03-U209"
     },
     {
+      "name": "エーリアン・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U316"
+    },
+    {
+      "name": "エーリアン・キッズ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U316"
+    },
+    {
+      "name": "エーリアン・グレイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U316"
+    },
+    {
       "name": "エーリアン・サイコ",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U265"
+    },
+    {
+      "name": "エーリアン・テレパス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U316"
     },
     {
       "name": "オイルメン",
