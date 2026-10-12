@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 850,
+    "NOT_STARTED": 844,
     "PARTIAL": 30,
-    "TESTED": 2997
+    "TESTED": 3003
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -108,9 +108,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1456,
     "sin": 5,
-    "unified": 1053
+    "unified": 1059
   },
-  "static_registration_name_count": 3008,
+  "static_registration_name_count": 3014,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -21227,12 +21227,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZI_claude_s03_u321_koaki.js",
+          "line": 63
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u321_koaki.js"
+      ]
     },
     {
       "index": 983,
@@ -21265,12 +21273,20 @@
       "subtype": null,
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZI_claude_s03_u321_koaki.js",
+          "line": 48
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u321_koaki.js"
+      ]
     },
     {
       "index": 985,
@@ -21364,12 +21380,20 @@
       "subtype": null,
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZI_claude_s03_u321_koaki.js",
+          "line": 93
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u321_koaki.js"
+      ]
     },
     {
       "index": 990,
@@ -21510,12 +21534,20 @@
       "subtype": null,
       "date": "2009-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 23,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZI_claude_s03_u321_koaki.js",
+          "line": 114
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u321_koaki.js"
+      ]
     },
     {
       "index": 998,
@@ -21525,12 +21557,20 @@
       "subtype": null,
       "date": "2009-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZI_claude_s03_u321_koaki.js",
+          "line": 143
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u321_koaki.js"
+      ]
     },
     {
       "index": 999,
@@ -21563,12 +21603,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZI_claude_s03_u321_koaki.js",
+          "line": 170
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u321_koaki.js"
+      ]
     },
     {
       "index": 1001,

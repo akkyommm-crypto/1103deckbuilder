@@ -9593,6 +9593,66 @@
         "tools/test_s03_u320_naturia.js"
       ],
       "evidence": "Text (carddata): 相手のカードの効果の対象になった時、このカードを墓地へ送りデッキからレベル4以下の「ナチュル」2体を特殊召喚する。攻撃宣言できず、自分のエンドフェイズ時に破壊される。 Declared response when the opponent's effect targets it (read from the chain link targets, wrapper entries included); another monster targeted → not offered; both summoned with cannotAttack and destroyed at my own next End Phase (scheduled). Test: tools/test_s03_u320_naturia.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアキメイル・クルセイダー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U321",
+      "tests": [
+        "tools/test_s03_u321_koaki.js"
+      ],
+      "evidence": "Text (carddata): 維持コスト（鋼核か獣戦士を見せる）。戦闘で相手モンスターを破壊した場合、墓地の「コアキメイル」カード1枚を手札に加える事ができる。 Upkeep: 鋼核 / a 獣戦士 shown / destroyed, own End Phase only; battle kill → chosen GY Koaki card to the hand; no recovery when it did not destroy. Test: tools/test_s03_u321_koaki.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアキメイル・ウルナイト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U321",
+      "tests": [
+        "tools/test_s03_u321_koaki.js"
+      ],
+      "evidence": "Text (carddata): 維持コスト（獣戦士）。1ターンに1度、手札の鋼核を見せてデッキからウルナイト以外のLv4以下の「コアキメイル」を特殊召喚。 Show (not discard) 鋼核 → chosen Lv4- Koaki from the Deck (not another ウルナイト, not Lv8); once per turn; unavailable without 鋼核 / candidates. Test: tools/test_s03_u321_koaki.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアキメイル・スピード",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U321",
+      "tests": [
+        "tools/test_s03_u321_koaki.js"
+      ],
+      "evidence": "Text (carddata): 維持コスト（機械）。表側表示で存在する限り、ドローフェイズにドローしたカードが鋼核だった場合、見せてもう1枚ドローできる。 Normal draw of 鋼核 → extra draw; other card / not on the field → none. Engine: engine/30 processDrawV27 now drains the queued onDrawCard events after a normal draw (S03-U321). Test: tools/test_s03_u321_koaki.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアキメイル・マキシマム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U321",
+      "tests": [
+        "tools/test_s03_u321_koaki.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。手札の鋼核1枚を除外して特殊召喚。エンドフェイズ毎に鋼核か「コアキメイル」モンスターを墓地へ送る（または破壊）。1ターンに1度、相手のカード1枚を選択して破壊。 Hand procedure (banish 鋼核), upkeep (核 first, else a Koaki monster, else destroyed), once-per-turn targeted destruction. Test: tools/test_s03_u321_koaki.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアキメイル・ルークロード",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U321",
+      "tests": [
+        "tools/test_s03_u321_koaki.js"
+      ],
+      "evidence": "Text (carddata): 維持コスト（戦士）。「コアキメイル」1体のリリースでアドバンス召喚できる。召喚に成功した時、墓地の「コアキメイル」を除外して相手のカードを2枚まで破壊。 One-Tribute method only with a Koaki tribute; summon trigger: banish a GY Koaki card → destroys two chosen opponent cards. Test: tools/test_s03_u321_koaki.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアキメイル・ヴァラファール",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U321",
+      "tests": [
+        "tools/test_s03_u321_koaki.js"
+      ],
+      "evidence": "Text (carddata): 維持コスト＝鋼核を墓地へ送る（または破壊）。「コアキメイル」1体のリリースでアドバンス召喚できる。守備表示モンスターへの貫通ダメージ。罠カードの効果では破壊されない。 Upkeep (核 or destroyed — showing a warrior is not enough), one-Tribute method, piercing damage (2800 vs DEF 200), protectV21 against Trap effects only. Test: tools/test_s03_u321_koaki.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

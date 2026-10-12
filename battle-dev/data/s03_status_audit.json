@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 850,
+    "NOT_STARTED": 844,
     "PARTIAL": 30,
-    "TESTED": 2997
+    "TESTED": 3003
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -457,
+    "NOT_STARTED": -463,
     "PARTIAL": -152,
-    "TESTED": 948
+    "TESTED": 954
   },
   "status_changes": [
     {
@@ -1177,10 +1177,46 @@
       "unit": "S03-U65"
     },
     {
+      "name": "コアキメイル・ウルナイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
+      "name": "コアキメイル・クルセイダー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
+      "name": "コアキメイル・スピード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
+      "name": "コアキメイル・マキシマム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
+      "name": "コアキメイル・ルークロード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
       "name": "コアキメイル・ロック",
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U135"
+    },
+    {
+      "name": "コアキメイル・ヴァラファール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
     },
     {
       "name": "コア転送ユニット",
