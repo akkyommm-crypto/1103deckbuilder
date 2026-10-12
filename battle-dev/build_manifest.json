@@ -1393,6 +1393,9 @@
   "path": "cards/HZZZZZZO_claude_s03_u327_icebarrier.js"
  },
  {
+  "path": "cards/HZZZZZZP_claude_s03_u328_battleship.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

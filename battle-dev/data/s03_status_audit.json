@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 823,
+    "NOT_STARTED": 818,
     "PARTIAL": 30,
-    "TESTED": 3024
+    "TESTED": 3029
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -484,
+    "NOT_STARTED": -489,
     "PARTIAL": -152,
-    "TESTED": 975
+    "TESTED": 980
   },
   "status_changes": [
     {
@@ -4169,6 +4169,36 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U122"
+    },
+    {
+      "name": "巨大戦艦 カバード・コア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
+    },
+    {
+      "name": "巨大戦艦 クリスタル・コア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
+    },
+    {
+      "name": "巨大戦艦 テトラン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
+    },
+    {
+      "name": "巨大戦艦 ビッグ・コア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
+    },
+    {
+      "name": "巨大戦艦 ビッグ・コアMk－II",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
     },
     {
       "name": "干ばつの結界像",

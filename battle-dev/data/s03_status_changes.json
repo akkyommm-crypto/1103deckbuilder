@@ -9863,6 +9863,56 @@
         "tools/test_s03_u327_icebarrier.js"
       ],
       "evidence": "Text (carddata): 相手が自らの手札を捨てる効果を含むカードを発動した時、手札から墓地へ送ってその発動と効果を無効にしそのカードを破壊する。 Declared hand response against 手札抹殺 (nobody discards, the Spell is destroyed); not offered against サイクロン or for my own card. Known limitation: 「手札を捨てる効果を含む」 is read from the carddata wording (a first-sentence discard of a longer text = cost; one override for インフェルニティ・インフェルノ). Test: tools/test_s03_u327_icebarrier.js (Replay audit)."
+    },
+    {
+      "name": "巨大戦艦 ビッグ・コア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U328",
+      "tests": [
+        "tools/test_s03_u328_battleship.js"
+      ],
+      "evidence": "Text (carddata): Counters: placed on Normal Summon (Mk－II: Special Summon only) — 3 / 2 (カバード・コア) / 3 / 3 / 3; indestructible in battle (attacked by 青眼 3000 it stays); at the end of the Damage Step of a battle with a monster one counter is removed, without a counter it is destroyed (after killing ワイト); a direct attack changes nothing. Real 2-Tribute Normal Summon; not Tribute-free. Test: tools/test_s03_u328_battleship.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "巨大戦艦 カバード・コア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U328",
+      "tests": [
+        "tools/test_s03_u328_battleship.js"
+      ],
+      "evidence": "Text (carddata): Counters: placed on Normal Summon (Mk－II: Special Summon only) — 3 / 2 (カバード・コア) / 3 / 3 / 3; indestructible in battle (attacked by 青眼 3000 it stays); at the end of the Damage Step of a battle with a monster one counter is removed, without a counter it is destroyed (after killing ワイト); a direct attack changes nothing. Instead of the plain removal the controller calls Heads / Tails (registry choice) and the replay-safe coin decides: a right call keeps the counter, a wrong call removes one (both seeds exercised); no counter → destroyed without a toss. Test: tools/test_s03_u328_battleship.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "巨大戦艦 クリスタル・コア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U328",
+      "tests": [
+        "tools/test_s03_u328_battleship.js"
+      ],
+      "evidence": "Text (carddata): Counters: placed on Normal Summon (Mk－II: Special Summon only) — 3 / 2 (カバード・コア) / 3 / 3 / 3; indestructible in battle (attacked by 青眼 3000 it stays); at the end of the Damage Step of a battle with a monster one counter is removed, without a counter it is destroyed (after killing ワイト); a direct attack changes nothing. Once per turn in the Main Phase a face-up Attack Position opponent monster is changed to face-up Defense Position (unavailable with none). Test: tools/test_s03_u328_battleship.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "巨大戦艦 テトラン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U328",
+      "tests": [
+        "tools/test_s03_u328_battleship.js"
+      ],
+      "evidence": "Text (carddata): Counters: placed on Normal Summon (Mk－II: Special Summon only) — 3 / 2 (カバード・コア) / 3 / 3 / 3; indestructible in battle (attacked by 青眼 3000 it stays); at the end of the Damage Step of a battle with a monster one counter is removed, without a counter it is destroyed (after killing ワイト); a direct attack changes nothing. Cost: remove a counter (3 → 2); destroys the chosen Spell/Trap on the field; once per turn; unavailable without a counter. Test: tools/test_s03_u328_battleship.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "巨大戦艦 ビッグ・コアMk－II",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U328",
+      "tests": [
+        "tools/test_s03_u328_battleship.js"
+      ],
+      "evidence": "Text (carddata): Counters: placed on Normal Summon (Mk－II: Special Summon only) — 3 / 2 (カバード・コア) / 3 / 3 / 3; indestructible in battle (attacked by 青眼 3000 it stays); at the end of the Damage Step of a battle with a monster one counter is removed, without a counter it is destroyed (after killing ワイト); a direct attack changes nothing. Mk－II: 3 counters on Special Summon success (死者蘇生 revive); Normal Summoned Tribute-free only when my field has no monster (and then it has no counters, as the text reads); the Tribute-free method is not offered with a monster on my field. Test: tools/test_s03_u328_battleship.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
