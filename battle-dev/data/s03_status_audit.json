@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 914,
+    "NOT_STARTED": 910,
     "PARTIAL": 30,
-    "TESTED": 2933
+    "TESTED": 2937
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -393,
+    "NOT_STARTED": -397,
     "PARTIAL": -152,
-    "TESTED": 884
+    "TESTED": 888
   },
   "status_changes": [
     {
@@ -1757,6 +1757,30 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U202"
+    },
+    {
+      "name": "トゥーン・キャノン・ソルジャー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U309"
+    },
+    {
+      "name": "トゥーン・ゴブリン突撃部隊",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U309"
+    },
+    {
+      "name": "トゥーン・ヂェミナイ・エルフ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U309"
+    },
+    {
+      "name": "トゥーン・仮面魔道士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U309"
     },
     {
       "name": "トライクラー",

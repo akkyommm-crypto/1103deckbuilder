@@ -8953,6 +8953,46 @@
         "tools/test_s03_u308_direct_grant.js"
       ],
       "evidence": "Text (carddata): 自分フィールド上に表側表示で存在する「六武衆」と名のついたモンスター1体を選択して発動する。このターンのバトルフェイズ中、選択したモンスターが相手モンスターを戦闘によって破壊した場合、自分フィールド上に存在する「大将軍 紫炎」または「六武衆」と名のついたモンスターは相手プレイヤーに直接攻撃する事ができる。 New script (S03-U308) + engine record gameState.battleKillsS03 (engine/00 BATTLE_CLEANUP: uids of the turn battle destroyers) so the condition survives the destroyer leaving the field; lingering continuous.grantsDirectAttack (GROUP.SIX_SAMURAI_NAMED, 大将軍 紫炎 by name). Test: kill by the selected monster grants, by another does not, destroyer gone, no activation, refusal, Replay audit. No known deviation."
+    },
+    {
+      "name": "トゥーン・キャノン・ソルジャー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U309",
+      "tests": [
+        "tools/test_s03_u309_toon.js"
+      ],
+      "evidence": "Text (carddata): 召喚・反転召喚・特殊召喚したターンには攻撃できない。トゥーン・ワールド＋相手にトゥーンがいなければ直接攻撃。トゥーン・ワールドが破壊された時に破壊。また、自分フィールド上のモンスター1体をリリースする事で、相手ライフに500ポイントダメージを与える。 Card effect: ignition, release a monster (itself allowed) → 500 damage, no once-per-turn clause. Common clauses (toonCommonS03): no attack on the turn of Summon / Flip Summon / Special Summon; direct attack with the own トゥーン・ワールド and no opposing Toon monster (canDirectAttack); destroyed when a トゥーン・ワールド is destroyed (forced onDestroy trigger). Test: tools/test_s03_u309_toon.js (real Normal / Flip Summon, Battle Phase attacks, サイクロン on トゥーン・ワールド, Replay audit). No known deviation."
+    },
+    {
+      "name": "トゥーン・ゴブリン突撃部隊",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U309",
+      "tests": [
+        "tools/test_s03_u309_toon.js"
+      ],
+      "evidence": "Text (carddata): common clauses + 攻撃した場合、バトルフェイズ終了時に守備表示になり、次の自分のターンのエンドフェイズ時まで表示形式を変更する事ができない。 Card effect: the ゴブリン突撃部隊 pattern (b0DefLockUntil + cannotChangePosition). Common clauses (toonCommonS03): no attack on the turn of Summon / Flip Summon / Special Summon; direct attack with the own トゥーン・ワールド and no opposing Toon monster (canDirectAttack); destroyed when a トゥーン・ワールド is destroyed (forced onDestroy trigger). Test: tools/test_s03_u309_toon.js (real Normal / Flip Summon, Battle Phase attacks, サイクロン on トゥーン・ワールド, Replay audit). No known deviation."
+    },
+    {
+      "name": "トゥーン・ヂェミナイ・エルフ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U309",
+      "tests": [
+        "tools/test_s03_u309_toon.js"
+      ],
+      "evidence": "Text (carddata): common clauses + このカードが相手に戦闘ダメージを与えた時、相手の手札をランダムに1枚選んで捨てる。 Card effect: forced trigger on its battle damage, v80DiscardRandom. Common clauses (toonCommonS03): no attack on the turn of Summon / Flip Summon / Special Summon; direct attack with the own トゥーン・ワールド and no opposing Toon monster (canDirectAttack); destroyed when a トゥーン・ワールド is destroyed (forced onDestroy trigger). Test: tools/test_s03_u309_toon.js (real Normal / Flip Summon, Battle Phase attacks, サイクロン on トゥーン・ワールド, Replay audit). No known deviation."
+    },
+    {
+      "name": "トゥーン・仮面魔道士",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U309",
+      "tests": [
+        "tools/test_s03_u309_toon.js"
+      ],
+      "evidence": "Text (carddata): common clauses + このカードが相手ライフに戦闘ダメージを与えた時、自分のデッキからカードを1枚ドローする。 Card effect: forced trigger on its battle damage, API.draw. Common clauses (toonCommonS03): no attack on the turn of Summon / Flip Summon / Special Summon; direct attack with the own トゥーン・ワールド and no opposing Toon monster (canDirectAttack); destroyed when a トゥーン・ワールド is destroyed (forced onDestroy trigger). Test: tools/test_s03_u309_toon.js (real Normal / Flip Summon, Battle Phase attacks, サイクロン on トゥーン・ワールド, Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

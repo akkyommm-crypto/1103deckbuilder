@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 914,
+    "NOT_STARTED": 910,
     "PARTIAL": 30,
-    "TESTED": 2933
+    "TESTED": 2937
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -104,9 +104,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1445,
     "sin": 5,
-    "unified": 1036
+    "unified": 1040
   },
-  "static_registration_name_count": 2944,
+  "static_registration_name_count": 2948,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -37227,13 +37227,20 @@
       "subtype": null,
       "date": "2002-03-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZV_claude_s03_u309_toon.js",
+          "line": 65
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_battle_cards.js"
+        "tools\\test_battle_cards.js",
+        "tools\\test_s03_u309_toon.js"
       ]
     },
     {
@@ -37244,12 +37251,20 @@
       "subtype": null,
       "date": "2002-03-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZV_claude_s03_u309_toon.js",
+          "line": 85
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u309_toon.js"
+      ]
     },
     {
       "index": 1763,
@@ -37259,12 +37274,20 @@
       "subtype": null,
       "date": "2002-03-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZV_claude_s03_u309_toon.js",
+          "line": 103
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u309_toon.js"
+      ]
     },
     {
       "index": 1764,
@@ -37381,12 +37404,20 @@
       "subtype": null,
       "date": "2002-03-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZV_claude_s03_u309_toon.js",
+          "line": 111
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u309_toon.js"
+      ]
     },
     {
       "index": 1771,
