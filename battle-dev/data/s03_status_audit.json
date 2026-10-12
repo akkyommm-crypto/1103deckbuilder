@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 861,
+    "NOT_STARTED": 856,
     "PARTIAL": 30,
-    "TESTED": 2986
+    "TESTED": 2991
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -446,
+    "NOT_STARTED": -451,
     "PARTIAL": -152,
-    "TESTED": 937
+    "TESTED": 942
   },
   "status_changes": [
     {
@@ -61,10 +61,28 @@
       "unit": "S03-U147"
     },
     {
+      "name": "BF－そよ風のブリーズ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
+    },
+    {
+      "name": "BF－二の太刀のエテジア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
+    },
+    {
       "name": "BF－大旆のヴァーユ",
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U48"
+    },
+    {
+      "name": "BF－天狗風のヒレン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
     },
     {
       "name": "BF－孤高のシルバー・ウィンド",
@@ -83,6 +101,18 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U257"
+    },
+    {
+      "name": "BF－追い風のアリゼ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
+    },
+    {
+      "name": "BF－逆風のガスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
     },
     {
       "name": "C・シューター",

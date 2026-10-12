@@ -9483,6 +9483,56 @@
         "tools/test_s03_u318_gusto.js"
       ],
       "evidence": "Text (carddata): 1ターンに1度、自分のメインフェイズ時、墓地の「ガスタ」モンスター1体をデッキに戻し、フィールド上の表側表示モンスター1体の効果をエンドフェイズ時まで無効にする。 Returns the chosen 「ガスタ」 monster to the Deck and negates the chosen face-up monster until the end of the turn (negatedUntilTurn, ends with the turn); once per turn; unavailable without a 「ガスタ」 monster in the GY. Test: tools/test_s03_u318_gusto.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "BF－そよ風のブリーズ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U319",
+      "tests": [
+        "tools/test_s03_u319_bf.js"
+      ],
+      "evidence": "Text (carddata): デッキから手札に加わった場合に手札から特殊召喚できる。シンクロ素材とする場合「BF」のシンクロ召喚にしか使えない。 Added by クリッター's search → Special Summons itself (position choice); a normal draw does not; synchroMaterialRestriction (not usable for a non-BF Synchro Monster, usable for アームズ・ウィング). Test: tools/test_s03_u319_bf.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "BF－逆風のガスト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U319",
+      "tests": [
+        "tools/test_s03_u319_bf.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールド上にカードが存在しない場合、手札から特殊召喚できる。表側表示で存在する限り、相手モンスターが自分の「BF」を攻撃する場合、その攻撃モンスターはダメージステップの間攻撃力が300ダウンする。 Hand procedure legal only with no card on my field; the attacker of my BF loses 300 ATK in the Damage Step (damage 1800 instead of 2100), not for a non-BF target, restored after the battle. Test: tools/test_s03_u319_bf.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "BF－追い風のアリゼ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U319",
+      "tests": [
+        "tools/test_s03_u319_bf.js"
+      ],
+      "evidence": "Text (carddata): 自分の表側表示の「BF」が2体以上破壊されたターン、手札から特殊召喚できる。シンクロ素材として墓地へ送られた場合、600LP回復する。 Procedure legal after ブラック・ホール destroyed two BF (not one BF, not two non-BF); Synchro Material → +600 LP; destroyed otherwise → no recovery. Test: tools/test_s03_u319_bf.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "BF－二の太刀のエテジア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U319",
+      "tests": [
+        "tools/test_s03_u319_bf.js"
+      ],
+      "evidence": "Text (carddata): 自分の「BF」が相手モンスターと戦闘を行ったダメージステップ終了時にその相手モンスターが残っている場合、手札から墓地へ送って発動し、相手に1000ダメージ。 Quick effect at the end of the Damage Step (as the attacker or as the attacked monster); not usable when the opponent monster was destroyed or my battler is not a BF. Test: tools/test_s03_u319_bf.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "BF－天狗風のヒレン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U319",
+      "tests": [
+        "tools/test_s03_u319_bf.js"
+      ],
+      "evidence": "Text (carddata): 墓地に存在し、相手モンスターの直接攻撃で2000以上の戦闘ダメージを受けた時、墓地のレベル3以下の「BF」1体とこのカードを特殊召喚する（効果は無効化）。デュエル中に1度。 Trigger from the Graveyard on a 3000 direct hit: both summoned, effects negated; 1800 hit, a monster battle, no Lv3- BF: nothing; the second copy cannot (once per Duel, player flag). Test: tools/test_s03_u319_bf.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
