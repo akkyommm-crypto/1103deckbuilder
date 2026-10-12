@@ -1381,6 +1381,9 @@
   "path": "cards/HZZZZZZK_claude_s03_u323_cyberdark.js"
  },
  {
+  "path": "cards/HZZZZZZL_claude_s03_u324_symphonic.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

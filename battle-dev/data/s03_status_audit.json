@@ -12,16 +12,16 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 838,
+    "NOT_STARTED": 835,
     "PARTIAL": 30,
-    "TESTED": 3009
+    "TESTED": 3012
   },
   "delta": {
     "ENGINE_GAP": -144,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -469,
+    "NOT_STARTED": -472,
     "PARTIAL": -152,
-    "TESTED": 960
+    "TESTED": 963
   },
   "status_changes": [
     {
@@ -5591,6 +5591,24 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U192"
+    },
+    {
+      "name": "音響戦士ドラムス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U324"
+    },
+    {
+      "name": "音響戦士ピアーノ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U324"
+    },
+    {
+      "name": "音響戦士ベーシス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U324"
     },
     {
       "name": "風林火山",

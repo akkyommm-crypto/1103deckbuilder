@@ -376,6 +376,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u322_arcana.js": {"アルカナフォースIII－THE EMPRESS", "アルカナフォースXIV－TEMPERANCE", "アルカナフォースEX－THE LIGHT RULER"},
     # S03-U323 names ブラック・ホール / 青眼の白龍 / ワイト and a generic Lv3 / Lv4 Dragon only as fixtures.
     "test_s03_u323_cyberdark.js": {"サイバー・ダーク・エッジ", "サイバー・ダーク・キール", "サイバー・ダーク・ホーン"},
+    # S03-U324 names ワイト only as a fixture (the three cards are each other's fixtures).
+    "test_s03_u324_symphonic.js": {"音響戦士ドラムス", "音響戦士ピアーノ", "音響戦士ベーシス"},
 }
 
 

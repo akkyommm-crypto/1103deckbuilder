@@ -9713,6 +9713,36 @@
         "tools/test_s03_u323_cyberdark.js"
       ],
       "evidence": "Text (carddata): ①: Normal Summon → the chosen Lv3- Dragon of the Graveyard equipped (a Lv4 Dragon / a non-Dragon are not candidates; no candidate → nothing); ②: ATK + the printed ATK of the equipped Dragon; ④: in battle the equipped Dragon is destroyed instead (engine/1ZZB equipHostSubstituteS03:'battle'); not for an effect destruction, not without an equipped monster. ③: piercing damage to a Defense Position monster (ATK − DEF). Test: tools/test_s03_u323_cyberdark.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "音響戦士ドラムス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U324",
+      "tests": [
+        "tools/test_s03_u324_symphonic.js"
+      ],
+      "evidence": "Text (carddata): 属性を宣言して「音響戦士」1体を選択→その属性になる（1ターンに1度）。墓地のこのカードを除外して自分の「音響戦士」1体を宣言した属性にする。 Field effect (either side's face-up 音響戦士; the ワイト is not a candidate; once per turn), Graveyard effect (banish cost, own monsters only, not offered without one / with only the opponent's). Test: tools/test_s03_u324_symphonic.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "音響戦士ピアーノ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U324",
+      "tests": [
+        "tools/test_s03_u324_symphonic.js"
+      ],
+      "evidence": "Text (carddata): the Type version of ドラムス (declared Type, 1 per turn; Graveyard banish effect for my own 音響戦士). Test: tools/test_s03_u324_symphonic.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "音響戦士ベーシス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U324",
+      "tests": [
+        "tools/test_s03_u324_symphonic.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、フィールドの「音響戦士」1体のレベルをターン終了時まで手札の枚数分上げる。墓地のこのカードを除外して自分の「音響戦士」1体に同じ。 Hand-size Level rise (3 / 2 / 1), ends with the turn, the opponent's monster is a legal target of ①, ② only my own. Test: tools/test_s03_u324_symphonic.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

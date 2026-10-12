@@ -6,9 +6,9 @@
     "ENGINE_GAP": 472,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 838,
+    "NOT_STARTED": 835,
     "PARTIAL": 30,
-    "TESTED": 3009
+    "TESTED": 3012
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -108,9 +108,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1456,
     "sin": 5,
-    "unified": 1065
+    "unified": 1068
   },
-  "static_registration_name_count": 3020,
+  "static_registration_name_count": 3023,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -101012,12 +101012,20 @@
       "subtype": null,
       "date": "2010-11-13",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZL_claude_s03_u324_symphonic.js",
+          "line": 67
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u324_symphonic.js"
+      ]
     },
     {
       "index": 4800,
@@ -101027,12 +101035,20 @@
       "subtype": null,
       "date": "2010-11-13",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZL_claude_s03_u324_symphonic.js",
+          "line": 68
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u324_symphonic.js"
+      ]
     },
     {
       "index": 4801,
@@ -101042,12 +101058,20 @@
       "subtype": null,
       "date": "2010-11-13",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZL_claude_s03_u324_symphonic.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u324_symphonic.js"
+      ]
     },
     {
       "index": 4802,
