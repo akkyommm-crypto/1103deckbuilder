@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 472,
+    "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 920,
+    "NOT_STARTED": 758,
     "PARTIAL": 30,
-    "TESTED": 2927
+    "TESTED": 3092
   },
   "delta": {
-    "ENGINE_GAP": -144,
+    "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -387,
+    "NOT_STARTED": -549,
     "PARTIAL": -152,
-    "TESTED": 878
+    "TESTED": 1043
   },
   "status_changes": [
     {
@@ -55,16 +55,52 @@
       "unit": "S03-U82"
     },
     {
+      "name": "A・ジェネクス・アクセル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
+    },
+    {
+      "name": "A・ジェネクス・ケミストリ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U333"
+    },
+    {
+      "name": "A・ジェネクス・トライアーム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
+    },
+    {
       "name": "A・ジェネクス・トライフォース",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U147"
     },
     {
+      "name": "BF－そよ風のブリーズ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
+    },
+    {
+      "name": "BF－二の太刀のエテジア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
+    },
+    {
       "name": "BF－大旆のヴァーユ",
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U48"
+    },
+    {
+      "name": "BF－天狗風のヒレン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
     },
     {
       "name": "BF－孤高のシルバー・ウィンド",
@@ -83,6 +119,18 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U257"
+    },
+    {
+      "name": "BF－追い風のアリゼ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
+    },
+    {
+      "name": "BF－逆風のガスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U319"
     },
     {
       "name": "C・シューター",
@@ -145,10 +193,46 @@
       "unit": "S03-U254"
     },
     {
+      "name": "D・リペアユニット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
+    },
+    {
+      "name": "D－HERO ダイハードガイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U335"
+    },
+    {
+      "name": "D－HERO ダガーガイ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U335"
+    },
+    {
+      "name": "D－HERO ダッシュガイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U335"
+    },
+    {
       "name": "D－HERO デビルガイ",
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U264"
+    },
+    {
+      "name": "D－HERO ドゥームガイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U335"
+    },
+    {
+      "name": "D－HERO ドグマガイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U335"
     },
     {
       "name": "D－HERO ドレッドサーヴァント",
@@ -223,16 +307,46 @@
       "unit": "S03-U182"
     },
     {
+      "name": "E・HERO サンダー・ジャイアント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
+      "name": "E・HERO ジ・アース",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
       "name": "E・HERO ストーム・ネオス",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U179"
     },
     {
+      "name": "E・HERO セイラーマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
+      "name": "E・HERO ダーク・ブライトマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
       "name": "E・HERO テンペスター",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U165"
+    },
+    {
+      "name": "E・HERO ネクロイド・シャーマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
     },
     {
       "name": "E・HERO バブルマン",
@@ -247,16 +361,34 @@
       "unit": "S03-U174"
     },
     {
+      "name": "E・HERO フレイム・ブラスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
       "name": "E・HERO ブラック・ネオス",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U177"
     },
     {
+      "name": "E・HERO プラズマヴァイスマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
       "name": "E・HERO マグマ・ネオス",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U179"
+    },
+    {
+      "name": "E・HERO マッドボールマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
     },
     {
       "name": "E・HERO マリン・ネオス",
@@ -275,6 +407,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U115"
+    },
+    {
+      "name": "E・HERO ワイルド・ウィングマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
     },
     {
       "name": "E－HERO ワイルド・サイクロン",
@@ -583,6 +721,24 @@
       "unit": "S03-U227"
     },
     {
+      "name": "アルカナフォースEX－THE LIGHT RULER",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U322"
+    },
+    {
+      "name": "アルカナフォースIII－THE EMPRESS",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U322"
+    },
+    {
+      "name": "アルカナフォースXIV－TEMPERANCE",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U322"
+    },
+    {
       "name": "アルティメット・インセクト LV1",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -617,6 +773,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U202"
+    },
+    {
+      "name": "アーマー・ブレイカー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "アームズ・ホール",
@@ -781,16 +943,46 @@
       "unit": "S03-U267"
     },
     {
+      "name": "エレキツネ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U336"
+    },
+    {
       "name": "エレキトンボ",
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U276"
     },
     {
+      "name": "エレキャンセル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U336"
+    },
+    {
+      "name": "エレキリギリス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U336"
+    },
+    {
+      "name": "エレキリム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U336"
+    },
+    {
       "name": "エレキリン",
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U260"
+    },
+    {
+      "name": "エレキンモグラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U336"
     },
     {
       "name": "エレキーウィ",
@@ -841,10 +1033,40 @@
       "unit": "S03-U209"
     },
     {
+      "name": "エーリアン・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U316"
+    },
+    {
+      "name": "エーリアン・キッズ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U316"
+    },
+    {
+      "name": "エーリアン・グレイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U316"
+    },
+    {
       "name": "エーリアン・サイコ",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U265"
+    },
+    {
+      "name": "エーリアン・テレパス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U316"
+    },
+    {
+      "name": "オイルメン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "オシャレオン",
@@ -961,6 +1183,12 @@
       "unit": "S03-U267"
     },
     {
+      "name": "ガスタの神官 ムスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
+    },
+    {
       "name": "ガスタの賢者 ウィンダール",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1063,6 +1291,12 @@
       "unit": "S03-U276"
     },
     {
+      "name": "クロス・アタック",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U308"
+    },
+    {
       "name": "グランド・ドラゴン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1093,16 +1327,58 @@
       "unit": "S03-U65"
     },
     {
+      "name": "コアキメイル・ウルナイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
+      "name": "コアキメイル・クルセイダー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
+      "name": "コアキメイル・スピード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
+      "name": "コアキメイル・マキシマム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
+      "name": "コアキメイル・ルークロード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
       "name": "コアキメイル・ロック",
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U135"
     },
     {
+      "name": "コアキメイル・ヴァラファール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U321"
+    },
+    {
       "name": "コア転送ユニット",
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U207"
+    },
+    {
+      "name": "コイツ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "コダロス",
@@ -1159,10 +1435,40 @@
       "unit": "S03-U224"
     },
     {
+      "name": "サイバー・ダーク・エッジ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U323"
+    },
+    {
+      "name": "サイバー・ダーク・キール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U323"
+    },
+    {
+      "name": "サイバー・ダーク・ホーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U323"
+    },
+    {
+      "name": "サイバー・バリア・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U339"
+    },
+    {
       "name": "サイバー・ラーバァ",
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U185"
+    },
+    {
+      "name": "サイバー・レーザー・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U339"
     },
     {
       "name": "サイレント・ソードマン LV3",
@@ -1321,10 +1627,34 @@
       "unit": "S03-U200"
     },
     {
+      "name": "ジェムナイト・アイオーラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U307"
+    },
+    {
+      "name": "ジェムナイト・アクアマリナ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U338"
+    },
+    {
+      "name": "ジェムナイト・アメジス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U338"
+    },
+    {
       "name": "ジェムナイト・アレキサンド",
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U204"
+    },
+    {
+      "name": "ジェムナイト・アンバー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U307"
     },
     {
       "name": "ジェムナイト・エメラル",
@@ -1333,10 +1663,22 @@
       "unit": "S03-U241"
     },
     {
+      "name": "ジェムナイト・パーズ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U338"
+    },
+    {
       "name": "ジェムナイト・フュージョン",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U133"
+    },
+    {
+      "name": "ジェムナイト・プリズムオーラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U338"
     },
     {
       "name": "ジェムナイト・マディラ",
@@ -1345,10 +1687,22 @@
       "unit": "S03-U144"
     },
     {
+      "name": "ジェムナイト・ルビーズ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U338"
+    },
+    {
       "name": "ジェムレシス",
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U200"
+    },
+    {
+      "name": "ジオ・ジェネクス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
     },
     {
       "name": "ジャンクBOX",
@@ -1423,10 +1777,34 @@
       "unit": "S03-U05"
     },
     {
+      "name": "スクラップ・オルトロス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U332"
+    },
+    {
+      "name": "スクラップ・カウンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U332"
+    },
+    {
       "name": "スクラップ・コング",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U208"
+    },
+    {
+      "name": "スクラップ・ゴブリン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U332"
+    },
+    {
+      "name": "スクラップ・ゴーレム",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U332"
     },
     {
       "name": "スクラップ・サーチャー",
@@ -1439,6 +1817,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U194"
+    },
+    {
+      "name": "スクラップ・ソルジャー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U332"
     },
     {
       "name": "スクラップ・ハンター",
@@ -1477,6 +1861,12 @@
       "unit": "S03-U129"
     },
     {
+      "name": "ストライク・ショット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U340"
+    },
+    {
       "name": "スネーク・ホイッスル",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -1513,6 +1903,36 @@
       "unit": "S03-U156"
     },
     {
+      "name": "ゼンマイウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
+    },
+    {
+      "name": "ゼンマイナイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
+    },
+    {
+      "name": "ゼンマイハンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
+    },
+    {
+      "name": "ゼンマイバット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
+    },
+    {
+      "name": "ゼンマイマジシャン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U331"
+    },
+    {
       "name": "ソニックジャマー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1531,6 +1951,12 @@
       "unit": "S03-U192"
     },
     {
+      "name": "ゾンビタイガー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
+    },
+    {
       "name": "ゾンビ・マスター",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -1541,6 +1967,30 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U247"
+    },
+    {
+      "name": "ダイガスタ・イグルス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
+    },
+    {
+      "name": "ダイガスタ・ガルドス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
+    },
+    {
+      "name": "ダイガスタ・スフィアード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
+    },
+    {
+      "name": "ダイガスタ・ファルコス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U318"
     },
     {
       "name": "ダスト・シュート",
@@ -1595,6 +2045,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U130"
+    },
+    {
+      "name": "チェンジ・デステニー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U340"
     },
     {
       "name": "チューニング・サポーター",
@@ -1661,6 +2117,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U270"
+    },
+    {
+      "name": "デス・デンドル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
     },
     {
       "name": "デブリ・ドラゴン",
@@ -1741,10 +2203,64 @@
       "unit": "S03-U202"
     },
     {
+      "name": "トゥーン・キャノン・ソルジャー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U309"
+    },
+    {
+      "name": "トゥーン・ゴブリン突撃部隊",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U309"
+    },
+    {
+      "name": "トゥーン・ヂェミナイ・エルフ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U309"
+    },
+    {
+      "name": "トゥーン・デーモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
+    },
+    {
+      "name": "トゥーン・ドラゴン・エッガー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
+    },
+    {
+      "name": "トゥーン・ブラック・マジシャン・ガール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
+    },
+    {
+      "name": "トゥーン・マーメイド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
+    },
+    {
+      "name": "トゥーン・仮面魔道士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U309"
+    },
+    {
       "name": "トライクラー",
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U156"
+    },
+    {
+      "name": "トライゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "トライワイトゾーン",
@@ -1787,6 +2303,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U186"
+    },
+    {
+      "name": "ドイツ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "ドッペル・ウォリアー",
@@ -1891,6 +2413,12 @@
       "unit": "S03-U258"
     },
     {
+      "name": "ナチュル・スタッグ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
       "name": "ナチュル・スパイダーファング",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1921,10 +2449,40 @@
       "unit": "S03-U86"
     },
     {
+      "name": "ナチュル・フライトフライ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
+      "name": "ナチュル・ホワイトオーク",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
       "name": "ナチュル・マロン",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U208"
+    },
+    {
+      "name": "ナチュル・モスキート",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
+      "name": "ナチュル・レディバグ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
+    },
+    {
+      "name": "ナチュル・ローズウィップ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U320"
     },
     {
       "name": "ナーガ",
@@ -2017,6 +2575,12 @@
       "unit": "S03-U224"
     },
     {
+      "name": "バスター・ショットマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
+    },
+    {
       "name": "バスター・ビースト",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -2027,6 +2591,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U293"
+    },
+    {
+      "name": "バトル・テレポーテーション",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U308"
     },
     {
       "name": "バフォメット",
@@ -2227,16 +2797,34 @@
       "unit": "S03-U218"
     },
     {
+      "name": "ブラック・バック",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U339"
+    },
+    {
       "name": "ブラック・ホール",
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U83"
     },
     {
+      "name": "ブラック・マジシャンズ・ナイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U339"
+    },
+    {
       "name": "ブリザード・プリンセス",
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U260"
+    },
+    {
+      "name": "ブルーアイズ・トゥーン・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U310"
     },
     {
       "name": "ブルーメンブラット",
@@ -2341,6 +2929,12 @@
       "unit": "S03-U250"
     },
     {
+      "name": "マシンナーズ・カノン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U337"
+    },
+    {
       "name": "マシンナーズ・ギアフレーム",
       "before": "TESTED",
       "after": "PARTIAL",
@@ -2393,6 +2987,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U276"
+    },
+    {
+      "name": "マジック・ホール・ゴーレム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U308"
     },
     {
       "name": "マーダーサーカス",
@@ -2551,6 +3151,12 @@
       "unit": "S03-U292"
     },
     {
+      "name": "ライト・バニッシュ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U340"
+    },
+    {
       "name": "ライバル登場!",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -2575,6 +3181,18 @@
       "unit": "S03-U03"
     },
     {
+      "name": "ラヴァルバル・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
+      "name": "ラヴァルロード・ジャッジメント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
       "name": "ラヴァル・ウォリアー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2587,10 +3205,34 @@
       "unit": "S03-U235"
     },
     {
+      "name": "ラヴァル・グレイター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
+      "name": "ラヴァル・ステライド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
+      "name": "ラヴァル・ツインスレイヤー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
+    },
+    {
       "name": "ラヴァル炎樹海の妖女",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U222"
+    },
+    {
+      "name": "ラヴァル炎湖畔の淑女",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U325"
     },
     {
       "name": "ラヴァル炎火山の侍女",
@@ -2641,10 +3283,22 @@
       "unit": "S03-U56"
     },
     {
+      "name": "レアゴールド・アーマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
+    },
+    {
       "name": "レアル・ジェネクス・クラッシャー",
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U200"
+    },
+    {
+      "name": "レアル・ジェネクス・クロキシアン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
     },
     {
       "name": "レアル・ジェネクス・ターボ",
@@ -2657,6 +3311,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U200"
+    },
+    {
+      "name": "レアル・ジェネクス・ヴィンディカイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U333"
     },
     {
       "name": "レインボー・ライフ",
@@ -2687,6 +3347,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U239"
+    },
+    {
+      "name": "ロケット・パイルダー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U315"
     },
     {
       "name": "ロスト",
@@ -2725,6 +3391,12 @@
       "unit": "S03-U266"
     },
     {
+      "name": "ワンダー・クローバー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U340"
+    },
+    {
       "name": "ワン・フォー・ワン",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -2755,10 +3427,28 @@
       "unit": "S03-U74"
     },
     {
+      "name": "ワーム・ソリッド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U326"
+    },
+    {
       "name": "ワーム・テンタクルス",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U212"
+    },
+    {
+      "name": "ワーム・プリンス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U326"
+    },
+    {
+      "name": "ワーム・ミリディス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U326"
     },
     {
       "name": "ワーム・ヤガン",
@@ -2767,10 +3457,64 @@
       "unit": "S03-U136"
     },
     {
+      "name": "ヴァイロン・コンポーネント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
+    },
+    {
+      "name": "ヴァイロン・ステラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U330"
+    },
+    {
+      "name": "ヴァイロン・テセラクト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
+    },
+    {
+      "name": "ヴァイロン・ハプト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U330"
+    },
+    {
+      "name": "ヴァイロン・フィラメント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
+    },
+    {
+      "name": "ヴァイロン・プリズム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U330"
+    },
+    {
+      "name": "ヴァイロン・ペンタクロ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
+    },
+    {
+      "name": "ヴァイロン・マター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U339"
+    },
+    {
       "name": "ヴァリュアブル・アーマー",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U149"
+    },
+    {
+      "name": "ヴィクティム・カウンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U340"
     },
     {
       "name": "ヴィークラー",
@@ -2801,6 +3545,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U230"
+    },
+    {
+      "name": "ヴォルカニック・ハンマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U329"
     },
     {
       "name": "ヴォルカニック・バレット",
@@ -2857,6 +3607,12 @@
       "unit": "S03-U67"
     },
     {
+      "name": "中央突破",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U308"
+    },
+    {
       "name": "二重召喚",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -2879,6 +3635,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U202"
+    },
+    {
+      "name": "伝説の黒帯",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U315"
     },
     {
       "name": "侵略の手段",
@@ -2989,10 +3751,40 @@
       "unit": "S03-U141"
     },
     {
+      "name": "六武衆の御霊代",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
+    },
+    {
       "name": "六武衆の結束",
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U14"
+    },
+    {
+      "name": "六武衆－イロウ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U317"
+    },
+    {
+      "name": "六武衆－カモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U317"
+    },
+    {
+      "name": "六武衆－ニサシ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U317"
+    },
+    {
+      "name": "六武衆－ヤリザ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U317"
     },
     {
       "name": "六武院",
@@ -3025,6 +3817,12 @@
       "unit": "S03-U292"
     },
     {
+      "name": "再融合",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
+    },
+    {
       "name": "冥府の使者ゴーズ",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -3047,6 +3845,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U227"
+    },
+    {
+      "name": "剣の煌き",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U315"
     },
     {
       "name": "剣闘獣の底力",
@@ -3229,10 +4033,22 @@
       "unit": "S03-U281"
     },
     {
+      "name": "古代の採掘機",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U337"
+    },
+    {
       "name": "古代の機械兵士",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U144"
+    },
+    {
+      "name": "古代の機械合成獣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U337"
     },
     {
       "name": "古代の機械工兵",
@@ -3251,6 +4067,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U144"
+    },
+    {
+      "name": "古代の機械戦車",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
     },
     {
       "name": "古代の機械掌",
@@ -3451,6 +4273,18 @@
       "unit": "S03-U05"
     },
     {
+      "name": "墓守の大神官",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U337"
+    },
+    {
+      "name": "墓守の大筒持ち",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U337"
+    },
+    {
       "name": "墓守の巫女",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -3467,6 +4301,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U196"
+    },
+    {
+      "name": "墓守の監視者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U327"
     },
     {
       "name": "墓穴の道連れ",
@@ -3539,6 +4379,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U196"
+    },
+    {
+      "name": "契約の履行",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
     },
     {
       "name": "女王の選択",
@@ -3679,6 +4525,36 @@
       "unit": "S03-U122"
     },
     {
+      "name": "巨大戦艦 カバード・コア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
+    },
+    {
+      "name": "巨大戦艦 クリスタル・コア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
+    },
+    {
+      "name": "巨大戦艦 テトラン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
+    },
+    {
+      "name": "巨大戦艦 ビッグ・コア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
+    },
+    {
+      "name": "巨大戦艦 ビッグ・コアMk－II",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U328"
+    },
+    {
       "name": "干ばつの結界像",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3809,6 +4685,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U188"
+    },
+    {
+      "name": "戦線復活の代償",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
     },
     {
       "name": "手札抹殺",
@@ -4147,10 +5029,22 @@
       "unit": "S03-U148"
     },
     {
+      "name": "氷岩魔獣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
+    },
+    {
       "name": "氷帝メビウス",
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U189"
+    },
+    {
+      "name": "氷結界のロイヤル・ナイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U339"
     },
     {
       "name": "氷結界の交霊師",
@@ -4163,6 +5057,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U225"
+    },
+    {
+      "name": "氷結界の封魔団",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U327"
     },
     {
       "name": "氷結界の武士",
@@ -4199,6 +5099,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U225"
+    },
+    {
+      "name": "氷結界の風水師",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U327"
     },
     {
       "name": "氷結界の龍 トリシューラ",
@@ -4267,10 +5173,22 @@
       "unit": "S03-U178"
     },
     {
+      "name": "漆黒の名馬",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
+    },
+    {
       "name": "漆黒の戦士 ワーウルフ",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U220"
+    },
+    {
+      "name": "漆黒の闘龍",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "漆黒の魔王 LV6",
@@ -4295,6 +5213,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U244"
+    },
+    {
+      "name": "灼岩魔獣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U314"
     },
     {
       "name": "灼熱工の巨匠カエン",
@@ -4525,6 +5449,12 @@
       "unit": "S03-U280"
     },
     {
+      "name": "磁力の指輪",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
+    },
+    {
       "name": "神の宣告",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -4651,6 +5581,24 @@
       "unit": "S03-U156"
     },
     {
+      "name": "紫炎の参謀",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U329"
+    },
+    {
+      "name": "紫炎の寄子",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U329"
+    },
+    {
+      "name": "紫炎の老中 エニシ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U329"
+    },
+    {
       "name": "紫炎の道場",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4681,6 +5629,12 @@
       "unit": "S03-U285"
     },
     {
+      "name": "継承の印",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
+    },
+    {
       "name": "緊急鋼核処分",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -4709,6 +5663,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U264"
+    },
+    {
+      "name": "自律行動ユニット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U311"
     },
     {
       "name": "苦痛の回廊",
@@ -5113,6 +6073,24 @@
       "unit": "S03-U192"
     },
     {
+      "name": "音響戦士ドラムス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U324"
+    },
+    {
+      "name": "音響戦士ピアーノ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U324"
+    },
+    {
+      "name": "音響戦士ベーシス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U324"
+    },
+    {
       "name": "風林火山",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -5125,10 +6103,22 @@
       "unit": "S03-U245"
     },
     {
+      "name": "風魔手裏剣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U312"
+    },
+    {
       "name": "馬頭鬼",
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U186"
+    },
+    {
+      "name": "騎竜",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U313"
     },
     {
       "name": "魂の氷結",

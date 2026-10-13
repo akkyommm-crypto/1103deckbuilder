@@ -45,7 +45,9 @@ const DRAG={name:'Dragunity/レダメ provisional (R1)',strict1103:true,sourceCu
   ['レッド・デーモンズ・ドラゴン',1],['ギガンテック・ファイター',1],['スクラップ・ドラゴン',1],['アームズ・エイド',1],['エヴォルカイザー・ラギア',1],['ヴァイロン・ディシグマ',1],
   ['E・HERO The シャイニング',1],['ジェムナイト・パール',1]].map(([n,q])=>({n,q}))};
 const c=harness('const SEED='+SEED+',FIRST='+FIRST+',MAXT='+MAXT+',RESPOND='+RESPOND+',NODIGEST='+NODIGEST+',SAVESIZE='+SAVESIZE+',POLICY='+JSON.stringify(POLICY)+',PSEED='+PSEED+',RESP_P='+RESP_P+',PASS_Q='+PASS_Q+',SAVELOAD='+SAVELOAD+',SLEVERY='+SLEVERY+',DRAG='+JSON.stringify(DRAG)+',V1='+JSON.stringify(V1)+';'+String.raw`
-const TOASTS=[];showToast=m=>TOASTS.push(String(m));
+const TOASTS=[];
+/* S03-U305: under HARNESS_UI=1 (tools/astra_harness.js) the real showToast stays and is only wrapped to record the message */
+if(typeof HARNESS_UI!=='undefined'&&HARNESS_UI){const __realToast=showToast;showToast=m=>{TOASTS.push(String(m));return __realToast(m);};}else showToast=m=>TOASTS.push(String(m));
 const OPS=[], UNSUPPORTED=[], ERRORS=[], RESPONDED=new Set(), REPLAYED=new Set();
 let BLOCKER=null;
 /* S03-U297: the random policy's own PRNG (mulberry32); never the game's replay RNG */
@@ -430,7 +432,7 @@ if(SAVESIZE){
 globalThis.__SAVESIZE=SAVESIZE_RESULT;
 globalThis.__R1={list:V1?(V1.version+':'+V1.ids.join('-')):'provisional',v1load:V1LOAD,seed:SEED,first:FIRST,respond:RESPOND,policy:POLICY?{name:POLICY,seed:PSEED,respondP:RESP_P,passQ:PASS_Q,draws:PDRAWS}:null,deckErrors,opening:OPENING,completed:gameState.loser!=null,loser:gameState.loser,reason:gameState.duelEndedReason,turn:gameState.turn,
   lp:[gameState.players[0].lp,gameState.players[1].lp],deck:[gameState.players[0].deck.length,gameState.players[1].deck.length],blocker:BLOCKER,errors:ERRORS.slice(0,5),saveload:SAVELOAD?{every:SLEVERY,stops:SL.stops,done:SL.done,undo:SL.undo,perKind:SL.perKind,cancel:SL.cancel||0,skipped:SL.skipped||0,pointDropped:SL.pointDropped,evtDropped:SL.evtDropped,maxBytes:SL.bytes}:undefined,
-  unsupported:UNSUPPORTED,journal:pkg.actions.length,truncated:pkg.truncated,replay:{ok:audit.ok,reason:audit.reason||null,count:audit.count},digestDiff:DIGEST_DIFF,opsCount:OPS.length,saveSize:SAVESIZE_RESULT,futureFusion:futureFusionDiag,toastsTail:TOASTS.slice(-8)};
+  unsupported:UNSUPPORTED,journal:pkg.actions.length,truncated:pkg.truncated,replay:{ok:audit.ok,reason:audit.reason||null,count:audit.count},digestDiff:DIGEST_DIFF,opsCount:OPS.length,saveSize:SAVESIZE_RESULT,futureFusion:futureFusionDiag,ui:(typeof HARNESS_UI!=='undefined'&&HARNESS_UI)?{calls:HARNESS_UI_CALLS,errors:HARNESS_UI_ERRORS.slice(0,5),errorCount:HARNESS_UI_ERRORS.length}:undefined,toastsTail:TOASTS.slice(-8)};
 globalThis.__OPS=OPS;
 if(typeof process==='undefined'||true)globalThis.__JRN=(pkg.actions||[]).map(e=>e.seq+' '+e.action.type+(e.action.mode?':'+e.action.mode:'')+(e.action.reason?' ('+String(e.action.reason).slice(0,30)+')':''));
 ok('R1 driver ran',true);

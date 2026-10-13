@@ -21,6 +21,22 @@ function currentBattlersS03(){
   if(a) return {atk:a.attackerUid, def:a.targetUid};
   return null;
 }
+/* the face-up, not negated Equip Spell on this monster whose script declared an attack lock (declareAttackLockS03) */
+function equipAttackLockS03(monster){
+  if(!monster || !Array.isArray(monster.equippedBy) || !monster.equippedBy.length) return null;
+  for(let pi=0; pi<(gameState.players||[]).length; pi++){
+    const PP = gameState.players[pi];
+    for(let i=0; i<(PP.sz||[]).length; i++){
+      const eq = PP.sz[i];
+      if(!eq || eq.face!=='up' || eq.equipUid==null || monster.equippedBy.indexOf(eq.equipUid)<0) continue;
+      const name = cardName(eq), spec = ATTACK_LOCK_S03[name];
+      if(!spec) continue;
+      if(typeof effectNegated==='function' && effectNegated(eq)) continue;
+      return {name, spec};
+    }
+  }
+  return null;
+}
 function attackLockReasonS03(p, card, zone, db, opts){
   const bt = currentBattlersS03();
   if(!bt || !db) return '';
@@ -29,7 +45,9 @@ function attackLockReasonS03(p, card, zone, db, opts){
     if(x.uid==null) continue;
     const h = findCardByUid(x.uid);
     if(!h || h.zone!=='mz' || !h.card || h.card.face!=='up') continue;
-    const n = dbOf(h.card).n, spec = ATTACK_LOCK_S03[n];
+    let n = dbOf(h.card).n, spec = ATTACK_LOCK_S03[n];
+    /* S03-U312: 「装備モンスターが攻撃する場合、相手はダメージステップ終了時まで魔法・罠カードを発動できない」 (ヴァイロン・フィラメント) — an Equip Spell that declares the lock */
+    if(!spec){ const eq = equipAttackLockS03(h.card); if(eq){ n = eq.name; spec = eq.spec; } }
     if(!spec) continue;
     if(x.role==='def' && !spec.whenBattling) continue;
     if(h.p===p) continue;

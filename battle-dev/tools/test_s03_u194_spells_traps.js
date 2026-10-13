@@ -83,12 +83,13 @@ duelActivateFromHand(0);drive();
 ok('E2: 3 E・HERO but only 1 Spell / Trap — it is destroyed (not a fizzle)',z(os)==='grave');
 audit('E2');
 
+/* S03-U332: the destroyed fixture is スクラップ・ハンター — スクラップ・ゴブリン now has its own optional recovery trigger after a スクラップ card destroyed it (a driver that always activates would recover the milled ビースト) */
 /* ===== F: スクラップ・スコール — a 「スクラップ」 from the Deck to the GY, draw 1, then the chosen 「スクラップ」 destroyed ===== */
 fresh();
-let ss=mk('スクラップ・スコール',0),sg=mk('スクラップ・ゴブリン',0,'up'),sd=mk('スクラップ・ビースト',0);gameState.players[0].hand=[ss];gameState.players[0].mz=[sg];gameState.players[0].deck.unshift(sd);baselineA();
+let ss=mk('スクラップ・スコール',0),sg=mk('スクラップ・ハンター',0,'up'),sd=mk('スクラップ・ビースト',0);gameState.players[0].hand=[ss];gameState.players[0].mz=[sg];gameState.players[0].deck.unshift(sd);baselineA();
 const hF=gameState.players[0].hand.length;SEEN=[];
 duelActivateFromHand(0);drive();
-ok('F: スクラップ・ビースト milled, 1 drawn, スクラップ・ゴブリン destroyed; the choice was not cancelable',z(sd)==='grave'&&z(sg)==='grave'&&gameState.players[0].hand.length===hF-1+1&&SEEN.some(s=>/スクラップ・スコール/.test(s.title)&&!s.cancelable));
+ok('F: スクラップ・ビースト milled, 1 drawn, スクラップ・ハンター destroyed; the choice was not cancelable',z(sd)==='grave'&&z(sg)==='grave'&&gameState.players[0].hand.length===hF-1+1&&SEEN.some(s=>/スクラップ・スコール/.test(s.title)&&!s.cancelable));
 audit('F');
 
 /* ===== G: デルタ・クロウ－アンチ・リバース — with a 「BF」: every set Spell / Trap of the opponent destroyed (not the face-up one) ===== */

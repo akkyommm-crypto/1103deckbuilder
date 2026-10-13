@@ -1404,7 +1404,11 @@ defineScript("オネスト", {
     API.modAtk(me, add, 0, 'endTurn', 'オネスト');
     API.log(`オネスト：${labelOf(me.card)} の攻撃力が ${add} アップ`);
   },
-  afterResolve(ctx){ API.discard(ctx.player, ctx.index, "オネスト"); }
+  /* S03-U306: 「このカードを手札から墓地へ送って発動できる」 — the Graveyard send is the cost, paid at activation (like 速攻のかかし, S03-U152).
+     It used to be discarded after resolution, so the card stayed in the hand while on the chain and could be put on the chain again and again
+     (a responder loop found by the major-deck sweep: worm vs agent, seed 0x53040018, the chain grew without end). */
+  cost(ctx, done){ a6HandCost(ctx, done, 'オネスト'); },
+  afterResolve(){}
 });
 
 /* ---- N・グラン・モール（戦闘時にお互い手札へ戻る） ---- */

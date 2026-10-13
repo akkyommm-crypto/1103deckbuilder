@@ -301,6 +301,9 @@ function processDrawV27(pl){
   act({type:'DRAW',player:p,n});
   enqueueProcessorListFrontV27([
     {type:PROCESSOR_V27.EVENT,payload:{eventName:'onDraw',evt:{player:p,n}}},
+    /* S03-U321: the per-card onDrawCard events queued by the DRAW action (System v8) were never drained after a normal draw — a card that reacts to
+       the card drawn in the Draw Phase (コアキメイル・スピード, 凡骨の意地 …) only saw the event at some later drain. Drain them now. */
+    {type:PROCESSOR_V27.DRAIN_EVENTS,payload:{}},
     {type:PROCESSOR_V27.ADJUST,payload:{reason:'draw'}}
   ]);
   return PROC_V27_DONE;

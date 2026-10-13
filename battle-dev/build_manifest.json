@@ -1330,6 +1330,108 @@
   "path": "cards/HZZZZZS_claude_s03_u302_falcon.js"
  },
  {
+  "path": "cards/HZZZZZT_claude_s03_u307_gem_duals.js"
+ },
+ {
+  "path": "cards/HZZZZZU_claude_s03_u308_direct_grant.js"
+ },
+ {
+  "path": "cards/HZZZZZV_claude_s03_u309_toon.js"
+ },
+ {
+  "path": "cards/HZZZZZW_claude_s03_u310_toon2.js"
+ },
+ {
+  "path": "cards/HZZZZZX_claude_s03_u311_revive_equips.js"
+ },
+ {
+  "path": "cards/HZZZZZY_claude_s03_u312_limited_equips.js"
+ },
+ {
+  "path": "cards/HZZZZZZ_claude_s03_u313_union.js"
+ },
+ {
+  "path": "cards/HZZZZZZB_claude_s03_u314_union2.js"
+ },
+ {
+  "path": "cards/HZZZZZZC_claude_s03_u315_equips3.js"
+ },
+ {
+  "path": "cards/HZZZZZZD_claude_s03_u316_alien.js"
+ },
+ {
+  "path": "cards/HZZZZZZE_claude_s03_u317_six2.js"
+ },
+ {
+  "path": "cards/HZZZZZZF_claude_s03_u318_gusto.js"
+ },
+ {
+  "path": "cards/HZZZZZZG_claude_s03_u319_bf.js"
+ },
+ {
+  "path": "cards/HZZZZZZH_claude_s03_u320_naturia.js"
+ },
+ {
+  "path": "cards/HZZZZZZI_claude_s03_u321_koaki.js"
+ },
+ {
+  "path": "cards/HZZZZZZJ_claude_s03_u322_arcana.js"
+ },
+ {
+  "path": "cards/HZZZZZZK_claude_s03_u323_cyberdark.js"
+ },
+ {
+  "path": "cards/HZZZZZZL_claude_s03_u324_symphonic.js"
+ },
+ {
+  "path": "cards/HZZZZZZM_claude_s03_u325_laval.js"
+ },
+ {
+  "path": "cards/HZZZZZZN_claude_s03_u326_worm.js"
+ },
+ {
+  "path": "cards/HZZZZZZO_claude_s03_u327_icebarrier.js"
+ },
+ {
+  "path": "cards/HZZZZZZP_claude_s03_u328_battleship.js"
+ },
+ {
+  "path": "cards/HZZZZZZQ_claude_s03_u329_shien.js"
+ },
+ {
+  "path": "cards/HZZZZZZR_claude_s03_u330_vylon.js"
+ },
+ {
+  "path": "cards/HZZZZZZS_claude_s03_u331_zenmai.js"
+ },
+ {
+  "path": "cards/HZZZZZZT_claude_s03_u332_scrap.js"
+ },
+ {
+  "path": "cards/HZZZZZZU_claude_s03_u333_genex.js"
+ },
+ {
+  "path": "cards/HZZZZZZV_claude_s03_u334_ehero_fusion.js"
+ },
+ {
+  "path": "cards/HZZZZZZW_claude_s03_u335_dhero.js"
+ },
+ {
+  "path": "cards/HZZZZZZX_claude_s03_u336_elec.js"
+ },
+ {
+  "path": "cards/HZZZZZZY_claude_s03_u337_graveworld.js"
+ },
+ {
+  "path": "cards/HZZZZZZZ_claude_s03_u338_gemknight.js"
+ },
+ {
+  "path": "cards/HZZZZZZZA_claude_s03_u339_enablers.js"
+ },
+ {
+  "path": "cards/HZZZZZZZB_claude_s03_u340_traps.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

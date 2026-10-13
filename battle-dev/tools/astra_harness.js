@@ -5,8 +5,18 @@ module.exports=function(body){
  let js=html.slice(html.indexOf('<script>')+8,html.lastIndexOf('</script>')).replace(/\bboot\(\);\s*\/\* System v3\.1:/,'/* boot skipped */\n/* System v3.1:');
  js+=String.raw`
  CARD_DB=globalThis.__DB__;NAME_INDEX=null;MAT_SPEC_CACHE.clear();buildMaterialNameSet();
- render=()=>{};showToast=()=>{};saveDuelSoon=()=>{};clearSavedDuel=()=>{};closeSheet=()=>{};
- openChainPriorityV2=()=>{};openPick=()=>{};
+ saveDuelSoon=()=>{};clearSavedDuel=()=>{};
+ /* S03-U305 (redo of the unpublished U304): HARNESS_UI=1 keeps the real UI functions (render, showToast, closeSheet, openChainPriorityV2, openPick)
+    running against the stub DOM instead of no-ops, so a sweep also exercises the UI code. Each call is counted and an exception is recorded
+    in HARNESS_UI_ERRORS (and swallowed, as a click handler failing would not stop the engine). The default (no HARNESS_UI) is unchanged. */
+ if(${process.env.HARNESS_UI==='1'?'true':'false'}){
+  HARNESS_UI=true;HARNESS_UI_ERRORS=[];HARNESS_UI_CALLS={};
+  for(const n of ['render','showToast','closeSheet','openChainPriorityV2','openPick']){const f=globalThis[n];HARNESS_UI_CALLS[n]=0;
+   globalThis[n]=function(...a){HARNESS_UI_CALLS[n]++;try{return f.apply(this,a);}catch(e){HARNESS_UI_ERRORS.push({fn:n,turn:(typeof gameState!=='undefined'&&gameState)?gameState.turn:null,msg:String(e&&e.stack||e).slice(0,600)});}};}
+ }else{
+  render=()=>{};showToast=()=>{};closeSheet=()=>{};
+  openChainPriorityV2=()=>{};openPick=()=>{};
+ }
  const R=[];globalThis.__R=R;const ok=(n,v,d='')=>R.push({name:n,ok:!!v,detail:d});
  function mk(n,p=0,face='up',pos='atk'){const id=findCardIndex(n);if(id<0)throw Error('missing '+n);const c={id,owner:p,controller:p,face,pos};ensureCardUid(gameState,c);return c;}
  function resetA(){gameState=newGame();gameState.activePlayer=0;gameState.firstPlayer=0;gameState.phase='main1';gameState.turn=5;PLAY_MODE=PLAY_MODES.DUEL;HISTORY.length=0;REDO.length=0;turnActions=[];V44_REPLAY_SESSION=null;resetChoiceStatsV49();v41ResetActionJournal(gameState);gameState.fieldSnapV9=fieldSnapshotV9(gameState);}
