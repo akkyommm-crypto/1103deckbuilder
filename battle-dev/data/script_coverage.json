@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 466,
+    "ENGINE_GAP": 465,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 693,
     "PARTIAL": 30,
-    "TESTED": 3160
+    "TESTED": 3161
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -110,11 +110,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1494,
+    "legacy": 1495,
     "sin": 5,
     "unified": 1163
   },
-  "static_registration_name_count": 3171,
+  "static_registration_name_count": 3172,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -534,6 +534,7 @@
         "tools\\test_v850_batch36.js",
         "tools\\test_v860_batch37.js",
         "tools\\test_v880_batch39.js",
+        "tools\\test_v900_batch41.js",
         "tools\\test_v910_batch42.js"
       ]
     },
@@ -97705,12 +97706,19 @@
       "subtype": "",
       "date": "2003-04-24",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "summon event / hidden information / atomic deck operation: must banish the summoned low-ATK monster and every same-name copy from opponent hand and deck atomically.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\I4_codex_c07_chain_disappearance.js",
+          "line": 15
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c07_chain_disappearance.js",
         "tools\\test_v900_batch41.js"
       ]
     },

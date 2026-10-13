@@ -11223,6 +11223,16 @@
         "tools/test_codex_c06_deck_priority.js"
       ],
       "evidence": "Official card database/Q&A and historical text: while its effect is live, neither player can Special Summon LIGHT/DARK monsters, including face-down summons; its controller must send Iron Core, reveal a Dragon, or destroy it at each own End Phase. Real DUEL tests prove the bilateral printed-attribute lock, non-LIGHT/DARK allowance, negated-source negative, upkeep payment/destruction, and Replay audit."
+    },
+    {
+      "name": "連鎖除外",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C07",
+      "tests": [
+        "tools/test_codex_c07_chain_disappearance.js"
+      ],
+      "evidence": "Official Konami card database/Q&A: the Trap is non-targeting; it can answer a face-up Normal, Flip, or Special Summon of a monster with current ATK 1000 or less; simultaneous summons process every qualifying monster; resolution rechecks face-up status and ATK; only after a summoned monster is actually banished are every printed-name copy in the activator's opponent hand/Deck banished. Real DUEL tests prove both own/opponent summon response paths, hidden-pile removal, simultaneous processing, resolution-time negatives, and Replay audit."
     }
   ],
   "restored_to_baseline": [

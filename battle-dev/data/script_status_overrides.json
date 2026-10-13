@@ -1589,10 +1589,6 @@
       "status": "ENGINE_GAP",
       "reason": "hidden information / activation-time mode and selection: opponent hand inspection and card choice cannot be represented by the current public-information Choice flow."
     },
-    "連鎖除外": {
-      "status": "ENGINE_GAP",
-      "reason": "summon event / hidden information / atomic deck operation: must banish the summoned low-ATK monster and every same-name copy from opponent hand and deck atomically."
-    },
     "銀幕の鏡壁": {
       "status": "ENGINE_GAP",
       "reason": "ContinuousRule / standby maintenance choice: opponent attacking-monster ATK halving and pay-2000-or-destroy processing need a reusable continuous rule and maintenance-cost window."

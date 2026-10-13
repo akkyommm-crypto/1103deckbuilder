@@ -3,8 +3,10 @@ const ROOT=path.resolve(__dirname,'..');
 const ov=JSON.parse(fs.readFileSync(path.join(ROOT,'data','script_status_overrides.json'),'utf8')).cards;
 /* LeaveField primitive(System v9) で解消。当時 ENGINE_GAP だった記録として残す。 */
 const leaveUnlocked=["蘇りし魂","闇次元の解放"];/* StatModifier primitive(System v14) で解消。当時 ENGINE_GAP だった記録として残す。 */const statUnlocked=['カラテマン','グレート・スピリット','シンクロ・ギフト'];/* Position primitive(System v10) で解消。当時 ENGINE_GAP だった記録として残す。 */const positionUnlocked=['ガジェット・ドライバー'];
-const reviewed=["虹の引力","虹の行方","裁きの光","連鎖除外","銀幕の鏡壁","鎖付き爆弾","D・クロックン","E－HERO ヘル・ブラット","おとり人形","おジャマ・カントリー","アポカテクイル","イグザリオン・ユニバース","インセクト・プリンセス","インフェルニティ・ネクロマンサー","エキセントリック・ボーイ","エレメント・ザウルス","エレメント・ドラゴン","エンペラー・ストゥム","カラクリ粉","ガーディアン・トライス","グリード・クエーサー","コアキメイル・フルバリア","ゴースト王－パンプキング－","ゴーレム","システム・ダウン","ジェルエンデュオ","ジャンク・ディフェンダー"];
+const reviewed=["虹の引力","虹の行方","裁きの光","銀幕の鏡壁","鎖付き爆弾","D・クロックン","E－HERO ヘル・ブラット","おとり人形","おジャマ・カントリー","アポカテクイル","イグザリオン・ユニバース","インセクト・プリンセス","インフェルニティ・ネクロマンサー","エキセントリック・ボーイ","エレメント・ザウルス","エレメント・ドラゴン","エンペラー・ストゥム","カラクリ粉","ガーディアン・トライス","グリード・クエーサー","コアキメイル・フルバリア","ゴースト王－パンプキング－","ゴーレム","システム・ダウン","ジェルエンデュオ","ジャンク・ディフェンダー"];
 const classAUnlocked=['D・ビデオン'];let fail=0;
+/* CODEX-C07: summon-batch events + canonical identity + deterministic hidden-pile actions made the old gap stale. */
+for(const name of ['連鎖除外']){const okC07=!ov[name];console.log((okC07?'PASS ':'FAIL ')+'CODEX-C07 unlocked '+name);if(!okC07)fail++;}
 /* P26 Control primitive で解禁し、実装・テスト済み。当時 ENGINE_GAP だった記録として残す。 */
 const p26Unlocked=['ガスタの疾風 リーズ'];
 for(const name of p26Unlocked){const okP26=!ov[name];console.log((okP26?'PASS ':'FAIL ')+'P26 unlocked '+name);if(!okP26)fail++;}

@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 466,
+    "ENGINE_GAP": 465,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 693,
     "PARTIAL": 30,
-    "TESTED": 3160
+    "TESTED": 3161
   },
   "delta": {
-    "ENGINE_GAP": -150,
+    "ENGINE_GAP": -151,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -614,
     "PARTIAL": -152,
-    "TESTED": 1111
+    "TESTED": 1112
   },
   "status_changes": [
     {
@@ -6203,6 +6203,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U281"
+    },
+    {
+      "name": "連鎖除外",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C07"
     },
     {
       "name": "進化する翼",

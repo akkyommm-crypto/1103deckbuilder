@@ -1474,6 +1474,9 @@
   "path": "cards/I3_codex_c06_deck_priority.js"
  },
  {
+  "path": "cards/I4_codex_c07_chain_disappearance.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
