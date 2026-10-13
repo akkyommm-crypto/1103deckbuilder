@@ -10433,6 +10433,66 @@
         "tools/test_s03_u338_gemknight.js"
       ],
       "evidence": "Text (carddata): 1ターンに1度、他の自分の表側表示の「ジェム」モンスター1体をリリースし、ATKをターン終了時までそのATK分アップ。守備表示モンスター攻撃時は貫通ダメージ。 Fusion Summoned (ガネット + ジェムナイト); released オブシディア (1500) → ATK 2500 → 4000 until the End Phase (a ワイト not a candidate), once per turn; piercing against a Defense Position ワイト (2500 − 200). Test: tools/test_s03_u338_gemknight.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ブラック・マジシャンズ・ナイト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U339",
+      "tests": [
+        "tools/test_s03_u339_enablers.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず「騎士の称号」の効果でのみ特殊召喚でき、特殊召喚に成功した場合フィールドのカード1枚を対象に破壊する。 Special Summoned for real by 騎士の称号 (ブラック・マジシャン released) and the chosen 青眼 destroyed; cannot be Normal Summoned. Defect fixed on the way: 騎士の称号 summoned with no reason, so the engine's proper-summon check refused its own Knight — its summon now carries reason 騎士の称号. Test: tools/test_s03_u339_enablers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイバー・バリア・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U339",
+      "tests": [
+        "tools/test_s03_u339_enablers.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、攻撃表示の場合1ターンに1度だけ相手モンスター1体の攻撃を無効にする。 The attack of 青眼 on the ワイト is negated (control without it: destroyed); the second attack of the turn is not negated; in Defense Position nothing; cannot be Normal Summoned. Test: tools/test_s03_u339_enablers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイバー・レーザー・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U339",
+      "tests": [
+        "tools/test_s03_u339_enablers.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、攻撃力以上の攻撃力か守備力を持つモンスター1体を破壊できる（1ターンに1度）。 Candidates are the monsters with ATK or DEF ≥ 2400 (青眼 and the DEF-3000 スーパーバグマン; low monsters of both sides are not); destroyed the DEF-3000 one; once per turn; unavailable when none. Test: tools/test_s03_u339_enablers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ブラック・バック",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U339",
+      "tests": [
+        "tools/test_s03_u339_enablers.js"
+      ],
+      "evidence": "Text (carddata): 自分のターンのみ、墓地の攻撃力2000以下の「BF」1体を特殊召喚、このターン通常召喚できない。 ゲイル (1300) summoned, エルフェン (2200) not a candidate; no Normal Summon that turn (getLegalHandActions) but possible on a later turn; not activatable without a candidate or on the opponent's turn. Test: tools/test_s03_u339_enablers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷結界のロイヤル・ナイト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U339",
+      "tests": [
+        "tools/test_s03_u339_enablers.js"
+      ],
+      "evidence": "Text (carddata): アドバンス召喚に成功した時、相手フィールドに「アイスコフュントークン」(水族・水・星1・攻1000/守0)を攻撃表示で特殊召喚、このトークンはアドバンス召喚のためにリリースできない。 Advance Summoned (one Tribute) → the token (Attack, 1000/0) on the opponent's field that cannot be released for an Advance Summon (another monster can); a Special Summon creates none; nothing breaks when the opponent has no free zone. Test: tools/test_s03_u339_enablers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・マター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U339",
+      "tests": [
+        "tools/test_s03_u339_enablers.js"
+      ],
+      "evidence": "Text (carddata): 墓地の装備魔法カード3枚を選択して発動、デッキに加えてシャッフルし、ドロー1枚か相手フィールドのカード1枚の破壊を選択。 Three Equip Spells chosen (a normal Spell not counted), shuffled into the Deck; ●draw (Deck +3 −1) and ●destroy (a chosen opponent card) both tested; not activatable with two Equip Spells. Test: tools/test_s03_u339_enablers.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

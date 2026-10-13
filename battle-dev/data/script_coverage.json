@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 769,
+    "NOT_STARTED": 763,
     "PARTIAL": 30,
-    "TESTED": 3081
+    "TESTED": 3087
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -107,11 +107,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1467,
+    "legacy": 1469,
     "sin": 5,
-    "unified": 1120
+    "unified": 1124
   },
-  "static_registration_name_count": 3092,
+  "static_registration_name_count": 3098,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24371,13 +24371,20 @@
       "subtype": null,
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZA_claude_s03_u339_enablers.js",
+          "line": 31
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u204_partial7.js"
+        "tools\\test_s03_u204_partial7.js",
+        "tools\\test_s03_u339_enablers.js"
       ]
     },
     {
@@ -24510,13 +24517,20 @@
       "subtype": null,
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZA_claude_s03_u339_enablers.js",
+          "line": 43
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_class_a_recovery_02.js"
+        "tools\\test_class_a_recovery_02.js",
+        "tools\\test_s03_u339_enablers.js"
       ]
     },
     {
@@ -48016,12 +48030,20 @@
       "subtype": "",
       "date": "2010-07-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZA_claude_s03_u339_enablers.js",
+          "line": 62
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u339_enablers.js"
+      ]
     },
     {
       "index": 2247,
@@ -48189,12 +48211,20 @@
       "subtype": null,
       "date": "2003-03-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZA_claude_s03_u339_enablers.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u339_enablers.js"
+      ]
     },
     {
       "index": 2253,
@@ -61463,12 +61493,20 @@
       "subtype": "",
       "date": "2010-11-13",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZA_claude_s03_u339_enablers.js",
+          "line": 96
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u339_enablers.js"
+      ]
     },
     {
       "index": 2882,
@@ -83009,13 +83047,20 @@
       "subtype": null,
       "date": "2008-06-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZA_claude_s03_u339_enablers.js",
+          "line": 84
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_ready25_b2.js"
+        "tools\\test_ready25_b2.js",
+        "tools\\test_s03_u339_enablers.js"
       ]
     },
     {
