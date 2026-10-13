@@ -11173,6 +11173,36 @@
         "tools/test_codex_c04_safe_zone.js"
       ],
       "evidence": "Historical text in carddata: target one face-up Attack Position monster; while linked, it cannot be targeted or destroyed by the opponent's effects, cannot be destroyed by battle, and cannot attack directly; either linked card leaving destroys the other. Real DUEL tests prove activation from a previously Set Trap during the opponent turn, both-side target eligibility, target/effect/battle protections, own-effect allowance, direct-attack rejection, mutual leave-field destruction, and Replay audit. Negative control on the unchanged CODEX-C03 artifact fails all newly implemented behaviors without crashing."
+    },
+    {
+      "name": "ミンゲイドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C05",
+      "tests": [
+        "tools/test_codex_c05_deck_priority.js"
+      ],
+      "evidence": "Historical text in carddata: it is worth two Tributes for a Dragon Tribute Summon; during its controller's Standby Phase it may revive itself when all monsters in that controller's GY are Dragon, and is banished when it leaves after that revival. Real DUEL tests prove the Dragon-only tribute value, optional Standby revival, non-Dragon negative, leave-field replacement, and Replay audit."
+    },
+    {
+      "name": "時械神メタイオン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C05",
+      "tests": [
+        "tools/test_codex_c05_deck_priority.js"
+      ],
+      "evidence": "Official card database and historical text: cannot be Special Summoned from the Deck; can be Normal Summoned without Tribute while controlling no monsters; cannot be destroyed by battle/effects; its Attack Position battles deal no battle damage to its controller; after it battles, all other monsters return and the opponent takes 300 per monster actually returned; it returns to its owner's Deck during its controller's Standby Phase. Real DUEL tests cover each behavior, negatives, and Replay audit."
+    },
+    {
+      "name": "究極時械神セフィロン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C05",
+      "tests": [
+        "tools/test_codex_c05_deck_priority.js"
+      ],
+      "evidence": "Official card database and historical text: cannot be Normal Summoned; Special Summons from hand by its non-chain procedure with ten or more monsters in the controller's GY; once per turn it non-targetingly Special Summons a Level 8+ Fairy from hand/GY, negates that monster's effects, and makes its ATK 4000 while face-up. Real DUEL tests prove procedure positive/negative, resolution choice, permanent effect negation, set ATK, once-per-turn, and Replay audit."
     }
   ],
   "restored_to_baseline": [

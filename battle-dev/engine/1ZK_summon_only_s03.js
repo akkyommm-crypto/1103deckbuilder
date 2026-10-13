@@ -87,6 +87,18 @@ function properlySummonedReasonS03(card, summonKind, reason, from){
   if(card.properlySummonedS03) return '';
   return `${cardName(card)}は正規の方法で特殊召喚されていないため、この効果では特殊召喚できません`;
 }
+
+/* CODEX-C05: source-zone restrictions such as 「デッキから特殊召喚できない」.
+   Keep this declarative so candidate lists and the actual summon operation share
+   the same ruling.  An effect which explicitly ignores summon conditions may
+   bypass it at resolution, just like the existing summon-only checks. */
+function specialSummonSourceBanReasonS03(card, from){
+  if(!card || !from) return '';
+  const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
+  const raw = sc && sc.cannotSpecialSummonFromS03;
+  const zones = Array.isArray(raw) ? raw : (typeof raw==='string' ? [raw] : []);
+  return zones.indexOf(from)>=0 ? `${cardName(card)}は${zoneJp(from)}から特殊召喚できません` : '';
+}
 /* the cards whose effect is this monster's own proper Special Summon method: 「「N」(及び/またはこのカード)の効果でのみ特殊召喚できる」
    (the 2011 texts mostly say 「でのみ」; U126's summonOnlyByS03 parses the 「でしか」 wording only — enforcing the 「でのみ」 wording
    was a separate follow-up — done in S03-U251, summonOnlyByS03 `soft`; here it recognises the proper method). */
@@ -119,6 +131,7 @@ function canEffectSpecialSummonS03(card, from, reason, summonKind){
   if(!card) return false;
   const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
   if(sc && sc.cannotSpecialSummon===true) return false;
+  if(specialSummonSourceBanReasonS03(card, from)) return false;
   if(typeof sinUniqueReasonS03==='function' && sinUniqueReasonS03(card)) return false;   /* S03-U187 */
   /* S03-U211: a face-up monster's 「お互いに…特殊召喚できない」 lock (A・O・J D.D.チェッカー) also removes the card from effect candidate lists */
   if(typeof scriptSpecialSummonLockS03==='function'){ const l = (typeof locateCard==='function') ? locateCard(card) : null; if(scriptSpecialSummonLockS03(l && (l.p===0||l.p===1) ? l.p : 0, dbOf(card))) return false; }

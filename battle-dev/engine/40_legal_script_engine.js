@@ -800,6 +800,9 @@ const API = {
     /* S03-U145: 「召喚条件を無視して特殊召喚する」（古代の機械究極巨人 ③）— opts.ignoreSummonConditionS03 skips the card's own summon
        conditions (U126 「〜でしか」, U127 proper summon, and 「特殊召喚できない」 in FX_SPECIAL_SUMMON); player-level restrictions still apply. */
     const ignoreCondS03 = extra.ignoreSummonConditionS03===true;
+    /* CODEX-C05: card text may forbid a particular source zone (e.g. 時械神メタイオン from the Deck). */
+    const fromBanS03 = (!ignoreCondS03 && before && typeof specialSummonSourceBanReasonS03==='function') ? specialSummonSourceBanReasonS03(before, from) : '';
+    if(fromBanS03){ trace(`specialSummon blocked: ${fromBanS03}`,false); showToast(fromBanS03); logIt(gameState, `${reason||'効果'}：${fromBanS03}`); return false; }
     /* S03-U187: 「「Sin」モンスターはフィールドに1体しか表側表示で存在できない」 — a standing rule, not a summon condition (applies even when conditions are ignored) */
     const sinS03 = (before && typeof sinUniqueReasonS03==='function') ? sinUniqueReasonS03(before) : '';
     if(sinS03){ trace(`specialSummon blocked: ${sinS03}`,false); showToast(sinS03); logIt(gameState, `${reason||'効果'}：${sinS03}`); return false; }

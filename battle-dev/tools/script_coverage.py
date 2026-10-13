@@ -344,6 +344,8 @@ CARD_TEST_FOCUS = {
     "test_codex_c03_target_immunity.js": {"氷結界の御庭番"},
     # CODEX-C04 uses all other named cards only as targeting, destruction, battle, and link fixtures.
     "test_codex_c04_safe_zone.js": {"安全地帯"},
+    # CODEX-C05 uses the other named monsters as summon, battle, destruction, and graveyard fixtures.
+    "test_codex_c05_deck_priority.js": {"ミンゲイドラゴン", "時械神メタイオン", "究極時械神セフィロン"},
     # S03-U306 uses ライオウ / ワイト only as battle fixtures.
     "test_s03_u306_honest_cost.js": {"オネスト"},
     # S03-U307 names ワイト / ジェム monsters only as fixtures (the two cards under test are the Gemini duals).

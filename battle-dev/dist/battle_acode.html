@@ -11966,6 +11966,18 @@ function properlySummonedReasonS03(card, summonKind, reason, from){
   if(card.properlySummonedS03) return '';
   return `${cardName(card)}は正規の方法で特殊召喚されていないため、この効果では特殊召喚できません`;
 }
+
+/* CODEX-C05: source-zone restrictions such as 「デッキから特殊召喚できない」.
+   Keep this declarative so candidate lists and the actual summon operation share
+   the same ruling.  An effect which explicitly ignores summon conditions may
+   bypass it at resolution, just like the existing summon-only checks. */
+function specialSummonSourceBanReasonS03(card, from){
+  if(!card || !from) return '';
+  const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
+  const raw = sc && sc.cannotSpecialSummonFromS03;
+  const zones = Array.isArray(raw) ? raw : (typeof raw==='string' ? [raw] : []);
+  return zones.indexOf(from)>=0 ? `${cardName(card)}は${zoneJp(from)}から特殊召喚できません` : '';
+}
 /* the cards whose effect is this monster's own proper Special Summon method: 「「N」(及び/またはこのカード)の効果でのみ特殊召喚できる」
    (the 2011 texts mostly say 「でのみ」; U126's summonOnlyByS03 parses the 「でしか」 wording only — enforcing the 「でのみ」 wording
    was a separate follow-up — done in S03-U251, summonOnlyByS03 `soft`; here it recognises the proper method). */
@@ -11998,6 +12010,7 @@ function canEffectSpecialSummonS03(card, from, reason, summonKind){
   if(!card) return false;
   const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
   if(sc && sc.cannotSpecialSummon===true) return false;
+  if(specialSummonSourceBanReasonS03(card, from)) return false;
   if(typeof sinUniqueReasonS03==='function' && sinUniqueReasonS03(card)) return false;   /* S03-U187 */
   /* S03-U211: a face-up monster's 「お互いに…特殊召喚できない」 lock (A・O・J D.D.チェッカー) also removes the card from effect candidate lists */
   if(typeof scriptSpecialSummonLockS03==='function'){ const l = (typeof locateCard==='function') ? locateCard(card) : null; if(scriptSpecialSummonLockS03(l && (l.p===0||l.p===1) ? l.p : 0, dbOf(card))) return false; }
@@ -19312,6 +19325,9 @@ const API = {
     /* S03-U145: 「召喚条件を無視して特殊召喚する」（古代の機械究極巨人 ③）— opts.ignoreSummonConditionS03 skips the card's own summon
        conditions (U126 「〜でしか」, U127 proper summon, and 「特殊召喚できない」 in FX_SPECIAL_SUMMON); player-level restrictions still apply. */
     const ignoreCondS03 = extra.ignoreSummonConditionS03===true;
+    /* CODEX-C05: card text may forbid a particular source zone (e.g. 時械神メタイオン from the Deck). */
+    const fromBanS03 = (!ignoreCondS03 && before && typeof specialSummonSourceBanReasonS03==='function') ? specialSummonSourceBanReasonS03(before, from) : '';
+    if(fromBanS03){ trace(`specialSummon blocked: ${fromBanS03}`,false); showToast(fromBanS03); logIt(gameState, `${reason||'効果'}：${fromBanS03}`); return false; }
     /* S03-U187: 「「Sin」モンスターはフィールドに1体しか表側表示で存在できない」 — a standing rule, not a summon condition (applies even when conditions are ignored) */
     const sinS03 = (before && typeof sinUniqueReasonS03==='function') ? sinUniqueReasonS03(before) : '';
     if(sinS03){ trace(`specialSummon blocked: ${sinS03}`,false); showToast(sinS03); logIt(gameState, `${reason||'効果'}：${sinS03}`); return false; }
@@ -84613,6 +84629,117 @@ defineScript('安全地帯', {
       }
     }
   }
+});
+/* CODEX-C05 — deck-priority automation selected from the user's
+   スキドレギアバレー / レヴァライダー / ガリスフルモン lists. */
+
+/* ---- ミンゲイドラゴン ------------------------------------------------- */
+function c05MingeiReady(ctx){
+  const P=API.me(ctx);
+  return ctx.zone==='grave'&&ctx.player===gameState.activePlayer&&P.mz.length===0
+    &&hasMonsterZoneSpace(ctx.player)
+    &&P.grave.every(c=>dbOf(c).k!=='m'||dbOf(c).ra==='ドラゴン');
+}
+
+defineUnifiedCardV4('ミンゲイドラゴン',[{
+  key:'standby-revive',type:EFFECT_TYPE.TRIGGER,range:LOCATION.GRAVE,speed:1,events:['onStandbyPhase'],
+  condition(ctx){return c05MingeiReady(ctx);},
+  operation(ctx){
+    if(!c05MingeiReady(ctx))return;
+    const i=API.me(ctx).grave.indexOf(ctx.card);if(i<0)return;
+    ensureCardUid(gameState,ctx.card);const uid=ctx.card.uid;
+    API.specialSummon(ctx.player,'grave',i,'atk','ミンゲイドラゴン');
+    const now=findCardByUid(uid);
+    if(now&&now.zone==='mz')API.setCardFlag(now,'banishWhenLeavesField',true,'ミンゲイドラゴン',{silent:true});
+  },afterResolve(){}
+}],{
+  type:'monster',priority:1,activateFrom:['grave'],timing:['standby'],includesSpecialSummon:true,blocksIfNoSpecialSummon:true,
+  tributeValue:{value:2,condition(targetDb){return !!targetDb&&targetDb.ra==='ドラゴン';}},
+  passive:{onStandbyPhase:ctx=>c05MingeiReady(ctx)}
+});
+
+/* ---- 時械神メタイオン ------------------------------------------------- */
+function c05MetaionDamage(info){
+  const self=info.self;
+  if(!self||self.face!=='up'||self.pos!=='atk')return info.amount;
+  if((info.atkCard===self||info.defCard===self)&&info.to===info.srcPlayer)return 0;
+  return info.amount;
+}
+
+defineUnifiedCardV4('時械神メタイオン',[{
+  key:'battle-end-return',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onBattlePhaseEnd'],forced:true,
+  condition(ctx){return ctx.card.face==='up'&&API.battledThisPhase(ctx.card);},
+  operation(ctx){
+    const others=API.fieldCards({zone:'mz',filter:x=>x.card!==ctx.card}).map(x=>x.card);
+    let returned=0;
+    for(const card of others){
+      const h=locateCardAnyV4(card);if(!h||h.zone!=='mz')continue;
+      API.returnToHand(h,'時械神メタイオン');
+      const after=locateCardAnyV4(card);
+      if(after&&(after.zone==='hand'||after.zone==='ex'))returned++;
+    }
+    if(returned)API.damageLP(ctx.opponent,returned*300);
+  },afterResolve(){}
+},{
+  key:'standby-return',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onStandbyPhase'],forced:true,
+  condition(ctx){return gameState.activePlayer===ctx.player&&ctx.card.face==='up';},
+  operation(ctx){
+    const h=locateCardAnyV4(ctx.card);if(!h||h.zone!=='mz')return;
+    const owner=(ctx.card.owner===0||ctx.card.owner===1)?ctx.card.owner:h.p;
+    API.returnToDeck(h,false,'時械神メタイオン');API.shuffle(owner);
+  },afterResolve(){}
+}],{
+  type:'monster',priority:1,forced:true,cannotSpecialSummonFromS03:['deck'],
+  normalSummonProcedure:{includeStandard:true,methods:[{
+    id:'metaion0',tributes:0,modes:['summon'],summonLabel:'自分フィールドにモンスターがいないためリリースなしで召喚',
+    condition({player}){return gameState.players[player].mz.length===0;}
+  }]},
+  passive:{
+    onBattlePhaseEnd:ctx=>ctx.zone==='mz'&&ctx.card.face==='up'&&API.battledThisPhase(ctx.card),
+    onStandbyPhase:ctx=>ctx.zone==='mz'&&ctx.card.face==='up'&&gameState.activePlayer===ctx.player
+  },
+  protectV21:{key:'c05.metaion',battle:true,effect:true,label:'時械神メタイオン'},
+  continuous:{scope:'self',from:['mz'],apply(){return null;},battleDamage:c05MetaionDamage}
+});
+
+/* ---- 究極時械神セフィロン --------------------------------------------- */
+function c05SephylonPool(player){
+  return API.pileCards(player,'hand',x=>x.db.k==='m'&&x.db.ra==='天使'&&(x.db.lv||0)>=8&&canEffectSpecialSummonS03(x.card,'hand','究極時械神セフィロン'))
+    .concat(API.pileCards(player,'grave',x=>x.db.k==='m'&&x.db.ra==='天使'&&(x.db.lv||0)>=8&&canEffectSpecialSummonS03(x.card,'grave','究極時械神セフィロン')));
+}
+
+API.registerChoiceHandler('codex.c05.sephylon-summon',(answer,args)=>{
+  const picked=v49P1ChoiceCards(answer)[0],h=picked&&locateCardAnyV4(picked.card);
+  if(!h||h.p!==args.player||!['hand','grave'].includes(h.zone)||!hasMonsterZoneSpace(args.player))return;
+  const db=dbOf(h.card);
+  if(db.k!=='m'||db.ra!=='天使'||(db.lv||0)<8||!canEffectSpecialSummonS03(h.card,h.zone,args.reason))return;
+  ensureCardUid(gameState,h.card);const uid=h.card.uid;
+  API.specialSummon(args.player,h.zone,h.index,'atk',args.reason);
+  const now=findCardByUid(uid);
+  if(now&&now.zone==='mz'){
+    API.negateEffectUntil(now,'permanent',args.reason);
+    v4RegisterStatModifier(now,{setAtk:4000},{code:'究極時械神セフィロン',resetMask:RESET.LEAVE|RESET.FACE_DOWN});
+  }
+});
+
+defineUnifiedCardV4('究極時械神セフィロン',[{
+  key:'summon-fairy',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],
+  condition(ctx){return ctx.card.face==='up'&&hasMonsterZoneSpace(ctx.player)&&c05SephylonPool(ctx.player).length>0;},
+  operation(ctx){
+    const pool=c05SephylonPool(ctx.player);if(!pool.length)return;
+    API.requestChoice({player:ctx.player,kind:'card',title:'究極時械神セフィロン：特殊召喚するレベル8以上の天使族',
+      candidates:pool,min:1,max:1,cancelable:false,
+      resume:{handler:'codex.c05.sephylon-summon',args:{player:ctx.player,reason:'究極時械神セフィロン'}},
+      meta:{v4EffectKey:ctx.v4EffectKey||null,scriptName:'究極時械神セフィロン'}});
+  },afterResolve(){}
+}],{
+  type:'monster',priority:1,timing:['mainPhase'],countLimit:{n:1,effects:['summon-fairy']},
+  cannotNormalSummon:true,includesSpecialSummon:true,blocksIfNoSpecialSummon:true,
+  summonProcedure:{from:'hand',positions:['atk','def'],condition(ctx){
+    const n=API.pileCards(ctx.player,'grave',x=>x.db.k==='m').length;
+    if(n<10){ctx.reason='自分の墓地のモンスターが10体以上必要です';return false;}
+    return hasMonsterZoneSpace(ctx.player);
+  }}
 });
 /* =========================================================================
    デッキ操作カードの一括定義
