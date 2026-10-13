@@ -6,15 +6,15 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 784,
+    "NOT_STARTED": 779,
     "PARTIAL": 30,
-    "TESTED": 3066
+    "TESTED": 3071
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
     "gladiator": 18,
     "helper:a3AttributeSweep": 6,
-    "helper:a3PreDamageDestroy": 9,
+    "helper:a3PreDamageDestroy": 10,
     "helper:a4RaceControlSteal": 2,
     "helper:a5DamageStepAtkUp": 5,
     "helper:a6DamageStepStat": 5,
@@ -107,11 +107,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1461,
+    "legacy": 1465,
     "sin": 5,
     "unified": 1112
   },
-  "static_registration_name_count": 3077,
+  "static_registration_name_count": 3082,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -13763,13 +13763,20 @@
       "subtype": null,
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZX_claude_s03_u336_elec.js",
+          "line": 29
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle09.js"
+        "tools\\test_auto_cycle09.js",
+        "tools\\test_s03_u336_elec.js"
       ]
     },
     {
@@ -13920,12 +13927,20 @@
       "subtype": "カウンター",
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZX_claude_s03_u336_elec.js",
+          "line": 48
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u336_elec.js"
+      ]
     },
     {
       "index": 626,
@@ -13982,12 +13997,20 @@
       "subtype": null,
       "date": "2010-07-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZX_claude_s03_u336_elec.js",
+          "line": 85
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u336_elec.js"
+      ]
     },
     {
       "index": 629,
@@ -13997,12 +14020,20 @@
       "subtype": null,
       "date": "2010-11-13",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZX_claude_s03_u336_elec.js",
+          "line": 110
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u336_elec.js"
+      ]
     },
     {
       "index": 630,
@@ -14110,12 +14141,20 @@
       "subtype": null,
       "date": "2010-11-13",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:a3PreDamageDestroy",
+          "source": "cards\\HZZZZZZX_claude_s03_u336_elec.js",
+          "line": 129
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u336_elec.js"
+      ]
     },
     {
       "index": 635,

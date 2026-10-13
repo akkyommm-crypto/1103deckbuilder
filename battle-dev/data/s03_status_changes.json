@@ -10283,6 +10283,56 @@
         "tools/test_s03_u335_dhero.js"
       ],
       "evidence": "Text (carddata): 通常召喚できない。「D－HERO」を含む自分フィールドのモンスター3体をリリースした場合のみ特殊召喚でき、その場合次の相手スタンバイフェイズに相手LPを半分にする。 Real hand procedure with three monsters including ダッシュガイ released; the opponent's LP 8000 unchanged on my turn, 4000 at their Standby Phase, only once; not legal without a 「D－HERO」 or with two monsters; cannot be Normal Summoned; Special Summoned by another effect → not halved. Test: tools/test_s03_u335_dhero.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エレキツネ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U336",
+      "tests": [
+        "tools/test_s03_u336_elec.js"
+      ],
+      "evidence": "Text (carddata): このカードが相手によって破壊された場合、そのターン相手はモンスターの特殊召喚及び魔法・罠・効果モンスターの効果を発動する事ができない。 Destroyed by the opponent's battle: ブラック・ホール (Spell) and ライオウ (monster effect) cannot be activated, no Special Summon, really not activatable in Main Phase 2, the lock ends with the turn; destroyed by my own card → no lock. Test: tools/test_s03_u336_elec.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エレキャンセル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U336",
+      "tests": [
+        "tools/test_s03_u336_elec.js"
+      ],
+      "evidence": "Text (carddata): 手札から「エレキ」と名のついたモンスター1体を捨てて発動する。相手モンスターの召喚・特殊召喚を無効にし破壊する。 Offered in the summon-negation window of the opponent's Normal Summon: the 「エレキ」 monster discarded as the cost, the summoned monster negated and destroyed; offered against 死者蘇生 (Special Summon effect) which is negated; not offered without a 「エレキ」 monster in the hand or for my own summon. Test: tools/test_s03_u336_elec.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エレキリギリス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U336",
+      "tests": [
+        "tools/test_s03_u336_elec.js"
+      ],
+      "evidence": "Text (carddata): 表側表示で存在する限り、相手は他の表側表示の「エレキ」と名のついたモンスターを攻撃対象に選択できず、カードの効果の対象にもできない。 The opponent's attack targets exclude the other face-up 「エレキ」 monster (リギリス and a ワイト stay, a face-down one is not covered, control without it attackable); the opponent's targeting (filterTargetable context and a real エネミーコントローラー) offers no other 「エレキ」 monster while my own effects may still target it. Test: tools/test_s03_u336_elec.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エレキリム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U336",
+      "tests": [
+        "tools/test_s03_u336_elec.js"
+      ],
+      "evidence": "Text (carddata): 「エレキ」チューナー＋チューナー以外の雷族1体以上／直接攻撃でき、直接攻撃で戦闘ダメージを与えた時デッキのカード1枚を除外、発動後2回目の自分のスタンバイフェイズに手札に加える。 Real Synchro Summon with エレキツネ + サンダー・ドラゴン (refused with a non-「エレキ」 Tuner or a non-Thunder non-Tuner); direct attack although the opponent has a monster, 1500 damage, the chosen Deck card banished and still banished at the 1st own Standby Phase, in the hand at the 2nd. Test: tools/test_s03_u336_elec.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エレキンモグラ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U336",
+      "tests": [
+        "tools/test_s03_u336_elec.js"
+      ],
+      "evidence": "Text (carddata): 1度のバトルフェイズ中に2回攻撃でき、裏側守備表示のモンスターを攻撃した場合、ダメージ計算を行わず裏側守備表示のままそのモンスターを破壊できる。 Two face-down スケルエンジェル destroyed by two attacks without flipping (no draw), no third attack; a face-up Defense Position ワイト is not destroyed (200 damage to me). Test: tools/test_s03_u336_elec.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
