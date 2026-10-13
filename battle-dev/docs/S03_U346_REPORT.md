@@ -1,0 +1,12 @@
+# S03-U346 — high-Level restricted-summon monsters ×7
+
+Base: `claude/work` `b552963` (U345, gate 19598 PASS / 0 FAIL). Sonnet 5.5, single writer; no engine change.
+
+## Cards (`cards/HZZZZZZZH_claude_s03_u346_gods.js`)
+- 邪神ドレッド・ルート / イレイザー / アバター: `cannotSpecialSummon` + `normalSummonProcedure:{includeStandard:false, methods:[3-Tribute]}` (the text 「3体をリリースした場合のみ通常召喚できる」). ドレッド・ルート: continuous `mulFinalAtk/Def 0.5` (S03-U323) on every other monster. イレイザー: continuous set ATK/DEF = the opponent's cards × 1000; ignition destroy self; forced Graveyard trigger after a destruction → destroy every card of the field. アバター: continuous set ATK/DEF = the highest ATK among the other monsters + 100; forced `onNormalSummon` self trigger → `banActivationS03` (S03-U229) on the opponent for their next two turns (turn+1 and turn+3 when summoned in my turn).
+- 堕天使ディザイア: `includeStandard:true` + a 1-Tribute method with `materialFilter` (Angel); ignition once per turn: cost `modAtk −1000 'permanent'`, then the chosen opposing monster `sendToGrave`. 神鳥シムルグ: a single 2-Tribute method with a WIND `materialFilter`; a forced `onEndPhase` trigger on every End Phase: both players take 1000 − 500 × Spell/Trap Cards controlled (Field Zone included).
+- 黒の魔法神官: hand `summonProcedure` releasing two Level 6+ Spellcasters (helpers of S03-U342); a speed-2 QUICK effect from the Monster Zone against the chain top Trap Card (`negatePreviousChainLinkV2`). 幻魔皇ラビエル: procedure releasing three Fiends; ignition (release another monster as the cost, its printed ATK added until the End Phase); a forced `onNormalSummon` trigger on the opponent's Normal Summon (`onOtherSummon:true`) → `API.createToken` 幻魔トークン; the token is made with a registered token spec (`defineTokenSpecV11` + `API.createTokens`) and gets the card flag `cannotAttack`. (A `defineScript('幻魔トークン')` was tried first: a script name that is not a card of the DB fails the gate check 「coverage sees Unified/helper scripts」 — `registration_names_missing_from_db` — so token scripts must not be registered.)
+- Not part of this unit: ヴィクトリー・ドラゴン (the Match win), 魔王ディアボロス / 天魔神 インヴィシル / 大天使ゼラート / オベリスク / ラー (release-lock, whole-field effect negation, 天空の聖域, summon-immune effects).
+
+## Tests
+- `tools/test_s03_u346_gods.js` 52 / 0. Negative control on the previous build: 13 FAIL. Coverage TESTED 3130 → 3137, NOT_STARTED 720 → 713; audit 0 off-target. Pre-scan: no other test names these cards.

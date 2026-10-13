@@ -1432,6 +1432,33 @@
   "path": "cards/HZZZZZZZB_claude_s03_u340_traps.js"
  },
  {
+  "path": "cards/HZZZZZZZC_claude_s03_u341_equips_traps.js"
+ },
+ {
+  "path": "cards/HZZZZZZZD_claude_s03_u342_procs.js"
+ },
+ {
+  "path": "cards/HZZZZZZZE_claude_s03_u343_banish_procs.js"
+ },
+ {
+  "path": "cards/HZZZZZZZF_claude_s03_u344_spirits.js"
+ },
+ {
+  "path": "cards/HZZZZZZZG_claude_s03_u345_defenders.js"
+ },
+ {
+  "path": "cards/HZZZZZZZH_claude_s03_u346_gods.js"
+ },
+ {
+  "path": "cards/HZZZZZZZI_claude_s03_u347_misc.js"
+ },
+ {
+  "path": "cards/HZZZZZZZJ_claude_s03_u348_revive_traps.js"
+ },
+ {
+  "path": "cards/HZZZZZZZK_claude_s03_u349_event_traps.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
