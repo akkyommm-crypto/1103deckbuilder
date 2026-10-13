@@ -10493,6 +10493,56 @@
         "tools/test_s03_u339_enablers.js"
       ],
       "evidence": "Text (carddata): 墓地の装備魔法カード3枚を選択して発動、デッキに加えてシャッフルし、ドロー1枚か相手フィールドのカード1枚の破壊を選択。 Three Equip Spells chosen (a normal Spell not counted), shuffled into the Deck; ●draw (Deck +3 −1) and ●destroy (a chosen opponent card) both tested; not activatable with two Equip Spells. Test: tools/test_s03_u339_enablers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ストライク・ショット",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U340",
+      "tests": [
+        "tools/test_s03_u340_traps.js"
+      ],
+      "evidence": "Text (carddata): 自分のモンスターの攻撃宣言時に発動、ATK+700（エンドフェイズまで）、守備表示モンスターへは貫通。 Set Trap answered at my attack declaration: エメラル 1800 → 2500 vs a Defense Position ワイト → piercing 2300; vs an Attack Position ワイト only the battle damage; ATK back at the End Phase; not activatable at the opponent's attack declaration. Test: tools/test_s03_u340_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "チェンジ・デステニー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U340",
+      "tests": [
+        "tools/test_s03_u340_traps.js"
+      ],
+      "evidence": "Text (carddata): 相手モンスターの攻撃宣言時、その攻撃を無効にし守備表示にする。表側表示の間は表示形式を変更できない。その後、相手はATKの半分の回復かダメージのどちらかを選択。 The attack of 青眼 negated, 青眼 in Defense Position and locked across turns (cannotChangePosition, lingering source); the attacker's controller chooses: damage (I lose 1500) or recovery (they gain 1500); not on my own attack; control without it. Test: tools/test_s03_u340_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ライト・バニッシュ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U340",
+      "tests": [
+        "tools/test_s03_u340_traps.js"
+      ],
+      "evidence": "Text (carddata): 「ライトロード」1体をリリースして、モンスターの召喚・反転召喚・特殊召喚を無効にし破壊する。 Offered in the summon-negation window (cost: the 「ライトロード」 released) → the opponent's Normal Summon negated and destroyed; offered against 死者蘇生 (Special Summon effect) which is negated; not offered without a 「ライトロード」. Test: tools/test_s03_u340_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴィクティム・カウンター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U340",
+      "tests": [
+        "tools/test_s03_u340_traps.js"
+      ],
+      "evidence": "Text (carddata): 表側表示のデュアルモンスター1体を裏側守備表示にし、相手の魔法カードの発動を無効にし破壊する。 Offered against the opponent's ブラック・ホール (chain top Spell): the Gemini monster (アイオーラ) turned face-down Defense as the cost, the Spell negated and destroyed (the monster not destroyed); not offered without a Gemini monster. Test: tools/test_s03_u340_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ワンダー・クローバー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U340",
+      "tests": [
+        "tools/test_s03_u340_traps.js"
+      ],
+      "evidence": "Text (carddata): 手札のレベル4植物族1体を墓地へ送り、選択した自分のモンスターは1度のバトルフェイズ中に2回攻撃できる。発動ターン他のモンスターは攻撃宣言できない。 Cost sent to the Graveyard; the chosen monster attacked twice (no third), another monster could not attack; control: one attack; not activatable without a Level 4 Plant. Test: tools/test_s03_u340_traps.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
