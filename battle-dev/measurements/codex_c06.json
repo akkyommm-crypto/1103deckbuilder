@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "CODEX-C06",
+  "category": "card",
+  "mode": "batch",
+  "workflow_profile": "codex-supplied-deck-priority",
+  "scope": "resolve two supplied-deck ENGINE_GAP cards using existing procedure, stat-layer, lock, and upkeep primitives",
+  "outcome": "waiting",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "started_at": "2026-10-14T06:35:00+09:00",
+  "finished_at": null,
+  "gate_owner": "codex",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: per-unit tokens not available in this session",
+    "includes_all_agents": true,
+    "by_model": [
+      {
+        "model": "gpt-6-astra",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Single Codex session. Negative control established absent scripts/behavior before implementation. Final gate fields follow repository convention and are emitted by finish-work."
+}

@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 468,
+    "ENGINE_GAP": 466,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 693,
     "PARTIAL": 30,
-    "TESTED": 3158
+    "TESTED": 3160
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -112,9 +112,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1494,
     "sin": 5,
-    "unified": 1161
+    "unified": 1163
   },
-  "static_registration_name_count": 3169,
+  "static_registration_name_count": 3171,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -21719,12 +21719,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「お互いに光・闇属性モンスターを特殊召喚できない」を宣言できない。v46GlobalSpecialSummonRestrictionReason はカード名の直書き（40_legal_script_engine.js:97）で、スクリプト側から条件を足す hook が無い（cycle 30 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\I3_codex_c06_deck_priority.js",
+          "line": 26
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_codex_c06_deck_priority.js"
+      ]
     },
     {
       "index": 993,
@@ -43184,12 +43192,19 @@
       "subtype": null,
       "date": "2008-09-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a hand Special Summon procedure that records its exact procedure identity and applies replay-safe original ATK/DEF halving only when summoned by that procedure.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\I3_codex_c06_deck_priority.js",
+          "line": 6
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c06_deck_priority.js",
         "tools\\test_destruction_protection_cards.js",
         "tools\\test_v450_native_cards.js",
         "tools\\test_v660_batch18.js"

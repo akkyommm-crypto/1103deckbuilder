@@ -1471,6 +1471,9 @@
   "path": "cards/I2_codex_c05_deck_priority.js"
  },
  {
+  "path": "cards/I3_codex_c06_deck_priority.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

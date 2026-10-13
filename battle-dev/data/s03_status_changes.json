@@ -11203,6 +11203,26 @@
         "tools/test_codex_c05_deck_priority.js"
       ],
       "evidence": "Official card database and historical text: cannot be Normal Summoned; Special Summons from hand by its non-chain procedure with ten or more monsters in the controller's GY; once per turn it non-targetingly Special Summons a Level 8+ Fairy from hand/GY, negates that monster's effects, and makes its ATK 4000 while face-up. Real DUEL tests prove procedure positive/negative, resolution choice, permanent effect negation, set ATK, once-per-turn, and Replay audit."
+    },
+    {
+      "name": "バイス・ドラゴン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C06",
+      "tests": [
+        "tools/test_codex_c06_deck_priority.js"
+      ],
+      "evidence": "Official card database/Q&A and historical text: it can be Special Summoned from the hand by its non-chain procedure only while only the opponent controls a monster; while face-up after that procedure, its original ATK/DEF are halved. Real DUEL tests prove exact procedure provenance, 1000/1200 original and current stats, face-down reset, illegal-condition negative, ordinary-revival negative, and Replay audit."
+    },
+    {
+      "name": "コアキメイル・ドラゴ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C06",
+      "tests": [
+        "tools/test_codex_c06_deck_priority.js"
+      ],
+      "evidence": "Official card database/Q&A and historical text: while its effect is live, neither player can Special Summon LIGHT/DARK monsters, including face-down summons; its controller must send Iron Core, reveal a Dragon, or destroy it at each own End Phase. Real DUEL tests prove the bilateral printed-attribute lock, non-LIGHT/DARK allowance, negated-source negative, upkeep payment/destruction, and Replay audit."
     }
   ],
   "restored_to_baseline": [

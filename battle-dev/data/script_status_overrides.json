@@ -405,10 +405,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a central opponent Spell/Trap targeting event retaining the targeted Plant, source controller and Chain timing before the self-tribute cost and draw-two resolution."
     },
-    "バイス・ドラゴン": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a hand Special Summon procedure that records its exact procedure identity and applies replay-safe original ATK/DEF halving only when summoned by that procedure."
-    },
     "パトロイド": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe private inspection of one opponent set card followed by restoration without leaking its identity into public logs, UI, save or replay."
@@ -1934,10 +1930,6 @@
     "コアキメイル・デビル": {
       "status": "ENGINE_GAP",
       "reason": "「メインフェイズ時に発動する光・闇属性モンスターの効果を無効化する」を表現できない。[[コアキメイル・パワーハンド]] と同じくモンスター発の negateEffect が他のモンスターへ届かず、さらに「発動する効果だけ」を選り分ける層も無い（cycle 30 実測）。"
-    },
-    "コアキメイル・ドラゴ": {
-      "status": "ENGINE_GAP",
-      "reason": "「お互いに光・闇属性モンスターを特殊召喚できない」を宣言できない。v46GlobalSpecialSummonRestrictionReason はカード名の直書き（40_legal_script_engine.js:97）で、スクリプト側から条件を足す hook が無い（cycle 30 実測）。"
     },
     "ガーディアン・エルマ": {
       "status": "ENGINE_GAP",

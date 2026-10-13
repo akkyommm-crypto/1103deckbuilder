@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 468,
+    "ENGINE_GAP": 466,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 693,
     "PARTIAL": 30,
-    "TESTED": 3158
+    "TESTED": 3160
   },
   "delta": {
-    "ENGINE_GAP": -148,
+    "ENGINE_GAP": -150,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -614,
     "PARTIAL": -152,
-    "TESTED": 1109
+    "TESTED": 1111
   },
   "status_changes": [
     {
@@ -1405,6 +1405,12 @@
       "unit": "S03-U321"
     },
     {
+      "name": "コアキメイル・ドラゴ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C06"
+    },
+    {
       "name": "コアキメイル・マキシマム",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2675,6 +2681,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U156"
+    },
+    {
+      "name": "バイス・ドラゴン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C06"
     },
     {
       "name": "バグ・ロード",
