@@ -10853,6 +10853,76 @@
         "tools/test_s03_u344_spirits.js"
       ],
       "evidence": "Text (carddata). a Beast sent from the hand; on success choose Level + or − the Beast's Level (5 → 9 / 1); refused without a Beast. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デッド・ガードナー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). the attack aimed at my ワイト moved to it (Defense 1900 vs 青眼: destroyed, no battle damage); destroyed → the opponent's monster loses 1000 ATK until the End Phase (back at 3000 afterwards); also when attacked directly; control without it. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "カードブロッカー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). Normal Summoned → Defense Position; the attack on another monster moved to it; attacked → send up to 3 cards from the Deck top (3 → DEF 1900 survives ガロス 1850, 0 → destroyed). Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "シャトルロイド",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). selected as the attack target → banished (the attack becomes a Replay, cancelled), back at my next Standby Phase with 1000 damage to the opponent. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ロックストーン・ウォリアー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). no battle damage to me; its attack on 青眼 destroyed it → two ロックストーン・トークン (cannot be released for an Advance Summon); destroyed while defending → no token. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔力吸収球体",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). offered from the field against the opponent's ブラック・ホール in their turn: released (cost), the Spell negated and destroyed; not in my own turn. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "傀儡虫",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). discarded as the cost; the Undead ワイト is under my control until the End Phase (the Dragon is not a candidate); unavailable without a Fiend/Zombie target. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "クリボン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). attacked → at damage calculation it returned to my hand, no battle damage to me, the opponent recovered 3000 (the attacker's ATK). Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

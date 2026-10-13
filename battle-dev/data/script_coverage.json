@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 727,
+    "NOT_STARTED": 720,
     "PARTIAL": 30,
-    "TESTED": 3123
+    "TESTED": 3130
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -109,11 +109,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1484,
+    "legacy": 1485,
     "sin": 5,
-    "unified": 1140
+    "unified": 1146
   },
-  "static_registration_name_count": 3134,
+  "static_registration_name_count": 3141,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -17363,12 +17363,20 @@
       "subtype": null,
       "date": "2007-05-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZG_claude_s03_u345_defenders.js",
+          "line": 52
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u345_defenders.js"
+      ]
     },
     {
       "index": 787,
@@ -19938,12 +19946,20 @@
       "subtype": null,
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZG_claude_s03_u345_defenders.js",
+          "line": 156
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u345_defenders.js"
+      ]
     },
     {
       "index": 910,
@@ -26075,12 +26091,20 @@
       "subtype": null,
       "date": "2007-12-22",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZG_claude_s03_u345_defenders.js",
+          "line": 81
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u345_defenders.js"
+      ]
     },
     {
       "index": 1198,
@@ -36957,12 +36981,20 @@
       "subtype": null,
       "date": "2008-04-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZG_claude_s03_u345_defenders.js",
+          "line": 38
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u345_defenders.js"
+      ]
     },
     {
       "index": 1716,
@@ -59615,12 +59647,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZG_claude_s03_u345_defenders.js",
+          "line": 99
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u345_defenders.js"
+      ]
     },
     {
       "index": 2798,
@@ -64241,12 +64281,20 @@
       "subtype": null,
       "date": "2006-11-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZG_claude_s03_u345_defenders.js",
+          "line": 137
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u345_defenders.js"
+      ]
     },
     {
       "index": 3011,
@@ -103099,12 +103147,20 @@
       "subtype": null,
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZG_claude_s03_u345_defenders.js",
+          "line": 122
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u345_defenders.js"
+      ]
     },
     {
       "index": 4862,
