@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 758,
+    "NOT_STARTED": 752,
     "PARTIAL": 30,
-    "TESTED": 3092
+    "TESTED": 3098
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -549,
+    "NOT_STARTED": -555,
     "PARTIAL": -152,
-    "TESTED": 1043
+    "TESTED": 1049
   },
   "status_changes": [
     {
@@ -4657,6 +4657,12 @@
       "unit": "S03-U156"
     },
     {
+      "name": "憎悪の棘",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U341"
+    },
+    {
       "name": "憑依装着－アウス",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -4733,6 +4739,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U261"
+    },
+    {
+      "name": "早すぎた復活",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U341"
     },
     {
       "name": "明鏡止水の心",
@@ -5539,6 +5551,12 @@
       "unit": "S03-U148"
     },
     {
+      "name": "竜殺しの剣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U341"
+    },
+    {
       "name": "簡易融合",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5657,6 +5675,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U194"
+    },
+    {
+      "name": "能力吸収コア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U341"
     },
     {
       "name": "能力調整",
@@ -5905,6 +5929,12 @@
       "unit": "S03-U288"
     },
     {
+      "name": "閃光のイリュージョン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U341"
+    },
+    {
       "name": "閃光の結界像",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6149,6 +6179,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U192"
+    },
+    {
+      "name": "魔導書整理",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U341"
     },
     {
       "name": "魔導獣 ケルベロス",

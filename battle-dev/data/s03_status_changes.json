@@ -10543,6 +10543,66 @@
         "tools/test_s03_u340_traps.js"
       ],
       "evidence": "Text (carddata): 手札のレベル4植物族1体を墓地へ送り、選択した自分のモンスターは1度のバトルフェイズ中に2回攻撃できる。発動ターン他のモンスターは攻撃宣言できない。 Cost sent to the Graveyard; the chosen monster attacked twice (no third), another monster could not attack; control: one attack; not activatable without a Level 4 Plant. Test: tools/test_s03_u340_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "憎悪の棘",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 「ブラック・ローズ・ドラゴン」または植物族にのみ装備可能、ATK+600、守備表示モンスターへ貫通、攻撃対象のATK/DEFを600下げ、戦闘を行った相手モンスターはその戦闘では破壊されない。 キラー・トマト 1400 → 2000; attacked エメラル (1800): 200 damage, エメラル not destroyed and then 1200/200; piercing 1800 vs a Defense Position ワイト (not destroyed); not equippable to a ワイト; control without it. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "竜殺しの剣",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 戦士族にのみ装備可能、ATK+700、ドラゴン族と戦闘を行ったダメージ計算後、そのモンスターはバトルフェイズ終了時に破壊される。 ガロス 1850 → 2550; the Dragon (DEF raised to 3000 so that it survives) destroyed when the Battle Phase ends; a non-Dragon not destroyed; not equippable to a non-Warrior. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "閃光のイリュージョン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 永続罠。墓地の「ライトロード」を表側攻撃表示で特殊召喚、離れた時の相互破壊、自分のエンドフェイズ毎にデッキの上から2枚を墓地へ送る。 ガロス revived and the card stays; the Deck −2 at my End Phase; the monster destroyed → the card destroyed (and the reverse, with サイクロン); not activatable without a 「ライトロード」 in the Graveyard. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "早すぎた復活",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 墓地の「地縛神」1体を特殊召喚、そのターン攻撃宣言できず、戦闘を行う場合相手が受ける戦闘ダメージは0。 地縛神 Ccarayhua (with a Field Spell) revived; no attack that turn; on a later turn it destroyed a monster and the opponent took no damage; not activatable without a 「地縛神」. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "能力吸収コア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールドに「コアキメイル」が表側表示で存在し自分の墓地に「コアキメイルの鋼核」が存在する場合、効果モンスターの効果の発動を無効にし破壊する。 Offered against the opponent's ダッシュガイ effect → negated and destroyed; not offered without 鋼核 in the Graveyard or without a 「コアキメイル」 monster. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔導書整理",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): デッキの上から3枚をめくり好きな順番でデッキの上に戻す。 Chose the order (ブラック・ホール, ワイト, 青眼) and the Deck top three equal it (Deck size unchanged); not activatable with an empty Deck. Test: tools/test_s03_u341_equips_traps.js (Replay audit). Known: the cards are chosen from a list shown to the chooser only; no separate reveal log is written."
     }
   ],
   "restored_to_baseline": [
