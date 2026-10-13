@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 746,
+    "NOT_STARTED": 738,
     "PARTIAL": 30,
-    "TESTED": 3104
+    "TESTED": 3112
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -561,
+    "NOT_STARTED": -569,
     "PARTIAL": -152,
-    "TESTED": 1055
+    "TESTED": 1063
   },
   "status_changes": [
     {
@@ -2131,6 +2131,12 @@
       "unit": "S03-U224"
     },
     {
+      "name": "デザート・ツイスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U343"
+    },
+    {
       "name": "デステニー・シグナル",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -2159,6 +2165,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U314"
+    },
+    {
+      "name": "デビルドーザー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U343"
     },
     {
       "name": "デブリ・ドラゴン",
@@ -2761,6 +2773,12 @@
       "unit": "S03-U206"
     },
     {
+      "name": "フェンリル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U343"
+    },
+    {
       "name": "フォトン・ケルベロス",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2879,6 +2897,18 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U231"
+    },
+    {
+      "name": "ヘリオス・デュオ・メギストス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U343"
+    },
+    {
+      "name": "ヘリオス・トリス・メギストス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U343"
     },
     {
       "name": "ヘルカイザー・ドラゴン",
@@ -3031,6 +3061,12 @@
       "unit": "S03-U308"
     },
     {
+      "name": "マスターモンク",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U343"
+    },
+    {
       "name": "マーダーサーカス",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -3085,6 +3121,12 @@
       "unit": "S03-U217"
     },
     {
+      "name": "メガロック・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U343"
+    },
+    {
       "name": "メタモルポット",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -3119,6 +3161,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U194"
+    },
+    {
+      "name": "モンタージュ・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U343"
     },
     {
       "name": "ユーフォロイド",

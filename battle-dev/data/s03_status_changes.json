@@ -10663,6 +10663,86 @@
         "tools/test_s03_u342_procs.js"
       ],
       "evidence": "Text (carddata): 通常召喚できず、自分がシンクロモンスターのシンクロ召喚に成功した時に手札から特殊召喚できる。 After a real Synchro Summon (エレキリム) it is Special Summoned from the hand; a Normal Summon does not trigger it. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デザート・ツイスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の風属性2体と地属性1体を除外する事でのみ特殊召喚でき、手札1枚を捨ててフィールドの魔法・罠1枚を破壊できる（1ターンに1度）。 3 monsters banished (a ワイト stays), refused with one WIND; ignition: discard cost, the chosen Set Spell/Trap destroyed (a Field Spell stays), once per turn, unavailable without a hand card. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "フェンリル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の水属性2体を除外して特殊召喚、戦闘で相手モンスターを破壊した場合に次の相手ターンのドローフェイズをスキップ。 2 WATER monsters banished, refused with one; after a battle destruction the opponent's next Draw Phase is marked skipped (control: none otherwise). Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デビルドーザー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の昆虫族2体を除外した場合のみ特殊召喚、相手に戦闘ダメージを与えた時デッキの上から1枚を墓地へ。 2 Insects banished, refused with one; direct attack 2800 mills the opponent's top card. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "メガロック・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の岩石族を除外する事でのみ特殊召喚、元々の攻撃力・守備力は除外した数×700。 3 Rocks → 2100/2100, 1 Rock + 「decide」 → 700/700, refused without a Rock. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "モンタージュ・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、手札のモンスター3体を墓地へ送った場合のみ特殊召喚、攻撃力は墓地へ送ったモンスターのレベル合計×300。 3 chosen monsters (Lv 1 + 4 + 7) → 3600, a Spell stays in the hand; refused with two. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マスターモンク",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、モンク・ファイター1体を生け贄に捧げた場合のみ特殊召喚、1ターンに2回攻撃できる。 モンク・ファイター released; two attacks and no third; refused without it. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヘリオス・デュオ・メギストス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 原始太陽ヘリオスを生け贄に捧げて特殊召喚、ATK/DEFは除外されたモンスター×200、戦闘破壊された場合エンドフェイズに300アップして特殊召喚。 Special Summoned releasing ヘリオス (5 banished → 1000); destroyed by 青眼 → at the End Phase back with 1300; refused without ヘリオス. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヘリオス・トリス・メギストス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): ヘリオス・デュオ・メギストスを生け贄に捧げて特殊召喚、ATK/DEFは除外されたモンスター×300、戦闘破壊で500アップして特殊召喚、相手モンスターが存在する場合2回攻撃。 10 banished → 3000; two attacks against three monsters, no third; refused without デュオ. (The revival is the same handler as デュオ with +500, covered by its shared code.) Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

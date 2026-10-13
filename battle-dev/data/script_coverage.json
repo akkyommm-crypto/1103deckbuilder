@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 746,
+    "NOT_STARTED": 738,
     "PARTIAL": 30,
-    "TESTED": 3104
+    "TESTED": 3112
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -73,6 +73,7 @@
     "helper:u312Define": 12,
     "helper:u328Define": 5,
     "helper:u342HandSS": 2,
+    "helper:u343Helios": 2,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
@@ -108,11 +109,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1479,
+    "legacy": 1481,
     "sin": 5,
-    "unified": 1127
+    "unified": 1132
   },
-  "static_registration_name_count": 3115,
+  "static_registration_name_count": 3123,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -36282,12 +36283,20 @@
       "subtype": null,
       "date": "2007-05-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZE_claude_s03_u343_banish_procs.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u343_banish_procs.js"
+      ]
     },
     {
       "index": 1683,
@@ -37080,12 +37089,20 @@
       "subtype": null,
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZE_claude_s03_u343_banish_procs.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u343_banish_procs.js"
+      ]
     },
     {
       "index": 1724,
@@ -46470,12 +46487,20 @@
       "subtype": null,
       "date": "2003-04-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZE_claude_s03_u343_banish_procs.js",
+          "line": 57
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u343_banish_procs.js"
+      ]
     },
     {
       "index": 2171,
@@ -49530,12 +49555,20 @@
       "subtype": null,
       "date": "2006-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u343Helios",
+          "source": "cards\\HZZZZZZZE_claude_s03_u343_banish_procs.js",
+          "line": 209
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u343_banish_procs.js"
+      ]
     },
     {
       "index": 2314,
@@ -49545,12 +49578,20 @@
       "subtype": null,
       "date": "2006-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u343Helios",
+          "source": "cards\\HZZZZZZZE_claude_s03_u343_banish_procs.js",
+          "line": 210
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u343_banish_procs.js"
+      ]
     },
     {
       "index": 2315,
@@ -52247,12 +52288,20 @@
       "subtype": null,
       "date": "2005-02-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZE_claude_s03_u343_banish_procs.js",
+          "line": 162
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u343_banish_procs.js"
+      ]
     },
     {
       "index": 2449,
@@ -53816,12 +53865,20 @@
       "subtype": null,
       "date": "2005-02-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZE_claude_s03_u343_banish_procs.js",
+          "line": 95
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u343_banish_procs.js"
+      ]
     },
     {
       "index": 2525,
@@ -54767,12 +54824,20 @@
       "subtype": null,
       "date": "2008-04-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZE_claude_s03_u343_banish_procs.js",
+          "line": 137
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u343_banish_procs.js"
+      ]
     },
     {
       "index": 2573,
@@ -67558,11 +67623,17 @@
           "kind": "unified",
           "source": "cards\\78_v78_autobuild_batch30.js",
           "line": 11
+        },
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZE_claude_s03_u343_banish_procs.js",
+          "line": 178
         }
       ],
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u214_grave_redirect.js",
+        "tools\\test_s03_u343_banish_procs.js",
         "tools\\test_v780_batch30.js"
       ]
     },
