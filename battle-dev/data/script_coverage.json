@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 738,
+    "NOT_STARTED": 727,
     "PARTIAL": 30,
-    "TESTED": 3112
+    "TESTED": 3123
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -109,11 +109,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1481,
+    "legacy": 1484,
     "sin": 5,
-    "unified": 1132
+    "unified": 1140
   },
-  "static_registration_name_count": 3123,
+  "static_registration_name_count": 3134,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -82781,12 +82781,20 @@
       "subtype": null,
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 73
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 3888,
@@ -83176,12 +83184,20 @@
       "subtype": null,
       "date": "2007-05-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 92
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 3906,
@@ -89502,12 +89518,20 @@
       "subtype": null,
       "date": "2004-12-09",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 146
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 4207,
@@ -90218,12 +90242,20 @@
       "subtype": null,
       "date": "2000-12-07",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 215
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 4245,
@@ -90747,12 +90779,20 @@
       "subtype": null,
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 54
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 4271,
@@ -94521,12 +94561,20 @@
       "subtype": null,
       "date": "2010-04-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 248
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 4450,
@@ -98009,12 +98057,20 @@
       "subtype": null,
       "date": "2007-12-22",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 22,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 164
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 4625,
@@ -100010,13 +100066,20 @@
       "subtype": null,
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 202
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u178_contact4.js"
+        "tools\\test_s03_u178_contact4.js",
+        "tools\\test_s03_u344_spirits.js"
       ]
     },
     {
@@ -100892,12 +100955,20 @@
       "subtype": null,
       "date": "2008-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 117
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 4761,
@@ -101051,12 +101122,20 @@
       "subtype": null,
       "date": "2011-04-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 51
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 4769,
@@ -101939,12 +102018,20 @@
       "subtype": null,
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZF_claude_s03_u344_spirits.js",
+          "line": 65
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u344_spirits.js"
+      ]
     },
     {
       "index": 4807,

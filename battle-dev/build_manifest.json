@@ -1441,6 +1441,9 @@
   "path": "cards/HZZZZZZZE_claude_s03_u343_banish_procs.js"
  },
  {
+  "path": "cards/HZZZZZZZF_claude_s03_u344_spirits.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

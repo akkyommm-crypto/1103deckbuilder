@@ -416,6 +416,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u342_procs.js": {"ゲート・ガーディアン", "カード・ブレイカー", "ギガストーン・オメガ", "ジャイアントワーム", "カゲトカゲ", "シンクロ・マグネーター"},
     # S03-U343 names the WIND / EARTH / WATER / Insect / Rock / Monk fixtures, ワイト / 青眼の白龍 / サイクロン / ブラック・ホール / 王家の眠る谷－ネクロバレー only as fixtures.
     "test_s03_u343_banish_procs.js": {"デザート・ツイスター", "フェンリル", "デビルドーザー", "メガロック・ドラゴン", "モンタージュ・ドラゴン", "マスターモンク", "原始太陽ヘリオス", "ヘリオス・デュオ・メギストス", "ヘリオス・トリス・メギストス"},
+    # S03-U344 names the LIGHT / WIND / WATER / FIRE / Thunder / Reptile / Dragon / Beast fixtures, 磁石の戦士α β γ, the Continuous Spells, ワイト / 青眼の白龍 / サイクロン / ネクロバレー only as fixtures.
+    "test_s03_u344_spirits.js": {"霊魂の護送船", "神聖なる魂", "風の精霊 ガルーダ", "水の精霊 アクエリア", "氷炎の双竜", "電池メン－業務用", "真紅眼の闇竜", "邪龍アナンタ", "降雷皇ハモン", "磁石の戦士マグネット・バルキリオン", "虚栄の大猿"},
 }
 
 

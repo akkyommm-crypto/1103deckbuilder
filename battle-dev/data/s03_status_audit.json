@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 738,
+    "NOT_STARTED": 727,
     "PARTIAL": 30,
-    "TESTED": 3112
+    "TESTED": 3123
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -569,
+    "NOT_STARTED": -580,
     "PARTIAL": -152,
-    "TESTED": 1063
+    "TESTED": 1074
   },
   "status_changes": [
     {
@@ -5119,6 +5119,12 @@
       "unit": "S03-U262"
     },
     {
+      "name": "水の精霊 アクエリア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
+    },
+    {
       "name": "水面のアレサ",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5135,6 +5141,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U189"
+    },
+    {
+      "name": "氷炎の双竜",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
     },
     {
       "name": "氷結界のロイヤル・ナイト",
@@ -5527,6 +5539,12 @@
       "unit": "S03-U222"
     },
     {
+      "name": "真紅眼の闇竜",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
+    },
+    {
       "name": "督戦官コヴィントン",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -5549,6 +5567,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U312"
+    },
+    {
+      "name": "磁石の戦士マグネット・バルキリオン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
     },
     {
       "name": "神の宣告",
@@ -5591,6 +5615,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U231"
+    },
+    {
+      "name": "神聖なる魂",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
     },
     {
       "name": "禁じられた聖杯",
@@ -5815,6 +5845,12 @@
       "unit": "S03-U160"
     },
     {
+      "name": "虚栄の大猿",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
+    },
+    {
       "name": "虚無の統括者",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5995,6 +6031,12 @@
       "unit": "S03-U226"
     },
     {
+      "name": "邪龍アナンタ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
+    },
+    {
       "name": "野生の咆哮",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6071,6 +6113,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U266"
+    },
+    {
+      "name": "降雷皇ハモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
     },
     {
       "name": "降霊の儀式",
@@ -6157,6 +6205,18 @@
       "unit": "S03-U225"
     },
     {
+      "name": "電池メン－業務用",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
+    },
+    {
+      "name": "霊魂の護送船",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
+    },
+    {
       "name": "霞の谷のファルコン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6203,6 +6263,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U324"
+    },
+    {
+      "name": "風の精霊 ガルーダ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U344"
     },
     {
       "name": "風林火山",

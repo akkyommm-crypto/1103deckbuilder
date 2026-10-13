@@ -10743,6 +10743,116 @@
         "tools/test_s03_u343_banish_procs.js"
       ],
       "evidence": "Text (carddata): ヘリオス・デュオ・メギストスを生け贄に捧げて特殊召喚、ATK/DEFは除外されたモンスター×300、戦闘破壊で500アップして特殊召喚、相手モンスターが存在する場合2回攻撃。 10 banished → 3000; two attacks against three monsters, no third; refused without デュオ. (The revival is the same handler as デュオ with +500, covered by its shared code.) Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "霊魂の護送船",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). a LIGHT monster banished from the Graveyard; refused without one or under ネクロバレー. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "神聖なる魂",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). two LIGHT monsters banished; during the opponent's Battle Phase only every opposing monster loses 300 ATK (3000 → 2700), unchanged in my turn / their Main Phase. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "風の精霊 ガルーダ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). a WIND monster banished; at the opponent's End Phase (not at mine) the chosen opposing monster changes position. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "水の精霊 アクエリア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). a WATER monster banished; at the opponent's Standby Phase the chosen monster changes position and cannot change position that turn (the lock ends with the turn). Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷炎の双竜",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). 2 WATER + 1 FIRE banished, refused without FIRE; ignition: discard cost, the chosen monster destroyed, once per turn. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "電池メン－業務用",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). two 「電池メン」 banished (another Thunder stays); ignition: a Thunder banished (cost) → the chosen monster and Spell/Trap destroyed; not offered without a Spell/Trap. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "真紅眼の闇竜",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). 真紅眼の黒竜 released; ATK 2400 + 300 per Dragon in the Graveyard (3000 with 黒竜 + エレメント・ドラゴン); refused without 黒竜. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "邪龍アナンタ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). every Reptile of mine on the field and in the Graveyard banished → ATK/DEF 3 × 600 = 1800; at my End Phase it destroys a chosen card of the field. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "降雷皇ハモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). three face-up Continuous Spells sent to the Graveyard; in Defense Position the opponent can attack only it; destroying a monster by battle → 1000 damage; refused with two Spells. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "磁石の戦士マグネット・バルキリオン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). α (hand) / β / γ (field) released; ignition: it releases itself and Special Summons α / β / γ from the Graveyard; refused without γ. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "虚栄の大猿",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). a Beast sent from the hand; on success choose Level + or − the Beast's Level (5 → 9 / 1); refused without a Beast. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
