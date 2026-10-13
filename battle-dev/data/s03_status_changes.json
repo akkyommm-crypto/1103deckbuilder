@@ -11073,6 +11073,46 @@
         "tools/test_s03_u347_misc.js"
       ],
       "evidence": "Text (carddata). the opponent's Normal Summon → 800 damage (once per turn); in that turn's Battle Phase it negates one attack; without a summon no negation; ignition: AI + RR + AID sent to the Graveyard → ジャイアント・ボマー・エアレイド Special Summoned from the hand (refused without AID). Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "アマゾネスの意地",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U348",
+      "tests": [
+        "tools/test_s03_u348_revive_traps.js"
+      ],
+      "evidence": "Text (carddata). a 「アマゾネス」 revived face-up Attack (the ワイト not chosen), cannot change position and must attack; the trap destroyed → the monster destroyed; the monster destroyed by battle → the trap destroyed; not activatable without an 「アマゾネス」 in the Graveyard. Test: tools/test_s03_u348_revive_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ウィキッド・リボーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U348",
+      "tests": [
+        "tools/test_s03_u348_revive_traps.js"
+      ],
+      "evidence": "Text (carddata). 800 LP paid; a properly summoned Synchro Monster revived face-up Attack, its effects negated, no attack that turn (it attacks on a later turn); the trap destroyed → the monster destroyed; not activatable without a Synchro Monster. Test: tools/test_s03_u348_revive_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアの再練成",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U348",
+      "tests": [
+        "tools/test_s03_u348_revive_traps.js"
+      ],
+      "evidence": "Text (carddata). a 「コアキメイル」 revived; destroyed at my End Phase (no upkeep) → I take its ATK 1900 and the trap is destroyed; destroyed by battle in the opponent's turn → only the battle damage, the trap destroyed. Test: tools/test_s03_u348_revive_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイコ・チューン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U348",
+      "tests": [
+        "tools/test_s03_u348_revive_traps.js"
+      ],
+      "evidence": "Text (carddata). a Psychic monster revived and treated as a Tuner; the trap destroyed → the monster destroyed and I take Level 4 × 400 = 1600; the monster destroyed by battle → the trap destroyed and the same 1600 burn. Test: tools/test_s03_u348_revive_traps.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

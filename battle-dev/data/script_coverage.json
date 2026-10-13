@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 705,
+    "NOT_STARTED": 701,
     "PARTIAL": 30,
-    "TESTED": 3145
+    "TESTED": 3149
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -74,6 +74,7 @@
     "helper:u328Define": 5,
     "helper:u342HandSS": 2,
     "helper:u343Helios": 2,
+    "helper:u348Revive": 4,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
@@ -113,7 +114,7 @@
     "sin": 5,
     "unified": 1158
   },
-  "static_registration_name_count": 3156,
+  "static_registration_name_count": 3160,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -9703,12 +9704,20 @@
       "subtype": "永続",
       "date": "2010-04-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u348Revive",
+          "source": "cards\\HZZZZZZZJ_claude_s03_u348_revive_traps.js",
+          "line": 59
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u348_revive_traps.js"
+      ]
     },
     {
       "index": 424,
@@ -12423,12 +12432,20 @@
       "subtype": "永続",
       "date": "2009-02-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u348Revive",
+          "source": "cards\\HZZZZZZZJ_claude_s03_u348_revive_traps.js",
+          "line": 69
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u348_revive_traps.js"
+      ]
     },
     {
       "index": 553,
@@ -21376,12 +21393,20 @@
       "subtype": "永続",
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u348Revive",
+          "source": "cards\\HZZZZZZZJ_claude_s03_u348_revive_traps.js",
+          "line": 80
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u348_revive_traps.js"
+      ]
     },
     {
       "index": 978,
@@ -23736,12 +23761,20 @@
       "subtype": "永続",
       "date": "2008-11-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u348Revive",
+          "source": "cards\\HZZZZZZZJ_claude_s03_u348_revive_traps.js",
+          "line": 96
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u348_revive_traps.js"
+      ]
     },
     {
       "index": 1087,
