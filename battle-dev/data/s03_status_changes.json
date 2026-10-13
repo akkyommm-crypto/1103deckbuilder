@@ -11113,6 +11113,46 @@
         "tools/test_s03_u348_revive_traps.js"
       ],
       "evidence": "Text (carddata). a Psychic monster revived and treated as a Tuner; the trap destroyed → the monster destroyed and I take Level 4 × 400 = 1600; the monster destroyed by battle → the trap destroyed and the same 1600 burn. Test: tools/test_s03_u348_revive_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヘル・ポリマー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U349",
+      "tests": [
+        "tools/test_s03_u349_event_traps.js"
+      ],
+      "evidence": "Text (carddata). answered the opponent's real Fusion Summon (融合 + スパークマン + クレイマン): ワイト released (cost), the Fusion Monster under my control permanently; not activated without a monster to release or for a Normal Summon. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "痛恨の訴え",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U349",
+      "tests": [
+        "tools/test_s03_u349_event_traps.js"
+      ],
+      "evidence": "Text (carddata). a direct attack hit me (300) → I took control of the highest-DEF monster (ブラック・マジシャン), effects negated, cannot attack; it returned to the opponent at my next End Phase (not before) with the negation cleared; not activated for an attack on a monster. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "破壊輪",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U349",
+      "tests": [
+        "tools/test_s03_u349_event_traps.js"
+      ],
+      "evidence": "Text (carddata). opponent's turn: the chosen monster (青眼, ATK 3000 ≤ their LP) destroyed, I take 3000 and then they take 3000; refused when its ATK exceeds their LP or in my own turn. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "融合回収",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U349",
+      "tests": [
+        "tools/test_s03_u349_event_traps.js"
+      ],
+      "evidence": "Text (carddata). after a real Fusion Summon: 融合 and the chosen Fusion Material returned to the hand (the other material stays); not activatable when the Graveyard monster was not a Fusion Material. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

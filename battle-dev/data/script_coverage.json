@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 701,
+    "NOT_STARTED": 697,
     "PARTIAL": 30,
-    "TESTED": 3149
+    "TESTED": 3153
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -110,11 +110,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1488,
+    "legacy": 1492,
     "sin": 5,
     "unified": 1158
   },
-  "static_registration_name_count": 3160,
+  "static_registration_name_count": 3164,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -49987,12 +49987,20 @@
       "subtype": "",
       "date": "2005-08-11",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZK_claude_s03_u349_event_traps.js",
+          "line": 19
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u349_event_traps.js"
+      ]
     },
     {
       "index": 2330,
@@ -88872,12 +88880,20 @@
       "subtype": "",
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZK_claude_s03_u349_event_traps.js",
+          "line": 55
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u349_event_traps.js"
+      ]
     },
     {
       "index": 4171,
@@ -90129,12 +90145,20 @@
       "subtype": "",
       "date": "2000-12-07",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZK_claude_s03_u349_event_traps.js",
+          "line": 83
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u349_event_traps.js"
+      ]
     },
     {
       "index": 4230,
@@ -95181,12 +95205,20 @@
       "subtype": "",
       "date": "2005-05-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZK_claude_s03_u349_event_traps.js",
+          "line": 104
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u349_event_traps.js"
+      ]
     },
     {
       "index": 4472,

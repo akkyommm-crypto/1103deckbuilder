@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 701,
+    "NOT_STARTED": 697,
     "PARTIAL": 30,
-    "TESTED": 3149
+    "TESTED": 3153
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -606,
+    "NOT_STARTED": -610,
     "PARTIAL": -152,
-    "TESTED": 1100
+    "TESTED": 1104
   },
   "status_changes": [
     {
@@ -2995,6 +2995,12 @@
       "unit": "S03-U156"
     },
     {
+      "name": "ヘル・ポリマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U349"
+    },
+    {
       "name": "ベビケラサウルス",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -5611,6 +5617,12 @@
       "unit": "S03-U245"
     },
     {
+      "name": "痛恨の訴え",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U349"
+    },
+    {
       "name": "痛魂の呪術",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5675,6 +5687,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U280"
+    },
+    {
+      "name": "破壊輪",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U349"
     },
     {
       "name": "磁力の指輪",
@@ -5993,6 +6011,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U130"
+    },
+    {
+      "name": "融合回収",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U349"
     },
     {
       "name": "融合賢者",
