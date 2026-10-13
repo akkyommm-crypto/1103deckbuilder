@@ -10233,6 +10233,56 @@
         "tools/test_s03_u334_ehero_fusion.js"
       ],
       "evidence": "Text (carddata): 水属性モンスターと戦闘を行う場合、ダメージステップの間攻撃力が1000アップ。 Against the WATER ひょうすべ (1500): ATK 2300 + 1000 → 1800 damage, back to 2300 afterwards. Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D－HERO ダイハードガイ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U335",
+      "tests": [
+        "tools/test_s03_u335_dhero.js"
+      ],
+      "evidence": "Text (carddata): このカードを除く自分フィールド上の「D－HERO」が戦闘によって破壊され墓地へ送られた場合、そのモンスター1体を次の自分のスタンバイフェイズ時に特殊召喚できる（1ターンに1度）。 Battle kill of ダッシュガイ on my turn and on the opponent's turn → revived (face-up Attack) at my next Standby Phase, not at the opponent's; not for itself, a non-D－HERO, or a destruction by effect; two destroyed in one turn → only one. Test: tools/test_s03_u335_dhero.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D－HERO ダガーガイ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U335",
+      "tests": [
+        "tools/test_s03_u335_dhero.js"
+      ],
+      "evidence": "Text (carddata): 相手のバトルフェイズ時、手札からこのカードを捨てて発動できる。自分フィールド上の全ての「D－HERO」の攻撃力はエンドフェイズ時まで800アップ。 The stale ENGINE_GAP override (hand quick-effect window / discard provenance / turn-duration ATK modifier) was removed: the attack declaration window of the opponent's Battle Phase offers the hand Quick Effect with the discard as the cost; every face-up 「D－HERO」 +800 (a ワイト not), ダッシュガイ 2100 → 2900 beats ブラック・マジシャン; control without it loses; not offered in my own Battle Phase or the opponent's Main Phase; back to normal at the End Phase. Offered in the windows the engine opens during the opponent's Battle Phase (the attack declaration). Test: tools/test_s03_u335_dhero.js (Replay audit)."
+    },
+    {
+      "name": "D－HERO ダッシュガイ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U335",
+      "tests": [
+        "tools/test_s03_u335_dhero.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、自分フィールド上のモンスター1体をリリースして発動できる。ATK+1000（エンドフェイズ時まで）。攻撃した場合、バトルフェイズ終了時に守備表示になる。墓地に存在する限り1度だけ、自分のドローフェイズ時に引いたカードがモンスターだった場合、特殊召喚できる。 Release cost (the chosen monster) → ATK 3100, back at the End Phase, once per turn; attacked → Defense Position when the Battle Phase ends, not when it did not attack; in the Graveyard the drawn monster is shown and Special Summoned once, a drawn Spell stays in the hand, nothing without it in the Graveyard, and the next draw is not summoned. Test: tools/test_s03_u335_dhero.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D－HERO ドゥームガイ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U335",
+      "tests": [
+        "tools/test_s03_u335_dhero.js"
+      ],
+      "evidence": "Text (carddata): 戦闘によって破壊され墓地へ送られた場合、次の自分のスタンバイフェイズ時に自分の墓地から「D－HERO ドゥームガイ」以外の「D－HERO」1体を選択して特殊召喚する。 Destroyed by battle on my turn / the opponent's turn → nothing in the opponent's Standby Phase, at my next Standby Phase the chosen 「D－HERO」 (another ドゥームガイ is not a candidate); nothing without a candidate or when destroyed by an effect. Test: tools/test_s03_u335_dhero.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D－HERO ドグマガイ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U335",
+      "tests": [
+        "tools/test_s03_u335_dhero.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。「D－HERO」を含む自分フィールドのモンスター3体をリリースした場合のみ特殊召喚でき、その場合次の相手スタンバイフェイズに相手LPを半分にする。 Real hand procedure with three monsters including ダッシュガイ released; the opponent's LP 8000 unchanged on my turn, 4000 at their Standby Phase, only once; not legal without a 「D－HERO」 or with two monsters; cannot be Normal Summoned; Special Summoned by another effect → not halved. Test: tools/test_s03_u335_dhero.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

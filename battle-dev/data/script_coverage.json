@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 470,
+    "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 788,
+    "NOT_STARTED": 784,
     "PARTIAL": 30,
-    "TESTED": 3061
+    "TESTED": 3066
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -109,9 +109,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1461,
     "sin": 5,
-    "unified": 1107
+    "unified": 1112
   },
-  "static_registration_name_count": 3072,
+  "static_registration_name_count": 3077,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -3202,13 +3202,20 @@
       "subtype": null,
       "date": "2006-02-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZW_claude_s03_u335_dhero.js",
+          "line": 37
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u254_ns34.js"
+        "tools\\test_s03_u254_ns34.js",
+        "tools\\test_s03_u335_dhero.js"
       ]
     },
     {
@@ -3238,14 +3245,20 @@
       "subtype": null,
       "date": "2006-05-18",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / battle: needs a hand quick-effect activation window during the opponent Battle Phase, discard provenance, and turn-duration team ATK modifier.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZW_claude_s03_u335_dhero.js",
+          "line": 54
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u210_ns3.js",
-        "tools\\test_v840_batch35.js"
+        "tools\\test_s03_u335_dhero.js"
       ]
     },
     {
@@ -3256,12 +3269,20 @@
       "subtype": null,
       "date": "2006-05-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZW_claude_s03_u335_dhero.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u335_dhero.js"
+      ]
     },
     {
       "index": 129,
@@ -3427,12 +3448,20 @@
       "subtype": null,
       "date": "2006-05-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZW_claude_s03_u335_dhero.js",
+          "line": 125
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u335_dhero.js"
+      ]
     },
     {
       "index": 137,
@@ -3442,12 +3471,20 @@
       "subtype": null,
       "date": "2006-05-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZW_claude_s03_u335_dhero.js",
+          "line": 138
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u335_dhero.js"
+      ]
     },
     {
       "index": 138,

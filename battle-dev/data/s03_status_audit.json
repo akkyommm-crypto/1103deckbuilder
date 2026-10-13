@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 470,
+    "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 788,
+    "NOT_STARTED": 784,
     "PARTIAL": 30,
-    "TESTED": 3061
+    "TESTED": 3066
   },
   "delta": {
-    "ENGINE_GAP": -146,
+    "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -519,
+    "NOT_STARTED": -523,
     "PARTIAL": -152,
-    "TESTED": 1012
+    "TESTED": 1017
   },
   "status_changes": [
     {
@@ -199,10 +199,40 @@
       "unit": "S03-U311"
     },
     {
+      "name": "D－HERO ダイハードガイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U335"
+    },
+    {
+      "name": "D－HERO ダガーガイ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U335"
+    },
+    {
+      "name": "D－HERO ダッシュガイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U335"
+    },
+    {
       "name": "D－HERO デビルガイ",
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U264"
+    },
+    {
+      "name": "D－HERO ドゥームガイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U335"
+    },
+    {
+      "name": "D－HERO ドグマガイ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U335"
     },
     {
       "name": "D－HERO ドレッドサーヴァント",

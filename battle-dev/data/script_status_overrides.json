@@ -1169,10 +1169,6 @@
       "status": "ENGINE_GAP",
       "reason": "continuous rule / provenance: needs canonical three-copy face-up detection, atomic draw-and-destroy processing, and a leave-field-to-Grave trigger for each copy that independently heals 700."
     },
-    "D－HERO ダガーガイ": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / battle: needs a hand quick-effect activation window during the opponent Battle Phase, discard provenance, and turn-duration team ATK modifier."
-    },
     "N・ブラック・パンサー": {
       "status": "ENGINE_GAP",
       "reason": "target selection / continuous rule: needs arbitrary monster name-and-effect copying, complete copied effect legality, and End Phase reset without copying identity hacks."

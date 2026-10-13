@@ -398,6 +398,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u333_genex.js": {"A・ジェネクス・アクセル", "A・ジェネクス・ケミストリ", "A・ジェネクス・トライアーム", "レアル・ジェネクス・クロキシアン", "レアル・ジェネクス・ヴィンディカイト", "ジオ・ジェネクス"},
     # S03-U334 names the E・HERO Normal materials / ライオウ / 融合 / ひょうすべ / サイクロン / 青眼の白龍 / ワイト only as fixtures.
     "test_s03_u334_ehero_fusion.js": {"E・HERO サンダー・ジャイアント", "E・HERO ジ・アース", "E・HERO セイラーマン", "E・HERO ダーク・ブライトマン", "E・HERO ネクロイド・シャーマン", "E・HERO プラズマヴァイスマン", "E・HERO マッドボールマン", "E・HERO ワイルド・ウィングマン", "E・HERO フレイム・ブラスト"},
+    # S03-U335 names ワイト / 青眼の白龍 / ブラック・マジシャン / ブラック・ホール / サイクロン only as fixtures.
+    "test_s03_u335_dhero.js": {"D－HERO ダイハードガイ", "D－HERO ダガーガイ", "D－HERO ダッシュガイ", "D－HERO ドゥームガイ", "D－HERO ドグマガイ"},
 }
 
 
