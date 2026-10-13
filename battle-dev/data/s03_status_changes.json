@@ -10333,6 +10333,56 @@
         "tools/test_s03_u336_elec.js"
       ],
       "evidence": "Text (carddata): 1度のバトルフェイズ中に2回攻撃でき、裏側守備表示のモンスターを攻撃した場合、ダメージ計算を行わず裏側守備表示のままそのモンスターを破壊できる。 Two face-down スケルエンジェル destroyed by two attacks without flipping (no draw), no third attack; a face-up Defense Position ワイト is not destroyed (200 damage to me). Test: tools/test_s03_u336_elec.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "墓守の大神官",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U337",
+      "tests": [
+        "tools/test_s03_u337_graveworld.js"
+      ],
+      "evidence": "Text (carddata): 「墓守の」1体のリリースで召喚でき、ATKは墓地の「墓守の」×200アップ、破壊される場合は代わりに手札から「墓守の」1体を捨てられる。 Tribute Summoned with a single 墓守の呪術師 (a ワイト is refused); ATK 2200 / 2400 by the 「墓守の」 in the Graveyard (a ワイト not counted); destroyed by battle (青眼 3000) and by the opponent's ブラック・ホール → the controller chooses to discard a 「墓守の」 from the hand instead (new destroySubstituteS03 kind 'discardHand', engine/1ZV), optional (declined → destroyed), none without a 「墓守の」 in the hand. Test: tools/test_s03_u337_graveworld.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "墓守の大筒持ち",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U337",
+      "tests": [
+        "tools/test_s03_u337_graveworld.js"
+      ],
+      "evidence": "Text (carddata): 自分の「墓守の」を生け贄に捧げる度に相手に700ダメージ（大筒持ち自身は含まない）。 One 墓守 released for a Tribute Summon → 700, two → 1400, as the cost of 墓守の末裔 → 700; a ワイト released, 大筒持ち itself released, or 大筒持ち not on the field → none. Test: tools/test_s03_u337_graveworld.js (Replay audit). Known interpretation: 「この場合『墓守の大筒持ち』を生け贄に捧げる事はできない」 is read as 大筒持ち itself not being counted (the Tribute Summon with it is not refused)."
+    },
+    {
+      "name": "マシンナーズ・カノン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U337",
+      "tests": [
+        "tools/test_s03_u337_graveworld.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できない。手札の機械族モンスターを任意の枚数墓地へ送った場合に特殊召喚でき、ATKは送った数×800アップ。 The hand procedure offers only the Machine monsters plus a 「decide」 entry (ワイト not offered): two sent → ATK 1600 (DEF 2200), one → 800, zero → 0; cannot be Normal Summoned. Test: tools/test_s03_u337_graveworld.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "古代の機械合成獣",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U337",
+      "tests": [
+        "tools/test_s03_u337_graveworld.js"
+      ],
+      "evidence": "Text (carddata): 召喚のためにリリースしたモンスターに応じてグリーン：ATK+300／レッド：直接攻撃で戦闘ダメージを与えた場合500ダメージ／イエロー：戦闘で相手モンスターを破壊した場合700ダメージ。 Tribute Summoned (Lv6, one Tribute): Green → 2600 and no bonus on a direct hit; Red → direct attack 2300 + 500 (a battle with a monster only the battle damage); Yellow → ワイト destroyed by battle 2000 + 700; ワイト → nothing. Test: tools/test_s03_u337_graveworld.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "古代の採掘機",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U337",
+      "tests": [
+        "tools/test_s03_u337_graveworld.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールドに「アンティーク・ギア」モンスターが存在する場合、手札を1枚捨てて発動、デッキから魔法カード1枚を選んで自分フィールドにセット、そのカードはこのターン発動できない。 The hand card discarded, the chosen Deck Spell Set face-down (a Field Spell replaces the face-up one, which goes to the Graveyard); not activatable that turn (the lingering lock) but activatable on a later turn; refused without an 「アンティーク・ギア」 monster, without another hand card, or without a Spell Card in the Deck. Test: tools/test_s03_u337_graveworld.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

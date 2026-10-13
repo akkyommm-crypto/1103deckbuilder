@@ -105,6 +105,19 @@ function destroySubOptionsS03(gs, card, p, cause, excl){
     });
     return outB;
   }
+  /* S03-U337: 「代わりに手札から…モンスター1体を捨てる事ができる」 (墓守の大神官) —
+     destroySubstituteS03:{kind:'discardHand', causes:['battle','effect'], filter(card)}: any matching monster in its controller's hand is discarded instead */
+  if(decl.kind==='discardHand'){
+    const outD = [];
+    (gs.players[p].hand||[]).forEach(c=>{
+      if(!c || excl.indexOf(c.uid)>=0) return;
+      ensureCardUid(gs, c);
+      if(dbOf(c).k!=='m') return;
+      if(typeof decl.filter==='function' && !decl.filter(c)) return;
+      outD.push({kind:'discard', uid:c.uid, name:cardName(c)});
+    });
+    return outD;
+  }
   if(decl.kind==='destroyOwn'){
     const src = {uid:card.uid, k:'m'};
     const out = [];
@@ -252,6 +265,7 @@ function destroySubBattleS03(b){
 function destroySubKeyS03(o){ if(o.kind==='equipInstead') return 'eq:' + o.hostUid;   /* S03-U268 */
   if(o.kind==='release') return 'rel:' + o.uid;   /* S03-U286 */
   if(o.kind==='banish') return 'ban:' + o.uid;   /* S03-U325 */
+  if(o.kind==='discard') return 'dis:' + o.uid;   /* S03-U337 */
   return (o.kind==='detach' ? 'mat:' : (o.kind==='placeSpell' ? 'place:' : 'sub:')) + o.uid; }
 
 /* Ask the next protected card, or perform everything. true = a choice is open. */
@@ -259,13 +273,14 @@ function destroySubNextS03(job){
   const gs = gameState;
   while(job.pos < job.items.length){
     const item = job.items[job.pos];
-    const claimed = job.picks.filter(x=>x.use && (x.kind==='destroy' || x.kind==='release' || x.kind==='banish')).map(x=>x.subUid);   /* S03-U286: release */
-    const opts = item.opts.filter(o=>(o.kind!=='destroy' && o.kind!=='release' && o.kind!=='banish') || claimed.indexOf(o.uid)<0);
+    const claimed = job.picks.filter(x=>x.use && (x.kind==='destroy' || x.kind==='release' || x.kind==='banish' || x.kind==='discard')).map(x=>x.subUid);   /* S03-U286: release */
+    const opts = item.opts.filter(o=>(o.kind!=='destroy' && o.kind!=='release' && o.kind!=='banish' && o.kind!=='discard') || claimed.indexOf(o.uid)<0);
     if(!opts.length){ job.picks.push({uid:item.uid, use:false}); job.pos++; continue; }
     const cands = opts.map(o=>{
       if(o.kind==='detach') return {key:destroySubKeyS03(o), label:`身代わりを使う：素材「${o.name}」を取り除く`, sub:`${item.name} のエクシーズ素材`};
       if(o.kind==='release') return {key:destroySubKeyS03(o), label:`代わりに「${o.name}」をリリースする`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U286 */
       if(o.kind==='banish') return {key:destroySubKeyS03(o), label:`代わりに墓地の「${o.name}」を除外する`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U325 */
+      if(o.kind==='discard') return {key:destroySubKeyS03(o), label:`代わりに手札の「${o.name}」を捨てる`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U337 */
       if(o.kind==='equipInstead') return {key:destroySubKeyS03(o), label:`墓地へ送らずに「${o.name}」に装備する`, sub:`${item.name}（破壊されたまま装備カード扱いになる）`, uid:o.hostUid};
       if(o.kind==='placeSpell') return {key:destroySubKeyS03(o), label:'墓地へ送らずに、永続魔法カード扱いとして魔法＆罠ゾーンに置く', sub:`${item.name}（破壊されたまま行き先だけが変わります）`};   /* S03-U240 */
       const h = findCardByUidInState(gs, o.uid);
@@ -309,6 +324,11 @@ function destroySubApplyS03(job){
     if(x.kind==='banish'){   /* S03-U325: a Graveyard monster is banished instead (the protected card is not destroyed) */
       const g = findCardByUidInState(gs, x.subUid);
       if(g && g.zone==='grave') act({type:'FX_BANISH', player:g.p, zone:'grave', index:g.index, reason:`${protName}（破壊の代わりに除外）`});
+      return;
+    }
+    if(x.kind==='discard'){   /* S03-U337: a monster of the hand is discarded instead (the protected card is not destroyed) */
+      const dh = findCardByUidInState(gs, x.subUid);
+      if(dh && dh.zone==='hand') act({type:'FX_DISCARD', player:dh.p, handIndex:dh.index, reason:`${protName}（破壊の代わりに手札を捨てる）`});
       return;
     }
     if(x.kind==='release'){   /* S03-U286: released instead (not destroyed), then the declared after-step */
@@ -369,7 +389,7 @@ function destroySubReduceS03(gs, a){
       logIt(gs, `${nm}：破壊され、墓地へ送らずに魔法＆罠ゾーンへ置く事を選んだ`);
     }else if(x.use){
       if(a.site==='battle' && h && h.card) delete h.card.battleDestroyed;
-      logIt(gs, `${nm}：破壊される代わりに${x.kind==='detach'?'エクシーズ素材を1つ取り除く':(x.kind==='release'?'モンスター1体をリリースする':'身代わりのモンスターを破壊する')}`);
+      logIt(gs, `${nm}：破壊される代わりに${x.kind==='detach'?'エクシーズ素材を1つ取り除く':(x.kind==='release'?'モンスター1体をリリースする':(x.kind==='discard'?'手札のモンスター1体を捨てる':'身代わりのモンスターを破壊する'))}`);
     }else if(h){
       logIt(gs, `${nm}：身代わりを使わずに破壊される`);
     }

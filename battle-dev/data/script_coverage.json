@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 779,
+    "NOT_STARTED": 774,
     "PARTIAL": 30,
-    "TESTED": 3071
+    "TESTED": 3076
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -107,11 +107,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1465,
+    "legacy": 1467,
     "sin": 5,
-    "unified": 1112
+    "unified": 1115
   },
-  "static_registration_name_count": 3082,
+  "static_registration_name_count": 3087,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -51261,12 +51261,20 @@
       "subtype": null,
       "date": "2010-12-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZY_claude_s03_u337_graveworld.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u337_graveworld.js"
+      ]
     },
     {
       "index": 2408,
@@ -67690,12 +67698,20 @@
       "subtype": "",
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZY_claude_s03_u337_graveworld.js",
+          "line": 118
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u337_graveworld.js"
+      ]
     },
     {
       "index": 3180,
@@ -67756,12 +67772,20 @@
       "subtype": null,
       "date": "2006-09-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZY_claude_s03_u337_graveworld.js",
+          "line": 98
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u337_graveworld.js"
+      ]
     },
     {
       "index": 3183,
@@ -70172,12 +70196,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZY_claude_s03_u337_graveworld.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u337_graveworld.js"
+      ]
     },
     {
       "index": 3298,
@@ -70187,12 +70219,20 @@
       "subtype": null,
       "date": "2002-05-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZY_claude_s03_u337_graveworld.js",
+          "line": 44
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u337_graveworld.js"
+      ]
     },
     {
       "index": 3299,
