@@ -10383,6 +10383,56 @@
         "tools/test_s03_u337_graveworld.js"
       ],
       "evidence": "Text (carddata): 自分フィールドに「アンティーク・ギア」モンスターが存在する場合、手札を1枚捨てて発動、デッキから魔法カード1枚を選んで自分フィールドにセット、そのカードはこのターン発動できない。 The hand card discarded, the chosen Deck Spell Set face-down (a Field Spell replaces the face-up one, which goes to the Graveyard); not activatable that turn (the lingering lock) but activatable on a later turn; refused without an 「アンティーク・ギア」 monster, without another hand card, or without a Spell Card in the Deck. Test: tools/test_s03_u337_graveworld.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジェムナイト・アクアマリナ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U338",
+      "tests": [
+        "tools/test_s03_u338_gemknight.js"
+      ],
+      "evidence": "Text (carddata): 攻撃した場合バトルフェイズ終了時に守備表示になる。フィールドから墓地へ送られた場合、相手フィールドのカード1枚を対象に手札へ戻す。 Fusion Summoned by 融合 (サフィア + ジェムナイト); attacked → Defense Position at the end of the Battle Phase (stays Attack without attacking); destroyed by ブラック・ホール → the chosen card of the opponent's field (a Set card) returns to their hand; nothing when the opponent has no card. Test: tools/test_s03_u338_gemknight.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジェムナイト・アメジス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U338",
+      "tests": [
+        "tools/test_s03_u338_gemknight.js"
+      ],
+      "evidence": "Text (carddata): フィールドから墓地へ送られた場合、フィールドにセットされた魔法・罠カードを全て持ち主の手札に戻す。 Fusion Summoned (ジェムナイト + 水族; refused with a ワイト); destroyed → the Set Spell/Trap of both players return to their owners' hands, the face-up one stays. Test: tools/test_s03_u338_gemknight.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジェムナイト・パーズ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U338",
+      "tests": [
+        "tools/test_s03_u338_gemknight.js"
+      ],
+      "evidence": "Text (carddata): 1度のバトルフェイズ中に2回攻撃でき、戦闘でモンスターを破壊し墓地へ送った場合、そのモンスターの元々の攻撃力分のダメージを相手に与える。 Fusion Summoned (ルマリン + ジェムナイト); two attacks and no third; destroying ワイト → 1500 battle + 300 effect damage; destroyed by 青眼 → no damage. Test: tools/test_s03_u338_gemknight.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジェムナイト・プリズムオーラ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U338",
+      "tests": [
+        "tools/test_s03_u338_gemknight.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、手札から「ジェムナイト」カード1枚を墓地へ送り、フィールドの表側表示のカード1枚を対象に破壊。 Fusion Summoned (ジェムナイト + 雷族); the hand 「ジェムナイト」 card sent to the Graveyard (cost), the chosen face-up 青眼 destroyed, a face-down monster not a candidate; once per turn; not available without a 「ジェムナイト」 card in the hand. Test: tools/test_s03_u338_gemknight.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジェムナイト・ルビーズ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U338",
+      "tests": [
+        "tools/test_s03_u338_gemknight.js"
+      ],
+      "evidence": "Text (carddata): 1ターンに1度、他の自分の表側表示の「ジェム」モンスター1体をリリースし、ATKをターン終了時までそのATK分アップ。守備表示モンスター攻撃時は貫通ダメージ。 Fusion Summoned (ガネット + ジェムナイト); released オブシディア (1500) → ATK 2500 → 4000 until the End Phase (a ワイト not a candidate), once per turn; piercing against a Defense Position ワイト (2500 − 200). Test: tools/test_s03_u338_gemknight.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
