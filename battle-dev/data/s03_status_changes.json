@@ -11163,6 +11163,16 @@
         "tools/test_codex_c03_target_immunity.js"
       ],
       "evidence": "Historical text in carddata: while face-up, Ice Barrier monsters I control cannot be targeted by the opponent's Effect Monster effects. CODEX-C03 adds source/controller-aware metadata to the central target filter. Real DUEL tests prove opponent Effect Monster exclusion, own Effect Monster allowance, opponent Spell/Trap allowance, face-down-name handling, negated-source handling, and Replay audit. Negative control on the unchanged U349 artifact fails the registration and two protected-candidate assertions."
+    },
+    {
+      "name": "安全地帯",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C04",
+      "tests": [
+        "tools/test_codex_c04_safe_zone.js"
+      ],
+      "evidence": "Historical text in carddata: target one face-up Attack Position monster; while linked, it cannot be targeted or destroyed by the opponent's effects, cannot be destroyed by battle, and cannot attack directly; either linked card leaving destroys the other. Real DUEL tests prove activation from a previously Set Trap during the opponent turn, both-side target eligibility, target/effect/battle protections, own-effect allowance, direct-attack rejection, mutual leave-field destruction, and Replay audit. Negative control on the unchanged CODEX-C03 artifact fails all newly implemented behaviors without crashing."
     }
   ],
   "restored_to_baseline": [

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 697,
+    "NOT_STARTED": 696,
     "PARTIAL": 30,
-    "TESTED": 3154
+    "TESTED": 3155
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -610,
+    "NOT_STARTED": -611,
     "PARTIAL": -152,
-    "TESTED": 1105
+    "TESTED": 1106
   },
   "status_changes": [
     {
@@ -4607,6 +4607,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U230"
+    },
+    {
+      "name": "安全地帯",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "CODEX-C04"
     },
     {
       "name": "宝玉の双璧",

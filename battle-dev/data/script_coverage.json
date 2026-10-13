@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 697,
+    "NOT_STARTED": 696,
     "PARTIAL": 30,
-    "TESTED": 3154
+    "TESTED": 3155
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -110,11 +110,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1493,
+    "legacy": 1494,
     "sin": 5,
     "unified": 1158
   },
-  "static_registration_name_count": 3165,
+  "static_registration_name_count": 3166,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -73317,12 +73317,20 @@
       "subtype": "永続",
       "date": "2011-02-11",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\I1_codex_c04_safe_zone.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_codex_c04_safe_zone.js"
+      ]
     },
     {
       "index": 3428,
