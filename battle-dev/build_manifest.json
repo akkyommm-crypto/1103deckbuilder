@@ -1435,6 +1435,9 @@
   "path": "cards/HZZZZZZZC_claude_s03_u341_equips_traps.js"
  },
  {
+  "path": "cards/HZZZZZZZD_claude_s03_u342_procs.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 752,
+    "NOT_STARTED": 746,
     "PARTIAL": 30,
-    "TESTED": 3098
+    "TESTED": 3104
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -72,6 +72,7 @@
     "helper:u311Define": 6,
     "helper:u312Define": 12,
     "helper:u328Define": 5,
+    "helper:u342HandSS": 2,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
@@ -107,11 +108,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1477,
+    "legacy": 1479,
     "sin": 5,
-    "unified": 1125
+    "unified": 1127
   },
-  "static_registration_name_count": 3109,
+  "static_registration_name_count": 3115,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -16455,12 +16456,20 @@
       "subtype": null,
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u342HandSS",
+          "source": "cards\\HZZZZZZZD_claude_s03_u342_procs.js",
+          "line": 134
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u342_procs.js"
+      ]
     },
     {
       "index": 746,
@@ -17392,12 +17401,20 @@
       "subtype": null,
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZD_claude_s03_u342_procs.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u342_procs.js"
+      ]
     },
     {
       "index": 789,
@@ -19213,12 +19230,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZD_claude_s03_u342_procs.js",
+          "line": 80
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u342_procs.js"
+      ]
     },
     {
       "index": 876,
@@ -21265,12 +21290,20 @@
       "subtype": null,
       "date": "2000-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZD_claude_s03_u342_procs.js",
+          "line": 34
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u342_procs.js"
+      ]
     },
     {
       "index": 975,
@@ -26634,12 +26667,20 @@
       "subtype": null,
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u342HandSS",
+          "source": "cards\\HZZZZZZZD_claude_s03_u342_procs.js",
+          "line": 135
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u342_procs.js"
+      ]
     },
     {
       "index": 1226,
@@ -27990,12 +28031,20 @@
       "subtype": null,
       "date": "2007-11-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZD_claude_s03_u342_procs.js",
+          "line": 100
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u342_procs.js"
+      ]
     },
     {
       "index": 1287,

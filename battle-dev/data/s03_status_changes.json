@@ -10603,6 +10603,66 @@
         "tools/test_s03_u341_equips_traps.js"
       ],
       "evidence": "Text (carddata): デッキの上から3枚をめくり好きな順番でデッキの上に戻す。 Chose the order (ブラック・ホール, ワイト, 青眼) and the Deck top three equal it (Deck size unchanged); not activatable with an empty Deck. Test: tools/test_s03_u341_equips_traps.js (Replay audit). Known: the cards are chosen from a list shown to the chooser only; no separate reveal log is written."
+    },
+    {
+      "name": "ゲート・ガーディアン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、自分フィールドの「雷魔神－サンガ」「風魔神－ヒューガ」「水魔神－スーガ」を1体ずつリリースした場合に特殊召喚できる。 The hand procedure legal with the three 魔神, cost releases them; refused when one is missing; cannot be Normal Summoned. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "カード・ブレイカー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、自分の魔法&罠カードゾーンのカード1枚を墓地へ送った場合に表側攻撃表示で特殊召喚できる。 The Set Spell sent to the Graveyard, Special Summoned face-up Attack; refused without a Spell/Trap card. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ギガストーン・オメガ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の地属性モンスター2体を除外した場合に特殊召喚できる。カードの効果で墓地へ送られた時、相手の魔法・罠カードを全て破壊する。 Two EARTH monsters banished (a ワイト stays), refused with one or while ネクロバレー applies; sent to the Graveyard by ブラック・ホール → the opponent's Set Trap and Field Spell destroyed; destroyed by battle → nothing. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジャイアントワーム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の昆虫族を除外した場合のみ特殊召喚でき、戦闘ダメージを与えた時に相手のデッキの上から1枚を墓地へ送る。 The Insect banished, refused without an Insect or under ネクロバレー; its direct attack (1900) mills one card of the opponent's Deck. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "カゲトカゲ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、自分がレベル4モンスターの召喚に成功した時に手札から特殊召喚でき、シンクロ素材にできない。 A Level 4 Normal Summon → Special Summoned from the hand through the post-summon response window (a Level 3 summon / the opponent's summon do not); excluded from the Synchro Material candidates. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "シンクロ・マグネーター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、自分がシンクロモンスターのシンクロ召喚に成功した時に手札から特殊召喚できる。 After a real Synchro Summon (エレキリム) it is Special Summoned from the hand; a Normal Summon does not trigger it. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
