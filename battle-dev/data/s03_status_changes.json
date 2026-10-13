@@ -10143,6 +10143,96 @@
         "tools/test_s03_u333_genex.js"
       ],
       "evidence": "Text (carddata): 1ターンに1度、自分フィールドにレベル4以下の「ジェネクス」がいる限り、元々の攻撃力と守備力をエンドフェイズ時まで入れ替える。 Real Synchro Summon; with a Lv3 Genex on my field ATK/DEF 1800/2800 → 2800/1800, restored when the turn ends, once per turn; unavailable without a Lv4- Genex. Test: tools/test_s03_u333_genex.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO サンダー・ジャイアント",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U334",
+      "tests": [
+        "tools/test_s03_u334_ehero_fusion.js"
+      ],
+      "evidence": "Text (carddata): 手札を1枚捨て、元々の攻撃力がこのカードの攻撃力より低い表側表示モンスター1体を破壊（1ターンに1度、メインフェイズ）。 Fusion Summoned by 融合 (スパークマン + クレイマン); discard cost, ワイト (printed ATK 300) destroyed, 青眼 (3000) not a candidate; once per turn. Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO ジ・アース",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U334",
+      "tests": [
+        "tools/test_s03_u334_ehero_fusion.js"
+      ],
+      "evidence": "Text (carddata): 他の表側表示の「E・HERO」1体をリリースして攻撃力をターン終了時までそのモンスターの攻撃力分アップ。 Fusion Summoned; release スパークマン → ATK +1600 until the turn ends (back next turn). Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO セイラーマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U334",
+      "tests": [
+        "tools/test_s03_u334_ehero_fusion.js"
+      ],
+      "evidence": "Text (carddata): 自分の魔法&罠カードゾーンにカードがセットされている場合、直接攻撃できる。 Fusion Summoned; direct attack with a Set card in my Spell & Trap Zone although the opponent has a monster, not without. Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO ダーク・ブライトマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U334",
+      "tests": [
+        "tools/test_s03_u334_ehero_fusion.js"
+      ],
+      "evidence": "Text (carddata): 守備表示モンスターへの貫通ダメージ。攻撃した場合ダメージステップ終了時に守備表示になる。破壊された時、相手モンスター1体を破壊。 Piercing damage 1800 vs ワイト DEF, Defense Position afterwards; destroyed by 青眼 → the chosen opponent monster destroyed. Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO ネクロイド・シャーマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U334",
+      "tests": [
+        "tools/test_s03_u334_ehero_fusion.js"
+      ],
+      "evidence": "Text (carddata): 特殊召喚に成功した場合、相手モンスター1体を破壊し、その後相手の墓地からモンスター1体を選び相手フィールドに特殊召喚する。 Fusion Summon success: 青眼 destroyed, the chosen opponent Graveyard monster (ライオウ) Special Summoned onto the opponent field (only when the destruction happened: afterDestroyS03). Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO プラズマヴァイスマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U334",
+      "tests": [
+        "tools/test_s03_u334_ehero_fusion.js"
+      ],
+      "evidence": "Text (carddata): メインフェイズに手札を1枚捨てて、攻撃表示の相手モンスター1体を破壊。守備表示モンスターへの貫通ダメージ。 Discard cost, the chosen Attack Position monster destroyed (the Defense Position one is not a candidate); piercing 2400. Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO マッドボールマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U334",
+      "tests": [
+        "tools/test_s03_u334_ehero_fusion.js"
+      ],
+      "evidence": "Text (carddata): (融合素材の指定のみ) Fusion Summoned by 融合 (バブルマン + クレイマン); registered without effects. Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO ワイルド・ウィングマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U334",
+      "tests": [
+        "tools/test_s03_u334_ehero_fusion.js"
+      ],
+      "evidence": "Text (carddata): 手札を1枚捨てる事で、フィールド上の魔法・罠カード1枚を破壊する。 Discard cost, the chosen Spell/Trap destroyed (no once-per-turn clause). Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO フレイム・ブラスト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U334",
+      "tests": [
+        "tools/test_s03_u334_ehero_fusion.js"
+      ],
+      "evidence": "Text (carddata): 水属性モンスターと戦闘を行う場合、ダメージステップの間攻撃力が1000アップ。 Against the WATER ひょうすべ (1500): ATK 2300 + 1000 → 1800 damage, back to 2300 afterwards. Test: tools/test_s03_u334_ehero_fusion.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

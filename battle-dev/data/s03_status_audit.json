@@ -12,16 +12,16 @@
     "ENGINE_GAP": 470,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 797,
+    "NOT_STARTED": 788,
     "PARTIAL": 30,
-    "TESTED": 3052
+    "TESTED": 3061
   },
   "delta": {
     "ENGINE_GAP": -146,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -510,
+    "NOT_STARTED": -519,
     "PARTIAL": -152,
-    "TESTED": 1003
+    "TESTED": 1012
   },
   "status_changes": [
     {
@@ -277,16 +277,46 @@
       "unit": "S03-U182"
     },
     {
+      "name": "E・HERO サンダー・ジャイアント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
+      "name": "E・HERO ジ・アース",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
       "name": "E・HERO ストーム・ネオス",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U179"
     },
     {
+      "name": "E・HERO セイラーマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
+      "name": "E・HERO ダーク・ブライトマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
       "name": "E・HERO テンペスター",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U165"
+    },
+    {
+      "name": "E・HERO ネクロイド・シャーマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
     },
     {
       "name": "E・HERO バブルマン",
@@ -301,16 +331,34 @@
       "unit": "S03-U174"
     },
     {
+      "name": "E・HERO フレイム・ブラスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
       "name": "E・HERO ブラック・ネオス",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U177"
     },
     {
+      "name": "E・HERO プラズマヴァイスマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
+    },
+    {
       "name": "E・HERO マグマ・ネオス",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U179"
+    },
+    {
+      "name": "E・HERO マッドボールマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
     },
     {
       "name": "E・HERO マリン・ネオス",
@@ -329,6 +377,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U115"
+    },
+    {
+      "name": "E・HERO ワイルド・ウィングマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U334"
     },
     {
       "name": "E－HERO ワイルド・サイクロン",
