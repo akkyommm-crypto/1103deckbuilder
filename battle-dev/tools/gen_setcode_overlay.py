@@ -102,6 +102,24 @@ SPEC = [
  dict(key="GAERU", jp="ガエル", ruby=None, rule="name", arg="ガエル",
       basis="S03-U161: 「ガエル」と名のついたモンスター（イレカエル）。イレカエル・サシカエル・粋カエル・フロッグ・バリアは名前に「ガエル」を含まず非member",
       ads="EDOPro Frog(setcode 0x1029) は カエル 系と魔法を含む上位集合なので代用できない"),
+ dict(key="GEM", jp="ジェム", ruby=None, rule="name", arg="ジェム",
+      basis="S03-U307: 「ジェム」と名のついたカード。名前にジェムを含む24枚（ジェムナイト各種・ジェムエレファント・ジェムタートル・ジェムレシス・ジェム・マーチャント・ジェム・エンハンス・ジェムフラッシュエナジー・カウンター・ジェム）。ジェムナイトは名前にジェムを含むので member",
+      ads="EDOPro Gem- は同系統。setcode 0x100f はジェムナイト用で、ジェム・エンハンス／輝石融合／パーティカル・フュージョンを含むため代用できない"),
+ dict(key="GEMKNIGHT", jp="ジェムナイト", ruby=None, rule="name", arg="ジェムナイト",
+      basis="S03-U307: 「ジェムナイト」と名のついたカード（モンスター16枚＋ジェムナイト・フュージョン）。setcode 0x100f(20枚)から名前にジェムナイトを含まないジェム・エンハンス・輝石融合・パーティカル・フュージョンを除外",
+      ads="EDOPro Gem-Knight と同系統だが setcode は上位集合のため名前で定義"),
+ dict(key="NINJA", jp="忍者", ruby=None, rule="name", arg="忍者",
+      basis="S03-U312: 「忍者」と名のついたカード。名前に忍者を含む11枚（カラクリ忍者・女忍者ヤエなど）",
+      ads="EDOPro Ninja(0x2b) は忍者（ニンジャ）系の別述語。ここはカード名に「忍者」を含むもの"),
+ dict(key="VYLON", jp="ヴァイロン", ruby=None, rule="name", arg="ヴァイロン",
+      basis="S03-U312: 「ヴァイロン」と名のついたカード（モンスター・魔法）。名前にヴァイロンを含む26枚",
+      ads="EDOPro Vylon と一致"),
+ dict(key="XSABER", jp="X－セイバー", ruby=None, rule="name", arg="X－セイバー",
+      basis="S03-U315: 「X－セイバー」と名のついたカード。名前にX－セイバーを含む18枚（XX－セイバー〔名前の末尾にX－セイバーを含む〕を含む）",
+      ads="EDOPro X-Saber と一致"),
+ dict(key="ALIEN", jp="エーリアン", ruby=None, rule="name", arg="エーリアン",
+      basis="S03-U316: 「エーリアン」と名のついたカード。名前にエーリアンを含む16枚（エーリアン・ブレインなど）。setcode 0x102e(26枚)は宇宙獣ガンギル等を含む上位集合のため名前で定義",
+      ads="EDOPro Alien は setcode 0xc で上位集合"),
  dict(key="RESONATOR", jp="リゾネーター", ruby=None, rule="name", arg="リゾネーター",
       basis="カタカナ", ads="EDOPro Resonator と一致"),
  dict(key="PENGUIN", jp="ペンギン", ruby=None, rule="name", arg="ペンギン",
@@ -170,7 +188,7 @@ def build():
     overlay_uniq = sorted({p for g in groups.values() if not g["setcode_exact"] for p in g["members"]})
     payload = {
         "schema_version": 1,
-        "authority_version": "P4-v7",   # S03-U161: +GAERU (10 passcodes); S03-U169: +TOMABO (2)
+        "authority_version": "P4-v11",   # S03-U161: +GAERU (10 passcodes); S03-U169: +TOMABO (2); S03-U307: +GEM (24), +GEMKNIGHT (17); S03-U312: +NINJA, +VYLON; S03-U315: +XSABER; S03-U316: +ALIEN
         "generated_from": "data/carddata.json (read-only)",
         "rule": "membership は passcode でのみ表現する。実行時に名前一致・ruby推測を行わない。",
         "predicate_count": len(groups),

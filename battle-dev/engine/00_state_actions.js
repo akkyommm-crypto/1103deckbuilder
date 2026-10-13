@@ -1127,13 +1127,19 @@ function applyActionBodyV31(gs, a){
           const c = PP.mz[i];
           if(!c || !c.battleDestroyed) continue;
           /* S03-U183: an equip destroyed instead (engine/1ZZB) */
-          if(typeof equipSubstituteDestroyS03==='function' && equipSubstituteDestroyS03(gs, c)){ delete c.battleDestroyed; continue; }
+          if(typeof equipSubstituteDestroyS03==='function' && equipSubstituteDestroyS03(gs, c, 'battle')){ delete c.battleDestroyed; continue; }
           dropXyzMaterials(PP, c, gs); dropEquips(PP, c, gs);
           PP.mz.splice(i,1);
           delete c.battleDestroyed;
           /* S03-U251: 「このカードがモンスターを戦闘によって破壊したターン」 — the destroyer still in the Monster Zone records the turn (zone-local) */
           { const lbK = gs.lastBattle, vu = c.uid;
             const kU = (!lbK || vu == null) ? null : (lbK.defenderUidV6 === vu ? lbK.attackerUidV6 : (lbK.attackerUidV6 === vu ? lbK.defenderUidV6 : null));
+            /* S03-U308: the uids of this turn's battle destroyers, wherever they are afterwards (中央突破: 「選択したモンスターが…戦闘によって破壊した場合」
+               stays true if that monster leaves the field later; battleKillTurnS03 below is zone-local) */
+            if(kU != null){
+              if(!gs.battleKillsS03 || gs.battleKillsS03.turn !== gs.turn) gs.battleKillsS03 = {turn:gs.turn, uids:[]};
+              if(gs.battleKillsS03.uids.indexOf(kU) < 0) gs.battleKillsS03.uids.push(kU);
+            }
             const hK = (kU != null && typeof findCardByUidInState==='function') ? findCardByUidInState(gs, kU) : null;
             if(hK && hK.zone==='mz' && hK.card){
               hK.card.battleKillTurnS03 = gs.turn;
@@ -3426,7 +3432,7 @@ function collectContinuous(card){
     if(r.setBaseAtk!=null || r.setBaseDef!=null) layers.setBase.push({...r, src:tag});
     if(r.setAtk!=null     || r.setDef!=null)     layers.set.push({...r, src:tag});
     if(r.atk!=null        || r.def!=null)        layers.update.push({...r, src:tag});
-    if(r.setFinalAtk!=null|| r.setFinalDef!=null)layers.setFinal.push({...r, src:tag});
+    if(r.setFinalAtk!=null|| r.setFinalDef!=null || r.mulFinalAtk!=null || r.mulFinalDef!=null)layers.setFinal.push({...r, src:tag});   /* S03-U323: mulFinalAtk / mulFinalDef — a factor applied (floor) on the value so far, last */
   });
   /* v4: RESET-managed modifiers share the same stat layers. */
   if(typeof v4RuntimeStatLayers==='function'){
@@ -3457,7 +3463,7 @@ function curStat(card, key){
   // 一時修正値（オネスト・突進など）は増減層に入る
   (card.mods||[]).forEach(m=>{ v += (m[key]||0); });
   L.update .forEach(l=>{ if(l[key]!=null) v += l[key]; });
-  L.setFinal.forEach(l=>{ if(l[Fin]!=null) v = l[Fin]; });
+  L.setFinal.forEach(l=>{ if(l[Fin]!=null) v = l[Fin]; const mf = key==='atk' ? l.mulFinalAtk : l.mulFinalDef; if(mf!=null) v = Math.floor(v*mf); });
   return Math.max(0, v);
 }
 function curATK(card){ return curStat(card, 'atk'); }

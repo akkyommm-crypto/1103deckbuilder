@@ -577,10 +577,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs current-ATK-qualified DARK tribute cost and a three-opponent-turn persistent private hand/draw inspection-and-destroy replacement effect."
     },
-    "A・ジェネクス・ケミストリ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe Attribute declaration and a turn-duration Attribute override consumed consistently by all effect and summon legality checks."
-    },
     "BF－熱風のギブリ": {
       "status": "ENGINE_GAP",
       "reason": "Needs a direct-attack response window for hand Special Summon plus a serializable until-End-Phase base-ATK/base-DEF swap modifier."
@@ -1173,10 +1169,6 @@
       "status": "ENGINE_GAP",
       "reason": "continuous rule / provenance: needs canonical three-copy face-up detection, atomic draw-and-destroy processing, and a leave-field-to-Grave trigger for each copy that independently heals 700."
     },
-    "D－HERO ダガーガイ": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / battle: needs a hand quick-effect activation window during the opponent Battle Phase, discard provenance, and turn-duration team ATK modifier."
-    },
     "N・ブラック・パンサー": {
       "status": "ENGINE_GAP",
       "reason": "target selection / continuous rule: needs arbitrary monster name-and-effect copying, complete copied effect legality, and End Phase reset without copying identity hacks."
@@ -1220,10 +1212,6 @@
     "ジュラック・イグアノン": {
       "status": "ENGINE_GAP",
       "reason": "battle / target selection: needs exact opponent-monster battle-destruction provenance followed by an optional activation-time target among opponent set cards."
-    },
-    "スクラップ・ゴーレム": {
-      "status": "ENGINE_GAP",
-      "reason": "target selection / resolution-time Choice: needs Graveyard Scrap activation target plus a serializable choice of which player's Monster Zone receives it, with capacity validation."
     },
     "スター・ブラスト": {
       "status": "ENGINE_GAP",
