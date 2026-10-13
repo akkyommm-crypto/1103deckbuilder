@@ -10923,6 +10923,76 @@
         "tools/test_s03_u345_defenders.js"
       ],
       "evidence": "Text (carddata). attacked → at damage calculation it returned to my hand, no battle damage to me, the opponent recovered 3000 (the attacker's ATK). Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "邪神ドレッド・ルート",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Normal Summoned only by releasing three monsters (not with two); cannot be Special Summoned; every other monster's ATK/DEF halved (青眼 3000/2500 → 1500/1250), itself 4000. Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "邪神イレイザー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). 3-Tribute Normal Summon; ATK/DEF = the opponent's cards × 1000 (3 → 3000, 1 → 1000); the ignition effect destroys it and, as it is destroyed, every card on the field (also when destroyed by battle). Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "邪神アバター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). 3-Tribute Normal Summon; ATK/DEF = the highest ATK among the other monsters + 100 (3100); the opponent cannot activate Spell/Trap Cards in their next two turns (turn 6 and 8; not 7, not afterwards). Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "堕天使ディザイア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Advance Summoned by releasing one Angel (a ワイト cannot make the 1-Tribute Summon); ignition once per turn: ATK −1000 and the chosen opposing monster sent to the Graveyard. Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "神鳥シムルグ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Advance Summoned only with WIND Tributes (two ワイト give no method); at both players' End Phases both take 1000, reduced by 500 per Spell/Trap Card controlled (1 → 500, 2 → 0). Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "黒の魔法神官",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Special Summoned by releasing two Level 6+ Spellcasters (one is not enough; cannot be Normal Summoned); offered against the opponent's Trap Card activation (リビングデッドの呼び声) which is negated and destroyed. Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "幻魔皇ラビエル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Special Summoned by releasing three Fiends; ignition once per turn: releases another monster, ATK + its ATK until the End Phase; the opponent's Normal Summon → a 幻魔トークン (1000/1000) that cannot attack. Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
