@@ -445,10 +445,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs exact three-distinct-name hand reveal as activation cost, fixed opponent-card targeting, then a separate replay-safe resolution-time Ice Barrier hand summon choice."
     },
-    "氷結界の御庭番": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs source/controller-aware continuous targeting immunity for canonical Ice Barrier monsters against only opponent monster effects during Chain construction."
-    },
     "海神の巫女": {
       "status": "ENGINE_GAP",
       "reason": "Needs a source-linked virtual Field identity override that treats the field as canonical Umi only while no face-up Field Spell exists, shared by all Umi-dependent effects."

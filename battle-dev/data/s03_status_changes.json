@@ -11153,6 +11153,16 @@
         "tools/test_s03_u349_event_traps.js"
       ],
       "evidence": "Text (carddata). after a real Fusion Summon: 融合 and the chosen Fusion Material returned to the hand (the other material stays); not activatable when the Graveyard monster was not a Fusion Material. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷結界の御庭番",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C03",
+      "tests": [
+        "tools/test_codex_c03_target_immunity.js"
+      ],
+      "evidence": "Historical text in carddata: while face-up, Ice Barrier monsters I control cannot be targeted by the opponent's Effect Monster effects. CODEX-C03 adds source/controller-aware metadata to the central target filter. Real DUEL tests prove opponent Effect Monster exclusion, own Effect Monster allowance, opponent Spell/Trap allowance, face-down-name handling, negated-source handling, and Replay audit. Negative control on the unchanged U349 artifact fails the registration and two protected-candidate assertions."
     }
   ],
   "restored_to_baseline": [

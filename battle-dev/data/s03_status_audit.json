@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 469,
+    "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 697,
     "PARTIAL": 30,
-    "TESTED": 3153
+    "TESTED": 3154
   },
   "delta": {
-    "ENGINE_GAP": -147,
+    "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -610,
     "PARTIAL": -152,
-    "TESTED": 1104
+    "TESTED": 1105
   },
   "status_changes": [
     {
@@ -5291,6 +5291,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U327"
+    },
+    {
+      "name": "氷結界の御庭番",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C03"
     },
     {
       "name": "氷結界の武士",

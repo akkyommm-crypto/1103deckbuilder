@@ -1240,6 +1240,14 @@ const API = {
   registerChoiceHandler(name, fn){ return registerChoiceHandlerV49(name, fn); },
   answerChoice(keys){ return answerChoiceV49(keys); },
   cancelChoice(){ return cancelChoiceV49(); },
+  /* CODEX-C03: common target-immunity consumers use the same source-aware
+     filter as API.selectCard / ChoiceRequest. */
+  targetEffectInfoS03(byPlayer){
+    return (typeof targetEffectSourceS03==='function') ? targetEffectSourceS03(byPlayer) : {player:byPlayer};
+  },
+  targetableCardsS03(candidates, byPlayer){
+    return (typeof filterTargetable==='function') ? filterTargetable(candidates||[], byPlayer) : (candidates||[]);
+  },
 
   /* --- 以下は legacy 互換層 --------------------------------------------
      onPick がクロージャなのでレジストリ化できない。シグネチャ互換のため
@@ -1568,7 +1576,7 @@ function runScript(name, p, zone, index, opts){
   const card = zone ? zoneCard(P, zone, index) : null;
   const ctx = makeContext(p, card, zone, index, "activate", opts||{});
   ACTIVE_SCRIPT = sc;                  // 対象耐性の判定に使う
-  p3BeginEffectContextV3(p);           // P3: この効果のコントローラを provenance に使う
+  p3BeginEffectContextV3(p, card, name); // P3 / CODEX-C03: controller and source identity
   beginCostSnapshotsV3(gameState);     // P3: コストsnapshotのバッファを毎回空にする
   SCRIPT_ZONE = zone;                  // 「墓地で発動する効果」の判定に使う
   beginResolve(name);                  // 中断したときに巻き戻す位置を覚える

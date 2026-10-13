@@ -131,8 +131,15 @@ function attachMoveProvenanceV3(card, prov){
      入れない。provenance は act() の時点で Action へ焼き込むので、再生は
      Journal の Action だけで完全に決まる（隠れ globals に依存しない）。      */
 let P3_EFFECT_CONTEXT = null;
-function p3BeginEffectContextV3(player){
-  P3_EFFECT_CONTEXT = (player===0||player===1) ? {player:player} : null;
+function p3BeginEffectContextV3(player, source, sourceName){
+  if(player!==0 && player!==1){ P3_EFFECT_CONTEXT=null; return; }
+  const ctx={player:player};
+  if(source && typeof source==='object'){
+    if(source.uid!=null) ctx.uid=source.uid;
+    if(!sourceName && typeof cardName==='function') sourceName=cardName(source);
+  }else if(source!=null && Number.isFinite(Number(source))) ctx.uid=Number(source);
+  if(sourceName) ctx.name=String(sourceName);
+  P3_EFFECT_CONTEXT=ctx;
 }
 function p3EndEffectContextV3(){ P3_EFFECT_CONTEXT = null; }
 /* 自動付与する移動 Action。ここを増やすときは必ずテストも足す。 */

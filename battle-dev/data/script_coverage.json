@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 469,
+    "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 697,
     "PARTIAL": 30,
-    "TESTED": 3153
+    "TESTED": 3154
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -110,11 +110,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1492,
+    "legacy": 1493,
     "sin": 5,
     "unified": 1158
   },
-  "static_registration_name_count": 3164,
+  "static_registration_name_count": 3165,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -83577,12 +83577,19 @@
       "subtype": null,
       "date": "2010-01-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs source/controller-aware continuous targeting immunity for canonical Ice Barrier monsters against only opponent monster effects during Chain construction.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\I0_codex_c03_target_immunity.js",
+          "line": 6
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c03_target_immunity.js",
         "tools\\test_v670_batch19.js"
       ]
     },

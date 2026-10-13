@@ -340,6 +340,8 @@ CARD_TEST_FOCUS = {
         "ドレッド・ドラゴン", "バイオレット・ウィッチ", "悪魂邪苦止", "ガスタ・ガルド", "ナチュル・クリフ", "ボタニティ・ガール"},
     # CODEX-C02 uses the other named cards only as board, hand, battle, and draw fixtures.
     "test_codex_c02_cards.js": {"またたびキャット", "H－ヒートハート", "HERO’S ボンド", "ロスト", "いたずら好きな双子悪魔", "風林火山"},
+    # CODEX-C03 uses ならず者傭兵部隊 / 強制脱出装置 / 月の書 and 氷結界の術者 as fixtures.
+    "test_codex_c03_target_immunity.js": {"氷結界の御庭番"},
     # S03-U306 uses ライオウ / ワイト only as battle fixtures.
     "test_s03_u306_honest_cost.js": {"オネスト"},
     # S03-U307 names ワイト / ジェム monsters only as fixtures (the two cards under test are the Gemini duals).
