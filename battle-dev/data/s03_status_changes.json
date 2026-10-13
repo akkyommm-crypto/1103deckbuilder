@@ -10993,6 +10993,86 @@
         "tools/test_s03_u346_gods.js"
       ],
       "evidence": "Text (carddata). Special Summoned by releasing three Fiends; ignition once per turn: releases another monster, ATK + its ATK until the End Phase; the opponent's Normal Summon → a 幻魔トークン (1000/1000) that cannot attack. Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "フレムベル・デスガンナー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). Normal Summon offered only with a 「フレムベル」 Tribute (a ワイト does not), cannot be Special Summoned; ignition once per turn: the DEF-200 ワイト banished from the Graveyard → 300 damage (its ATK); not offered without such a monster. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ネオフレムベル・シャーマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). with 3 「フレムベル」 in my Graveyard it destroyed ワイト by battle → the chosen card of the opponent's Graveyard banished, +500 damage only when no Spell Card was there; nothing with fewer than 3. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "速攻の黒い忍者",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). Quick effect: two DARK monsters banished from the Graveyard (cost), the ninja banished and back at the End Phase (my turn and the opponent's turn); not offered with one DARK monster. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "インヴェルズ・グレズ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). Normal Summon offered with three 「インヴェルズ」 (not with two), cannot be Special Summoned; ignition once per turn: half LP paid, every other card of the field destroyed. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マジオシャレオン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). cannot be chosen as an attack target while the attacker's field holds a Spell/Trap Card (can when none); attacking a Defense Position ワイト pierces 2000 − 200. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ボタニカル・ライオ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). ATK 1600 + 300 per face-up Plant of mine (itself included: 2500 with three); its control cannot be changed while face-up; face-down no bonus. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "幻影の妖精",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). attacked → another monster of mine (エメラル) takes the attack and is destroyed, the fairy survives; with no other monster it is destroyed. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サモン・リアクター・AI",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). the opponent's Normal Summon → 800 damage (once per turn); in that turn's Battle Phase it negates one attack; without a summon no negation; ignition: AI + RR + AID sent to the Graveyard → ジャイアント・ボマー・エアレイド Special Summoned from the hand (refused without AID). Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
