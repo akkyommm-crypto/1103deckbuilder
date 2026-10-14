@@ -12,16 +12,16 @@
     "ENGINE_GAP": 464,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 693,
+    "NOT_STARTED": 692,
     "PARTIAL": 30,
-    "TESTED": 3162
+    "TESTED": 3163
   },
   "delta": {
     "ENGINE_GAP": -152,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -614,
+    "NOT_STARTED": -615,
     "PARTIAL": -152,
-    "TESTED": 1113
+    "TESTED": 1114
   },
   "status_changes": [
     {
@@ -3893,6 +3893,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U198"
+    },
+    {
+      "name": "光と闇の竜",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "CODEX-C09"
     },
     {
       "name": "光の召集",

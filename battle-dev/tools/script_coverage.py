@@ -352,6 +352,8 @@ CARD_TEST_FOCUS = {
     "test_codex_c07_chain_disappearance.js": {"連鎖除外"},
     # CODEX-C08 uses D.D.クロウ / ヴェーラー / ゾンビキャリア / ブレイカー only as activation fixtures.
     "test_codex_c08_koaki_doom.js": {"コアキメイル・デビル"},
+    # CODEX-C09 uses 火の粉 / D.D.クロウ / ワイト / ライオウ / サイクロン / 竜の渓谷 as fixtures.
+    "test_codex_c09_light_and_darkness_dragon.js": {"光と闇の竜"},
     # S03-U306 uses ライオウ / ワイト only as battle fixtures.
     "test_s03_u306_honest_cost.js": {"オネスト"},
     # S03-U307 names ワイト / ジェム monsters only as fixtures (the two cards under test are the Gemini duals).

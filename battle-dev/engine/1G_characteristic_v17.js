@@ -111,6 +111,30 @@ function currentAttributeV17(card){
   const m = charModValueV17(card, 'attr');
   return (m != null) ? String(m) : originalAttributeV17(card);
 }
+/* CODEX-C09: some monsters have more than one Attribute at the same time
+   (「光と闇の竜」 is LIGHT and is also treated as DARK while face-up).  An
+   attrOverride replaces the primary Attribute; additionalAttributes augments
+   it.  Keep currentAttributeV17 scalar for compatibility and expose the full
+   set through currentAttributesV17 / hasAttributeV17. */
+function currentAttributesV17(card){
+  if(!card) return [];
+  const out=[]; const primary=currentAttributeV17(card);
+  if(primary) out.push(String(primary));
+  if(typeof continuousSources==='function'){
+    const loc=(typeof locateCard==='function')?locateCard(card):null;
+    if(loc) continuousSources().forEach(src=>{
+      const cont=src.sc&&src.sc.continuous, f=cont&&cont.additionalAttributes;
+      if(typeof f!=='function'||!continuousReaches(cont.scope||'self',src.p,loc,src.card,card))return;
+      let vals=[]; try{vals=f(card,src.card);}catch(e){vals=[];}
+      if(vals!=null&&!Array.isArray(vals))vals=[vals];
+      (vals||[]).forEach(v=>{v=String(v||'');if(v&&out.indexOf(v)<0)out.push(v);});
+    });
+  }
+  return out;
+}
+function hasAttributeV17(card, attribute){
+  return currentAttributesV17(card).indexOf(String(attribute||''))>=0;
+}
 function currentNameV17(card){
   if(!card) return '';
   const c = continuousCharV17(card, 'nameOverride');
@@ -173,6 +197,7 @@ function v17Handle(p, zone, index, card){
   if(card){
     h.race = currentRaceV17(card);
     h.attr = currentAttributeV17(card);
+    h.attrs = currentAttributesV17(card);
     h.name = currentNameV17(card);
     h.tuner = isTunerNowV17(card);
   }

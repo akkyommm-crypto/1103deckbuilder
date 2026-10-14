@@ -6,9 +6,9 @@
     "ENGINE_GAP": 464,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 693,
+    "NOT_STARTED": 692,
     "PARTIAL": 30,
-    "TESTED": 3162
+    "TESTED": 3163
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -112,9 +112,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1495,
     "sin": 5,
-    "unified": 1164
+    "unified": 1165
   },
-  "static_registration_name_count": 3173,
+  "static_registration_name_count": 3174,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -13512,7 +13512,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2352
+          "line": 2358
         }
       ],
       "auto_table": false,
@@ -64730,12 +64730,20 @@
       "subtype": null,
       "date": "2006-11-02",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 26,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\I6_codex_c09_light_and_darkness_dragon.js",
+          "line": 35
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_codex_c09_light_and_darkness_dragon.js"
+      ]
     },
     {
       "index": 3028,
@@ -68007,7 +68015,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2263
+          "line": 2269
         }
       ],
       "auto_table": false,
@@ -69392,7 +69400,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2332
+          "line": 2338
         }
       ],
       "auto_table": false,
@@ -69765,7 +69773,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2312
+          "line": 2318
         }
       ],
       "auto_table": false,
@@ -77768,7 +77776,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2399
+          "line": 2405
         }
       ],
       "auto_table": false,
@@ -91589,7 +91597,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2283
+          "line": 2289
         }
       ],
       "auto_table": false,
@@ -97516,7 +97524,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2107
+          "line": 2113
         }
       ],
       "auto_table": false,

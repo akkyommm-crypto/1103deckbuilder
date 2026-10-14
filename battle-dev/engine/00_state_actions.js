@@ -1478,7 +1478,11 @@ function applyActionBodyV31(gs, a){
       const sentLv=(a.zone==='mz')?curLV(card):null, sentFace=card.face, sentAttrS03=(a.zone==='mz')?(typeof currentAttributeV17==='function'?currentAttributeV17(card):null):null;   /* S03-U293 */
       const sentCountersV22 = (fromField && card.counters && Object.keys(card.counters).length)
         ? Object.assign({}, card.counters) : null;
-      const byDestroy = fromField && a.byDestroy !== false;
+      /* CODEX-C09: destruction is not limited to cards on the field.  Effects
+         may destroy a card in the hand or Deck; those cards still carry a
+         destroyed-to-GY record and raise onDestroy (光と闇の竜).  Ordinary
+         send-to-GY actions omit byDestroy or pass false and remain unchanged. */
+      const byDestroy = a.byDestroy === true;
       /* System v30 B1: 効果破壊の「破壊したプレイヤー」。明示指定が無ければ
          解決中のチェーンリンクの発動プレイヤーを使う（v21 と同じ考え方）。 */
       const byPlayerV30 = (typeof destroyerPlayerV30==='function')
@@ -1533,11 +1537,11 @@ function applyActionBodyV31(gs, a){
       if(card.token) recordTokenGoneV11(gs, card, {byDestroy, byBattle:false, controller:a.player});
       /* System v3.5.0: 効果破壊/墓地送りでも誘発イベントをチェーン解決後へ予約する。
          戦闘破壊はBATTLE_CLEANUP側で同時イベント化するためここには来ない。 */
-      if(fromField && typeof queueDeferredEventV2==='function' && typeof PLAY_MODE!=='undefined' && PLAY_MODE===PLAY_MODES.DUEL){
+      if((fromField||byDestroy) && typeof queueDeferredEventV2==='function' && typeof PLAY_MODE!=='undefined' && PLAY_MODE===PLAY_MODES.DUEL){
         const loc=findCardByUid(card.uid);
         if(byDestroy) queueDeferredEventV2('onDestroy',{player:a.player,card,reason:'effect',byPlayer:byPlayerV30});
         if(loc && loc.zone==='grave') queueDeferredEventV2('onSendToGrave',Object.assign({player:a.player,card,reason:byDestroy?'destroy':'effect',byPlayer:byPlayerV30},eventProvS03(a)));   /* S03-U295: move group */
-        queueDeferredEventV2('onRemove',{player:a.player,card,reason:byDestroy?'destroy':'effect',byPlayer:byPlayerV30});
+        if(fromField) queueDeferredEventV2('onRemove',{player:a.player,card,reason:byDestroy?'destroy':'effect',byPlayer:byPlayerV30});
       }
       break;
     }

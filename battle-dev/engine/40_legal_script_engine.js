@@ -744,6 +744,7 @@ const API = {
   me(ctx){ return gameState.players[ctx.player]; },
   foe(ctx){ return gameState.players[ctx.opponent]; },
   db(card){ return dbOf(card); },
+  hasAttribute(card, attribute){ return typeof hasAttributeV17==='function' ? hasAttributeV17(card,attribute) : dbOf(card).at===attribute; },
   /* 場のカードを列挙 [{p, zone, index, card, db}] */
   fieldCards(opts){
     const o = opts||{};

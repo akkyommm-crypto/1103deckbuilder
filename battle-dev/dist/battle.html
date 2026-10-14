@@ -2434,7 +2434,11 @@ function applyActionBodyV31(gs, a){
       const sentLv=(a.zone==='mz')?curLV(card):null, sentFace=card.face, sentAttrS03=(a.zone==='mz')?(typeof currentAttributeV17==='function'?currentAttributeV17(card):null):null;   /* S03-U293 */
       const sentCountersV22 = (fromField && card.counters && Object.keys(card.counters).length)
         ? Object.assign({}, card.counters) : null;
-      const byDestroy = fromField && a.byDestroy !== false;
+      /* CODEX-C09: destruction is not limited to cards on the field.  Effects
+         may destroy a card in the hand or Deck; those cards still carry a
+         destroyed-to-GY record and raise onDestroy (光と闇の竜).  Ordinary
+         send-to-GY actions omit byDestroy or pass false and remain unchanged. */
+      const byDestroy = a.byDestroy === true;
       /* System v30 B1: 効果破壊の「破壊したプレイヤー」。明示指定が無ければ
          解決中のチェーンリンクの発動プレイヤーを使う（v21 と同じ考え方）。 */
       const byPlayerV30 = (typeof destroyerPlayerV30==='function')
@@ -2489,11 +2493,11 @@ function applyActionBodyV31(gs, a){
       if(card.token) recordTokenGoneV11(gs, card, {byDestroy, byBattle:false, controller:a.player});
       /* System v3.5.0: 効果破壊/墓地送りでも誘発イベントをチェーン解決後へ予約する。
          戦闘破壊はBATTLE_CLEANUP側で同時イベント化するためここには来ない。 */
-      if(fromField && typeof queueDeferredEventV2==='function' && typeof PLAY_MODE!=='undefined' && PLAY_MODE===PLAY_MODES.DUEL){
+      if((fromField||byDestroy) && typeof queueDeferredEventV2==='function' && typeof PLAY_MODE!=='undefined' && PLAY_MODE===PLAY_MODES.DUEL){
         const loc=findCardByUid(card.uid);
         if(byDestroy) queueDeferredEventV2('onDestroy',{player:a.player,card,reason:'effect',byPlayer:byPlayerV30});
         if(loc && loc.zone==='grave') queueDeferredEventV2('onSendToGrave',Object.assign({player:a.player,card,reason:byDestroy?'destroy':'effect',byPlayer:byPlayerV30},eventProvS03(a)));   /* S03-U295: move group */
-        queueDeferredEventV2('onRemove',{player:a.player,card,reason:byDestroy?'destroy':'effect',byPlayer:byPlayerV30});
+        if(fromField) queueDeferredEventV2('onRemove',{player:a.player,card,reason:byDestroy?'destroy':'effect',byPlayer:byPlayerV30});
       }
       break;
     }
@@ -9041,6 +9045,30 @@ function currentAttributeV17(card){
   const m = charModValueV17(card, 'attr');
   return (m != null) ? String(m) : originalAttributeV17(card);
 }
+/* CODEX-C09: some monsters have more than one Attribute at the same time
+   (「光と闇の竜」 is LIGHT and is also treated as DARK while face-up).  An
+   attrOverride replaces the primary Attribute; additionalAttributes augments
+   it.  Keep currentAttributeV17 scalar for compatibility and expose the full
+   set through currentAttributesV17 / hasAttributeV17. */
+function currentAttributesV17(card){
+  if(!card) return [];
+  const out=[]; const primary=currentAttributeV17(card);
+  if(primary) out.push(String(primary));
+  if(typeof continuousSources==='function'){
+    const loc=(typeof locateCard==='function')?locateCard(card):null;
+    if(loc) continuousSources().forEach(src=>{
+      const cont=src.sc&&src.sc.continuous, f=cont&&cont.additionalAttributes;
+      if(typeof f!=='function'||!continuousReaches(cont.scope||'self',src.p,loc,src.card,card))return;
+      let vals=[]; try{vals=f(card,src.card);}catch(e){vals=[];}
+      if(vals!=null&&!Array.isArray(vals))vals=[vals];
+      (vals||[]).forEach(v=>{v=String(v||'');if(v&&out.indexOf(v)<0)out.push(v);});
+    });
+  }
+  return out;
+}
+function hasAttributeV17(card, attribute){
+  return currentAttributesV17(card).indexOf(String(attribute||''))>=0;
+}
 function currentNameV17(card){
   if(!card) return '';
   const c = continuousCharV17(card, 'nameOverride');
@@ -9103,6 +9131,7 @@ function v17Handle(p, zone, index, card){
   if(card){
     h.race = currentRaceV17(card);
     h.attr = currentAttributeV17(card);
+    h.attrs = currentAttributesV17(card);
     h.name = currentNameV17(card);
     h.tuner = isTunerNowV17(card);
   }
@@ -15956,7 +15985,7 @@ function slotMatches(db, q, lv, card){
     if(!canSub) return false;
   }
   if(q.race  && curRace !== q.race) return false;
-  if(q.attr  && curAttr !== q.attr) return false;
+  if(q.attr  && !(card&&typeof hasAttributeV17==='function' ? hasAttributeV17(card,q.attr) : curAttr===q.attr)) return false;
   if(q.lvMin != null && LV < q.lvMin) return false;
   if(q.lvMax != null && LV > q.lvMax) return false;
   if(q.tuner === true  && !curTuner) return false;
@@ -16573,7 +16602,6 @@ function whyBlocked(what){
   };
   return msg[what] || `${ph}ではその操作はできません`;
 }
-
 /* =========================================================================
    SYSTEM CORE v2.8 — ADS-like Processor Queue / Chain / Priority / Summon Window / Events
    -------------------------------------------------------------------------
@@ -19296,6 +19324,7 @@ const API = {
   me(ctx){ return gameState.players[ctx.player]; },
   foe(ctx){ return gameState.players[ctx.opponent]; },
   db(card){ return dbOf(card); },
+  hasAttribute(card, attribute){ return typeof hasAttributeV17==='function' ? hasAttributeV17(card,attribute) : dbOf(card).at===attribute; },
   /* 場のカードを列挙 [{p, zone, index, card, db}] */
   fieldCards(opts){
     const o = opts||{};
@@ -22916,6 +22945,12 @@ defineScript("D.D.クロウ", {
     if(!g.length){ ctx.reason = "相手の墓地にカードがありません"; return false; }
     return true;
   },
+  cost(ctx,done){
+    const h=ctx.card&&locateCardAnyV4(ctx.card);
+    if(!h||h.p!==ctx.player||h.zone!=='hand'){done(false);return;}
+    API.discard(ctx.player,h.index,"D.D.クロウ（コスト）",{byEffect:false});
+    done(true);
+  },
   selectTargets(ctx, done){
     API.selectCard("D.D.クロウ：除外する相手墓地のカード",
       API.pileCards(ctx.opponent,'grave'), t=>done([t]));
@@ -22924,7 +22959,7 @@ defineScript("D.D.クロウ", {
     const t=ctx.selectedTargets[0];
     if(t) API.banish(t, "D.D.クロウ");
   },
-  afterResolve(ctx){ API.discard(ctx.player, ctx.index, "D.D.クロウ（コスト）"); }
+  afterResolve(){}
 });
 
 /* ---- 速攻のかかし（直接攻撃を無効） ---- */
@@ -84861,6 +84896,79 @@ defineUnifiedCardV4('コアキメイル・デビル',[
     return !!link&&['main1','main2'].includes(link.activationPhase)&&(attribute==='光'||attribute==='闇');
   }
 }));
+/* CODEX-C09 — 光と闇の竜.
+   Official 1103 behaviour:
+   - cannot be Special Summoned; LIGHT and also DARK while face-up in the MZ;
+   - mandatory activation-negation response, once per chain, to monster-effect
+     activations and Spell/Trap *Card* activations; it does not destroy;
+   - at resolution it needs both current ATK and DEF >=500, then negates and
+     permanently loses 500/500 (the reduction resets on leave/face-down/disable);
+   - mandatory destroyed-to-GY trigger from any zone: target a summonable own
+     GY monster when one exists, destroy every card on the controller's field,
+     then Special Summon the still-valid target. */
+function c09LaddSelfFaceUp(ctx){
+  const h=ctx&&ctx.card&&locateCardAnyV4(ctx.card);
+  return h&&h.zone==='mz'&&h.p===ctx.player&&h.card.face==='up' ? h : null;
+}
+function c09LaddActivationLink(ctx){
+  const e=ctx&&ctx.event, l=e&&typeof activationLinkV12==='function'?activationLinkV12(gameState,e):null;
+  if(!e||!l||l.chainId!==e.chainId)return null;
+  if(e.kind==='monster')return l;
+  if((e.kind==='spell'||e.kind==='trap')&&l.cardActivationS03===true)return l;
+  return null;
+}
+function c09LaddAlreadyUsedThisChain(card){
+  return !!(card&&Array.isArray(gameState.chain)&&gameState.chain.some(l=>l&&l.uid===card.uid&&l.name==='光と闇の竜'));
+}
+function c09LaddDestroyedSelf(ctx){
+  const g=ctx&&ctx.card&&ctx.card.graveInfo, e=ctx&&ctx.event;
+  return !!(ctx&&ctx.zone==='grave'&&g&&g.byDestroy===true&&e&&
+    (e.card===ctx.card||(e.uid!=null&&e.uid===ctx.card.uid)));
+}
+function c09LaddReviveCandidates(ctx){
+  return API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&x.card!==ctx.card&&
+    (typeof canEffectSpecialSummonS03!=='function'||canEffectSpecialSummonS03(x.card,'grave','光と闇の竜')));
+}
+
+defineUnifiedCardV4('光と闇の竜',[
+  {
+    key:'negate-activation',type:EFFECT_TYPE.QUICK,range:LOCATION.MZONE,speed:2,events:['onActivateSuccess'],
+    condition(ctx){
+      if(!c09LaddSelfFaceUp(ctx)){ctx.reason='表側表示でモンスターゾーンに存在する場合に発動します';return false;}
+      if(c09LaddAlreadyUsedThisChain(ctx.card)){ctx.reason='同一チェーン上では1度しか発動しません';return false;}
+      if(!c09LaddActivationLink(ctx)){ctx.reason='効果モンスターの効果または魔法・罠カードの発動にチェーンします';return false;}
+      return true;
+    },
+    operation(ctx){
+      const self=c09LaddSelfFaceUp(ctx), target=c09LaddActivationLink(ctx);
+      if(!self||!target||ctx.card.battleDestroyed||curATK(ctx.card)<500||curDEF(ctx.card)<500||target.activationNegated===true)return;
+      if(!API.negateChainLink(ctx.event,'activation','光と闇の竜',false))return;
+      v4RegisterStatModifier(self,{atk:-500,def:-500},{controller:ctx.player,code:'光と闇の竜 -500',targetCard:ctx.card,resetMask:RESET.LEAVE|RESET.FACE_DOWN|RESET.DISABLE});
+    },afterResolve(){}
+  },
+  {
+    key:'destroyed-revive',type:EFFECT_TYPE.TRIGGER,range:LOCATION.GRAVE,targetRange:LOCATION.GRAVE,targetSide:'self',speed:1,events:['onDestroy'],forced:true,
+    condition(ctx){if(!c09LaddDestroyedSelf(ctx)){ctx.reason='このカードが破壊され墓地へ送られた時に発動します';return false;}return true;},
+    target(ctx,done){
+      const list=c09LaddReviveCandidates(ctx);
+      if(!list.length){done([]);return;}
+      API.selectCard('光と闇の竜：特殊召喚するモンスター',list,t=>done([t]));
+    },
+    operation(ctx){
+      API.destroyAll('mz',ctx.player,'光と闇の竜');
+      API.destroyAll('sz',ctx.player,'光と闇の竜');
+      API.destroyAll('field',ctx.player,'光と闇の竜');
+      const t=ctx.selectedTargets&&ctx.selectedTargets[0], r=t&&resolveTarget(t);
+      if(r&&r.p===ctx.player&&r.zone==='grave')API.specialSummon(ctx.player,'grave',r.index,'atk','光と闇の竜');
+    },afterResolve(){}
+  }
+],{
+  type:'monster',priority:2,quickEffect:true,cannotSpecialSummon:true,activateFrom:['mz','grave'],targets:true,forced:true,
+  includesSpecialSummon:true,destroysFieldV46:true,
+  continuous:{scope:'self',from:['mz'],apply(){return null;},additionalAttributes(card,self){return card===self&&card.face==='up'?['闇']:[];}}
+});
+
+declareForcedActivationResponseS03(['光と闇の竜']);
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

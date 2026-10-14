@@ -584,6 +584,7 @@ subprocess.run(['node',str(ROOT/'tools/test_codex_c05_deck_priority.js')],check=
 subprocess.run(['node',str(ROOT/'tools/test_codex_c06_deck_priority.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_codex_c07_chain_disappearance.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_codex_c08_koaki_doom.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_codex_c09_light_and_darkness_dragon.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u292_gap9.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u293_field_to_grave.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u294_destroy_after.js')],check=True)

@@ -11243,6 +11243,16 @@
         "tools/test_codex_c08_koaki_doom.js"
       ],
       "evidence": "Official Konami card database/Q&A: its maintenance is a non-chain upkeep; its continuous monster effect negates LIGHT/DARK monster effects activated during either Main Phase, including effects activated in the hand or GY, while not negating continuous effects or effects activated outside Main Phase. A generic resolution hook now lets a live face-up monster declare selective activated-monster-effect negation. Real DUEL tests cover DARK hand/GY/field effects, LIGHT hand effects, paid costs, battle-phase negative, face-down/negated-source negatives, continuous-layer negative, upkeep, and Replay audit."
+    },
+    {
+      "name": "光と闇の竜",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C09",
+      "tests": [
+        "tools/test_codex_c09_light_and_darkness_dragon.js"
+      ],
+      "evidence": "Official Konami card database/Q&A: it cannot be Special Summoned; is also DARK while face-up; its mandatory once-per-chain response negates monster-effect activations and Spell/Trap Card activations without destroying, only when both current ATK and DEF can lose 500 at resolution; and its mandatory destroyed-to-GY trigger applies from any zone, wipes its controller's field, then revives the selected monster. Real DUEL tests cover Spell and hand-monster activations, paid cost, low-stat failure, face-up Spell-effect negative, once-per-chain, dual Attribute, Special Summon restriction, field/hand/Deck destruction, empty and missing targets, full own-field wipe, revival, and Replay audit."
     }
   ],
   "restored_to_baseline": [

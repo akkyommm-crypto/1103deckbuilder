@@ -1483,6 +1483,9 @@
   "path": "cards/I5_codex_c08_koaki_doom.js"
  },
  {
+  "path": "cards/I6_codex_c09_light_and_darkness_dragon.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

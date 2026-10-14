@@ -2092,6 +2092,12 @@ defineScript("D.D.クロウ", {
     if(!g.length){ ctx.reason = "相手の墓地にカードがありません"; return false; }
     return true;
   },
+  cost(ctx,done){
+    const h=ctx.card&&locateCardAnyV4(ctx.card);
+    if(!h||h.p!==ctx.player||h.zone!=='hand'){done(false);return;}
+    API.discard(ctx.player,h.index,"D.D.クロウ（コスト）",{byEffect:false});
+    done(true);
+  },
   selectTargets(ctx, done){
     API.selectCard("D.D.クロウ：除外する相手墓地のカード",
       API.pileCards(ctx.opponent,'grave'), t=>done([t]));
@@ -2100,7 +2106,7 @@ defineScript("D.D.クロウ", {
     const t=ctx.selectedTargets[0];
     if(t) API.banish(t, "D.D.クロウ");
   },
-  afterResolve(ctx){ API.discard(ctx.player, ctx.index, "D.D.クロウ（コスト）"); }
+  afterResolve(){}
 });
 
 /* ---- 速攻のかかし（直接攻撃を無効） ---- */
