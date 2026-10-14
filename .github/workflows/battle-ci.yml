@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - "battle.html"
+      - "rulings.html"
+      - "rulings-data.js"
+      - "wiki-rulings.js"
+      - "official-current.js"
       - "battle-dev/**"
       - "AGENTS.md"
       - "CLAUDE.md"
@@ -17,6 +21,10 @@ on:
       - "integration/**"
     paths:
       - "battle.html"
+      - "rulings.html"
+      - "rulings-data.js"
+      - "wiki-rulings.js"
+      - "official-current.js"
       - "battle-dev/**"
       - "AGENTS.md"
       - "CLAUDE.md"
