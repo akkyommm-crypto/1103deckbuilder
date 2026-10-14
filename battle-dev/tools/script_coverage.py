@@ -350,6 +350,8 @@ CARD_TEST_FOCUS = {
     "test_codex_c06_deck_priority.js": {"バイス・ドラゴン", "コアキメイル・ドラゴ"},
     # CODEX-C07 uses クリボー / ワイト / ライオウ only as summon and identity fixtures.
     "test_codex_c07_chain_disappearance.js": {"連鎖除外"},
+    # CODEX-C08 uses D.D.クロウ / ヴェーラー / ゾンビキャリア / ブレイカー only as activation fixtures.
+    "test_codex_c08_koaki_doom.js": {"コアキメイル・デビル"},
     # S03-U306 uses ライオウ / ワイト only as battle fixtures.
     "test_s03_u306_honest_cost.js": {"オネスト"},
     # S03-U307 names ワイト / ジェム monsters only as fixtures (the two cards under test are the Gemini duals).

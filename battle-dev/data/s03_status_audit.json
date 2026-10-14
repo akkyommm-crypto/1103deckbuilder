@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 465,
+    "ENGINE_GAP": 464,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 693,
     "PARTIAL": 30,
-    "TESTED": 3161
+    "TESTED": 3162
   },
   "delta": {
-    "ENGINE_GAP": -151,
+    "ENGINE_GAP": -152,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -614,
     "PARTIAL": -152,
-    "TESTED": 1112
+    "TESTED": 1113
   },
   "status_changes": [
     {
@@ -1403,6 +1403,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U321"
+    },
+    {
+      "name": "コアキメイル・デビル",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C08"
     },
     {
       "name": "コアキメイル・ドラゴ",

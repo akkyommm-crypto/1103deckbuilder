@@ -14728,6 +14728,34 @@ function targetEffectMatchesS03(info, spec){
   if(spec.maxLevel!=null && !(info.level>0 && info.level<=Number(spec.maxLevel))) return false;
   return true;
 }
+/* CODEX-C08 — generic field source that negates an activated monster effect.
+
+   A face-up, non-negated monster script may declare:
+     negateActivatedMonsterEffectS03(link, sourceCard, sourceDb, attribute)
+   and return true. The source effect may have been activated in the hand, GY,
+   or Monster Zone; this hook only concerns an activated monster effect, never a
+   continuous effect. The chain link's activationPhase is authoritative for
+   timing predicates even if resolution happens after the phase changes. */
+function fieldActivatedMonsterEffectNegationS03(link, sourceCard){
+  if(!link)return null;
+  const sourceDb=sourceCard?dbOf(sourceCard):((link.cardId!=null&&CARD_DB[link.cardId])||null);
+  if(!sourceDb||sourceDb.k!=='m')return null;
+  let attribute=sourceDb.at;
+  const loc=sourceCard&&locateCardAnyV4(sourceCard);
+  if(loc&&loc.zone==='mz'&&sourceCard.face==='up'&&typeof currentAttributeV17==='function')attribute=currentAttributeV17(sourceCard);
+  for(let p=0;p<2;p++){
+    for(const card of gameState.players[p].mz||[]){
+      if(!card||card.face!=='up'||card.activationPending||card.activationNegated)continue;
+      if(typeof effectNegated==='function'&&effectNegated(card))continue;
+      const sc=CARD_SCRIPTS[cardName(card)],fn=sc&&sc.negateActivatedMonsterEffectS03;
+      if(typeof fn!=='function')continue;
+      try{
+        if(fn(link,sourceCard,sourceDb,attribute))return {source:card,reason:cardName(card)};
+      }catch(e){}
+    }
+  }
+  return null;
+}
 /* =========================================================================
    RENDER — gameState を読んで描画するだけ
    ========================================================================= */
@@ -17503,7 +17531,9 @@ function resolveOnePreparedLinkV27(link){
   const battleNegatedS03 = (typeof battleDestroyedLinkNegatedS03==='function') ? battleDestroyedLinkNegatedS03(link, srcCard) : false;
   /* S03-U118: 解決時に王宮のお触れ・トラップ・スタン・サイコ・ショッカーで無効になっている魔法＆罠ゾーンの罠カード。 */
   const trapNegatedS03 = (typeof trapLinkNegatedAtResolutionS03==='function') ? trapLinkNegatedAtResolutionS03(link, srcCard) : false;
-  const effectNegatedNow = chainEffectNegated || sourceEffectNegated || battleNegatedS03 || trapNegatedS03;
+  /* CODEX-C08: a live field monster may continuously negate selected activated monster effects (コアキメイル・デビル). */
+  const fieldLinkNegatedS03 = (typeof fieldActivatedMonsterEffectNegationS03==='function') ? fieldActivatedMonsterEffectNegationS03(link, srcCard) : null;
+  const effectNegatedNow = chainEffectNegated || sourceEffectNegated || battleNegatedS03 || trapNegatedS03 || !!fieldLinkNegatedS03;
   if(activationNegated){
     logIt(gameState,`チェーン：${link.name} は${link.negateReason||'発動を無効'}のため発動が成立しません`);
     /* S03-U29: 発動を無効にされた魔法・罠カードは墓地へ送られる（破壊ではない）。 */
@@ -17523,7 +17553,7 @@ function resolveOnePreparedLinkV27(link){
       if(typeof sc.onCardActivationResolvedS03==='function'){ try{ sc.onCardActivationResolvedS03(ctx); }catch(e){ console.error(e); } }
     }else if(typeof sc.resolve==='function'){
       if(effectNegatedNow){
-        const why = chainEffectNegated ? (link.negateReason||'無効') : trapNegatedS03 ? (srcCard && dbOf(srcCard).k==='s' ? 'フィールドの魔法カードの効果が無効化されている' : 'フィールドの罠カードの効果が無効化されている') : '発動元モンスターの効果が無効';
+        const why = chainEffectNegated ? (link.negateReason||'無効') : trapNegatedS03 ? (srcCard && dbOf(srcCard).k==='s' ? 'フィールドの魔法カードの効果が無効化されている' : 'フィールドの罠カードの効果が無効化されている') : fieldLinkNegatedS03 ? (fieldLinkNegatedS03.reason+'の永続効果') : '発動元モンスターの効果が無効';
         logIt(gameState,`チェーン：${link.name} の効果は${why}のため適用されません`);
       }else{
         /* S03-U22: 解決中のブロック（誘発イベント／damageStepOnly）を攻守変化の判定に使う。 */
@@ -84823,6 +84853,17 @@ defineScript('連鎖除外',{
     onFlip(ctx){return ctx.zone==='sz'&&ctx.card.face==='down'&&c07ChainDisappearanceCards(ctx).length>0;}
   }
 });
+/* CODEX-C08 — コアキメイル・デビル.
+   Official ruling: the upkeep is the established Koa'ki maintenance path; the
+   continuous effect negates LIGHT/DARK monster effects activated during either
+   Main Phase, including effects activated from the hand or GY. */
+defineUnifiedCardV4('コアキメイル・デビル',[
+  u321UpkeepEffect(db=>db.k==='m'&&db.ra==='悪魔')
+],u321UpkeepMeta({
+  negateActivatedMonsterEffectS03(link,sourceCard,sourceDb,attribute){
+    return !!link&&['main1','main2'].includes(link.activationPhase)&&(attribute==='光'||attribute==='闇');
+  }
+}));
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

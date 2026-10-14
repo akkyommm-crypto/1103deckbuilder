@@ -11233,6 +11233,16 @@
         "tools/test_codex_c07_chain_disappearance.js"
       ],
       "evidence": "Official Konami card database/Q&A: the Trap is non-targeting; it can answer a face-up Normal, Flip, or Special Summon of a monster with current ATK 1000 or less; simultaneous summons process every qualifying monster; resolution rechecks face-up status and ATK; only after a summoned monster is actually banished are every printed-name copy in the activator's opponent hand/Deck banished. Real DUEL tests prove both own/opponent summon response paths, hidden-pile removal, simultaneous processing, resolution-time negatives, and Replay audit."
+    },
+    {
+      "name": "コアキメイル・デビル",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C08",
+      "tests": [
+        "tools/test_codex_c08_koaki_doom.js"
+      ],
+      "evidence": "Official Konami card database/Q&A: its maintenance is a non-chain upkeep; its continuous monster effect negates LIGHT/DARK monster effects activated during either Main Phase, including effects activated in the hand or GY, while not negating continuous effects or effects activated outside Main Phase. A generic resolution hook now lets a live face-up monster declare selective activated-monster-effect negation. Real DUEL tests cover DARK hand/GY/field effects, LIGHT hand effects, paid costs, battle-phase negative, face-down/negated-source negatives, continuous-layer negative, upkeep, and Replay audit."
     }
   ],
   "restored_to_baseline": [

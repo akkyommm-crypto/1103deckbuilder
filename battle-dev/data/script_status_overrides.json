@@ -1923,10 +1923,6 @@
       "status": "ENGINE_GAP",
       "reason": "「戦闘を行う光・闇属性モンスターの効果をバトルフェイズの間だけ無効化する」を表現できない。continuous.negateEffect は外側（sz / field）のソースが mz のモンスターを無効化する層で、モンスター同士では effectNegatedBy の対象にならない（00_state_actions.js:2520-2522 実測、cycle 30）。"
     },
-    "コアキメイル・デビル": {
-      "status": "ENGINE_GAP",
-      "reason": "「メインフェイズ時に発動する光・闇属性モンスターの効果を無効化する」を表現できない。[[コアキメイル・パワーハンド]] と同じくモンスター発の negateEffect が他のモンスターへ届かず、さらに「発動する効果だけ」を選り分ける層も無い（cycle 30 実測）。"
-    },
     "ガーディアン・エルマ": {
       "status": "ENGINE_GAP",
       "reason": "「墓地の装備魔法をこのカードに装備する」経路が無い。API.equipSpell は sz にある装備カードしか装備先へ結べず（40_legal_script_engine.js:677）、墓地から魔法・罠ゾーンへ置き直す action が無い（cycle 31 実測）。"

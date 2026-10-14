@@ -952,7 +952,9 @@ function resolveOnePreparedLinkV27(link){
   const battleNegatedS03 = (typeof battleDestroyedLinkNegatedS03==='function') ? battleDestroyedLinkNegatedS03(link, srcCard) : false;
   /* S03-U118: 解決時に王宮のお触れ・トラップ・スタン・サイコ・ショッカーで無効になっている魔法＆罠ゾーンの罠カード。 */
   const trapNegatedS03 = (typeof trapLinkNegatedAtResolutionS03==='function') ? trapLinkNegatedAtResolutionS03(link, srcCard) : false;
-  const effectNegatedNow = chainEffectNegated || sourceEffectNegated || battleNegatedS03 || trapNegatedS03;
+  /* CODEX-C08: a live field monster may continuously negate selected activated monster effects (コアキメイル・デビル). */
+  const fieldLinkNegatedS03 = (typeof fieldActivatedMonsterEffectNegationS03==='function') ? fieldActivatedMonsterEffectNegationS03(link, srcCard) : null;
+  const effectNegatedNow = chainEffectNegated || sourceEffectNegated || battleNegatedS03 || trapNegatedS03 || !!fieldLinkNegatedS03;
   if(activationNegated){
     logIt(gameState,`チェーン：${link.name} は${link.negateReason||'発動を無効'}のため発動が成立しません`);
     /* S03-U29: 発動を無効にされた魔法・罠カードは墓地へ送られる（破壊ではない）。 */
@@ -972,7 +974,7 @@ function resolveOnePreparedLinkV27(link){
       if(typeof sc.onCardActivationResolvedS03==='function'){ try{ sc.onCardActivationResolvedS03(ctx); }catch(e){ console.error(e); } }
     }else if(typeof sc.resolve==='function'){
       if(effectNegatedNow){
-        const why = chainEffectNegated ? (link.negateReason||'無効') : trapNegatedS03 ? (srcCard && dbOf(srcCard).k==='s' ? 'フィールドの魔法カードの効果が無効化されている' : 'フィールドの罠カードの効果が無効化されている') : '発動元モンスターの効果が無効';
+        const why = chainEffectNegated ? (link.negateReason||'無効') : trapNegatedS03 ? (srcCard && dbOf(srcCard).k==='s' ? 'フィールドの魔法カードの効果が無効化されている' : 'フィールドの罠カードの効果が無効化されている') : fieldLinkNegatedS03 ? (fieldLinkNegatedS03.reason+'の永続効果') : '発動元モンスターの効果が無効';
         logIt(gameState,`チェーン：${link.name} の効果は${why}のため適用されません`);
       }else{
         /* S03-U22: 解決中のブロック（誘発イベント／damageStepOnly）を攻守変化の判定に使う。 */
