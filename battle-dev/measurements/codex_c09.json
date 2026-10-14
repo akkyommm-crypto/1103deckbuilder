@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "CODEX-C09",
+  "category": "engine+card",
+  "mode": "single",
+  "workflow_profile": "codex-supplied-deck-priority",
+  "scope": "automate Light and Darkness Dragon and close the last unfinished card in the three supplied decks",
+  "outcome": "waiting",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "started_at": "2026-10-14T10:00:00+09:00",
+  "finished_at": null,
+  "gate_owner": "codex",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: per-unit tokens not available in this session",
+    "includes_all_agents": true,
+    "by_model": [
+      {
+        "model": "gpt-6-astra",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Single Codex session. Negative control established the missing card and behavior. A real activation-negation test exposed and corrected D.D. Crow's pre-existing late cost timing. Final gate fields follow repository convention and are emitted by finish-work."
+}

@@ -10543,6 +10543,716 @@
         "tools/test_s03_u340_traps.js"
       ],
       "evidence": "Text (carddata): 手札のレベル4植物族1体を墓地へ送り、選択した自分のモンスターは1度のバトルフェイズ中に2回攻撃できる。発動ターン他のモンスターは攻撃宣言できない。 Cost sent to the Graveyard; the chosen monster attacked twice (no third), another monster could not attack; control: one attack; not activatable without a Level 4 Plant. Test: tools/test_s03_u340_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "憎悪の棘",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 「ブラック・ローズ・ドラゴン」または植物族にのみ装備可能、ATK+600、守備表示モンスターへ貫通、攻撃対象のATK/DEFを600下げ、戦闘を行った相手モンスターはその戦闘では破壊されない。 キラー・トマト 1400 → 2000; attacked エメラル (1800): 200 damage, エメラル not destroyed and then 1200/200; piercing 1800 vs a Defense Position ワイト (not destroyed); not equippable to a ワイト; control without it. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "竜殺しの剣",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 戦士族にのみ装備可能、ATK+700、ドラゴン族と戦闘を行ったダメージ計算後、そのモンスターはバトルフェイズ終了時に破壊される。 ガロス 1850 → 2550; the Dragon (DEF raised to 3000 so that it survives) destroyed when the Battle Phase ends; a non-Dragon not destroyed; not equippable to a non-Warrior. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "閃光のイリュージョン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 永続罠。墓地の「ライトロード」を表側攻撃表示で特殊召喚、離れた時の相互破壊、自分のエンドフェイズ毎にデッキの上から2枚を墓地へ送る。 ガロス revived and the card stays; the Deck −2 at my End Phase; the monster destroyed → the card destroyed (and the reverse, with サイクロン); not activatable without a 「ライトロード」 in the Graveyard. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "早すぎた復活",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 墓地の「地縛神」1体を特殊召喚、そのターン攻撃宣言できず、戦闘を行う場合相手が受ける戦闘ダメージは0。 地縛神 Ccarayhua (with a Field Spell) revived; no attack that turn; on a later turn it destroyed a monster and the opponent took no damage; not activatable without a 「地縛神」. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "能力吸収コア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): 自分フィールドに「コアキメイル」が表側表示で存在し自分の墓地に「コアキメイルの鋼核」が存在する場合、効果モンスターの効果の発動を無効にし破壊する。 Offered against the opponent's ダッシュガイ effect → negated and destroyed; not offered without 鋼核 in the Graveyard or without a 「コアキメイル」 monster. Test: tools/test_s03_u341_equips_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔導書整理",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U341",
+      "tests": [
+        "tools/test_s03_u341_equips_traps.js"
+      ],
+      "evidence": "Text (carddata): デッキの上から3枚をめくり好きな順番でデッキの上に戻す。 Chose the order (ブラック・ホール, ワイト, 青眼) and the Deck top three equal it (Deck size unchanged); not activatable with an empty Deck. Test: tools/test_s03_u341_equips_traps.js (Replay audit). Known: the cards are chosen from a list shown to the chooser only; no separate reveal log is written."
+    },
+    {
+      "name": "ゲート・ガーディアン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、自分フィールドの「雷魔神－サンガ」「風魔神－ヒューガ」「水魔神－スーガ」を1体ずつリリースした場合に特殊召喚できる。 The hand procedure legal with the three 魔神, cost releases them; refused when one is missing; cannot be Normal Summoned. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "カード・ブレイカー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、自分の魔法&罠カードゾーンのカード1枚を墓地へ送った場合に表側攻撃表示で特殊召喚できる。 The Set Spell sent to the Graveyard, Special Summoned face-up Attack; refused without a Spell/Trap card. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ギガストーン・オメガ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の地属性モンスター2体を除外した場合に特殊召喚できる。カードの効果で墓地へ送られた時、相手の魔法・罠カードを全て破壊する。 Two EARTH monsters banished (a ワイト stays), refused with one or while ネクロバレー applies; sent to the Graveyard by ブラック・ホール → the opponent's Set Trap and Field Spell destroyed; destroyed by battle → nothing. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジャイアントワーム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の昆虫族を除外した場合のみ特殊召喚でき、戦闘ダメージを与えた時に相手のデッキの上から1枚を墓地へ送る。 The Insect banished, refused without an Insect or under ネクロバレー; its direct attack (1900) mills one card of the opponent's Deck. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "カゲトカゲ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、自分がレベル4モンスターの召喚に成功した時に手札から特殊召喚でき、シンクロ素材にできない。 A Level 4 Normal Summon → Special Summoned from the hand through the post-summon response window (a Level 3 summon / the opponent's summon do not); excluded from the Synchro Material candidates. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "シンクロ・マグネーター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U342",
+      "tests": [
+        "tools/test_s03_u342_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、自分がシンクロモンスターのシンクロ召喚に成功した時に手札から特殊召喚できる。 After a real Synchro Summon (エレキリム) it is Special Summoned from the hand; a Normal Summon does not trigger it. Test: tools/test_s03_u342_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デザート・ツイスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の風属性2体と地属性1体を除外する事でのみ特殊召喚でき、手札1枚を捨ててフィールドの魔法・罠1枚を破壊できる（1ターンに1度）。 3 monsters banished (a ワイト stays), refused with one WIND; ignition: discard cost, the chosen Set Spell/Trap destroyed (a Field Spell stays), once per turn, unavailable without a hand card. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "フェンリル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の水属性2体を除外して特殊召喚、戦闘で相手モンスターを破壊した場合に次の相手ターンのドローフェイズをスキップ。 2 WATER monsters banished, refused with one; after a battle destruction the opponent's next Draw Phase is marked skipped (control: none otherwise). Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デビルドーザー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の昆虫族2体を除外した場合のみ特殊召喚、相手に戦闘ダメージを与えた時デッキの上から1枚を墓地へ。 2 Insects banished, refused with one; direct attack 2800 mills the opponent's top card. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "メガロック・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、墓地の岩石族を除外する事でのみ特殊召喚、元々の攻撃力・守備力は除外した数×700。 3 Rocks → 2100/2100, 1 Rock + 「decide」 → 700/700, refused without a Rock. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "モンタージュ・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、手札のモンスター3体を墓地へ送った場合のみ特殊召喚、攻撃力は墓地へ送ったモンスターのレベル合計×300。 3 chosen monsters (Lv 1 + 4 + 7) → 3600, a Spell stays in the hand; refused with two. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マスターモンク",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 通常召喚できず、モンク・ファイター1体を生け贄に捧げた場合のみ特殊召喚、1ターンに2回攻撃できる。 モンク・ファイター released; two attacks and no third; refused without it. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヘリオス・デュオ・メギストス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): 原始太陽ヘリオスを生け贄に捧げて特殊召喚、ATK/DEFは除外されたモンスター×200、戦闘破壊された場合エンドフェイズに300アップして特殊召喚。 Special Summoned releasing ヘリオス (5 banished → 1000); destroyed by 青眼 → at the End Phase back with 1300; refused without ヘリオス. Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヘリオス・トリス・メギストス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U343",
+      "tests": [
+        "tools/test_s03_u343_banish_procs.js"
+      ],
+      "evidence": "Text (carddata): ヘリオス・デュオ・メギストスを生け贄に捧げて特殊召喚、ATK/DEFは除外されたモンスター×300、戦闘破壊で500アップして特殊召喚、相手モンスターが存在する場合2回攻撃。 10 banished → 3000; two attacks against three monsters, no third; refused without デュオ. (The revival is the same handler as デュオ with +500, covered by its shared code.) Test: tools/test_s03_u343_banish_procs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "霊魂の護送船",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). a LIGHT monster banished from the Graveyard; refused without one or under ネクロバレー. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "神聖なる魂",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). two LIGHT monsters banished; during the opponent's Battle Phase only every opposing monster loses 300 ATK (3000 → 2700), unchanged in my turn / their Main Phase. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "風の精霊 ガルーダ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). a WIND monster banished; at the opponent's End Phase (not at mine) the chosen opposing monster changes position. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "水の精霊 アクエリア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). a WATER monster banished; at the opponent's Standby Phase the chosen monster changes position and cannot change position that turn (the lock ends with the turn). Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷炎の双竜",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). 2 WATER + 1 FIRE banished, refused without FIRE; ignition: discard cost, the chosen monster destroyed, once per turn. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "電池メン－業務用",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). two 「電池メン」 banished (another Thunder stays); ignition: a Thunder banished (cost) → the chosen monster and Spell/Trap destroyed; not offered without a Spell/Trap. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "真紅眼の闇竜",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). 真紅眼の黒竜 released; ATK 2400 + 300 per Dragon in the Graveyard (3000 with 黒竜 + エレメント・ドラゴン); refused without 黒竜. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "邪龍アナンタ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). every Reptile of mine on the field and in the Graveyard banished → ATK/DEF 3 × 600 = 1800; at my End Phase it destroys a chosen card of the field. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "降雷皇ハモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). three face-up Continuous Spells sent to the Graveyard; in Defense Position the opponent can attack only it; destroying a monster by battle → 1000 damage; refused with two Spells. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "磁石の戦士マグネット・バルキリオン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). α (hand) / β / γ (field) released; ignition: it releases itself and Special Summons α / β / γ from the Graveyard; refused without γ. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "虚栄の大猿",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U344",
+      "tests": [
+        "tools/test_s03_u344_spirits.js"
+      ],
+      "evidence": "Text (carddata). a Beast sent from the hand; on success choose Level + or − the Beast's Level (5 → 9 / 1); refused without a Beast. Test: tools/test_s03_u344_spirits.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デッド・ガードナー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). the attack aimed at my ワイト moved to it (Defense 1900 vs 青眼: destroyed, no battle damage); destroyed → the opponent's monster loses 1000 ATK until the End Phase (back at 3000 afterwards); also when attacked directly; control without it. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "カードブロッカー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). Normal Summoned → Defense Position; the attack on another monster moved to it; attacked → send up to 3 cards from the Deck top (3 → DEF 1900 survives ガロス 1850, 0 → destroyed). Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "シャトルロイド",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). selected as the attack target → banished (the attack becomes a Replay, cancelled), back at my next Standby Phase with 1000 damage to the opponent. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ロックストーン・ウォリアー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). no battle damage to me; its attack on 青眼 destroyed it → two ロックストーン・トークン (cannot be released for an Advance Summon); destroyed while defending → no token. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔力吸収球体",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). offered from the field against the opponent's ブラック・ホール in their turn: released (cost), the Spell negated and destroyed; not in my own turn. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "傀儡虫",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). discarded as the cost; the Undead ワイト is under my control until the End Phase (the Dragon is not a candidate); unavailable without a Fiend/Zombie target. Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "クリボン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U345",
+      "tests": [
+        "tools/test_s03_u345_defenders.js"
+      ],
+      "evidence": "Text (carddata). attacked → at damage calculation it returned to my hand, no battle damage to me, the opponent recovered 3000 (the attacker's ATK). Test: tools/test_s03_u345_defenders.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "邪神ドレッド・ルート",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Normal Summoned only by releasing three monsters (not with two); cannot be Special Summoned; every other monster's ATK/DEF halved (青眼 3000/2500 → 1500/1250), itself 4000. Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "邪神イレイザー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). 3-Tribute Normal Summon; ATK/DEF = the opponent's cards × 1000 (3 → 3000, 1 → 1000); the ignition effect destroys it and, as it is destroyed, every card on the field (also when destroyed by battle). Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "邪神アバター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). 3-Tribute Normal Summon; ATK/DEF = the highest ATK among the other monsters + 100 (3100); the opponent cannot activate Spell/Trap Cards in their next two turns (turn 6 and 8; not 7, not afterwards). Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "堕天使ディザイア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Advance Summoned by releasing one Angel (a ワイト cannot make the 1-Tribute Summon); ignition once per turn: ATK −1000 and the chosen opposing monster sent to the Graveyard. Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "神鳥シムルグ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Advance Summoned only with WIND Tributes (two ワイト give no method); at both players' End Phases both take 1000, reduced by 500 per Spell/Trap Card controlled (1 → 500, 2 → 0). Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "黒の魔法神官",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Special Summoned by releasing two Level 6+ Spellcasters (one is not enough; cannot be Normal Summoned); offered against the opponent's Trap Card activation (リビングデッドの呼び声) which is negated and destroyed. Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "幻魔皇ラビエル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U346",
+      "tests": [
+        "tools/test_s03_u346_gods.js"
+      ],
+      "evidence": "Text (carddata). Special Summoned by releasing three Fiends; ignition once per turn: releases another monster, ATK + its ATK until the End Phase; the opponent's Normal Summon → a 幻魔トークン (1000/1000) that cannot attack. Test: tools/test_s03_u346_gods.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "フレムベル・デスガンナー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). Normal Summon offered only with a 「フレムベル」 Tribute (a ワイト does not), cannot be Special Summoned; ignition once per turn: the DEF-200 ワイト banished from the Graveyard → 300 damage (its ATK); not offered without such a monster. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ネオフレムベル・シャーマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). with 3 「フレムベル」 in my Graveyard it destroyed ワイト by battle → the chosen card of the opponent's Graveyard banished, +500 damage only when no Spell Card was there; nothing with fewer than 3. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "速攻の黒い忍者",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). Quick effect: two DARK monsters banished from the Graveyard (cost), the ninja banished and back at the End Phase (my turn and the opponent's turn); not offered with one DARK monster. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "インヴェルズ・グレズ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). Normal Summon offered with three 「インヴェルズ」 (not with two), cannot be Special Summoned; ignition once per turn: half LP paid, every other card of the field destroyed. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マジオシャレオン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). cannot be chosen as an attack target while the attacker's field holds a Spell/Trap Card (can when none); attacking a Defense Position ワイト pierces 2000 − 200. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ボタニカル・ライオ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). ATK 1600 + 300 per face-up Plant of mine (itself included: 2500 with three); its control cannot be changed while face-up; face-down no bonus. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "幻影の妖精",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). attacked → another monster of mine (エメラル) takes the attack and is destroyed, the fairy survives; with no other monster it is destroyed. Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サモン・リアクター・AI",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U347",
+      "tests": [
+        "tools/test_s03_u347_misc.js"
+      ],
+      "evidence": "Text (carddata). the opponent's Normal Summon → 800 damage (once per turn); in that turn's Battle Phase it negates one attack; without a summon no negation; ignition: AI + RR + AID sent to the Graveyard → ジャイアント・ボマー・エアレイド Special Summoned from the hand (refused without AID). Test: tools/test_s03_u347_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "アマゾネスの意地",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U348",
+      "tests": [
+        "tools/test_s03_u348_revive_traps.js"
+      ],
+      "evidence": "Text (carddata). a 「アマゾネス」 revived face-up Attack (the ワイト not chosen), cannot change position and must attack; the trap destroyed → the monster destroyed; the monster destroyed by battle → the trap destroyed; not activatable without an 「アマゾネス」 in the Graveyard. Test: tools/test_s03_u348_revive_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ウィキッド・リボーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U348",
+      "tests": [
+        "tools/test_s03_u348_revive_traps.js"
+      ],
+      "evidence": "Text (carddata). 800 LP paid; a properly summoned Synchro Monster revived face-up Attack, its effects negated, no attack that turn (it attacks on a later turn); the trap destroyed → the monster destroyed; not activatable without a Synchro Monster. Test: tools/test_s03_u348_revive_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアの再練成",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U348",
+      "tests": [
+        "tools/test_s03_u348_revive_traps.js"
+      ],
+      "evidence": "Text (carddata). a 「コアキメイル」 revived; destroyed at my End Phase (no upkeep) → I take its ATK 1900 and the trap is destroyed; destroyed by battle in the opponent's turn → only the battle damage, the trap destroyed. Test: tools/test_s03_u348_revive_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイコ・チューン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U348",
+      "tests": [
+        "tools/test_s03_u348_revive_traps.js"
+      ],
+      "evidence": "Text (carddata). a Psychic monster revived and treated as a Tuner; the trap destroyed → the monster destroyed and I take Level 4 × 400 = 1600; the monster destroyed by battle → the trap destroyed and the same 1600 burn. Test: tools/test_s03_u348_revive_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヘル・ポリマー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U349",
+      "tests": [
+        "tools/test_s03_u349_event_traps.js"
+      ],
+      "evidence": "Text (carddata). answered the opponent's real Fusion Summon (融合 + スパークマン + クレイマン): ワイト released (cost), the Fusion Monster under my control permanently; not activated without a monster to release or for a Normal Summon. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "痛恨の訴え",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U349",
+      "tests": [
+        "tools/test_s03_u349_event_traps.js"
+      ],
+      "evidence": "Text (carddata). a direct attack hit me (300) → I took control of the highest-DEF monster (ブラック・マジシャン), effects negated, cannot attack; it returned to the opponent at my next End Phase (not before) with the negation cleared; not activated for an attack on a monster. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "破壊輪",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U349",
+      "tests": [
+        "tools/test_s03_u349_event_traps.js"
+      ],
+      "evidence": "Text (carddata). opponent's turn: the chosen monster (青眼, ATK 3000 ≤ their LP) destroyed, I take 3000 and then they take 3000; refused when its ATK exceeds their LP or in my own turn. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "融合回収",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U349",
+      "tests": [
+        "tools/test_s03_u349_event_traps.js"
+      ],
+      "evidence": "Text (carddata). after a real Fusion Summon: 融合 and the chosen Fusion Material returned to the hand (the other material stays); not activatable when the Graveyard monster was not a Fusion Material. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷結界の御庭番",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C03",
+      "tests": [
+        "tools/test_codex_c03_target_immunity.js"
+      ],
+      "evidence": "Historical text in carddata: while face-up, Ice Barrier monsters I control cannot be targeted by the opponent's Effect Monster effects. CODEX-C03 adds source/controller-aware metadata to the central target filter. Real DUEL tests prove opponent Effect Monster exclusion, own Effect Monster allowance, opponent Spell/Trap allowance, face-down-name handling, negated-source handling, and Replay audit. Negative control on the unchanged U349 artifact fails the registration and two protected-candidate assertions."
+    },
+    {
+      "name": "安全地帯",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C04",
+      "tests": [
+        "tools/test_codex_c04_safe_zone.js"
+      ],
+      "evidence": "Historical text in carddata: target one face-up Attack Position monster; while linked, it cannot be targeted or destroyed by the opponent's effects, cannot be destroyed by battle, and cannot attack directly; either linked card leaving destroys the other. Real DUEL tests prove activation from a previously Set Trap during the opponent turn, both-side target eligibility, target/effect/battle protections, own-effect allowance, direct-attack rejection, mutual leave-field destruction, and Replay audit. Negative control on the unchanged CODEX-C03 artifact fails all newly implemented behaviors without crashing."
+    },
+    {
+      "name": "ミンゲイドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C05",
+      "tests": [
+        "tools/test_codex_c05_deck_priority.js"
+      ],
+      "evidence": "Historical text in carddata: it is worth two Tributes for a Dragon Tribute Summon; during its controller's Standby Phase it may revive itself when all monsters in that controller's GY are Dragon, and is banished when it leaves after that revival. Real DUEL tests prove the Dragon-only tribute value, optional Standby revival, non-Dragon negative, leave-field replacement, and Replay audit."
+    },
+    {
+      "name": "時械神メタイオン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C05",
+      "tests": [
+        "tools/test_codex_c05_deck_priority.js"
+      ],
+      "evidence": "Official card database and historical text: cannot be Special Summoned from the Deck; can be Normal Summoned without Tribute while controlling no monsters; cannot be destroyed by battle/effects; its Attack Position battles deal no battle damage to its controller; after it battles, all other monsters return and the opponent takes 300 per monster actually returned; it returns to its owner's Deck during its controller's Standby Phase. Real DUEL tests cover each behavior, negatives, and Replay audit."
+    },
+    {
+      "name": "究極時械神セフィロン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C05",
+      "tests": [
+        "tools/test_codex_c05_deck_priority.js"
+      ],
+      "evidence": "Official card database and historical text: cannot be Normal Summoned; Special Summons from hand by its non-chain procedure with ten or more monsters in the controller's GY; once per turn it non-targetingly Special Summons a Level 8+ Fairy from hand/GY, negates that monster's effects, and makes its ATK 4000 while face-up. Real DUEL tests prove procedure positive/negative, resolution choice, permanent effect negation, set ATK, once-per-turn, and Replay audit."
+    },
+    {
+      "name": "バイス・ドラゴン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C06",
+      "tests": [
+        "tools/test_codex_c06_deck_priority.js"
+      ],
+      "evidence": "Official card database/Q&A and historical text: it can be Special Summoned from the hand by its non-chain procedure only while only the opponent controls a monster; while face-up after that procedure, its original ATK/DEF are halved. Real DUEL tests prove exact procedure provenance, 1000/1200 original and current stats, face-down reset, illegal-condition negative, ordinary-revival negative, and Replay audit."
+    },
+    {
+      "name": "コアキメイル・ドラゴ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C06",
+      "tests": [
+        "tools/test_codex_c06_deck_priority.js"
+      ],
+      "evidence": "Official card database/Q&A and historical text: while its effect is live, neither player can Special Summon LIGHT/DARK monsters, including face-down summons; its controller must send Iron Core, reveal a Dragon, or destroy it at each own End Phase. Real DUEL tests prove the bilateral printed-attribute lock, non-LIGHT/DARK allowance, negated-source negative, upkeep payment/destruction, and Replay audit."
+    },
+    {
+      "name": "連鎖除外",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C07",
+      "tests": [
+        "tools/test_codex_c07_chain_disappearance.js"
+      ],
+      "evidence": "Official Konami card database/Q&A: the Trap is non-targeting; it can answer a face-up Normal, Flip, or Special Summon of a monster with current ATK 1000 or less; simultaneous summons process every qualifying monster; resolution rechecks face-up status and ATK; only after a summoned monster is actually banished are every printed-name copy in the activator's opponent hand/Deck banished. Real DUEL tests prove both own/opponent summon response paths, hidden-pile removal, simultaneous processing, resolution-time negatives, and Replay audit."
+    },
+    {
+      "name": "コアキメイル・デビル",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C08",
+      "tests": [
+        "tools/test_codex_c08_koaki_doom.js"
+      ],
+      "evidence": "Official Konami card database/Q&A: its maintenance is a non-chain upkeep; its continuous monster effect negates LIGHT/DARK monster effects activated during either Main Phase, including effects activated in the hand or GY, while not negating continuous effects or effects activated outside Main Phase. A generic resolution hook now lets a live face-up monster declare selective activated-monster-effect negation. Real DUEL tests cover DARK hand/GY/field effects, LIGHT hand effects, paid costs, battle-phase negative, face-down/negated-source negatives, continuous-layer negative, upkeep, and Replay audit."
+    },
+    {
+      "name": "光と闇の竜",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C09",
+      "tests": [
+        "tools/test_codex_c09_light_and_darkness_dragon.js"
+      ],
+      "evidence": "Official Konami card database/Q&A: it cannot be Special Summoned; is also DARK while face-up; its mandatory once-per-chain response negates monster-effect activations and Spell/Trap Card activations without destroying, only when both current ATK and DEF can lose 500 at resolution; and its mandatory destroyed-to-GY trigger applies from any zone, wipes its controller's field, then revives the selected monster. Real DUEL tests cover Spell and hand-monster activations, paid cost, low-stat failure, face-up Spell-effect negative, once-per-chain, dual Attribute, Special Summon restriction, field/hand/Deck destruction, empty and missing targets, full own-field wipe, revival, and Replay audit."
     }
   ],
   "restored_to_baseline": [

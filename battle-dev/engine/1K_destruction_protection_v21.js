@@ -264,7 +264,12 @@ function effectDestroyCtxV21(gs, a, card){
                         : destroyerTargetingV21(gs);
   return {
     cause:'effect',
-    byPlayer: (a && a.byPlayer!=null) ? a.byPlayer : null,
+    /* CODEX-C04: mass-destruction Actions normally omit byPlayer and carry the
+       resolving controller in the Replay-safe P3 stamp. Use the same v30
+       authority as graveInfo/onDestroy so opponent-only protection also works
+       for FX_WIPE_ZONE (Black Hole, Torrential Tribute, etc.). */
+    byPlayer: (typeof destroyerPlayerV30==='function') ? destroyerPlayerV30(gs,a)
+      : ((a && (a.byPlayer===0||a.byPlayer===1)) ? a.byPlayer : null),
     reason: (a && a.reason) || null,
     /* S03-U167: the resolving link has already left gs.chain when its effect destroys (destroyerKindV21 always saw an empty chain in
        the real DUEL path, so 「罠カードの効果では破壊されない」 / 「魔法・罠カードの効果では破壊されない」 never applied). The action's

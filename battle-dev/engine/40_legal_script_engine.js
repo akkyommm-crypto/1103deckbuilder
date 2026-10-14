@@ -744,6 +744,7 @@ const API = {
   me(ctx){ return gameState.players[ctx.player]; },
   foe(ctx){ return gameState.players[ctx.opponent]; },
   db(card){ return dbOf(card); },
+  hasAttribute(card, attribute){ return typeof hasAttributeV17==='function' ? hasAttributeV17(card,attribute) : dbOf(card).at===attribute; },
   /* 場のカードを列挙 [{p, zone, index, card, db}] */
   fieldCards(opts){
     const o = opts||{};
@@ -800,6 +801,9 @@ const API = {
     /* S03-U145: 「召喚条件を無視して特殊召喚する」（古代の機械究極巨人 ③）— opts.ignoreSummonConditionS03 skips the card's own summon
        conditions (U126 「〜でしか」, U127 proper summon, and 「特殊召喚できない」 in FX_SPECIAL_SUMMON); player-level restrictions still apply. */
     const ignoreCondS03 = extra.ignoreSummonConditionS03===true;
+    /* CODEX-C05: card text may forbid a particular source zone (e.g. 時械神メタイオン from the Deck). */
+    const fromBanS03 = (!ignoreCondS03 && before && typeof specialSummonSourceBanReasonS03==='function') ? specialSummonSourceBanReasonS03(before, from) : '';
+    if(fromBanS03){ trace(`specialSummon blocked: ${fromBanS03}`,false); showToast(fromBanS03); logIt(gameState, `${reason||'効果'}：${fromBanS03}`); return false; }
     /* S03-U187: 「「Sin」モンスターはフィールドに1体しか表側表示で存在できない」 — a standing rule, not a summon condition (applies even when conditions are ignored) */
     const sinS03 = (before && typeof sinUniqueReasonS03==='function') ? sinUniqueReasonS03(before) : '';
     if(sinS03){ trace(`specialSummon blocked: ${sinS03}`,false); showToast(sinS03); logIt(gameState, `${reason||'効果'}：${sinS03}`); return false; }
@@ -1240,6 +1244,14 @@ const API = {
   registerChoiceHandler(name, fn){ return registerChoiceHandlerV49(name, fn); },
   answerChoice(keys){ return answerChoiceV49(keys); },
   cancelChoice(){ return cancelChoiceV49(); },
+  /* CODEX-C03: common target-immunity consumers use the same source-aware
+     filter as API.selectCard / ChoiceRequest. */
+  targetEffectInfoS03(byPlayer){
+    return (typeof targetEffectSourceS03==='function') ? targetEffectSourceS03(byPlayer) : {player:byPlayer};
+  },
+  targetableCardsS03(candidates, byPlayer){
+    return (typeof filterTargetable==='function') ? filterTargetable(candidates||[], byPlayer) : (candidates||[]);
+  },
 
   /* --- 以下は legacy 互換層 --------------------------------------------
      onPick がクロージャなのでレジストリ化できない。シグネチャ互換のため
@@ -1568,7 +1580,7 @@ function runScript(name, p, zone, index, opts){
   const card = zone ? zoneCard(P, zone, index) : null;
   const ctx = makeContext(p, card, zone, index, "activate", opts||{});
   ACTIVE_SCRIPT = sc;                  // 対象耐性の判定に使う
-  p3BeginEffectContextV3(p);           // P3: この効果のコントローラを provenance に使う
+  p3BeginEffectContextV3(p, card, name); // P3 / CODEX-C03: controller and source identity
   beginCostSnapshotsV3(gameState);     // P3: コストsnapshotのバッファを毎回空にする
   SCRIPT_ZONE = zone;                  // 「墓地で発動する効果」の判定に使う
   beginResolve(name);                  // 中断したときに巻き戻す位置を覚える

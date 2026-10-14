@@ -591,7 +591,7 @@ function slotMatches(db, q, lv, card){
     if(!canSub) return false;
   }
   if(q.race  && curRace !== q.race) return false;
-  if(q.attr  && curAttr !== q.attr) return false;
+  if(q.attr  && !(card&&typeof hasAttributeV17==='function' ? hasAttributeV17(card,q.attr) : curAttr===q.attr)) return false;
   if(q.lvMin != null && LV < q.lvMin) return false;
   if(q.lvMax != null && LV > q.lvMax) return false;
   if(q.tuner === true  && !curTuner) return false;
@@ -1208,4 +1208,3 @@ function whyBlocked(what){
   };
   return msg[what] || `${ph}ではその操作はできません`;
 }
-

@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "CODEX-C04",
+  "category": "card",
+  "mode": "single",
+  "workflow_profile": "codex-safe-zone",
+  "scope": "full historical Safe Zone implementation with opponent-turn activation and linked protections",
+  "outcome": "waiting",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-13T21:00:00+09:00",
+  "finished_at": null,
+  "gate_owner": "codex",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: per-unit tokens not available in this session",
+    "includes_all_agents": true,
+    "by_model": [
+      {
+        "model": "gpt-6-astra",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Single Codex session. Negative control fails every newly implemented behavior without crashing. Final gate fields follow repository convention and are emitted by finish-work."
+}

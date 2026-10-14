@@ -340,6 +340,20 @@ CARD_TEST_FOCUS = {
         "ドレッド・ドラゴン", "バイオレット・ウィッチ", "悪魂邪苦止", "ガスタ・ガルド", "ナチュル・クリフ", "ボタニティ・ガール"},
     # CODEX-C02 uses the other named cards only as board, hand, battle, and draw fixtures.
     "test_codex_c02_cards.js": {"またたびキャット", "H－ヒートハート", "HERO’S ボンド", "ロスト", "いたずら好きな双子悪魔", "風林火山"},
+    # CODEX-C03 uses ならず者傭兵部隊 / 強制脱出装置 / 月の書 and 氷結界の術者 as fixtures.
+    "test_codex_c03_target_immunity.js": {"氷結界の御庭番"},
+    # CODEX-C04 uses all other named cards only as targeting, destruction, battle, and link fixtures.
+    "test_codex_c04_safe_zone.js": {"安全地帯"},
+    # CODEX-C05 uses the other named monsters as summon, battle, destruction, and graveyard fixtures.
+    "test_codex_c05_deck_priority.js": {"ミンゲイドラゴン", "時械神メタイオン", "究極時械神セフィロン"},
+    # CODEX-C06 uses the other named monsters only as procedure, lock, negate, and upkeep fixtures.
+    "test_codex_c06_deck_priority.js": {"バイス・ドラゴン", "コアキメイル・ドラゴ"},
+    # CODEX-C07 uses クリボー / ワイト / ライオウ only as summon and identity fixtures.
+    "test_codex_c07_chain_disappearance.js": {"連鎖除外"},
+    # CODEX-C08 uses D.D.クロウ / ヴェーラー / ゾンビキャリア / ブレイカー only as activation fixtures.
+    "test_codex_c08_koaki_doom.js": {"コアキメイル・デビル"},
+    # CODEX-C09 uses 火の粉 / D.D.クロウ / ワイト / ライオウ / サイクロン / 竜の渓谷 as fixtures.
+    "test_codex_c09_light_and_darkness_dragon.js": {"光と闇の竜"},
     # S03-U306 uses ライオウ / ワイト only as battle fixtures.
     "test_s03_u306_honest_cost.js": {"オネスト"},
     # S03-U307 names ワイト / ジェム monsters only as fixtures (the two cards under test are the Gemini duals).
@@ -410,6 +424,24 @@ CARD_TEST_FOCUS = {
     "test_s03_u339_enablers.js": {"ブラック・マジシャンズ・ナイト", "サイバー・バリア・ドラゴン", "サイバー・レーザー・ドラゴン", "ブラック・バック", "氷結界のロイヤル・ナイト", "ヴァイロン・マター"},
     # S03-U340 names ジェムナイト・エメラル / ジェムナイト・アイオーラ / ライトロード・ウォリアー ガロス / ワイト / 青眼の白龍 / 死者蘇生 / ブラック・ホール / キラー・トマト only as fixtures.
     "test_s03_u340_traps.js": {"ストライク・ショット", "チェンジ・デステニー", "ライト・バニッシュ", "ヴィクティム・カウンター", "ワンダー・クローバー"},
+    # S03-U341 names キラー・トマト / ライトロード・ウォリアー ガロス / ガード・オブ・フレムベル / ジェムナイト・エメラル / 地縛神 Ccarayhua / コアキメイル・クルセイダー / コアキメイルの鋼核 / D－HERO ダッシュガイ / 歯車街 / ブラック・ホール / サイクロン / ワイト / 青眼の白龍 only as fixtures.
+    "test_s03_u341_equips_traps.js": {"憎悪の棘", "竜殺しの剣", "閃光のイリュージョン", "早すぎた復活", "能力吸収コア", "魔導書整理"},
+    # S03-U342 names the three 魔神 / サイクロン / ジェムナイト・エメラル / C・リペアラー / アーモド・ビー / ブラック・ホール / ネクロバレー / エレキツネ / サンダー・ドラゴン / エレキリム / ワイト / 青眼の白龍 only as fixtures.
+    "test_s03_u342_procs.js": {"ゲート・ガーディアン", "カード・ブレイカー", "ギガストーン・オメガ", "ジャイアントワーム", "カゲトカゲ", "シンクロ・マグネーター"},
+    # S03-U343 names the WIND / EARTH / WATER / Insect / Rock / Monk fixtures, ワイト / 青眼の白龍 / サイクロン / ブラック・ホール / 王家の眠る谷－ネクロバレー only as fixtures.
+    "test_s03_u343_banish_procs.js": {"デザート・ツイスター", "フェンリル", "デビルドーザー", "メガロック・ドラゴン", "モンタージュ・ドラゴン", "マスターモンク", "原始太陽ヘリオス", "ヘリオス・デュオ・メギストス", "ヘリオス・トリス・メギストス"},
+    # S03-U344 names the LIGHT / WIND / WATER / FIRE / Thunder / Reptile / Dragon / Beast fixtures, 磁石の戦士α β γ, the Continuous Spells, ワイト / 青眼の白龍 / サイクロン / ネクロバレー only as fixtures.
+    "test_s03_u344_spirits.js": {"霊魂の護送船", "神聖なる魂", "風の精霊 ガルーダ", "水の精霊 アクエリア", "氷炎の双竜", "電池メン－業務用", "真紅眼の闇竜", "邪龍アナンタ", "降雷皇ハモン", "磁石の戦士マグネット・バルキリオン", "虚栄の大猿"},
+    # S03-U345 names ワイト / 青眼の白龍 / ブラック・ホール / ライトロード・ウォリアー ガロス / ブラック・マジシャン only as fixtures.
+    "test_s03_u345_defenders.js": {"デッド・ガードナー", "カードブロッカー", "シャトルロイド", "ロックストーン・ウォリアー", "魔力吸収球体", "傀儡虫", "クリボン"},
+    # S03-U346 names ワイト / 青眼の白龍 / クリボン / E・HERO フェザーマン / C・チッキー / ブラック・マジシャン / デーモンの召喚 / サイクロン / リビングデッドの呼び声 only as fixtures.
+    "test_s03_u346_gods.js": {"邪神ドレッド・ルート", "邪神イレイザー", "邪神アバター", "堕天使ディザイア", "神鳥シムルグ", "黒の魔法神官", "幻魔皇ラビエル"},
+    # S03-U347 names the フレムベル / インヴェルズ / Plant fixtures, ジャイアント・ボマー・エアレイド / トラップ・リアクター・RR / マジック・リアクター・AID, ワイト / 青眼の白龍 / ブラック・マジシャン / ジェムナイト・エメラル / サイクロン only as fixtures.
+    "test_s03_u347_misc.js": {"フレムベル・デスガンナー", "ネオフレムベル・シャーマン", "速攻の黒い忍者", "インヴェルズ・グレズ", "マジオシャレオン", "ボタニカル・ライオ", "幻影の妖精", "サモン・リアクター・AI"},
+    # S03-U348 names アマゾネスの剣士 / エレキリム / コアキメイル・クルセイダー / ウォールクリエイター / コアキメイルの鋼核 / ワイト / 青眼の白龍 / サイクロン only as fixtures.
+    "test_s03_u348_revive_traps.js": {"アマゾネスの意地", "ウィキッド・リボーン", "コアの再練成", "サイコ・チューン"},
+    # S03-U349 names 融合 / the E・HERO materials and Fusion Monster / ブラック・マジシャン / 青眼の白龍 / ワイト only as fixtures.
+    "test_s03_u349_event_traps.js": {"ヘル・ポリマー", "痛恨の訴え", "破壊輪", "融合回収"},
 }
 
 

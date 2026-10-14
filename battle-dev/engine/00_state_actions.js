@@ -1478,7 +1478,11 @@ function applyActionBodyV31(gs, a){
       const sentLv=(a.zone==='mz')?curLV(card):null, sentFace=card.face, sentAttrS03=(a.zone==='mz')?(typeof currentAttributeV17==='function'?currentAttributeV17(card):null):null;   /* S03-U293 */
       const sentCountersV22 = (fromField && card.counters && Object.keys(card.counters).length)
         ? Object.assign({}, card.counters) : null;
-      const byDestroy = fromField && a.byDestroy !== false;
+      /* CODEX-C09: destruction is not limited to cards on the field.  Effects
+         may destroy a card in the hand or Deck; those cards still carry a
+         destroyed-to-GY record and raise onDestroy (光と闇の竜).  Ordinary
+         send-to-GY actions omit byDestroy or pass false and remain unchanged. */
+      const byDestroy = a.byDestroy === true;
       /* System v30 B1: 効果破壊の「破壊したプレイヤー」。明示指定が無ければ
          解決中のチェーンリンクの発動プレイヤーを使う（v21 と同じ考え方）。 */
       const byPlayerV30 = (typeof destroyerPlayerV30==='function')
@@ -1533,11 +1537,11 @@ function applyActionBodyV31(gs, a){
       if(card.token) recordTokenGoneV11(gs, card, {byDestroy, byBattle:false, controller:a.player});
       /* System v3.5.0: 効果破壊/墓地送りでも誘発イベントをチェーン解決後へ予約する。
          戦闘破壊はBATTLE_CLEANUP側で同時イベント化するためここには来ない。 */
-      if(fromField && typeof queueDeferredEventV2==='function' && typeof PLAY_MODE!=='undefined' && PLAY_MODE===PLAY_MODES.DUEL){
+      if((fromField||byDestroy) && typeof queueDeferredEventV2==='function' && typeof PLAY_MODE!=='undefined' && PLAY_MODE===PLAY_MODES.DUEL){
         const loc=findCardByUid(card.uid);
         if(byDestroy) queueDeferredEventV2('onDestroy',{player:a.player,card,reason:'effect',byPlayer:byPlayerV30});
         if(loc && loc.zone==='grave') queueDeferredEventV2('onSendToGrave',Object.assign({player:a.player,card,reason:byDestroy?'destroy':'effect',byPlayer:byPlayerV30},eventProvS03(a)));   /* S03-U295: move group */
-        queueDeferredEventV2('onRemove',{player:a.player,card,reason:byDestroy?'destroy':'effect',byPlayer:byPlayerV30});
+        if(fromField) queueDeferredEventV2('onRemove',{player:a.player,card,reason:byDestroy?'destroy':'effect',byPlayer:byPlayerV30});
       }
       break;
     }
@@ -3501,7 +3505,7 @@ let ACTIVE_SCRIPT = null;              // 実行中のスクリプト（対象�
 /* 対象耐性を持つか。スクリプトの continuous.immuneToTarget を優先し、
    無ければ効果テキストから自身への耐性を推定する。 */
 const TARGET_IMMUNE_CACHE = new Map();
-function targetImmune(card){
+function targetImmune(card, effectInfo){
   if(!card || card.face !== 'up') return false;
   const db = dbOf(card);
   const nm = db.n; if(!nm) return false;
@@ -3513,7 +3517,10 @@ function targetImmune(card){
       if(!cont.immuneToTarget) continue;
       if(!continuousReaches(cont.scope||'self', src.p, loc, src.card, card)) continue;
       let r = false;
-      try{ r = cont.immuneToTarget(card, src.card); }catch(e){ r = false; }
+      /* CODEX-C03: the third argument identifies the effect that is choosing a
+         target. Existing declarations ignore it; conditional declarations can
+         distinguish controller, Monster/Spell/Trap, Level, Synchro, etc. */
+      try{ r = cont.immuneToTarget(card, src.card, effectInfo||null); }catch(e){ r = false; }
       if(r) return true;
     }
   }
@@ -3535,8 +3542,9 @@ function targetImmune(card){
 }
 
 /* 対象を取る効果の候補から、耐性を持つカードを除く */
-function filterTargetable(cands, byPlayer){
+function filterTargetable(cands, byPlayer, effectInfo){
   if(!Array.isArray(cands)) return cands;
+  const srcInfo = effectInfo || (typeof targetEffectSourceS03==='function' ? targetEffectSourceS03(byPlayer) : {player:byPlayer});
   return cands.filter(x=>{
     if(!x || !x.card) return true;
     // 対象耐性は場のカードにのみ意味がある
@@ -3544,7 +3552,7 @@ function filterTargetable(cands, byPlayer){
     if(battleDestroyConfirmed(x.card)) return false;   // 戦闘破壊確定は対象に取れない
     /* S03-U130: 「このターン相手の効果の対象にならない」（ダーク・フュージョン）— 対象を取るプレイヤーが分かる時だけ判定する */
     if(typeof oppTargetImmuneNowS03==='function' && oppTargetImmuneNowS03(x.card, x.p, byPlayer)) return false;
-    return !targetImmune(x.card);
+    return !targetImmune(x.card, srcInfo);
   });
 }
 
