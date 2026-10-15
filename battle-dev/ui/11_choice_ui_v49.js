@@ -51,8 +51,10 @@ function renderChoiceSheetV49(){
   const commit = multi
     ? `<div class="act fx${sel.length>=pc.min&&sel.length<=pc.max?'':' off'}" onclick="__choiceCommitV49()">決定（${sel.length}/${pc.max}）</div>`
     : '';
+  const activationCancel=(typeof choiceCancelsActivationS03==='function')
+    ? choiceCancelsActivationS03(pc) : !!(pc.meta&&pc.meta.activationPrepS03);
   const cancel = pc.cancelable
-    ? `<button class="close" onclick="__choiceCancelV49()">やめる</button>` : '';
+    ? `<button class="close" onclick="__choiceCancelV49()">${activationCancel?'発動を取り消す':'やめる'}</button>` : '';
 
   /* S03-U173: 破壊の身代わり — 守るカードを先頭に表示する */
   let subHead = '';
@@ -118,4 +120,3 @@ function refreshChoiceSheetV49(){
   const pc = (typeof pendingChoiceV49==='function') ? pendingChoiceV49(gameState) : null;
   if(pc) renderChoiceSheetV49();
 }
-

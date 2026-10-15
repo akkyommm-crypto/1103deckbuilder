@@ -928,6 +928,13 @@ defineScript("カラクリ解体新書", {
    ダメージステップ⑤で墓地に送られた後のリバース効果は、
    「フィールドで発動した扱い」なのでこれを貫通する（当時裁定）。 */
 defineScript("スキルドレイン", {
+  type:"trap", priority:2,
+  condition(ctx){
+    if(API.me(ctx).lp <= 1000){ ctx.reason = "1000ライフポイントを払えません"; return false; }
+    return true;
+  },
+  cost(ctx, done){ API.payCost(ctx.player, 1000); done(true); },
+  resolve(){},
   continuous:{
     scope:'allMonsters', from:['sz'],
     apply(){ return null; },              // 攻守には影響しない

@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "CODEX-C11",
+  "category": "engine",
+  "mode": "single",
+  "workflow_profile": "codex-user-bug",
+  "scope": "offer continuous Trap card activations in chain response lists and restore Skill Drain's 1000 LP activation cost",
+  "outcome": "waiting",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "started_at": "2026-10-15T00:00:00+09:00",
+  "finished_at": null,
+  "gate_owner": "codex",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: per-unit tokens not available in this session",
+    "includes_all_agents": true,
+    "by_model": [
+      {
+        "model": "gpt-6-astra",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Negative control reproduced the missing response candidate and missing LP cost. Focused and adjacent chain, continuous-effect, Replay, and phase-priority suites pass; final gate fields follow repository convention."
+}

@@ -121,7 +121,7 @@ function cycleAdsChainModeV370(){
 }
 
 function phaseRailHTMLV360(gs){
-  return PHASES.map(ph=>{const cur=ph.id===gs.phase;const can=!cur&&(PLAY_MODE===PLAY_MODES.DUEL?legalPhaseTransitionV28(gs.phase,ph.id):true);const cls=cur?'on':(can?'can':'');return `<button class="pr-btn ${cls}" ${cur||!can?'disabled':''} onclick="doPhase('${ph.id}')" title="${ph.jp}">${phaseShortV360(ph.id)}<br><span style="font-size:7px">${ph.jp}</span></button>`;}).join('');
+  return PHASES.map(ph=>{const cur=ph.id===gs.phase;const can=!cur&&(PLAY_MODE===PLAY_MODES.DUEL?publicPhaseTransitionAllowedC12(gs,ph.id):true);const cls=cur?'on':(can?'can':'');return `<button class="pr-btn ${cls}" ${cur||!can?'disabled':''} onclick="doPhase('${ph.id}')" title="${ph.jp}">${phaseShortV360(ph.id)}<br><span style="font-size:7px">${ph.jp}</span></button>`;}).join('');
 }
 
 /* ---- 下部ドック HTML ---- */
@@ -607,4 +607,3 @@ const AUTO_EFFECT = {
     "黒き森のウィッチ":{op:"search",trig:"ignition",f:{defmax:1500,tk:"m"}},
     "黒魔術のカーテン":{op:"recruit",trig:"ignition",f:{arch:"ブラック・マジシャン"}}
   };
-

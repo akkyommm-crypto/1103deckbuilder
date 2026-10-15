@@ -189,10 +189,46 @@ function legalPhaseTransitionV28(from,to){
   const map={draw:['standby'],standby:['main1'],main1:['battle','end'],battle:['main2','end'],main2:['end'],end:[]};
   return !!(map[from]&&map[from].includes(to));
 }
+/* CODEX-C12: the phase rail and the processor share the same public-entry
+   restriction.  The route main1 -> battle exists in general, but is not a
+   selectable transition when this turn is forbidden from having a BP. */
+function publicPhaseTransitionAllowedC12(gs,to){
+  gs=gs||gameState;
+  return !!(gs&&legalPhaseTransitionV28(gs.phase,to)
+    && !(to==='battle'&&battlePhaseForbiddenV340(gs)));
+}
+/* CODEX-C10: an open game state at the end of Draw / Standby / Main / End
+   Phase must give both players priority before the phase or turn is committed.
+   The POINT itself is serializable; its `after` processor carries the original
+   request with a one-shot guard, so save/resume and a chain started here return
+   to the same window and eventually continue the requested transition. */
+function phaseEndPointC10(phase, afterType, afterPayload){
+  return {
+    kind:'phaseEnd', phase,
+    label:`${phaseJp(phase)}終了前のクイックエフェクト確認`,
+    priority:gameState.activePlayer, passes:0, action:'PHASE_END_FAST_C10',
+    after:{type:afterType,payload:afterPayload||{}}
+  };
+}
 function processPhaseV27(pl){
   const to=pl.to||nextPhaseIdV27(); if(!to||to===gameState.phase) return PROC_V27_CANCEL;
   if(PLAY_MODE===PLAY_MODES.DUEL && !pl.force && !legalPhaseTransitionV28(gameState.phase,to)){
     showToast(`${phaseJp(gameState.phase)}から${phaseJp(to)}へは直接移れません`); return PROC_V27_CANCEL;
+  }
+  /* Refuse before opening the phase-end priority window.  In particular, the
+     first player must not enter (or appear to begin entering) BP on turn 1. */
+  if(to==='battle' && battlePhaseForbiddenV340(gameState)){
+    showToast(firstTurnBattleForbiddenV311(gameState)?'先攻1ターン目はバトルフェイズを行えません。エンドフェイズへ進んでください':'カードの効果によりこのターンはバトルフェイズを行えません');
+    return PROC_V27_CANCEL;
+  }
+  /* Battle Phase already has Start / Battle Step POINTs.  Other ordinary
+     transitions previously jumped straight to the next phase, so the
+     non-turn player could not activate a Set Trap such as 安全地帯. */
+  if(PLAY_MODE===PLAY_MODES.DUEL && !pl.force && !pl.byEffectS03 && !pl.phaseEndPassedC10
+     && ['draw','standby','main1','main2'].includes(gameState.phase)){
+    const next=Object.assign({},pl,{phaseEndPassedC10:true});
+    enqueueProcessorV27(PROCESSOR_V27.POINT,phaseEndPointC10(gameState.phase,PROCESSOR_V27.PHASE,next),true);
+    return PROC_V27_DONE;
   }
   /* System v7: フェイズのスキップ予約。draw / standby / battle / main2 に効く。 */
   if(typeof phaseSkippedV7==='function' && phaseSkippedV7(gameState, gameState.activePlayer, to)){
@@ -206,10 +242,6 @@ function processPhaseV27(pl){
      && battlePhaseSkippedV6(gameState, gameState.activePlayer)){
     act({type:'BATTLE_PHASE_V6',player:gameState.activePlayer,mode:'consumeSkip'});
     showToast('カードの効果によりこのバトルフェイズはスキップされます');
-    return PROC_V27_CANCEL;
-  }
-  if(to==='battle' && battlePhaseForbiddenV340(gameState)){
-    showToast(firstTurnBattleForbiddenV311(gameState)?'先攻1ターン目はバトルフェイズを行えません。エンドフェイズへ進んでください':'カードの効果によりこのターンはバトルフェイズを行えません');
     return PROC_V27_CANCEL;
   }
   if(gameState.phase==='battle' && to!=='battle' && !pl.byEffectS03 && !canLeaveBattleV27()) return PROC_V27_CANCEL;   /* S03-U152: an effect ends it — no must-attack question */
@@ -253,6 +285,11 @@ function processTurnV27(pl){
   }
   if(PLAY_MODE===PLAY_MODES.DUEL && gameState.phase!=='end'){
     showToast('DUELモードではエンドフェイズからターンを終了してください'); return PROC_V27_CANCEL;
+  }
+  if(PLAY_MODE===PLAY_MODES.DUEL && !pl.phaseEndPassedC10){
+    const next=Object.assign({},pl,{phaseEndPassedC10:true});
+    enqueueProcessorV27(PROCESSOR_V27.POINT,phaseEndPointC10('end',PROCESSOR_V27.TURN,next),true);
+    return PROC_V27_DONE;
   }
   /* S03-U273: hand size limit — the turn player discards down to the limit before the turn ends (engine/1ZZJ) */
   if(!pl.handLimitDoneS03 && typeof handLimitStepS03==='function' && handLimitStepS03()){
@@ -1597,7 +1634,12 @@ function getChainResponsesV2(p){
   const P=gameState.players[p], out=[], top=chainTopSpeed();
   const push=(zone,index,c)=>{
     if(!c) return; const db=dbOf(c), nm=db.n||'', sc=CARD_SCRIPTS[nm];
-    if(!sc||typeof sc.resolve!=='function') return;
+    /* CODEX-C11: a Set Continuous Spell/Trap may be activated as a chain link even when
+       its only scripted behavior is `continuous` (no one-shot resolve operation).
+       strictScriptLegalityV2 already accepts this shape; filtering it here made cards
+       such as スキルドレイン disappear while ordinary Traps remained available. */
+    const continuousActivation=!!(sc&&sc.continuous&&(db.k==='s'||db.k==='t'));
+    if(!sc||(typeof sc.resolve!=='function'&&!continuousActivation)) return;
     const ss=scriptSpellSpeed(sc,db); if(ss<top) return;
     /* S03-U12: チェーン・応答タイミングで発動できるのはスペルスピード2以上だけ。
        表側の永続・フィールド魔法の効果（SS1）は開いたゲーム状態（自分のメインフェイズの操作）でのみ発動する。 */
