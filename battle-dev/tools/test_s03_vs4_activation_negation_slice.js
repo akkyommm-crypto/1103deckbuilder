@@ -43,7 +43,7 @@ const P1_FRONT=['ネイビィロイド','奈落の落とし穴','マジック・
 const P1_LIST=[['真六武衆－カゲキ',3],['六武衆－ザンジ',2],['真六武衆－キザン',3],['真六武衆－ミズホ',2],['真六武衆－エニシ',2],['六武衆の露払い',2],['六武衆の師範',2],['紫炎の足軽',3],['六武衆－ヤイチ',1],['六武衆のご隠居',2],
  ['ネイビィロイド',1],['マジック・ストライカー',1],
  ['紫炎の狼煙',3],['紫炎の計略',1],['六武衆の結束',1],['増援',1],['死者蘇生',1],['奈落の落とし穴',2],['強制脱出装置',1],['エフェクト・ヴェーラー',2],['昇天の角笛',1],['マジック・ジャマー',1],['サイクロン',2]];
-const RABBIT_FRONT=['サイクロン','レスキューラビット','死者蘇生','セイバーザウルス','エフェクト・ヴェーラー','ジェネティック・ワーウルフ'];
+const RABBIT_FRONT=['サイクロン','レスキューラビット','死者蘇生','セイバーザウルス','禁じられた聖槍','ジェネティック・ワーウルフ'];
 
 const first=harness(COMMON+'const P1_FRONT='+JSON.stringify(P1_FRONT)+';const P1_LIST='+JSON.stringify(P1_LIST)+';const RABBIT_FRONT='+JSON.stringify(RABBIT_FRONT)+';'+String.raw`
 function arranged(list,front){const rest=[];for(const [n,q] of list)for(let i=0;i<q;i++){const id=findCardIndex(n);if(id<0)throw Error('missing '+n);rest.push({id,face:'down',pos:'atk'});}

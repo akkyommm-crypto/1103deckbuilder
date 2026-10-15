@@ -12,16 +12,16 @@
     "ENGINE_GAP": 464,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 692,
+    "NOT_STARTED": 691,
     "PARTIAL": 30,
-    "TESTED": 3163
+    "TESTED": 3164
   },
   "delta": {
     "ENGINE_GAP": -152,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -615,
+    "NOT_STARTED": -616,
     "PARTIAL": -152,
-    "TESTED": 1114
+    "TESTED": 1115
   },
   "status_changes": [
     {
@@ -1871,6 +1871,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U160"
+    },
+    {
+      "name": "スキル・サクセサー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "CODEX-C14"
     },
     {
       "name": "スクラップ・エリア",

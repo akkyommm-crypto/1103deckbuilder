@@ -1486,6 +1486,9 @@
   "path": "cards/I6_codex_c09_light_and_darkness_dragon.js"
  },
  {
+  "path": "cards/I7_codex_c14_skill_successor.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

@@ -27,11 +27,11 @@ function replayAudit(label){const pkg=v41ReplayPackage(gameState),a=v44ReplayAud
 const P1_LIST=[['紫炎の狼煙',1],['真六武衆－キザン',1],['六武衆－ザンジ',1],['奈落の落とし穴',1],['サイクロン',1],['異次元の女戦士',1],
  ['真六武衆－カゲキ',3],['真六武衆－キザン',2],['六武衆－ザンジ',1],['真六武衆－ミズホ',2],['真六武衆－エニシ',2],['六武衆の露払い',2],['六武衆の師範',2],['紫炎の足軽',3],['六武衆－ヤイチ',1],['六武衆のご隠居',2],
  ['紫炎の狼煙',2],['紫炎の計略',1],['諸刃の活人剣術',1],['増援',1],['死者蘇生',1],['奈落の落とし穴',1],['強制脱出装置',1],['エフェクト・ヴェーラー',2],['異次元の女戦士',1],['ライオウ',2],['サイクロン',1]];
-const RABBIT_FRONT=['レスキューラビット','セイバーザウルス','サイクロン','奈落の落とし穴','エフェクト・ヴェーラー','ジェネティック・ワーウルフ'];
+const RABBIT_FRONT=['レスキューラビット','セイバーザウルス','サイクロン','奈落の落とし穴','禁じられた聖槍','ジェネティック・ワーウルフ'];
 
 const first=harness(COMMON+'const P1_LIST='+JSON.stringify(P1_LIST)+';const RABBIT_FRONT='+JSON.stringify(RABBIT_FRONT)+';'+String.raw`
 function expand(list){const out=[];for(const [n,q] of list)for(let i=0;i<q;i++){const id=findCardIndex(n);if(id<0)throw Error('missing '+n);out.push({id,face:'down',pos:'atk'});}return out;}
-function arrangeRabbit(){const rab=buildTestDeck('rabbit');const rest=rab.main.map(c=>({id:c.id,face:'down',pos:'atk'}));const top=[];for(const n of RABBIT_FRONT){const i=rest.findIndex(c=>CARD_DB[c.id].n===n);top.push(rest.splice(i,1)[0]);}return {main:top.concat(rest),ex:rab.ex.map(c=>({id:c.id,face:'down',pos:'atk'}))};}
+function arrangeRabbit(){const rab=buildTestDeck('rabbit');const rest=rab.main.map(c=>({id:c.id,face:'down',pos:'atk'}));const top=[];for(const n of RABBIT_FRONT){const i=rest.findIndex(c=>CARD_DB[c.id].n===n);if(i<0)throw Error('rabbit front card missing '+n);top.push(rest.splice(i,1)[0]);}return {main:top.concat(rest),ex:rab.ex.map(c=>({id:c.id,face:'down',pos:'atk'}))};}
 function setup(reverse){
   resetA();resetForTestDuel();gameState.rngInitialSeed=1395762661;gameState.rngState=1395762661;v41ResetActionJournal(gameState);/* S03-U151: fixed RNG seed (was Date.now()) */
   let a=expand(P1_LIST),r=arrangeRabbit(),b=r.main;if(reverse){a.reverse();b.reverse();}

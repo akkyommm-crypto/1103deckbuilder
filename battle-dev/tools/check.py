@@ -650,6 +650,8 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u349_event_traps.js')],check=Tru
 subprocess.run(['node',str(ROOT/'tools/test_codex_c10_phase_priority.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_codex_c11_continuous_trap_chain.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_codex_c12_activation_cancel_first_turn.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_codex_c13_rabbit_laggia_recipe.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_codex_c14_skill_successor.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
@@ -710,7 +712,7 @@ checks={
   'v4.7.0 device smoke 13 scenarios':all(x in js for x in ['V351_DEVICE_SMOKE','openDeviceSmokeV351','startDeviceSmokeV351','v351SmokePreflight','rabbitBottomless','実機スモークテスト v4.7.0']) and js.count("name:'")>=13,
  'v3.6.1 smoke forces DUEL route':all(x in js for x in ['v351SetPlayModeRaw(PLAY_MODES.DUEL)','deviceSmokeMenuButtonV351','実機テスト結果へ']),
  'v3.6.1 noSS activation legality':all(x in js for x in ['blocksIfNoSpecialSummon===true','特殊召喚できないため、この効果は発動できません','blocksIfNoSpecialSummon:true']),
- 'rabbit test deck 22 monsters': all(x in js for x in ['{n:"異次元の女戦士", q:2}','{n:"スノーマンイーター", q:2}','{n:"エフェクト・ヴェーラー", q:2}']) and '{n:"盗賊の七つ道具", q:2}' not in js,
+ 'rabbit test deck user recipe': all(x in js for x in ['{n:"ジェネティック・ワーウルフ", q:3}','{n:"盗賊の七つ道具", q:3}','{n:"エヴォルカイザー・ラギア", q:2}','{n:"スキル・サクセサー", q:1}','side: [']),
  'v3.6.1 Bottomless summon batch': all(x in js for x in ['bottomlessSummonedCards','FX_DESTROY_BANISH','destroyAndBanish']),
  'post-summon fast window': all(x in js for x in ['postSummonFastPointV321','summonFast','clearTimingOnPass']),
  'ignition guard closes correctly': "['summon','flip','summonFast','flipFast'].includes(w.kind)" in js and 'gameState.timingWindow=null;' in js,

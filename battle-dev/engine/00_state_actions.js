@@ -503,6 +503,7 @@ function applyActionBodyV31(gs, a){
          source: 'user'（ユーザーが読み込んだデッキ）/ 'test'（開発テスト）/ 'opponentSample'（対戦相手用サンプル） */
       P.loadedDeckV32 = {source:String(a.source||'unknown'), name:String(a.name||''),
         main:(a.deck||[]).map(c=>c&&c.id).filter(x=>x!=null), ex:(a.ex||[]).map(c=>c&&c.id).filter(x=>x!=null)};
+      if(Array.isArray(a.side)) P.loadedDeckV32.side = a.side.map(e=>({n:String(e&&e.n||''), q:Number(e&&e.q)||1})).filter(e=>e.n);
       /* 持ち主を記録しておく。コントロールを奪われたカードが
          墓地・除外・デッキへ行くとき、持ち主のゾーンに戻すために使う。 */
       P.deck.forEach(c=>{ if(c){ c.owner = a.player; ensureCardUid(gs,c); } });

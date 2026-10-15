@@ -30,11 +30,11 @@ const P1_LIST=[['竜の渓谷',1],['ドラグニティ－ドゥクス',1],['ド�
  ['異次元の女戦士',2],['エフェクト・ヴェーラー',2],['スノーマンイーター',2],['サイバー・ドラゴン',1],['ライオウ',1],['魔導戦士 ブレイカー',2],
  ['竜の渓谷',2],['調和の宝札',2],['サイクロン',1],['死者蘇生',1],['強欲で謙虚な壺',2],['奈落の落とし穴',1],['強制脱出装置',1],['ゴブリンドバーグ',2],['ドラグニティ－ミリトゥム',1],['スノーマンイーター',1]];
 const P1_EX=[['ドラグニティナイト－ヴァジュランダ',2],['ドラグニティナイト－ガジャルグ',1],['ドラグニティナイト－バルーチャ',1]];
-const RABBIT_FRONT=['レスキューラビット','セイバーザウルス','サイクロン','奈落の落とし穴','エフェクト・ヴェーラー','ジェネティック・ワーウルフ'];
+const RABBIT_FRONT=['レスキューラビット','セイバーザウルス','サイクロン','奈落の落とし穴','禁じられた聖槍','ジェネティック・ワーウルフ'];
 
 const first=harness(COMMON+'const P1_LIST='+JSON.stringify(P1_LIST)+';const P1_EX='+JSON.stringify(P1_EX)+';const RABBIT_FRONT='+JSON.stringify(RABBIT_FRONT)+';'+String.raw`
 function expand(list){const out=[];for(const [n,q] of list)for(let i=0;i<q;i++){const id=findCardIndex(n);if(id<0)throw Error('missing '+n);out.push({id,face:'down',pos:'atk'});}return out;}
-function arrangeRabbit(){const rab=buildTestDeck('rabbit');const rest=rab.main.map(c=>({id:c.id,face:'down',pos:'atk'}));const top=[];for(const n of RABBIT_FRONT){const i=rest.findIndex(c=>CARD_DB[c.id].n===n);top.push(rest.splice(i,1)[0]);}return {main:top.concat(rest),ex:rab.ex.map(c=>({id:c.id,face:'down',pos:'atk'}))};}
+function arrangeRabbit(){const rab=buildTestDeck('rabbit');const rest=rab.main.map(c=>({id:c.id,face:'down',pos:'atk'}));const top=[];for(const n of RABBIT_FRONT){const i=rest.findIndex(c=>CARD_DB[c.id].n===n);if(i<0)throw Error('rabbit front card missing '+n);top.push(rest.splice(i,1)[0]);}return {main:top.concat(rest),ex:rab.ex.map(c=>({id:c.id,face:'down',pos:'atk'}))};}
 function setup(reverse){
   resetA();resetForTestDuel();gameState.rngInitialSeed=1395762661;gameState.rngState=1395762661;v41ResetActionJournal(gameState);/* S03-U151: fixed RNG seed (was Date.now()) */
   let a=expand(P1_LIST),r=arrangeRabbit(),b=r.main;if(reverse){a.reverse();b.reverse();}
