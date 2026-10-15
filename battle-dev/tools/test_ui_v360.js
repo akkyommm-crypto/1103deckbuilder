@@ -8,7 +8,7 @@ const ok=(n,v)=>{if(!v)throw new Error('FAIL '+n);console.log('PASS '+n)};
 ok('FIELD横長バー',/function pileRowHTML[\s\S]*?fieldbar[\s\S]*?FIELD ACTIVE/.test(ui));
 ok('FIELDカード画像＋カウンター',/IMG_BASE/.test(ui)&&/field-thumb/.test(ui)&&/field-state/.test(ui));
 ok('6フェイズレール',/phaseRailHTMLV360/.test(ui)&&/repeat\(6/.test(css)&&/id="phaseRail"/.test(pref));
-ok('合法フェイズだけ操作',/legalPhaseTransitionV28\(gs\.phase,ph\.id\)/.test(ui));
+ok('合法かつ実行可能なフェイズだけ操作',/publicPhaseTransitionAllowedC12\(gs,ph\.id\)/.test(ui));
 ok('特殊召喚禁止・BP不可バッジ',/特殊召喚禁止/.test(ui)&&/BP不可/.test(ui));
 ok('チェーンリボンは優先権確認へ',/chainRibbonActionV360[\s\S]*?openChainPriorityV2/.test(ui));
 ok('チェーンリボンから直接解決しない',!/chainRibbonActionV360[\s\S]{0,400}resolveChainStep/.test(ui));

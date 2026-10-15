@@ -189,6 +189,14 @@ function legalPhaseTransitionV28(from,to){
   const map={draw:['standby'],standby:['main1'],main1:['battle','end'],battle:['main2','end'],main2:['end'],end:[]};
   return !!(map[from]&&map[from].includes(to));
 }
+/* CODEX-C12: the phase rail and the processor share the same public-entry
+   restriction.  The route main1 -> battle exists in general, but is not a
+   selectable transition when this turn is forbidden from having a BP. */
+function publicPhaseTransitionAllowedC12(gs,to){
+  gs=gs||gameState;
+  return !!(gs&&legalPhaseTransitionV28(gs.phase,to)
+    && !(to==='battle'&&battlePhaseForbiddenV340(gs)));
+}
 /* CODEX-C10: an open game state at the end of Draw / Standby / Main / End
    Phase must give both players priority before the phase or turn is committed.
    The POINT itself is serializable; its `after` processor carries the original
@@ -206,6 +214,12 @@ function processPhaseV27(pl){
   const to=pl.to||nextPhaseIdV27(); if(!to||to===gameState.phase) return PROC_V27_CANCEL;
   if(PLAY_MODE===PLAY_MODES.DUEL && !pl.force && !legalPhaseTransitionV28(gameState.phase,to)){
     showToast(`${phaseJp(gameState.phase)}から${phaseJp(to)}へは直接移れません`); return PROC_V27_CANCEL;
+  }
+  /* Refuse before opening the phase-end priority window.  In particular, the
+     first player must not enter (or appear to begin entering) BP on turn 1. */
+  if(to==='battle' && battlePhaseForbiddenV340(gameState)){
+    showToast(firstTurnBattleForbiddenV311(gameState)?'先攻1ターン目はバトルフェイズを行えません。エンドフェイズへ進んでください':'カードの効果によりこのターンはバトルフェイズを行えません');
+    return PROC_V27_CANCEL;
   }
   /* Battle Phase already has Start / Battle Step POINTs.  Other ordinary
      transitions previously jumped straight to the next phase, so the
@@ -228,10 +242,6 @@ function processPhaseV27(pl){
      && battlePhaseSkippedV6(gameState, gameState.activePlayer)){
     act({type:'BATTLE_PHASE_V6',player:gameState.activePlayer,mode:'consumeSkip'});
     showToast('カードの効果によりこのバトルフェイズはスキップされます');
-    return PROC_V27_CANCEL;
-  }
-  if(to==='battle' && battlePhaseForbiddenV340(gameState)){
-    showToast(firstTurnBattleForbiddenV311(gameState)?'先攻1ターン目はバトルフェイズを行えません。エンドフェイズへ進んでください':'カードの効果によりこのターンはバトルフェイズを行えません');
     return PROC_V27_CANCEL;
   }
   if(gameState.phase==='battle' && to!=='battle' && !pl.byEffectS03 && !canLeaveBattleV27()) return PROC_V27_CANCEL;   /* S03-U152: an effect ends it — no must-attack question */

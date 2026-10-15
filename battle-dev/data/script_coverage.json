@@ -249,6 +249,7 @@
         "tools\\test_codex_c01_special_win.js",
         "tools\\test_codex_c10_phase_priority.js",
         "tools\\test_codex_c11_continuous_trap_chain.js",
+        "tools\\test_codex_c12_activation_cancel_first_turn.js",
         "tools\\test_counter_cards.js",
         "tools\\test_destruction_protection_cards.js",
         "tools\\test_device_paths_v351.js",
@@ -8537,6 +8538,7 @@
       "tests": [
         "tools\\test_auto_cycle27.js",
         "tools\\test_auto_cycle29.js",
+        "tools\\test_codex_c12_activation_cancel_first_turn.js",
         "tools\\test_s03_u269_gap1.js",
         "tools\\test_s03_u271_damage_origin.js",
         "tools\\test_s03_u296_choice_release_replay.js",
@@ -15543,6 +15545,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c12_activation_cancel_first_turn.js",
         "tools\\test_device_paths_v351.js",
         "tools\\test_s03_u299_honest_damage_step.js",
         "tools\\test_s03_u306_honest_cost.js",
@@ -23419,6 +23422,7 @@
         "tools\\test_class_a_recovery_03.js",
         "tools\\test_class_a_recovery_04.js",
         "tools\\test_class_a_recovery_05.js",
+        "tools\\test_codex_c12_activation_cancel_first_turn.js",
         "tools\\test_destruction_protection_cards.js",
         "tools\\test_device_paths_v351.js",
         "tools\\test_draw_event_cards.js",
@@ -52202,6 +52206,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle23.js",
+        "tools\\test_codex_c12_activation_cancel_first_turn.js",
         "tools\\test_s03_u18_activation_response.js",
         "tools\\test_s03_u34_pot_resolution.js",
         "tools\\test_s03_u35_interrupted_activation.js",
@@ -60138,6 +60143,7 @@
         "tools\\test_class_a_recovery_05.js",
         "tools\\test_codex_c01_special_win.js",
         "tools\\test_codex_c10_phase_priority.js",
+        "tools\\test_codex_c12_activation_cancel_first_turn.js",
         "tools\\test_engine_e123_unlocked.js",
         "tools\\test_provenance_v30.js",
         "tools\\test_ready25_b1.js",
@@ -71994,6 +72000,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c12_activation_cancel_first_turn.js",
         "tools\\test_p1_choice_recovery_minibatch.js",
         "tools\\test_s03_u19_monster_activation_response.js",
         "tools\\test_s03_u292_gap9.js",

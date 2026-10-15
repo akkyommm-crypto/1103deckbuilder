@@ -314,11 +314,18 @@ function cancelChoiceV49(){
   const cid=pc.cid, resume=pc.resume, isLegacy=pc.legacy;
   const args=(resume&&resume.args)?resume.args:{};
   const handler=(resume&&resume.handler)||'';
+  /* CODEX-C12: a legacy target/cost choice opened while an activation is
+     still being prepared carries the exact pre-activation Journal position.
+     Cancelling this choice means cancelling the activation, not merely
+     dismissing the sheet and leaving a face-up card outside the chain. */
+  const activationPrepS03=((typeof choiceCancelsActivationS03==='function')
+      ? choiceCancelsActivationS03(pc) : !!(pc.meta&&pc.meta.activationPrepS03))
+    ? JSON.parse(JSON.stringify(pc.meta.activationPrepS03)) : null;
 
   act({type:'CHOICE_CANCEL_V49', player:pc.player, cid});
   CHOICE_STATS_V49.cancelled++;
 
-  dispatchChoiceContinuationV49({cid, isLegacy, handler, args,
+  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, activationPrepS03,
     answer:{keys:[], cards:[], cancelled:true}});
   return true;
 }
@@ -341,7 +348,14 @@ function dispatchChoiceContinuationV49(job){
       if(typeof abortResolve==='function') abortResolve();
       return;
     }
-    if(job.answer.cancelled){ if(cb.onCancel) cb.onCancel(); if(typeof settleActivationPrepS03==='function') settleActivationPrepS03(); if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03(); return; }
+    if(job.answer.cancelled){
+      if(cb.onCancel) cb.onCancel();
+      const rolledBack=!!(job.activationPrepS03 && typeof rollbackLiveActivationPrepS03==='function'
+        && rollbackLiveActivationPrepS03(job.activationPrepS03));
+      if(!rolledBack && typeof settleActivationPrepS03==='function') settleActivationPrepS03();
+      if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03();
+      return;
+    }
     /* 既存 onPick は候補1件を受け取る形。互換のため先頭を渡す。 */
     if(cb.onPick) cb.onPick(job.answer.cards[0], job.answer.cards);
     if(typeof settleActivationPrepS03==='function') settleActivationPrepS03();   /* S03-U35 */
@@ -426,4 +440,3 @@ function assertChoiceSerializableV49(gs){
   if(pc==null) return {ok:true, why:''};
   return choiceJsonSafetyV49(pc, 'pendingChoice');
 }
-

@@ -6219,11 +6219,18 @@ function cancelChoiceV49(){
   const cid=pc.cid, resume=pc.resume, isLegacy=pc.legacy;
   const args=(resume&&resume.args)?resume.args:{};
   const handler=(resume&&resume.handler)||'';
+  /* CODEX-C12: a legacy target/cost choice opened while an activation is
+     still being prepared carries the exact pre-activation Journal position.
+     Cancelling this choice means cancelling the activation, not merely
+     dismissing the sheet and leaving a face-up card outside the chain. */
+  const activationPrepS03=((typeof choiceCancelsActivationS03==='function')
+      ? choiceCancelsActivationS03(pc) : !!(pc.meta&&pc.meta.activationPrepS03))
+    ? JSON.parse(JSON.stringify(pc.meta.activationPrepS03)) : null;
 
   act({type:'CHOICE_CANCEL_V49', player:pc.player, cid});
   CHOICE_STATS_V49.cancelled++;
 
-  dispatchChoiceContinuationV49({cid, isLegacy, handler, args,
+  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, activationPrepS03,
     answer:{keys:[], cards:[], cancelled:true}});
   return true;
 }
@@ -6246,7 +6253,14 @@ function dispatchChoiceContinuationV49(job){
       if(typeof abortResolve==='function') abortResolve();
       return;
     }
-    if(job.answer.cancelled){ if(cb.onCancel) cb.onCancel(); if(typeof settleActivationPrepS03==='function') settleActivationPrepS03(); if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03(); return; }
+    if(job.answer.cancelled){
+      if(cb.onCancel) cb.onCancel();
+      const rolledBack=!!(job.activationPrepS03 && typeof rollbackLiveActivationPrepS03==='function'
+        && rollbackLiveActivationPrepS03(job.activationPrepS03));
+      if(!rolledBack && typeof settleActivationPrepS03==='function') settleActivationPrepS03();
+      if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03();
+      return;
+    }
     /* 既存 onPick は候補1件を受け取る形。互換のため先頭を渡す。 */
     if(cb.onPick) cb.onPick(job.answer.cards[0], job.answer.cards);
     if(typeof settleActivationPrepS03==='function') settleActivationPrepS03();   /* S03-U35 */
@@ -6331,7 +6345,6 @@ function assertChoiceSerializableV49(gs){
   if(pc==null) return {ok:true, why:''};
   return choiceJsonSafetyV49(pc, 'pendingChoice');
 }
-
 /* =========================================================================
    System P1.1 — Activation-time Choice / Declaration / Cost identity
    -------------------------------------------------------------------------
@@ -10935,6 +10948,39 @@ function activationPrepMetaS03(){
   return m ? {afterSeq:m.afterSeq, uid:m.uid, name:m.name, player:m.player} : null;
 }
 
+/* A mandatory trigger is not a player-cancellable activation.  Some legacy
+   forced triggers still expose the compatibility cancel button and re-open
+   their required target choice after it is pressed; they must not be confused
+   with an optional activation the player started by mistake. */
+function choiceCancelsActivationS03(choice){
+  const m=choice&&choice.meta&&choice.meta.activationPrepS03;
+  if(!m) return false;
+  const sc=(typeof CARD_SCRIPTS!=='undefined')?CARD_SCRIPTS[m.name]:null;
+  return !(sc&&sc.forced===true);
+}
+
+/* CODEX-C12: live counterpart of save/resume recovery.  The activation-time
+   ChoiceRequest already stores the Journal sequence from before the card was
+   moved/flipped and before any cost was paid.  Walk the normal Undo snapshots
+   back to that exact sequence so state, Journal, Replay, processor state, and
+   the original card position are restored together. */
+function rollbackLiveActivationPrepS03(meta){
+  if(!meta || meta.afterSeq==null || typeof HISTORY==='undefined' || typeof undo!=='function') return false;
+  const target=Math.max(0,Number(meta.afterSeq)||0);
+  let guard=(HISTORY.length||0)+1;
+  while(currentSeqS03()>target && HISTORY.length && guard-->0) undo();
+  if(currentSeqS03()!==target) return false;
+  ACTIVATION_PREP_S03=null;
+  PROMPT_OPEN_S03=null; MANUAL_PROMPT_PREP_S03=null;
+  /* A cancelled preparation is one atomic user decision.  Do not allow Redo
+     to resurrect an orphaned target-choice closure without its prep marker. */
+  if(typeof REDO!=='undefined') REDO.length=0;
+  if(typeof closeSheet==='function') closeSheet();
+  if(typeof render==='function') render();
+  if(typeof showToast==='function') showToast(`「${String(meta.name||'カード')}」の発動を取り消して元に戻しました`);
+  return true;
+}
+
 function recoverInterruptedActivationAfterLoadS03(savedPromptS03){
   const pc = gameState && gameState.pendingChoice;
   let m = null;
@@ -14908,7 +14954,7 @@ function cycleAdsChainModeV370(){
 }
 
 function phaseRailHTMLV360(gs){
-  return PHASES.map(ph=>{const cur=ph.id===gs.phase;const can=!cur&&(PLAY_MODE===PLAY_MODES.DUEL?legalPhaseTransitionV28(gs.phase,ph.id):true);const cls=cur?'on':(can?'can':'');return `<button class="pr-btn ${cls}" ${cur||!can?'disabled':''} onclick="doPhase('${ph.id}')" title="${ph.jp}">${phaseShortV360(ph.id)}<br><span style="font-size:7px">${ph.jp}</span></button>`;}).join('');
+  return PHASES.map(ph=>{const cur=ph.id===gs.phase;const can=!cur&&(PLAY_MODE===PLAY_MODES.DUEL?publicPhaseTransitionAllowedC12(gs,ph.id):true);const cls=cur?'on':(can?'can':'');return `<button class="pr-btn ${cls}" ${cur||!can?'disabled':''} onclick="doPhase('${ph.id}')" title="${ph.jp}">${phaseShortV360(ph.id)}<br><span style="font-size:7px">${ph.jp}</span></button>`;}).join('');
 }
 
 /* ---- 下部ドック HTML ---- */
@@ -15394,7 +15440,6 @@ const AUTO_EFFECT = {
     "黒き森のウィッチ":{op:"search",trig:"ignition",f:{defmax:1500,tk:"m"}},
     "黒魔術のカーテン":{op:"recruit",trig:"ignition",f:{arch:"ブラック・マジシャン"}}
   };
-
 /* =========================================================================
    効果処理エンジン
    ① AUTO_EFFECT  … 宣言テーブル（サーチ/リクルート/落とし）約220枚
@@ -16796,6 +16841,14 @@ function legalPhaseTransitionV28(from,to){
   const map={draw:['standby'],standby:['main1'],main1:['battle','end'],battle:['main2','end'],main2:['end'],end:[]};
   return !!(map[from]&&map[from].includes(to));
 }
+/* CODEX-C12: the phase rail and the processor share the same public-entry
+   restriction.  The route main1 -> battle exists in general, but is not a
+   selectable transition when this turn is forbidden from having a BP. */
+function publicPhaseTransitionAllowedC12(gs,to){
+  gs=gs||gameState;
+  return !!(gs&&legalPhaseTransitionV28(gs.phase,to)
+    && !(to==='battle'&&battlePhaseForbiddenV340(gs)));
+}
 /* CODEX-C10: an open game state at the end of Draw / Standby / Main / End
    Phase must give both players priority before the phase or turn is committed.
    The POINT itself is serializable; its `after` processor carries the original
@@ -16813,6 +16866,12 @@ function processPhaseV27(pl){
   const to=pl.to||nextPhaseIdV27(); if(!to||to===gameState.phase) return PROC_V27_CANCEL;
   if(PLAY_MODE===PLAY_MODES.DUEL && !pl.force && !legalPhaseTransitionV28(gameState.phase,to)){
     showToast(`${phaseJp(gameState.phase)}から${phaseJp(to)}へは直接移れません`); return PROC_V27_CANCEL;
+  }
+  /* Refuse before opening the phase-end priority window.  In particular, the
+     first player must not enter (or appear to begin entering) BP on turn 1. */
+  if(to==='battle' && battlePhaseForbiddenV340(gameState)){
+    showToast(firstTurnBattleForbiddenV311(gameState)?'先攻1ターン目はバトルフェイズを行えません。エンドフェイズへ進んでください':'カードの効果によりこのターンはバトルフェイズを行えません');
+    return PROC_V27_CANCEL;
   }
   /* Battle Phase already has Start / Battle Step POINTs.  Other ordinary
      transitions previously jumped straight to the next phase, so the
@@ -16835,10 +16894,6 @@ function processPhaseV27(pl){
      && battlePhaseSkippedV6(gameState, gameState.activePlayer)){
     act({type:'BATTLE_PHASE_V6',player:gameState.activePlayer,mode:'consumeSkip'});
     showToast('カードの効果によりこのバトルフェイズはスキップされます');
-    return PROC_V27_CANCEL;
-  }
-  if(to==='battle' && battlePhaseForbiddenV340(gameState)){
-    showToast(firstTurnBattleForbiddenV311(gameState)?'先攻1ターン目はバトルフェイズを行えません。エンドフェイズへ進んでください':'カードの効果によりこのターンはバトルフェイズを行えません');
     return PROC_V27_CANCEL;
   }
   if(gameState.phase==='battle' && to!=='battle' && !pl.byEffectS03 && !canLeaveBattleV27()) return PROC_V27_CANCEL;   /* S03-U152: an effect ends it — no must-attack question */
@@ -87554,8 +87609,10 @@ function renderChoiceSheetV49(){
   const commit = multi
     ? `<div class="act fx${sel.length>=pc.min&&sel.length<=pc.max?'':' off'}" onclick="__choiceCommitV49()">決定（${sel.length}/${pc.max}）</div>`
     : '';
+  const activationCancel=(typeof choiceCancelsActivationS03==='function')
+    ? choiceCancelsActivationS03(pc) : !!(pc.meta&&pc.meta.activationPrepS03);
   const cancel = pc.cancelable
-    ? `<button class="close" onclick="__choiceCancelV49()">やめる</button>` : '';
+    ? `<button class="close" onclick="__choiceCancelV49()">${activationCancel?'発動を取り消す':'やめる'}</button>` : '';
 
   /* S03-U173: 破壊の身代わり — 守るカードを先頭に表示する */
   let subHead = '';
@@ -87621,7 +87678,6 @@ function refreshChoiceSheetV49(){
   const pc = (typeof pendingChoiceV49==='function') ? pendingChoiceV49(gameState) : null;
   if(pc) renderChoiceSheetV49();
 }
-
 /* =========================================================================
    System v2.4: 特殊な通常召喚手順 + リリース価値
    -------------------------------------------------------------------------
