@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "CODEX-C10",
+  "category": "engine",
+  "mode": "single",
+  "workflow_profile": "codex-engine-gap",
+  "scope": "add open-game phase-end priority windows for non-turn-player Fast Effects",
+  "outcome": "waiting",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "started_at": "2026-10-14T12:00:00+09:00",
+  "finished_at": null,
+  "gate_owner": "codex",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: per-unit tokens not available in this session",
+    "includes_all_agents": true,
+    "by_model": [
+      {
+        "model": "gpt-6-astra",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Single Codex session. Negative control reproduced the real phase-flow gap. Focused and adjacent processor/save/replay suites pass; final gate fields follow repository convention."
+}

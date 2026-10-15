@@ -36,6 +36,39 @@ function activationPrepMetaS03(){
   return m ? {afterSeq:m.afterSeq, uid:m.uid, name:m.name, player:m.player} : null;
 }
 
+/* A mandatory trigger is not a player-cancellable activation.  Some legacy
+   forced triggers still expose the compatibility cancel button and re-open
+   their required target choice after it is pressed; they must not be confused
+   with an optional activation the player started by mistake. */
+function choiceCancelsActivationS03(choice){
+  const m=choice&&choice.meta&&choice.meta.activationPrepS03;
+  if(!m) return false;
+  const sc=(typeof CARD_SCRIPTS!=='undefined')?CARD_SCRIPTS[m.name]:null;
+  return !(sc&&sc.forced===true);
+}
+
+/* CODEX-C12: live counterpart of save/resume recovery.  The activation-time
+   ChoiceRequest already stores the Journal sequence from before the card was
+   moved/flipped and before any cost was paid.  Walk the normal Undo snapshots
+   back to that exact sequence so state, Journal, Replay, processor state, and
+   the original card position are restored together. */
+function rollbackLiveActivationPrepS03(meta){
+  if(!meta || meta.afterSeq==null || typeof HISTORY==='undefined' || typeof undo!=='function') return false;
+  const target=Math.max(0,Number(meta.afterSeq)||0);
+  let guard=(HISTORY.length||0)+1;
+  while(currentSeqS03()>target && HISTORY.length && guard-->0) undo();
+  if(currentSeqS03()!==target) return false;
+  ACTIVATION_PREP_S03=null;
+  PROMPT_OPEN_S03=null; MANUAL_PROMPT_PREP_S03=null;
+  /* A cancelled preparation is one atomic user decision.  Do not allow Redo
+     to resurrect an orphaned target-choice closure without its prep marker. */
+  if(typeof REDO!=='undefined') REDO.length=0;
+  if(typeof closeSheet==='function') closeSheet();
+  if(typeof render==='function') render();
+  if(typeof showToast==='function') showToast(`「${String(meta.name||'カード')}」の発動を取り消して元に戻しました`);
+  return true;
+}
+
 function recoverInterruptedActivationAfterLoadS03(savedPromptS03){
   const pc = gameState && gameState.pendingChoice;
   let m = null;
