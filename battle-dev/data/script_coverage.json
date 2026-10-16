@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 670,
+    "NOT_STARTED": 666,
     "PARTIAL": 30,
-    "TESTED": 3180
+    "TESTED": 3184
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,9 +114,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1501,
     "sin": 5,
-    "unified": 1171
+    "unified": 1175
   },
-  "static_registration_name_count": 3191,
+  "static_registration_name_count": 3195,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -84776,12 +84776,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZR_claude_s03_u356_counters2.js",
+          "line": 68
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u356_counters2.js"
+      ]
     },
     {
       "index": 3968,
@@ -102136,12 +102144,20 @@
       "subtype": null,
       "date": "2011-02-11",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZR_claude_s03_u356_counters2.js",
+          "line": 103
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u356_counters2.js"
+      ]
     },
     {
       "index": 4791,
@@ -103773,12 +103789,20 @@
       "subtype": null,
       "date": "2002-09-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZR_claude_s03_u356_counters2.js",
+          "line": 44
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u356_counters2.js"
+      ]
     },
     {
       "index": 4873,
@@ -105293,12 +105317,20 @@
       "subtype": null,
       "date": "2002-11-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZR_claude_s03_u356_counters2.js",
+          "line": 24
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u356_counters2.js"
+      ]
     },
     {
       "index": 4945,

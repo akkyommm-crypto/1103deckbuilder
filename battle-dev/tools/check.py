@@ -646,6 +646,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u352_battle_upkeep.js')],check=T
 subprocess.run(['node',str(ROOT/'tools/test_s03_u353_holds.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u354_chain.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u355_counters.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u356_counters2.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

@@ -11423,6 +11423,46 @@
         "tools/test_s03_u355_counters.js"
       ],
       "evidence": "Text (carddata). the opponent's Normal Summon trigger effect (ものマネ幻想師) is offered, negated, and its owner drew 1 card; a Spell activation is not offered. Test: tools/test_s03_u355_counters.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔鏡導士リフレクト・バウンダー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U356",
+      "tests": [
+        "tools/test_s03_u356_counters2.js"
+      ],
+      "evidence": "Text (carddata). attacked in Attack Position by 青眼の白龍: the attacker's ATK 3000 dealt to its controller before damage calculation, and it is destroyed afterwards; in Defense Position only the normal battle damage applies and it stays. Test: tools/test_s03_u356_counters2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔導アーマー エグゼ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U356",
+      "tests": [
+        "tools/test_s03_u356_counters2.js"
+      ],
+      "evidence": "Text (carddata). each Standby Phase (the opponent's and mine) one 魔力 counter of my field is removed (2 -> 1 -> 0); with none left it is destroyed; it cannot attack the turn it was summoned. Test: tools/test_s03_u356_counters2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "海底に潜む深海竜",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U356",
+      "tests": [
+        "tools/test_s03_u356_counters2.js"
+      ],
+      "evidence": "Text (carddata). an オーシャン counter at each Standby Phase (both players); destroyed with 1 counter: my Fish monster (ホワイト・ドルフィン 500) gets +200 until the End Phase and loses it afterwards. Test: tools/test_s03_u356_counters2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "静寂のサイコウィッチ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U356",
+      "tests": [
+        "tools/test_s03_u356_counters2.js"
+      ],
+      "evidence": "Text (carddata). destroyed by battle: サイコ・コマンダー banished from the Deck and Special Summoned at the next Standby Phase; with no Psychic monster in the Deck it is only destroyed. Test: tools/test_s03_u356_counters2.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
