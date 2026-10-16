@@ -11463,6 +11463,46 @@
         "tools/test_s03_u356_counters2.js"
       ],
       "evidence": "Text (carddata). destroyed by battle: サイコ・コマンダー banished from the Deck and Special Summoned at the next Standby Phase; with no Psychic monster in the Deck it is only destroyed. Test: tools/test_s03_u356_counters2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "踊りによる誘発",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U357",
+      "tests": [
+        "tools/test_s03_u357_rituals.js"
+      ],
+      "evidence": "Text (carddata). Ritual Summons ダンシング・ソルジャー with a Level 8 Tribute (Level 6 or more required); a Level 4 Tribute alone is refused; not activatable when the Ritual Monster is not in the hand. Test: tools/test_s03_u357_rituals.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "亀の誓い",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U357",
+      "tests": [
+        "tools/test_s03_u357_rituals.js"
+      ],
+      "evidence": "Text (carddata). Ritual Summons クラブ・タートル with a Level 8 Tribute (Level 8 or more required); a Level 4 Tribute alone is refused; not activatable when the Ritual Monster is not in the hand. Test: tools/test_s03_u357_rituals.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ハンバーガーのレシピ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U357",
+      "tests": [
+        "tools/test_s03_u357_rituals.js"
+      ],
+      "evidence": "Text (carddata). Ritual Summons ハングリーバーガー with a Level 8 Tribute, and with two Tributes whose Levels total exactly 6 (4 + 2); a Level 4 Tribute alone is refused; not activatable when the Ritual Monster is not in the hand. Test: tools/test_s03_u357_rituals.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "大邪神 レシェフ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U357",
+      "tests": [
+        "tools/test_s03_u357_rituals.js"
+      ],
+      "evidence": "Text (carddata). ignition (once per turn): a Spell discarded from the hand as the cost, the opposing 青眼の白龍 is mine until the End Phase and returns then; not activatable without a Spell in hand (a monster in hand does not count). Test: tools/test_s03_u357_rituals.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

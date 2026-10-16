@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 666,
+    "NOT_STARTED": 662,
     "PARTIAL": 30,
-    "TESTED": 3184
+    "TESTED": 3188
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -641,
+    "NOT_STARTED": -645,
     "PARTIAL": -152,
-    "TESTED": 1135
+    "TESTED": 1139
   },
   "status_changes": [
     {
@@ -2695,6 +2695,12 @@
       "unit": "S03-U184"
     },
     {
+      "name": "ハンバーガーのレシピ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U357"
+    },
+    {
       "name": "ハーピィ・レディ三姉妹",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3859,6 +3865,12 @@
       "unit": "S03-U308"
     },
     {
+      "name": "亀の誓い",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U357"
+    },
+    {
       "name": "二重召喚",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -4619,6 +4631,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U67"
+    },
+    {
+      "name": "大邪神 レシェフ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U357"
     },
     {
       "name": "天下人 紫炎",
@@ -6251,6 +6269,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U97"
+    },
+    {
+      "name": "踊りによる誘発",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U357"
     },
     {
       "name": "軍荼利",

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 666,
+    "NOT_STARTED": 662,
     "PARTIAL": 30,
-    "TESTED": 3184
+    "TESTED": 3188
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -93,7 +93,7 @@
     "helper:v49SummonFromHand": 4,
     "helper:v50Field": 13,
     "helper:v50PositionSpell": 2,
-    "helper:v5DefineRitualSpell": 25,
+    "helper:v5DefineRitualSpell": 28,
     "helper:v66Aura": 3,
     "helper:v66Bugman": 3,
     "helper:v66TripleCoin": 2,
@@ -114,9 +114,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1501,
     "sin": 5,
-    "unified": 1175
+    "unified": 1176
   },
-  "static_registration_name_count": 3195,
+  "static_registration_name_count": 3199,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -42727,12 +42727,20 @@
       "subtype": "儀式",
       "date": "2002-06-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:v5DefineRitualSpell",
+          "source": "cards\\HZZZZZZZS_claude_s03_u357_rituals.js",
+          "line": 17
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u357_rituals.js"
+      ]
     },
     {
       "index": 1981,
@@ -63192,12 +63200,20 @@
       "subtype": "儀式",
       "date": "2002-06-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:v5DefineRitualSpell",
+          "source": "cards\\HZZZZZZZS_claude_s03_u357_rituals.js",
+          "line": 16
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u357_rituals.js"
+      ]
     },
     {
       "index": 2949,
@@ -71858,13 +71874,20 @@
       "subtype": null,
       "date": "2005-02-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZS_claude_s03_u357_rituals.js",
+          "line": 22
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_ritual_cards.js"
+        "tools\\test_ritual_cards.js",
+        "tools\\test_s03_u357_rituals.js"
       ]
     },
     {
@@ -96938,12 +96961,20 @@
       "subtype": "儀式",
       "date": "2002-06-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:v5DefineRitualSpell",
+          "source": "cards\\HZZZZZZZS_claude_s03_u357_rituals.js",
+          "line": 15
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u357_rituals.js"
+      ]
     },
     {
       "index": 4547,
