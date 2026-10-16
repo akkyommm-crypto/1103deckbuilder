@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 690,
+    "NOT_STARTED": 685,
     "PARTIAL": 30,
-    "TESTED": 3160
+    "TESTED": 3165
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -113,9 +113,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1493,
     "sin": 5,
-    "unified": 1161
+    "unified": 1166
   },
-  "static_registration_name_count": 3171,
+  "static_registration_name_count": 3176,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -2162,12 +2162,19 @@
       "subtype": null,
       "date": "2008-07-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZM_claude_s03_u351_smallmon.js",
+          "line": 120
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u351_smallmon.js",
         "tools\\test_v470_native_cards.js"
       ]
     },
@@ -2394,12 +2401,20 @@
       "subtype": null,
       "date": "2008-07-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZM_claude_s03_u351_smallmon.js",
+          "line": 94
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u351_smallmon.js"
+      ]
     },
     {
       "index": 87,
@@ -7232,12 +7247,20 @@
       "subtype": null,
       "date": "2008-06-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZM_claude_s03_u351_smallmon.js",
+          "line": 29
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u351_smallmon.js"
+      ]
     },
     {
       "index": 309,
@@ -12403,12 +12426,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZM_claude_s03_u351_smallmon.js",
+          "line": 69
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u351_smallmon.js"
+      ]
     },
     {
       "index": 551,
@@ -15356,12 +15387,20 @@
       "subtype": null,
       "date": "2004-02-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZM_claude_s03_u351_smallmon.js",
+          "line": 53
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u351_smallmon.js"
+      ]
     },
     {
       "index": 692,

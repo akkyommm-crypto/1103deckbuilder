@@ -11223,6 +11223,56 @@
         "tools/test_s03_u350_guards.js"
       ],
       "evidence": "Text (carddata). cannot be Normal Summoned; the hand procedure needs 2+ Undead on my field; on its Special Summon every other monster (both fields) returned to the owner's Deck and, with 3 face-up original-Undead returned, its ATK became 3000. Test: tools/test_s03_u350_guards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "X－セイバー ガラハド",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U351",
+      "tests": [
+        "tools/test_s03_u351_smallmon.js"
+      ],
+      "evidence": "Text (carddata). attacking ワイト: ATK 1800+300 in the Damage Step (1800 battle damage), back to 1800 afterwards; attacked by ブラック・マジシャン: ATK 1300, destroyed, 1200 damage; with another セイバー (エアベルン) released the attack is negated and nothing is destroyed. Test: tools/test_s03_u351_smallmon.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "オアシスの使者",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U351",
+      "tests": [
+        "tools/test_s03_u351_smallmon.js"
+      ],
+      "evidence": "Text (carddata). with a Level 3 or lower Normal monster (ワイト) on my field it cannot be attacked, and the battle damage from that monster's battle is 0; a Level 7 Normal monster's battle damage still applies; without such a monster it is attackable. Test: tools/test_s03_u351_smallmon.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "イービル・ソーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U351",
+      "tests": [
+        "tools/test_s03_u351_smallmon.js"
+      ],
+      "evidence": "Text (carddata). released: 300 damage and two copies Special Summoned in Attack Position from the Deck with their effects negated; only one copy in the Deck: one is summoned. Test: tools/test_s03_u351_smallmon.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "C・リペアラー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U351",
+      "tests": [
+        "tools/test_s03_u351_smallmon.js"
+      ],
+      "evidence": "Text (carddata). destroyed ワイト by battle: 1300 battle damage + 300; once per turn it revives a C monster of Level 4 or lower from the Graveyard and cannot attack that turn; not activatable without a target. Test: tools/test_s03_u351_smallmon.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "C・コイル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U351",
+      "tests": [
+        "tools/test_s03_u351_smallmon.js"
+      ],
+      "evidence": "Text (carddata). once per turn: a C monster (C・スネーク 800/1200 -> 1100/1500, or itself) gets +300 ATK and DEF until the End Phase. Test: tools/test_s03_u351_smallmon.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

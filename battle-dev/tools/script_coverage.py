@@ -429,6 +429,7 @@ CARD_TEST_FOCUS = {
     # S03-U349 names 融合 / the E・HERO materials and Fusion Monster / ブラック・マジシャン / 青眼の白龍 / ワイト only as fixtures.
     "test_s03_u349_event_traps.js": {"ヘル・ポリマー", "痛恨の訴え", "破壊輪", "融合回収"},
     "test_s03_u350_guards.js": {"雷魔神－サンガ", "風魔神－ヒューガ", "水魔神－スーガ", "盲信するゴブリン", "牙城のガーディアン", "精気を吸う骨の塔", "火車"},
+    "test_s03_u351_smallmon.js": {"X－セイバー ガラハド", "オアシスの使者", "イービル・ソーン", "C・リペアラー", "C・コイル"},
 }
 
 

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 690,
+    "NOT_STARTED": 685,
     "PARTIAL": 30,
-    "TESTED": 3160
+    "TESTED": 3165
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -617,
+    "NOT_STARTED": -622,
     "PARTIAL": -152,
-    "TESTED": 1111
+    "TESTED": 1116
   },
   "status_changes": [
     {
@@ -133,6 +133,12 @@
       "unit": "S03-U319"
     },
     {
+      "name": "C・コイル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U351"
+    },
+    {
       "name": "C・シューター",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -173,6 +179,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U197"
+    },
+    {
+      "name": "C・リペアラー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U351"
     },
     {
       "name": "D.D.クロウ",
@@ -637,6 +649,12 @@
       "unit": "S03-U209"
     },
     {
+      "name": "X－セイバー ガラハド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U351"
+    },
+    {
       "name": "X－セイバー パロムロ",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -901,6 +919,12 @@
       "unit": "S03-U213"
     },
     {
+      "name": "イービル・ソーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U351"
+    },
+    {
       "name": "ウィキッド・リボーン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1079,6 +1103,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U316"
+    },
+    {
+      "name": "オアシスの使者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U351"
     },
     {
       "name": "オイルメン",
