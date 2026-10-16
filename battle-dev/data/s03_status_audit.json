@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 464,
+    "ENGINE_GAP": 463,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 691,
     "PARTIAL": 30,
-    "TESTED": 3164
+    "TESTED": 3165
   },
   "delta": {
-    "ENGINE_GAP": -152,
+    "ENGINE_GAP": -153,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -616,
     "PARTIAL": -152,
-    "TESTED": 1115
+    "TESTED": 1116
   },
   "status_changes": [
     {
@@ -869,6 +869,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U259"
+    },
+    {
+      "name": "インヴェルズの門番",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "CODEX-C16"
     },
     {
       "name": "インヴェルズを呼ぶ者",

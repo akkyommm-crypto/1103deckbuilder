@@ -1489,6 +1489,9 @@
   "path": "cards/I7_codex_c14_skill_successor.js"
  },
  {
+  "path": "cards/I9_codex_c16_invellz_gatekeeper.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

@@ -11263,6 +11263,16 @@
         "tools/test_codex_c14_skill_successor.js"
       ],
       "evidence": "2011 card text: the Set Normal Trap targets one own face-up monster for +400 ATK until the End Phase; its GY Trap effect is available only during its owner's turn and not on the turn sent to the GY, banishes itself as activation cost, and targets one own face-up monster for +800 ATK until the End Phase. Real DUEL tests cover opponent-turn field activation, expiry, later-turn GY activation and cost, same-turn/opponent-turn negatives, target filtering, and Replay audit."
+    },
+    {
+      "name": "インヴェルズの門番",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C16",
+      "tests": [
+        "tools/test_codex_c16_invellz_gatekeeper.js"
+      ],
+      "evidence": "Official 2011 text and Konami Q&A: while a face-up Gatekeeper witnesses a face-up Invellz Advance Summon, its controller gets one additional Normal Summon or Set that turn; multiple Gatekeepers share one additional action; Gatekeeper itself may be Tributed for that additional Advance Summon. A serializable source-local turn stamp and shared extra-Normal key implement the continuous effect without a Chain. Real DUEL tests cover summon and set paths, multiple copies, self-Tribute, non-Advance/non-Invellz/face-down negatives, and Replay audit."
     }
   ],
   "restored_to_baseline": [

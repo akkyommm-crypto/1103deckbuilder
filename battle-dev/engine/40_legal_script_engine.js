@@ -206,28 +206,50 @@ function canPaySetTribute(db,p){ return normalSummonMethodsFor(db,p,'set').lengt
 
 /* v3.7.0: カード効果で得る追加通常召喚権。
    現在は《鬼ガエル》の「鬼ガエル以外のガエル1体を追加召喚」に使用。 */
-function extraNormalSummonKeyV370(p,db){
+function extraNormalSummonKeyV370(p,db,mode){
   const P=gameState.players[p], f=P&&P.temporaryFlags||{};
-  if(Number(f.v370FrogExtraNormal||0)>0 && db&&db.k==='m' && String(db.n||'').includes('ガエル') && db.n!=='鬼ガエル')
+  const setMode=mode==='set';
+  if(!setMode && Number(f.v370FrogExtraNormal||0)>0 && db&&db.k==='m' && String(db.n||'').includes('ガエル') && db.n!=='鬼ガエル')
     return 'v370FrogExtraNormal';
-  if(Number(f.v380NordicExtraNormal||0)>0 && db&&db.k==='m' && (typeof isSetCardV4==='function'?isSetCardV4(db,SETCODE.NORDIC):String(db.n||'').includes('極星')))
+  if(!setMode && Number(f.v380NordicExtraNormal||0)>0 && db&&db.k==='m' && (typeof isSetCardV4==='function'?isSetCardV4(db,SETCODE.NORDIC):String(db.n||'').includes('極星')))
     return 'v380NordicExtraNormal';
   /* S03-U101: カラクリ小町 弐弐四 — 「通常召喚に加えて『カラクリ』モンスター1体を召喚できる」。
      以前はこの権利を表すフラグ（karakuriExtraSummon）を立てるだけで、doExtraNormalSummonV370 の
      実オファー経路（このv370系関数）に一切繋がっておらず、効果が完全に機能していなかった。 */
-  if(Number(f.karakuriExtraNormal||0)>0 && db&&db.k==='m' && String(db.n||'').includes('カラクリ'))
+  if(!setMode && Number(f.karakuriExtraNormal||0)>0 && db&&db.k==='m' && String(db.n||'').includes('カラクリ'))
     return 'karakuriExtraNormal';
   /* S03-U274: 「自分は通常召喚に加えて…1体を召喚できる」 granted by a face-up continuous source (氷結界の虎将 グルナード):
      continuous.extraNormalS03 = {filter(db, player, card)}; once per turn per source card (key 'src:'+uid, engine/00 NORMAL_SUMMON_ATTEMPT). */
   if(db && db.k==='m' && typeof continuousSources==='function'){
     const src = continuousSources().find(s=>{
       const x = s && s.p===p && s.sc && s.sc.continuous && s.sc.continuous.extraNormalS03;
-      if(!x || !s.card || s.card.uid==null || f['xn'+s.card.uid+'XnUsedS03']) return false;
-      try{ return typeof x.filter==='function' ? !!x.filter(db, p, s.card) : true; }catch(e){ return false; }
+      if(!x || !s.card || s.card.uid==null || (setMode && x.allowSet!==true)) return false;
+      const useKey=x.sharedKey ? 'shared_'+String(x.sharedKey) : 'xn'+s.card.uid;
+      if(f[useKey+'XnUsedS03']) return false;
+      try{
+        if(typeof x.active==='function' && !x.active(db,p,s.card)) return false;
+        return typeof x.filter==='function' ? !!x.filter(db,p,s.card) : true;
+      }catch(e){ return false; }
     });
-    if(src) return 'src:xn'+src.card.uid;
+    if(src){
+      const x=src.sc.continuous.extraNormalS03;
+      return 'src:'+(x.sharedKey ? 'shared_'+String(x.sharedKey) : 'xn'+src.card.uid);
+    }
   }
   return null;
+}
+
+/* CODEX-C16: Some continuous effects grant the right only after witnessing a
+   particular successful Normal Summon.  Stamp the live source itself, so a
+   source which was face-down/negated at that moment cannot gain the right
+   later, and ordinary save/Replay state preserves the result. */
+function recordConditionalExtraNormalSummonS03(player,summoned){
+  if(!summoned || typeof continuousSources!=='function') return;
+  continuousSources().forEach(s=>{
+    const x=s&&s.p===player&&s.sc&&s.sc.continuous&&s.sc.continuous.extraNormalS03;
+    if(!x || typeof x.qualifiesOnNormalSummon!=='function' || !s.card) return;
+    try{ if(x.qualifiesOnNormalSummon(summoned,player,s.card)) s.card.extraNormalS03Turn=gameState.turn; }catch(e){}
+  });
 }
 
 /* -------------------------------------------------------------------------
@@ -383,6 +405,8 @@ function getLegalHandActions(p, i){
     }
     const setOk = R.setCard && normalRightFreeS03(P) && hasMonsterZoneSpace(p) && canPaySetTribute(db,p);
     if(setOk) out.push({id:'setMonster', label:'セット', run:`doSetMonsterLegal(${i})`});
+    const extraSetKey=R.setCard&&hasMonsterZoneSpace(p)&&canPaySetTribute(db,p)?extraNormalSummonKeyV370(p,db,'set'):null;
+    if(extraSetKey) out.push({id:'extraSetMonster', label:'追加セット', run:`doExtraSetMonsterV370(${i},${jsStr(extraSetKey)})`});
 
     if(sc && typeof sc.resolve==='function'){
       /* 手札発動を明示したカードだけ。全モンスターに特殊召喚ボタンは出さない。 */

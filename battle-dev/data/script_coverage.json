@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 464,
+    "ENGINE_GAP": 463,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 691,
     "PARTIAL": 30,
-    "TESTED": 3164
+    "TESTED": 3165
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -110,11 +110,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1495,
+    "legacy": 1496,
     "sin": 5,
     "unified": 1166
   },
-  "static_registration_name_count": 3175,
+  "static_registration_name_count": 3176,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -251,6 +251,7 @@
         "tools\\test_codex_c11_continuous_trap_chain.js",
         "tools\\test_codex_c12_activation_cancel_first_turn.js",
         "tools\\test_codex_c14_skill_successor.js",
+        "tools\\test_codex_c16_invellz_gatekeeper.js",
         "tools\\test_counter_cards.js",
         "tools\\test_destruction_protection_cards.js",
         "tools\\test_device_paths_v351.js",
@@ -12075,6 +12076,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_class_a_recovery_04.js",
+        "tools\\test_codex_c16_invellz_gatekeeper.js",
         "tools\\test_s03_u221_ns13.js"
       ]
     },
@@ -12109,12 +12111,19 @@
       "subtype": null,
       "date": "2010-08-03",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs successful Advance Summon material/setcode provenance and a serializable conditional extra Normal Summon grant for the current turn.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\I9_codex_c16_invellz_gatekeeper.js",
+          "line": 5
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c16_invellz_gatekeeper.js",
         "tools\\test_s03_u205_partial8.js",
         "tools\\test_s03_u215_ns7.js",
         "tools\\test_s03_u221_ns13.js",
@@ -12295,6 +12304,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_class_a_recovery_04.js",
+        "tools\\test_codex_c16_invellz_gatekeeper.js",
         "tools\\test_v640_batch16.js"
       ]
     },
@@ -27393,6 +27403,7 @@
         "tools\\test_codex_c01_special_win.js",
         "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_codex_c14_skill_successor.js",
+        "tools\\test_codex_c16_invellz_gatekeeper.js",
         "tools\\test_s03_u09_offer_legality.js",
         "tools\\test_s03_u10_card_activation.js",
         "tools\\test_s03_u13_field_effect_response.js",
@@ -31880,6 +31891,7 @@
         "tools\\test_bottomless_batch_v361.js",
         "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_codex_c14_skill_successor.js",
+        "tools\\test_codex_c16_invellz_gatekeeper.js",
         "tools\\test_p1_choice_recovery_minibatch.js",
         "tools\\test_p26_unlocked_cards.js",
         "tools\\test_reveal_cards.js",
@@ -37766,6 +37778,7 @@
         "tools\\test_auto_cycle09.js",
         "tools\\test_auto_cycle10.js",
         "tools\\test_battle_cards.js",
+        "tools\\test_codex_c16_invellz_gatekeeper.js",
         "tools\\test_s03_u188_staples.js",
         "tools\\test_s03_u205_partial8.js",
         "tools\\test_s03_u296_choice_release_replay.js"
@@ -60178,6 +60191,7 @@
         "tools\\test_codex_c01_special_win.js",
         "tools\\test_codex_c10_phase_priority.js",
         "tools\\test_codex_c12_activation_cancel_first_turn.js",
+        "tools\\test_codex_c16_invellz_gatekeeper.js",
         "tools\\test_engine_e123_unlocked.js",
         "tools\\test_provenance_v30.js",
         "tools\\test_ready25_b1.js",
