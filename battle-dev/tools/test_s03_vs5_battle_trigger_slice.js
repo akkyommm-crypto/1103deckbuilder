@@ -43,7 +43,7 @@ const P1_LIST=[['ハイドロゲドン',3],['ロケット戦士',2],['電磁ミ�
  ['E・HERO エアーマン',1],['ダーク・グレファー',2],['サイバー・ドラゴン',2],['クリッター',1],['オネスト',1],['セイバーザウルス',3],['ジェネティック・ワーウルフ',3],['エフェクト・ヴェーラー',2],
  ['死者蘇生',1],['ハリケーン',1],['強欲で謙虚な壺',2],['サイクロン',2],['増援',1],['天使の施し',1],
  ['奈落の落とし穴',2],['強制脱出装置',1],['昇天の角笛',1],['マジック・ジャマー',1]];
-const RABBIT_FRONT=['セイバーザウルス','ジェネティック・ワーウルフ','セイバーザウルス','エフェクト・ヴェーラー','サイクロン','レスキューラビット','ライオウ','死者蘇生'];
+const RABBIT_FRONT=['セイバーザウルス','ジェネティック・ワーウルフ','セイバーザウルス','禁じられた聖槍','サイクロン','レスキューラビット','ライオウ','死者蘇生'];
 
 const first=harness(COMMON+'const P1_FRONT='+JSON.stringify(P1_FRONT)+';const P1_LIST='+JSON.stringify(P1_LIST)+';const RABBIT_FRONT='+JSON.stringify(RABBIT_FRONT)+';'+String.raw`
 function arranged(list,front){const rest=[];for(const [n,q] of list)for(let i=0;i<q;i++){const id=findCardIndex(n);if(id<0)throw Error('missing '+n);rest.push({id,face:'down',pos:'atk'});}

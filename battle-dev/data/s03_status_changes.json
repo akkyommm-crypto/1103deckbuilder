@@ -11253,6 +11253,16 @@
         "tools/test_codex_c09_light_and_darkness_dragon.js"
       ],
       "evidence": "Official Konami card database/Q&A: it cannot be Special Summoned; is also DARK while face-up; its mandatory once-per-chain response negates monster-effect activations and Spell/Trap Card activations without destroying, only when both current ATK and DEF can lose 500 at resolution; and its mandatory destroyed-to-GY trigger applies from any zone, wipes its controller's field, then revives the selected monster. Real DUEL tests cover Spell and hand-monster activations, paid cost, low-stat failure, face-up Spell-effect negative, once-per-chain, dual Attribute, Special Summon restriction, field/hand/Deck destruction, empty and missing targets, full own-field wipe, revival, and Replay audit."
+    },
+    {
+      "name": "スキル・サクセサー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "CODEX-C14",
+      "tests": [
+        "tools/test_codex_c14_skill_successor.js"
+      ],
+      "evidence": "2011 card text: the Set Normal Trap targets one own face-up monster for +400 ATK until the End Phase; its GY Trap effect is available only during its owner's turn and not on the turn sent to the GY, banishes itself as activation cost, and targets one own face-up monster for +800 ATK until the End Phase. Real DUEL tests cover opponent-turn field activation, expiry, later-turn GY activation and cost, same-turn/opponent-turn negatives, target filtering, and Replay audit."
     }
   ],
   "restored_to_baseline": [

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 464,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 692,
+    "NOT_STARTED": 691,
     "PARTIAL": 30,
-    "TESTED": 3163
+    "TESTED": 3164
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -112,9 +112,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1495,
     "sin": 5,
-    "unified": 1165
+    "unified": 1166
   },
-  "static_registration_name_count": 3174,
+  "static_registration_name_count": 3175,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -250,6 +250,7 @@
         "tools\\test_codex_c10_phase_priority.js",
         "tools\\test_codex_c11_continuous_trap_chain.js",
         "tools\\test_codex_c12_activation_cancel_first_turn.js",
+        "tools\\test_codex_c14_skill_successor.js",
         "tools\\test_counter_cards.js",
         "tools\\test_destruction_protection_cards.js",
         "tools\\test_device_paths_v351.js",
@@ -2453,6 +2454,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u188_staples.js"
       ]
     },
@@ -5489,6 +5491,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u51_shock_ruler_lock.js"
       ]
     },
@@ -5605,6 +5608,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u120_extra_tier.js",
         "tools\\test_s03_u218_ns10.js",
         "tools\\test_s03_u227_ns19.js",
@@ -11263,6 +11267,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_v460_native_cards.js"
       ]
     },
@@ -12313,6 +12318,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u120_extra_tier.js"
       ]
     },
@@ -14892,6 +14898,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_owner_return.js",
         "tools\\test_s03_u163_ex_material_check.js",
         "tools\\test_s03_u46_royal_oppression.js",
@@ -16563,6 +16570,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_v480_native_cards.js"
       ]
     },
@@ -18779,6 +18787,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u174_contact_fusion.js",
         "tools\\test_s03_u175_contact_full_zone.js"
       ]
@@ -23423,6 +23432,7 @@
         "tools\\test_class_a_recovery_04.js",
         "tools\\test_class_a_recovery_05.js",
         "tools\\test_codex_c12_activation_cancel_first_turn.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_destruction_protection_cards.js",
         "tools\\test_device_paths_v351.js",
         "tools\\test_draw_event_cards.js",
@@ -24430,6 +24440,7 @@
         "tools\\test_auto_cycle55.js",
         "tools\\test_characteristic_cards.js",
         "tools\\test_class_a_recovery_02.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_device_paths_v351.js",
         "tools\\test_p1_choice_recovery_minibatch.js",
         "tools\\test_raiou_summon_window_fix.js",
@@ -27380,6 +27391,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_codex_c01_special_win.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
+        "tools\\test_codex_c14_skill_successor.js",
         "tools\\test_s03_u09_offer_legality.js",
         "tools\\test_s03_u10_card_activation.js",
         "tools\\test_s03_u13_field_effect_response.js",
@@ -27820,7 +27833,9 @@
       "complexity_score": 5,
       "registrations": [],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js"
+      ]
     },
     {
       "index": 1272,
@@ -29514,12 +29529,21 @@
       "subtype": "",
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\I7_codex_c14_skill_successor.js",
+          "line": 9
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
+        "tools\\test_codex_c14_skill_successor.js"
+      ]
     },
     {
       "index": 1351,
@@ -31854,6 +31878,8 @@
       "tests": [
         "tools\\test_architecture_v400.js",
         "tools\\test_bottomless_batch_v361.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
+        "tools\\test_codex_c14_skill_successor.js",
         "tools\\test_p1_choice_recovery_minibatch.js",
         "tools\\test_p26_unlocked_cards.js",
         "tools\\test_reveal_cards.js",
@@ -46666,6 +46692,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_v460_native_cards.js"
       ]
     },
@@ -46827,6 +46854,7 @@
         "tools\\test_auto_cycle30.js",
         "tools\\test_auto_cycle38.js",
         "tools\\test_auto_cycle40.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_ready25_b3.js",
         "tools\\test_s03_u174_contact_fusion.js",
         "tools\\test_s03_u176_contact2.js",
@@ -48322,6 +48350,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u145_mass_destroy_attack_lock.js",
         "tools\\test_s03_u146_self_event_destroyer.js",
         "tools\\test_s03_u173_destroy_substitute.js",
@@ -48528,6 +48557,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_expansion_v350.js"
       ]
     },
@@ -51396,6 +51426,7 @@
       ],
       "auto_table": true,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u214_grave_redirect.js"
       ]
     },
@@ -55333,6 +55364,8 @@
         "tools\\test_auto_cycle65.js",
         "tools\\test_auto_cycle66.js",
         "tools\\test_bottomless_batch_v361.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
+        "tools\\test_codex_c14_skill_successor.js",
         "tools\\test_counter_cards.js",
         "tools\\test_p11_activation_cards.js",
         "tools\\test_p11_activation_context.js",
@@ -58782,6 +58815,7 @@
       "tests": [
         "tools\\test_architecture_v400.js",
         "tools\\test_bottomless_batch_v361.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u08_journaled_flags.js",
         "tools\\test_s03_u09_offer_legality.js",
         "tools\\test_s03_u10_card_activation.js",
@@ -61669,6 +61703,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_v460_native_cards.js"
       ]
     },
@@ -66194,6 +66229,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u50_gorz.js"
       ]
     },
@@ -72701,6 +72737,7 @@
       "tests": [
         "tools\\test_auto_cycle62.js",
         "tools\\test_bottomless_batch_v361.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_device_paths_v351.js",
         "tools\\test_s03_u09_offer_legality.js",
         "tools\\test_s03_u159_tribute_summon_batch.js",
@@ -75554,6 +75591,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_codex_c11_continuous_trap_chain.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_device_paths_v351.js",
         "tools\\test_owner_return.js",
         "tools\\test_s03_u189_monarchs.js",
@@ -75756,6 +75794,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u01_raioh_lock.js",
         "tools\\test_s03_u34_pot_resolution.js",
         "tools\\test_s03_u35_interrupted_activation.js",
@@ -80201,6 +80240,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u219_counters.js",
         "tools\\test_s03_u222_ns14.js",
         "tools\\test_s03_u251_lv.js",
@@ -82014,6 +82054,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u40_attack_declaration_window.js"
       ]
     },
@@ -82656,6 +82697,7 @@
         "tools\\test_astra01_cards.js",
         "tools\\test_astra02_cards.js",
         "tools\\test_class_a_recovery_04.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_device_paths_v351.js",
         "tools\\test_effect_category_cards.js",
         "tools\\test_expansion_v330.js",
@@ -83281,6 +83323,7 @@
         "tools\\test_auto_cycle09.js",
         "tools\\test_auto_cycle11.js",
         "tools\\test_auto_cycle13.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_destruction_protection_cards.js",
         "tools\\test_ready25_b2.js",
         "tools\\test_s03_u121_builder_launch.js",
@@ -84082,6 +84125,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u62_legacy_choice_migration.js"
       ]
     },
@@ -84105,6 +84149,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u120_extra_tier.js",
         "tools\\test_s03_u121_builder_launch.js"
       ]
@@ -87674,6 +87719,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
         "tools\\test_s03_u48_vayu_resolution.js",
@@ -89032,6 +89078,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_v470_native_cards.js"
       ]
     },
@@ -89456,6 +89503,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u86_seven_tools_activation_response.js"
       ]
     },
@@ -89978,6 +90026,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u88_dust_tornado.js"
       ]
     },
@@ -90583,6 +90632,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u215_ns7.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
@@ -90704,6 +90754,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
@@ -91168,6 +91219,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u186_sample_deck_cards.js"
       ]
     },
@@ -91191,7 +91243,12 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u115_forbidden_lance_immunity.js"
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
+        "tools\\test_s03_u115_forbidden_lance_immunity.js",
+        "tools\\test_s03_vs1_dragunity_slice.js",
+        "tools\\test_s03_vs2_six_samurai_slice.js",
+        "tools\\test_s03_vs4_activation_negation_slice.js",
+        "tools\\test_s03_vs5_battle_trigger_slice.js"
       ]
     },
     {
@@ -93845,6 +93902,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u174_contact_fusion.js",
         "tools\\test_s03_u176_contact2.js",
         "tools\\test_s03_u177_contact3.js",
@@ -94656,6 +94714,7 @@
         "tools\\test_class_a_bulk50_b2.js",
         "tools\\test_class_a_bulk50_b3.js",
         "tools\\test_class_a_recovery_04.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_device_paths_v351.js",
         "tools\\test_engine_e123_unlocked.js",
         "tools\\test_expansion_v330.js",
@@ -96217,6 +96276,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_p1_choice_recovery_minibatch.js",
         "tools\\test_s03_u01_raioh_lock.js",
         "tools\\test_s03_u34_pot_resolution.js",
@@ -103740,6 +103800,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_codex_c11_continuous_trap_chain.js",
+        "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u222_ns14.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs7_targeting_negation_slice.js",

@@ -139,55 +139,59 @@ const FEATURE_DECK = {
 
 /* =========================================================================
    1103兎ラギア：最初の「実戦完走」対象デッキ
-   2011/03リミット、2011年8月までのカードで構成された40+15。
-   メインの効果カードは現時点ですべてCARD_SCRIPTS実装済み。
+   2011/03リミット、2011年8月までのカードで構成された40+15+15。
+   ユーザー指定レシピ（2026-10-15）。サイドは対戦中のゾーンへは入れず、
+   次回のマッチ戦対応に備えてデッキ構成メタデータとして保持する。
    ========================================================================= */
 const RABBIT_LAGGIA_DECK = {
   name: "1103兎ラギア（完走対象）",
   strict1103: true,
   sourceCutoff: "2011-08-31",
   cards: [
-    {n:"レスキューラビット", q:3},
-    {n:"セイバーザウルス", q:3},
     {n:"ジェネティック・ワーウルフ", q:3},
+    {n:"セイバーザウルス", q:3},
     {n:"ライオウ", q:3},
-    {n:"魔導戦士 ブレイカー", q:2},
-    {n:"N・グラン・モール", q:1},
-    {n:"サイバー・ドラゴン", q:1},
-    // テスト安定化：モンスター22枚。初手・数ターンでモンスター無しになりにくくする。
-    {n:"異次元の女戦士", q:2},
-    {n:"スノーマンイーター", q:2},
-    {n:"エフェクト・ヴェーラー", q:2},
+    {n:"レスキューラビット", q:3},
+    {n:"魔導戦士 ブレイカー", q:3},
     {n:"サイクロン", q:2},
-    {n:"死者蘇生", q:1},
-    {n:"精神操作", q:1},
     {n:"ブラック・ホール", q:1},
-    {n:"強欲で謙虚な壺", q:2},
-    {n:"禁じられた聖槍", q:2},
+    {n:"強欲で謙虚な壺", q:3},
+    {n:"禁じられた聖槍", q:3},
+    {n:"月の書", q:1},
+    {n:"死者蘇生", q:1},
+    {n:"王宮の弾圧", q:1},
+    {n:"強制脱出装置", q:2},
+    {n:"次元幽閉", q:2},
     {n:"神の警告", q:2},
     {n:"神の宣告", q:1},
-    {n:"次元幽閉", q:1},
     {n:"聖なるバリア －ミラーフォース－", q:1},
+    {n:"盗賊の七つ道具", q:3},
     {n:"奈落の落とし穴", q:2},
-    {n:"強制脱出装置", q:1},
-    {n:"激流葬", q:1},
-    
   ],
   ex: [
-    {n:"エヴォルカイザー・ラギア", q:2},
-    {n:"No.39 希望皇ホープ", q:1},
-    {n:"ジェムナイト・パール", q:1},
-    {n:"インヴェルズ・ローチ", q:1},
-    {n:"イビリチュア・メロウガイスト", q:1},
-    {n:"ヴァイロン・ディシグマ", q:1},
     {n:"No.16 色の支配者ショック・ルーラー", q:1},
+    {n:"No.39 希望皇ホープ", q:1},
+    {n:"イビリチュア・メロウガイスト", q:1},
+    {n:"インヴェルズ・ローチ", q:1},
+    {n:"ヴァイロン・ディシグマ", q:1},
+    {n:"エヴォルカイザー・ラギア", q:2},
+    {n:"カチコチドラゴン", q:1},
     {n:"キメラテック・フォートレス・ドラゴン", q:1},
-    {n:"ナチュル・パルキオン", q:1},
-    {n:"氷結界の龍 ブリューナク", q:1},
+    {n:"ジェムナイト・パール", q:2},
     {n:"ブラック・ローズ・ドラゴン", q:1},
+    {n:"発条機甲ゼンマイスター", q:1},
     {n:"氷結界の龍 トリシューラ", q:1},
-    {n:"E・HERO The シャイニング", q:1},
-    {n:"V・HERO アドレイション", q:1},
+    {n:"氷結界の龍 ブリューナク", q:1},
+  ],
+  side: [
+    {n:"D.D.クロウ", q:2},
+    {n:"サイバー・ドラゴン", q:2},
+    {n:"フォッシル・ダイナ パキケファロ", q:2},
+    {n:"冥府の使者ゴーズ", q:1},
+    {n:"禁じられた聖杯", q:3},
+    {n:"スキル・サクセサー", q:1},
+    {n:"マクロコスモス", q:2},
+    {n:"砂塵の大竜巻", q:2},
   ]
 };
 
@@ -295,9 +299,9 @@ function startPresetDuel(key, firstPlayer){
   if(!p0.main.length || !p1.main.length){ showToast("カードデータが読み込まれていません"); return; }
 
   resetForTestDuel();
-  act({type:"LOAD_DECK", player:0, deck:p0.main, ex:p0.ex, source:'test', name:cfg.name});
+  act({type:"LOAD_DECK", player:0, deck:p0.main, ex:p0.ex, side:base0.side, source:'test', name:cfg.name});
   act({type:"DRAW", player:0, n:5, initial:true});
-  act({type:"LOAD_DECK", player:1, deck:p1.main, ex:p1.ex, source:'test', name:cfg.name});
+  act({type:"LOAD_DECK", player:1, deck:p1.main, ex:p1.ex, side:base1.side, source:'test', name:cfg.name});
   act({type:"DRAW", player:1, n:5, initial:true});
 
   const fp = (firstPlayer===1) ? 1 : 0;
@@ -328,10 +332,12 @@ function validateStrict1103TestDefinition(D){
   const errors=[];
   const mainN=testDeckDeclaredCount(D,'cards');
   const exN=testDeckDeclaredCount(D,'ex');
+  const sideN=testDeckDeclaredCount(D,'side');
   if(mainN!==40) errors.push(`メインが${mainN}枚（40枚必要）`);
   if(exN>15) errors.push(`EXが${exN}枚（15枚上限）`);
+  if(sideN>15) errors.push(`サイドが${sideN}枚（15枚上限）`);
   const counts={};
-  (D.cards||[]).concat(D.ex||[]).forEach(e=>{ counts[e.n]=(counts[e.n]||0)+(e.q||0); });
+  (D.cards||[]).concat(D.ex||[],D.side||[]).forEach(e=>{ counts[e.n]=(counts[e.n]||0)+(e.q||0); });
   Object.entries(counts).forEach(([nm,n])=>{
     const lim=deckLimit(nm);
     if(lim===0) errors.push(`${nm} は1103禁止カード`);
@@ -345,7 +351,7 @@ function validateStrict1103TestDefinition(D){
    strict1103 デッキは宣言枚数・2011/03制限を検証し、異常なら開始しない。 */
 function buildTestDeck(which){
   const D = testDeckDefinition(which);
-  const main=[], ex=[], miss=[];
+  const main=[], ex=[], side=[], miss=[];
   const defErrors = D.strict1103 ? validateStrict1103TestDefinition(D) : [];
   if(defErrors.length){
     console.error('[1103 TEST DECK INVALID]', D.name, defErrors);
@@ -366,10 +372,16 @@ function buildTestDeck(which){
     if(idx<0){ miss.push(e.n); return; }
     for(let i=0;i<e.q;i++) ex.push({id:idx, face:"down", pos:"atk"});
   });
+  (D.side||[]).forEach(e=>{
+    if(!e.q) return;
+    const idx = findCardIndex(e.n);
+    if(idx<0){ miss.push(e.n); return; }
+    side.push({n:CARD_DB[idx].n, q:e.q});
+  });
   if(miss.length){
     console.warn('[1103 TEST DECK MISSING CARD DATA]', D.name, miss);
   }
-  return {main, ex, side:[], miss, violations:[]};
+  return {main, ex, side, miss, violations:[]};
 }
 
 /* ランダムテスト初手。
@@ -407,14 +419,14 @@ function startTestDuel(bothSides, firstPlayer, which){
 
   const p0Deck=parsed.main.slice();
   shuffleFreshTestOpening(p0Deck,0);
-  act({type:"LOAD_DECK", player:0, deck:p0Deck, ex:parsed.ex.slice(), source:'test', name:testDeckDefinition(which).name});
+  act({type:"LOAD_DECK", player:0, deck:p0Deck, ex:parsed.ex.slice(), side:parsed.side, source:'test', name:testDeckDefinition(which).name});
   act({type:"DRAW", player:0, n:5, initial:true});
 
   if(bothSides){
     const p2 = buildTestDeck(which);
     const p1Deck=p2.main.slice();
     shuffleFreshTestOpening(p1Deck,1);
-    act({type:"LOAD_DECK", player:1, deck:p1Deck, ex:p2.ex, source:'test', name:testDeckDefinition(which).name});
+    act({type:"LOAD_DECK", player:1, deck:p1Deck, ex:p2.ex, side:p2.side, source:'test', name:testDeckDefinition(which).name});
     act({type:"DRAW", player:1, n:5, initial:true});
   }
   // 先攻を設定してドローフェイズから開始
@@ -440,12 +452,12 @@ function startRabbitOpponentDuel(firstPlayer){
   const rabbit = buildTestDeck('rabbit');
   if(!rabbit.main.length){ showToast("カードデータが読み込まれていません"); return false; }
   const toCards = ids => (ids||[]).filter(id=>CARD_DB[id]).map(id=>({id, face:"down", pos:"atk"}));
-  const p0Main = toCards(mine.main), p0Ex = toCards(mine.ex), myName = mine.name||'';
+  const p0Main = toCards(mine.main), p0Ex = toCards(mine.ex), p0Side = Array.isArray(mine.side)?mine.side:[], myName = mine.name||'';
   resetForTestDuel();
-  act({type:"LOAD_DECK", player:0, deck:p0Main, ex:p0Ex, source:'user', name:myName});
+  act({type:"LOAD_DECK", player:0, deck:p0Main, ex:p0Ex, side:p0Side, source:'user', name:myName});
   act({type:"SHUFFLE", player:0});
   act({type:"DRAW", player:0, n:5, initial:true});
-  act({type:"LOAD_DECK", player:1, deck:rabbit.main.slice(), ex:rabbit.ex.slice(), source:'opponentSample', name:RABBIT_LAGGIA_DECK.name});
+  act({type:"LOAD_DECK", player:1, deck:rabbit.main.slice(), ex:rabbit.ex.slice(), side:rabbit.side, source:'opponentSample', name:RABBIT_LAGGIA_DECK.name});
   act({type:"SHUFFLE", player:1});
   act({type:"DRAW", player:1, n:5, initial:true});
   const fp = (firstPlayer===1) ? 1 : 0;
@@ -863,7 +875,7 @@ function applyLoad(p, parsed, autostart){
     return;
   }
   if(autostart){
-    act({type:"LOAD_DECK", player:p, deck:main, ex, source:'user', name:parsed.name||''});
+    act({type:"LOAD_DECK", player:p, deck:main, ex, side:(parsed.sideNames||[]), source:'user', name:parsed.name||''});
     act({type:"SHUFFLE", player:p});
     act({type:"DRAW", player:p, n:5, initial:true});
     // 1103は先攻ドローあり。ドローフェイズから始める。
@@ -897,16 +909,16 @@ function loadedDeckCardsV108(p){
   const d = gameState && gameState.players[p] && gameState.players[p].loadedDeckV32;
   if(!d || !(d.main||[]).length) return null;
   const toCards = ids => (ids||[]).filter(id=>CARD_DB[id]).map(id=>({id, face:"down", pos:"atk"}));
-  return {name:d.name||'', main:toCards(d.main), ex:toCards(d.ex), source:d.source||'user'};
+  return {name:d.name||'', main:toCards(d.main), ex:toCards(d.ex), side:Array.isArray(d.side)?d.side:[], source:d.source||'user'};
 }
 function startSelectedDeckDuel(firstPlayer){
   const d0 = loadedDeckCardsV108(0), d1 = loadedDeckCardsV108(1);
   if(!d0 || !d1){ showToast('Player1とPlayer2のデッキを選択してください'); return false; }
   resetForTestDuel();
-  act({type:"LOAD_DECK", player:0, deck:d0.main, ex:d0.ex, source:d0.source, name:d0.name});
+  act({type:"LOAD_DECK", player:0, deck:d0.main, ex:d0.ex, side:d0.side, source:d0.source, name:d0.name});
   act({type:"SHUFFLE", player:0});
   act({type:"DRAW", player:0, n:5, initial:true});
-  act({type:"LOAD_DECK", player:1, deck:d1.main, ex:d1.ex, source:d1.source, name:d1.name});
+  act({type:"LOAD_DECK", player:1, deck:d1.main, ex:d1.ex, side:d1.side, source:d1.source, name:d1.name});
   act({type:"SHUFFLE", player:1});
   act({type:"DRAW", player:1, n:5, initial:true});
   const fp = (firstPlayer===1) ? 1 : 0;
