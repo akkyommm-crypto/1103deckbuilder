@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 681,
+    "NOT_STARTED": 678,
     "PARTIAL": 30,
-    "TESTED": 3169
+    "TESTED": 3172
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -76,6 +76,7 @@
     "helper:u343Helios": 2,
     "helper:u348Revive": 4,
     "helper:u350Majin": 3,
+    "helper:u353Bind": 2,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
@@ -113,9 +114,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1493,
     "sin": 5,
-    "unified": 1170
+    "unified": 1171
   },
-  "static_registration_name_count": 3180,
+  "static_registration_name_count": 3183,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -74819,12 +74820,20 @@
       "subtype": "永続",
       "date": "2002-06-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZO_claude_s03_u353_holds.js",
+          "line": 60
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u353_holds.js"
+      ]
     },
     {
       "index": 3496,
@@ -77949,12 +77958,20 @@
       "subtype": "永続",
       "date": "2002-05-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u353Bind",
+          "source": "cards\\HZZZZZZZO_claude_s03_u353_holds.js",
+          "line": 48
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u353_holds.js"
+      ]
     },
     {
       "index": 3643,
@@ -99649,12 +99666,20 @@
       "subtype": "永続",
       "date": "2001-04-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u353Bind",
+          "source": "cards\\HZZZZZZZO_claude_s03_u353_holds.js",
+          "line": 40
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u353_holds.js"
+      ]
     },
     {
       "index": 4684,

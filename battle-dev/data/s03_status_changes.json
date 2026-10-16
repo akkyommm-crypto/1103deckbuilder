@@ -11313,6 +11313,36 @@
         "tools/test_s03_u352_battle_upkeep.js"
       ],
       "evidence": "Text (carddata). ignition (Attack Position, once per turn): a hand monster discarded as the cost, the opponent's face-up Defense monster is mine until the End Phase with its position locked; not activatable against an Attack Position monster or with no monster in hand; 死者蘇生 cannot revive it (cannot be Special Summoned). Test: tools/test_s03_u352_battle_upkeep.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "闇の呪縛",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U353",
+      "tests": [
+        "tools/test_s03_u353_holds.js"
+      ],
+      "evidence": "Text (carddata). the targeted 青眼の白龍 lost 700 ATK (3000 -> 2300), could not attack and could not change its position; the monster destroyed -> the trap destroyed; the trap destroyed (サイクロン) -> the ATK returned to 3000. Test: tools/test_s03_u353_holds.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "拷問車輪",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U353",
+      "tests": [
+        "tools/test_s03_u353_holds.js"
+      ],
+      "evidence": "Text (carddata). the target cannot attack or change position, with no ATK drop; my Standby Phase deals 500 to the opponent (their own Standby Phase does not); the target destroyed -> the trap destroyed and no later burn. Test: tools/test_s03_u353_holds.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "平和の使者",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U353",
+      "tests": [
+        "tools/test_s03_u353_holds.js"
+      ],
+      "evidence": "Text (carddata). a monster with ATK 1500 or more (青眼の白龍) cannot declare an attack while ワイト (ATK 300) can; my Standby Phase pays 100 LP (the opponent's does not); with less than 100 LP it is destroyed. Test: tools/test_s03_u353_holds.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
