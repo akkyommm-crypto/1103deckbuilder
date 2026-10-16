@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 464,
+    "ENGINE_GAP": 463,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 691,
     "PARTIAL": 30,
-    "TESTED": 3164
+    "TESTED": 3165
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -112,9 +112,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1495,
     "sin": 5,
-    "unified": 1166
+    "unified": 1167
   },
-  "static_registration_name_count": 3175,
+  "static_registration_name_count": 3176,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -251,6 +251,7 @@
         "tools\\test_codex_c11_continuous_trap_chain.js",
         "tools\\test_codex_c12_activation_cancel_first_turn.js",
         "tools\\test_codex_c14_skill_successor.js",
+        "tools\\test_codex_c15_aoj_researcher.js",
         "tools\\test_counter_cards.js",
         "tools\\test_destruction_protection_cards.js",
         "tools\\test_device_paths_v351.js",
@@ -516,7 +517,6 @@
         "tools\\test_v610_batch13.js",
         "tools\\test_v620_batch14.js",
         "tools\\test_v630_batch15.js",
-        "tools\\test_v640_batch16.js",
         "tools\\test_v650_batch17.js",
         "tools\\test_v660_batch18.js",
         "tools\\test_v670_batch19.js",
@@ -1016,12 +1016,19 @@
       "subtype": null,
       "date": "2008-09-22",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a no-Flip-effect face-up Attack transition for one targeted face-down Defense monster, centrally suppressing its Flip effect.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\I8_codex_c15_aoj_researcher.js",
+          "line": 9
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c15_aoj_researcher.js",
         "tools\\test_v640_batch16.js"
       ]
     },
@@ -10374,8 +10381,7 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u255_lv2.js",
-        "tools\\test_v640_batch16.js"
+        "tools\\test_s03_u255_lv2.js"
       ]
     },
     {
@@ -16546,8 +16552,7 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_class_a_recovery_01.js",
-        "tools\\test_v640_batch16.js"
+        "tools\\test_class_a_recovery_01.js"
       ]
     },
     {
@@ -19922,6 +19927,7 @@
         "tools\\test_auto_cycle58.js",
         "tools\\test_auto_cycle60.js",
         "tools\\test_auto_cycle63.js",
+        "tools\\test_codex_c15_aoj_researcher.js",
         "tools\\test_p1_choice_recovery_minibatch.js",
         "tools\\test_p4_setcode_recovery.js",
         "tools\\test_reveal_cards.js",
@@ -19944,7 +19950,6 @@
         "tools\\test_v460_native_cards.js",
         "tools\\test_v470_native_cards.js",
         "tools\\test_v610_batch13.js",
-        "tools\\test_v640_batch16.js",
         "tools\\test_v660_batch18.js",
         "tools\\test_v680_batch20.js",
         "tools\\test_v700_batch22.js",
@@ -31880,6 +31885,7 @@
         "tools\\test_bottomless_batch_v361.js",
         "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_codex_c14_skill_successor.js",
+        "tools\\test_codex_c15_aoj_researcher.js",
         "tools\\test_p1_choice_recovery_minibatch.js",
         "tools\\test_p26_unlocked_cards.js",
         "tools\\test_reveal_cards.js",
@@ -50214,6 +50220,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c15_aoj_researcher.js",
         "tools\\test_v440_native_cards.js"
       ]
     },
@@ -54184,6 +54191,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_codex_c15_aoj_researcher.js",
         "tools\\test_s03_u137_fixed_list_singles.js",
         "tools\\test_s03_u176_contact2.js",
         "tools\\test_s03_u178_contact4.js"
@@ -55366,6 +55374,7 @@
         "tools\\test_bottomless_batch_v361.js",
         "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_codex_c14_skill_successor.js",
+        "tools\\test_codex_c15_aoj_researcher.js",
         "tools\\test_counter_cards.js",
         "tools\\test_p11_activation_cards.js",
         "tools\\test_p11_activation_context.js",
@@ -55414,7 +55423,6 @@
         "tools\\test_v600_batch12.js",
         "tools\\test_v610_batch13.js",
         "tools\\test_v620_batch14.js",
-        "tools\\test_v640_batch16.js",
         "tools\\test_v650_batch17.js",
         "tools\\test_v660_batch18.js",
         "tools\\test_v670_batch19.js",
@@ -60178,6 +60186,7 @@
         "tools\\test_codex_c01_special_win.js",
         "tools\\test_codex_c10_phase_priority.js",
         "tools\\test_codex_c12_activation_cancel_first_turn.js",
+        "tools\\test_codex_c15_aoj_researcher.js",
         "tools\\test_engine_e123_unlocked.js",
         "tools\\test_provenance_v30.js",
         "tools\\test_ready25_b1.js",
@@ -66067,8 +66076,7 @@
       ],
       "auto_table": true,
       "tests": [
-        "tools\\test_s03_u197_partial1.js",
-        "tools\\test_v640_batch16.js"
+        "tools\\test_s03_u197_partial1.js"
       ]
     },
     {
@@ -66519,7 +66527,6 @@
         "tools\\test_v450_native_cards.js",
         "tools\\test_v530_batch05.js",
         "tools\\test_v600_batch12.js",
-        "tools\\test_v640_batch16.js",
         "tools\\test_v670_batch19.js",
         "tools\\test_v710_batch23.js"
       ]
@@ -74468,6 +74475,7 @@
       "tests": [
         "tools\\test_auto_cycle65.js",
         "tools\\test_battle_cards.js",
+        "tools\\test_codex_c15_aoj_researcher.js",
         "tools\\test_leave_field_cards.js",
         "tools\\test_p3_provenance_cards.js",
         "tools\\test_ritual_cards.js",

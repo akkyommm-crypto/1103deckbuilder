@@ -357,10 +357,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a central effect-damage-received event plus replay-safe resolution-time hand selection of a Level-4-or-lower canonical Blackwing."
     },
-    "A・O・J リサーチャー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a no-Flip-effect face-up Attack transition for one targeted face-down Defense monster, centrally suppressing its Flip effect."
-    },
     "さまようミイラ": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe hidden-zone permutation of all own face-down Defense monsters without exposing their identities or changing card states."

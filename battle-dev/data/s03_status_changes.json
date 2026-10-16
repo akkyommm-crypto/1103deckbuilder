@@ -11263,6 +11263,16 @@
         "tools/test_codex_c14_skill_successor.js"
       ],
       "evidence": "2011 card text: the Set Normal Trap targets one own face-up monster for +400 ATK until the End Phase; its GY Trap effect is available only during its owner's turn and not on the turn sent to the GY, banishes itself as activation cost, and targets one own face-up monster for +800 ATK until the End Phase. Real DUEL tests cover opponent-turn field activation, expiry, later-turn GY activation and cost, same-turn/opponent-turn negatives, target filtering, and Replay audit."
+    },
+    {
+      "name": "A・O・J リサーチャー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "CODEX-C15",
+      "tests": [
+        "tools/test_codex_c15_aoj_researcher.js"
+      ],
+      "evidence": "2011 card text: once per turn, discard one card to target one opponent face-down Defense Position monster, turn it face-up Attack Position, and do not activate its Flip effect. A generic replay-safe API now distinguishes a normal effect flip from a face-up transition that suppresses Flip effects; the existing VWーTiger Catapult path uses the same primitive. Real DUEL tests cover the discard cost, target filtering, resolution recheck, once-per-turn limit, Flip-effect suppression, ordinary effect-flip negative control, and Replay audit."
     }
   ],
   "restored_to_baseline": [

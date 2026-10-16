@@ -1514,6 +1514,14 @@ const API = {
     act({type:"FX_SET_STATE", player:r.p, zone:r.zone, index:r.index,
          face:'up', pos:pos||r.card.pos||'atk', reason:reason||'効果で表側表示に', v10FlipEffect:true});
     return true; },
+  /* CODEX-C15: 裏側から表側にするが、リバース効果を発動させない効果。
+     v10FlipEffect を付けないこと自体が Replay 可能な抑止指定になる。 */
+  flipFaceUpWithoutFlipEffect(t, pos, reason){ const r=resolveTarget(t); if(!r) return false;
+    if(r.zone!=='mz' || r.card.face!=='down') return false;
+    trace(`flipFaceUpWithoutFlipEffect: ${labelOf(r.card)}`);
+    act({type:"FX_SET_STATE", player:r.p, zone:r.zone, index:r.index,
+         face:'up', pos:pos||r.card.pos||'atk', reason:reason||'リバース効果を発動せず表側表示に'});
+    return true; },
   positionChangedCard(evt){ return positionChangedCardV10(evt); },
   turnedToFaceUpDefense(evt){ return turnedToFaceUpDefenseV10(evt); },
   turnedFaceUp(evt){ return turnedFaceUpV10(evt); },

@@ -82,8 +82,8 @@ defineScript('VW－タイガー・カタパルト', {
     const t = ctx.selectedTargets && ctx.selectedTargets[0];
     const r = t && resolveTarget(t);
     if(!r || r.p!==ctx.opponent || r.zone!=='mz') return;
-    /* face-down Defense → face-up Attack without the flip effect (no v10FlipEffect mark: no onFlip); face-up ↔ the other position */
-    if(r.card.face==='down') act({type:'FX_SET_STATE', player:r.p, zone:'mz', index:r.index, face:'up', pos:'atk', reason:'VW－タイガー・カタパルト'});
+    /* face-down Defense → face-up Attack without the flip effect; face-up ↔ the other position */
+    if(r.card.face==='down') API.flipFaceUpWithoutFlipEffect(r,'atk','VW－タイガー・カタパルト');
     else API.changePosition(r, r.card.pos==='def' ? 'atk' : 'def', 'VW－タイガー・カタパルト');
   }
 });
