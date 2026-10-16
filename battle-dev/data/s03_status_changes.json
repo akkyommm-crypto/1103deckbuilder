@@ -11383,6 +11383,46 @@
         "tools/test_s03_u354_chain.js"
       ],
       "evidence": "Text (carddata). not activatable without a chain; as link 4 it Special Summoned ブラック・マジシャン from the OTHER player's Graveyard to the activator's field. Test: tools/test_s03_u354_chain.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "透破抜き",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U355",
+      "tests": [
+        "tools/test_s03_u355_counters.js"
+      ],
+      "evidence": "Text (carddata). the opponent's 傀儡虫 activated from the hand: offered, the activation negated and the monster banished (my monster stays mine); a Spell activation is not offered. Test: tools/test_s03_u355_counters.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "王家の呪い",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U355",
+      "tests": [
+        "tools/test_s03_u355_counters.js"
+      ],
+      "evidence": "Text (carddata). the opponent's サイクロン targeting one of my Spell/Trap cards: offered, negated and destroyed, my set card survives; ブラック・ホール (no Spell/Trap target) is not offered. Test: tools/test_s03_u355_counters.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "六尺瓊勾玉",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U355",
+      "tests": [
+        "tools/test_s03_u355_counters.js"
+      ],
+      "evidence": "Text (carddata). with 六武衆－ザンジ on my field the opponent's ブラック・ホール (a destroying Spell) is offered, negated and destroyed, the 六武衆 survives; without a 六武衆 it is not offered. Test: tools/test_s03_u355_counters.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エンペラー・オーダー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U355",
+      "tests": [
+        "tools/test_s03_u355_counters.js"
+      ],
+      "evidence": "Text (carddata). the opponent's Normal Summon trigger effect (ものマネ幻想師) is offered, negated, and its owner drew 1 card; a Spell activation is not offered. Test: tools/test_s03_u355_counters.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

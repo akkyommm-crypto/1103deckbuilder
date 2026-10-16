@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 674,
+    "NOT_STARTED": 670,
     "PARTIAL": 30,
-    "TESTED": 3176
+    "TESTED": 3180
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -112,11 +112,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1497,
+    "legacy": 1501,
     "sin": 5,
     "unified": 1171
   },
-  "static_registration_name_count": 3187,
+  "static_registration_name_count": 3191,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -14852,12 +14852,20 @@
       "subtype": "永続",
       "date": "2007-12-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZQ_claude_s03_u355_counters.js",
+          "line": 63
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u355_counters.js"
+      ]
     },
     {
       "index": 665,
@@ -65408,12 +65416,20 @@
       "subtype": "カウンター",
       "date": "2010-11-13",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZQ_claude_s03_u355_counters.js",
+          "line": 50
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u355_counters.js"
+      ]
     },
     {
       "index": 3057,
@@ -87796,12 +87812,20 @@
       "subtype": "カウンター",
       "date": "2003-04-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZQ_claude_s03_u355_counters.js",
+          "line": 42
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u355_counters.js"
+      ]
     },
     {
       "index": 4112,
@@ -97561,12 +97585,20 @@
       "subtype": "カウンター",
       "date": "2011-02-11",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZQ_claude_s03_u355_counters.js",
+          "line": 16
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u355_counters.js"
+      ]
     },
     {
       "index": 4580,
