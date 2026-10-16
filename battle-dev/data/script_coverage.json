@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 697,
+    "NOT_STARTED": 690,
     "PARTIAL": 30,
-    "TESTED": 3153
+    "TESTED": 3160
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -75,6 +75,7 @@
     "helper:u342HandSS": 2,
     "helper:u343Helios": 2,
     "helper:u348Revive": 4,
+    "helper:u350Majin": 3,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
@@ -110,11 +111,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1492,
+    "legacy": 1493,
     "sin": 5,
-    "unified": 1158
+    "unified": 1161
   },
-  "static_registration_name_count": 3164,
+  "static_registration_name_count": 3171,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -83183,12 +83184,20 @@
       "subtype": null,
       "date": "1999-09-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u350Majin",
+          "source": "cards\\HZZZZZZZL_claude_s03_u350_guards.js",
+          "line": 41
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u350_guards.js"
+      ]
     },
     {
       "index": 3899,
@@ -85876,12 +85885,20 @@
       "subtype": null,
       "date": "2008-09-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZL_claude_s03_u350_guards.js",
+          "line": 96
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u350_guards.js"
+      ]
     },
     {
       "index": 4028,
@@ -87113,12 +87130,20 @@
       "subtype": null,
       "date": "2010-04-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZL_claude_s03_u350_guards.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u350_guards.js"
+      ]
     },
     {
       "index": 4084,
@@ -89407,12 +89432,20 @@
       "subtype": null,
       "date": "2002-11-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZL_claude_s03_u350_guards.js",
+          "line": 44
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u350_guards.js"
+      ]
     },
     {
       "index": 4196,
@@ -92223,12 +92256,20 @@
       "subtype": null,
       "date": "2004-06-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZL_claude_s03_u350_guards.js",
+          "line": 78
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u350_guards.js"
+      ]
     },
     {
       "index": 4334,
@@ -100970,12 +101011,20 @@
       "subtype": null,
       "date": "1999-09-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u350Majin",
+          "source": "cards\\HZZZZZZZL_claude_s03_u350_guards.js",
+          "line": 39
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u350_guards.js"
+      ]
     },
     {
       "index": 4752,
@@ -102406,12 +102455,20 @@
       "subtype": null,
       "date": "1999-09-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u350Majin",
+          "source": "cards\\HZZZZZZZL_claude_s03_u350_guards.js",
+          "line": 40
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u350_guards.js"
+      ]
     },
     {
       "index": 4814,

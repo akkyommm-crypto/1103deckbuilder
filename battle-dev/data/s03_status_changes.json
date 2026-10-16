@@ -11153,6 +11153,76 @@
         "tools/test_s03_u349_event_traps.js"
       ],
       "evidence": "Text (carddata). after a real Fusion Summon: 融合 and the chosen Fusion Material returned to the hand (the other material stays); not activatable when the Graveyard monster was not a Fusion Material. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "雷魔神－サンガ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U350",
+      "tests": [
+        "tools/test_s03_u350_guards.js"
+      ],
+      "evidence": "Text (carddata). attacked on the opponent's turn: at damage calculation the attacker's ATK became 0 (青眼の白龍 destroyed, the Majin stayed, the opponent took 2600 battle damage); a second attack on the same face-up Majin is not answered (once only, flag); an already-used Majin is destroyed; my own attack does not use it. Test: tools/test_s03_u350_guards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "風魔神－ヒューガ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U350",
+      "tests": [
+        "tools/test_s03_u350_guards.js"
+      ],
+      "evidence": "Text (carddata). attacked on the opponent's turn: at damage calculation the attacker's ATK became 0 (青眼の白龍 destroyed, the Majin stayed, the opponent took 2400 battle damage); a second attack on the same face-up Majin is not answered (once only, flag); an already-used Majin is destroyed; my own attack does not use it. Test: tools/test_s03_u350_guards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "水魔神－スーガ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U350",
+      "tests": [
+        "tools/test_s03_u350_guards.js"
+      ],
+      "evidence": "Text (carddata). attacked on the opponent's turn: at damage calculation the attacker's ATK became 0 (青眼の白龍 destroyed, the Majin stayed, the opponent took 2500 battle damage); a second attack on the same face-up Majin is not answered (once only, flag); an already-used Majin is destroyed; my own attack does not use it. Test: tools/test_s03_u350_guards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "盲信するゴブリン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U350",
+      "tests": [
+        "tools/test_s03_u350_guards.js"
+      ],
+      "evidence": "Text (carddata). 心変わり on it does not change control (controlLockS03), ワイト is still taken as a control. Test: tools/test_s03_u350_guards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "牙城のガーディアン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U350",
+      "tests": [
+        "tools/test_s03_u350_guards.js"
+      ],
+      "evidence": "Text (carddata). the opponent attacked my Defense Position monster: discarded from the hand in the Damage Step, DEF +1500 until the End Phase (2500 vs ブラック・マジシャン 2500: no destruction); not used when the attacked monster is in Attack Position. Test: tools/test_s03_u350_guards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "精気を吸う骨の塔",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U350",
+      "tests": [
+        "tools/test_s03_u350_guards.js"
+      ],
+      "evidence": "Text (carddata). with another Undead on my field the attack on it is refused (no destruction, no damage); alone it is destroyed; an Undead Special Summoned (死者蘇生) -> the opponent's Deck top 2 to the Graveyard; a non-Undead Special Summon does not mill. Test: tools/test_s03_u350_guards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "火車",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U350",
+      "tests": [
+        "tools/test_s03_u350_guards.js"
+      ],
+      "evidence": "Text (carddata). cannot be Normal Summoned; the hand procedure needs 2+ Undead on my field; on its Special Summon every other monster (both fields) returned to the owner's Deck and, with 3 face-up original-Undead returned, its ATK became 3000. Test: tools/test_s03_u350_guards.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
