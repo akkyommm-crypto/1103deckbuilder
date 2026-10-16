@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 678,
+    "NOT_STARTED": 674,
     "PARTIAL": 30,
-    "TESTED": 3172
+    "TESTED": 3176
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -629,
+    "NOT_STARTED": -633,
     "PARTIAL": -152,
-    "TESTED": 1123
+    "TESTED": 1127
   },
   "status_changes": [
     {
@@ -3805,6 +3805,12 @@
       "unit": "S03-U261"
     },
     {
+      "name": "一陣の風",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U354"
+    },
+    {
       "name": "万力魔神バイサー・デス",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4625,6 +4631,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U196"
+    },
+    {
+      "name": "奇跡の蘇生",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U354"
     },
     {
       "name": "契約の履行",
@@ -5863,6 +5875,12 @@
       "unit": "S03-U116"
     },
     {
+      "name": "積み上げる幸福",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U354"
+    },
+    {
       "name": "究極宝玉神 レインボー・ドラゴン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6257,6 +6275,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U281"
+    },
+    {
+      "name": "連鎖爆撃",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U354"
     },
     {
       "name": "進化する翼",

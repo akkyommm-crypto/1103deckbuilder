@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 678,
+    "NOT_STARTED": 674,
     "PARTIAL": 30,
-    "TESTED": 3172
+    "TESTED": 3176
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -112,11 +112,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1493,
+    "legacy": 1497,
     "sin": 5,
     "unified": 1171
   },
-  "static_registration_name_count": 3183,
+  "static_registration_name_count": 3187,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -62673,12 +62673,20 @@
       "subtype": "速攻",
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZP_claude_s03_u354_chain.js",
+          "line": 30
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u354_chain.js"
+      ]
     },
     {
       "index": 2923,
@@ -72653,12 +72661,20 @@
       "subtype": "速攻",
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 22,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZP_claude_s03_u354_chain.js",
+          "line": 58
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u354_chain.js"
+      ]
     },
     {
       "index": 3394,
@@ -91385,12 +91401,20 @@
       "subtype": "",
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZP_claude_s03_u354_chain.js",
+          "line": 45
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u354_chain.js"
+      ]
     },
     {
       "index": 4286,
@@ -97748,12 +97772,20 @@
       "subtype": "速攻",
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZP_claude_s03_u354_chain.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u354_chain.js"
+      ]
     },
     {
       "index": 4590,

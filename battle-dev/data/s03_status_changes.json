@@ -11343,6 +11343,46 @@
         "tools/test_s03_u353_holds.js"
       ],
       "evidence": "Text (carddata). a monster with ATK 1500 or more (青眼の白龍) cannot declare an attack while ワイト (ATK 300) can; my Standby Phase pays 100 LP (the opponent's does not); with less than 100 LP it is destroyed. Test: tools/test_s03_u353_holds.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "連鎖爆撃",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U354",
+      "tests": [
+        "tools/test_s03_u354_chain.js"
+      ],
+      "evidence": "Text (carddata). not activatable without a chain; chained to サイクロン as link 2: 1 stacked link x 400 = 400 damage to the opponent of the activator, サイクロン still resolves. Test: tools/test_s03_u354_chain.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "一陣の風",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U354",
+      "tests": [
+        "tools/test_s03_u354_chain.js"
+      ],
+      "evidence": "Text (carddata). not activatable without a chain; as chain link 3 (サイクロン, 連鎖爆撃, 一陣の風): destroyed the chosen Spell/Trap card on the field. Test: tools/test_s03_u354_chain.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "積み上げる幸福",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U354",
+      "tests": [
+        "tools/test_s03_u354_chain.js"
+      ],
+      "evidence": "Text (carddata). not activatable without a chain and not offered as link 3; as link 4 the activator drew 2 cards. Test: tools/test_s03_u354_chain.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "奇跡の蘇生",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U354",
+      "tests": [
+        "tools/test_s03_u354_chain.js"
+      ],
+      "evidence": "Text (carddata). not activatable without a chain; as link 4 it Special Summoned ブラック・マジシャン from the OTHER player's Graveyard to the activator's field. Test: tools/test_s03_u354_chain.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
