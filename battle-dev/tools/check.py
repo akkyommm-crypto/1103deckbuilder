@@ -642,6 +642,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u348_revive_traps.js')],check=Tr
 subprocess.run(['node',str(ROOT/'tools/test_s03_u349_event_traps.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u350_guards.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u351_smallmon.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u352_battle_upkeep.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

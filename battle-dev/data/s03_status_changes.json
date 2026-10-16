@@ -11273,6 +11273,46 @@
         "tools/test_s03_u351_smallmon.js"
       ],
       "evidence": "Text (carddata). once per turn: a C monster (C・スネーク 800/1200 -> 1100/1500, or itself) gets +300 ATK and DEF until the End Phase. Test: tools/test_s03_u351_smallmon.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "フュージョニストキラー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U352",
+      "tests": [
+        "tools/test_s03_u352_battle_upkeep.js"
+      ],
+      "evidence": "Text (carddata). a Fusion Monster (フレイム・ウィングマン 2100) attacking it, or attacked by it, has ATK 0 in the Damage Step: the Fusion is destroyed and its controller takes 1400; a non-Fusion monster destroys it normally. Test: tools/test_s03_u352_battle_upkeep.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マックス・ウォリアー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U352",
+      "tests": [
+        "tools/test_s03_u352_battle_upkeep.js"
+      ],
+      "evidence": "Text (carddata). attacking ワイト: ATK 1800+400, 1900 damage; after destroying a monster it is Level 2 with halved original ATK/DEF (900/400) through the opponent turn and back to Level 4, 1800/800 after my next Standby Phase; a direct attack has no bonus and no shrink. Test: tools/test_s03_u352_battle_upkeep.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "メンタルプロテクター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U352",
+      "tests": [
+        "tools/test_s03_u352_battle_upkeep.js"
+      ],
+      "evidence": "Text (carddata). my Standby Phase pays 500 LP (the opponent's does not); with less than 500 LP it is destroyed; a non-Psychic monster with ATK 2000 or less (ワイト) cannot declare an attack, ATK 3000 and a Psychic (サイコ・コマンダー) can. Test: tools/test_s03_u352_battle_upkeep.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マジシャンズ・エイプ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U352",
+      "tests": [
+        "tools/test_s03_u352_battle_upkeep.js"
+      ],
+      "evidence": "Text (carddata). ignition (Attack Position, once per turn): a hand monster discarded as the cost, the opponent's face-up Defense monster is mine until the End Phase with its position locked; not activatable against an Attack Position monster or with no monster in hand; 死者蘇生 cannot revive it (cannot be Special Summoned). Test: tools/test_s03_u352_battle_upkeep.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

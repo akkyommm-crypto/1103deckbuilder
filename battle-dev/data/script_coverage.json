@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 685,
+    "NOT_STARTED": 681,
     "PARTIAL": 30,
-    "TESTED": 3165
+    "TESTED": 3169
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -113,9 +113,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1493,
     "sin": 5,
-    "unified": 1166
+    "unified": 1170
   },
-  "static_registration_name_count": 3176,
+  "static_registration_name_count": 3180,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -47208,12 +47208,20 @@
       "subtype": null,
       "date": "2006-11-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZN_claude_s03_u352_battle_upkeep.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u352_battle_upkeep.js"
+      ]
     },
     {
       "index": 2196,
@@ -51971,12 +51979,20 @@
       "subtype": null,
       "date": "2011-04-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 22,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZN_claude_s03_u352_battle_upkeep.js",
+          "line": 82
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u352_battle_upkeep.js"
+      ]
     },
     {
       "index": 2426,
@@ -52602,12 +52618,20 @@
       "subtype": null,
       "date": "2009-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZN_claude_s03_u352_battle_upkeep.js",
+          "line": 33
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u352_battle_upkeep.js"
+      ]
     },
     {
       "index": 2456,
@@ -54553,14 +54577,21 @@
       "subtype": null,
       "date": "2008-04-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZN_claude_s03_u352_battle_upkeep.js",
+          "line": 59
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle34.js",
-        "tools\\test_auto_cycle37.js"
+        "tools\\test_auto_cycle37.js",
+        "tools\\test_s03_u352_battle_upkeep.js"
       ]
     },
     {
