@@ -7,8 +7,8 @@
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 538,
-    "PARTIAL": 12,
-    "TESTED": 3330
+    "PARTIAL": 10,
+    "TESTED": 3332
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,9 +117,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1551,
     "sin": 5,
-    "unified": 1259
+    "unified": 1261
   },
-  "static_registration_name_count": 3341,
+  "static_registration_name_count": 3342,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -63588,18 +63588,24 @@
       "subtype": null,
       "date": "2003-04-24",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "S03-U66 implemented its cannotNormalSummon restriction and its continuous protection (negate and destroy the activation of a Spell/Trap targeting it, same shape as 大神官デ・ザード's own first effect, via declareTargetingNegatorS03) since it is now reachable as a real Special Summon target of 大神官デ・ザード's second effect; its once-per-turn self-Set-face-down-defense effect and its on-reversal GY-Undead-revival effect are not implemented, so the card is not complete.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 24,
       "registrations": [
         {
           "kind": "legacy",
           "source": "cards\\H8C_claude_s03u67_dezaado_counter.js",
           "line": 92
+        },
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZE_claude_s03_u395_asmo.js",
+          "line": 54
         }
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u395_asmo.js",
         "tools\\test_s03_u67_dezaado_counter.js"
       ]
     },
@@ -70981,12 +70987,20 @@
       "subtype": null,
       "date": "2009-02-21",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZE_claude_s03_u395_asmo.js",
+          "line": 19
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u395_asmo.js"
+      ]
     },
     {
       "index": 3283,

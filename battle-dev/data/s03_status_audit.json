@@ -13,15 +13,15 @@
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 538,
-    "PARTIAL": 12,
-    "TESTED": 3330
+    "PARTIAL": 10,
+    "TESTED": 3332
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -769,
-    "PARTIAL": -170,
-    "TESTED": 1281
+    "PARTIAL": -172,
+    "TESTED": 1283
   },
   "status_changes": [
     {
@@ -4275,8 +4275,8 @@
     {
       "name": "不死王リッチー",
       "before": "NOT_STARTED",
-      "after": "PARTIAL",
-      "unit": "S03-U67"
+      "after": "TESTED",
+      "unit": "S03-U395"
     },
     {
       "name": "世界樹",
@@ -4997,6 +4997,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U292"
+    },
+    {
+      "name": "堕天使アスモディウス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U395"
     },
     {
       "name": "堕天使ディザイア",

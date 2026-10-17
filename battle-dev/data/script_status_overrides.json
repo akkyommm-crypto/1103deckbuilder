@@ -5,10 +5,6 @@
       "status": "PARTIAL",
       "reason": "S03-U276 implemented it for exactly 3 face-up same-name Normal Monsters (not Tokens): this turn those 3 may attack directly (lingering grant on the recorded uids). PARTIAL because the case of 4 or more same-name Normal Monsters (activatable or not, and which 3) is an open ruling under the 2026-10-03 TESTED rule."
     },
-    "不死王リッチー": {
-      "status": "PARTIAL",
-      "reason": "S03-U66 implemented its cannotNormalSummon restriction and its continuous protection (negate and destroy the activation of a Spell/Trap targeting it, same shape as 大神官デ・ザード's own first effect, via declareTargetingNegatorS03) since it is now reachable as a real Special Summon target of 大神官デ・ザード's second effect; its once-per-turn self-Set-face-down-defense effect and its on-reversal GY-Undead-revival effect are not implemented, so the card is not complete."
-    },
     "コアキメイルの鋼核": {
       "status": "PARTIAL",
       "reason": "S03-U65 implemented its Draw Phase replacement (instead of the normal draw, add this card from the GY to hand) through C-S03-26; its alternate cost-based effect (discard a Koa'ki Meiru monster from hand during the Draw Phase to add this card from the GY to hand, a separate activation window from the draw-replacement offer) is not implemented, so the card is not complete."

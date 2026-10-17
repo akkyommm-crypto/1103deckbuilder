@@ -12923,6 +12923,26 @@
         "tools/test_s03_u394_cannon.js"
       ],
       "evidence": "Exact script. Text (carddata). Normal Trap: two hand cards to the Graveyard (cost), two ソウルトークン (Fiend, DARK, Level 1, ATK/DEF 0) Special Summoned, usable as Tributes for an Advance Summon; refused with one hand card or with fewer than two free Monster Zones. Known limit (same as the U388 cloud Tokens): a Release as the cost of an effect is not intercepted. Test: tools/test_s03_u394_cannon.js (Replay audit). No other known deviation."
+    },
+    {
+      "name": "堕天使アスモディウス",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U395",
+      "tests": [
+        "tools/test_s03_u395_asmo.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Replaced the coarse AUTO_DECK_TABLE entry. Effect 1: once per turn in my Main Phase an Angel monster of the Deck goes to the Graveyard (not offered without an Angel in the Deck); it cannot be Special Summoned from the Graveyard or the Deck (standing rule read from the text, engine/1ZK noGraveSummonReasonS03 extended to the Deck and to the text 'Deck / Graveyard'); effect 2: destroyed (by an effect or in battle) and sent to the Graveyard -> アスモトークン (Angel, DARK, Lv5, 1800/1300, not destroyed by effects) and ディウストークン (Lv3, 1200/1200, not destroyed by battle) Special Summoned (grantProtection permanent); checked that Dius survives a battle and the Asmo Token dies in battle / survives an effect. Test: tools/test_s03_u395_asmo.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "不死王リッチー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U395",
+      "tests": [
+        "tools/test_s03_u395_asmo.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Completed the two missing effects (override entry removed from data/script_status_overrides.json): the once-per-turn ignition turns it face-down Defense Position; the Flip trigger Special Summons an Undead monster of my Graveyard (flipped by an attack: yes; nothing without an Undead); cannotNormalSummon and the Spell / Trap targeting negation of S03-U66 / U67 are kept. Test: tools/test_s03_u395_asmo.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

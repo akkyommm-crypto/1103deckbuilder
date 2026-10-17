@@ -117,9 +117,13 @@ function sweepProperlySummonedS03(gs){
    summoned) is not offered as a target in the first place. */
 /* S03-U358: 「このカードは墓地からの特殊召喚はできない」 (インフェルニティ・ミラージュ / ハ・デス / 地獄詩人ヘルポエマー) — a standing rule read from the card text; applies to every effect Special Summon from the Graveyard. */
 function noGraveSummonReasonS03(card, from){
-  if(!card || from!=='grave') return '';
+  if(!card || (from!=='grave' && from!=='deck')) return '';
   const d = (typeof dbOf==='function') ? dbOf(card) : null;
-  return (d && /このカードは墓地からの特殊召喚はできない/.test(String(d.e||''))) ? `${cardName(card)}は墓地から特殊召喚できません` : '';
+  const txt = String((d && d.e) || '');
+  /* S03-U395: 「このカードはデッキ・墓地からの特殊召喚はできない」 (堕天使アスモディウス) and 「デッキからの…」 */
+  if(from==='grave' && /このカードは(デッキ・)?墓地からの特殊召喚はできない/.test(txt)) return `${cardName(card)}は墓地から特殊召喚できません`;
+  if(from==='deck' && /このカードは(デッキ・墓地|デッキ)からの特殊召喚はできない/.test(txt)) return `${cardName(card)}はデッキから特殊召喚できません`;
+  return '';
 }
 function canEffectSpecialSummonS03(card, from, reason, summonKind){
   if(!card) return false;
