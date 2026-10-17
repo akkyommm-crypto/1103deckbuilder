@@ -65,7 +65,8 @@ function u385ZenEffect(ctx){
 function u385ZenPool(p){ return API.pileCards(p, 'deck', x=>x.db.k==='m' && u331Zen(x.db) && Number(x.db.lv)<=4); }
 defineUnifiedCardV4('ゼンマイマニュファクチャ', [{
   key:'activate', type:EFFECT_TYPE.ACTIVATE, range:LOCATION.SZONE, speed:1, events:['activate'],
-  condition(ctx){ return !(ctx.zone==='sz' && ctx.card.face==='up'); }, operation(){}, afterResolve(){}
+  /* a card activated from the hand is judged in the logical zone 'sz' with its hand face: only a card really standing in the Spell & Trap Zone is already activated (S03-U390) */
+  condition(ctx){ const h = locateCardAnyV4(ctx.card); return !(h && h.zone==='sz' && ctx.card.face==='up'); }, operation(){}, afterResolve(){}
 }, {
   key:'search', type:EFFECT_TYPE.TRIGGER, range:LOCATION.SZONE, speed:1, events:['onActivateSuccess'],
   condition(ctx){ return u385ZenEffect(ctx) && u385ZenPool(ctx.player).length>0; },

@@ -83,4 +83,6 @@ function foeCast(name,prefer){const i=gameState.players[1].hand.findIndex(c=>car
   ok('神光の宣告者 negative: no Angel in my hand -> not offered',offered===false,'');drive(); }
 
 console.log('U370 done');
+{ fresh();const s=mk(SOU,0,'up');gameState.players[0].hand=[s];baselineA();
+  ok('昇華する魂: the Continuous Spell can be activated from the hand (S03-U390: the activation guard looked at the logical zone)',getLegalHandActions(0,0).some(a=>a.id==='activate'),JSON.stringify(getLegalHandActions(0,0).map(a=>a.id))); }
 `);

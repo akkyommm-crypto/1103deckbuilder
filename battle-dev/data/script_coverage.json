@@ -7,8 +7,8 @@
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 550,
-    "PARTIAL": 16,
-    "TESTED": 3314
+    "PARTIAL": 12,
+    "TESTED": 3318
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -115,11 +115,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1540,
+    "legacy": 1541,
     "sin": 5,
-    "unified": 1254
+    "unified": 1257
   },
-  "static_registration_name_count": 3325,
+  "static_registration_name_count": 3329,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -51063,12 +51063,20 @@
       "subtype": "永続",
       "date": "2005-08-11",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZ_claude_s03_u390_partials.js",
+          "line": 131
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u390_partials.js"
+      ]
     },
     {
       "index": 2361,
@@ -63425,7 +63433,7 @@
         {
           "kind": "unified",
           "source": "cards\\HZZZZZZZZU_claude_s03_u385_misc7.js",
-          "line": 116
+          "line": 117
         }
       ],
       "auto_table": false,
@@ -64025,12 +64033,20 @@
       "subtype": "永続",
       "date": "2004-02-26",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZ_claude_s03_u390_partials.js",
+          "line": 97
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u390_partials.js"
+      ]
     },
     {
       "index": 2964,
@@ -90053,13 +90069,20 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZ_claude_s03_u390_partials.js",
+          "line": 23
+        }
+      ],
       "auto_table": true,
       "tests": [
-        "tools\\test_ritual_cards.js"
+        "tools\\test_ritual_cards.js",
+        "tools\\test_s03_u390_partials.js"
       ]
     },
     {
@@ -99324,7 +99347,7 @@
         {
           "kind": "unified",
           "source": "cards\\HZZZZZZZZU_claude_s03_u385_misc7.js",
-          "line": 82
+          "line": 83
         }
       ],
       "auto_table": false,
@@ -105162,12 +105185,20 @@
       "subtype": "",
       "date": "2008-02-23",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZ_claude_s03_u390_partials.js",
+          "line": 60
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u390_partials.js"
+      ]
     },
     {
       "index": 4890,

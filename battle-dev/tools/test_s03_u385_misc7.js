@@ -100,6 +100,11 @@ function actSzC(c,prefer){PREFER=(prefer||[]).slice();duelActivateFromZone(0,'sz
   ok('マニュファクチャ: a ゼンマイ monster effect was activated -> a Level 4 or lower ゼンマイ added from the Deck',z(zg)==='hand'||z(zh)==='hand',JSON.stringify([z(zg),z(zh)]));
   audit('マニュファクチャ 1'); }
 
+{ fresh();const m=mk(MFG,0,'up');gameState.players[0].hand=[m];baselineA();
+  ok('マニュファクチャ: the Continuous Spell can be activated from the hand',getLegalHandActions(0,0).some(a=>a.id==='activate'),JSON.stringify(getLegalHandActions(0,0).map(a=>a.id)));
+  cast(0,MFG);
+  ok('マニュファクチャ: it is face-up in the Spell & Trap Zone afterwards',z(m)==='sz'&&C(m).face==='up',JSON.stringify([z(m),C(m)&&C(m).face])); }
+
 /* ===== 邪狂神の使い ===== */
 { fresh();const e=mon(ENV,0),a=mk('ワイト',0),b=mk('ブラック・マジシャン',0),c=mk('青眼の白龍',0);
   gameState.players[0].mz=[e];gameState.players[0].grave=[a,b,c];baselineA();

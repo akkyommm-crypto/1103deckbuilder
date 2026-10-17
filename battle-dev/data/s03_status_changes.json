@@ -12763,6 +12763,46 @@
         "tools/test_s03_u389_traps3.js"
       ],
       "evidence": "Text (carddata). A second copy cannot be Normal / Flip / Special Summoned while one is on my field; the opponent can attack only the Flipper, not my other monsters; destroyed by battle -> Special Summoned on the opponent's field; destroyed by a Spell (地割れ) -> an opposing monster (chosen) is destroyed. Test: tools/test_s03_u389_traps3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "白竜の聖騎士",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U390",
+      "tests": [
+        "tools/test_s03_u390_partials.js"
+      ],
+      "evidence": "Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Text (carddata). Ritual Summoned by 白竜降臨 (Level 4 Tribute); attacking a face-down Defense monster destroys it without damage calculation (stays face-down, no damage to me); a face-up Defense monster is fought normally; the release effect (the Knight sent to the Graveyard as the cost) Special Summons 青眼の白龍 from the Deck, which cannot attack that turn; refused without a 青眼の白龍. Test: tools/test_s03_u390_partials.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔法の歯車",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U390",
+      "tests": [
+        "tools/test_s03_u390_partials.js"
+      ],
+      "evidence": "Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Text (carddata). Normal Spell: three face-up アンティーク・ギア cards sent to the Graveyard (cost), one 古代の機械巨人 from the hand and one from the Deck Special Summoned ignoring the conditions, my other monster destroyed, no Normal Summon for the activation turn and my next turn (banSummonS03; over the turn after); refused with only two Gear cards. Test: tools/test_s03_u390_partials.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "人海戦術",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U390",
+      "tests": [
+        "tools/test_s03_u390_partials.js"
+      ],
+      "evidence": "Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Text (carddata). Continuous Trap: at the End Phase a Level 2 Normal Monster of mine destroyed by battle this turn -> one Level 2 or lower Normal Monster of the Deck is Special Summoned; a Level 7 Normal Monster destroyed -> nothing. Test: tools/test_s03_u390_partials.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ボスラッシュ",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U390",
+      "tests": [
+        "tools/test_s03_u390_partials.js"
+      ],
+      "evidence": "Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Text (carddata). Continuous Spell activated from the hand when no Normal Summon was made (refused after one); while face-up I cannot Normal Summon (the opponent can); my 巨大戦艦 destroyed -> at the End Phase a 巨大戦艦 of the Deck is Special Summoned (yes / no). Test: tools/test_s03_u390_partials.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

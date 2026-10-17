@@ -24,7 +24,7 @@ function u370RitualMats(ctx){
 function u370SoulReady(ctx){ return ctx.zone==='sz' && ctx.card.face==='up' && Number(ctx.card.u370SoulTurn)!==Number(gameState.turn) && u370RitualMats(ctx).length>0; }
 defineUnifiedCardV4('昇華する魂', [{
   key:'activate', type:EFFECT_TYPE.ACTIVATE, range:LOCATION.SZONE, speed:1, events:['activate'],
-  condition(ctx){ return !(ctx.zone==='sz' && ctx.card.face==='up'); }, operation(){}, afterResolve(){}
+  condition(ctx){ const h = locateCardAnyV4(ctx.card); return !(h && h.zone==='sz' && ctx.card.face==='up'); }, operation(){}, afterResolve(){}   /* judged in the logical zone 'sz' when activated from the hand: only a card really standing in the Spell & Trap Zone is already activated (S03-U390) */
 }, {
   key:'retrieve', type:EFFECT_TYPE.TRIGGER, range:LOCATION.SZONE, speed:1, events:['onSpecialSummon'],
   condition(ctx){ return u370SoulReady(ctx); },
@@ -34,7 +34,7 @@ defineUnifiedCardV4('昇華する魂', [{
     API.selectCard('昇華する魂：手札に加える儀式召喚でリリースしたモンスター', pool, t=>{ const r = t && resolveTarget(t); if(r && r.zone==='grave' && r.p===ctx.player) API.returnToHand(r, '昇華する魂'); });
   },
   afterResolve(){}
-}], {type:'spell', priority:1, onOtherSummon:true, passive:{ onSpecialSummon(ctx){ return u370SoulReady(ctx); } } });
+}], {type:'spell', priority:1, onOtherSummon:true, fieldIgnition:true, passive:{ onSpecialSummon(ctx){ return u370SoulReady(ctx); } } });   /* fieldIgnition: the card activation is a plain placement (otherwise the summon-event passive made it activatable only "when a monster is Summoned" — found by the hand-activation check of S03-U390) */
 
 /* ---- 宣告者の預言 ---- */
 registerRitualSpecV24('宣告者の預言', {monsters:['神光の宣告者'], level:6, levelMode:'exact'});
