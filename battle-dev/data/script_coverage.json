@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 642,
+    "NOT_STARTED": 638,
     "PARTIAL": 30,
-    "TESTED": 3208
+    "TESTED": 3212
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -112,11 +112,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1504,
+    "legacy": 1508,
     "sin": 5,
     "unified": 1193
   },
-  "static_registration_name_count": 3219,
+  "static_registration_name_count": 3223,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -11437,12 +11437,20 @@
       "subtype": null,
       "date": "1999-12-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZY_claude_s03_u363_fusion_subs.js",
+          "line": 13
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u363_fusion_subs.js"
+      ]
     },
     {
       "index": 502,
@@ -76395,12 +76403,20 @@
       "subtype": null,
       "date": "1999-12-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZY_claude_s03_u363_fusion_subs.js",
+          "line": 14
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u363_fusion_subs.js"
+      ]
     },
     {
       "index": 3557,
@@ -84463,12 +84479,20 @@
       "subtype": null,
       "date": "1999-12-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZY_claude_s03_u363_fusion_subs.js",
+          "line": 15
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u363_fusion_subs.js"
+      ]
     },
     {
       "index": 3944,
@@ -90438,12 +90462,20 @@
       "subtype": null,
       "date": "1999-12-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZY_claude_s03_u363_fusion_subs.js",
+          "line": 16
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u363_fusion_subs.js"
+      ]
     },
     {
       "index": 4227,

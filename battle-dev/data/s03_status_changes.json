@@ -11703,6 +11703,46 @@
         "tools/test_s03_u362_lightdark.js"
       ],
       "evidence": "Text (carddata). Defense Position at my Standby Phase: 1 counter (none in Attack Position); with a counter: 1 Graveyard card banished (cost), 1 Spell / Trap destroyed and the counters removed. Test: tools/test_s03_u362_lightdark.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "イリュージョン・シープ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U363",
+      "tests": [
+        "tools/test_s03_u363_fusion_subs.js"
+      ],
+      "evidence": "Text (carddata). 融合: with バーストレディ the substitute stands in for フェザーマン (フレイム・ウィングマン) or クレイマン (ランパートガンナー) and the Fusion Summon succeeds with both as Fusion Materials in the Graveyard; with a non-material (エアーマン) or with a second substitute nothing is offered. The rule is the engine text rule of S03-U134 (the card is only registered). Test: tools/test_s03_u363_fusion_subs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "心眼の女神",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U363",
+      "tests": [
+        "tools/test_s03_u363_fusion_subs.js"
+      ],
+      "evidence": "Text (carddata). 融合: with バーストレディ the substitute stands in for フェザーマン (フレイム・ウィングマン) or クレイマン (ランパートガンナー) and the Fusion Summon succeeds with both as Fusion Materials in the Graveyard; with a non-material (エアーマン) or with a second substitute nothing is offered. The rule is the engine text rule of S03-U134 (the card is only registered). Test: tools/test_s03_u363_fusion_subs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "沼地の魔獣王",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U363",
+      "tests": [
+        "tools/test_s03_u363_fusion_subs.js"
+      ],
+      "evidence": "Text (carddata). 融合: with バーストレディ the substitute stands in for フェザーマン (フレイム・ウィングマン) or クレイマン (ランパートガンナー) and the Fusion Summon succeeds with both as Fusion Materials in the Graveyard; with a non-material (エアーマン) or with a second substitute nothing is offered. The rule is the engine text rule of S03-U134 (the card is only registered). Test: tools/test_s03_u363_fusion_subs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "破壊神 ヴァサーゴ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U363",
+      "tests": [
+        "tools/test_s03_u363_fusion_subs.js"
+      ],
+      "evidence": "Text (carddata). 融合: with バーストレディ the substitute stands in for フェザーマン (フレイム・ウィングマン) or クレイマン (ランパートガンナー) and the Fusion Summon succeeds with both as Fusion Materials in the Graveyard; with a non-material (エアーマン) or with a second substitute nothing is offered. The rule is the engine text rule of S03-U134 (the card is only registered). Test: tools/test_s03_u363_fusion_subs.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
