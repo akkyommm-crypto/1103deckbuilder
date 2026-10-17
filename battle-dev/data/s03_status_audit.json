@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 560,
+    "NOT_STARTED": 557,
     "PARTIAL": 16,
-    "TESTED": 3304
+    "TESTED": 3307
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -747,
+    "NOT_STARTED": -750,
     "PARTIAL": -166,
-    "TESTED": 1255
+    "TESTED": 1258
   },
   "status_changes": [
     {
@@ -6031,6 +6031,12 @@
       "unit": "S03-U216"
     },
     {
+      "name": "洗脳光線",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U387"
+    },
+    {
       "name": "洗脳－ブレインコントロール",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -6419,6 +6425,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U349"
+    },
+    {
+      "name": "破邪の刻印",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U387"
     },
     {
       "name": "磁力の指輪",
@@ -7169,6 +7181,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U218"
+    },
+    {
+      "name": "集団催眠",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U387"
     },
     {
       "name": "雲魔物－アイ・オブ・ザ・タイフーン",

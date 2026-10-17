@@ -12663,6 +12663,36 @@
         "tools/test_s03_u386_blaze.js"
       ],
       "evidence": "Text (carddata). Sent to the Graveyard: 500 damage (also by 手札抹殺, without any prompt); sent by ブレイズ・キャノン (turn-stamped card flag u386Cannon): a yes / no — yes sends two more from the hand / Deck and destroys all the opponent's monsters (3 x 500 damage in total), no keeps the others. Test: tools/test_s03_u386_blaze.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "洗脳光線",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U387",
+      "tests": [
+        "tools/test_s03_u387_control.js"
+      ],
+      "evidence": "Text (carddata). Continuous Trap: control of an opposing A Counter monster is taken (the monster without a counter stays); each of my End Phases removes one A Counter; at 0 counters the Trap is destroyed and the monster returns; the controlled monster destroyed -> the Trap is destroyed; refused without an A Counter monster. Test: tools/test_s03_u387_control.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "集団催眠",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U387",
+      "tests": [
+        "tools/test_s03_u387_control.js"
+      ],
+      "evidence": "Text (carddata). Continuous Trap with an エーリアン monster of mine: control of up to three opposing A Counter monsters (the fourth stays); the Trap is destroyed at the End Phase of its activation turn and the monsters go back; refused without an エーリアン monster. Test: tools/test_s03_u387_control.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "破邪の刻印",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U387",
+      "tests": [
+        "tools/test_s03_u387_control.js"
+      ],
+      "evidence": "Text (carddata). Continuous Trap: at the opponent's Standby Phase the chosen face-up card (ライオウ) is negated for that turn only; at my Standby Phase yes -> 500 LP paid and it stays, no -> no payment and it is destroyed. Test: tools/test_s03_u387_control.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
