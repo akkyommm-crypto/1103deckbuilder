@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 513,
+    "NOT_STARTED": 511,
     "PARTIAL": 10,
-    "TESTED": 3357
+    "TESTED": 3359
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -794,
+    "NOT_STARTED": -796,
     "PARTIAL": -172,
-    "TESTED": 1308
+    "TESTED": 1310
   },
   "status_changes": [
     {
@@ -1655,6 +1655,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U364"
+    },
+    {
+      "name": "コーリング・マジック",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U403"
     },
     {
       "name": "コール・リゾネーター",
@@ -6497,6 +6503,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U233"
+    },
+    {
+      "name": "異次元隔離マシーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U403"
     },
     {
       "name": "異界空間－Aゾーン",

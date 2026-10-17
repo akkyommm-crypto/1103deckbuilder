@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 513,
+    "NOT_STARTED": 511,
     "PARTIAL": 10,
-    "TESTED": 3357
+    "TESTED": 3359
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,9 +117,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1560,
     "sin": 5,
-    "unified": 1276
+    "unified": 1278
   },
-  "static_registration_name_count": 3367,
+  "static_registration_name_count": 3369,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -22865,12 +22865,20 @@
       "subtype": "",
       "date": "2006-05-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZM_claude_s03_u403_isolate.js",
+          "line": 71
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u403_isolate.js"
+      ]
     },
     {
       "index": 1039,
@@ -89827,12 +89835,20 @@
       "subtype": "永続",
       "date": "2002-11-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZM_claude_s03_u403_isolate.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u403_isolate.js"
+      ]
     },
     {
       "index": 4160,
