@@ -12333,6 +12333,46 @@
         "tools/test_s03_u378_targetlocks.js"
       ],
       "evidence": "Text (carddata). Normal Spell with a 青眼の白龍 on my field: all the opponent's monsters destroyed; my 青眼の白龍 (also one Special Summoned afterwards by 死者蘇生) cannot attack that turn, can attack again next turn; refused without 青眼の白龍. Test: tools/test_s03_u378_targetlocks.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "増殖",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U379",
+      "tests": [
+        "tools/test_s03_u379_spells.js"
+      ],
+      "evidence": "Text (carddata). Quick-Play Spell: release a face-up クリボー as the cost, then クリボートークン (Fiend, DARK, Lv1, 300/200) fill the free Monster Zones in Defense Position; refused without a face-up クリボー. Test: tools/test_s03_u379_spells.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "百機夜工",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U379",
+      "tests": [
+        "tools/test_s03_u379_spells.js"
+      ],
+      "evidence": "Text (carddata). Quick-Play Spell: every 「D」 monster of the Graveyard is banished (the other monster stays), a face-up Machine monster gains 200 ATK per banished monster until the End Phase (gone next turn); refused without a 「D」 in the Graveyard. Test: tools/test_s03_u379_spells.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スターライト・ロード",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U379",
+      "tests": [
+        "tools/test_s03_u379_spells.js"
+      ],
+      "evidence": "Text (carddata). Trap: the opponent's ブラック・ホール would destroy 2 of my monsters -> negated and destroyed, my monsters survive and スターダスト・ドラゴン is Special Summoned from the Extra Deck (optional prompt); not offered for one card or a single-target Cyclone. Test: tools/test_s03_u379_spells.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マジシャンズ・クロス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U379",
+      "tests": [
+        "tools/test_s03_u379_spells.js"
+      ],
+      "evidence": "Text (carddata). Normal Spell: with two face-up Attack Position Spellcasters, the targeted one gets ATK 3000 until the End Phase and the other Spellcaster cannot attack that turn (lingering source with a turn stamp); next turn normal again; refused with one Spellcaster. Test: tools/test_s03_u379_spells.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

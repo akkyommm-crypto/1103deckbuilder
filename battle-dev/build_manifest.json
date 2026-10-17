@@ -1546,6 +1546,9 @@
   "path": "cards/HZZZZZZZZN_claude_s03_u378_targetlocks.js"
  },
  {
+  "path": "cards/HZZZZZZZZO_claude_s03_u379_spells.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

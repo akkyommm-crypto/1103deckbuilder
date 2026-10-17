@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 593,
+    "NOT_STARTED": 589,
     "PARTIAL": 16,
-    "TESTED": 3271
+    "TESTED": 3275
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -714,
+    "NOT_STARTED": -718,
     "PARTIAL": -166,
-    "TESTED": 1222
+    "TESTED": 1226
   },
   "status_changes": [
     {
@@ -2137,6 +2137,12 @@
       "unit": "S03-U367"
     },
     {
+      "name": "スターライト・ロード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U379"
+    },
+    {
       "name": "ストライク・ショット",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3395,6 +3401,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U352"
+    },
+    {
+      "name": "マジシャンズ・クロス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U379"
     },
     {
       "name": "マジシャンズ・ヴァルキリア",
@@ -4903,6 +4915,12 @@
       "unit": "S03-U01"
     },
     {
+      "name": "増殖",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U379"
+    },
+    {
       "name": "夜薔薇の騎士",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6197,6 +6215,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U267"
+    },
+    {
+      "name": "百機夜工",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U379"
     },
     {
       "name": "盗賊の七つ道具",
