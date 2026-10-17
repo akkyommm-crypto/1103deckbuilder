@@ -12033,6 +12033,66 @@
         "tools/test_s03_u371_misc5.js"
       ],
       "evidence": "Text (carddata). at the opponent's End Phase with my hand empty and it face-up: at my next Standby Phase I drew 1 extra card (2 cards in hand with the normal draw); with a card in hand only the normal draw. Test: tools/test_s03_u371_misc5.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ハイエナ",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U372",
+      "tests": [
+        "tools/test_s03_u372_autotable.js"
+      ],
+      "evidence": "Text (carddata). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. destroyed by battle (青眼の白龍): another ハイエナ Special Summoned from the Deck in Attack Position and the Deck shuffled; none left in the Deck: only destroyed. Test: tools/test_s03_u372_autotable.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スーパイ",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U372",
+      "tests": [
+        "tools/test_s03_u372_autotable.js"
+      ],
+      "evidence": "Text (carddata). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. destroyed by an effect (ブラック・ホール): 太陽の神官 Special Summoned from the Deck with ATK doubled (2000) and back to the hand at the End Phase; destroyed by battle: nothing. Test: tools/test_s03_u372_autotable.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "クロス・ポーター",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U372",
+      "tests": [
+        "tools/test_s03_u372_autotable.js"
+      ],
+      "evidence": "Text (carddata). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. ignition: ワイト sent to the Graveyard and N・グロー・モス Special Summoned from the hand; sent to the Graveyard (destroyed by battle): an 「N」 monster added from the Deck to the hand. Test: tools/test_s03_u372_autotable.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "メンタルマスター",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U372",
+      "tests": [
+        "tools/test_s03_u372_autotable.js"
+      ],
+      "evidence": "Text (carddata). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. 800 LP paid and ウォールクリエイター released: サイコ・コマンダー Special Summoned from the Deck in Attack Position; once per turn; not activatable below 800 LP. Test: tools/test_s03_u372_autotable.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "リバース・オブ・ネオス",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U372",
+      "tests": [
+        "tools/test_s03_u372_autotable.js"
+      ],
+      "evidence": "Text (carddata). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Quick-Play Spell: my Neos Fusion Monster (アクア・ネオス) destroyed: E・HERO ネオス Special Summoned from the Deck with ATK 3500, destroyed at the End Phase; a non-Neos monster destroyed: not triggered. Test: tools/test_s03_u372_autotable.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "トライアングル・エリア",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U372",
+      "tests": [
+        "tools/test_s03_u372_autotable.js"
+      ],
+      "evidence": "Text (carddata). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Quick-Play Spell: the A Counter monster destroyed, エーリアン・ソルジャー (Level 4) Special Summoned from the Deck and destroyed at the End Phase; not activatable without an A Counter monster. Test: tools/test_s03_u372_autotable.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

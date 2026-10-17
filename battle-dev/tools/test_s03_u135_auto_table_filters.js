@@ -48,7 +48,8 @@ for(const [name,ent] of Object.entries(AUTO_DECK_TABLE)){
   if(got.some(n=>n==='ワイト'||n==='サンダー・ボルト')) leak.push(name);
   if(ok1.length && !got.length) lost.push(name);
 }
-ok('A: all live identity-filter entries checked',checked>=80,String(checked));
+/* S03-U372: six entries (ハイエナ, スーパイ, クロス・ポーター, メンタルマスター, リバース・オブ・ネオス, トライアングル・エリア) became exact card scripts and left the auto table, so the live count fell from 82 to 76; the floor is 70. */
+ok('A: all live identity-filter entries checked',checked>=70,String(checked));
 ok('A: no entry offers a non-matching card (ワイト / サンダー・ボルト)',leak.length===0,JSON.stringify(leak));
 ok('A: every entry still finds its named card / group member',lost.length===0,JSON.stringify(lost));
 `);

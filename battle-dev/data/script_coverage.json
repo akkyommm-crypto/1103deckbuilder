@@ -7,8 +7,8 @@
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 609,
-    "PARTIAL": 30,
-    "TESTED": 3241
+    "PARTIAL": 24,
+    "TESTED": 3247
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,11 +114,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1516,
+    "legacy": 1518,
     "sin": 5,
-    "unified": 1210
+    "unified": 1214
   },
-  "static_registration_name_count": 3252,
+  "static_registration_name_count": 3258,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -20486,12 +20486,20 @@
       "subtype": null,
       "date": "2008-02-23",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZH_claude_s03_u372_autotable.js",
+          "line": 58
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u372_autotable.js"
+      ]
     },
     {
       "index": 927,
@@ -31855,12 +31863,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZH_claude_s03_u372_autotable.js",
+          "line": 40
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u372_autotable.js"
+      ]
     },
     {
       "index": 1454,
@@ -38556,12 +38572,20 @@
       "subtype": "速攻",
       "date": "2008-11-15",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZH_claude_s03_u372_autotable.js",
+          "line": 142
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u372_autotable.js"
+      ]
     },
     {
       "index": 1779,
@@ -42345,12 +42369,20 @@
       "subtype": null,
       "date": "2004-11-25",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZH_claude_s03_u372_autotable.js",
+          "line": 19
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u372_autotable.js"
+      ]
     },
     {
       "index": 1954,
@@ -54823,12 +54855,20 @@
       "subtype": null,
       "date": "2008-04-19",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZH_claude_s03_u372_autotable.js",
+          "line": 86
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u372_autotable.js"
+      ]
     },
     {
       "index": 2553,
@@ -58014,12 +58054,20 @@
       "subtype": "速攻",
       "date": "2007-05-12",
       "extra": false,
-      "status": "PARTIAL",
-      "reason": "AUTO_DECK_TABLE coarse implementation; requires card-specific historical review",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZH_claude_s03_u372_autotable.js",
+          "line": 117
+        }
+      ],
       "auto_table": true,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u372_autotable.js"
+      ]
     },
     {
       "index": 2700,

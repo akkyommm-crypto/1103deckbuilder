@@ -13,15 +13,15 @@
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 609,
-    "PARTIAL": 30,
-    "TESTED": 3241
+    "PARTIAL": 24,
+    "TESTED": 3247
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -698,
-    "PARTIAL": -152,
-    "TESTED": 1192
+    "PARTIAL": -158,
+    "TESTED": 1198
   },
   "status_changes": [
     {
@@ -1465,6 +1465,12 @@
       "unit": "S03-U308"
     },
     {
+      "name": "クロス・ポーター",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U372"
+    },
+    {
       "name": "クローザー・フォレスト",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2155,6 +2161,12 @@
       "unit": "S03-U156"
     },
     {
+      "name": "スーパイ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U372"
+    },
+    {
       "name": "ゼンマイウォリアー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2539,6 +2551,12 @@
       "unit": "S03-U309"
     },
     {
+      "name": "トライアングル・エリア",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U372"
+    },
+    {
       "name": "トライクラー",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -2819,6 +2837,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U198"
+    },
+    {
+      "name": "ハイエナ",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U372"
     },
     {
       "name": "ハネクリボー LV10",
@@ -3463,6 +3487,12 @@
       "unit": "S03-U352"
     },
     {
+      "name": "メンタルマスター",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U372"
+    },
+    {
       "name": "モロコシーナ",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -3677,6 +3707,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U235"
+    },
+    {
+      "name": "リバース・オブ・ネオス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U372"
     },
     {
       "name": "リビングデッドの呼び声",
