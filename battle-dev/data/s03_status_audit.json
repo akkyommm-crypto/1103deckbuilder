@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 528,
+    "NOT_STARTED": 525,
     "PARTIAL": 10,
-    "TESTED": 3342
+    "TESTED": 3345
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -779,
+    "NOT_STARTED": -782,
     "PARTIAL": -172,
-    "TESTED": 1293
+    "TESTED": 1296
   },
   "status_changes": [
     {
@@ -6397,6 +6397,12 @@
       "unit": "S03-U228"
     },
     {
+      "name": "王女の試練",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U399"
+    },
+    {
       "name": "王宮のお触れ",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -7631,6 +7637,18 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U148"
+    },
+    {
+      "name": "魔法の国の王女－クラン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U399"
+    },
+    {
+      "name": "魔法の国の王女－ピケル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U399"
     },
     {
       "name": "魔法の歯車",

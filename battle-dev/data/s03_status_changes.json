@@ -13043,6 +13043,36 @@
         "tools/test_s03_u398_light.js"
       ],
       "evidence": "Exact script. Text (carddata). When attacked: a Level 7 or higher Dragon (青眼の白龍) of my Graveyard is Special Summoned and the attack is moved to it (API.redirectAttack): ブラック・マジシャン destroyed, the Decoy survives; without such a Dragon the attack proceeds and the Decoy is destroyed. Test: tools/test_s03_u398_light.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "王女の試練",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U399",
+      "tests": [
+        "tools/test_s03_u399_princess.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Equip Spell for 白魔導士ピケル / 黒魔導師クラン only (not activatable with only a ワイト; ATK 1200 + 800 = 2000); a forced onDamageStep trigger stamps the card when the equipped monster destroyed a Level 5 or higher monster in battle (アイツ); in that turn the ignition Tributes the host and the card and Special Summons 魔法の国の王女－ピケル from the hand; not offered after a Level 1 victim or before any battle. Test: tools/test_s03_u399_princess.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔法の国の王女－ピケル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U399",
+      "tests": [
+        "tools/test_s03_u399_princess.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Cannot be Normal Summoned; Special Summonable only for the reason 王女の試練 (engine/1ZK text rule); at my Standby Phase I recover 800 x the number of my monsters (1600 with two). Test: tools/test_s03_u399_princess.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔法の国の王女－クラン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U399",
+      "tests": [
+        "tools/test_s03_u399_princess.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Same summon restrictions; at my Standby Phase the opponent takes 600 x the number of their monsters (1200 with two). Test: tools/test_s03_u399_princess.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

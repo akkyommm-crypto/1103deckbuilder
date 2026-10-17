@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 528,
+    "NOT_STARTED": 525,
     "PARTIAL": 10,
-    "TESTED": 3342
+    "TESTED": 3345
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,9 +117,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1553,
     "sin": 5,
-    "unified": 1268
+    "unified": 1271
   },
-  "static_registration_name_count": 3352,
+  "static_registration_name_count": 3355,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -88606,12 +88606,20 @@
       "subtype": "装備",
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZI_claude_s03_u399_princess.js",
+          "line": 35
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u399_princess.js"
+      ]
     },
     {
       "index": 4103,
@@ -105320,12 +105328,20 @@
       "subtype": null,
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZI_claude_s03_u399_princess.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u399_princess.js"
+      ]
     },
     {
       "index": 4887,
@@ -105335,12 +105351,20 @@
       "subtype": null,
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZI_claude_s03_u399_princess.js",
+          "line": 70
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u399_princess.js"
+      ]
     },
     {
       "index": 4888,
