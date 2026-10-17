@@ -11653,6 +11653,56 @@
         "tools/test_s03_u361_alien2.js"
       ],
       "evidence": "Text (carddata). a random card (the only one) discarded from the hand; every Special Summoned monster on both fields destroyed while Normal Summoned monsters stay; neither player can Special Summon while it is face-up (死者蘇生 does not revive); not activatable without a Special Summoned monster. Test: tools/test_s03_u361_alien2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ライトロード・ドルイド オルクス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U362",
+      "tests": [
+        "tools/test_s03_u362_lightdark.js"
+      ],
+      "evidence": "Text (carddata). a 「ライトロード」 monster cannot be targeted by 心変わり (ワイト can); my End Phase mills the top 2 cards of my Deck, the opponent's End Phase mills nothing. Test: tools/test_s03_u362_lightdark.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ライトエンド・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U362",
+      "tests": [
+        "tools/test_s03_u362_lightdark.js"
+      ],
+      "evidence": "Text (carddata). attacking or attacked by 青眼の白龍: ATK -500 (2100) and the opponent monster -1500 (1500): 青眼 destroyed, 600 damage; a direct attack is not weakened (2600). Test: tools/test_s03_u362_lightdark.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ライトニング・トライコーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U362",
+      "tests": [
+        "tools/test_s03_u362_lightdark.js"
+      ],
+      "evidence": "Text (carddata). destroyed by the opponent's battle: サンダー・ユニコーン (properly summoned) Special Summoned from the Graveyard; with no target in the Graveyard it is only destroyed. Test: tools/test_s03_u362_lightdark.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ダーク・クリエイター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U362",
+      "tests": [
+        "tools/test_s03_u362_lightdark.js"
+      ],
+      "evidence": "Text (carddata). hand procedure with 5 DARK monsters in the Graveyard and an empty field (4 DARK or a monster on the field refused); once per turn banish a DARK monster from the Graveyard to Special Summon another one. Test: tools/test_s03_u362_lightdark.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ダーク・カタパルター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U362",
+      "tests": [
+        "tools/test_s03_u362_lightdark.js"
+      ],
+      "evidence": "Text (carddata). Defense Position at my Standby Phase: 1 counter (none in Attack Position); with a counter: 1 Graveyard card banished (cost), 1 Spell / Trap destroyed and the counters removed. Test: tools/test_s03_u362_lightdark.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
