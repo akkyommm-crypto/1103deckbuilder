@@ -885,6 +885,15 @@ const API = {
     act({type:'FX_MONSTER_EQUIP_V46',player:p,fromPlayer:r.p,fromIndex:r.index,targetPlayer:h.p,targetMz:h.index,reason});
     return !!(gameState.players[p].sz||[]).find(c=>c===r.card&&c.v46MonsterEquip);
   },
+  /* S03-U402: a monster of the hand equipped directly (竜操術), without being Special Summoned */
+  equipMonsterFromHand(p,handIndex,target,reason){
+    const h=resolveTarget(target), c=gameState.players[p].hand[handIndex];
+    if(!h||h.zone!=='mz'||!c) return false;
+    if(gameState.players[p].sz.length>=ZONE_LIMITS.sz) return false;
+    ensureCardUid(gameState,c);
+    act({type:'FX_MONSTER_EQUIP_V46',player:p,fromPlayer:p,fromIndex:handIndex,fromHandS03:true,targetPlayer:h.p,targetMz:h.index,reason});
+    return !!(gameState.players[p].sz||[]).find(x=>x===c&&x.v46MonsterEquip);
+  },
   equipSpell(source,target,reason){
     const s=resolveTarget(source),t=resolveTarget(target);
     if(!s||!t||s.zone!=='sz'||t.zone!=='mz') return false;

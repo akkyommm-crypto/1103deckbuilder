@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 516,
+    "NOT_STARTED": 513,
     "PARTIAL": 10,
-    "TESTED": 3354
+    "TESTED": 3357
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -115,11 +115,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1559,
+    "legacy": 1560,
     "sin": 5,
-    "unified": 1274
+    "unified": 1276
   },
-  "static_registration_name_count": 3364,
+  "static_registration_name_count": 3367,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -93106,12 +93106,20 @@
       "subtype": "永続",
       "date": "2010-06-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZL_claude_s03_u402_chosen.js",
+          "line": 90
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u402_chosen.js"
+      ]
     },
     {
       "index": 4314,
@@ -95824,12 +95832,20 @@
       "subtype": "",
       "date": "2010-03-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZL_claude_s03_u402_chosen.js",
+          "line": 55
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u402_chosen.js"
+      ]
     },
     {
       "index": 4438,
@@ -99385,12 +99401,20 @@
       "subtype": "",
       "date": "2001-04-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZL_claude_s03_u402_chosen.js",
+          "line": 29
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u402_chosen.js"
+      ]
     },
     {
       "index": 4608,

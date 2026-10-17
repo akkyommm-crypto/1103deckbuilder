@@ -13163,6 +13163,36 @@
         "tools/test_s03_u401_ouija.js"
       ],
       "evidence": "Exact script. Text (carddata). Same; fourth letter (from the Deck); with it the Ouija Board wins. Test: tools/test_s03_u401_ouija.js (Replay audit). Known small deviation: the 'all go to the Graveyard' clause is the engine's field-dependent self-destruction (recorded as a destruction instead of a plain 'sent')."
+    },
+    {
+      "name": "選ばれし者",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U402",
+      "tests": [
+        "tools/test_s03_u402_chosen.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Spell: a monster and two non-monster cards of the hand are chosen (the Spell itself is not counted); the opponent's blind pick is a journaled duelRandomInt(3): with the monster picked it is Special Summoned and the other two go to the Graveyard, otherwise all three go to the Graveyard (both outcomes checked over seeds); refused with only one non-monster card. Test: tools/test_s03_u402_chosen.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "荒野の大竜巻",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U402",
+      "tests": [
+        "tools/test_s03_u402_chosen.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Trap: destroys a face-up Spell / Trap Zone card (スクリーン・オブ・レッド) of the opponent, then its controller may Set a Spell / Trap from the hand (set face-down; no question without such a card); effect 2: Set and destroyed on the field by the opponent's サイクロン -> it destroys a face-up card of the field (ライオウ). Test: tools/test_s03_u402_chosen.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "竜操術",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U402",
+      "tests": [
+        "tools/test_s03_u402_chosen.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Spell (fieldIgnition): once per turn a 「ドラグニティ」 Dragon of the hand (ブランディストック) is equipped to ワイト as a monster Equip without being Special Summoned (NEW API.equipMonsterFromHand, engine FX_MONSTER_EQUIP_V46 fromHandS03); monsters carrying such an Equip gain 500 ATK (300 -> 800); not offered without a Dragunity Dragon in the hand. Test: tools/test_s03_u402_chosen.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

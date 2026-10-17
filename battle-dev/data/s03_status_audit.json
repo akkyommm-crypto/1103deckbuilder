@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 516,
+    "NOT_STARTED": 513,
     "PARTIAL": 10,
-    "TESTED": 3354
+    "TESTED": 3357
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -791,
+    "NOT_STARTED": -794,
     "PARTIAL": -172,
-    "TESTED": 1305
+    "TESTED": 1308
   },
   "status_changes": [
     {
@@ -6763,6 +6763,12 @@
       "unit": "S03-U148"
     },
     {
+      "name": "竜操術",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U402"
+    },
+    {
       "name": "竜殺しの剣",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6995,6 +7001,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U229"
+    },
+    {
+      "name": "荒野の大竜巻",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U402"
     },
     {
       "name": "荒野の女戦士",
@@ -7259,6 +7271,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U216"
+    },
+    {
+      "name": "選ばれし者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U402"
     },
     {
       "name": "邪狂神の使い",

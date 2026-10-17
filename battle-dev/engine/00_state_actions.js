@@ -2519,12 +2519,13 @@ function applyActionBodyV31(gs, a){
     case "FX_MONSTER_EQUIP_V46": {
       if(P.sz.length>=ZONE_LIMITS.sz){ logIt(gs,'魔法・罠ゾーンが一杯です'); break; }
       const FP=gs.players[a.fromPlayer], TP=gs.players[a.targetPlayer==null?a.player:a.targetPlayer], mon=TP&&TP.mz[a.targetMz];
-      const eq=FP&&FP.mz[a.fromIndex];
+      const eq=FP&&(a.fromHandS03 ? FP.hand[a.fromIndex] : FP.mz[a.fromIndex]);   /* S03-U402: fromHandS03 — a hand monster is equipped directly (竜操術) */
       if(!eq||!mon){ logIt(gs,'装備するモンスターまたは装備先が見つかりません'); break; }
       if(eq===mon){ logIt(gs,'自身を装備カードにはできません'); break; }
       ensureCardUid(gs,eq); ensureCardUid(gs,mon);
-      FP.mz.splice(a.fromIndex,1);
-      dropXyzMaterials(FP,eq,gs); dropEquips(FP,eq,gs);
+      if(a.fromHandS03){ FP.hand.splice(a.fromIndex,1); }
+      else { FP.mz.splice(a.fromIndex,1);
+        dropXyzMaterials(FP,eq,gs); dropEquips(FP,eq,gs); }
       if(eq.owner==null) eq.owner=a.fromPlayer;
       eq.controller=a.player; eq.face='up'; eq.pos='atk';
       eq.v46MonsterEquip=true; eq.equipUid=eq.equipUid||eq.uid;
