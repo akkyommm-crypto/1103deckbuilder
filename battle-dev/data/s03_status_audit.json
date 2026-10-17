@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 620,
+    "NOT_STARTED": 616,
     "PARTIAL": 30,
-    "TESTED": 3230
+    "TESTED": 3234
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -687,
+    "NOT_STARTED": -691,
     "PARTIAL": -152,
-    "TESTED": 1181
+    "TESTED": 1185
   },
   "status_changes": [
     {
@@ -3655,6 +3655,12 @@
       "unit": "S03-U201"
     },
     {
+      "name": "リチュアルバスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U369"
+    },
+    {
       "name": "リチュア・アビス",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -3761,6 +3767,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U239"
+    },
+    {
+      "name": "レベル調整",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U369"
     },
     {
       "name": "ロケット・パイルダー",
@@ -4643,6 +4655,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U148"
+    },
+    {
+      "name": "地獄詩人ヘルポエマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U369"
     },
     {
       "name": "地砕き",
@@ -6689,6 +6707,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U198"
+    },
+    {
+      "name": "闇晦ましの城",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U369"
     },
     {
       "name": "闇竜の黒騎士",

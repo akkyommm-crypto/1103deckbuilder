@@ -11923,6 +11923,46 @@
         "tools/test_s03_u368_linktraps.js"
       ],
       "evidence": "Text (carddata). ブラック・マジシャン (Level 7) from my Graveyard Special Summoned to the opponent's field in Defense Position and my ワイト Level 1 + 7 = 8 until the End of the turn (back to 1 afterwards); not activatable without a monster in my Graveyard. Test: tools/test_s03_u368_linktraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "地獄詩人ヘルポエマー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U369",
+      "tests": [
+        "tools/test_s03_u369_misc4.js"
+      ],
+      "evidence": "Text (carddata). destroyed by battle on the opponent turn: at the end of their Battle Phase one random card of their hand is discarded; nothing with an empty hand; 死者蘇生 cannot Special Summon it from the Graveyard (engine rule of S03-U358). Test: tools/test_s03_u369_misc4.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "闇晦ましの城",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U369",
+      "tests": [
+        "tools/test_s03_u369_misc4.js"
+      ],
+      "evidence": "Text (carddata). flipped by an attack: every face-up Undead monster on the field (both sides) +200 (800 -> 1000), another +200 at my next Standby Phase (1200). Test: tools/test_s03_u369_misc4.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "レベル調整",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U369",
+      "tests": [
+        "tools/test_s03_u369_misc4.js"
+      ],
+      "evidence": "Text (carddata). the opponent drew 2; アームド・ドラゴン LV3 Special Summoned from the Graveyard ignoring its summon condition, its effect negated, and it cannot attack that turn; not activatable without a 「LV」 monster in the Graveyard. Test: tools/test_s03_u369_misc4.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "リチュアルバスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U369",
+      "tests": [
+        "tools/test_s03_u369_misc4.js"
+      ],
+      "evidence": "Text (carddata). my Ritual Summon (ダンシング・ソルジャー via 踊りによる誘発) triggers the set Trap (new engine event: a Ritual Summon queues the Special Summon success event with kind 'ritual'); during the opponent turn they cannot activate a Spell Card. Test: tools/test_s03_u369_misc4.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -2600,6 +2600,7 @@ function applyActionBodyV31(gs, a){
       const card = removeFrom(P, "hand", hIdx);
       if(!card) break;
       card.face='up'; card.pos=a.pos||'atk'; card.attacked=false; card.specialSummoned=true; card.properlySummonedS03=true;   /* S03-U127 */
+      card.specialSummonKind='ritual';   /* S03-U369: 「儀式召喚に成功した時」 (リチュアルバスター) reads the kind */
       /* P3: 儀式召喚の provenance。素材の identity と snapshot を残す。 */
       applySummonProvenanceP3(gs, card, a, 'ritual');
       P.mz.push(card);
