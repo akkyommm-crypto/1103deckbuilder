@@ -12833,6 +12833,36 @@
         "tools/test_s03_u391_gravity.js"
       ],
       "evidence": "Exact script. Text (carddata). Continuous Trap: 1000 LP paid at my End Phase (destroyed when I cannot pay; not charged in the opponent's End Phase); while face-up the opponent's monsters cannot declare an attack; effect 2: with レッド・デーモンズ・ドラゴン on the field it destroys itself and Special Summons a Level 1 Tuner from my Graveyard (not offered without the Dragon). Test: tools/test_s03_u391_gravity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "悪夢の鉄檻",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U391",
+      "tests": [
+        "tools/test_s03_u392_freeze.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Spell that stays on the field: no monster of either player can declare an attack in my turn and the opponent's 1st and 2nd turns; destroyed at the End Phase of the opponent's 2nd turn (scheduled, like 光の護封剣); attacks possible again afterwards. Test: tools/test_s03_u392_freeze.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "大寒波",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U391",
+      "tests": [
+        "tools/test_s03_u392_freeze.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Spell, Main Phase 1 start only (like 大熱波): until my next Draw Phase neither player can activate Spell / Trap cards or use their effects (a lingering activationLockS03 with locksStEffectsS03) nor Set Spell / Trap cards (NEW engine/1ZZT effectFlags.setBanS03 read by SET_ST); over at my next turn; refused outside Main Phase 1. Test: tools/test_s03_u392_freeze.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "閃光弾",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U391",
+      "tests": [
+        "tools/test_s03_u392_freeze.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Trap: after the opponent's direct attack damaged me the optional trigger moves the turn to the End Phase (requestProcessorV27 PHASE end); not offered when the attack hit a monster. Test: tools/test_s03_u392_freeze.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

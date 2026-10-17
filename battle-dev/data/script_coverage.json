@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 547,
+    "NOT_STARTED": 544,
     "PARTIAL": 12,
-    "TESTED": 3321
+    "TESTED": 3324
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -115,11 +115,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1543,
+    "legacy": 1546,
     "sin": 5,
     "unified": 1258
   },
-  "static_registration_name_count": 3332,
+  "static_registration_name_count": 3335,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -72054,12 +72054,20 @@
       "subtype": "",
       "date": "2000-12-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZB_claude_s03_u392_freeze.js",
+          "line": 36
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u392_freeze.js"
+      ]
     },
     {
       "index": 3333,
@@ -77620,12 +77628,20 @@
       "subtype": "",
       "date": "2000-12-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZB_claude_s03_u392_freeze.js",
+          "line": 17
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u392_freeze.js"
+      ]
     },
     {
       "index": 3592,
@@ -100511,12 +100527,20 @@
       "subtype": "",
       "date": "2006-11-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZB_claude_s03_u392_freeze.js",
+          "line": 62
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u392_freeze.js"
+      ]
     },
     {
       "index": 4675,

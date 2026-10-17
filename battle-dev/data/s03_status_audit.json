@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 547,
+    "NOT_STARTED": 544,
     "PARTIAL": 12,
-    "TESTED": 3321
+    "TESTED": 3324
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -760,
+    "NOT_STARTED": -763,
     "PARTIAL": -170,
-    "TESTED": 1272
+    "TESTED": 1275
   },
   "status_changes": [
     {
@@ -5077,6 +5077,12 @@
       "unit": "S03-U110"
     },
     {
+      "name": "大寒波",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U391"
+    },
+    {
       "name": "大嵐",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -5477,6 +5483,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U272"
+    },
+    {
+      "name": "悪夢の鉄檻",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U391"
     },
     {
       "name": "悪魂邪苦止",
@@ -7169,6 +7181,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U214"
+    },
+    {
+      "name": "閃光弾",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U391"
     },
     {
       "name": "闇の侯爵ベリアル",

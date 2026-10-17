@@ -2192,6 +2192,7 @@ function applyActionBodyV31(gs, a){
     /* セット（魔法・罠）。a:{player, handIndex, toField} */
     case "SET_ST": {
       if(P.temporaryFlags && Number(P.temporaryFlags.noSetS03)===Number(gs.turn)){ logIt(gs, `このターンはカードをセットできません`); break; }   /* S03-U266 */
+      if(typeof setBannedS03==='function' && setBannedS03(gs, P)){ logIt(gs, `大寒波：魔法・罠カードをセットできません`); break; }   /* S03-U392 */
       const zone = a.toField ? "field" : "sz";
       if(zone==="sz" && P.sz.length >= ZONE_LIMITS.sz){ logIt(gs, `魔法・罠ゾーンが一杯です`); break; }
       if(zone==="field" && P.field){ logIt(gs, `フィールドゾーンが埋まっています`); break; }

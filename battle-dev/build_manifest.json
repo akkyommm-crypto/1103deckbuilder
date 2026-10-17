@@ -271,6 +271,9 @@
   "path": "engine/1ZZS_summon_lock_s03.js"
  },
  {
+  "path": "engine/1ZZT_set_ban_s03.js"
+ },
+ {
   "path": "ui/10_render_input.js",
   "start_line": 2683,
   "end_line": 3288,
@@ -1589,6 +1592,9 @@
  },
  {
   "path": "cards/HZZZZZZZZZA_claude_s03_u391_gravity.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZB_claude_s03_u392_freeze.js"
  },
  {
   "path": "cards/40_auto_interpreter.js",

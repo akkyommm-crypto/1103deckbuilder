@@ -3151,6 +3151,7 @@ function applyActionBodyV31(gs, a){
     /* セット（魔法・罠）。a:{player, handIndex, toField} */
     case "SET_ST": {
       if(P.temporaryFlags && Number(P.temporaryFlags.noSetS03)===Number(gs.turn)){ logIt(gs, `このターンはカードをセットできません`); break; }   /* S03-U266 */
+      if(typeof setBannedS03==='function' && setBannedS03(gs, P)){ logIt(gs, `大寒波：魔法・罠カードをセットできません`); break; }   /* S03-U392 */
       const zone = a.toField ? "field" : "sz";
       if(zone==="sz" && P.sz.length >= ZONE_LIMITS.sz){ logIt(gs, `魔法・罠ゾーンが一杯です`); break; }
       if(zone==="field" && P.field){ logIt(gs, `フィールドゾーンが埋まっています`); break; }
@@ -14772,6 +14773,15 @@ function summonLockReasonS03(p, db, kind){
     if(hit) return `${hit.label || '効果'}により${kind === 'special' ? '特殊召喚' : kind === 'flip' ? '反転召喚' : '召喚'}できません`;
   }
   return '';
+}
+/* =========================================================================
+   S03-U392 — Spell / Trap Set ban for a turn range (大寒波)
+   effectFlags.setBanS03 = [{from, to, label}] on a player (written with API.setFlag(p, 'setBanS03', list, false));
+   SET_ST refuses while gs.turn is inside a range of the player. Pure function of the state (Replay-safe).
+   ========================================================================= */
+function setBannedS03(gs, P){
+  const l = P && P.effectFlags && P.effectFlags.setBanS03;
+  return Array.isArray(l) && l.some(b=>b && Number(b.from) <= Number(gs.turn) && Number(gs.turn) <= Number(b.to));
 }
 /* =========================================================================
    RENDER — gameState を読んで描画するだけ
@@ -88945,6 +88955,74 @@ defineUnifiedCardV4('スクリーン・オブ・レッド', [{
   passive:{ onEndPhase(ctx){ return u391Ready(ctx) && ctx.player===gameState.activePlayer; } },
   continuous:{ scope:'oppMonsters', from:['sz'], apply(){ return null; },
     cannotAttack(target, self){ return !!self && self.face==='up' && !self.activationPending; } } });
+/* S03-U392: 悪夢の鉄檻, 大寒波, 閃光弾 (NOT_STARTED cards, carddata texts).
+
+   悪夢の鉄檻  （通常魔法）全てのモンスターは(相手ターンで数えて)2ターンの間攻撃できない。2ターン後このカードを破壊する。
+   大寒波      （通常魔法）メインフェイズ1の開始時に発動する事ができる。次の自分のドローフェイズ時まで、お互いに魔法・罠カードの効果の使用及び発動・セットはできない。
+   閃光弾      （通常罠）相手モンスターの直接攻撃によって自分が戦闘ダメージを受けた時に発動できる。このターンのエンドフェイズになる。
+
+   Notes
+   - 悪夢の鉄檻 copies 光の護封剣 (S03-U07 / U154): remainsOnFieldAfterResolve, a continuous cannotAttack on every monster while it stands in the Spell & Trap Zone, and a scheduled destroy at the opponent's End Phase (the 2nd opponent turn counted from the activation).
+   - 大寒波: 「メインフェイズ1の開始時」 is read like 大熱波 (u384MainStart); the card lingers (API.lingerS03 until the next turn) with activationLockS03 + locksStEffectsS03 for Spell / Trap cards of both players, and the Set ban is effectFlags.setBanS03 (engine/1ZZT) read by SET_ST.
+   - 閃光弾: an optional trap trigger on the opponent's direct battle damage to me; the resolution requests the End Phase. */
+
+/* ---- 悪夢の鉄檻 ---- */
+API.registerScheduleHandler('u392.cage-destroy', (args)=>{
+  const h = args && args.uid!=null ? findCardByUid(args.uid) : null;
+  if(h && (h.zone==='sz' || h.zone==='field') && Number(h.card.u392CageTurn)===Number(args.turn)) API.destroy(h, '悪夢の鉄檻');
+});
+defineScript('悪夢の鉄檻', {
+  remainsOnFieldAfterResolve:true,
+  continuous:{ scope:'allMonsters', from:['sz'], apply(){ return null; }, cannotAttack(){ return true; } },
+  type:'spell', priority:1, quickEffect:false,
+  condition(){ return true; },
+  resolve(ctx){
+    const me = locateCardAnyV4(ctx.card);
+    if(me && (me.zone==='sz' || me.zone==='field')){
+      ensureCardUid(gameState, ctx.card);
+      API.setCardFlag(me, 'u392CageTurn', gameState.turn, '悪夢の鉄檻', {silent:true});
+      API.schedule({at:'endPhase', turns:(gameState.activePlayer===ctx.player?3:2), player:ctx.opponent, handler:'u392.cage-destroy',
+        args:{uid:ctx.card.uid, turn:gameState.turn}, note:'悪夢の鉄檻（相手ターンで数えて2ターン後に破壊）'});
+    }
+    API.log('悪夢の鉄檻：全てのモンスターは攻撃宣言できない（相手ターンで数えて2ターン後のエンドフェイズに破壊）');
+  },
+  afterResolve(){}
+});
+
+/* ---- 大寒波 ---- */
+defineScript('大寒波', {
+  type:'spell', priority:1, targets:false,
+  condition(ctx){ if(!u384MainStart(ctx)){ ctx.reason = 'メインフェイズ1の開始時にのみ発動できます'; return false; } return true; },
+  resolve(ctx){
+    const T = gameState.turn;
+    /* until my next Draw Phase: my own turn T and the opponent's turn T+1 */
+    [0,1].forEach(q=>{
+      const cur = API.getFlag(q, 'setBanS03');
+      const keep = (Array.isArray(cur) ? cur : []).filter(b=>b && Number(b.to) >= Number(gameState.turn));
+      keep.push({from:T, to:T+1, label:'大寒波'});
+      API.setFlag(q, 'setBanS03', keep, false);
+    });
+    const me = locateCardAnyV4(ctx.card); if(!me) return;
+    API.setCardFlag(me, 'u392ColdTurn', T, '大寒波', {silent:true});
+    const me2 = locateCardAnyV4(ctx.card); if(me2) API.lingerS03(ctx.player, me2, '大寒波', T+1);
+  },
+  afterResolve(){},
+  locksStEffectsS03:true,
+  activationLockS03:(i)=> (i.db.k==='s' || i.db.k==='t') && Number(i.src.u392ColdTurn) >= Number(gameState.turn)-1 && Number(i.src.u392ColdTurn) <= Number(gameState.turn)
+});
+
+/* ---- 閃光弾 ---- */
+function u392Flash(ctx){
+  const e = ctx.event || {};
+  return ctx.zone==='sz' && ctx.card.face==='down' && e.direct===true && e.player===ctx.player && e.dealtBy===ctx.opponent && Number(e.amount)>0;
+}
+defineScript('閃光弾', {
+  type:'trap', priority:2,
+  condition(ctx){ if(!u392Flash(ctx)){ ctx.reason = '相手モンスターの直接攻撃で戦闘ダメージを受けた時にのみ発動できます'; return false; } return true; },
+  resolve(){ API.log('閃光弾：このターンのエンドフェイズになる'); requestProcessorV27(PROCESSOR_V27.PHASE, {to:'end'}); },
+  afterResolve(){},
+  passive:{ onDirectBattleDamage(ctx){ return u392Flash(ctx); } }
+});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

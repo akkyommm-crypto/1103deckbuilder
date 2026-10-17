@@ -682,6 +682,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u388_tokens_dragunity.js')],chec
 subprocess.run(['node',str(ROOT/'tools/test_s03_u389_traps3.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u390_partials.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u391_gravity.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u392_freeze.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
