@@ -11613,6 +11613,46 @@
         "tools/test_s03_u360_misc.js"
       ],
       "evidence": "Text (carddata). attacked: banished, drew 1 and the Battle Phase ended with no damage; main phase mode 2: banished with ワイト and drew 2; main phase mode 3: banished with a hand card and the chosen Graveyard card is on top of the Deck. Test: tools/test_s03_u360_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エーリアン・マザー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U361",
+      "tests": [
+        "tools/test_s03_u361_alien2.js"
+      ],
+      "evidence": "Text (carddata). destroyed an A Counter monster (ワイト) in battle: at the end of the Battle Phase it was Special Summoned to my field; when Mother is destroyed the revived monster is destroyed too; a monster without an A Counter is not revived. Test: tools/test_s03_u361_alien2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "異界空間－Aゾーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U361",
+      "tests": [
+        "tools/test_s03_u361_alien2.js"
+      ],
+      "evidence": "Text (carddata). Field Spell: エーリアン・ソルジャー (1900) vs サファイアドラゴン (1900 -> 1600 in the Damage Step): the opponent monster is destroyed, mine survives, 300 battle damage; without the Spell it is a tie. Test: tools/test_s03_u361_alien2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エーリアン・ブレイン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U361",
+      "tests": [
+        "tools/test_s03_u361_alien2.js"
+      ],
+      "evidence": "Text (carddata). my Reptile (C・スネーク) destroyed by 青眼の白龍: the attacker is mine and treated as a Reptile; not triggered when a non-Reptile is destroyed. Test: tools/test_s03_u361_alien2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "昇霊術師 ジョウゲン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U361",
+      "tests": [
+        "tools/test_s03_u361_alien2.js"
+      ],
+      "evidence": "Text (carddata). a random card (the only one) discarded from the hand; every Special Summoned monster on both fields destroyed while Normal Summoned monsters stay; neither player can Special Summon while it is face-up (死者蘇生 does not revive); not activatable without a Special Summoned monster. Test: tools/test_s03_u361_alien2.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 651,
+    "NOT_STARTED": 647,
     "PARTIAL": 30,
-    "TESTED": 3199
+    "TESTED": 3203
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -112,11 +112,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1503,
+    "legacy": 1504,
     "sin": 5,
-    "unified": 1185
+    "unified": 1188
   },
-  "static_registration_name_count": 3210,
+  "static_registration_name_count": 3214,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -15378,12 +15378,20 @@
       "subtype": "",
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZW_claude_s03_u361_alien2.js",
+          "line": 81
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u361_alien2.js"
+      ]
     },
     {
       "index": 687,
@@ -15410,12 +15418,20 @@
       "subtype": null,
       "date": "2006-05-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZW_claude_s03_u361_alien2.js",
+          "line": 37
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u361_alien2.js"
+      ]
     },
     {
       "index": 689,
@@ -78860,12 +78876,20 @@
       "subtype": null,
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZW_claude_s03_u361_alien2.js",
+          "line": 96
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u361_alien2.js"
+      ]
     },
     {
       "index": 3680,
@@ -88927,12 +88951,20 @@
       "subtype": "フィールド",
       "date": "2007-02-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZW_claude_s03_u361_alien2.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u361_alien2.js"
+      ]
     },
     {
       "index": 4161,
