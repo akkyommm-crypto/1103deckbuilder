@@ -13073,6 +13073,46 @@
         "tools/test_s03_u399_princess.js"
       ],
       "evidence": "Exact script. Text (carddata). Same summon restrictions; at my Standby Phase the opponent takes 600 x the number of their monsters (1200 with two). Test: tools/test_s03_u399_princess.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "第一の棺",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U400",
+      "tests": [
+        "tools/test_s03_u400_coffin.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap: activated (stage flag effectFlags.u400Stage = 1); at each OPPONENT End Phase a forced trigger puts the next coffin from the hand / Deck face-up into the Spell & Trap Zone (第二の棺 from the hand at the first, 第三の棺 from the Deck at the second); when all three stand there they are sent to the Graveyard and スピリッツ・オブ・ファラオ is Special Summoned from the Deck; when one coffin leaves the field the others go to the Graveyard (selfDestroyWhenS03, 第一の棺 included). Test: tools/test_s03_u400_coffin.js (Replay audit). Known small deviation: when a coffin leaves the field the others are sent to the Graveyard by the engine's field-dependent self-destruction, which records a destruction instead of a plain 'sent'."
+    },
+    {
+      "name": "第二の棺",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U400",
+      "tests": [
+        "tools/test_s03_u400_coffin.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A Spell that cannot be activated or Set by the player (every activation refused); it only enters the field through 第一の棺; leaves with the others when one coffin is gone. Test: tools/test_s03_u400_coffin.js (Replay audit). Known small deviation: when a coffin leaves the field the others are sent to the Graveyard by the engine's field-dependent self-destruction, which records a destruction instead of a plain 'sent'."
+    },
+    {
+      "name": "第三の棺",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U400",
+      "tests": [
+        "tools/test_s03_u400_coffin.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Same as 第二の棺; comes out of the Deck at the second opponent End Phase. Test: tools/test_s03_u400_coffin.js (Replay audit). Known small deviation: when a coffin leaves the field the others are sent to the Graveyard by the engine's field-dependent self-destruction, which records a destruction instead of a plain 'sent'."
+    },
+    {
+      "name": "スピリッツ・オブ・ファラオ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U400",
+      "tests": [
+        "tools/test_s03_u400_coffin.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Cannot be Normal Summoned; Special Summonable only for the reason 第一の棺 (engine/1ZK text rule; refused for 死者蘇生); on its Special Summon up to 4 Level 2 or lower Undead Normal Monsters of the Graveyard are Special Summoned (4 chosen of 5 in the test). Test: tools/test_s03_u400_coffin.js (Replay audit). Known small deviation: when a coffin leaves the field the others are sent to the Graveyard by the engine's field-dependent self-destruction, which records a destruction instead of a plain 'sent'."
     }
   ],
   "restored_to_baseline": [

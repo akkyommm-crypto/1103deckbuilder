@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 525,
+    "NOT_STARTED": 521,
     "PARTIAL": 10,
-    "TESTED": 3345
+    "TESTED": 3349
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -782,
+    "NOT_STARTED": -786,
     "PARTIAL": -172,
-    "TESTED": 1296
+    "TESTED": 1300
   },
   "status_changes": [
     {
@@ -2201,6 +2201,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U203"
+    },
+    {
+      "name": "スピリッツ・オブ・ファラオ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U400"
     },
     {
       "name": "スピリット・バーナー",
@@ -6731,6 +6737,24 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U341"
+    },
+    {
+      "name": "第一の棺",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U400"
+    },
+    {
+      "name": "第三の棺",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U400"
+    },
+    {
+      "name": "第二の棺",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U400"
     },
     {
       "name": "簡易融合",
