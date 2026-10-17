@@ -265,6 +265,9 @@
   "path": "engine/1ZZQ_attack_cost_s03.js"
  },
  {
+  "path": "engine/1ZZR_dice_demon_s03.js"
+ },
+ {
   "path": "ui/10_render_input.js",
   "start_line": 2683,
   "end_line": 3288,
@@ -1556,6 +1559,9 @@
  },
  {
   "path": "cards/HZZZZZZZZR_claude_s03_u382_misc6.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZS_claude_s03_u383_dice_demons.js"
  },
  {
   "path": "cards/40_auto_interpreter.js",

@@ -1036,6 +1036,8 @@ function processSolveChainV27(){
      last resolution-time choice.  It deliberately precedes the next Adjust/link. */
   RESOLVE_START_SEQ_S296=(typeof V41_ACTION_SEQ!=='undefined')?V41_ACTION_SEQ:null;   /* S03-U296 */
   if(typeof specialWinBeginLinkResolutionS03==='function') specialWinBeginLinkResolutionS03();
+  /* S03-U383: the dice of the 2003 「デーモン」 monsters are rolled when a link that targets them is about to be processed (engine/1ZZR) */
+  if(typeof applyDiceDemonResolveS03==='function') applyDiceDemonResolveS03(link);
   act({type:'CHAIN_RESOLVE_TOP'}); resolveOnePreparedLinkV27(link);
   /* S03-U173: destructions deferred for an optional substitute decision (engine/1ZV) */
   if(typeof flushDestroySubS03==='function') flushDestroySubS03();

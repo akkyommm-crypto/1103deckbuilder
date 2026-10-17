@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 578,
+    "NOT_STARTED": 572,
     "PARTIAL": 16,
-    "TESTED": 3286
+    "TESTED": 3292
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -729,
+    "NOT_STARTED": -735,
     "PARTIAL": -166,
-    "TESTED": 1237
+    "TESTED": 1243
   },
   "status_changes": [
     {
@@ -961,6 +961,12 @@
       "unit": "S03-U358"
     },
     {
+      "name": "インフェルノクインデーモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U383"
+    },
+    {
       "name": "インヴェルズの歩哨",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1789,6 +1795,12 @@
       "unit": "S03-U345"
     },
     {
+      "name": "シャドウナイトデーモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U383"
+    },
+    {
       "name": "シャドウ・ダイバー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2305,6 +2317,12 @@
       "unit": "S03-U272"
     },
     {
+      "name": "ダークビショップデーモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U383"
+    },
+    {
       "name": "ダーク・アイズ・イリュージョニスト",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -2423,6 +2441,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U199"
+    },
+    {
+      "name": "デスルークデーモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U383"
     },
     {
       "name": "デス・ウォンバット",
@@ -3257,6 +3281,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U119"
+    },
+    {
+      "name": "ヘルポーンデーモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U383"
     },
     {
       "name": "ヘル・セキュリティ",
@@ -6845,6 +6875,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U156"
+    },
+    {
+      "name": "迅雷の魔王－スカル・デーモン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U383"
     },
     {
       "name": "迷宮変化",

@@ -12483,6 +12483,66 @@
         "tools/test_s03_u382_misc6.js"
       ],
       "evidence": "Text (carddata). Cannot be Normal Summoned; Special Summonable from the hand with 2+ Normal Monsters in the Graveyard (refused with 1); release (sent to the Graveyard) as the cost to add a Dual Monster from the Deck. Test: tools/test_s03_u382_misc6.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "迅雷の魔王－スカル・デーモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U383",
+      "tests": [
+        "tools/test_s03_u383_dice_demons.js"
+      ],
+      "evidence": "Text (carddata). Upkeep 500 LP at my Standby Phase; a link of the opponent that targets it rolls the die when it is processed: 3 -> the effect of 月の書 is negated and its source destroyed, the demon stays face-up; 2 -> the effect resolves (face-down). Test: tools/test_s03_u383_dice_demons.js (Replay audit; the die is the replay RNG, engine/1ZZR). No known deviation."
+    },
+    {
+      "name": "シャドウナイトデーモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U383",
+      "tests": [
+        "tools/test_s03_u383_dice_demons.js"
+      ],
+      "evidence": "Text (carddata). Upkeep 900 LP; dice face 3; the battle damage the opponent takes from its battle is halved (1700 -> 850). Test: tools/test_s03_u383_dice_demons.js (Replay audit; the die is the replay RNG, engine/1ZZR). No known deviation."
+    },
+    {
+      "name": "ダークビショップデーモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U383",
+      "tests": [
+        "tools/test_s03_u383_dice_demons.js"
+      ],
+      "evidence": "Text (carddata). Upkeep 500 LP; the die is rolled when the opponent's effect targets another 「デーモン」 of mine (1 -> negated, the targeted demon stays face-up), not for a non-「デーモン」 target, not for my own effect. Test: tools/test_s03_u383_dice_demons.js (Replay audit; the die is the replay RNG, engine/1ZZR). No known deviation."
+    },
+    {
+      "name": "デスルークデーモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U383",
+      "tests": [
+        "tools/test_s03_u383_dice_demons.js"
+      ],
+      "evidence": "Text (carddata). Upkeep 500 LP; dice face 3; when my ジェノサイドキングデーモン is destroyed and sent to the Graveyard, it is sent from the hand to the Graveyard and the Genocide King is Special Summoned (another destroyed monster: nothing). Test: tools/test_s03_u383_dice_demons.js (Replay audit; the die is the replay RNG, engine/1ZZR). No known deviation."
+    },
+    {
+      "name": "インフェルノクインデーモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U383",
+      "tests": [
+        "tools/test_s03_u383_dice_demons.js"
+      ],
+      "evidence": "Text (carddata). Upkeep 500 LP at my Standby Phase; every Standby Phase a chosen 「デーモン」 gets +1000 ATK until the End Phase (one forced trigger carries both clauses); dice faces 2 and 5. Test: tools/test_s03_u383_dice_demons.js (Replay audit; the die is the replay RNG, engine/1ZZR). No known deviation."
+    },
+    {
+      "name": "ヘルポーンデーモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U383",
+      "tests": [
+        "tools/test_s03_u383_dice_demons.js"
+      ],
+      "evidence": "Text (carddata). Upkeep 500 LP; dice face 3; the opponent cannot attack the other-named 「デーモン」 (ダークビショップデーモン) of its controller but can attack it and a non-Demon. Test: tools/test_s03_u383_dice_demons.js (Replay audit; the die is the replay RNG, engine/1ZZR). No known deviation."
     }
   ],
   "restored_to_baseline": [

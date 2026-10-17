@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 578,
+    "NOT_STARTED": 572,
     "PARTIAL": 16,
-    "TESTED": 3286
+    "TESTED": 3292
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,9 +116,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1534,
     "sin": 5,
-    "unified": 1234
+    "unified": 1240
   },
-  "static_registration_name_count": 3297,
+  "static_registration_name_count": 3303,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -12083,12 +12083,20 @@
       "subtype": null,
       "date": "2003-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZS_claude_s03_u383_dice_demons.js",
+          "line": 68
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u383_dice_demons.js"
+      ]
     },
     {
       "index": 530,
@@ -26392,14 +26400,21 @@
       "subtype": null,
       "date": "2003-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZS_claude_s03_u383_dice_demons.js",
+          "line": 31
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u218_ns10.js",
-        "tools\\test_s03_u226_ns18.js"
+        "tools\\test_s03_u226_ns18.js",
+        "tools\\test_s03_u383_dice_demons.js"
       ]
     },
     {
@@ -34592,12 +34607,20 @@
       "subtype": null,
       "date": "2003-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZS_claude_s03_u383_dice_demons.js",
+          "line": 41
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u383_dice_demons.js"
+      ]
     },
     {
       "index": 1586,
@@ -36982,12 +37005,20 @@
       "subtype": null,
       "date": "2003-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZS_claude_s03_u383_dice_demons.js",
+          "line": 52
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u383_dice_demons.js"
+      ]
     },
     {
       "index": 1699,
@@ -50176,12 +50207,20 @@
       "subtype": null,
       "date": "2003-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZS_claude_s03_u383_dice_demons.js",
+          "line": 85
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u383_dice_demons.js"
+      ]
     },
     {
       "index": 2322,
@@ -98012,12 +98051,20 @@
       "subtype": null,
       "date": "2003-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZS_claude_s03_u383_dice_demons.js",
+          "line": 27
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u383_dice_demons.js"
+      ]
     },
     {
       "index": 4563,
