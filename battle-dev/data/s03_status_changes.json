@@ -12943,6 +12943,46 @@
         "tools/test_s03_u395_asmo.js"
       ],
       "evidence": "Exact script. Text (carddata). Completed the two missing effects (override entry removed from data/script_status_overrides.json): the once-per-turn ignition turns it face-down Defense Position; the Flip trigger Special Summons an Undead monster of my Graveyard (flipped by an attack: yes; nothing without an Undead); cannotNormalSummon and the Spell / Trap targeting negation of S03-U66 / U67 are kept. Test: tools/test_s03_u395_asmo.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔封じの芳香",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U396",
+      "tests": [
+        "tools/test_s03_u396_scent.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap: while face-up neither player can activate a Spell Card from the hand, and a Set Spell only from two turns after it was Set (Set in turn 4: refused in turn 5 and in the opponent turn, available from turn 7); the opponent is locked too; control without the trap: activatable (activationLockS03, engine/1ZD). Test: tools/test_s03_u396_scent.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷結界の破術師",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U396",
+      "tests": [
+        "tools/test_s03_u396_scent.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Same Spell lock while another 「氷結界」 monster is face-up on its controller's field; no lock when it stands alone. Test: tools/test_s03_u396_scent.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "八つ手サソリ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U396",
+      "tests": [
+        "tools/test_s03_u396_scent.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Once-per-turn ignition turning it face-down Defense Position; attacking a face-down Defense monster (ブラック・マジシャン, DEF 2100) its ATK is 2400 in the damage calculation (gameState.battle.flipped) and it destroys the monster; against a face-up Defense monster the ATK stays 300. Test: tools/test_s03_u396_scent.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "A・O・J リバース・ブレイク",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U396",
+      "tests": [
+        "tools/test_s03_u396_scent.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Attacking a face-down Defense monster destroys it without damage calculation (no damage to me although ATK 1200 < DEF 2100); destroyed (selfDestroyWhenS03) while a face-up LIGHT monster is on the field, not when the other monster is DARK. Test: tools/test_s03_u396_scent.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
