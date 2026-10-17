@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 589,
+    "NOT_STARTED": 585,
     "PARTIAL": 16,
-    "TESTED": 3275
+    "TESTED": 3279
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -718,
+    "NOT_STARTED": -722,
     "PARTIAL": -166,
-    "TESTED": 1226
+    "TESTED": 1230
   },
   "status_changes": [
     {
@@ -3379,6 +3379,12 @@
       "unit": "S03-U143"
     },
     {
+      "name": "マシン・デベロッパー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U380"
+    },
+    {
       "name": "マジオシャレオン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4153,6 +4159,12 @@
       "unit": "S03-U67"
     },
     {
+      "name": "世界樹",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U380"
+    },
+    {
       "name": "中央突破",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4565,6 +4577,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U184"
+    },
+    {
+      "name": "創世神",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U380"
     },
     {
       "name": "創造の代行者 ヴィーナス",
@@ -7193,6 +7211,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U137"
+    },
+    {
+      "name": "魂を喰らう者 バズー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U380"
     },
     {
       "name": "魔力の棘",

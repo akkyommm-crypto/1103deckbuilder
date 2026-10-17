@@ -12373,6 +12373,46 @@
         "tools/test_s03_u379_spells.js"
       ],
       "evidence": "Text (carddata). Normal Spell: with two face-up Attack Position Spellcasters, the targeted one gets ATK 3000 until the End Phase and the other Spellcaster cannot attack that turn (lingering source with a turn stamp); next turn normal again; refused with one Spellcaster. Test: tools/test_s03_u379_spells.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "創世神",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U380",
+      "tests": [
+        "tools/test_s03_u380_counters4.js"
+      ],
+      "evidence": "Text (carddata). Ignition once per turn: discard a hand card (cost), the chosen Graveyard monster is Special Summoned; refused without a hand card and, as 「墓地からの特殊召喚はできない」, another 創世神 in the Graveyard is not a candidate. Test: tools/test_s03_u380_counters4.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魂を喰らう者 バズー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U380",
+      "tests": [
+        "tools/test_s03_u380_counters4.js"
+      ],
+      "evidence": "Text (carddata). Ignition once per turn: banish 1-3 Graveyard monsters (free multi-pick, cost), +300 ATK each until the end of the opponent's turn (still raised in the opponent's turn, normal afterwards); refused with an empty Graveyard. Test: tools/test_s03_u380_counters4.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マシン・デベロッパー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U380",
+      "tests": [
+        "tools/test_s03_u380_counters4.js"
+      ],
+      "evidence": "Text (carddata). Continuous Spell: Machine monsters of both fields +200 ATK; Machine monsters destroyed (two together by ブラック・ホール) add 2 ジャンクカウンター each (ワイト none); ignition: sent to the Graveyard as the cost, a Machine of Level <= the counters (ガトリングバギー, not Lv5) revived; refused without counters. Test: tools/test_s03_u380_counters4.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "世界樹",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U380",
+      "tests": [
+        "tools/test_s03_u380_counters4.js"
+      ],
+      "evidence": "Text (carddata). Continuous Spell: destroyed Plant monsters (both fields, together) add フラワーカウンター; one ignition effect removes 1 (a Plant +400 ATK/DEF until the End Phase), 2 (destroy a field card) or 3 (Special Summon a Graveyard Plant) counters; refused without counters. Test: tools/test_s03_u380_counters4.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
