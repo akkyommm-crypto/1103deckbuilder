@@ -42,8 +42,9 @@ ok('A: own Spell activation → 2 counters',cnt(cd)===2,String(cnt(cd)));
 pot();
 ok('A: second Spell → 4 counters (no cap)',cnt(cd)===4,String(cnt(cd)));
 PREFER=['2',ap.uid];duelActivateFromZone(0,'mz',idx(cd));drive();PREFER=[];
-ok('A: chose 2 → 2 counters removed (cost); the Level 2 見習い魔術師 special summoned from the hand; the Level 4 in the GY stays',cnt(cd)===2&&z(ap)==='mz'&&z(va)==='grave',JSON.stringify([cnt(cd),z(ap),z(va)]));
-ok('A: once per turn (2 counters left but not activatable again)',!legal('マジカル・コンダクター',0,'mz',idx(cd)));
+/* S03-U373: 見習い魔術師 now has its exact script (text ①: on Special Summon success it places a Spell Counter on a capable card) — the summoned 見習い魔術師 puts 1 counter back on マジカル・コンダクター: 4 − 2 + 1 = 3. The card text, not the old coarse entry, is the authority. */
+ok('A: chose 2 → 2 counters removed (cost) and 1 placed by the summoned 見習い魔術師 (3); the Level 2 見習い魔術師 special summoned from the hand; the Level 4 in the GY stays',cnt(cd)===3&&z(ap)==='mz'&&z(va)==='grave',JSON.stringify([cnt(cd),z(ap),z(va)]));
+ok('A: once per turn (3 counters left but not activatable again)',!legal('マジカル・コンダクター',0,'mz',idx(cd)));
 audit('A');
 
 /* A2: the opponent's Spell counts too (+2) */

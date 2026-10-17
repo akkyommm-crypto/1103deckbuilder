@@ -13,15 +13,15 @@
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 609,
-    "PARTIAL": 24,
-    "TESTED": 3247
+    "PARTIAL": 19,
+    "TESTED": 3252
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -698,
-    "PARTIAL": -158,
-    "TESTED": 1198
+    "PARTIAL": -163,
+    "TESTED": 1203
   },
   "status_changes": [
     {
@@ -2065,6 +2065,12 @@
       "unit": "S03-U196"
     },
     {
+      "name": "スクラップ・シャーク",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U373"
+    },
+    {
       "name": "スクラップ・スコール",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -3973,6 +3979,12 @@
       "unit": "S03-U339"
     },
     {
+      "name": "ヴァイロン・マテリアル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U373"
+    },
+    {
       "name": "ヴァリュアブル・アーマー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5515,6 +5527,12 @@
       "unit": "S03-U191"
     },
     {
+      "name": "極星宝ドラウプニル",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U373"
+    },
+    {
       "name": "極星將テュール",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5597,6 +5615,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U233"
+    },
+    {
+      "name": "機皇城",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U373"
     },
     {
       "name": "機皇帝の賜与",
@@ -6545,6 +6569,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U269"
+    },
+    {
+      "name": "見習い魔術師",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U373"
     },
     {
       "name": "言語道断侍",

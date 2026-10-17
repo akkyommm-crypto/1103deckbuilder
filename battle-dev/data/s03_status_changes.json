@@ -12093,6 +12093,56 @@
         "tools/test_s03_u372_autotable.js"
       ],
       "evidence": "Text (carddata). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Quick-Play Spell: the A Counter monster destroyed, エーリアン・ソルジャー (Level 4) Special Summoned from the Deck and destroyed at the End Phase; not activatable without an A Counter monster. Test: tools/test_s03_u372_autotable.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・マテリアル",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U373",
+      "tests": [
+        "tools/test_s03_u373_autotable2.js"
+      ],
+      "evidence": "Text (carddata). Equip Spell for 「ヴァイロン」 monsters only: ATK +600; sent to the Graveyard face-up from the field -> one 「ヴァイロン」 Spell is added from the Deck (the monster is not offered); refused without a 「ヴァイロン」 monster. Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u373_autotable2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "極星宝ドラウプニル",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U373",
+      "tests": [
+        "tools/test_s03_u373_autotable2.js"
+      ],
+      "evidence": "Text (carddata). Equip Spell for 「極神」/「極星」 monsters only: ATK +800; destroyed by a card effect (Cyclone) -> a 「極星宝」 card (Trap グングニル; decoy monster / other card not offered) is added from the Deck; the host being destroyed (equip rule) does not search. Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u373_autotable2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スクラップ・シャーク",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U373",
+      "tests": [
+        "tools/test_s03_u373_autotable2.js"
+      ],
+      "evidence": "Text (carddata). A Spell or monster-effect activation destroys the face-up Shark; destroyed by its own Scrap-named effect (graveInfo.srcUidS03) -> a 「スクラップ」 monster is sent from the Deck to the Graveyard; destroyed by ブラック・ホール -> nothing. Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u373_autotable2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "見習い魔術師",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U373",
+      "tests": [
+        "tools/test_s03_u373_autotable2.js"
+      ],
+      "evidence": "Text (carddata). Normal Summon success -> a Spell Counter is placed on a face-up Spell Counter capable card (魔導戦士 ブレイカー); no capable card -> nothing; destroyed by battle -> a Level 2 or lower Spellcaster is Special Summoned face-down in Defense from the Deck. Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u373_autotable2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "機皇城",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U373",
+      "tests": [
+        "tools/test_s03_u373_autotable2.js"
+      ],
+      "evidence": "Text (carddata). Field Spell: my 「機皇帝」 monster is not offered to a Synchro Monster's targeting effect (氷結界の龍 グングニール) but can still be targeted by a Spell (月の書); destroyed -> a 「機皇帝」 monster is added from the Deck (機皇兵 not offered). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u373_autotable2.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
