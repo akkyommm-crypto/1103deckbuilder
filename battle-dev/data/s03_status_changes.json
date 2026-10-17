@@ -11813,6 +11813,46 @@
         "tools/test_s03_u365_tenma.js"
       ],
       "evidence": "Text (carddata). hand procedure with a FIRE monster on my field (refused without one): on that summon my other FIRE monster is destroyed; releasing another FIRE monster gives ATK 2200 + 500 = 2700 until the End Phase; my Standby Phase creates a 火の玉トークン in Defense Position. Test: tools/test_s03_u365_tenma.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ファイヤー・ウォール",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U366",
+      "tests": [
+        "tools/test_s03_u366_battletraps.js"
+      ],
+      "evidence": "Text (carddata). a direct attack: the Pyro in my Graveyard (スティング) banished as the cost, the attack negated (no damage); with no Pyro the attack hits (3000); my Standby Phase pays 500 (the opponent's costs nothing), destroyed when it cannot be paid. Test: tools/test_s03_u366_battletraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "吠え猛る大地",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U366",
+      "tests": [
+        "tools/test_s03_u366_battletraps.js"
+      ],
+      "evidence": "Text (carddata). my Beast (イビル・ラット 750) attacking Defense Position ワイト (DEF 200): destroyed, 550 piercing damage and the chosen opposing 青眼の白龍 loses 500 ATK / DEF; a non-Beast attack gets no piercing damage. Test: tools/test_s03_u366_battletraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "援護射撃",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U366",
+      "tests": [
+        "tools/test_s03_u366_battletraps.js"
+      ],
+      "evidence": "Text (carddata). the opponent's サファイアドラゴン attacks my ワイト (300): in the Damage Step the trap adds サファイアドラゴン's 1900 (2200): the attacker is destroyed, 300 damage to its controller; without the trap ワイト is destroyed. Test: tools/test_s03_u366_battletraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "奇跡の軌跡",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U366",
+      "tests": [
+        "tools/test_s03_u366_battletraps.js"
+      ],
+      "evidence": "Text (carddata). activated on my ワイト: the opponent drew 1, ATK 300 + 1000 = 1300, it attacked twice (both opposing ワイト destroyed) and the opponent took no battle damage; without the trap only one attack. Test: tools/test_s03_u366_battletraps.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

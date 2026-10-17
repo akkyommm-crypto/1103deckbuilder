@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 631,
+    "NOT_STARTED": 627,
     "PARTIAL": 30,
-    "TESTED": 3219
+    "TESTED": 3223
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,11 +114,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1508,
+    "legacy": 1510,
     "sin": 5,
-    "unified": 1196
+    "unified": 1198
   },
-  "static_registration_name_count": 3230,
+  "static_registration_name_count": 3234,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -46154,12 +46154,20 @@
       "subtype": "永続",
       "date": "2007-02-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZB_claude_s03_u366_battletraps.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u366_battletraps.js"
+      ]
     },
     {
       "index": 2139,
@@ -69173,12 +69181,20 @@
       "subtype": "永続",
       "date": "2011-04-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZB_claude_s03_u366_battletraps.js",
+          "line": 53
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u366_battletraps.js"
+      ]
     },
     {
       "index": 3217,
@@ -72921,12 +72937,20 @@
       "subtype": "",
       "date": "2009-02-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZB_claude_s03_u366_battletraps.js",
+          "line": 96
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u366_battletraps.js"
+      ]
     },
     {
       "index": 3395,
@@ -78320,12 +78344,20 @@
       "subtype": "",
       "date": "2004-08-05",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZB_claude_s03_u366_battletraps.js",
+          "line": 74
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u366_battletraps.js"
+      ]
     },
     {
       "index": 3648,
