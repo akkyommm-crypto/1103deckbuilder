@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 544,
+    "NOT_STARTED": 541,
     "PARTIAL": 12,
-    "TESTED": 3324
+    "TESTED": 3327
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -115,11 +115,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1546,
+    "legacy": 1548,
     "sin": 5,
-    "unified": 1258
+    "unified": 1259
   },
-  "static_registration_name_count": 3335,
+  "static_registration_name_count": 3338,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -74898,12 +74898,20 @@
       "subtype": "カウンター",
       "date": "2003-04-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZC_claude_s03_u393_seal.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u393_seal.js"
+      ]
     },
     {
       "index": 3465,
@@ -80346,12 +80354,20 @@
       "subtype": "永続",
       "date": "2007-11-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZC_claude_s03_u393_seal.js",
+          "line": 72
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u393_seal.js"
+      ]
     },
     {
       "index": 3720,
@@ -80722,12 +80738,20 @@
       "subtype": "永続",
       "date": "2010-11-13",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZC_claude_s03_u393_seal.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u393_seal.js"
+      ]
     },
     {
       "index": 3739,

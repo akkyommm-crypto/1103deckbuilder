@@ -86,6 +86,9 @@ function summonTrapLockReasonS03(card, zone, db, opts){
    turn (LINGER_ADD_S03, S03-U257: ランドオルスのヒカリゴケ, 古代の機械砲台) lock too, wherever the used card is. */
 function monsterActivationLockReasonS03(p, card, zone, db, opts){
   if(!db || (db.k!=='s' && db.k!=='t' && db.k!=='m') || typeof CARD_SCRIPTS==='undefined') return '';
+  /* S03-U393: 封魔の呪印 — a Spell name banned for this player for the rest of the duel (effectFlags.activationBanNamesS03) */
+  { const banL = gameState.players[p] && gameState.players[p].effectFlags && gameState.players[p].effectFlags.activationBanNamesS03;
+    if(db.k==='s' && Array.isArray(banL) && banL.indexOf(db.n)>=0) return `封魔の呪印の効果により${db.n}を発動できません`; }
   /* S03-U260: the effect of a face-up Spell / Trap (not a card activation) is locked only by sources that opt in with
      locksStEffectsS03:true (エレキリン 「魔法・罠・効果モンスターの効果を発動する事ができない」); the others lock card activations only. */
   let stEffectOnly = false;

@@ -60,6 +60,11 @@ registerChoiceHandlerV49('s03.hand-limit-discard', (a, x)=>{
   /* discard from the highest hand index down, so earlier indexes stay valid */
   const idxs = uids.map(u=>(P.hand||[]).findIndex(c=>c && c.uid === u)).filter(i=>i >= 0).sort((i, j)=>j - i);
   idxs.forEach(i=>act({type:'FX_DISCARD', player:p, handIndex:i, reason:'手札制限', byEffect:false}));
+  /* S03-U393: 暗黒界の書物 — face-up Spell / Trap / Field cards with handLimitDiscardS03(player, uids, card) react to the discard */
+  if(uids.length){ [].concat(P.sz||[], P.field?[P.field]:[]).forEach(c=>{ if(!c || c.face!=='up' || c.activationPending) return;
+    const sc = CARD_SCRIPTS[cardName(c)], f = sc && sc.handLimitDiscardS03; if(typeof f!=='function') return;
+    if(typeof effectNegated==='function' && effectNegated(c)) return;
+    try{ f(p, uids, c); }catch(e){} }); }
   const w = gameState.processorWaiting;
   if(gameState.processorPaused && w && w.type === PROCESSOR_V27.TURN && w.payload && w.payload.handLimitWaitS03) processorResumeV27();
 });

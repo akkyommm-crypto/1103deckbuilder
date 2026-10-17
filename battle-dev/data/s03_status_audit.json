@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 544,
+    "NOT_STARTED": 541,
     "PARTIAL": 12,
-    "TESTED": 3324
+    "TESTED": 3327
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -763,
+    "NOT_STARTED": -766,
     "PARTIAL": -170,
-    "TESTED": 1275
+    "TESTED": 1278
   },
   "status_changes": [
     {
@@ -5317,6 +5317,12 @@
       "unit": "S03-U64"
     },
     {
+      "name": "封魔の呪印",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U393"
+    },
+    {
       "name": "巨人ゴーグル",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5671,6 +5677,12 @@
       "unit": "S03-U156"
     },
     {
+      "name": "暗黒界の書物",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U393"
+    },
+    {
       "name": "暗黒界の武神 ゴルド",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -5717,6 +5729,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U249"
+    },
+    {
+      "name": "暴君の暴言",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U393"
     },
     {
       "name": "暴君の暴飲暴食",

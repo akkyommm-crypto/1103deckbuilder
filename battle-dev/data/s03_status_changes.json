@@ -12863,6 +12863,36 @@
         "tools/test_s03_u392_freeze.js"
       ],
       "evidence": "Exact script. Text (carddata). Normal Trap: after the opponent's direct attack damaged me the optional trigger moves the turn to the End Phase (requestProcessorV27 PHASE end); not offered when the attack hit a monster. Test: tools/test_s03_u392_freeze.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "封魔の呪印",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U393",
+      "tests": [
+        "tools/test_s03_u393_seal.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Counter Trap answering the opponent's Spell Card activation: a Spell of my hand discarded (cost), the Spell negated and destroyed, and its name goes into effectFlags.activationBanNamesS03 of the opponent: a second copy cannot be activated, also in later turns (engine/1ZD, duel-long); not offered without a Spell in my hand. Test: tools/test_s03_u393_seal.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "暴君の暴言",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U393",
+      "tests": [
+        "tools/test_s03_u393_seal.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap: two of my monsters released (cost); while face-up neither player can activate monster effects in the hand or on the field (activationLockS03; checked with 白竜の聖騎士 on both sides, with a control without the trap); not activated with only one monster. Test: tools/test_s03_u393_seal.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "暗黒界の書物",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U393",
+      "tests": [
+        "tools/test_s03_u393_seal.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Spell (also activatable from the hand): after my hand-limit discard in the End Phase a monster among the discarded cards can be Special Summoned, only one (NEW hook handLimitDiscardS03 in engine/1ZZJ with a confirm and a card choice); nothing when only Spells were discarded. Test: tools/test_s03_u393_seal.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
