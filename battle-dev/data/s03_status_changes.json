@@ -11533,6 +11533,46 @@
         "tools/test_s03_u358_infernity.js"
       ],
       "evidence": "Text (carddata). my デストロイヤー destroyed by 青眼の白龍 in battle: the trap Special Summoned it back, discarded the whole hand and dealt 1000; a non-Infernity monster destroyed in battle does not trigger it. Test: tools/test_s03_u358_infernity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D・スコープン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U359",
+      "tests": [
+        "tools/test_s03_u359_dmonsters.js"
+      ],
+      "evidence": "Text (carddata). Attack Position: once per turn a D Level 4 monster from the hand (D・ビデオン) is Special Summoned and destroyed in the End Phase; not offered without one; Defense Position: the call is not offered and its Level is 4 (3 in Attack Position). Test: tools/test_s03_u359_dmonsters.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D・マグネンU",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U359",
+      "tests": [
+        "tools/test_s03_u359_dmonsters.js"
+      ],
+      "evidence": "Text (carddata). Attack Position: it can attack only the highest-ATK opposing monster (ワイト refused, 青眼の白龍 allowed); Defense Position: the opponent cannot attack the other monster (ワイト untouched) while マグネンU itself can be attacked. Test: tools/test_s03_u359_dmonsters.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D・マグネンI",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U359",
+      "tests": [
+        "tools/test_s03_u359_dmonsters.js"
+      ],
+      "evidence": "Text (carddata). Defense Position: my monsters cannot attack; Attack Position with exactly two other Attack Position monsters: once per turn ATK 100 + 1900 + 300 = 2300 until the End Phase, the other monsters cannot attack that turn while マグネンI can; not offered with one other monster. Test: tools/test_s03_u359_dmonsters.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D・キャメラン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U359",
+      "tests": [
+        "tools/test_s03_u359_dmonsters.js"
+      ],
+      "evidence": "Text (carddata). destroyed by battle in Attack Position: D・ナポレオン (Level 2) Special Summoned from the hand; not in Defense Position; Defense Position: a D monster cannot be targeted by 心変わり (it is taken in Attack Position). Test: tools/test_s03_u359_dmonsters.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
