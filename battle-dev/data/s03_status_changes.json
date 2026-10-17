@@ -12413,6 +12413,36 @@
         "tools/test_s03_u380_counters4.js"
       ],
       "evidence": "Text (carddata). Continuous Spell: destroyed Plant monsters (both fields, together) add フラワーカウンター; one ignition effect removes 1 (a Plant +400 ATK/DEF until the End Phase), 2 (destroy a field card) or 3 (Special Summon a Graveyard Plant) counters; refused without counters. Test: tools/test_s03_u380_counters4.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "聖獣セルケト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U381",
+      "tests": [
+        "tools/test_s03_u381_fusions.js"
+      ],
+      "evidence": "Text (carddata). With 「王家の神殿」 face-up: the monster it destroys in battle is banished (not sent to the Graveyard) and its ATK rises by 500 (once per victim); when the Temple leaves the field (FX_TO_GRAVE) it is destroyed (selfDestroyWhenS03). Test: tools/test_s03_u381_fusions.js (Replay audit). The Fusion Summon of the two Fusion Monsters is the engine's, not part of this unit; no known deviation in the card effects."
+    },
+    {
+      "name": "地天の騎士ガイアドレイク",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U381",
+      "tests": [
+        "tools/test_s03_u381_fusions.js"
+      ],
+      "evidence": "Text (carddata). Fusion Monster placed on the field: an opponent Effect Monster effect (氷結界の龍 グングニール) cannot target it (only ワイト is offered) while an opponent Trap still can; effect-destruction immunity from Effect Monsters declared via protectV21 sourceKind m. Test: tools/test_s03_u381_fusions.js (Replay audit). The Fusion Summon of the two Fusion Monsters is the engine's, not part of this unit; no known deviation in the card effects."
+    },
+    {
+      "name": "ナイトメアを駆る死霊",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U381",
+      "tests": [
+        "tools/test_s03_u381_fusions.js"
+      ],
+      "evidence": "Text (carddata). Fusion Monster placed on the field: not destroyed by battle (青眼の白龍 attacks it); attacks directly although the opponent controls a monster (800 damage) and the opponent discards a random hand card; destroyed when targeted (月の書) via declareTargetedSelfDestroyS03; another monster targeted -> it stays. Test: tools/test_s03_u381_fusions.js (Replay audit). The Fusion Summon of the two Fusion Monsters is the engine's, not part of this unit; no known deviation in the card effects."
     }
   ],
   "restored_to_baseline": [

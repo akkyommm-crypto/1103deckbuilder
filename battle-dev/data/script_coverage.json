@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 585,
+    "NOT_STARTED": 582,
     "PARTIAL": 16,
-    "TESTED": 3279
+    "TESTED": 3282
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,11 +114,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1531,
+    "legacy": 1533,
     "sin": 5,
-    "unified": 1230
+    "unified": 1231
   },
-  "static_registration_name_count": 3290,
+  "static_registration_name_count": 3293,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -40646,12 +40646,20 @@
       "subtype": null,
       "date": "2002-05-16",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZQ_claude_s03_u381_fusions.js",
+          "line": 54
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u381_fusions.js"
+      ]
     },
     {
       "index": 1873,
@@ -69917,12 +69925,20 @@
       "subtype": null,
       "date": "2010-07-17",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZQ_claude_s03_u381_fusions.js",
+          "line": 35
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u381_fusions.js"
+      ]
     },
     {
       "index": 3241,
@@ -94844,12 +94860,20 @@
       "subtype": null,
       "date": "2002-01-22",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZQ_claude_s03_u381_fusions.js",
+          "line": 19
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u381_fusions.js"
+      ]
     },
     {
       "index": 4416,

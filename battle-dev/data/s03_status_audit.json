@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 585,
+    "NOT_STARTED": 582,
     "PARTIAL": 16,
-    "TESTED": 3279
+    "TESTED": 3282
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -722,
+    "NOT_STARTED": -725,
     "PARTIAL": -166,
-    "TESTED": 1230
+    "TESTED": 1233
   },
   "status_changes": [
     {
@@ -2731,6 +2731,12 @@
       "unit": "S03-U156"
     },
     {
+      "name": "ナイトメアを駆る死霊",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U381"
+    },
+    {
       "name": "ナチュラル・ディザスター",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4771,6 +4777,12 @@
       "unit": "S03-U62"
     },
     {
+      "name": "地天の騎士ガイアドレイク",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U381"
+    },
+    {
       "name": "地獄からの使い",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6569,6 +6581,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U194"
+    },
+    {
+      "name": "聖獣セルケト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U381"
     },
     {
       "name": "能力吸収コア",
