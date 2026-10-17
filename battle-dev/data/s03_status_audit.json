@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 623,
+    "NOT_STARTED": 620,
     "PARTIAL": 30,
-    "TESTED": 3227
+    "TESTED": 3230
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -684,
+    "NOT_STARTED": -687,
     "PARTIAL": -152,
-    "TESTED": 1178
+    "TESTED": 1181
   },
   "status_changes": [
     {
@@ -769,6 +769,12 @@
       "unit": "S03-U202"
     },
     {
+      "name": "アヌビスの裁き",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U368"
+    },
+    {
       "name": "アポピスの化神",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -1433,6 +1439,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U122"
+    },
+    {
+      "name": "ギブ&テイク",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U368"
     },
     {
       "name": "クリボン",
@@ -4793,6 +4805,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U288"
+    },
+    {
+      "name": "大火葬",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U368"
     },
     {
       "name": "大神官デ・ザード",

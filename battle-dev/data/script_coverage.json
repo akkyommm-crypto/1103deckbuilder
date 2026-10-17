@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 623,
+    "NOT_STARTED": 620,
     "PARTIAL": 30,
-    "TESTED": 3227
+    "TESTED": 3230
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,11 +114,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1510,
+    "legacy": 1513,
     "sin": 5,
     "unified": 1202
   },
-  "static_registration_name_count": 3238,
+  "static_registration_name_count": 3241,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -9548,13 +9548,20 @@
       "subtype": "カウンター",
       "date": "2003-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZD_claude_s03_u368_linktraps.js",
+          "line": 48
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle15.js"
+        "tools\\test_auto_cycle15.js",
+        "tools\\test_s03_u368_linktraps.js"
       ]
     },
     {
@@ -19646,12 +19653,20 @@
       "subtype": "",
       "date": "2008-10-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZD_claude_s03_u368_linktraps.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u368_linktraps.js"
+      ]
     },
     {
       "index": 887,
@@ -71873,12 +71888,20 @@
       "subtype": "",
       "date": "2003-04-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZD_claude_s03_u368_linktraps.js",
+          "line": 19
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u368_linktraps.js"
+      ]
     },
     {
       "index": 3343,

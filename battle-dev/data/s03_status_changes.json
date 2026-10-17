@@ -11893,6 +11893,36 @@
         "tools/test_s03_u367_contraps.js"
       ],
       "evidence": "Text (carddata). Field Spell: my Beast (イビル・ラット 750) gets +100 per monster in my Graveyard (3 -> 1050); while it is face-up no other Field Spell can be activated; destroyed (サイクロン) it still blocks Field Spells that turn, and not in a later turn. Test: tools/test_s03_u367_contraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "大火葬",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U368",
+      "tests": [
+        "tools/test_s03_u368_linktraps.js"
+      ],
+      "evidence": "Text (carddata). the opponent's 死者蘇生 targeting a Graveyard monster: offered, every monster in both Graveyards banished and the revival finds no target; a card that targets no Graveyard monster (サイクロン) is not answered. Test: tools/test_s03_u368_linktraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "アヌビスの裁き",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U368",
+      "tests": [
+        "tools/test_s03_u368_linktraps.js"
+      ],
+      "evidence": "Text (carddata). the opponent's 大嵐 (destroys Spell / Trap cards): offered, a hand card discarded, 大嵐 negated and destroyed (my set card survives), then the optional choice: 青眼の白龍 destroyed and 3000 damage; declining leaves it; a Spell that does not destroy Spell / Trap cards (死者蘇生) is not answered. Test: tools/test_s03_u368_linktraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ギブ&テイク",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U368",
+      "tests": [
+        "tools/test_s03_u368_linktraps.js"
+      ],
+      "evidence": "Text (carddata). ブラック・マジシャン (Level 7) from my Graveyard Special Summoned to the opponent's field in Defense Position and my ワイト Level 1 + 7 = 8 until the End of the turn (back to 1 afterwards); not activatable without a monster in my Graveyard. Test: tools/test_s03_u368_linktraps.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
