@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 596,
+    "NOT_STARTED": 593,
     "PARTIAL": 16,
-    "TESTED": 3268
+    "TESTED": 3271
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -711,
+    "NOT_STARTED": -714,
     "PARTIAL": -166,
-    "TESTED": 1219
+    "TESTED": 1222
   },
   "status_changes": [
     {
@@ -3985,6 +3985,12 @@
       "unit": "S03-U330"
     },
     {
+      "name": "ヴァイロン・セグメント",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U378"
+    },
+    {
       "name": "ヴァイロン・テセラクト",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5911,6 +5917,12 @@
       "unit": "S03-U178"
     },
     {
+      "name": "滅びの爆裂疾風弾",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U378"
+    },
+    {
       "name": "漆黒の名馬",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6881,6 +6893,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U214"
+    },
+    {
+      "name": "闇の侯爵ベリアル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U378"
     },
     {
       "name": "闇の呪縛",

@@ -12303,6 +12303,36 @@
         "tools/test_s03_u377_negators.js"
       ],
       "evidence": "Text (carddata). Quick effect: an effect (サイクロン) that targets a card on the field is activated -> release another face-up Plant, negate and destroy; refused without another Plant and when nothing is targeted. Test: tools/test_s03_u377_negators.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァイロン・セグメント",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U378",
+      "tests": [
+        "tools/test_s03_u378_targetlocks.js"
+      ],
+      "evidence": "Text (carddata). Equip Spell for 「ヴァイロン」 monsters: the equipped monster cannot be targeted by the opponent's Trap or Effect Monster effects (氷結界の龍 グングニール, 強制脱出装置: only the other monster is offered; without the Equip Spell it is offered), while the opponent's Spell (月の書) still can; refused/search as the other Vylon equips. Test: tools/test_s03_u378_targetlocks.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "闇の侯爵ベリアル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U378",
+      "tests": [
+        "tools/test_s03_u378_targetlocks.js"
+      ],
+      "evidence": "Text (carddata). While face-up: the opponent can attack only ベリアル itself (not the other monster) and cannot target the other monster with Spell / Trap effects (月の書 on ベリアル works, the other monster is not offered); my own Spell may target it. Test: tools/test_s03_u378_targetlocks.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "滅びの爆裂疾風弾",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U378",
+      "tests": [
+        "tools/test_s03_u378_targetlocks.js"
+      ],
+      "evidence": "Text (carddata). Normal Spell with a 青眼の白龍 on my field: all the opponent's monsters destroyed; my 青眼の白龍 (also one Special Summoned afterwards by 死者蘇生) cannot attack that turn, can attack again next turn; refused without 青眼の白龍. Test: tools/test_s03_u378_targetlocks.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
