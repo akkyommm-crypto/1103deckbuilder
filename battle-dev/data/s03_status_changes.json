@@ -12583,6 +12583,56 @@
         "tools/test_s03_u384_summon_locks.js"
       ],
       "evidence": "Text (carddata). Normal Spell at the start of Main Phase 1 without my face-up Synchro Monster: until the end of the opponent's next End Phase neither player can Special Summon a Synchro Monster (non-Synchro unaffected; over afterwards); refused with my face-up Synchro Monster. Test: tools/test_s03_u384_summon_locks.js (Replay audit). 「メインフェイズ1の開始時」 is modelled as: Main Phase 1, empty chain, nothing done yet that turn."
+    },
+    {
+      "name": "紅蓮魔竜の壺",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U385",
+      "tests": [
+        "tools/test_s03_u385_misc7.js"
+      ],
+      "evidence": "Text (carddata). Normal Spell with a face-up レッド・デーモンズ・ドラゴン: draws 2; my Normal / Special Summons are banned (banSummonS03) this turn and the opponent's next turn (Flip Summon legal, the opponent unaffected), over afterwards; refused without the Dragon. Test: tools/test_s03_u385_misc7.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "究極・背水の陣",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U385",
+      "tests": [
+        "tools/test_s03_u385_misc7.js"
+      ],
+      "evidence": "Text (carddata). Normal Trap: LP paid down to 100; one 六武衆 per name from the Graveyard is Special Summoned (a name on the field and non-六武衆 stay); refused without a 六武衆 in the Graveyard. Test: tools/test_s03_u385_misc7.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ゼンマイマニュファクチャ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U385",
+      "tests": [
+        "tools/test_s03_u385_misc7.js"
+      ],
+      "evidence": "Text (carddata). Continuous Spell: when a ゼンマイ monster effect (ゼンマイバット) is activated, a Level 4 or lower ゼンマイ is added from the Deck (once per turn). Test: tools/test_s03_u385_misc7.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "邪狂神の使い",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U385",
+      "tests": [
+        "tools/test_s03_u385_misc7.js"
+      ],
+      "evidence": "Text (carddata). At the opponent's Standby Phase: banish chosen DARK monsters of my Graveyard (LIGHT not offered), DEF +500 each until the End Phase (+1000 for two; gone afterwards). Test: tools/test_s03_u385_misc7.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "不吉な占い",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U385",
+      "tests": [
+        "tools/test_s03_u385_misc7.js"
+      ],
+      "evidence": "Text (carddata). Continuous Trap: at my Standby Phase a random card of the opponent's hand is picked and I declare its type: a right guess (モンスター) deals 700, a wrong one (罠) nothing. Test: tools/test_s03_u385_misc7.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
