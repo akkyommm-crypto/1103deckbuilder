@@ -11963,6 +11963,36 @@
         "tools/test_s03_u369_misc4.js"
       ],
       "evidence": "Text (carddata). my Ritual Summon (ダンシング・ソルジャー via 踊りによる誘発) triggers the set Trap (new engine event: a Ritual Summon queues the Special Summon success event with kind 'ritual'); during the opponent turn they cannot activate a Spell Card. Test: tools/test_s03_u369_misc4.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "昇華する魂",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U370",
+      "tests": [
+        "tools/test_s03_u370_ritual_react.js"
+      ],
+      "evidence": "Text (carddata). my Ritual Summon (ダンシング・ソルジャー releasing 青眼の白龍): 青眼 returned from the Graveyard to my hand; a Normal Summon does not trigger it. Test: tools/test_s03_u370_ritual_react.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "宣告者の預言",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U370",
+      "tests": [
+        "tools/test_s03_u370_ritual_react.js"
+      ],
+      "evidence": "Text (carddata). Levels 3 + 2 + 1 = 6 exactly: 神光の宣告者 Ritual Summoned; the Spell in the Graveyard was banished (cost) and one released monster returned to my hand while the other two stay in the Graveyard; a lone Level 8 monster is refused (exactly 6 is required). Test: tools/test_s03_u370_ritual_react.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "神光の宣告者",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U370",
+      "tests": [
+        "tools/test_s03_u370_ritual_react.js"
+      ],
+      "evidence": "Text (carddata). the opponent's サイクロン activation: offered with an Angel in my hand; the Angel discarded, サイクロン negated and destroyed, my set card survives; not offered without an Angel in hand. Test: tools/test_s03_u370_ritual_react.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

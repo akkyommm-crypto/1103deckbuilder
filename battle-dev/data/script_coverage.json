@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 616,
+    "NOT_STARTED": 613,
     "PARTIAL": 30,
-    "TESTED": 3234
+    "TESTED": 3237
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,11 +114,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1515,
+    "legacy": 1516,
     "sin": 5,
-    "unified": 1204
+    "unified": 1206
   },
-  "static_registration_name_count": 3245,
+  "static_registration_name_count": 3248,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -74153,12 +74153,20 @@
       "subtype": "儀式",
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZF_claude_s03_u370_ritual_react.js",
+          "line": 49
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u370_ritual_react.js"
+      ]
     },
     {
       "index": 3446,
@@ -79085,12 +79093,20 @@
       "subtype": "永続",
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZF_claude_s03_u370_ritual_react.js",
+          "line": 25
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u370_ritual_react.js"
+      ]
     },
     {
       "index": 3679,
@@ -91188,12 +91204,20 @@
       "subtype": null,
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZF_claude_s03_u370_ritual_react.js",
+          "line": 68
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u370_ritual_react.js"
+      ]
     },
     {
       "index": 4255,
