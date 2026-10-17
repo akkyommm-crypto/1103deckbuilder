@@ -118,6 +118,12 @@ function destroySubOptionsS03(gs, card, p, cause, excl){
     });
     return outD;
   }
+  /* S03-U364: 「代わりにこのカードのカウンターを1つ取り除く」 (デス・モスキート / メタル・シューター) —
+     destroySubstituteS03:{kind:'counter', counter:'カウンター', causes:['battle'], mandatory:true}: one counter of the protected card itself is removed instead */
+  if(decl.kind==='counter'){
+    const n = (card.counters && Number(card.counters[decl.counter||'カウンター'])) || 0;
+    return n>0 ? [{kind:'counter', uid:card.uid, name:cardName(card)}] : [];
+  }
   if(decl.kind==='destroyOwn'){
     const src = {uid:card.uid, k:'m'};
     const out = [];
@@ -266,6 +272,7 @@ function destroySubKeyS03(o){ if(o.kind==='equipInstead') return 'eq:' + o.hostU
   if(o.kind==='release') return 'rel:' + o.uid;   /* S03-U286 */
   if(o.kind==='banish') return 'ban:' + o.uid;   /* S03-U325 */
   if(o.kind==='discard') return 'dis:' + o.uid;   /* S03-U337 */
+  if(o.kind==='counter') return 'cnt:' + o.uid;   /* S03-U364 */
   return (o.kind==='detach' ? 'mat:' : (o.kind==='placeSpell' ? 'place:' : 'sub:')) + o.uid; }
 
 /* Ask the next protected card, or perform everything. true = a choice is open. */
@@ -276,11 +283,17 @@ function destroySubNextS03(job){
     const claimed = job.picks.filter(x=>x.use && (x.kind==='destroy' || x.kind==='release' || x.kind==='banish' || x.kind==='discard')).map(x=>x.subUid);   /* S03-U286: release */
     const opts = item.opts.filter(o=>(o.kind!=='destroy' && o.kind!=='release' && o.kind!=='banish' && o.kind!=='discard') || claimed.indexOf(o.uid)<0);
     if(!opts.length){ job.picks.push({uid:item.uid, use:false}); job.pos++; continue; }
+    /* S03-U364: a mandatory replacement (「代わりに…取り除く」) with a single option is taken without asking */
+    if(opts.length===1 && opts[0].kind==='counter'){
+      const ph = findCardByUidInState(gs, item.uid), pd = ph ? destroySubDeclS03(ph.card) : null;
+      if(pd && pd.mandatory===true){ job.picks.push({uid:item.uid, use:true, kind:'counter', subUid:opts[0].uid, p:item.p}); job.pos++; continue; }
+    }
     const cands = opts.map(o=>{
       if(o.kind==='detach') return {key:destroySubKeyS03(o), label:`身代わりを使う：素材「${o.name}」を取り除く`, sub:`${item.name} のエクシーズ素材`};
       if(o.kind==='release') return {key:destroySubKeyS03(o), label:`代わりに「${o.name}」をリリースする`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U286 */
       if(o.kind==='banish') return {key:destroySubKeyS03(o), label:`代わりに墓地の「${o.name}」を除外する`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U325 */
       if(o.kind==='discard') return {key:destroySubKeyS03(o), label:`代わりに手札の「${o.name}」を捨てる`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U337 */
+      if(o.kind==='counter') return {key:destroySubKeyS03(o), label:`代わりに「${o.name}」のカウンターを1つ取り除く`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U364 */
       if(o.kind==='equipInstead') return {key:destroySubKeyS03(o), label:`墓地へ送らずに「${o.name}」に装備する`, sub:`${item.name}（破壊されたまま装備カード扱いになる）`, uid:o.hostUid};
       if(o.kind==='placeSpell') return {key:destroySubKeyS03(o), label:'墓地へ送らずに、永続魔法カード扱いとして魔法＆罠ゾーンに置く', sub:`${item.name}（破壊されたまま行き先だけが変わります）`};   /* S03-U240 */
       const h = findCardByUidInState(gs, o.uid);
@@ -324,6 +337,11 @@ function destroySubApplyS03(job){
     if(x.kind==='banish'){   /* S03-U325: a Graveyard monster is banished instead (the protected card is not destroyed) */
       const g = findCardByUidInState(gs, x.subUid);
       if(g && g.zone==='grave') act({type:'FX_BANISH', player:g.p, zone:'grave', index:g.index, reason:`${protName}（破壊の代わりに除外）`});
+      return;
+    }
+    if(x.kind==='counter'){   /* S03-U364: one counter of the protected card is removed instead (it is not destroyed) */
+      const cd = prot ? destroySubDeclS03(prot.card) : null;
+      if(prot && prot.zone==='mz') act({type:'COUNTER_REMOVE', player:prot.p, zone:'mz', index:prot.index, kind:(cd && cd.counter) || 'カウンター', n:1});
       return;
     }
     if(x.kind==='discard'){   /* S03-U337: a monster of the hand is discarded instead (the protected card is not destroyed) */

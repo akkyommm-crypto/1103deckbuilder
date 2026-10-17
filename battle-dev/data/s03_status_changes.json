@@ -11743,6 +11743,46 @@
         "tools/test_s03_u363_fusion_subs.js"
       ],
       "evidence": "Text (carddata). 融合: with バーストレディ the substitute stands in for フェザーマン (フレイム・ウィングマン) or クレイマン (ランパートガンナー) and the Fusion Summon succeeds with both as Fusion Materials in the Graveyard; with a non-material (エアーマン) or with a second substitute nothing is offered. The rule is the engine text rule of S03-U134 (the card is only registered). Test: tools/test_s03_u363_fusion_subs.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デス・モスキート",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U364",
+      "tests": [
+        "tools/test_s03_u364_counters3.js"
+      ],
+      "evidence": "Text (carddata). Normal Summoned and Special Summoned (死者蘇生): 2 counters, ATK 500 + 1000 = 1500; destroyed by battle with counters: one counter is removed instead and it stays (automatically, the text is mandatory); the last counter is used once; with no counters it is destroyed; destroyed by an effect it is destroyed (the substitute is for battle only). Test: tools/test_s03_u364_counters3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "メタル・シューター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U364",
+      "tests": [
+        "tools/test_s03_u364_counters3.js"
+      ],
+      "evidence": "Text (carddata). Normal Summoned (1 Tribute): 2 counters, ATK 800 + 1600 = 2400; destroyed by an effect (ブラック・ホール): one counter is removed instead and it stays; destroyed by battle it is destroyed (the substitute is for effects only). Test: tools/test_s03_u364_counters3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コンボファイター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U364",
+      "tests": [
+        "tools/test_s03_u364_counters3.js"
+      ],
+      "evidence": "Text (carddata). a chain in my Main Phase 1 (強欲な壺): it attacked twice (ワイト, then directly for 1600); without a chain the second attack is refused. Test: tools/test_s03_u364_counters3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コンボマスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U364",
+      "tests": [
+        "tools/test_s03_u364_counters3.js"
+      ],
+      "evidence": "Text (carddata). a chain in my Main Phase 1 (強欲な壺): it attacked twice (ワイト, then directly for 2200); without a chain the second attack is refused. Test: tools/test_s03_u364_counters3.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

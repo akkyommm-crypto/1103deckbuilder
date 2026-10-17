@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 638,
+    "NOT_STARTED": 634,
     "PARTIAL": 30,
-    "TESTED": 3212
+    "TESTED": 3216
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -669,
+    "NOT_STARTED": -673,
     "PARTIAL": -152,
-    "TESTED": 1163
+    "TESTED": 1167
   },
   "status_changes": [
     {
@@ -1573,6 +1573,18 @@
       "unit": "S03-U206"
     },
     {
+      "name": "コンボファイター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U364"
+    },
+    {
+      "name": "コンボマスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U364"
+    },
+    {
       "name": "コール・リゾネーター",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -2351,6 +2363,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U314"
+    },
+    {
+      "name": "デス・モスキート",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U364"
     },
     {
       "name": "デッド・ガードナー",
@@ -3377,6 +3395,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U137"
+    },
+    {
+      "name": "メタル・シューター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U364"
     },
     {
       "name": "メタル・リフレクト・スライム",

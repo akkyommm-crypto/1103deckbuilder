@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 638,
+    "NOT_STARTED": 634,
     "PARTIAL": 30,
-    "TESTED": 3212
+    "TESTED": 3216
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -77,6 +77,8 @@
     "helper:u348Revive": 4,
     "helper:u350Majin": 3,
     "helper:u353Bind": 2,
+    "helper:u364Combo": 2,
+    "helper:u364Counter": 2,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
@@ -116,7 +118,7 @@
     "sin": 5,
     "unified": 1193
   },
-  "static_registration_name_count": 3223,
+  "static_registration_name_count": 3227,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -22674,12 +22676,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u364Combo",
+          "source": "cards\\HZZZZZZZZ_claude_s03_u364_counters3.js",
+          "line": 47
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u364_counters3.js"
+      ]
     },
     {
       "index": 1035,
@@ -22689,12 +22699,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u364Combo",
+          "source": "cards\\HZZZZZZZZ_claude_s03_u364_counters3.js",
+          "line": 48
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u364_counters3.js"
+      ]
     },
     {
       "index": 1036,
@@ -37126,12 +37144,20 @@
       "subtype": null,
       "date": "2007-08-09",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u364Counter",
+          "source": "cards\\HZZZZZZZZ_claude_s03_u364_counters3.js",
+          "line": 32
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u364_counters3.js"
+      ]
     },
     {
       "index": 1712,
@@ -54369,12 +54395,20 @@
       "subtype": null,
       "date": "2007-08-09",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u364Counter",
+          "source": "cards\\HZZZZZZZZ_claude_s03_u364_counters3.js",
+          "line": 33
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u364_counters3.js"
+      ]
     },
     {
       "index": 2534,

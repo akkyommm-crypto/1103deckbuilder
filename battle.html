@@ -12889,6 +12889,12 @@ function destroySubOptionsS03(gs, card, p, cause, excl){
     });
     return outD;
   }
+  /* S03-U364: 「代わりにこのカードのカウンターを1つ取り除く」 (デス・モスキート / メタル・シューター) —
+     destroySubstituteS03:{kind:'counter', counter:'カウンター', causes:['battle'], mandatory:true}: one counter of the protected card itself is removed instead */
+  if(decl.kind==='counter'){
+    const n = (card.counters && Number(card.counters[decl.counter||'カウンター'])) || 0;
+    return n>0 ? [{kind:'counter', uid:card.uid, name:cardName(card)}] : [];
+  }
   if(decl.kind==='destroyOwn'){
     const src = {uid:card.uid, k:'m'};
     const out = [];
@@ -13037,6 +13043,7 @@ function destroySubKeyS03(o){ if(o.kind==='equipInstead') return 'eq:' + o.hostU
   if(o.kind==='release') return 'rel:' + o.uid;   /* S03-U286 */
   if(o.kind==='banish') return 'ban:' + o.uid;   /* S03-U325 */
   if(o.kind==='discard') return 'dis:' + o.uid;   /* S03-U337 */
+  if(o.kind==='counter') return 'cnt:' + o.uid;   /* S03-U364 */
   return (o.kind==='detach' ? 'mat:' : (o.kind==='placeSpell' ? 'place:' : 'sub:')) + o.uid; }
 
 /* Ask the next protected card, or perform everything. true = a choice is open. */
@@ -13047,11 +13054,17 @@ function destroySubNextS03(job){
     const claimed = job.picks.filter(x=>x.use && (x.kind==='destroy' || x.kind==='release' || x.kind==='banish' || x.kind==='discard')).map(x=>x.subUid);   /* S03-U286: release */
     const opts = item.opts.filter(o=>(o.kind!=='destroy' && o.kind!=='release' && o.kind!=='banish' && o.kind!=='discard') || claimed.indexOf(o.uid)<0);
     if(!opts.length){ job.picks.push({uid:item.uid, use:false}); job.pos++; continue; }
+    /* S03-U364: a mandatory replacement (「代わりに…取り除く」) with a single option is taken without asking */
+    if(opts.length===1 && opts[0].kind==='counter'){
+      const ph = findCardByUidInState(gs, item.uid), pd = ph ? destroySubDeclS03(ph.card) : null;
+      if(pd && pd.mandatory===true){ job.picks.push({uid:item.uid, use:true, kind:'counter', subUid:opts[0].uid, p:item.p}); job.pos++; continue; }
+    }
     const cands = opts.map(o=>{
       if(o.kind==='detach') return {key:destroySubKeyS03(o), label:`身代わりを使う：素材「${o.name}」を取り除く`, sub:`${item.name} のエクシーズ素材`};
       if(o.kind==='release') return {key:destroySubKeyS03(o), label:`代わりに「${o.name}」をリリースする`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U286 */
       if(o.kind==='banish') return {key:destroySubKeyS03(o), label:`代わりに墓地の「${o.name}」を除外する`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U325 */
       if(o.kind==='discard') return {key:destroySubKeyS03(o), label:`代わりに手札の「${o.name}」を捨てる`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U337 */
+      if(o.kind==='counter') return {key:destroySubKeyS03(o), label:`代わりに「${o.name}」のカウンターを1つ取り除く`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U364 */
       if(o.kind==='equipInstead') return {key:destroySubKeyS03(o), label:`墓地へ送らずに「${o.name}」に装備する`, sub:`${item.name}（破壊されたまま装備カード扱いになる）`, uid:o.hostUid};
       if(o.kind==='placeSpell') return {key:destroySubKeyS03(o), label:'墓地へ送らずに、永続魔法カード扱いとして魔法＆罠ゾーンに置く', sub:`${item.name}（破壊されたまま行き先だけが変わります）`};   /* S03-U240 */
       const h = findCardByUidInState(gs, o.uid);
@@ -13095,6 +13108,11 @@ function destroySubApplyS03(job){
     if(x.kind==='banish'){   /* S03-U325: a Graveyard monster is banished instead (the protected card is not destroyed) */
       const g = findCardByUidInState(gs, x.subUid);
       if(g && g.zone==='grave') act({type:'FX_BANISH', player:g.p, zone:'grave', index:g.index, reason:`${protName}（破壊の代わりに除外）`});
+      return;
+    }
+    if(x.kind==='counter'){   /* S03-U364: one counter of the protected card is removed instead (it is not destroyed) */
+      const cd = prot ? destroySubDeclS03(prot.card) : null;
+      if(prot && prot.zone==='mz') act({type:'COUNTER_REMOVE', player:prot.p, zone:'mz', index:prot.index, kind:(cd && cd.counter) || 'カウンター', n:1});
       return;
     }
     if(x.kind==='discard'){   /* S03-U337: a monster of the hand is discarded instead (the protected card is not destroyed) */
@@ -85791,6 +85809,54 @@ defineScript('イリュージョン・シープ', u363Passive('イリュージ�
 defineScript('心眼の女神', u363Passive('心眼の女神'));
 defineScript('沼地の魔獣王', u363Passive('沼地の魔獣王'));
 defineScript('破壊神 ヴァサーゴ', u363Passive('破壊神 ヴァサーゴ'));
+/* S03-U364: four monsters (carddata texts) and a new destroy-substitute kind (counter).
+
+   デス・モスキート  召喚・特殊召喚に成功した時、カウンターを2つ置く。カウンター1つにつき攻撃力500アップ。戦闘によって破壊される場合、代わりにカウンターを1つ取り除く。
+   メタル・シューター 召喚に成功した時、カウンターを2つ置く。カウンター1つにつき攻撃力800アップ。他のカードの効果によって破壊される場合、代わりにカウンターを1つ取り除く。
+   コンボファイター  表側表示で存在する時に自分ターンのメインフェイズ1でチェーンが発生した場合、このターンのみ1度のバトルフェイズ中に2回攻撃できる。
+   コンボマスター    （同じ。コンボファイターと同じ効果）
+
+   Notes
+   - The substitute is destroySubstituteS03:{kind:'counter', counter:'カウンター', causes:[…], mandatory:true} (engine/1ZV, S03-U364): the protected card's own counter is removed instead of the destruction; because the text is mandatory the choice is made automatically when it is the only substitute.
+   - Counters: API.addCounter / countCounter; the ATK is a continuous modifier of the counter count.
+   - コンボ: a forced trigger on onActivateSuccess in my Main Phase 1 stamps a card flag with the turn; attackLimit(card) (as 重装武者－ベン・ケイ) returns 2 for that turn. */
+
+/* ---- デス・モスキート / メタル・シューター ---- */
+function u364Counters(card){ const h = card && findCardByUid(card.uid); return (h && h.zone==='mz') ? API.countCounter(h, 'カウンター') : 0; }
+function u364Summoned(ctx, kinds){
+  const e = ctx.event || {};
+  if(ctx.zone!=='mz' || ctx.card.face!=='up') return false;
+  if(Array.isArray(e.cards) ? e.cards.indexOf(ctx.card)>=0 : (e.card===ctx.card)) return kinds.indexOf(ctx.eventName)>=0;
+  return false;
+}
+function u364Counter(name, perCounter, onKinds, subCause){
+  defineUnifiedCardV4(name, [{
+    key:'counters', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:onKinds, forced:true,
+    condition(ctx){ return u364Summoned(ctx, onKinds); },
+    operation(ctx){ const me = locateCardAnyV4(ctx.card); if(me && me.zone==='mz') API.addCounter(me, 'カウンター', 2); },
+    afterResolve(){}
+  }], {type:'monster', priority:1, forced:true, timing:['free'],
+    passive:onKinds.reduce((o,k)=>{ o[k] = ctx=>u364Summoned(ctx, onKinds); return o; }, {}),
+    destroySubstituteS03:{kind:'counter', counter:'カウンター', causes:subCause, mandatory:true},
+    continuous:{ scope:'self', from:['mz'], apply(card, self){ const n = u364Counters(self); return (card===self && self.face==='up' && n>0) ? {atk:perCounter*n} : null; } } });
+}
+u364Counter('デス・モスキート', 500, ['onNormalSummon','onSpecialSummon'], ['battle']);
+u364Counter('メタル・シューター', 800, ['onNormalSummon'], ['effect']);
+
+/* ---- コンボファイター / コンボマスター ---- */
+function u364ComboChain(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && gameState.activePlayer===ctx.player && gameState.phase==='main1' && Number(ctx.card.u364ComboTurn)!==Number(gameState.turn); }
+function u364Combo(name){
+  defineUnifiedCardV4(name, [{
+    key:'combo', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:['onActivateSuccess'], forced:true,
+    condition(ctx){ return u364ComboChain(ctx); },
+    operation(ctx){ const me = locateCardAnyV4(ctx.card); if(me && me.zone==='mz') API.setCardFlag(me, 'u364ComboTurn', gameState.turn, name, {silent:true}); },
+    afterResolve(){}
+  }], {type:'monster', priority:1, forced:true, timing:['free'], onOtherSummon:true,
+    passive:{ onActivateSuccess(ctx){ return u364ComboChain(ctx); } },
+    attackLimit(card){ return Number(card.u364ComboTurn)===Number(gameState.turn) ? 2 : 1; } });
+}
+u364Combo('コンボファイター');
+u364Combo('コンボマスター');
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、
