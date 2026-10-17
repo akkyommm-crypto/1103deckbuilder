@@ -11853,6 +11853,46 @@
         "tools/test_s03_u366_battletraps.js"
       ],
       "evidence": "Text (carddata). activated on my ワイト: the opponent drew 1, ATK 300 + 1000 = 1300, it attacked twice (both opposing ワイト destroyed) and the opponent took no battle damage; without the trap only one attack. Test: tools/test_s03_u366_battletraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "忍法 空蝉の術",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U367",
+      "tests": [
+        "tools/test_s03_u367_contraps.js"
+      ],
+      "evidence": "Text (carddata). the chosen ninja (女忍者ヤエ 1100) attacked by 青眼の白龍 (3000) is not destroyed while the damage calculation still applies (1900 damage); without the trap it is destroyed. Test: tools/test_s03_u367_contraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コア・ブラスト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U367",
+      "tests": [
+        "tools/test_s03_u367_contraps.js"
+      ],
+      "evidence": "Text (carddata). with a 「コアキメイル」 monster on my field, at my Standby Phase (not the opponent's) with 3 opposing monsters against my 1: 2 opposing monsters destroyed so the counts match; no destruction when the counts are equal or without a 「コアキメイル」 monster. Test: tools/test_s03_u367_contraps.js (Replay audit). Interpretation: 「相手フィールド上に存在するカード」 is applied to the opponent's monsters (the count that is equalised)."
+    },
+    {
+      "name": "スターゲート",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U367",
+      "tests": [
+        "tools/test_s03_u367_contraps.js"
+      ],
+      "evidence": "Text (carddata). a battle with an opposing monster puts a ゲートカウンター on it; in the Main Phase it is sent to the Graveyard to Special Summon a hand monster of Level up to the counters (ワイト); nothing happens without counters. Test: tools/test_s03_u367_contraps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "クローザー・フォレスト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U367",
+      "tests": [
+        "tools/test_s03_u367_contraps.js"
+      ],
+      "evidence": "Text (carddata). Field Spell: my Beast (イビル・ラット 750) gets +100 per monster in my Graveyard (3 -> 1050); while it is face-up no other Field Spell can be activated; destroyed (サイクロン) it still blocks Field Spells that turn, and not in a later turn. Test: tools/test_s03_u367_contraps.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

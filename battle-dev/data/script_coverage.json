@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 627,
+    "NOT_STARTED": 623,
     "PARTIAL": 30,
-    "TESTED": 3223
+    "TESTED": 3227
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,9 +116,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1510,
     "sin": 5,
-    "unified": 1198
+    "unified": 1202
   },
-  "static_registration_name_count": 3234,
+  "static_registration_name_count": 3238,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -20510,12 +20510,20 @@
       "subtype": "フィールド",
       "date": "2011-04-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZC_claude_s03_u367_contraps.js",
+          "line": 99
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u367_contraps.js"
+      ]
     },
     {
       "index": 929,
@@ -22132,12 +22140,20 @@
       "subtype": "永続",
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZC_claude_s03_u367_contraps.js",
+          "line": 39
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u367_contraps.js"
+      ]
     },
     {
       "index": 1006,
@@ -30318,13 +30334,20 @@
       "subtype": "永続",
       "date": "2008-04-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZC_claude_s03_u367_contraps.js",
+          "line": 65
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u194_spells_traps.js"
+        "tools\\test_s03_u194_spells_traps.js",
+        "tools\\test_s03_u367_contraps.js"
       ]
     },
     {
@@ -76624,12 +76647,20 @@
       "subtype": "永続",
       "date": "2004-05-27",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZC_claude_s03_u367_contraps.js",
+          "line": 16
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u367_contraps.js"
+      ]
     },
     {
       "index": 3564,

@@ -657,6 +657,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u363_fusion_subs.js')],check=Tru
 subprocess.run(['node',str(ROOT/'tools/test_s03_u364_counters3.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u365_tenma.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u366_battletraps.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u367_contraps.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
