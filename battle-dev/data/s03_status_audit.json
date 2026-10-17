@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 609,
+    "NOT_STARTED": 605,
     "PARTIAL": 16,
-    "TESTED": 3255
+    "TESTED": 3259
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -698,
+    "NOT_STARTED": -702,
     "PARTIAL": -166,
-    "TESTED": 1206
+    "TESTED": 1210
   },
   "status_changes": [
     {
@@ -2887,6 +2887,12 @@
       "unit": "S03-U357"
     },
     {
+      "name": "ハーピィ・レディ・SB",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U375"
+    },
+    {
       "name": "ハーピィ・レディ三姉妹",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2945,6 +2951,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U202"
+    },
+    {
+      "name": "バーサーキング",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U375"
     },
     {
       "name": "バード・フェイス",
@@ -6079,6 +6091,12 @@
       "unit": "S03-U255"
     },
     {
+      "name": "異次元への隙間",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U375"
+    },
+    {
       "name": "異次元グランド",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6455,6 +6473,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U341"
+    },
+    {
+      "name": "能力吸収石",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U375"
     },
     {
       "name": "能力調整",

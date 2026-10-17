@@ -12173,6 +12173,46 @@
         "tools/test_s03_u374_autotable3.js"
       ],
       "evidence": "Text (carddata). ① discard 1: every Level 4 or lower Fish in the Deck that fits is Special Summoned, negated and unable to attack, once per turn; limited by free Monster Zones. ② when an effect targets it, release another Fish: negate and destroy (offered only for the targeted card and with a Fish to release). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u374_autotable3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ハーピィ・レディ・SB",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U375",
+      "tests": [
+        "tools/test_s03_u375_traps2.js"
+      ],
+      "evidence": "Text (carddata). The carddata row carries the alias of ハーピィ・レディ; the card is registered as a continuous-text-only script. Test: バード・フェイス's Deck search offers it as a ハーピィ・レディ (and not ハーピィ・ガール), sameCanonicalCardV4 true. Test: tools/test_s03_u375_traps2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "異次元への隙間",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U375",
+      "tests": [
+        "tools/test_s03_u375_traps2.js"
+      ],
+      "evidence": "Text (carddata). Normal Trap: the attribute is declared at activation, two monsters of that attribute are chosen across both Graveyards and banished; the unchosen ones stay; refused when no attribute has two Graveyard monsters. Test: tools/test_s03_u375_traps2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "バーサーキング",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U375",
+      "tests": [
+        "tools/test_s03_u375_traps2.js"
+      ],
+      "evidence": "Text (carddata). Continuous Trap: the card activation does nothing (ruling 10/09/23), the face-up effect is activated separately: my Main Phase or the opponent's Battle Phase, once per turn, two Beast targets; the first halved, the second gains that amount until the End Phase; refused with one Beast, in my Battle Phase. Test: tools/test_s03_u375_traps2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "能力吸収石",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U375",
+      "tests": [
+        "tools/test_s03_u375_traps2.js"
+      ],
+      "evidence": "Text (carddata). Continuous Trap: each monster effect activation adds a 魔石 counter (max 2); with 2 every face-up monster is negated and no new monster effect can be activated; the End Phase removes all counters and the monsters work again. Test: tools/test_s03_u375_traps2.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

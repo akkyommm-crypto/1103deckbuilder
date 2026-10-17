@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 609,
+    "NOT_STARTED": 605,
     "PARTIAL": 16,
-    "TESTED": 3255
+    "TESTED": 3259
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,11 +114,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1519,
+    "legacy": 1521,
     "sin": 5,
-    "unified": 1219
+    "unified": 1221
   },
-  "static_registration_name_count": 3266,
+  "static_registration_name_count": 3270,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -43271,12 +43271,20 @@
       "subtype": null,
       "date": "2001-05-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZK_claude_s03_u375_traps2.js",
+          "line": 15
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u375_traps2.js"
+      ]
     },
     {
       "index": 1996,
@@ -44362,12 +44370,20 @@
       "subtype": "永続",
       "date": "2009-02-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZK_claude_s03_u375_traps2.js",
+          "line": 83
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u375_traps2.js"
+      ]
     },
     {
       "index": 2048,
@@ -89185,12 +89201,20 @@
       "subtype": "",
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZK_claude_s03_u375_traps2.js",
+          "line": 31
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u375_traps2.js"
+      ]
     },
     {
       "index": 4155,
@@ -94770,12 +94794,20 @@
       "subtype": "永続",
       "date": "2010-07-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZK_claude_s03_u375_traps2.js",
+          "line": 94
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u375_traps2.js"
+      ]
     },
     {
       "index": 4420,
