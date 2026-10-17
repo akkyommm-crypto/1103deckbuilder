@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 531,
+    "NOT_STARTED": 528,
     "PARTIAL": 10,
-    "TESTED": 3339
+    "TESTED": 3342
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -776,
+    "NOT_STARTED": -779,
     "PARTIAL": -172,
-    "TESTED": 1290
+    "TESTED": 1293
   },
   "status_changes": [
     {
@@ -2449,6 +2449,12 @@
       "unit": "S03-U219"
     },
     {
+      "name": "デコイドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U398"
+    },
+    {
       "name": "デコイロイド",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4849,6 +4855,12 @@
       "unit": "S03-U144"
     },
     {
+      "name": "召喚僧サモンプリースト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U398"
+    },
+    {
       "name": "召喚制限－パワーフィルター",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6851,6 +6863,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U261"
+    },
+    {
+      "name": "聖なるあかり",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U398"
     },
     {
       "name": "聖なるバリア －ミラーフォース－",

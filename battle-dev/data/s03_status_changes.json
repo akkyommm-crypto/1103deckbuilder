@@ -13013,6 +13013,36 @@
         "tools/test_s03_u397_cat.js"
       ],
       "evidence": "Exact script. Text (carddata). Once-per-turn ignition targeting a Set Spell / Trap of the opponent (not offered without one): while the monster stands face-up that Set card cannot be activated (activationLockS03 over a zone-local uid list), checked in the opponent turn against a control without it. Test: tools/test_s03_u397_cat.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "聖なるあかり",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U398",
+      "tests": [
+        "tools/test_s03_u398_light.js"
+      ],
+      "evidence": "Exact script. Text (carddata). DARK monsters cannot declare an attack (ブラック・マジシャン flagged; a LIGHT attacker can); attacking a DARK monster (ATK 2500) with it: not destroyed and 0 battle damage to me (protectV21 battle with ctx.opponentCard + continuous battleDamage); neither player can Normal or Special Summon DARK monsters (ワイト locked, 青眼の白龍 not) via summonLockS03. Test: tools/test_s03_u398_light.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "召喚僧サモンプリースト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U398",
+      "tests": [
+        "tools/test_s03_u398_light.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Summoned -> Defense Position (forced trigger; the Flip Summon trigger has the same body); cannot be Tributed for an Advance Summon (noAdvanceTributeS03; known limit: a Release as an effect cost is not intercepted); once-per-turn ignition: a Spell discarded (cost), a Level 4 monster Special Summoned from the Deck which cannot attack this turn (cannotAttackTurn stamp); not offered without a Spell in hand. Test: tools/test_s03_u398_light.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デコイドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U398",
+      "tests": [
+        "tools/test_s03_u398_light.js"
+      ],
+      "evidence": "Exact script. Text (carddata). When attacked: a Level 7 or higher Dragon (青眼の白龍) of my Graveyard is Special Summoned and the attack is moved to it (API.redirectAttack): ブラック・マジシャン destroyed, the Decoy survives; without such a Dragon the attack proceeds and the Decoy is destroyed. Test: tools/test_s03_u398_light.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
