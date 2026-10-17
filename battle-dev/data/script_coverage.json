@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 521,
+    "NOT_STARTED": 516,
     "PARTIAL": 10,
-    "TESTED": 3349
+    "TESTED": 3354
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -115,11 +115,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1555,
+    "legacy": 1559,
     "sin": 5,
-    "unified": 1273
+    "unified": 1274
   },
-  "static_registration_name_count": 3359,
+  "static_registration_name_count": 3364,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -12628,12 +12628,20 @@
       "subtype": "永続",
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZK_claude_s03_u401_ouija.js",
+          "line": 34
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u401_ouija.js"
+      ]
     },
     {
       "index": 555,
@@ -83259,12 +83267,20 @@
       "subtype": "永続",
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZK_claude_s03_u401_ouija.js",
+          "line": 27
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u401_ouija.js"
+      ]
     },
     {
       "index": 3855,
@@ -83274,12 +83290,20 @@
       "subtype": "永続",
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZK_claude_s03_u401_ouija.js",
+          "line": 26
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u401_ouija.js"
+      ]
     },
     {
       "index": 3856,
@@ -83289,12 +83313,20 @@
       "subtype": "永続",
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZK_claude_s03_u401_ouija.js",
+          "line": 29
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u401_ouija.js"
+      ]
     },
     {
       "index": 3857,
@@ -83304,12 +83336,20 @@
       "subtype": "永続",
       "date": "2002-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZK_claude_s03_u401_ouija.js",
+          "line": 28
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u401_ouija.js"
+      ]
     },
     {
       "index": 3858,

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 521,
+    "NOT_STARTED": 516,
     "PARTIAL": 10,
-    "TESTED": 3349
+    "TESTED": 3354
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -786,
+    "NOT_STARTED": -791,
     "PARTIAL": -172,
-    "TESTED": 1300
+    "TESTED": 1305
   },
   "status_changes": [
     {
@@ -1025,6 +1025,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U231"
+    },
+    {
+      "name": "ウィジャ盤",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U401"
     },
     {
       "name": "ウィード",
@@ -5999,6 +6005,30 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U192"
+    },
+    {
+      "name": "死のメッセージ「A」",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U401"
+    },
+    {
+      "name": "死のメッセージ「E」",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U401"
+    },
+    {
+      "name": "死のメッセージ「H」",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U401"
+    },
+    {
+      "name": "死のメッセージ「T」",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U401"
     },
     {
       "name": "死の演算盤",

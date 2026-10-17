@@ -13113,6 +13113,56 @@
         "tools/test_s03_u400_coffin.js"
       ],
       "evidence": "Exact script. Text (carddata). Cannot be Normal Summoned; Special Summonable only for the reason 第一の棺 (engine/1ZK text rule; refused for 死者蘇生); on its Special Summon up to 4 Level 2 or lower Undead Normal Monsters of the Graveyard are Special Summoned (4 chosen of 5 in the test). Test: tools/test_s03_u400_coffin.js (Replay audit). Known small deviation: when a coffin leaves the field the others are sent to the Graveyard by the engine's field-dependent self-destruction, which records a destruction instead of a plain 'sent'."
+    },
+    {
+      "name": "ウィジャ盤",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U401",
+      "tests": [
+        "tools/test_s03_u401_ouija.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap: activated; at each OPPONENT End Phase a forced trigger puts the next 「死のメッセージ」 in the order E, A, T, H from the hand / Deck face-up into my Spell & Trap Zone; when the Ouija Board and all four stand there I win the Duel (NEW field form specialWinS03:{field:[names]} of engine/1ZZL, checked after every Action; the opponent loses with reason specialWin); when one of the cards leaves the field the others go to the Graveyard (selfDestroyWhenS03). Test: tools/test_s03_u401_ouija.js (Replay audit). Known small deviation: the 'all go to the Graveyard' clause is the engine's field-dependent self-destruction (recorded as a destruction instead of a plain 'sent')."
+    },
+    {
+      "name": "死のメッセージ「E」",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U401",
+      "tests": [
+        "tools/test_s03_u401_ouija.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A Spell that cannot be activated or Set by the player (every activation refused); it only enters the field through ウィジャ盤 (first, from the hand). Test: tools/test_s03_u401_ouija.js (Replay audit). Known small deviation: the 'all go to the Graveyard' clause is the engine's field-dependent self-destruction (recorded as a destruction instead of a plain 'sent')."
+    },
+    {
+      "name": "死のメッセージ「A」",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U401",
+      "tests": [
+        "tools/test_s03_u401_ouija.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Same; second letter (from the hand). Test: tools/test_s03_u401_ouija.js (Replay audit). Known small deviation: the 'all go to the Graveyard' clause is the engine's field-dependent self-destruction (recorded as a destruction instead of a plain 'sent')."
+    },
+    {
+      "name": "死のメッセージ「T」",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U401",
+      "tests": [
+        "tools/test_s03_u401_ouija.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Same; third letter (from the Deck). Test: tools/test_s03_u401_ouija.js (Replay audit). Known small deviation: the 'all go to the Graveyard' clause is the engine's field-dependent self-destruction (recorded as a destruction instead of a plain 'sent')."
+    },
+    {
+      "name": "死のメッセージ「H」",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U401",
+      "tests": [
+        "tools/test_s03_u401_ouija.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Same; fourth letter (from the Deck); with it the Ouija Board wins. Test: tools/test_s03_u401_ouija.js (Replay audit). Known small deviation: the 'all go to the Graveyard' clause is the engine's field-dependent self-destruction (recorded as a destruction instead of a plain 'sent')."
     }
   ],
   "restored_to_baseline": [
