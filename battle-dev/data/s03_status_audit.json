@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 503,
+    "NOT_STARTED": 500,
     "PARTIAL": 10,
-    "TESTED": 3367
+    "TESTED": 3370
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -804,
+    "NOT_STARTED": -807,
     "PARTIAL": -172,
-    "TESTED": 1318
+    "TESTED": 1321
   },
   "status_changes": [
     {
@@ -4351,6 +4351,12 @@
       "unit": "S03-U395"
     },
     {
+      "name": "不退の荒武者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U406"
+    },
+    {
       "name": "世界樹",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4991,6 +4997,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U258"
+    },
+    {
+      "name": "地獄の傀儡魔人",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U406"
     },
     {
       "name": "地獄の暴走召喚",
@@ -7715,6 +7727,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U380"
+    },
+    {
+      "name": "魔人 ダーク・バルター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U406"
     },
     {
       "name": "魔力の棘",

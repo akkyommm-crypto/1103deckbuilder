@@ -13293,6 +13293,36 @@
         "tools/test_s03_u405_fusions.js"
       ],
       "evidence": "Exact script. Text (carddata). Continuous piercing damage: ATK 3000 vs a Defense Position ブラック・マジシャン (DEF 2100) destroys it and deals 900 battle damage; an Attack Position target only the normal damage. Test: tools/test_s03_u405_fusions.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "地獄の傀儡魔人",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U406",
+      "tests": [
+        "tools/test_s03_u406_puppet.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Once-per-turn ignition with a hand discard cost: both Level 1 ワイト of the opponent come under my control until the End Phase (changeControl endPhase, noTribute) while the Level 4 ライオウ stays; the controlled monsters have their effects negated, cannot be Tributed or used as Synchro material (stamp); they return at the End Phase; not offered with only a Level 4 monster on the opponent field. Test: tools/test_s03_u406_puppet.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔人 ダーク・バルター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U406",
+      "tests": [
+        "tools/test_s03_u406_puppet.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Quick effect (declareActivationResponseS03) answering the activation of a Normal Spell (ブラック・ホール, DB sub empty): 1000 LP paid and its effect negated (API.negateChainLink 'effect'), so nothing is destroyed; without the response the Spell resolves; a Quick-Play Spell (サイクロン) is not offered; the battle clause is declareBattleDestroyedNegatorS03 (S03-U336). Test: tools/test_s03_u406_puppet.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "不退の荒武者",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U406",
+      "tests": [
+        "tools/test_s03_u406_puppet.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Attacked by 青眼の白龍 (ATK 3000 > 2400) it is not destroyed (protectV21 battle, ctx.battleRole defender) and the attacker is destroyed after the damage calculation (onDamageStep step leave); when it attacks the stronger monster itself it is destroyed. Test: tools/test_s03_u406_puppet.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

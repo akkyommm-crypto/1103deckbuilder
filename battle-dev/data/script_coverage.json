@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 503,
+    "NOT_STARTED": 500,
     "PARTIAL": 10,
-    "TESTED": 3367
+    "TESTED": 3370
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,9 +117,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1563,
     "sin": 5,
-    "unified": 1283
+    "unified": 1286
   },
-  "static_registration_name_count": 3377,
+  "static_registration_name_count": 3380,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -63711,12 +63711,20 @@
       "subtype": null,
       "date": "2010-11-20",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZP_claude_s03_u406_puppet.js",
+          "line": 72
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u406_puppet.js"
+      ]
     },
     {
       "index": 2941,
@@ -70322,12 +70330,20 @@
       "subtype": null,
       "date": "2011-04-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZP_claude_s03_u406_puppet.js",
+          "line": 14
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u406_puppet.js"
+      ]
     },
     {
       "index": 3247,
@@ -104839,12 +104855,20 @@
       "subtype": null,
       "date": "2001-09-20",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZP_claude_s03_u406_puppet.js",
+          "line": 57
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u406_puppet.js"
+      ]
     },
     {
       "index": 4855,
