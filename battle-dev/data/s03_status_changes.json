@@ -12893,6 +12893,36 @@
         "tools/test_s03_u393_seal.js"
       ],
       "evidence": "Exact script. Text (carddata). Continuous Spell (also activatable from the hand): after my hand-limit discard in the End Phase a monster among the discarded cards can be Special Summoned, only one (NEW hook handLimitDiscardS03 in engine/1ZZJ with a confirm and a card choice); nothing when only Spells were discarded. Test: tools/test_s03_u393_seal.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "リニアキャノン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U394",
+      "tests": [
+        "tools/test_s03_u394_cannon.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Spell: a monster of mine sacrificed (cost), half of its original ATK (2500 -> 1250) as damage to the opponent; no other Spell Card of mine can be activated for the rest of the turn (a lingering activationLockS03; over in my next turn); not activatable without a monster. Test: tools/test_s03_u394_cannon.js (Replay audit). No other known deviation."
+    },
+    {
+      "name": "絶対不可侵領域",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U394",
+      "tests": [
+        "tools/test_s03_u394_cannon.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Trap, only in my own Standby Phase (refused in the Main Phase): a hand card discarded (cost); the opponent cannot Normal Summon or Special Summon in their next turn (banSummonS03 for turn+1 only; none in the activation turn, over afterwards). Test: tools/test_s03_u394_cannon.js (Replay audit). No other known deviation."
+    },
+    {
+      "name": "極限への衝動",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U394",
+      "tests": [
+        "tools/test_s03_u394_cannon.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Trap: two hand cards to the Graveyard (cost), two ソウルトークン (Fiend, DARK, Level 1, ATK/DEF 0) Special Summoned, usable as Tributes for an Advance Summon; refused with one hand card or with fewer than two free Monster Zones. Known limit (same as the U388 cloud Tokens): a Release as the cost of an effect is not intercepted. Test: tools/test_s03_u394_cannon.js (Replay audit). No other known deviation."
     }
   ],
   "restored_to_baseline": [

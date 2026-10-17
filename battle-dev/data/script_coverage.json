@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 541,
+    "NOT_STARTED": 538,
     "PARTIAL": 12,
-    "TESTED": 3327
+    "TESTED": 3330
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -115,11 +115,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1548,
+    "legacy": 1551,
     "sin": 5,
     "unified": 1259
   },
-  "static_registration_name_count": 3338,
+  "static_registration_name_count": 3341,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -58146,12 +58146,20 @@
       "subtype": "",
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZD_claude_s03_u394_cannon.js",
+          "line": 14
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u394_cannon.js"
+      ]
     },
     {
       "index": 2694,
@@ -82227,12 +82235,20 @@
       "subtype": "",
       "date": "2009-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZD_claude_s03_u394_cannon.js",
+          "line": 59
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u394_cannon.js"
+      ]
     },
     {
       "index": 3810,
@@ -94334,12 +94350,20 @@
       "subtype": "",
       "date": "2002-05-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZD_claude_s03_u394_cannon.js",
+          "line": 39
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u394_cannon.js"
+      ]
     },
     {
       "index": 4379,

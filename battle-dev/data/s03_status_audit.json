@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 541,
+    "NOT_STARTED": 538,
     "PARTIAL": 12,
-    "TESTED": 3327
+    "TESTED": 3330
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -766,
+    "NOT_STARTED": -769,
     "PARTIAL": -170,
-    "TESTED": 1278
+    "TESTED": 1281
   },
   "status_changes": [
     {
@@ -3871,6 +3871,12 @@
       "unit": "S03-U235"
     },
     {
+      "name": "リニアキャノン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U394"
+    },
+    {
       "name": "リバース・オブ・ネオス",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -5863,6 +5869,12 @@
       "unit": "S03-U191"
     },
     {
+      "name": "極限への衝動",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U394"
+    },
+    {
       "name": "樹海の射手",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6761,6 +6773,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U188"
+    },
+    {
+      "name": "絶対不可侵領域",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U394"
     },
     {
       "name": "絶対服従魔人",
