@@ -12803,6 +12803,36 @@
         "tools/test_s03_u390_partials.js"
       ],
       "evidence": "Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Text (carddata). Continuous Spell activated from the hand when no Normal Summon was made (refused after one); while face-up I cannot Normal Summon (the opponent can); my 巨大戦艦 destroyed -> at the End Phase a 巨大戦艦 of the Deck is Special Summoned (yes / no). Test: tools/test_s03_u390_partials.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "重力崩壊",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U391",
+      "tests": [
+        "tools/test_s03_u391_gravity.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Counter Trap: a face-up Synchro Monster of mine sent to the Graveyard (cost); the opponent's Normal Summon negated and the monster destroyed, the Special Summon effect of 死者蘇生 negated; the opponent then cannot Normal / Flip / Special Summon until the end of the turn (banSummonS03; not mine; over after the End Phase); not offered without a Synchro Monster or against my own summon. Test: tools/test_s03_u391_gravity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "賢者の聖杯",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U391",
+      "tests": [
+        "tools/test_s03_u391_gravity.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Spell: only with no monster on my field; the chosen monster of the opponent's Graveyard Special Summoned to my field, cannotTribute and not Synchro material this turn, control returns to the opponent at the End Phase (scheduled changeControl); refused with a monster on my field or only a Spell in the opponent's Graveyard. Test: tools/test_s03_u391_gravity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スクリーン・オブ・レッド",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U391",
+      "tests": [
+        "tools/test_s03_u391_gravity.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap: 1000 LP paid at my End Phase (destroyed when I cannot pay; not charged in the opponent's End Phase); while face-up the opponent's monsters cannot declare an attack; effect 2: with レッド・デーモンズ・ドラゴン on the field it destroys itself and Special Summons a Level 1 Tuner from my Graveyard (not offered without the Dragon). Test: tools/test_s03_u391_gravity.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

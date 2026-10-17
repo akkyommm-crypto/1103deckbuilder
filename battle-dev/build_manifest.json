@@ -1588,6 +1588,9 @@
   "path": "cards/HZZZZZZZZZ_claude_s03_u390_partials.js"
  },
  {
+  "path": "cards/HZZZZZZZZZA_claude_s03_u391_gravity.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

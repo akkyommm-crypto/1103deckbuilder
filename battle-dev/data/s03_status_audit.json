@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 550,
+    "NOT_STARTED": 547,
     "PARTIAL": 12,
-    "TESTED": 3318
+    "TESTED": 3321
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -757,
+    "NOT_STARTED": -760,
     "PARTIAL": -170,
-    "TESTED": 1269
+    "TESTED": 1272
   },
   "status_changes": [
     {
@@ -2147,6 +2147,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U210"
+    },
+    {
+      "name": "スクリーン・オブ・レッド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U391"
     },
     {
       "name": "スケイルモース",
@@ -6955,6 +6961,12 @@
       "unit": "S03-U201"
     },
     {
+      "name": "賢者の聖杯",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U391"
+    },
+    {
       "name": "赤蟻アスカトル",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -7115,6 +7127,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U344"
+    },
+    {
+      "name": "重力崩壊",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U391"
     },
     {
       "name": "野生の咆哮",
