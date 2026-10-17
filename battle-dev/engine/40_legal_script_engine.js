@@ -808,6 +808,9 @@ const API = {
     /* S03-U127: 正規の方法で特殊召喚されていない特殊召喚モンスター */
     const properS03 = (!ignoreCondS03 && before && typeof properlySummonedReasonS03==='function') ? properlySummonedReasonS03(before, extra.summonKind||null, reason, from) : '';
     if(properS03){ trace(`specialSummon blocked: ${properS03}`,false); showToast(properS03); logIt(gameState, `${reason||'効果'}：${properS03}`); return false; }
+    /* S03-U358: 「このカードは墓地からの特殊召喚はできない」 */
+    const noGraveS03 = (!ignoreCondS03 && before && typeof noGraveSummonReasonS03==='function') ? noGraveSummonReasonS03(before, from) : '';
+    if(noGraveS03){ trace(`specialSummon blocked: ${noGraveS03}`,false); showToast(noGraveS03); logIt(gameState, `${reason||'効果'}：${noGraveS03}`); return false; }
     trace(`specialSummon: ${from}[${index}] → ${pos||'atk'}`);
     act(Object.assign({type:"FX_SPECIAL_SUMMON", player:p, fromPlayer:sp, from, fromIndex:index, pos:pos||'atk', reason}, extra));
     // System v3.4.0: 特殊召喚が制約等で失敗した時、既存の最後尾モンスターを誤って「召喚成功」にしない。

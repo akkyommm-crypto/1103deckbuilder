@@ -11503,6 +11503,36 @@
         "tools/test_s03_u357_rituals.js"
       ],
       "evidence": "Text (carddata). ignition (once per turn): a Spell discarded from the hand as the cost, the opposing 青眼の白龍 is mine until the End Phase and returns then; not activatable without a Spell in hand (a monster in hand does not count). Test: tools/test_s03_u357_rituals.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ZERO－MAX",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U358",
+      "tests": [
+        "tools/test_s03_u358_infernity.js"
+      ],
+      "evidence": "Text (carddata). with an empty hand: インフェルニティ・デストロイヤー (ATK 2300) Special Summoned from the Graveyard, the face-up monsters with lower ATK on both fields destroyed (ワイト x2), 青眼の白龍 (3000) survives, and the Battle Phase cannot be entered; refused with another card in hand or without an Infernity monster in the Graveyard. Test: tools/test_s03_u358_infernity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "インフェルニティ・ミラージュ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U358",
+      "tests": [
+        "tools/test_s03_u358_infernity.js"
+      ],
+      "evidence": "Text (carddata). empty hand: released, two Infernity monsters Special Summoned from the Graveyard; refused with a card in hand or with only one Infernity in the Graveyard; it cannot be Special Summoned from the Graveyard (死者蘇生 does not revive it - new engine rule noGraveSummonReasonS03 read from the card text), other monsters are revived normally. Test: tools/test_s03_u358_infernity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "インフェルニティ・リフレクター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U358",
+      "tests": [
+        "tools/test_s03_u358_infernity.js"
+      ],
+      "evidence": "Text (carddata). my デストロイヤー destroyed by 青眼の白龍 in battle: the trap Special Summoned it back, discarded the whole hand and dealt 1000; a non-Infernity monster destroyed in battle does not trigger it. Test: tools/test_s03_u358_infernity.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

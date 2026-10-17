@@ -115,6 +115,12 @@ function sweepProperlySummonedS03(gs){
 /* S03-U144: can this card be Special Summoned by this effect from this zone? For candidate lists (e.g. 死者蘇生), so that a card
    the summon would refuse (「特殊召喚できない」, a 「〜でしか」 condition, or a special-summon monster that was never properly
    summoned) is not offered as a target in the first place. */
+/* S03-U358: 「このカードは墓地からの特殊召喚はできない」 (インフェルニティ・ミラージュ / ハ・デス / 地獄詩人ヘルポエマー) — a standing rule read from the card text; applies to every effect Special Summon from the Graveyard. */
+function noGraveSummonReasonS03(card, from){
+  if(!card || from!=='grave') return '';
+  const d = (typeof dbOf==='function') ? dbOf(card) : null;
+  return (d && /このカードは墓地からの特殊召喚はできない/.test(String(d.e||''))) ? `${cardName(card)}は墓地から特殊召喚できません` : '';
+}
 function canEffectSpecialSummonS03(card, from, reason, summonKind){
   if(!card) return false;
   const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
@@ -124,5 +130,6 @@ function canEffectSpecialSummonS03(card, from, reason, summonKind){
   if(typeof scriptSpecialSummonLockS03==='function'){ const l = (typeof locateCard==='function') ? locateCard(card) : null; if(scriptSpecialSummonLockS03(l && (l.p===0||l.p===1) ? l.p : 0, dbOf(card))) return false; }
   if(summonOnlyReasonS03(card, summonKind||null, reason)) return false;
   if(properlySummonedReasonS03(card, summonKind||null, reason, from)) return false;
+  if(noGraveSummonReasonS03(card, from)) return false;
   return true;
 }

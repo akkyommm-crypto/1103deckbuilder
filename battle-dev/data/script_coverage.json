@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 662,
+    "NOT_STARTED": 659,
     "PARTIAL": 30,
-    "TESTED": 3188
+    "TESTED": 3191
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -112,11 +112,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1501,
+    "legacy": 1503,
     "sin": 5,
-    "unified": 1176
+    "unified": 1177
   },
-  "static_registration_name_count": 3199,
+  "static_registration_name_count": 3202,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -7391,12 +7391,20 @@
       "subtype": "",
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZT_claude_s03_u358_infernity.js",
+          "line": 17
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u358_infernity.js"
+      ]
     },
     {
       "index": 316,
@@ -11878,13 +11886,20 @@
       "subtype": null,
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZT_claude_s03_u358_infernity.js",
+          "line": 43
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u241_ns29.js"
+        "tools\\test_s03_u241_ns29.js",
+        "tools\\test_s03_u358_infernity.js"
       ]
     },
     {
@@ -11895,12 +11910,20 @@
       "subtype": "",
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZT_claude_s03_u358_infernity.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u358_infernity.js"
+      ]
     },
     {
       "index": 526,
