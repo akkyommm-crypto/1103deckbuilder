@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 500,
+    "NOT_STARTED": 497,
     "PARTIAL": 10,
-    "TESTED": 3370
+    "TESTED": 3373
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -807,
+    "NOT_STARTED": -810,
     "PARTIAL": -172,
-    "TESTED": 1321
+    "TESTED": 1324
   },
   "status_changes": [
     {
@@ -1813,6 +1813,12 @@
       "unit": "S03-U111"
     },
     {
+      "name": "サンダー・ユニコーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U407"
+    },
+    {
       "name": "サンライズ・ガードナー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2063,6 +2069,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U388"
+    },
+    {
+      "name": "ジュラック・タイタン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U407"
     },
     {
       "name": "ジュラック・デイノ",
@@ -6671,6 +6683,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U363"
+    },
+    {
+      "name": "破壊竜ガンドラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U407"
     },
     {
       "name": "破壊輪",

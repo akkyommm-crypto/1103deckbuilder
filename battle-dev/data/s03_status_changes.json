@@ -13323,6 +13323,36 @@
         "tools/test_s03_u406_puppet.js"
       ],
       "evidence": "Exact script. Text (carddata). Attacked by 青眼の白龍 (ATK 3000 > 2400) it is not destroyed (protectV21 battle, ctx.battleRole defender) and the attacker is destroyed after the damage calculation (onDamageStep step leave); when it attacks the stronger monster itself it is destroyed. Test: tools/test_s03_u406_puppet.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジュラック・タイタン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U407",
+      "tests": [
+        "tools/test_s03_u407_titan.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Cannot be Special Summoned; while face-up it cannot be targeted by a Trap (強制脱出装置: only ワイト is offered) nor by an Effect Monster effect (氷結界の龍 グングニール) - continuous.immuneToTarget with u378Source; once-per-turn ignition banishing a 「ジュラック」 (ATK 1700 or less) of the Graveyard (cost): ATK 3000 + 1000 = 4000 until the End Phase; not offered without such a monster. Test: tools/test_s03_u407_titan.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サンダー・ユニコーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U407",
+      "tests": [
+        "tools/test_s03_u407_titan.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Once-per-turn ignition choosing a face-up opponent monster: 青眼の白龍 ATK 3000 - 500 x my 2 monsters = 2000 until the End Phase; in that turn my other monsters cannot attack while the Unicorn can; not offered without a face-up opponent monster. Test: tools/test_s03_u407_titan.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "破壊竜ガンドラ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U407",
+      "tests": [
+        "tools/test_s03_u407_titan.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Cannot be Special Summoned; ignition: half of my LP (8000 -> 4000) paid, every other card of the field (my ワイト, 青眼, the Set 激流葬) is destroyed and banished and the Dragon gains 300 each (ATK 900); summoned (Normal / Flip) in the turn it goes to the Graveyard at the End Phase, otherwise it stays. Test: tools/test_s03_u407_titan.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
