@@ -12693,6 +12693,46 @@
         "tools/test_s03_u387_control.js"
       ],
       "evidence": "Text (carddata). Continuous Trap: at the opponent's Standby Phase the chosen face-up card (ライオウ) is negated for that turn only; at my Standby Phase yes -> 500 LP paid and it stays, no -> no payment and it is destroyed. Test: tools/test_s03_u387_control.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "雲魔物－羊雲",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U388",
+      "tests": [
+        "tools/test_s03_u388_tokens_dragunity.js"
+      ],
+      "evidence": "Text (carddata). Destroyed by battle: two 雲魔物トークン (天使族・水・星1・0/0) in Defense Position; the tokens can be Tributed only for a monster with 「雲魔物」 in its name (not for 青眼の白龍); with only one free Monster Zone no token appears (two are summoned). Test: tools/test_s03_u388_tokens_dragunity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジュラック・スタウリコ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U388",
+      "tests": [
+        "tools/test_s03_u388_tokens_dragunity.js"
+      ],
+      "evidence": "Text (carddata). Destroyed by battle: two ジュラックトークン (恐竜族・炎・星1・0/0) in Defense Position, Tribute-restricted to monsters with 「ジュラック」 in their name (new token flag advanceTributeOnlyForS03). Test: tools/test_s03_u388_tokens_dragunity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ドラグニティ－ピルム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U388",
+      "tests": [
+        "tools/test_s03_u388_tokens_dragunity.js"
+      ],
+      "evidence": "Text (carddata). Normal Summoned: ドラグニティ－ドゥクス (Winged Beast) Special Summoned from the hand and the Pilum equipped to it (API.equipMonster); the equipped monster attacks directly through a defender and its battle damage is halved; nothing without a 「ドラグニティ」 Winged Beast in the hand. Test: tools/test_s03_u388_tokens_dragunity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ドラグニティアームズ－ミスティル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U388",
+      "tests": [
+        "tools/test_s03_u388_tokens_dragunity.js"
+      ],
+      "evidence": "Text (carddata). Special Summoned from the hand by sending a face-up 「ドラグニティ」 to the Graveyard (refused without one); on success a Dragon 「ドラグニティ」 of the Graveyard (ブラックスピア) is equipped to it (API.equipFromGrave). Test: tools/test_s03_u388_tokens_dragunity.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

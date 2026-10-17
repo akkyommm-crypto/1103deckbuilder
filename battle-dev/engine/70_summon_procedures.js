@@ -167,6 +167,7 @@ function tributeCandidates(p, targetDb){
      S03-U188: 黒焔トークン 「闇属性モンスター以外のアドバンス召喚のためにはリリースできない」 (card flag; needs the summoned monster's db) */
   return API.fieldCards({zone:'mz', player:p, filter:x=>x.card && !x.card.cannotTribute && !x.card.noAdvanceTributeS03
     && !(x.card.noAdvanceTributeNonDarkS03 && !(targetDb && targetDb.at==='闇'))
+    && !(x.card.advanceTributeOnlyForS03 && !(targetDb && String(targetDb.n||'').indexOf(x.card.advanceTributeOnlyForS03)>=0))   /* S03-U388: only for the Advance Summon of monsters whose name has it (雲魔物トークン / ジュラックトークン) */
     && !(()=>{ const v=(CARD_SCRIPTS[cardName(x.card)]||{}).noAdvanceTributeS03; try{ return typeof v==='function' ? !!v(x.card) : !!v; }catch(e){ return false; } })()});   /* S03-U266: a function form (きつね火: only while face-up) */
 }
 

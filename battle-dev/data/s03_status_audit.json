@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 557,
+    "NOT_STARTED": 553,
     "PARTIAL": 16,
-    "TESTED": 3307
+    "TESTED": 3311
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -750,
+    "NOT_STARTED": -754,
     "PARTIAL": -166,
-    "TESTED": 1258
+    "TESTED": 1262
   },
   "status_changes": [
     {
@@ -2017,6 +2017,12 @@
       "unit": "S03-U100"
     },
     {
+      "name": "ジュラック・スタウリコ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U388"
+    },
+    {
       "name": "ジュラック・デイノ",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2701,6 +2707,12 @@
       "unit": "S03-U276"
     },
     {
+      "name": "ドラグニティアームズ－ミスティル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U388"
+    },
+    {
       "name": "ドラグニティアームズ－レヴァテイン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2741,6 +2753,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U202"
+    },
+    {
+      "name": "ドラグニティ－ピルム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U388"
     },
     {
       "name": "ドラゴニック・ガード",
@@ -7223,6 +7241,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U237"
+    },
+    {
+      "name": "雲魔物－羊雲",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U388"
     },
     {
       "name": "雷帝ザボルグ",

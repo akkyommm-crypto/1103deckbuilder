@@ -941,6 +941,7 @@ const API = {
          atk:def.atk, def:def.def, lv:def.lv, ra:def.ra, at:def.at,
          pos:def.pos||'def', n:n||1}, def.noAdvanceTributeS03 ? {noAdvanceTributeS03:true} : {},
          def.noAdvanceTributeNonDarkS03 ? {noAdvanceTributeNonDarkS03:true} : {},
+         def.advanceTributeOnlyForS03 ? {advanceTributeOnlyForS03:String(def.advanceTributeOnlyForS03)} : {},
          Number(def.destroyDamageS03) > 0 ? {destroyDamageS03:Number(def.destroyDamageS03)} : {}));
     /* S03-U289: the summoning player chooses the position when the text gives none (engine/1ZZK) */
     if(typeof ssPositionQueueTokensS03==='function')   /* the text decides: a position written only in the script is not the text's */

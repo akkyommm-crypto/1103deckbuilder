@@ -2432,6 +2432,7 @@ function applyActionBodyV31(gs, a){
         if(a.copiedFromUid != null) t.tokenV11.copiedFromUid = a.copiedFromUid;
         if(a.noAdvanceTributeS03) t.noAdvanceTributeS03 = true;   /* S03-U129: アドバンス召喚のためにはリリースできない */
         if(a.noAdvanceTributeNonDarkS03) t.noAdvanceTributeNonDarkS03 = true;
+        if(a.advanceTributeOnlyForS03) t.advanceTributeOnlyForS03 = String(a.advanceTributeOnlyForS03);   /* S03-U388: 「○○と名のついたカード以外の生け贄召喚のための生け贄にはできない」 */
         if(Number(a.destroyDamageS03) > 0) t.destroyDamageS03 = Number(a.destroyDamageS03);   /* S03-U195: おジャマトークン */   /* S03-U188: 闇属性以外のアドバンス召喚のためにはリリースできない */
         P.mz.push(t);
         ensureCardUid(gs, t);
