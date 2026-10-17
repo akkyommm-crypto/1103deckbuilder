@@ -1537,6 +1537,9 @@
   "path": "cards/HZZZZZZZZK_claude_s03_u375_traps2.js"
  },
  {
+  "path": "cards/HZZZZZZZZL_claude_s03_u376_chainers.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

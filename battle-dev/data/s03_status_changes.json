@@ -12213,6 +12213,46 @@
         "tools/test_s03_u375_traps2.js"
       ],
       "evidence": "Text (carddata). Continuous Trap: each monster effect activation adds a 魔石 counter (max 2); with 2 every face-up monster is negated and no new monster effect can be activated; the End Phase removes all counters and the monsters work again. Test: tools/test_s03_u375_traps2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "獣人アレス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U376",
+      "tests": [
+        "tools/test_s03_u376_chainers.js"
+      ],
+      "evidence": "Text (carddata). A chain begins (chain link 1, e.g. サイクロン) -> permanent +500 ATK while face-up (stat modifier until it leaves / is turned face-down); two chains -> +1000; face-down -> nothing. The card's own carrier trigger is excluded so it does not start another count. Test: tools/test_s03_u376_chainers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "連爆魔人",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U376",
+      "tests": [
+        "tools/test_s03_u376_chainers.js"
+      ],
+      "evidence": "Text (carddata). A Spell / Trap chained (chain link 2, the opponent's set サイクロン in response) -> 500 damage to the opponent of the controller, once; a lone Spell (link 1) deals nothing. Test: tools/test_s03_u376_chainers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "紅蓮の炎壁",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U376",
+      "tests": [
+        "tools/test_s03_u376_chainers.js"
+      ],
+      "evidence": "Text (carddata). Quick-Play Spell: banish any number of 「ラヴァル」 monsters from the Graveyard as cost (free multi-pick, at most the free Monster Zones), then that many ラヴァルトークン (Pyro, FIRE, Lv1, 0/0) are Special Summoned in Defense Position; refused without a 「ラヴァル」 in the Graveyard. Test: tools/test_s03_u376_chainers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "地獄の暴走召喚",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U376",
+      "tests": [
+        "tools/test_s03_u376_chainers.js"
+      ],
+      "evidence": "Text (carddata). Quick-Play Spell: exactly one ATK 1500 or less monster Special Summoned on my field (死者蘇生) while the opponent has a face-up monster -> all my same-name monsters from hand / Deck / Graveyard are Special Summoned in Attack Position, the opponent chooses a face-up monster of theirs and Special Summons its same-name monsters; refused for ATK over 1500 and without an opposing face-up monster. Test: tools/test_s03_u376_chainers.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

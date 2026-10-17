@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 605,
+    "NOT_STARTED": 601,
     "PARTIAL": 16,
-    "TESTED": 3259
+    "TESTED": 3263
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,11 +114,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1521,
+    "legacy": 1523,
     "sin": 5,
-    "unified": 1221
+    "unified": 1223
   },
-  "static_registration_name_count": 3270,
+  "static_registration_name_count": 3274,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -70001,12 +70001,20 @@
       "subtype": "速攻",
       "date": "2005-10-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZL_claude_s03_u376_chainers.js",
+          "line": 95
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u376_chainers.js"
+      ]
     },
     {
       "index": 3249,
@@ -88051,12 +88059,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZL_claude_s03_u376_chainers.js",
+          "line": 20
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u376_chainers.js"
+      ]
     },
     {
       "index": 4099,
@@ -93131,12 +93147,20 @@
       "subtype": "速攻",
       "date": "2010-04-27",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZL_claude_s03_u376_chainers.js",
+          "line": 40
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u376_chainers.js"
+      ]
     },
     {
       "index": 4344,
@@ -98307,12 +98331,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZL_claude_s03_u376_chainers.js",
+          "line": 29
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u376_chainers.js"
+      ]
     },
     {
       "index": 4586,

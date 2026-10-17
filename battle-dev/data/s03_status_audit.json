@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 605,
+    "NOT_STARTED": 601,
     "PARTIAL": 16,
-    "TESTED": 3259
+    "TESTED": 3263
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -702,
+    "NOT_STARTED": -706,
     "PARTIAL": -166,
-    "TESTED": 1210
+    "TESTED": 1214
   },
   "status_changes": [
     {
@@ -4723,6 +4723,12 @@
       "unit": "S03-U258"
     },
     {
+      "name": "地獄の暴走召喚",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U376"
+    },
+    {
       "name": "地獄の門番イル・ブラッド",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6037,6 +6043,12 @@
       "unit": "S03-U225"
     },
     {
+      "name": "獣人アレス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U376"
+    },
+    {
       "name": "獣神機王バルバロスUr",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6365,6 +6377,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U200"
+    },
+    {
+      "name": "紅蓮の炎壁",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U376"
     },
     {
       "name": "素早いビッグハムスター",
@@ -6737,6 +6755,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U347"
+    },
+    {
+      "name": "連爆魔人",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U376"
     },
     {
       "name": "連鎖旋風",
