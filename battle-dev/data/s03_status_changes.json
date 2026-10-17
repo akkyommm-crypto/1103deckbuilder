@@ -11993,6 +11993,46 @@
         "tools/test_s03_u370_ritual_react.js"
       ],
       "evidence": "Text (carddata). the opponent's サイクロン activation: offered with an Angel in my hand; the Angel discarded, サイクロン negated and destroyed, my set card survives; not offered without an Angel in hand. Test: tools/test_s03_u370_ritual_react.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔知ガエル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U371",
+      "tests": [
+        "tools/test_s03_u371_misc5.js"
+      ],
+      "evidence": "Text (carddata). face-up its name is 「デスガエル」; the opponent cannot target my other monster (ワイト untouched); destroyed: 悪魔ガエル added from the Deck to my hand; with no other 「ガエル」 it is only destroyed. Test: tools/test_s03_u371_misc5.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "赤蟻アスカトル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U371",
+      "tests": [
+        "tools/test_s03_u371_misc5.js"
+      ],
+      "evidence": "Text (carddata). destroyed by battle (青眼の白龍): 3万年の白亀 (Level 5) Special Summoned from the Graveyard with its effect negated and sent to the Graveyard at the End Phase; with no Level 5 monster in the Graveyard it is only destroyed. Test: tools/test_s03_u371_misc5.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "神竜アクアバザル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U371",
+      "tests": [
+        "tools/test_s03_u371_misc5.js"
+      ],
+      "evidence": "Text (carddata). releasing another WATER monster (アクア・スネーク) it puts a Continuous Spell from my Graveyard (D－フォーメーション) on top of my Deck, once per turn; not activatable without another WATER monster. Test: tools/test_s03_u371_misc5.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "英知の代行者 マーキュリー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U371",
+      "tests": [
+        "tools/test_s03_u371_misc5.js"
+      ],
+      "evidence": "Text (carddata). at the opponent's End Phase with my hand empty and it face-up: at my next Standby Phase I drew 1 extra card (2 cards in hand with the normal draw); with a card in hand only the normal draw. Test: tools/test_s03_u371_misc5.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
