@@ -13243,6 +13243,56 @@
         "tools/test_s03_u404_decklock.js"
       ],
       "evidence": "Exact script. Text (carddata). Continuous Trap: while on the field a card that would return from the Graveyard to the Deck is banished instead (graveToDeckBanishS03 in FX_RETURN_DECK); a control without it returns to the Deck. Test: tools/test_s03_u404_decklock.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "カタパルト・ウォリアー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U405",
+      "tests": [
+        "tools/test_s03_u405_fusions.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Once-per-turn ignition: a 「ジャンク」 monster of mine released (cost), the opponent takes its printed ATK (ジャンク・サーバント 1500); the effect is not offered again that turn nor without a 「ジャンク」 monster. Test: tools/test_s03_u405_fusions.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジャンク・バーサーカー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U405",
+      "tests": [
+        "tools/test_s03_u405_fusions.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Ignition: a 「ジャンク」 monster of my Graveyard banished (cost, ジャンク・ブレーダー ATK 1800), a face-up opponent monster loses that much ATK (青眼 3000 -> 1200, permanent modifier until it leaves or is turned face-down); attacking a Defense Position monster (千年の盾 DEF 3000 > ATK 2700) destroys it before the damage calculation (no damage to me); an Attack Position target is fought normally. Test: tools/test_s03_u405_fusions.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "重爆撃禽 ボム・フェネクス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U405",
+      "tests": [
+        "tools/test_s03_u405_fusions.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Once-per-turn ignition in my Main Phase: 300 x every card on the field (3 cards: two monsters + a Set card = 900 damage); it cannot attack that turn (cannotAttackTurn). Test: tools/test_s03_u405_fusions.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "異星の最終戦士",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U405",
+      "tests": [
+        "tools/test_s03_u405_fusions.js"
+      ],
+      "evidence": "Exact script. Text (carddata). On its Special Summon (死者蘇生 from the Graveyard) my other monsters are destroyed (ワイト); while face-up neither player can Normal / Flip / Special Summon (summonLockS03 for all three kinds); a control without it shows no lock. Test: tools/test_s03_u405_fusions.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スーパービークロイド－ジャンボドリル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U405",
+      "tests": [
+        "tools/test_s03_u405_fusions.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous piercing damage: ATK 3000 vs a Defense Position ブラック・マジシャン (DEF 2100) destroys it and deals 900 battle damage; an Attack Position target only the normal damage. Test: tools/test_s03_u405_fusions.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

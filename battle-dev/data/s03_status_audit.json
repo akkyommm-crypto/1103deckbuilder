@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 508,
+    "NOT_STARTED": 503,
     "PARTIAL": 10,
-    "TESTED": 3362
+    "TESTED": 3367
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -799,
+    "NOT_STARTED": -804,
     "PARTIAL": -172,
-    "TESTED": 1313
+    "TESTED": 1318
   },
   "status_changes": [
     {
@@ -1297,6 +1297,12 @@
       "unit": "S03-U342"
     },
     {
+      "name": "カタパルト・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U405"
+    },
+    {
       "name": "カバリスト",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -2035,6 +2041,12 @@
       "unit": "S03-U193"
     },
     {
+      "name": "ジャンク・バーサーカー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U405"
+    },
+    {
       "name": "ジャンク・ブレーダー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2261,6 +2273,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U372"
+    },
+    {
+      "name": "スーパービークロイド－ジャンボドリル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U405"
     },
     {
       "name": "ゼンマイウォリアー",
@@ -6487,6 +6505,12 @@
       "unit": "S03-U192"
     },
     {
+      "name": "異星の最終戦士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U405"
+    },
+    {
       "name": "異次元からの埋葬",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -7349,6 +7373,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U391"
+    },
+    {
+      "name": "重爆撃禽 ボム・フェネクス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U405"
     },
     {
       "name": "野生の咆哮",

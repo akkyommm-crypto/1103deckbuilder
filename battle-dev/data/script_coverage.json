@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 508,
+    "NOT_STARTED": 503,
     "PARTIAL": 10,
-    "TESTED": 3362
+    "TESTED": 3367
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -115,11 +115,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1562,
+    "legacy": 1563,
     "sin": 5,
-    "unified": 1279
+    "unified": 1283
   },
-  "static_registration_name_count": 3372,
+  "static_registration_name_count": 3377,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -16710,12 +16710,20 @@
       "subtype": null,
       "date": "2010-12-29",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZO_claude_s03_u405_fusions.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u405_fusions.js"
+      ]
     },
     {
       "index": 747,
@@ -28924,12 +28932,20 @@
       "subtype": null,
       "date": "2011-02-11",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 25,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZO_claude_s03_u405_fusions.js",
+          "line": 45
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u405_fusions.js"
+      ]
     },
     {
       "index": 1311,
@@ -32088,12 +32104,20 @@
       "subtype": null,
       "date": "2006-05-18",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZO_claude_s03_u405_fusions.js",
+          "line": 104
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u405_fusions.js"
+      ]
     },
     {
       "index": 1459,
@@ -89422,12 +89446,20 @@
       "subtype": null,
       "date": "2002-12-12",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZO_claude_s03_u405_fusions.js",
+          "line": 94
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u405_fusions.js"
+      ]
     },
     {
       "index": 4140,
@@ -99925,12 +99957,20 @@
       "subtype": null,
       "date": "2010-12-18",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZO_claude_s03_u405_fusions.js",
+          "line": 78
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u405_fusions.js"
+      ]
     },
     {
       "index": 4631,

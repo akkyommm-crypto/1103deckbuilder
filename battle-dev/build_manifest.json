@@ -1636,6 +1636,9 @@
   "path": "cards/HZZZZZZZZZN_claude_s03_u404_decklock.js"
  },
  {
+  "path": "cards/HZZZZZZZZZO_claude_s03_u405_fusions.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
