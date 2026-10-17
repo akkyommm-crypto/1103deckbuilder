@@ -1489,6 +1489,9 @@
   "path": "cards/HZZZZZZZU_claude_s03_u359_dmonsters.js"
  },
  {
+  "path": "cards/HZZZZZZZV_claude_s03_u360_misc.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

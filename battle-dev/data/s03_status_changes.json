@@ -11573,6 +11573,46 @@
         "tools/test_s03_u359_dmonsters.js"
       ],
       "evidence": "Text (carddata). destroyed by battle in Attack Position: D・ナポレオン (Level 2) Special Summoned from the hand; not in Defense Position; Defense Position: a D monster cannot be targeted by 心変わり (it is taken in Attack Position). Test: tools/test_s03_u359_dmonsters.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイバー・オーガ・2",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U360",
+      "tests": [
+        "tools/test_s03_u360_misc.js"
+      ],
+      "evidence": "Text (carddata). attacking 青眼の白龍 (3000): ATK 2600 + 1500 = 4100 in the Damage Step: 青眼 destroyed, 1100 battle damage, back to 2600 afterwards; as the opponent's attacker against ワイト (300): ATK 2750, 2450 damage. Test: tools/test_s03_u360_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO ブルーメ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U360",
+      "tests": [
+        "tools/test_s03_u360_misc.js"
+      ],
+      "evidence": "Text (carddata). the opponent can attack only ブルーメ (another monster of mine is untouched); dealing 1600 battle damage raises it to ATK 2100 / DEF 1800; 死者蘇生 cannot Special Summon it from the Graveyard (only 「ブルーメンブラット」 can). Test: tools/test_s03_u360_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "E・HERO フラッシュ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U360",
+      "tests": [
+        "tools/test_s03_u360_misc.js"
+      ],
+      "evidence": "Text (carddata). destroyed by battle: banished with three differently named E・HERO monsters from the Graveyard, a Normal Spell (ブラック・ホール) returned to the hand while a Quick-Play Spell (サイクロン) is not eligible; with only two different names nothing happens. Test: tools/test_s03_u360_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイバー・ヴァリー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U360",
+      "tests": [
+        "tools/test_s03_u360_misc.js"
+      ],
+      "evidence": "Text (carddata). attacked: banished, drew 1 and the Battle Phase ended with no damage; main phase mode 2: banished with ワイト and drew 2; main phase mode 3: banished with a hand card and the chosen Graveyard card is on top of the Deck. Test: tools/test_s03_u360_misc.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
