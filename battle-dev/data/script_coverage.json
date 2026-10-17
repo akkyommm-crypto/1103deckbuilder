@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 634,
+    "NOT_STARTED": 631,
     "PARTIAL": 30,
-    "TESTED": 3216
+    "TESTED": 3219
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,9 +116,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1508,
     "sin": 5,
-    "unified": 1193
+    "unified": 1196
   },
-  "static_registration_name_count": 3227,
+  "static_registration_name_count": 3230,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -72593,12 +72593,20 @@
       "subtype": null,
       "date": "2007-02-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZA_claude_s03_u365_tenma.js",
+          "line": 54
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u365_tenma.js"
+      ]
     },
     {
       "index": 3379,
@@ -72608,12 +72616,20 @@
       "subtype": null,
       "date": "2007-02-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZA_claude_s03_u365_tenma.js",
+          "line": 33
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u365_tenma.js"
+      ]
     },
     {
       "index": 3380,
@@ -76878,12 +76894,20 @@
       "subtype": null,
       "date": "2007-03-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZA_claude_s03_u365_tenma.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u365_tenma.js"
+      ]
     },
     {
       "index": 3579,

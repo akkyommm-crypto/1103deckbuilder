@@ -11783,6 +11783,36 @@
         "tools/test_s03_u364_counters3.js"
       ],
       "evidence": "Text (carddata). a chain in my Main Phase 1 (強欲な壺): it attacked twice (ワイト, then directly for 2200); without a chain the second attack is refused. Test: tools/test_s03_u364_counters3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "天魔神 ノーレラス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U365",
+      "tests": [
+        "tools/test_s03_u365_tenma.js"
+      ],
+      "evidence": "Text (carddata). hand procedure banishing 1 LIGHT Angel + 3 DARK Fiends from the Graveyard (refused with only 2 Fiends); ignition: 1000 LP paid, both hands and fields (itself included) sent to the Graveyard and I draw 1; not activatable below 1000 LP. Test: tools/test_s03_u365_tenma.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "天魔神 エンライズ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U365",
+      "tests": [
+        "tools/test_s03_u365_tenma.js"
+      ],
+      "evidence": "Text (carddata). hand procedure banishing 3 LIGHT Angels + 1 DARK Fiend (refused with only 2 Angels); ignition once per turn: the opposing 青眼の白龍 is banished and the card cannot attack that turn; not activatable without another face-up monster. Test: tools/test_s03_u365_tenma.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "怨念の魂 業火",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U365",
+      "tests": [
+        "tools/test_s03_u365_tenma.js"
+      ],
+      "evidence": "Text (carddata). hand procedure with a FIRE monster on my field (refused without one): on that summon my other FIRE monster is destroyed; releasing another FIRE monster gives ATK 2200 + 500 = 2700 until the End Phase; my Standby Phase creates a 火の玉トークン in Defense Position. Test: tools/test_s03_u365_tenma.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
