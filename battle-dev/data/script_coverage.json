@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 534,
+    "NOT_STARTED": 531,
     "PARTIAL": 10,
-    "TESTED": 3336
+    "TESTED": 3339
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,9 +117,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1552,
     "sin": 5,
-    "unified": 1263
+    "unified": 1266
   },
-  "static_registration_name_count": 3346,
+  "static_registration_name_count": 3349,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -14461,12 +14461,20 @@
       "subtype": null,
       "date": "2010-03-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZG_claude_s03_u397_cat.js",
+          "line": 66
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u397_cat.js"
+      ]
     },
     {
       "index": 641,
@@ -51343,13 +51351,20 @@
       "subtype": null,
       "date": "2008-11-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZG_claude_s03_u397_cat.js",
+          "line": 47
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle21.js"
+        "tools\\test_auto_cycle21.js",
+        "tools\\test_s03_u397_cat.js"
       ]
     },
     {
@@ -63496,12 +63511,20 @@
       "subtype": null,
       "date": "2002-05-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZG_claude_s03_u397_cat.js",
+          "line": 19
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u397_cat.js"
+      ]
     },
     {
       "index": 2935,

@@ -31,12 +31,14 @@ const ALL=['昇天の角笛','方舟の選別','アーマーブレイク','オ�
 ALL.forEach(n=>ok('cycle21 registration '+n,!!CARD_SCRIPTS[n]));
 ok('cycle21 枚数は11',ALL.length===11);
 /* 召喚回数の制限や「デッキに戻せない」等は consumer が無いので実装しない */
-['サモンリミッター','ヘル・ブランブル','G・B・ハンター',
- 'ボーンクラッシャー']
+['サモンリミッター','ヘル・ブランブル','G・B・ハンター']
   .forEach(n=>ok('cycle21 SKIP: '+n+' は未実装（対応する consumer が engine に無い）',!CARD_SCRIPTS[n]));
 /* S03-U384: 《大熱波》 now has its consumer (the turn-ranged summon bans banSummonS03 / summonLockReasonS03, engine/1ZZS), tested in tools/test_s03_u384_summon_locks.js —
    the former SKIP assertion (no script) described the old build, not the card text; the count of assertions is unchanged. */
 ok('cycle21: 大熱波 has a script with its consumer (S03-U384)',!!CARD_SCRIPTS['大熱波']&&typeof summonLockReasonS03==='function'&&typeof banSummonS03==='function');
+/* S03-U397: 《ボーンクラッシャー》 now has its consumer (card.summonSrcS03 of S03-U238 names the Undead monster whose effect revived it), tested in tools/test_s03_u397_cat.js —
+   the former SKIP assertion (no script) described the old build, not the card text; the count of assertions is unchanged. */
+ok('cycle21: ボーンクラッシャー has a script with its consumer (S03-U397)',!!CARD_SCRIPTS['ボーンクラッシャー']&&typeof CARD_SCRIPTS['ボーンクラッシャー']==='object');
 /* S03-U267: カーム・マジック is scripted on the existing summon-ban flags (noSummonS03 / noSpecialSummon), tested in tools/test_s03_u267_ns38.js;
    its old SKIP check becomes this one (count unchanged). */
 ok('cycle21: カーム・マジック has a script (S03-U267)',!!CARD_SCRIPTS['カーム・マジック']);

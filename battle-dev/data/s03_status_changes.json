@@ -12983,6 +12983,36 @@
         "tools/test_s03_u396_scent.js"
       ],
       "evidence": "Exact script. Text (carddata). Attacking a face-down Defense monster destroys it without damage calculation (no damage to me although ATK 1200 < DEF 2100); destroyed (selfDestroyWhenS03) while a face-up LIGHT monster is on the field, not when the other monster is DARK. Test: tools/test_s03_u396_scent.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "不幸を告げる黒猫",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U397",
+      "tests": [
+        "tools/test_s03_u397_cat.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Flip (forced): a Trap of the Deck is chosen and placed on top of the Deck (drawn in my next Draw Phase); with 王家の眠る谷－ネクロバレー face-up in the Field Zone the Trap is added to the hand instead (confirm); nothing when the Deck has no Trap. Test: tools/test_s03_u397_cat.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ボーンクラッシャー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U397",
+      "tests": [
+        "tools/test_s03_u397_cat.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Special Summoned from my Graveyard by the effect of an Undead monster (ゾンビ・マスター, summonSrcS03): an optional destruction of one Spell / Trap of the opponent (a Set Spell destroyed); revived by a Spell (死者蘇生) nothing is destroyed; in both cases it is destroyed at the End Phase of the turn it was Special Summoned. Test: tools/test_s03_u397_cat.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エレクトロ軍曹",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U397",
+      "tests": [
+        "tools/test_s03_u397_cat.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Once-per-turn ignition targeting a Set Spell / Trap of the opponent (not offered without one): while the monster stands face-up that Set card cannot be activated (activationLockS03 over a zone-local uid list), checked in the opponent turn against a control without it. Test: tools/test_s03_u397_cat.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
