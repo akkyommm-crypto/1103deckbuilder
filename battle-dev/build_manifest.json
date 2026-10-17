@@ -268,6 +268,9 @@
   "path": "engine/1ZZR_dice_demon_s03.js"
  },
  {
+  "path": "engine/1ZZS_summon_lock_s03.js"
+ },
+ {
   "path": "ui/10_render_input.js",
   "start_line": 2683,
   "end_line": 3288,
@@ -1562,6 +1565,9 @@
  },
  {
   "path": "cards/HZZZZZZZZS_claude_s03_u383_dice_demons.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZT_claude_s03_u384_summon_locks.js"
  },
  {
   "path": "cards/40_auto_interpreter.js",

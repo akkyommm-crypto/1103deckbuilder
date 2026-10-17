@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 572,
+    "NOT_STARTED": 568,
     "PARTIAL": 16,
-    "TESTED": 3292
+    "TESTED": 3296
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,11 +114,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1534,
+    "legacy": 1537,
     "sin": 5,
-    "unified": 1240
+    "unified": 1241
   },
-  "static_registration_name_count": 3303,
+  "static_registration_name_count": 3307,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -27714,14 +27714,21 @@
       "subtype": null,
       "date": "2003-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 23,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZT_claude_s03_u384_summon_locks.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_battle_cards.js",
-        "tools\\test_s03_u226_ns18.js"
+        "tools\\test_s03_u226_ns18.js",
+        "tools\\test_s03_u384_summon_locks.js"
       ]
     },
     {
@@ -59618,12 +59625,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZT_claude_s03_u384_summon_locks.js",
+          "line": 27
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u384_summon_locks.js"
+      ]
     },
     {
       "index": 2769,
@@ -72171,13 +72186,20 @@
       "subtype": "",
       "date": "2010-07-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZT_claude_s03_u384_summon_locks.js",
+          "line": 47
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle21.js"
+        "tools\\test_auto_cycle21.js",
+        "tools\\test_s03_u384_summon_locks.js"
       ]
     },
     {
@@ -73987,12 +74009,20 @@
       "subtype": "",
       "date": "2011-02-11",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZT_claude_s03_u384_summon_locks.js",
+          "line": 55
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u384_summon_locks.js"
+      ]
     },
     {
       "index": 3429,

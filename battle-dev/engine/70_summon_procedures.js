@@ -172,14 +172,14 @@ function tributeCandidates(p, targetDb){
 
 function doNormalSummon(i, pos){
   const p=gameState.activePlayer,c=gameState.players[p].hand[i];
-  const why=c?v46FaceUpSummonRestrictionReason(p,dbOf(c)):'';
+  const why=c?v46FaceUpSummonRestrictionReason(p,dbOf(c),'normal'):'';
   if(why){showToast(why);return;}
   chooseNormalSummonMethod(i,'summon',(m,payment)=>finishNormalSummon(i,pos,payment,m.id,null));
 }
 /* v3.7.0: 効果で得た追加通常召喚権を通常召喚権と分離して消費する。 */
 function doExtraNormalSummonV370(i, extraNormalKey){
   const p=gameState.activePlayer,c=gameState.players[p].hand[i];
-  const why=c?v46FaceUpSummonRestrictionReason(p,dbOf(c)):'';
+  const why=c?v46FaceUpSummonRestrictionReason(p,dbOf(c),'normal'):'';
   if(why){showToast(why);return;}
   chooseNormalSummonMethod(i,'summon',(m,payment)=>finishNormalSummon(i,'atk',payment,m.id,extraNormalKey));
 }

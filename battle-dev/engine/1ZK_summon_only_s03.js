@@ -128,6 +128,8 @@ function canEffectSpecialSummonS03(card, from, reason, summonKind){
   if(typeof sinUniqueReasonS03==='function' && sinUniqueReasonS03(card)) return false;   /* S03-U187 */
   /* S03-U211: a face-up monster's 「お互いに…特殊召喚できない」 lock (A・O・J D.D.チェッカー) also removes the card from effect candidate lists */
   if(typeof scriptSpecialSummonLockS03==='function'){ const l = (typeof locateCard==='function') ? locateCard(card) : null; if(scriptSpecialSummonLockS03(l && (l.p===0||l.p===1) ? l.p : 0, dbOf(card))) return false; }
+  /* S03-U384: summon locks by kind (engine/1ZZS) — a turn-ranged ban or a locking card also removes the card from effect candidate lists */
+  if(typeof summonLockReasonS03==='function'){ const o = (card.owner===0||card.owner===1) ? card.owner : 0; if(summonLockReasonS03(o, dbOf(card), 'special')) return false; }
   if(summonOnlyReasonS03(card, summonKind||null, reason)) return false;
   if(properlySummonedReasonS03(card, summonKind||null, reason, from)) return false;
   if(noGraveSummonReasonS03(card, from)) return false;

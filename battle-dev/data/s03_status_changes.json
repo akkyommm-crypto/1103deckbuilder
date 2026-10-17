@@ -12543,6 +12543,46 @@
         "tools/test_s03_u383_dice_demons.js"
       ],
       "evidence": "Text (carddata). Upkeep 500 LP; dice face 3; the opponent cannot attack the other-named 「デーモン」 (ダークビショップデーモン) of its controller but can attack it and a non-Demon. Test: tools/test_s03_u383_dice_demons.js (Replay audit; the die is the replay RNG, engine/1ZZR). No known deviation."
+    },
+    {
+      "name": "ジェノサイドキングデーモン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U384",
+      "tests": [
+        "tools/test_s03_u384_summon_locks.js"
+      ],
+      "evidence": "Text (carddata). Cannot be Normal / Flip Summoned without a face-up 「デーモン」 on my field (summonConditionS03; Special Summon unaffected); with ヘルポーンデーモン it can; the Effect Monster it destroys in battle is negated (declareBattleDestroyedNegatorS03, graveInfo.battleNegatorUidS03); upkeep 800 and dice 2 / 5 as the other dice Demons (S03-U383). Test: tools/test_s03_u384_summon_locks.js (Replay audit). 「メインフェイズ1の開始時」 is modelled as: Main Phase 1, empty chain, nothing done yet that turn."
+    },
+    {
+      "name": "レプティレス・サーヴァント",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U384",
+      "tests": [
+        "tools/test_s03_u384_summon_locks.js"
+      ],
+      "evidence": "Text (carddata). While face-up nobody can Normal Summon (Flip / Special Summons stay legal); destroyed when another monster appears face-up (selfDestroyWhenS03) and when a Spell (月の書) targets it (declareTargetedSelfDestroyS03 kinds s/t; a monster effect may target it). Test: tools/test_s03_u384_summon_locks.js (Replay audit). 「メインフェイズ1の開始時」 is modelled as: Main Phase 1, empty chain, nothing done yet that turn."
+    },
+    {
+      "name": "大熱波",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U384",
+      "tests": [
+        "tools/test_s03_u384_summon_locks.js"
+      ],
+      "evidence": "Text (carddata). Normal Spell at the start of Main Phase 1 (nothing done yet): for both players until my next Draw Phase Effect Monsters cannot be Normal / Special Summoned (Normal Monsters, Flip Summons stay legal; still in force in the opponent turn; over afterwards); not activatable after a Normal Summon. Test: tools/test_s03_u384_summon_locks.js (Replay audit). 「メインフェイズ1の開始時」 is modelled as: Main Phase 1, empty chain, nothing done yet that turn."
+    },
+    {
+      "name": "完全防音壁",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U384",
+      "tests": [
+        "tools/test_s03_u384_summon_locks.js"
+      ],
+      "evidence": "Text (carddata). Normal Spell at the start of Main Phase 1 without my face-up Synchro Monster: until the end of the opponent's next End Phase neither player can Special Summon a Synchro Monster (non-Synchro unaffected; over afterwards); refused with my face-up Synchro Monster. Test: tools/test_s03_u384_summon_locks.js (Replay audit). 「メインフェイズ1の開始時」 is modelled as: Main Phase 1, empty chain, nothing done yet that turn."
     }
   ],
   "restored_to_baseline": [

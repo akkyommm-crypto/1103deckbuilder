@@ -117,8 +117,10 @@ function v46ActiveFieldRestrictions(){
   });
   return out;
 }
-function v46FaceUpSummonRestrictionReason(p,db){
+function v46FaceUpSummonRestrictionReason(p,db,kind){
   if(!db || db.k!=='m') return '';
+  /* S03-U384: summon locks by kind (engine/1ZZS): the summoned card's own condition, face-up locking cards, turn-ranged bans */
+  { const slS03 = (typeof summonLockReasonS03==='function') ? summonLockReasonS03(p, db, kind) : ''; if(slS03) return slS03; }
   /* S03-U282: 「…はフィールド上に1体しか表側表示で存在できない」 (地縛神, engine/1ZZM) */
   { const uS03 = (typeof uniqueFaceUpReasonS03==='function') ? uniqueFaceUpReasonS03(db) : ''; if(uS03) return uS03; }
   /* S03-U129: 「このカードを発動するターン、自分はこのカードの効果以外ではモンスターを召喚・反転召喚・特殊召喚できない」（スケープ・ゴート） */
@@ -157,7 +159,7 @@ function v46GlobalSpecialSummonRestrictionReason(p){
   return '';
 }
 function v46SpecialSummonRestrictionReason(p,db){
-  return v46GlobalSpecialSummonRestrictionReason(p) || v46FaceUpSummonRestrictionReason(p,db) || scriptSpecialSummonLockS03(p,db);
+  return v46GlobalSpecialSummonRestrictionReason(p) || v46FaceUpSummonRestrictionReason(p,db,'special') || scriptSpecialSummonLockS03(p,db);
 }
 /* S03-U211: 「このカードがフィールド上に表側表示で存在する限り、お互いに○○を特殊召喚できない」 — a face-up monster whose script declares
    specialSummonLockS03(db, p, srcCard, srcPlayer) → true forbids that special summon (A・O・J D.D.チェッカー). Negated sources do not lock. */
@@ -373,7 +375,7 @@ function getLegalHandActions(p, i){
       const SL=strictSummonProcedureLegality(nm,p,'hand',i);
       if(SL.ok) out.push({id:'specialSummonProcedure', label:'特殊召喚', cls:'gold', run:`runSummonProcedure(${jsStr(nm)},${p},'hand',${i})`});
     }
-    const summonLock=v46FaceUpSummonRestrictionReason(p,db);
+    const summonLock=v46FaceUpSummonRestrictionReason(p,db,'normal');
     const ns = R.normalSummon && normalRightFreeS03(P) && hasMonsterZoneSpace(p) && canPayNormalTribute(db,p) && !summonLock;
     if(ns) out.push({id:'normalSummon', label:'通常召喚', cls:'gold', run:`doNormalSummon(${i},'atk')`});
     const extraKey=R.normalSummon&&hasMonsterZoneSpace(p)&&canPayNormalTribute(db,p)&&!summonLock?extraNormalSummonKeyV370(p,db):null;
@@ -439,7 +441,7 @@ function canFlipSummonLegal(card,p){
   if(!(gameState.phase==='main1'||gameState.phase==='main2')) return false;
   if(card.setTurn===gameState.turn || card.summonedTurn===gameState.turn) return false;
   const owner=p!=null?p:(locateCard(card)||{}).p;
-  if(owner!=null && v46FaceUpSummonRestrictionReason(owner,dbOf(card))) return false;
+  if(owner!=null && v46FaceUpSummonRestrictionReason(owner,dbOf(card),'flip')) return false;
   return true;
 }
 
