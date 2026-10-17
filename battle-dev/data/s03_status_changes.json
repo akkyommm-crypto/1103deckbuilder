@@ -12143,6 +12143,36 @@
         "tools/test_s03_u373_autotable2.js"
       ],
       "evidence": "Text (carddata). Field Spell: my 「機皇帝」 monster is not offered to a Synchro Monster's targeting effect (氷結界の龍 グングニール) but can still be targeted by a Spell (月の書); destroyed -> a 「機皇帝」 monster is added from the Deck (機皇兵 not offered). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u373_autotable2.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D・バリア",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U374",
+      "tests": [
+        "tools/test_s03_u374_autotable3.js"
+      ],
+      "evidence": "Text (carddata). Counter Trap: the opponent's ブラック・ホール (destroys monsters) with a face-up 「D」 of mine -> negated and destroyed, my 「D」 survives, a 「D」 card is added from the Deck; refused without a 「D」 monster, for サイクロン and 大嵐 (Spell / Trap destruction only). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u374_autotable3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D・リモコン",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U374",
+      "tests": [
+        "tools/test_s03_u374_autotable3.js"
+      ],
+      "evidence": "Text (carddata). Position-dependent: Attack Position banishes a GY 「D」 and adds a same-Level 「D」 from the Deck; Defense Position sends a hand 「D」 to the GY and returns a same-Level other 「D」 from the GY; each mode once per turn (own turn marks); refused when no same-Level partner exists. Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u374_autotable3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "超古深海王シーラカンス",
+      "from": "PARTIAL",
+      "to": "TESTED",
+      "unit": "S03-U374",
+      "tests": [
+        "tools/test_s03_u374_autotable3.js"
+      ],
+      "evidence": "Text (carddata). ① discard 1: every Level 4 or lower Fish in the Deck that fits is Special Summoned, negated and unable to attack, once per turn; limited by free Monster Zones. ② when an effect targets it, release another Fish: negate and destroy (offered only for the targeted card and with a Fish to release). Replaced the coarse AUTO_DECK_TABLE entry by an exact script. Test: tools/test_s03_u374_autotable3.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

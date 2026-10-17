@@ -57,13 +57,16 @@ ok('A: every entry still finds its named card / group member',lost.length===0,JS
 /* ===== B. real DUEL activation: D・リモコン (group D) and バード・フェイス (canonical ハーピィ・レディ) only offer matching cards ===== */
 harness(COMMON+String.raw`
 fresh();
+/* S03-U374: D・リモコン now has its exact script (Attack Position: banish a 「D」 monster from the GY, add a same-Level 「D」 monster from the Deck), so this check of the group filter uses it: the Deck choice must offer only the same-Level 「D」 monster. */
 const rc=mk('D・リモコン',0,'up');gameState.players[0].mz=[rc];
-const dm=DB.find(d=>d.k==='m'&&isCardInGroupV4(d,GROUP.D_MORPHTRONIC)&&d.n!=='D・リモコン');
-gameState.players[0].deck=[mk('ワイト',0),mk(dm.n,0),mk('サンダー・ボルト',0)];
+const dms=DB.filter(d=>d.k==='m'&&isCardInGroupV4(d,GROUP.D_MORPHTRONIC)&&d.n!=='D・リモコン'&&!d.ex);
+const dm=dms[0], dm2=dms.find(d=>Number(d.lv)!==Number(dm.lv));
+gameState.players[0].grave=[mk(dm.n,0)];
+gameState.players[0].deck=[mk('ワイト',0),mk(dm.n,0),mk(dm2.n,0),mk('サンダー・ボルト',0)];
 baselineA();
 duelActivateFromZone(0,'mz',0);drive();
-const q=SEEN.find(s=>/D・リモコン/.test(s.title));
-ok('B: D・リモコン offers only the D monster ('+dm.n+')',!!q&&JSON.stringify(q.cands)===JSON.stringify([dm.n]),JSON.stringify(SEEN));
+const q=SEEN.find(s=>/D・リモコン：手札に加える/.test(s.title));
+ok('B: D・リモコン offers only the same-Level D monster ('+dm.n+')',!!q&&JSON.stringify(q.cands)===JSON.stringify([dm.n]),JSON.stringify(SEEN));
 ok('B: … and adds it to the hand',gameState.players[0].hand.map(nm).indexOf(dm.n)>=0);
 audit('B');
 /* S03-U156: バード・フェイス is 「このカードが戦闘によって破壊され墓地へ送られた時」 (it was an ignition effect from the field here):

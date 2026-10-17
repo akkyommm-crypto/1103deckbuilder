@@ -13,15 +13,15 @@
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 609,
-    "PARTIAL": 19,
-    "TESTED": 3252
+    "PARTIAL": 16,
+    "TESTED": 3255
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -698,
-    "PARTIAL": -163,
-    "TESTED": 1203
+    "PARTIAL": -166,
+    "TESTED": 1206
   },
   "status_changes": [
     {
@@ -217,6 +217,12 @@
       "unit": "S03-U254"
     },
     {
+      "name": "D・バリア",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U374"
+    },
+    {
       "name": "D・マグネンI",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -233,6 +239,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U311"
+    },
+    {
+      "name": "D・リモコン",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U374"
     },
     {
       "name": "D－HERO ダイハードガイ",
@@ -6635,6 +6647,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U259"
+    },
+    {
+      "name": "超古深海王シーラカンス",
+      "before": "PARTIAL",
+      "after": "TESTED",
+      "unit": "S03-U374"
     },
     {
       "name": "超融合",

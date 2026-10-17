@@ -664,6 +664,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u370_ritual_react.js')],check=Tr
 subprocess.run(['node',str(ROOT/'tools/test_s03_u371_misc5.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u372_autotable.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u373_autotable2.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u374_autotable3.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
