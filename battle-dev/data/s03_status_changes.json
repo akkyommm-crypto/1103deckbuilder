@@ -13213,6 +13213,36 @@
         "tools/test_s03_u403_isolate.js"
       ],
       "evidence": "Exact script. Text (carddata). Only the Graveyard trigger exists: the Set card destroyed by the opponent's Spell (graveInfo: face down, byDestroy, byPlayer = opponent, recorded source a Spell / Trap) -> a Quick-Play Spell (サイクロン) of the Deck is Set face-down on my field (act MOVE, logged as shown to both); destroyed by my own card -> nothing. Test: tools/test_s03_u403_isolate.js (Replay audit). Known small deviation (異次元隔離マシーン): a Continuous Spell's activation is a plain placement in this engine, so the banish is its field ignition used once after the placement (card flag u403Used)."
+    },
+    {
+      "name": "次元要塞兵器",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U404",
+      "tests": [
+        "tools/test_s03_u404_decklock.js"
+      ],
+      "evidence": "Exact script. Text (carddata). While face-up neither player can send cards from the Deck to the Graveyard: millTop for both players and sendToGrave of a Deck card are refused (the Deck keeps its cards, the Graveyards stay empty), a control without it mills normally, a negated copy gives no lock (engine/1ZZU deckToGraveLockS03 read in FX_TO_GRAVE (deck), FX_MILL, FX_MILL_TOP). Test: tools/test_s03_u404_decklock.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "G・B・ハンター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U404",
+      "tests": [
+        "tools/test_s03_u404_decklock.js"
+      ],
+      "evidence": "Exact script. Text (carddata). While face-up neither player can return cards on the field to the Deck: returnToDeck of the opponent's monster is refused (it stays on the field), a control without it returns the monster (fieldReturnLockS03 read in FX_RETURN_DECK). Test: tools/test_s03_u404_decklock.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "転生断絶",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U404",
+      "tests": [
+        "tools/test_s03_u404_decklock.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap: while on the field a card that would return from the Graveyard to the Deck is banished instead (graveToDeckBanishS03 in FX_RETURN_DECK); a control without it returns to the Deck. Test: tools/test_s03_u404_decklock.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

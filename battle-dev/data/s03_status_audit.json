@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 511,
+    "NOT_STARTED": 508,
     "PARTIAL": 10,
-    "TESTED": 3359
+    "TESTED": 3362
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -796,
+    "NOT_STARTED": -799,
     "PARTIAL": -172,
-    "TESTED": 1310
+    "TESTED": 1313
   },
   "status_changes": [
     {
@@ -491,6 +491,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U05"
+    },
+    {
+      "name": "G・B・ハンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U404"
     },
     {
       "name": "HERO’S ボンド",
@@ -6007,6 +6013,12 @@
       "unit": "S03-U40"
     },
     {
+      "name": "次元要塞兵器",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U404"
+    },
+    {
       "name": "死のマジック・ボックス",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -7211,6 +7223,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U156"
+    },
+    {
+      "name": "転生断絶",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U404"
     },
     {
       "name": "迅雷の魔王－スカル・デーモン",

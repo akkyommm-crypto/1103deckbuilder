@@ -1453,6 +1453,7 @@ function applyActionBodyV31(gs, a){
     /* 指定ゾーンのカードを墓地へ（破壊・墓地送り共通）
        a:{player, zone:'mz'|'sz'|'field', index, reason} */
     case "FX_TO_GRAVE": {
+      if(a.zone==='deck' && typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       /* System v21: 効果破壊だけを防ぐ。墨地送り・除外・バウンスは防がない。
          場を離れる前に見るので、守れた場合カードは一切動かない。 */
       if(a.byDestroy===true && ['mz','sz','field'].includes(a.zone)
@@ -1702,6 +1703,7 @@ function applyActionBodyV31(gs, a){
 
     /* デッキ→墓地（落とす）。a:{player, deckIndex, reason} */
     case "FX_MILL": {
+      if(typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       const card = removeFrom(P, "deck", a.deckIndex);
       if(!card) break;
       pushZone(P.grave, card);
@@ -1719,6 +1721,7 @@ function applyActionBodyV31(gs, a){
 
     /* デッキトップから n 枚墓地へ。a:{player, n, reason} */
     case "FX_MILL_TOP": {
+      if(typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       const n = a.n||1; const names=[],sent=[];
       for(let i=0;i<n;i++){
         if(!P.deck.length) break;
@@ -2208,8 +2211,13 @@ function applyActionBodyV31(gs, a){
     /* デッキへ戻す。a:{player, zone, index, toBottom}
        元々EXデッキのモンスターはメインデッキへ混ざらず、持ち主のEXデッキへ戻す。 */
     case "FX_RETURN_DECK": {
+      if(['mz','sz','field'].includes(a.zone) && typeof fieldReturnLockedS03==='function' && fieldReturnLockedS03(gs)){ logIt(gs, 'G・B・ハンター：フィールドのカードをデッキに戻せない'); break; }   /* S03-U404 */
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
+      if(a.zone==='grave' && typeof graveToDeckBanishedS03==='function' && graveToDeckBanishedS03(gs)){   /* S03-U404: 転生断絶 */
+        const ownerT=cardOwnerIndex(gs,card,a.player); pushZone(gs.players[ownerT].banish,card);
+        logIt(gs, `転生断絶：${cardName(card)} はデッキへ戻らず除外`); break;
+      }
       dropXyzMaterials(P, card, gs); dropEquips(P, card, gs, a.zone==='mz' ? 'deck' : null);   /* S03-U183: 闘器 */
       if(card.token){ logIt(gs, `${cardName(card)} は消滅した`); break; }
       if(v350BanishWhenLeavesField(card,a.zone,'deck',a)){

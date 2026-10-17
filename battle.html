@@ -2409,6 +2409,7 @@ function applyActionBodyV31(gs, a){
     /* 指定ゾーンのカードを墓地へ（破壊・墓地送り共通）
        a:{player, zone:'mz'|'sz'|'field', index, reason} */
     case "FX_TO_GRAVE": {
+      if(a.zone==='deck' && typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       /* System v21: 効果破壊だけを防ぐ。墨地送り・除外・バウンスは防がない。
          場を離れる前に見るので、守れた場合カードは一切動かない。 */
       if(a.byDestroy===true && ['mz','sz','field'].includes(a.zone)
@@ -2658,6 +2659,7 @@ function applyActionBodyV31(gs, a){
 
     /* デッキ→墓地（落とす）。a:{player, deckIndex, reason} */
     case "FX_MILL": {
+      if(typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       const card = removeFrom(P, "deck", a.deckIndex);
       if(!card) break;
       pushZone(P.grave, card);
@@ -2675,6 +2677,7 @@ function applyActionBodyV31(gs, a){
 
     /* デッキトップから n 枚墓地へ。a:{player, n, reason} */
     case "FX_MILL_TOP": {
+      if(typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       const n = a.n||1; const names=[],sent=[];
       for(let i=0;i<n;i++){
         if(!P.deck.length) break;
@@ -3164,8 +3167,13 @@ function applyActionBodyV31(gs, a){
     /* デッキへ戻す。a:{player, zone, index, toBottom}
        元々EXデッキのモンスターはメインデッキへ混ざらず、持ち主のEXデッキへ戻す。 */
     case "FX_RETURN_DECK": {
+      if(['mz','sz','field'].includes(a.zone) && typeof fieldReturnLockedS03==='function' && fieldReturnLockedS03(gs)){ logIt(gs, 'G・B・ハンター：フィールドのカードをデッキに戻せない'); break; }   /* S03-U404 */
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
+      if(a.zone==='grave' && typeof graveToDeckBanishedS03==='function' && graveToDeckBanishedS03(gs)){   /* S03-U404: 転生断絶 */
+        const ownerT=cardOwnerIndex(gs,card,a.player); pushZone(gs.players[ownerT].banish,card);
+        logIt(gs, `転生断絶：${cardName(card)} はデッキへ戻らず除外`); break;
+      }
       dropXyzMaterials(P, card, gs); dropEquips(P, card, gs, a.zone==='mz' ? 'deck' : null);   /* S03-U183: 闘器 */
       if(card.token){ logIt(gs, `${cardName(card)} は消滅した`); break; }
       if(v350BanishWhenLeavesField(card,a.zone,'deck',a)){
@@ -14800,6 +14808,28 @@ function setBannedS03(gs, P){
   const l = P && P.effectFlags && P.effectFlags.setBanS03;
   return Array.isArray(l) && l.some(b=>b && Number(b.from) <= Number(gs.turn) && Number(gs.turn) <= Number(b.to));
 }
+/* =========================================================================
+   S03-U404 — deck-movement locks declared by face-up cards
+   -------------------------------------------------------------------------
+   A face-up, non-negated card in a Monster / Spell & Trap / Field Zone (either side) whose script declares
+     fieldReturnLockS03:true     (G・B・ハンター)   the cards on the field cannot be returned to the Deck          → FX_RETURN_DECK from mz / sz / field is refused
+     deckToGraveLockS03:true     (次元要塞兵器)     nobody can send cards from the Deck to the Graveyard           → FX_TO_GRAVE from the deck, FX_MILL, FX_MILL_TOP are refused
+     graveToDeckBanishS03:true   (転生断絶)         a card that would return from the Graveyard to the Deck is banished instead → FX_RETURN_DECK from the grave banishes
+   Pure functions of the state (Replay-safe); they are read inside the reducers.
+   ========================================================================= */
+function deckLockSourceS03(gs, key){
+  gs = gs || gameState;
+  if(!gs || !gs.players || typeof CARD_SCRIPTS==='undefined') return false;
+  return gs.players.some(P=>[].concat(P.mz||[], P.sz||[], P.field?[P.field]:[]).some(c=>{
+    if(!c || c.face!=='up' || c.activationPending) return false;
+    const sc = CARD_SCRIPTS[cardName(c)];
+    if(!sc || sc[key]!==true) return false;
+    return !(typeof effectNegated==='function' && effectNegated(c));
+  }));
+}
+function fieldReturnLockedS03(gs){ return deckLockSourceS03(gs, 'fieldReturnLockS03'); }
+function deckToGraveLockedS03(gs){ return deckLockSourceS03(gs, 'deckToGraveLockS03'); }
+function graveToDeckBanishedS03(gs){ return deckLockSourceS03(gs, 'graveToDeckBanishS03'); }
 /* =========================================================================
    RENDER — gameState を読んで描画するだけ
    ========================================================================= */
@@ -89950,6 +89980,33 @@ defineUnifiedCardV4('コーリング・マジック', [{
   afterResolve(){}
 }], {type:'spell', priority:1, forced:true, activateFrom:['grave'],
   passive:{ onSendToGrave(ctx){ return u403Called(ctx) && u403QuickPlays(ctx.player).length>0; }, onDestroy(ctx){ return u403Called(ctx) && u403QuickPlays(ctx.player).length>0; } } });
+/* S03-U404: 次元要塞兵器, G・B・ハンター, 転生断絶 (NOT_STARTED cards, carddata texts).
+
+   次元要塞兵器    このカードがフィールド上に表側表示で存在する限り、お互いにデッキからカードを墓地へ送る事はできない。
+   G・B・ハンター  このカードがフィールド上に表側表示で存在する限り、お互いのプレイヤーはフィールド上のカードをデッキに戻す事はできない。
+   転生断絶        （永続罠）このカードがフィールド上に存在する限り、墓地からデッキに戻るカードはデッキに戻らずゲームから除外される。
+
+   Notes
+   - New engine/1ZZU (S03-U404): the script flags deckToGraveLockS03 / fieldReturnLockS03 / graveToDeckBanishS03 are read inside the reducers FX_TO_GRAVE (deck), FX_MILL, FX_MILL_TOP and FX_RETURN_DECK (deckLockSourceS03: a face-up, non-negated card of either side).
+   - Limit: sends from the Deck by raw MOVE actions and returns to the Deck by shuffle-all effects are not intercepted (the central reducers above are). */
+
+defineScript('次元要塞兵器', {
+  type:'monster', priority:1,
+  condition(ctx){ ctx.reason = '永続効果のみのカードです'; return false; },
+  resolve(){}, afterResolve(){},
+  deckToGraveLockS03:true
+});
+defineScript('G・B・ハンター', {
+  type:'monster', priority:1,
+  condition(ctx){ ctx.reason = '永続効果のみのカードです'; return false; },
+  resolve(){}, afterResolve(){},
+  fieldReturnLockS03:true
+});
+defineUnifiedCardV4('転生断絶', [{
+  key:'activate', type:EFFECT_TYPE.ACTIVATE, range:LOCATION.SZONE, speed:2, events:['activate'],
+  condition(ctx){ const h = locateCardAnyV4(ctx.card); return !(h && h.zone==='sz' && ctx.card.face==='up'); }, operation(){}, afterResolve(){}
+}], {type:'trap', priority:2, graveToDeckBanishS03:true });
+CARD_SCRIPTS['転生断絶'].graveToDeckBanishS03 = true;
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、
