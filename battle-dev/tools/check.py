@@ -672,6 +672,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u378_targetlocks.js')],check=Tru
 subprocess.run(['node',str(ROOT/'tools/test_s03_u379_spells.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u380_counters4.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u381_fusions.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u382_misc6.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 582,
+    "NOT_STARTED": 578,
     "PARTIAL": 16,
-    "TESTED": 3282
+    "TESTED": 3286
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -725,
+    "NOT_STARTED": -729,
     "PARTIAL": -166,
-    "TESTED": 1233
+    "TESTED": 1237
   },
   "status_changes": [
     {
@@ -5443,6 +5443,12 @@
       "unit": "S03-U366"
     },
     {
+      "name": "摩天楼 －スカイスクレイパー－",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U382"
+    },
+    {
       "name": "摩天楼2－ヒーローシティ",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5641,6 +5647,12 @@
       "unit": "S03-U191"
     },
     {
+      "name": "極星宝グングニル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U382"
+    },
+    {
       "name": "極星宝ドラウプニル",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -5693,6 +5705,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U191"
+    },
+    {
+      "name": "樹海の射手",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U382"
     },
     {
       "name": "機動砦 ストロング・ホールド",
@@ -6479,6 +6497,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U376"
+    },
+    {
+      "name": "紅蓮魔闘士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U382"
     },
     {
       "name": "素早いビッグハムスター",

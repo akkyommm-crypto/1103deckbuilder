@@ -12443,6 +12443,46 @@
         "tools/test_s03_u381_fusions.js"
       ],
       "evidence": "Text (carddata). Fusion Monster placed on the field: not destroyed by battle (青眼の白龍 attacks it); attacks directly although the opponent controls a monster (800 damage) and the opponent discards a random hand card; destroyed when targeted (月の書) via declareTargetedSelfDestroyS03; another monster targeted -> it stays. Test: tools/test_s03_u381_fusions.js (Replay audit). The Fusion Summon of the two Fusion Monsters is the engine's, not part of this unit; no known deviation in the card effects."
+    },
+    {
+      "name": "摩天楼 －スカイスクレイパー－",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U382",
+      "tests": [
+        "tools/test_s03_u382_misc6.js"
+      ],
+      "evidence": "Text (carddata). Field Spell: an attacking 「E・HERO」 (エッジマン 2600) gets +1000 in the damage calculation against a monster with higher ATK (青眼の白龍 3000) and wins; without the Field Spell it loses; as the defender, or outside the damage calculation, there is no bonus. Test: tools/test_s03_u382_misc6.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "極星宝グングニル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U382",
+      "tests": [
+        "tools/test_s03_u382_misc6.js"
+      ],
+      "evidence": "Text (carddata). Trap: banish an own 極神 / 極星 monster as cost, destroy the chosen field card; the monster returns face-up in Attack Position at my 2nd End Phase after the activation (not after the 1st); refused without such a monster. Test: tools/test_s03_u382_misc6.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "紅蓮魔闘士",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U382",
+      "tests": [
+        "tools/test_s03_u382_misc6.js"
+      ],
+      "evidence": "Text (carddata). Special Summon from the hand with exactly 3 Normal Monsters in the Graveyard by banishing 2 (refused with 2); ignition once per turn: a Level 4 or lower Normal Monster of the Graveyard is Special Summoned. Test: tools/test_s03_u382_misc6.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "樹海の射手",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U382",
+      "tests": [
+        "tools/test_s03_u382_misc6.js"
+      ],
+      "evidence": "Text (carddata). Cannot be Normal Summoned; Special Summonable from the hand with 2+ Normal Monsters in the Graveyard (refused with 1); release (sent to the Graveyard) as the cost to add a Dual Monster from the Deck. Test: tools/test_s03_u382_misc6.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
