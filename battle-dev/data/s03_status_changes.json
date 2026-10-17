@@ -12253,6 +12253,56 @@
         "tools/test_s03_u376_chainers.js"
       ],
       "evidence": "Text (carddata). Quick-Play Spell: exactly one ATK 1500 or less monster Special Summoned on my field (死者蘇生) while the opponent has a face-up monster -> all my same-name monsters from hand / Deck / Graveyard are Special Summoned in Attack Position, the opponent chooses a face-up monster of theirs and Special Summons its same-name monsters; refused for ATK over 1500 and without an opposing face-up monster. Test: tools/test_s03_u376_chainers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "我が身を盾に",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U377",
+      "tests": [
+        "tools/test_s03_u377_negators.js"
+      ],
+      "evidence": "Text (carddata). Quick-Play Spell answering the opponent's ブラック・ホール (destroys monsters): 1500 LP paid, the activation negated and destroyed, my monster survives; refused for サイクロン (Spells / Traps only) and with LP under 1500. Test: tools/test_s03_u377_negators.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デストラクション・ジャマー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U377",
+      "tests": [
+        "tools/test_s03_u377_negators.js"
+      ],
+      "evidence": "Text (carddata). Counter Trap: hand discard cost; negates and destroys ブラック・ホール (monster destruction), my monster survives; a burn Spell is not offered. Test: tools/test_s03_u377_negators.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ボム・ガード",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U377",
+      "tests": [
+        "tools/test_s03_u377_negators.js"
+      ],
+      "evidence": "Text (carddata). Trap: the opponent's ブラック・ホール would destroy my monster -> negated and destroyed, 500 damage to the opponent; refused when I control no monster. Test: tools/test_s03_u377_negators.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ライフ・コーディネイター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U377",
+      "tests": [
+        "tools/test_s03_u377_negators.js"
+      ],
+      "evidence": "Text (carddata). Hand quick effect: discarded when the opponent activates a burn card (ファイヤー・ボール) -> negated and destroyed, no damage; a non-burn Spell is not offered. Test: tools/test_s03_u377_negators.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "椿姫ティタニアル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U377",
+      "tests": [
+        "tools/test_s03_u377_negators.js"
+      ],
+      "evidence": "Text (carddata). Quick effect: an effect (サイクロン) that targets a card on the field is activated -> release another face-up Plant, negate and destroy; refused without another Plant and when nothing is targeted. Test: tools/test_s03_u377_negators.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

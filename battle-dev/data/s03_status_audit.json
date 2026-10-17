@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 601,
+    "NOT_STARTED": 596,
     "PARTIAL": 16,
-    "TESTED": 3263
+    "TESTED": 3268
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -706,
+    "NOT_STARTED": -711,
     "PARTIAL": -166,
-    "TESTED": 1214
+    "TESTED": 1219
   },
   "status_changes": [
     {
@@ -2407,6 +2407,12 @@
       "unit": "S03-U192"
     },
     {
+      "name": "デストラクション・ジャマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U377"
+    },
+    {
       "name": "デスハムスター",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -3301,6 +3307,12 @@
       "unit": "S03-U156"
     },
     {
+      "name": "ボム・ガード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U377"
+    },
+    {
       "name": "マインドクラッシュ",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -3635,6 +3647,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U280"
+    },
+    {
+      "name": "ライフ・コーディネイター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U377"
     },
     {
       "name": "ランドオルスのヒカリゴケ",
@@ -5323,6 +5341,12 @@
       "unit": "S03-U188"
     },
     {
+      "name": "我が身を盾に",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U377"
+    },
+    {
       "name": "戦線復活の代償",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5537,6 +5561,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U288"
+    },
+    {
+      "name": "椿姫ティタニアル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U377"
     },
     {
       "name": "業火の結界像",
