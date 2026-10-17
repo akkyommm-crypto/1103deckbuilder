@@ -12633,6 +12633,36 @@
         "tools/test_s03_u385_misc7.js"
       ],
       "evidence": "Text (carddata). Continuous Trap: at my Standby Phase a random card of the opponent's hand is picked and I declare its type: a right guess (モンスター) deals 700, a wrong one (罠) nothing. Test: tools/test_s03_u385_misc7.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ブレイズ・キャノン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U386",
+      "tests": [
+        "tools/test_s03_u386_blaze.js"
+      ],
+      "evidence": "Text (carddata). Continuous Spell: the card activation only places it; the effect (my Main Phase): a Pyro monster with ATK 500 or less is sent from the hand to the Graveyard (きつね火) and the chosen opposing monster is destroyed; my monsters cannot attack that turn (noAttackDeclareS03); refused without such a Pyro in the hand. Test: tools/test_s03_u386_blaze.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "クレイジー・ファイヤー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U386",
+      "tests": [
+        "tools/test_s03_u386_blaze.js"
+      ],
+      "evidence": "Text (carddata). Quick-Play Spell: 500 LP paid, my ブレイズ・キャノン destroyed, every monster on the field destroyed, then one クレイジー・ファイヤー・トークン (炎, Lv3, 1000/1000) in Attack Position; my monsters cannot attack that turn; refused without a ブレイズ・キャノン-named card. Test: tools/test_s03_u386_blaze.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴォルカニック・バックショット",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U386",
+      "tests": [
+        "tools/test_s03_u386_blaze.js"
+      ],
+      "evidence": "Text (carddata). Sent to the Graveyard: 500 damage (also by 手札抹殺, without any prompt); sent by ブレイズ・キャノン (turn-stamped card flag u386Cannon): a yes / no — yes sends two more from the hand / Deck and destroys all the opponent's monsters (3 x 500 damage in total), no keeps the others. Test: tools/test_s03_u386_blaze.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

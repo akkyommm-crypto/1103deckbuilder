@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 563,
+    "NOT_STARTED": 560,
     "PARTIAL": 16,
-    "TESTED": 3301
+    "TESTED": 3304
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -114,11 +114,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1539,
+    "legacy": 1540,
     "sin": 5,
-    "unified": 1244
+    "unified": 1246
   },
-  "static_registration_name_count": 3312,
+  "static_registration_name_count": 3315,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -20306,12 +20306,20 @@
       "subtype": "速攻",
       "date": "2007-02-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZV_claude_s03_u386_blaze.js",
+          "line": 48
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u386_blaze.js"
+      ]
     },
     {
       "index": 917,
@@ -49269,13 +49277,20 @@
       "subtype": "永続",
       "date": "2007-02-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZV_claude_s03_u386_blaze.js",
+          "line": 17
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_class_a_recruit_bulk.js"
+        "tools\\test_class_a_recruit_bulk.js",
+        "tools\\test_s03_u386_blaze.js"
       ]
     },
     {
@@ -62876,12 +62891,20 @@
       "subtype": null,
       "date": "2007-02-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZV_claude_s03_u386_blaze.js",
+          "line": 68
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u386_blaze.js"
+      ]
     },
     {
       "index": 2910,
