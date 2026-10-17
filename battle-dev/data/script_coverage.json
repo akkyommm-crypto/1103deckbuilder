@@ -6,9 +6,9 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 553,
+    "NOT_STARTED": 550,
     "PARTIAL": 16,
-    "TESTED": 3311
+    "TESTED": 3314
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,9 +117,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1540,
     "sin": 5,
-    "unified": 1251
+    "unified": 1254
   },
-  "static_registration_name_count": 3322,
+  "static_registration_name_count": 3325,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -54070,12 +54070,20 @@
       "subtype": null,
       "date": "2008-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZY_claude_s03_u389_traps3.js",
+          "line": 65
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u389_traps3.js"
+      ]
     },
     {
       "index": 2505,
@@ -83326,12 +83334,20 @@
       "subtype": "永続",
       "date": "2008-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZY_claude_s03_u389_traps3.js",
+          "line": 15
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u389_traps3.js"
+      ]
     },
     {
       "index": 3868,
@@ -91472,12 +91488,20 @@
       "subtype": "永続",
       "date": "2010-11-13",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZY_claude_s03_u389_traps3.js",
+          "line": 33
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u389_traps3.js"
+      ]
     },
     {
       "index": 4248,

@@ -12733,6 +12733,36 @@
         "tools/test_s03_u388_tokens_dragunity.js"
       ],
       "evidence": "Text (carddata). Special Summoned from the hand by sending a face-up 「ドラグニティ」 to the Graveyard (refused without one); on success a Dragon 「ドラグニティ」 of the Graveyard (ブラックスピア) is equipped to it (API.equipFromGrave). Test: tools/test_s03_u388_tokens_dragunity.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "死神の巡遊",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U389",
+      "tests": [
+        "tools/test_s03_u389_traps3.js"
+      ],
+      "evidence": "Text (carddata). Continuous Trap: at the opponent's Standby Phase a coin (replay RNG): heads -> the opponent cannot Normal / Flip Summon until the End Phase (Special Summon legal; I am unaffected); tails -> I cannot Normal / Flip Summon in my next turn (the opponent unaffected); both bans expire on time. Test: tools/test_s03_u389_traps3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "神の威光",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U389",
+      "tests": [
+        "tools/test_s03_u389_traps3.js"
+      ],
+      "evidence": "Text (carddata). Continuous Trap: the chosen 極神 monster (極神聖帝オーディン) cannot be targeted by either player (my own 月の書 offers only ワイト); sent to the Graveyard at my 2nd Standby Phase after the activation; refused without a 極神 monster. Test: tools/test_s03_u389_traps3.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ミラクル・フリッパー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U389",
+      "tests": [
+        "tools/test_s03_u389_traps3.js"
+      ],
+      "evidence": "Text (carddata). A second copy cannot be Normal / Flip / Special Summoned while one is on my field; the opponent can attack only the Flipper, not my other monsters; destroyed by battle -> Special Summoned on the opponent's field; destroyed by a Spell (地割れ) -> an opposing monster (chosen) is destroyed. Test: tools/test_s03_u389_traps3.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 469,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 553,
+    "NOT_STARTED": 550,
     "PARTIAL": 16,
-    "TESTED": 3311
+    "TESTED": 3314
   },
   "delta": {
     "ENGINE_GAP": -147,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -754,
+    "NOT_STARTED": -757,
     "PARTIAL": -166,
-    "TESTED": 1262
+    "TESTED": 1265
   },
   "status_changes": [
     {
@@ -3559,6 +3559,12 @@
       "unit": "S03-U96"
     },
     {
+      "name": "ミラクル・フリッパー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U389"
+    },
+    {
       "name": "ミラージュ・ドラゴン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5893,6 +5899,12 @@
       "unit": "S03-U205"
     },
     {
+      "name": "死神の巡遊",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U389"
+    },
+    {
       "name": "死霊ゾーマ",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6461,6 +6473,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U344"
+    },
+    {
+      "name": "神の威光",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U389"
     },
     {
       "name": "神の宣告",
