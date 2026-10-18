@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 400,
+    "ENGINE_GAP": 397,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 420,
+    "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3519
+    "TESTED": 3523
   },
   "delta": {
-    "ENGINE_GAP": -216,
+    "ENGINE_GAP": -219,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -887,
+    "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1470
+    "TESTED": 1474
   },
   "status_changes": [
     {
@@ -1711,6 +1711,12 @@
       "unit": "S03-U367"
     },
     {
+      "name": "グラディアル・チェンジ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U442"
+    },
+    {
       "name": "グランド・ドラゴン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2959,6 +2965,12 @@
       "unit": "S03-U194"
     },
     {
+      "name": "デンジャラスマシン TYPE－6",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U442"
+    },
+    {
       "name": "デーモンとの駆け引き",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -3479,6 +3491,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U293"
+    },
+    {
+      "name": "バッド・エンド・クイーン・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U442"
     },
     {
       "name": "バトル・テレポーテーション",
@@ -6455,6 +6473,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U258"
+    },
+    {
+      "name": "暗黒の謀略",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U442"
     },
     {
       "name": "暗黒界に続く結界通路",

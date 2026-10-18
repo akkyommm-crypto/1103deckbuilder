@@ -732,6 +732,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u438_water_equip.js')],check=Tru
 subprocess.run(['node',str(ROOT/'tools/test_s03_u439_garden_rock.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u440_traps_flipless.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u441_hand_choices.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u442_dice_discard.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

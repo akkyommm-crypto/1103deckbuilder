@@ -14813,6 +14813,46 @@
         "tools/test_s03_u441_hand_choices.js"
       ],
       "evidence": "Exact script. Text (carddata). I choose 2 hand cards, then the opponent chooses 2 of their own, all go to the Graveyard, then both draw 2; not activatable when the opponent has fewer than 2 hand cards or I have fewer than 2 other cards. Test: tools/test_s03_u441_hand_choices.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "グラディアル・チェンジ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U442",
+      "tests": [
+        "tools/test_s03_u442_dice_discard.js"
+      ],
+      "evidence": "Exact script. Text (carddata). My 剣闘獣 Special Summoned → the Set Trap makes the opponent discard a hand card of their own choice; a non-剣闘獣 does not trigger it. Test: tools/test_s03_u442_dice_discard.js (Replay audit). Bad End Queen Dragon counts only face-up Continuous Spells of mine for its procedure and its revival cost."
+    },
+    {
+      "name": "デンジャラスマシン TYPE－6",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U442",
+      "tests": [
+        "tools/test_s03_u442_dice_discard.js"
+      ],
+      "evidence": "Exact script. Text (carddata). At my Standby Phase the die (replay RNG): 1 my discard (my choice), 2 the opponent's discard (their choice), 3 I draw, 4 the opponent draws, 5 I destroy an opponent monster, 6 it destroys itself. Test: tools/test_s03_u442_dice_discard.js (Replay audit). Bad End Queen Dragon counts only face-up Continuous Spells of mine for its procedure and its revival cost."
+    },
+    {
+      "name": "バッド・エンド・クイーン・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U442",
+      "tests": [
+        "tools/test_s03_u442_dice_discard.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Special Summonable from the hand with 3+ Continuous Spells on my field (not with 2); its battle damage makes the opponent send a hand card of their choice to the Graveyard and I draw 1; from the Graveyard it revives at my Standby Phase by sending a Continuous Spell of mine to the Graveyard. Test: tools/test_s03_u442_dice_discard.js (Replay audit). Bad End Queen Dragon counts only face-up Continuous Spells of mine for its procedure and its revival cost."
+    },
+    {
+      "name": "暗黒の謀略",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U442",
+      "tests": [
+        "tools/test_s03_u442_dice_discard.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Both players choose 2 hand cards to discard and draw 2; the opponent may instead discard 1 hand card to negate the effect (nothing else happens); not activatable with fewer than 2 hand cards. Test: tools/test_s03_u442_dice_discard.js (Replay audit). Bad End Queen Dragon counts only face-up Continuous Spells of mine for its procedure and its revival cost."
     }
   ],
   "restored_to_baseline": [

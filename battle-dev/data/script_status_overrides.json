@@ -85,10 +85,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a first-class activate-Field-Spell-from-Deck operation that runs replacement, activation and resolution lifecycle correctly."
     },
-    "グラディアル・チェンジ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe mandatory opponent hand choice at resolution after a canonical Gladiator Beast Special Summon event."
-    },
     "コザッキーの研究成果": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe private Deck inspection and arbitrary ordering of the top three cards without exposing them to the opponent."
@@ -304,10 +300,6 @@
     "徴兵令": {
       "status": "ENGINE_GAP",
       "reason": "Needs opponent-Deck top reveal and ownership-preserving Special Summon to the controller's field, with fallback movement to the opponent's hand."
-    },
-    "暗黒の謀略": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs simultaneous two-card hand selections by both players plus a replay-safe opponent optional extra-discard veto before drawing."
     },
     "狭き通路": {
       "status": "ENGINE_GAP",
@@ -1520,10 +1512,6 @@
     "ディストラクター": {
       "status": "ENGINE_GAP",
       "reason": "set-card target / bilateral End Phase self-check: LP-cost destruction plus mandatory self-destruction at either player's End Phase need a generic recurring phase condition."
-    },
-    "デンジャラスマシン TYPE－6": {
-      "status": "ENGINE_GAP",
-      "reason": "recurring standby random branch / hidden hand discard: six deterministic RNG outcomes include opponent hand selection and must journal each phase trigger."
     },
     "ドラグニティ－パルチザン": {
       "status": "ENGINE_GAP",

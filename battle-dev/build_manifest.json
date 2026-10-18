@@ -1747,6 +1747,9 @@
   "path": "cards/HZZZZZZZZZZY_claude_s03_u441_hand_choices.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZ_claude_s03_u442_dice_discard.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
