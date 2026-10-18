@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 445,
+    "ENGINE_GAP": 440,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3467
+    "TESTED": 3472
   },
   "delta": {
-    "ENGINE_GAP": -171,
+    "ENGINE_GAP": -176,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1418
+    "TESTED": 1423
   },
   "status_changes": [
     {
@@ -1529,6 +1529,36 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U269"
+    },
+    {
+      "name": "ガーディアン・エルマ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U430"
+    },
+    {
+      "name": "ガーディアン・グラール",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U430"
+    },
+    {
+      "name": "ガーディアン・ケースト",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U430"
+    },
+    {
+      "name": "ガーディアン・シール",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U430"
+    },
+    {
+      "name": "ガーディアン・バオウ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U430"
     },
     {
       "name": "キックバック",

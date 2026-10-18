@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 445,
+    "ENGINE_GAP": 440,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3467
+    "TESTED": 3472
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1575,
+    "legacy": 1577,
     "sin": 5,
-    "unified": 1368
+    "unified": 1371
   },
-  "static_registration_name_count": 3477,
+  "static_registration_name_count": 3482,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -18759,12 +18759,20 @@
       "subtype": null,
       "date": "2002-11-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「墓地の装備魔法をこのカードに装備する」経路が無い。API.equipSpell は sz にある装備カードしか装備先へ結べず（40_legal_script_engine.js:677）、墓地から魔法・罠ゾーンへ置き直す action が無い（cycle 31 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZN_claude_s03_u430_guardians.js",
+          "line": 41
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u430_guardians.js"
+      ]
     },
     {
       "index": 835,
@@ -18797,12 +18805,19 @@
       "subtype": null,
       "date": "2002-11-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs central summon-legality restriction bound to an exact Equip Spell identity across Normal, Flip and Special Summon plus its one-card-hand summon procedure.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZN_claude_s03_u430_guardians.js",
+          "line": 26
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u430_guardians.js",
         "tools\\test_v700_batch22.js"
       ]
     },
@@ -18814,12 +18829,19 @@
       "subtype": null,
       "date": "2002-11-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs central summon-legality restriction bound to an exact Equip Spell, complete Spell-effect immunity and exclusion from opponent attack-target candidates.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZN_claude_s03_u430_guardians.js",
+          "line": 33
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u430_guardians.js",
         "tools\\test_v700_batch22.js"
       ]
     },
@@ -18831,12 +18853,20 @@
       "subtype": null,
       "date": "2002-11-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「「流星の弓－シール」が存在する時のみ召喚・反転召喚・特殊召喚できる」を表現できない。通常召喚は normalSummonProcedure の condition で縛れるが、特殊召喚は cannotSpecialSummon の全面禁止しか無く、条件付きで許可できない（cycle 31 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZN_claude_s03_u430_guardians.js",
+          "line": 69
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u430_guardians.js"
+      ]
     },
     {
       "index": 839,
@@ -18887,12 +18917,20 @@
       "subtype": null,
       "date": "2002-11-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「「破邪の大剣－バオウ」が自分フィールドに存在する時のみ召喚・反転召喚・特殊召喚できる」を表現できない。特殊召喚を条件付きで許可する宣言が無い（[[ガーディアン・シール]] と同じ層、cycle 35 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZN_claude_s03_u430_guardians.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u430_guardians.js"
+      ]
     },
     {
       "index": 842,

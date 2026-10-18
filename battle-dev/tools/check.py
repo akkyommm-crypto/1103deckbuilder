@@ -720,6 +720,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u426_material_gifts.js')],check=
 subprocess.run(['node',str(ROOT/'tools/test_s03_u427_gap_cards.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u428_provenance.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u429_summon_rules.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u430_guardians.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

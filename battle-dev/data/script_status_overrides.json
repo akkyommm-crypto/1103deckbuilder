@@ -589,14 +589,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs explicit five-column Monster Zone topology, adjacent-zone movement and column-aware direct-attack legality covering opposing Monster and Spell/Trap zones."
     },
-    "ガーディアン・グラール": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs central summon-legality restriction bound to an exact Equip Spell identity across Normal, Flip and Special Summon plus its one-card-hand summon procedure."
-    },
-    "ガーディアン・ケースト": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs central summon-legality restriction bound to an exact Equip Spell, complete Spell-effect immunity and exclusion from opponent attack-target candidates."
-    },
     "コクーン・パーティ": {
       "status": "ENGINE_GAP",
       "reason": "Needs authoritative Neo-Spacian and Chrysalis metadata mapping plus replay-safe resolution-time selection and simultaneous Deck Special Summons by distinct Graveyard kinds."
@@ -1863,17 +1855,9 @@
       "status": "ENGINE_GAP",
       "reason": "「メインフェイズ時に発動する光・闇属性モンスターの効果を無効化する」を表現できない。[[コアキメイル・パワーハンド]] と同じくモンスター発の negateEffect が他のモンスターへ届かず、さらに「発動する効果だけ」を選り分ける層も無い（cycle 30 実測）。"
     },
-    "ガーディアン・エルマ": {
-      "status": "ENGINE_GAP",
-      "reason": "「墓地の装備魔法をこのカードに装備する」経路が無い。API.equipSpell は sz にある装備カードしか装備先へ結べず（40_legal_script_engine.js:677）、墓地から魔法・罠ゾーンへ置き直す action が無い（cycle 31 実測）。"
-    },
     "ギルフォード・ザ・レジェンド": {
       "status": "ENGINE_GAP",
       "reason": "「墓地の装備魔法を可能な限り装備する」経路が無い。[[ガーディアン・エルマ]] と同じく墓地からの装備が書けない（cycle 31 実測）。"
-    },
-    "ガーディアン・シール": {
-      "status": "ENGINE_GAP",
-      "reason": "「「流星の弓－シール」が存在する時のみ召喚・反転召喚・特殊召喚できる」を表現できない。通常召喚は normalSummonProcedure の condition で縛れるが、特殊召喚は cannotSpecialSummon の全面禁止しか無く、条件付きで許可できない（cycle 31 実測）。"
     },
     "コンビネーション・アタック": {
       "status": "ENGINE_GAP",
@@ -1934,10 +1918,6 @@
         "tools/test_astra01_cards.js",
         "tools/test_astra01_primitive.js"
       ]
-    },
-    "ガーディアン・バオウ": {
-      "status": "ENGINE_GAP",
-      "reason": "「「破邪の大剣－バオウ」が自分フィールドに存在する時のみ召喚・反転召喚・特殊召喚できる」を表現できない。特殊召喚を条件付きで許可する宣言が無い（[[ガーディアン・シール]] と同じ層、cycle 35 実測）。"
     },
     "サイバー・オーガ": {
       "status": "ENGINE_GAP",

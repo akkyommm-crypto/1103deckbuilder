@@ -14293,6 +14293,56 @@
         "tools/test_s03_u429_summon_rules.js"
       ],
       "evidence": "Exact script. Text (carddata). Two 「仔羊トークン」 in Defense Position; this turn I cannot summon / flip summon / Special Summon any monster, the opponent can; not activatable with only one free Monster Zone. Test: tools/test_s03_u429_summon_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ガーディアン・エルマ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U430",
+      "tests": [
+        "tools/test_s03_u430_guardians.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Summonable only with 「蝶の短剣－エルマ」 on my field; a Normal Summon equips an Equip Spell (団結の力) of the Graveyard to it; nothing without one. Test: tools/test_s03_u430_guardians.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ガーディアン・グラール",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U430",
+      "tests": [
+        "tools/test_s03_u430_guardians.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Summonable only with 「重力の斧－グラール」 on my field (the Advance Summon is offered; not without it); when it is the only card in my hand it can be Special Summoned from the hand. Test: tools/test_s03_u430_guardians.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ガーディアン・ケースト",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U430",
+      "tests": [
+        "tools/test_s03_u430_guardians.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Summonable only with 「静寂のロッド－ケースト」 on my field; unaffected by Spell effects (ブラック・ホール destroyed only the other monster); the opponent's 青眼 cannot choose it as an attack target. Test: tools/test_s03_u430_guardians.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ガーディアン・シール",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U430",
+      "tests": [
+        "tools/test_s03_u430_guardians.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Summonable only with 「流星の弓－シール」 on my field; sending an Equip Card equipped to it to the Graveyard destroys a chosen opponent monster; not offered without one. Test: tools/test_s03_u430_guardians.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ガーディアン・バオウ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U430",
+      "tests": [
+        "tools/test_s03_u430_guardians.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Summonable only with 「破邪の大剣－バオウ」 on my field; destroying a monster in battle gives +1000 ATK and negates the destroyed Effect Monster (キラー・トマト summons nothing). Test: tools/test_s03_u430_guardians.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
