@@ -717,6 +717,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u423_st_shields.js')],check=True
 subprocess.run(['node',str(ROOT/'tools/test_s03_u424_lp_replace.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u425_synchro_mats.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u426_material_gifts.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u427_gap_cards.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

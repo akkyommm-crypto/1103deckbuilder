@@ -257,10 +257,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a replay-safe top-four reveal transaction, selective simultaneous summons of eligible Normal Monsters and deterministic shuffle-back of the remainder."
     },
-    "魔轟神獣チャワ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe in-hand ignition Special Summon procedure whose activation cost selects and discards another canonical Fabled monster."
-    },
     "要塞クジラ": {
       "status": "GENERIC_OK",
       "reason": "Effectless Ritual Monster; card-specific behavior is fully described by the future generic Ritual Summon recipe/pipeline."
@@ -881,10 +877,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs authoritative Chrysalis-to-Neo-Spacian mapping metadata, tribute cost and mapped Graveyard Special Summon."
     },
-    "コロボックリ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs an exact canonical Matsubokkuru hand-send cost and summon-method provenance for self Special Summon."
-    },
     "コンタクト": {
       "status": "ENGINE_GAP",
       "reason": "Needs authoritative Chrysalis-to-Neo-Spacian mapping and simultaneous mass send followed by hand/Deck summon selection."
@@ -900,10 +892,6 @@
     "スペシャル・デュアル・サモン": {
       "status": "ENGINE_GAP",
       "reason": "Needs Gemini second-summon state mutation and an End Phase hand-return schedule linked to the selected monster."
-    },
-    "タイム・イーター": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance and a serializable next-opponent-turn Main Phase 1 skip rule."
     },
     "ダーク・リペアラー": {
       "status": "ENGINE_GAP",
@@ -941,14 +929,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs battle-destruction provenance and private opponent Deck-top inspection with replay-safe top-or-bottom choice."
     },
-    "マスクド・チョッパー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance confirming an opponent monster was destroyed before mandatory 2000 damage."
-    },
-    "マツボックル": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs exact source-effect send-to-Grave provenance from canonical Korobokkuru and optional self-revival."
-    },
     "リゾネーター・エンジン": {
       "status": "ENGINE_GAP",
       "reason": "P4 now supplies authoritative Resonator membership, but exact resolution still needs an atomic primitive that adds one Level 4 monster from Deck and returns the surviving activation-time Graveyard targets simultaneously, followed by one deterministic Deck shuffle."
@@ -980,10 +960,6 @@
     "剣闘獣の檻－コロッセウム": {
       "status": "ENGINE_GAP",
       "reason": "Needs Deck-origin Special Summon event counting, canonical Gladiator Beast continuous stat scaling, and same-canonical-card discard destruction replacement for a Field Spell."
-    },
-    "原子ホタル": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance identifying the controller of the monster that destroyed this face-up card before mandatory 1000 effect damage."
     },
     "大逆転クイズ": {
       "status": "ENGINE_GAP",
@@ -1252,10 +1228,6 @@
     "パトロール・ロボ": {
       "status": "ENGINE_GAP",
       "reason": "resolution-time Choice / hidden information: needs private optional selection and inspection of an opponent set card every own Standby without leaking identity in replay/UI."
-    },
-    "ビッグ・ワン・ウォリアー": {
-      "status": "ENGINE_GAP",
-      "reason": "activation cost / summon procedure: needs a hand-resident ignition-like Special Summon procedure that sends another Level-1 hand monster before moving the source."
     },
     "ファイバーポッド": {
       "status": "ENGINE_GAP",

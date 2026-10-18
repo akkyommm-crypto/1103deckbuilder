@@ -14093,6 +14093,76 @@
         "tools/test_s03_u426_material_gifts.js"
       ],
       "evidence": "Exact script. Text (carddata). Special Summon from the Graveyard with exactly two face-up Beast monsters (not with one or three), banished when it leaves the field; usable as Synchro Material only for Beast Synchro Monsters. Test: tools/test_s03_u426_material_gifts.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コロボックリ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U427",
+      "tests": [
+        "tools/test_s03_u427_gap_cards.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Hand ignition: マツボックル of the hand is sent to the Graveyard (cost) and it is Special Summoned; not offered without one. Test: tools/test_s03_u427_gap_cards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "タイム・イーター",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U427",
+      "tests": [
+        "tools/test_s03_u427_gap_cards.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroying a monster in battle registers the skip of the opponent's next Main Phase 1 (phaseSkipV7 1:main1 = next turn) and the opponent's turn goes to the Battle Phase (engine: main1 is now skippable). Test: tools/test_s03_u427_gap_cards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ビッグ・ワン・ウォリアー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U427",
+      "tests": [
+        "tools/test_s03_u427_gap_cards.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Hand ignition in my Main Phase: another Level 1 monster of the hand is sent to the Graveyard (cost) and it is Special Summoned; not offered without one. Test: tools/test_s03_u427_gap_cards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マスクド・チョッパー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U427",
+      "tests": [
+        "tools/test_s03_u427_gap_cards.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroying ワイト in battle deals 2000 damage on top of the battle damage (2100-300 = 1800: 3800 in total); destroyed itself by 青眼 it deals none. Test: tools/test_s03_u427_gap_cards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マツボックル",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U427",
+      "tests": [
+        "tools/test_s03_u427_gap_cards.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Sent to the Graveyard by コロボックリ's cost → Special Summoned from the Graveyard (player flag u427Korobo); sent by something else it stays. Test: tools/test_s03_u427_gap_cards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "原子ホタル",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U427",
+      "tests": [
+        "tools/test_s03_u427_gap_cards.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroyed in battle while face-up by 青眼 → the destroyer's controller takes 1000 damage; destroyed by a card effect it deals none. Test: tools/test_s03_u427_gap_cards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔轟神獣チャワ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U427",
+      "tests": [
+        "tools/test_s03_u427_gap_cards.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Hand ignition: a 「魔轟神」 monster of the hand is discarded (cost) and it is Special Summoned; not offered without one. Test: tools/test_s03_u427_gap_cards.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

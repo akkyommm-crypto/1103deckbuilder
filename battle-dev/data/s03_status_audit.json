@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 465,
+    "ENGINE_GAP": 458,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3447
+    "TESTED": 3454
   },
   "delta": {
-    "ENGINE_GAP": -151,
+    "ENGINE_GAP": -158,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1398
+    "TESTED": 1405
   },
   "status_changes": [
     {
@@ -1741,6 +1741,12 @@
       "unit": "S03-U193"
     },
     {
+      "name": "コロボックリ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U427"
+    },
+    {
       "name": "コンバート・コンタクト",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -2483,6 +2489,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U247"
+    },
+    {
+      "name": "タイム・イーター",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U427"
     },
     {
       "name": "ダイガスタ・イグルス",
@@ -3391,6 +3403,12 @@
       "unit": "S03-U241"
     },
     {
+      "name": "ビッグ・ワン・ウォリアー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U427"
+    },
+    {
       "name": "ビーストライカー",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -3811,6 +3829,12 @@
       "unit": "S03-U308"
     },
     {
+      "name": "マスクド・チョッパー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U427"
+    },
+    {
       "name": "マスターモンク",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3821,6 +3845,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U352"
+    },
+    {
+      "name": "マツボックル",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U427"
     },
     {
       "name": "マーダーサーカス",
@@ -5099,6 +5129,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U245"
+    },
+    {
+      "name": "原子ホタル",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U427"
     },
     {
       "name": "反撃の毒牙",
@@ -8369,6 +8405,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U217"
+    },
+    {
+      "name": "魔轟神獣チャワ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U427"
     },
     {
       "name": "魔轟神獣ペガラサス",

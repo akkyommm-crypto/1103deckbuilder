@@ -33,7 +33,7 @@
 const SCHEDULE_AT_V7 = Object.freeze(
   ['drawPhase','standbyPhase','endPhase','turnStart','turnEnd','battlePhaseEnd']);
 /* スキップできるフェイズ */
-const SKIPPABLE_PHASE_V7 = Object.freeze(['draw','standby','battle','main2']);
+const SKIPPABLE_PHASE_V7 = Object.freeze(['draw','standby','main1','battle','main2']);   /* S03-U427: main1 (タイム・イーター) — the processor moves on to the Battle Phase */
 
 /* ---- handler レジストリ（state には名前だけを置く） -------------------- */
 const SCHEDULE_HANDLERS_V7 = Object.create(null);

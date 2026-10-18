@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 465,
+    "ENGINE_GAP": 458,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3447
+    "TESTED": 3454
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -118,9 +118,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1575,
     "sin": 5,
-    "unified": 1348
+    "unified": 1355
   },
-  "static_registration_name_count": 3457,
+  "static_registration_name_count": 3464,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -22799,12 +22799,19 @@
       "subtype": null,
       "date": "2011-07-16",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs an exact canonical Matsubokkuru hand-send cost and summon-method provenance for self Special Summon.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZK_claude_s03_u427_gap_cards.js",
+          "line": 82
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u427_gap_cards.js",
         "tools\\test_v760_batch28.js"
       ]
     },
@@ -33667,12 +33674,19 @@
       "subtype": null,
       "date": "2003-07-18",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance and a serializable next-opponent-turn Main Phase 1 skip rule.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZK_claude_s03_u427_gap_cards.js",
+          "line": 31
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u427_gap_cards.js",
         "tools\\test_v760_batch28.js"
       ]
     },
@@ -46298,12 +46312,19 @@
       "subtype": null,
       "date": "2010-10-16",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation cost / summon procedure: needs a hand-resident ignition-like Special Summon procedure that sends another Level-1 hand monster before moving the source.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZK_claude_s03_u427_gap_cards.js",
+          "line": 78
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u427_gap_cards.js",
         "tools\\test_v860_batch37.js"
       ]
     },
@@ -53243,12 +53264,19 @@
       "subtype": null,
       "date": "2006-11-30",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance confirming an opponent monster was destroyed before mandatory 2000 damage.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZK_claude_s03_u427_gap_cards.js",
+          "line": 23
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u427_gap_cards.js",
         "tools\\test_v770_batch29.js"
       ]
     },
@@ -53561,12 +53589,19 @@
       "subtype": null,
       "date": "2011-07-16",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs exact source-effect send-to-Grave provenance from canonical Korobokkuru and optional self-revival.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZK_claude_s03_u427_gap_cards.js",
+          "line": 90
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u427_gap_cards.js",
         "tools\\test_v770_batch29.js"
       ]
     },
@@ -68955,12 +68990,19 @@
       "subtype": null,
       "date": "2004-06-01",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance identifying the controller of the monster that destroyed this face-up card before mandatory 1000 effect damage.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZK_claude_s03_u427_gap_cards.js",
+          "line": 43
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u427_gap_cards.js",
         "tools\\test_v780_batch30.js"
       ]
     },
@@ -107290,12 +107332,19 @@
       "subtype": null,
       "date": "2009-10-01",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe in-hand ignition Special Summon procedure whose activation cost selects and discards another canonical Fabled monster.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 1,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZK_claude_s03_u427_gap_cards.js",
+          "line": 80
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u427_gap_cards.js",
         "tools\\test_v610_batch13.js"
       ]
     },
