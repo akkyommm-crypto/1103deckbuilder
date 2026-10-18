@@ -3176,6 +3176,8 @@ function continuousSources(){
 }
 
 /* 与えられた効果元の集合が、対象カードの効果を無効にしているか */
+const NEGATE_FROM_MZ_S03 = new Set();   /* S03-U432 */
+function declareNegateFromMzS03(name){ NEGATE_FROM_MZ_S03.add(name); }
 function effectNegatedBy(sources, card, loc){
   return sources.some(src=>{
     const f = src.sc.continuous && src.sc.continuous.negateEffect;
@@ -3214,7 +3216,13 @@ function effectNegated(card){
   const stSources = (typeof trapSourcesFilterS03==='function')
     ? continuousSources().filter(x=>x.zone==='sz'||x.zone==='field')
     : collectSources(['sz','field'], false);
-  return effectNegatedBy(stSources, card, loc);
+  if(effectNegatedBy(stSources, card, loc)) return true;
+  /* S03-U432: ゴーレム — a face-up MONSTER whose name was declared with declareNegateFromMzS03 negates other monsters through its continuous.negateEffect (the sz / field layer above never saw monster sources) */
+  if(NEGATE_FROM_MZ_S03.size){
+    const mzS = continuousSources().filter(x=>x.zone==='mz' && NEGATE_FROM_MZ_S03.has(cardName(x.card)));
+    if(mzS.length && effectNegatedBy(mzS, card, loc)) return true;
+  }
+  return false;
 }
 
 /* このモンスターが攻撃宣言できないか */

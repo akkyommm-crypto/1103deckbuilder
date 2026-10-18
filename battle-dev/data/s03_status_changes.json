@@ -14403,6 +14403,56 @@
         "tools/test_s03_u431_gap_misc.js"
       ],
       "evidence": "Exact script. Text (carddata). Added to the hand from the Deck by an effect → Special Summoned; not when returned from the Graveyard. Test: tools/test_s03_u431_gap_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エレメント・ザウルス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U432",
+      "tests": [
+        "tools/test_s03_u432_continuous_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A FIRE monster on the field gives +500 ATK; with an EARTH monster on the field the effect of a monster it destroyed in battle is negated (キラー・トマト summons nothing); neither without the attribute. Test: tools/test_s03_u432_continuous_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エレメント・ドラゴン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U432",
+      "tests": [
+        "tools/test_s03_u432_continuous_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). FIRE on the field gives +500 ATK; WIND on the field gives one more attack after it destroys a monster in battle; no second attack without WIND. Test: tools/test_s03_u432_continuous_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ゴーレム",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U432",
+      "tests": [
+        "tools/test_s03_u432_continuous_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). While face-up the effects of face-up LIGHT monsters are negated (ライオウ negated, a DARK monster not); after destroying a LIGHT monster in battle it may attack once more, not after a non-LIGHT one. Test: tools/test_s03_u432_continuous_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ブレイドナイト",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U432",
+      "tests": [
+        "tools/test_s03_u432_continuous_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). ATK +400 with 1 or fewer cards in hand; alone on my field it negates the Flip effect of a monster it destroyed in battle (アイヴィ・ウォール summons no token), not with another monster on the field. Test: tools/test_s03_u432_continuous_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マンモス・ゾンビ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U432",
+      "tests": [
+        "tools/test_s03_u432_continuous_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroyed when my Graveyard has no Undead (stays with one); a face-up destruction deals its original ATK (1900) to its controller. Test: tools/test_s03_u432_continuous_rules.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

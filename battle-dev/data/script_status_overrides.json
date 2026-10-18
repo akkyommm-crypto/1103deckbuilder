@@ -1545,14 +1545,6 @@
       "status": "ENGINE_GAP",
       "reason": "summon procedure / material-zone rule / summoned-monster restrictions: hand-only non-Tuner material, effect lock, and leave-field banish must attach to the resulting Synchro generation."
     },
-    "エレメント・ザウルス": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / effect negation provenance: attribute-presence ATK gain and negating a battle-destroyed Effect Monster need live attribute rules and destruction-source metadata."
-    },
-    "エレメント・ドラゴン": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / Battle extra attack: attribute-presence ATK gain and the WIND-dependent battle-destroy extra attack require a live conditional rule."
-    },
     "エンペラー・ストゥム": {
       "status": "ENGINE_GAP",
       "reason": "atomic deck-top operation / simultaneous optional choices: both players independently choose grave cards and place them on their deck tops after an Advance Summon."
@@ -1576,10 +1568,6 @@
     "ゴースト王－パンプキング－": {
       "status": "ENGINE_GAP",
       "reason": "ContinuousRule / bounded recurring standby schedule: conditional stats and exactly four cumulative standby increments require live dependency and bounded counter lifetime."
-    },
-    "ゴーレム": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / effect negation / Battle extra attack: blanket LIGHT monster negation and a battle-destroy-dependent extra attack need central rule hooks."
     },
     "システム・ダウン": {
       "status": "ENGINE_GAP",
@@ -1641,17 +1629,9 @@
       "status": "ENGINE_GAP",
       "reason": "equip metadata / self-return deck operation: target legality depends on Flint equip identity and this Spell optionally returns itself after resolution."
     },
-    "ブレイドナイト": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / battle-destroyed flip-effect negation: live hand/field conditions and suppression of the destroyed Flip monster's effect need rule-layer negation provenance."
-    },
     "ポセイドン・オオカブト": {
       "status": "ENGINE_GAP",
       "reason": "Battle repeated-target attack counter: up to two continued attacks against the same surviving attack-position monster require target-locked per-turn counters."
-    },
-    "マンモス・ゾンビ": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / destruction provenance snapshot: immediate self-destruction without Zombies and original-ATK damage to the controller at destruction need exact cause/time snapshots."
     },
     "リグラス・リーパー": {
       "status": "ENGINE_GAP",

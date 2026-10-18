@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 434,
+    "ENGINE_GAP": 429,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3478
+    "TESTED": 3483
   },
   "delta": {
-    "ENGINE_GAP": -182,
+    "ENGINE_GAP": -187,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1429
+    "TESTED": 1434
   },
   "status_changes": [
     {
@@ -1219,10 +1219,22 @@
       "unit": "S03-U397"
     },
     {
+      "name": "エレメント・ザウルス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U432"
+    },
+    {
       "name": "エレメント・ソルジャー",
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U264"
+    },
+    {
+      "name": "エレメント・ドラゴン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U432"
     },
     {
       "name": "エレメント・ヴァルキリー",
@@ -1853,6 +1865,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U64"
+    },
+    {
+      "name": "ゴーレム",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U432"
     },
     {
       "name": "ゴーレム・ドラゴン",
@@ -3685,6 +3703,12 @@
       "unit": "S03-U386"
     },
     {
+      "name": "ブレイドナイト",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U432"
+    },
+    {
       "name": "プチトマボー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3953,6 +3977,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U427"
+    },
+    {
+      "name": "マンモス・ゾンビ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U432"
     },
     {
       "name": "マーダーサーカス",

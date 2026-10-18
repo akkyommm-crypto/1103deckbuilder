@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 434,
+    "ENGINE_GAP": 429,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3478
+    "TESTED": 3483
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1578,
+    "legacy": 1580,
     "sin": 5,
-    "unified": 1376
+    "unified": 1379
   },
-  "static_registration_name_count": 3488,
+  "static_registration_name_count": 3493,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -14708,13 +14708,20 @@
       "subtype": null,
       "date": "2004-08-05",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / effect negation provenance: attribute-presence ATK gain and negating a battle-destroyed Effect Monster need live attribute rules and destruction-source metadata.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZP_claude_s03_u432_continuous_rules.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u197_partial1.js",
+        "tools\\test_s03_u432_continuous_rules.js",
         "tools\\test_v900_batch41.js"
       ]
     },
@@ -14774,12 +14781,19 @@
       "subtype": null,
       "date": "2004-05-27",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / Battle extra attack: attribute-presence ATK gain and the WIND-dependent battle-destroy extra attack require a live conditional rule.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZP_claude_s03_u432_continuous_rules.js",
+          "line": 36
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u432_continuous_rules.js",
         "tools\\test_v900_batch41.js"
       ]
     },
@@ -23692,10 +23706,16 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / effect negation / Battle extra attack: blanket LIGHT monster negation and a battle-destroy-dependent extra attack need central rule hooks.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZP_claude_s03_u432_continuous_rules.js",
+          "line": 48
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle01.js",
@@ -23706,6 +23726,7 @@
         "tools\\test_s03_u201_partial5.js",
         "tools\\test_s03_u224_ns16.js",
         "tools\\test_s03_u292_gap9.js",
+        "tools\\test_s03_u432_continuous_rules.js",
         "tools\\test_v470_native_cards.js",
         "tools\\test_v660_batch18.js",
         "tools\\test_v670_batch19.js",
@@ -49842,12 +49863,19 @@
       "subtype": null,
       "date": "2002-05-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / battle-destroyed flip-effect negation: live hand/field conditions and suppression of the destroyed Flip monster's effect need rule-layer negation provenance.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZP_claude_s03_u432_continuous_rules.js",
+          "line": 68
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u432_continuous_rules.js",
         "tools\\test_v910_batch42.js"
       ]
     },
@@ -53913,12 +53941,19 @@
       "subtype": null,
       "date": "2008-07-19",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / destruction provenance snapshot: immediate self-destruction without Zombies and original-ATK damage to the controller at destruction need exact cause/time snapshots.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZP_claude_s03_u432_continuous_rules.js",
+          "line": 58
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u432_continuous_rules.js",
         "tools\\test_v910_batch42.js"
       ]
     },
