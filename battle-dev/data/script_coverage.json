@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 475,
+    "NOT_STARTED": 471,
     "PARTIAL": 10,
-    "TESTED": 3396
+    "TESTED": 3400
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1565,
+    "legacy": 1566,
     "sin": 5,
-    "unified": 1307
+    "unified": 1310
   },
-  "static_registration_name_count": 3406,
+  "static_registration_name_count": 3410,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -12223,14 +12223,21 @@
       "subtype": null,
       "date": "2010-08-03",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZX_claude_s03_u414_inverz.js",
+          "line": 22
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_class_a_recovery_04.js",
-        "tools\\test_s03_u221_ns13.js"
+        "tools\\test_s03_u221_ns13.js",
+        "tools\\test_s03_u414_inverz.js"
       ]
     },
     {
@@ -12284,13 +12291,20 @@
       "subtype": null,
       "date": "2010-08-03",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZX_claude_s03_u414_inverz.js",
+          "line": 15
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_class_a_recovery_04.js"
+        "tools\\test_class_a_recovery_04.js",
+        "tools\\test_s03_u414_inverz.js"
       ]
     },
     {
@@ -86392,12 +86406,20 @@
       "subtype": null,
       "date": "2004-06-01",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZX_claude_s03_u414_inverz.js",
+          "line": 41
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u414_inverz.js"
+      ]
     },
     {
       "index": 3989,
@@ -96255,12 +96277,20 @@
       "subtype": null,
       "date": "2011-04-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZX_claude_s03_u414_inverz.js",
+          "line": 81
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u414_inverz.js"
+      ]
     },
     {
       "index": 4443,

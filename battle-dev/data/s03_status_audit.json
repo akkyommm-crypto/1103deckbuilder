@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 475,
+    "NOT_STARTED": 471,
     "PARTIAL": 10,
-    "TESTED": 3396
+    "TESTED": 3400
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -832,
+    "NOT_STARTED": -836,
     "PARTIAL": -172,
-    "TESTED": 1347
+    "TESTED": 1351
   },
   "status_changes": [
     {
@@ -991,10 +991,22 @@
       "unit": "S03-U383"
     },
     {
+      "name": "インヴェルズの斥候",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U414"
+    },
+    {
       "name": "インヴェルズの歩哨",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U259"
+    },
+    {
+      "name": "インヴェルズの魔細胞",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U414"
     },
     {
       "name": "インヴェルズを呼ぶ者",
@@ -6409,6 +6421,12 @@
       "unit": "S03-U220"
     },
     {
+      "name": "深緑の魔弓使い",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U414"
+    },
+    {
       "name": "混沌幻魔アーミタイル",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -7217,6 +7235,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U215"
+    },
+    {
+      "name": "蒼血鬼",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U414"
     },
     {
       "name": "薄幸の乙女",

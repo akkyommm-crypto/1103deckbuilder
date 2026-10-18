@@ -13583,6 +13583,46 @@
         "tools/test_s03_u413_fusion.js"
       ],
       "evidence": "Exact script. Text (carddata). Continuous Trap with the flag fusionSummonBanS03 (engine/1ZZU deckLockSourceS03): while face-up 融合 cannot be activated (fusionSpellOptionsS03 is empty) and API.specialSummon with summonKind 'fusion' is refused (the monster stays in the Extra Deck); a control without it: 融合 is activatable. Test: tools/test_s03_u413_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "インヴェルズの魔細胞",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U414",
+      "tests": [
+        "tools/test_s03_u414_inverz.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Summon procedure from the hand while I control no monster (illegal with one); on the field it can be Tributed only for the Advance Summon of an 「インヴェルズ」 monster (インヴェルズ・ガザス yes, ブラック・マジシャン no - NEW: noAdvanceTributeS03 function gets the summoned db) and is no Synchro material. Test: tools/test_s03_u414_inverz.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "インヴェルズの斥候",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U414",
+      "tests": [
+        "tools/test_s03_u414_inverz.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Graveyard ignition at the start of my Main Phase 1 with no Spell / Trap Card on my field (u384MainStart): Special Summoned, and I cannot Special Summon for the rest of the turn (banSummonS03); same Tribute / Synchro restrictions; not offered with a Spell / Trap Card on my field. Test: tools/test_s03_u414_inverz.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "深緑の魔弓使い",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U414",
+      "tests": [
+        "tools/test_s03_u414_inverz.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Unlimited ignition: a Plant of mine (きのこマン) is sacrificed (cost) and a Spell / Trap Card of the field destroyed; while I control another Plant it cannot be attacked (青眼's attack is refused), without a Plant it is attacked and destroyed. Test: tools/test_s03_u414_inverz.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "蒼血鬼",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U414",
+      "tests": [
+        "tools/test_s03_u414_inverz.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Summoned → Defense Position (forced trigger; the Flip Summon trigger shares the body); once-per-turn ignition: an Xyz Material of a monster of mine detached (API.detachMaterial) and ゾンビ・マスター (Level 4 Undead) Special Summoned from the Graveyard; not offered without an Xyz Material. Test: tools/test_s03_u414_inverz.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

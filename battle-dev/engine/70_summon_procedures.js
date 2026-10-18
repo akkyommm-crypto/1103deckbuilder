@@ -168,7 +168,7 @@ function tributeCandidates(p, targetDb){
   return API.fieldCards({zone:'mz', player:p, filter:x=>x.card && !x.card.cannotTribute && !x.card.noAdvanceTributeS03
     && !(x.card.noAdvanceTributeNonDarkS03 && !(targetDb && targetDb.at==='闇'))
     && !(x.card.advanceTributeOnlyForS03 && !(targetDb && String(targetDb.n||'').indexOf(x.card.advanceTributeOnlyForS03)>=0))   /* S03-U388: only for the Advance Summon of monsters whose name has it (雲魔物トークン / ジュラックトークン) */
-    && !(()=>{ const v=(CARD_SCRIPTS[cardName(x.card)]||{}).noAdvanceTributeS03; try{ return typeof v==='function' ? !!v(x.card) : !!v; }catch(e){ return false; } })()});   /* S03-U266: a function form (きつね火: only while face-up) */
+    && !(()=>{ const v=(CARD_SCRIPTS[cardName(x.card)]||{}).noAdvanceTributeS03; try{ return typeof v==='function' ? !!v(x.card, targetDb) : !!v;   /* S03-U414: the summoned monster's db is the 2nd argument (インヴェルズの魔細胞) */ }catch(e){ return false; } })()});   /* S03-U266: a function form (きつね火: only while face-up) */
 }
 
 function doNormalSummon(i, pos){
