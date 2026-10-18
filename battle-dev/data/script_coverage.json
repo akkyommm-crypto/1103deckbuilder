@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 451,
+    "NOT_STARTED": 447,
     "PARTIAL": 10,
-    "TESTED": 3420
+    "TESTED": 3424
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1568,
+    "legacy": 1570,
     "sin": 5,
-    "unified": 1328
+    "unified": 1330
   },
-  "static_registration_name_count": 3430,
+  "static_registration_name_count": 3434,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -15397,12 +15397,20 @@
       "subtype": null,
       "date": "2006-05-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZD_claude_s03_u420_foe_field.js",
+          "line": 23
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u420_foe_field.js"
+      ]
     },
     {
       "index": 681,
@@ -39645,12 +39653,20 @@
       "subtype": null,
       "date": "2007-10-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZD_claude_s03_u420_foe_field.js",
+          "line": 81
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u420_foe_field.js"
+      ]
     },
     {
       "index": 1813,
@@ -63167,12 +63183,20 @@
       "subtype": null,
       "date": "2008-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZD_claude_s03_u420_foe_field.js",
+          "line": 38
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u420_foe_field.js"
+      ]
     },
     {
       "index": 2906,
@@ -86765,12 +86789,20 @@
       "subtype": null,
       "date": "2002-05-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZD_claude_s03_u420_foe_field.js",
+          "line": 87
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u420_foe_field.js"
+      ]
     },
     {
       "index": 4001,

@@ -13823,6 +13823,46 @@
         "tools/test_s03_u419_unique_more.js"
       ],
       "evidence": "Exact script. Text (carddata). Hand procedure with a face-up 「氷結界」 monster of mine (not without); the turn it is Special Summoned this way a Level 5+ Special Summon is refused (banSummonS03 {lvmin:5}), a Level 4 or lower one is not; the release ignition Special Summons a 「氷結界」 monster of the Graveyard (not offered without one). Test: tools/test_s03_u419_unique_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エーリアン・スカル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U420",
+      "tests": [
+        "tools/test_s03_u420_foe_field.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Hand procedure releasing a Level 3 or lower opponent monster, the card stands on the OPPONENT field with 1 A Counter and I cannot Normal Summon this turn; not Special Summonable when the opponent only has a Level 7 monster. Test: tools/test_s03_u420_foe_field.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴォルカニック・クイーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U420",
+      "tests": [
+        "tools/test_s03_u420_foe_field.js"
+      ],
+      "evidence": "Exact script. Text (carddata). cannotNormalSummon; hand procedure releasing an opponent monster onto the opponent field (not without one), no Normal Summon this turn; its controller's burn ignition (send another card of theirs: 1000 damage to the summoner, once per turn) and End Phase upkeep (no other monster to release: 1000 damage to the controller). Test: tools/test_s03_u420_foe_field.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "トーチ・ゴーレム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U420",
+      "tests": [
+        "tools/test_s03_u420_foe_field.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Procedure creating two トーチトークン on my field (not with fewer than two free zones) and standing on the opponent field; no Normal Summon this turn. Test: tools/test_s03_u420_foe_field.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "溶岩魔神ラヴァ・ゴーレム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U420",
+      "tests": [
+        "tools/test_s03_u420_foe_field.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Procedure releasing two opponent monsters (not with one); stands on the opponent field, no Normal Summon this turn; 1000 damage to its controller at their Standby Phase. Test: tools/test_s03_u420_foe_field.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

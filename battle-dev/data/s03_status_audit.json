@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 451,
+    "NOT_STARTED": 447,
     "PARTIAL": 10,
-    "TESTED": 3420
+    "TESTED": 3424
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -856,
+    "NOT_STARTED": -860,
     "PARTIAL": -172,
-    "TESTED": 1371
+    "TESTED": 1375
   },
   "status_changes": [
     {
@@ -1253,6 +1253,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U265"
+    },
+    {
+      "name": "エーリアン・スカル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U420"
     },
     {
       "name": "エーリアン・テレパス",
@@ -2869,6 +2875,12 @@
       "unit": "S03-U186"
     },
     {
+      "name": "トーチ・ゴーレム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U420"
+    },
+    {
       "name": "ドイツ",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4421,6 +4433,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U230"
+    },
+    {
+      "name": "ヴォルカニック・クイーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U420"
     },
     {
       "name": "ヴォルカニック・ハンマー",
@@ -6521,6 +6539,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U418"
+    },
+    {
+      "name": "溶岩魔神ラヴァ・ゴーレム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U420"
     },
     {
       "name": "滅びの爆裂疾風弾",

@@ -252,7 +252,9 @@ function strictSummonProcedureLegality(name,p,zone,index){
   if(p!==gameState.activePlayer) return {ok:false,reason:'自分のターンに行います'};
   if(!rules().exSummon) return {ok:false,reason:`${phaseJp(gameState.phase)}ではこの特殊召喚を行えません`};
   /* S03-U175: a procedure whose cost removes one of the player's own monsters (contact fusion, engine/1ZW) frees a zone */
-  if(!hasMonsterZoneSpace(p) && !(typeof summonProcedureFreesZoneS03==='function' && summonProcedureFreesZoneS03(name,p,sp))) return {ok:false,reason:'モンスターゾーンが一杯です'};
+  /* S03-U420: summonProcedure.toFoeS03 — the card is Special Summoned onto the OPPONENT's field (エーリアン・スカル, ヴォルカニック・クイーン …); freesFoeZoneS03: the cost releases an opponent monster */
+  if(sp.toFoeS03){ if(!hasMonsterZoneSpace(p===0?1:0) && !sp.freesFoeZoneS03) return {ok:false,reason:'相手のモンスターゾーンが一杯です'}; }
+  else if(!hasMonsterZoneSpace(p) && !(typeof summonProcedureFreesZoneS03==='function' && summonProcedureFreesZoneS03(name,p,sp))) return {ok:false,reason:'モンスターゾーンが一杯です'};
   // 既存v3.4回帰の明示ガードを保持し、その後v4.6の常時制約も確認する。
   if(gameState.players[p].temporaryFlags && gameState.players[p].temporaryFlags.noSpecialSummon)
     return {ok:false,reason:'このターンは特殊召喚できません'};
@@ -349,13 +351,14 @@ function finishSummonProcedure(name,p,zone,index,pos){
 function doSpecialFromZoneUidV370(uid,pos,reason,procedureDataS03){
   const hit=findCardByUid(uid); if(!hit) return;
   const card=hit.card, nm=cardName(card), p=hit.p;
-  act({type:'FX_SPECIAL_SUMMON',player:p,from:hit.zone,fromIndex:hit.index,pos:pos||'atk',reason:reason||nm,summonKind:'procedure'});   /* S03-U127: 召喚手順＝正規の方法 */
+  const spT=(CARD_SCRIPTS[nm]||{}).summonProcedure, toFoeS03=!!(spT&&spT.toFoeS03), dest=toFoeS03?(p===0?1:0):p;   /* S03-U420: onto the opponent's field */
+  act(Object.assign({type:'FX_SPECIAL_SUMMON',player:dest,from:hit.zone,fromIndex:hit.index,pos:pos||'atk',reason:reason||nm,summonKind:'procedure'},toFoeS03?{fromPlayer:p}:{}));   /* S03-U127: 召喚手順＝正規の方法 */
   const h=locateCard(card);
-  if(h && h.p===p && h.zone==='mz' && procedureDataS03!==undefined){
+  if(h && h.p===dest && h.zone==='mz' && procedureDataS03!==undefined){
     const spS03=(CARD_SCRIPTS[nm]||{}).summonProcedure;
     if(spS03 && typeof spS03.afterSummonS03==='function') spS03.afterSummonS03({p:h.p,zone:h.zone,index:h.index,card},procedureDataS03);
   }
-  if(h && h.p===p && h.zone==='mz') queueDeferredEventV2('onSpecialSummon',{player:p,name:nm,card,kind:'procedure'});
+  if(h && h.p===dest && h.zone==='mz') queueDeferredEventV2('onSpecialSummon',{player:dest,name:nm,card,kind:'procedure'});
   flushDeferredEventsV2();
 }
 function doSpecialFromHandV2(index,pos,reason){
