@@ -12,16 +12,16 @@
     "ENGINE_GAP": 409,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 424,
+    "NOT_STARTED": 422,
     "PARTIAL": 10,
-    "TESTED": 3506
+    "TESTED": 3508
   },
   "delta": {
     "ENGINE_GAP": -207,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -883,
+    "NOT_STARTED": -885,
     "PARTIAL": -172,
-    "TESTED": 1457
+    "TESTED": 1459
   },
   "status_changes": [
     {
@@ -923,6 +923,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U313"
+    },
+    {
+      "name": "アームズ・シーハンター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U438"
     },
     {
       "name": "アームズ・ホール",
@@ -3479,6 +3485,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U202"
+    },
+    {
+      "name": "バブル・ショット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U438"
     },
     {
       "name": "バルーン・リザード",

@@ -14683,6 +14683,26 @@
         "tools/test_s03_u437_misc_more.js"
       ],
       "evidence": "Exact script. Text (carddata). Special Summonable from the hand by releasing a 「海竜－ダイダロス」 (not without one); paying my 「海」 sends every other card of both hands and fields to the Graveyard; not available without 「海」. Test: tools/test_s03_u437_misc_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "アームズ・シーハンター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U438",
+      "tests": [
+        "tools/test_s03_u438_water_equip.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With another WATER monster of mine the effect monster it fought is negated after the damage calculation (a Flip effect summons no トークン, a surviving ライオウ is negated, nothing without the second WATER monster); when it would be destroyed in battle the controller destroys a Level 3 WATER monster instead. Test: tools/test_s03_u438_water_equip.js (Replay audit). Armed Sea Hunter's negation of a surviving partner lasts until the end of the turn (the text only says 'after the damage calculation'). Bubble Blaster zeroes the damage to the host's controller when both battlers are in Attack Position (the host would be destroyed)."
+    },
+    {
+      "name": "バブル・ショット",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U438",
+      "tests": [
+        "tools/test_s03_u438_water_equip.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Equip only to E・HERO バブルマン (+800 ATK); when the host would be destroyed in battle the Equip Spell is destroyed instead and the battle damage is 0 (an unequipped Bubbleman is destroyed and takes the damage); not activatable without a Bubbleman. Test: tools/test_s03_u438_water_equip.js (Replay audit). Armed Sea Hunter's negation of a surviving partner lasts until the end of the turn (the text only says 'after the damage calculation'). Bubble Blaster zeroes the damage to the host's controller when both battlers are in Attack Position (the host would be destroyed)."
     }
   ],
   "restored_to_baseline": [
