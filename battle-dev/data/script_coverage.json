@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 491,
+    "NOT_STARTED": 487,
     "PARTIAL": 10,
-    "TESTED": 3380
+    "TESTED": 3384
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,9 +117,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1564,
     "sin": 5,
-    "unified": 1295
+    "unified": 1299
   },
-  "static_registration_name_count": 3390,
+  "static_registration_name_count": 3394,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -13483,12 +13483,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZS_claude_s03_u409_blackflare.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u409_blackflare.js"
+      ]
     },
     {
       "index": 597,
@@ -16487,12 +16495,20 @@
       "subtype": null,
       "date": "2010-02-20",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZS_claude_s03_u409_blackflare.js",
+          "line": 36
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u409_blackflare.js"
+      ]
     },
     {
       "index": 736,
@@ -75969,12 +75985,20 @@
       "subtype": null,
       "date": "2002-11-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZS_claude_s03_u409_blackflare.js",
+          "line": 92
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u409_blackflare.js"
+      ]
     },
     {
       "index": 3505,
@@ -107447,12 +107471,20 @@
       "subtype": null,
       "date": "2002-11-21",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZS_claude_s03_u409_blackflare.js",
+          "line": 72
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u409_blackflare.js"
+      ]
     },
     {
       "index": 4971,

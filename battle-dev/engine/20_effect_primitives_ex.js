@@ -489,6 +489,8 @@ function materialCandidates(p, kind){
     if(kind==='synchro' && sc && typeof sc.cannotSynchroMaterial==='function'){ let noS03=false; try{ noS03=!!sc.cannotSynchroMaterial(c); }catch(e){ noS03=false; } if(noS03) return; }
     /* S03-U169: 「このターン、…シンクロ素材にできない」 (プチトマボー's summons): a zone-local turn mark */
     if(kind==='synchro' && c.noSynchroMaterialTurnS03===gameState.turn) return;
+    /* S03-U409: 「シンクロ素材にできない」 for as long as the card stays (カオス・ゴッデス's revived monster): a zone-local mark */
+    if(kind==='synchro' && c.noSynchroMaterialS03===true) return;
     const baseLv=curLV(c);
     let levels=[baseLv];
     // System v3.8.0: 《チューニング・サポーター》のようにS素材時だけ複数のレベルとして扱えるカード。

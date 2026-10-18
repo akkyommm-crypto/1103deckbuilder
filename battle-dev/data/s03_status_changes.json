@@ -13423,6 +13423,46 @@
         "tools/test_s03_u408_buster.js"
       ],
       "evidence": "Exact script. Text (carddata). On its Special Summon Undead monsters of both Graveyards (my ゴースト, the opponent's ワイト) are Special Summoned to my field, their effects negated and destroyed at the End Phase (scheduled). Test: tools/test_s03_u408_buster.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エクスプロード・ウィング・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U409",
+      "tests": [
+        "tools/test_s03_u409_blackflare.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Optional onDamageStep (dsTiming start) trigger: battling ライオウ (ATK 1900 <= 2400) - as attacker and as the attacked monster - destroys it without damage calculation and deals 1900 to the opponent (none to me); a stronger monster (青眼 3000) is fought normally. Test: tools/test_s03_u409_blackflare.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "カオス・ゴッデス－混沌の女神－",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U409",
+      "tests": [
+        "tools/test_s03_u409_blackflare.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Once-per-turn ignition: a LIGHT monster of the hand discarded (cost), ブラック・マジシャン (Level 7 DARK) of my Graveyard Special Summoned; it carries the NEW permanent zone-local mark noSynchroMaterialS03 (engine/20 materialCandidates, whitelisted in engine/00), so it is excluded from Synchro material candidates; not offered without a LIGHT monster in the hand. Test: tools/test_s03_u409_blackflare.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "黒炎の騎士－ブラック・フレア・ナイト－",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U409",
+      "tests": [
+        "tools/test_s03_u409_blackflare.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroyed by 青眼 in battle: the battle damage to me is 0 (continuous.battleDamage) and 幻影の騎士－ミラージュ・ナイト－ is Special Summoned from the Deck (Graveyard trigger after a battle destruction, reason accepted by the 'only by' text rule). Test: tools/test_s03_u409_blackflare.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "幻影の騎士－ミラージュ・ナイト－",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U409",
+      "tests": [
+        "tools/test_s03_u409_blackflare.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Special Summonable only for the reason 黒炎の騎士－ブラック・フレア・ナイト－ (not 死者蘇生); in the damage calculation its ATK 2800 + the partner's printed ATK 1900 = 4700 (2800 battle damage), back to 2800 afterwards; it battled this turn -> banished at the End Phase; without a battle it stays. Test: tools/test_s03_u409_blackflare.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

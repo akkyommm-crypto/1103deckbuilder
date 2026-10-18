@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 491,
+    "NOT_STARTED": 487,
     "PARTIAL": 10,
-    "TESTED": 3380
+    "TESTED": 3384
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -816,
+    "NOT_STARTED": -820,
     "PARTIAL": -172,
-    "TESTED": 1331
+    "TESTED": 1335
   },
   "status_changes": [
     {
@@ -1081,6 +1081,12 @@
       "unit": "S03-U239"
     },
     {
+      "name": "エクスプロード・ウィング・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U409"
+    },
+    {
       "name": "エネミーコントローラー",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -1283,6 +1289,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U209"
+    },
+    {
+      "name": "カオス・ゴッデス－混沌の女神－",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U409"
     },
     {
       "name": "カオス・ソーサラー",
@@ -5551,6 +5563,12 @@
       "unit": "S03-U347"
     },
     {
+      "name": "幻影の騎士－ミラージュ・ナイト－",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U409"
+    },
+    {
       "name": "幻影の魔術士",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -8027,6 +8045,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U223"
+    },
+    {
+      "name": "黒炎の騎士－ブラック・フレア・ナイト－",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U409"
     },
     {
       "name": "黒羽の宝札",

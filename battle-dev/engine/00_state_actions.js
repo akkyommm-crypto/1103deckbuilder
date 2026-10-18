@@ -2865,7 +2865,7 @@ const ZONE_LOCAL_KEYS = [
   'oppTargetImmuneTurnS03','fusionMaterialS03',   // S03-U130: ダーク・フュージョン / 融合召喚に使用した融合素材
   'attackAllS03',   // S03-U149: the monsters an attack-all card attacked this turn
   'u155ReturnTurn','u155CoffinTurn',   // S03-U155: 異次元からの帰還 / 封印の黄金櫃 marks
-  'battledWithS03','u161ViceMarkedBy','u161ViceTargetUid','u165TempesterBy','u165TempesterUids','noSynchroMaterialTurnS03',                    // S03-U160: uids of the monsters this card battled while on the field (「このカードと戦闘を行ったモンスター」)
+  'battledWithS03','u161ViceMarkedBy','u161ViceTargetUid','u165TempesterBy','u165TempesterUids','noSynchroMaterialTurnS03','noSynchroMaterialS03',                    // S03-U160: uids of the monsters this card battled while on the field (「このカードと戦闘を行ったモンスター」)
   'u154SwordsTurn','u154LimiterTurn',   // S03-U154: 光の護封剣 / リミッター解除 marks belong to this stay on the field
   'd4WeaponSrcUid','d4WeaponUntilTurn',   // S03-U151: ウェポンチェンジ's swap belongs to the monster's stay on the field
   'battledTurnS03','gladiatorSummonedS03',   // S03-U180 (engine/1ZZ)
