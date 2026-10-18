@@ -3,7 +3,7 @@ const ROOT=path.resolve(__dirname,'..');
 const html=fs.readFileSync(path.join(ROOT,'dist','battle.html'),'utf8');
 const source=fs.readFileSync(path.join(ROOT,'cards','78_v78_autobuild_batch30.js'),'utf8');
 const scripted=['ロストガーディアン','ワーム・ジェートリクプス','原初の種','原始太陽ヘリオス','右手に盾を左手に剣を','名工 虎鉄','壺魔神','太陽の祭壇','女忍者ヤエ','巨大化','幻惑のラフレシア','幻獣ワイルドホーン','引きガエル'];
-const gaps=['二重魔法','伝説の爆炎使い','儀水鏡との交信','六武式三段衝','剣闘獣の檻－コロッセウム','大逆転クイズ','始祖神鳥シムルグ','幻影のゴラ亀'];/* Equip primitive(System v15) で解消。当時 ENGINE_GAP だった記録として残す。 */const equipUnlocked=['ヴァイロン・ソルジャー'];/* Scheduler primitive(System v7) で解消。当時 ENGINE_GAP だった記録として残す。 */const schedulerUnlocked=['宝札雲'];/* Battle primitive(System v6) で解消。当時 ENGINE_GAP だった記録として残す。 */const battleUnlocked=['仮面魔道士','大盤振舞侍'];/* DestructionProtection primitive(System v21) で解消。当時 ENGINE_GAP だった記録として残す。 */const protectUnlocked=['ロードランナー'];
+const gaps=['二重魔法','伝説の爆炎使い','儀水鏡との交信','剣闘獣の檻－コロッセウム','大逆転クイズ','始祖神鳥シムルグ','幻影のゴラ亀'];/* Equip primitive(System v15) で解消。当時 ENGINE_GAP だった記録として残す。 */const equipUnlocked=['ヴァイロン・ソルジャー'];/* Scheduler primitive(System v7) で解消。当時 ENGINE_GAP だった記録として残す。 */const schedulerUnlocked=['宝札雲'];/* Battle primitive(System v6) で解消。当時 ENGINE_GAP だった記録として残す。 */const battleUnlocked=['仮面魔道士','大盤振舞侍'];/* DestructionProtection primitive(System v21) で解消。当時 ENGINE_GAP だった記録として残す。 */const protectUnlocked=['ロードランナー'];
 let f=0;function ok(n,v){console.log((v?'PASS ':'FAIL ')+n);if(!v)f++;}
 scripted.forEach(n=>ok('batch30 registration '+n,html.includes(`'${n}'`)));
 const ov=JSON.parse(fs.readFileSync(path.join(ROOT,'data','script_status_overrides.json'),'utf8')).cards;
@@ -16,4 +16,5 @@ ok('existing battle primitive only',source.includes('piercingDamage(info)'));
 ok('no shared engine edit represented',!source.includes('CARD_SCRIPTS['));
 /* S03-U240: placement as a Continuous Spell (engine/1ZZH) made 宝玉の恵み TESTED; its ENGINE_GAP override was removed. Kept as the record that it was ENGINE_GAP then. */["宝玉の恵み"].forEach(n=>ok('Crystal Beast placement unlocked '+n,!ov[n]));/* Existing-engine Class A recovery sub-batch 2. */["光と闇の洗礼","味方殺しの女騎士"].forEach(n=>ok('Existing engine unlocked '+n,!ov[n]));/* S03-U427: implemented and tested; its ENGINE_GAP override was removed. Kept as the record that it was ENGINE_GAP then. */['原子ホタル'].forEach(n=>ok('U427 unlocked '+n,!ov[n]));
 /* S03-U434: implemented and tested; its ENGINE_GAP override was removed. Kept as the record that it was ENGINE_GAP then. */['代打バッター'].forEach(n=>{const okU=!ov[n];console.log((okU?'PASS ':'FAIL ')+'U434 unlocked '+n);if(!okU)process.exitCode=2;});
+/* S03-U448: implemented and tested; its ENGINE_GAP override was removed. Kept as the record that it was ENGINE_GAP then. */['六武式三段衝'].forEach(n=>{const okU=!ov[n];console.log((okU?'PASS ':'FAIL ')+'U448 unlocked '+n);if(!okU)process.exitCode=2;});
 if(f)process.exit(2);

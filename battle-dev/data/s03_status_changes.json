@@ -15103,6 +15103,56 @@
         "tools/test_s03_u447_lock_lance.js"
       ],
       "evidence": "Exact script. Text (carddata). At the opponent attack declaration my Synchro Monster is released, every Attack Position monster of the opponent turns Defense Position and the attacker's DEF (2500) is dealt to the opponent; not offered without a Synchro Monster. Test: tools/test_s03_u447_lock_lance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイコパス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U448",
+      "tests": [
+        "tools/test_s03_u448_search_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). 800 LP paid; both banished Psychic monsters of mine are added to the hand (a non-Psychic stays banished); not activatable without a banished Psychic monster. Test: tools/test_s03_u448_search_spells.js (Replay audit). サイコパス and リゾネーター・エンジン choose their targets at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "バブル・シャッフル",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U448",
+      "tests": [
+        "tools/test_s03_u448_search_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). My Attack Position Bubbleman and the chosen opponent Attack Position monster turn Defense Position, the Bubbleman is Tributed and a 「E・HERO」 of the hand is Special Summoned; not activatable without a Bubbleman. Test: tools/test_s03_u448_search_spells.js (Replay audit). サイコパス and リゾネーター・エンジン choose their targets at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "リゾネーター・エンジン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U448",
+      "tests": [
+        "tools/test_s03_u448_search_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The Level 4 monster of the Deck is added to the hand and the two chosen 「リゾネーター」 of the Graveyard return to the Deck; not activatable with only one Resonator in the Graveyard. Test: tools/test_s03_u448_search_spells.js (Replay audit). サイコパス and リゾネーター・エンジン choose their targets at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "レベルアップ!",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U448",
+      "tests": [
+        "tools/test_s03_u448_search_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The face-up サイレント・ソードマン LV3 goes to the Graveyard (cost) and LV5 (named on the card) is Special Summoned from the Deck; not activatable without LV5 in the hand or Deck. Test: tools/test_s03_u448_search_spells.js (Replay audit). サイコパス and リゾネーター・エンジン choose their targets at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "六武式三段衝",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U448",
+      "tests": [
+        "tools/test_s03_u448_search_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With 3 face-up 六武衆 one of three modes: all face-up monsters / all face-up Spell & Trap Cards / all Set Spell & Trap Cards of the opponent are destroyed (each mode tested, the others stay); not activatable with only two 六武衆. Test: tools/test_s03_u448_search_spells.js (Replay audit). サイコパス and リゾネーター・エンジン choose their targets at the resolution (ChoiceRequest) instead of as activation targets."
     }
   ],
   "restored_to_baseline": [

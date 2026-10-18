@@ -738,6 +738,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u444_event_traps.js')],check=Tru
 subprocess.run(['node',str(ROOT/'tools/test_s03_u445_more_st.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u446_traps_more.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u447_lock_lance.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u448_search_spells.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

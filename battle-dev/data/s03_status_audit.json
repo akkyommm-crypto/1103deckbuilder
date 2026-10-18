@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 372,
+    "ENGINE_GAP": 367,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3548
+    "TESTED": 3553
   },
   "delta": {
-    "ENGINE_GAP": -244,
+    "ENGINE_GAP": -249,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1499
+    "TESTED": 1504
   },
   "status_changes": [
     {
@@ -1957,6 +1957,12 @@
       "unit": "S03-U224"
     },
     {
+      "name": "サイコパス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U448"
+    },
+    {
       "name": "サイコ・チューン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3565,6 +3571,12 @@
       "unit": "S03-U202"
     },
     {
+      "name": "バブル・シャッフル",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U448"
+    },
+    {
       "name": "バブル・ショット",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4525,6 +4537,12 @@
       "unit": "S03-U441"
     },
     {
+      "name": "リゾネーター・エンジン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U448"
+    },
+    {
       "name": "リチュアルバスター",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4679,6 +4697,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U419"
+    },
+    {
+      "name": "レベルアップ!",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U448"
     },
     {
       "name": "レベル調整",
@@ -5225,6 +5249,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U204"
+    },
+    {
+      "name": "六武式三段衝",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U448"
     },
     {
       "name": "六武派二刀流",

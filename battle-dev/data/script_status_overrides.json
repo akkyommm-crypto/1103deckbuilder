@@ -757,10 +757,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs authoritative Chrysalis-to-Neo-Spacian mapping and simultaneous mass send followed by hand/Deck summon selection."
     },
-    "サイコパス": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe selection of one or two banished Psychic monsters after an 800 LP cost and simultaneous hand return."
-    },
     "サルベージ・ウォリアー": {
       "status": "ENGINE_GAP",
       "reason": "Needs Tribute Summon provenance and replay-safe hand-or-Graveyard Tuner selection for optional Special Summon."
@@ -777,10 +773,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs opponent-turn opponent-effect send-to-Grave provenance and an immediate serializable forced turn termination action."
     },
-    "バブル・シャッフル": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs exact Bubbleman/opponent position targets, tribute-after-position processing and replay-safe hand Elemental HERO summon selection."
-    },
     "ピクシーガーディアン": {
       "status": "ENGINE_GAP",
       "reason": "Needs same-turn opponent-caused Spell Graveyard provenance, self-tribute cost and eligible Deck-bottom recovery selection."
@@ -793,14 +785,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs Fusion destruction provenance and retained exact Fusion-material identities for optional Graveyard revival."
     },
-    "リゾネーター・エンジン": {
-      "status": "ENGINE_GAP",
-      "reason": "P4 now supplies authoritative Resonator membership, but exact resolution still needs an atomic primitive that adds one Level 4 monster from Deck and returns the surviving activation-time Graveyard targets simultaneously, followed by one deterministic Deck shuffle."
-    },
-    "レベルアップ!": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative LV evolution mapping metadata and a summon-condition-ignoring hand/Deck Special Summon pipeline."
-    },
     "二重魔法": {
       "status": "ENGINE_GAP",
       "reason": "Needs a generic replay-safe arbitrary Spell-effect copy/use pipeline from the opponent Graveyard, including activation legality, costs, targets and resolution identity."
@@ -812,10 +796,6 @@
     "儀水鏡との交信": {
       "status": "ENGINE_GAP",
       "reason": "Needs controller-private inspection of all opponent set Spell/Trap cards, private Deck-top-two inspection and deterministic reorder, with two-mode resolution selection."
-    },
-    "六武式三段衝": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe resolution mode selection among three legal mass-destruction operations after canonical Six Samurai field-count validation."
     },
     "剣闘獣の檻－コロッセウム": {
       "status": "ENGINE_GAP",

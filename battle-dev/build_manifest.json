@@ -1765,6 +1765,9 @@
   "path": "cards/HZZZZZZZZZZZE_claude_s03_u447_lock_lance.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZF_claude_s03_u448_search_spells.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

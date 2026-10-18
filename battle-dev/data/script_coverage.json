@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 372,
+    "ENGINE_GAP": 367,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3548
+    "TESTED": 3553
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1615,
+    "legacy": 1620,
     "sin": 5,
     "unified": 1405
   },
-  "static_registration_name_count": 3557,
+  "static_registration_name_count": 3562,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24184,12 +24184,19 @@
       "subtype": "",
       "date": "2009-02-14",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe selection of one or two banished Psychic monsters after an 800 LP cost and simultaneous hand return.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZF_claude_s03_u448_search_spells.js",
+          "line": 22
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u448_search_spells.js",
         "tools\\test_v760_batch28.js"
       ]
     },
@@ -44927,12 +44934,19 @@
       "subtype": "速攻",
       "date": "2005-05-26",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs exact Bubbleman/opponent position targets, tribute-after-position processing and replay-safe hand Elemental HERO summon selection.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZF_claude_s03_u448_search_spells.js",
+          "line": 127
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u448_search_spells.js",
         "tools\\test_v770_batch29.js"
       ]
     },
@@ -58550,13 +58564,20 @@
       "subtype": "",
       "date": "2010-11-13",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "P4 now supplies authoritative Resonator membership, but exact resolution still needs an atomic primitive that adds one Level 4 monster from Deck and returns the surviving activation-time Graveyard targets simultaneously, followed by one deterministic Deck shuffle.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZF_claude_s03_u448_search_spells.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_p4_setcode_recovery.js"
+        "tools\\test_p4_setcode_recovery.js",
+        "tools\\test_s03_u448_search_spells.js"
       ]
     },
     {
@@ -60772,12 +60793,19 @@
       "subtype": "",
       "date": "2004-05-27",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative LV evolution mapping metadata and a summon-condition-ignoring hand/Deck Special Summon pipeline.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZF_claude_s03_u448_search_spells.js",
+          "line": 77
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u448_search_spells.js",
         "tools\\test_v770_batch29.js"
       ]
     },
@@ -67052,12 +67080,19 @@
       "subtype": "",
       "date": "2010-11-13",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe resolution mode selection among three legal mass-destruction operations after canonical Six Samurai field-count validation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZF_claude_s03_u448_search_spells.js",
+          "line": 105
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u448_search_spells.js",
         "tools\\test_v780_batch30.js"
       ]
     },
