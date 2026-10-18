@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 409,
+    "ENGINE_GAP": 408,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 422,
+    "NOT_STARTED": 420,
     "PARTIAL": 10,
-    "TESTED": 3508
+    "TESTED": 3511
   },
   "delta": {
-    "ENGINE_GAP": -207,
+    "ENGINE_GAP": -208,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -885,
+    "NOT_STARTED": -887,
     "PARTIAL": -172,
-    "TESTED": 1459
+    "TESTED": 1462
   },
   "status_changes": [
     {
@@ -4585,6 +4585,12 @@
       "unit": "S03-U345"
     },
     {
+      "name": "ローズ・テンタクルス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U439"
+    },
+    {
       "name": "ローズ・バード",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -6133,6 +6139,12 @@
       "unit": "S03-U165"
     },
     {
+      "name": "幻獣ロックリザード",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U439"
+    },
+    {
       "name": "幻魔皇ラビエル",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6839,6 +6851,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U327"
+    },
+    {
+      "name": "氷結界の御庭番",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U439"
     },
     {
       "name": "氷結界の武士",

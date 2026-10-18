@@ -14703,6 +14703,36 @@
         "tools/test_s03_u438_water_equip.js"
       ],
       "evidence": "Exact script. Text (carddata). Equip only to E・HERO バブルマン (+800 ATK); when the host would be destroyed in battle the Equip Spell is destroyed instead and the battle damage is 0 (an unequipped Bubbleman is destroyed and takes the damage); not activatable without a Bubbleman. Test: tools/test_s03_u438_water_equip.js (Replay audit). Armed Sea Hunter's negation of a surviving partner lasts until the end of the turn (the text only says 'after the damage calculation'). Bubble Blaster zeroes the damage to the host's controller when both battlers are in Attack Position (the host would be destroyed)."
+    },
+    {
+      "name": "ローズ・テンタクルス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U439",
+      "tests": [
+        "tools/test_s03_u439_garden_rock.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Two opponent Plants at my Battle Phase start → 1 + 2 attacks (all three monsters destroyed), +300 damage for each Plant destroyed in battle; one attack without Plants; cannot be Special Summoned. Test: tools/test_s03_u439_garden_rock.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "幻獣ロックリザード",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U439",
+      "tests": [
+        "tools/test_s03_u439_garden_rock.js"
+      ],
+      "evidence": "Exact script. Text (carddata). One 「幻獣」 Tribute is enough for the Advance Summon (a non-幻獣 single Tribute is not); a monster destroyed in battle costs the opponent 500 on top of the battle damage, nothing when it destroyed nothing; destroyed by an opponent card effect (ブラック・ホール) → 2000, not by my own effect. Test: tools/test_s03_u439_garden_rock.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷結界の御庭番",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U439",
+      "tests": [
+        "tools/test_s03_u439_garden_rock.js"
+      ],
+      "evidence": "Exact script. Text (carddata). An opponent Effect Monster (氷結界の龍 グングニール) cannot target my 氷結界 monsters (only ワイト is offered); a Trap (強制脱出装置) still can; without it the monster can be targeted. Test: tools/test_s03_u439_garden_rock.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

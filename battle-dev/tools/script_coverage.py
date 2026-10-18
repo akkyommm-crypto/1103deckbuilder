@@ -517,6 +517,7 @@ CARD_TEST_FOCUS = {
     "test_s03_u436_coin_pierce.js": {"アルカナフォースIV－THE EMPEROR", "ドリル・シンクロン", "伝説の賭博師", "混沌の黒魔術師"},
     "test_s03_u437_misc_more.js": {"RAI－JIN", "エレメント・マジシャン", "海竜神－ネオダイダロス"},
     "test_s03_u438_water_equip.js": {"アームズ・シーハンター", "バブル・ショット"},
+    "test_s03_u439_garden_rock.js": {"ローズ・テンタクルス", "幻獣ロックリザード", "氷結界の御庭番"},
 }
 
 
