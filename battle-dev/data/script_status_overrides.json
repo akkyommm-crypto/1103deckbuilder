@@ -1297,14 +1297,6 @@
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / activation cost: exact 1103 processing for \"自分フィールド上の「ジェムナイト」と名のついたモンスター1体をリリースし、自分の墓地の「ジェムナイト」と名のついたモンスター1体を選択して発動できる。 選択したモンスターを墓地から特殊召喚する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "スパイダー・エッグ": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / provenance / battle / continuous rule: exact 1103 processing for \"相手が直接攻撃を宣言した時、自分の墓地に昆虫族モンスターが3体以上存在する場合に発動する事ができる。 そのモンスターの攻撃を無効にし、自分フィールド上に「スパイダー・トークン」(昆虫族・地・星1・攻/守100)3体を攻撃\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "スリップ・サモン": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / delayed/scheduled processing: exact 1103 processing for \"相手がモンスターの召喚・反転召喚・特殊召喚に成功した時に発動する事ができる。 手札からレベル4以下のモンスター1体を表側守備表示で特殊召喚する。 この効果で特殊召喚したモンスターはエンドフェイズ時に持ち主の手札に戻る。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "スーパージュニア対決!": {
       "status": "ENGINE_GAP",
       "reason": "activation-time Choice / target selection / declaration / provenance / battle / continuous rule: exact 1103 processing for \"相手モンスターの攻撃宣言時に発動する事ができる。 その戦闘を無効にし、相手フィールド上の一番攻撃力の低い表側攻撃表示モンスター1体と、自分フィールド上の一番守備力の低い表側守備表示モンスター1体で戦闘を行う。 その戦闘終\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
@@ -1325,25 +1317,13 @@
       "status": "ENGINE_GAP",
       "reason": "provenance / delayed/scheduled processing: exact 1103 processing for \"自分のスタンバイフェイズ時に1度だけ、サイコロを1回振る。 相手のモンスターカードゾーンを、このカードのコントローラーから見て右から1～5とし、出た目のモンスターカードゾーンに存在するモンスターを破壊する。 6の目が出た\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "パイナップル爆弾": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / provenance: exact 1103 processing for \"自分がモンスターの召喚に成功した時に発動する事ができる。 相手フィールド上のモンスターの数が自分のコントロールするモンスターの数より多い場合、同じ数になるように相手のカードを破壊する。 破壊するカードは相手が選択する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "フォーチュン・インハーリット": {
       "status": "ENGINE_GAP",
       "reason": "resolution-time Choice / provenance / delayed/scheduled processing: exact 1103 processing for \"自分フィールド上に表側表示で存在する「フォーチュンレディ」と名のついたモンスターが破壊されたターンに発動する事ができる。 次の自分のスタンバイフェイズ時に手札から「フォーチュンレディ」と名のついたモンスターを2体まで特殊\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "ブロークン・ブロッカー": {
-      "status": "ENGINE_GAP",
-      "reason": "resolution-time Choice / provenance / battle: exact 1103 processing for \"自分フィールド上に存在する攻撃力よりも守備力の高い守備表示モンスターが、戦闘によって破壊された場合に発動する事ができる。 そのモンスターと同名モンスターを2体まで自分のデッキから表側守備表示で特殊召喚する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "ヘイト・クレバス": {
       "status": "ENGINE_GAP",
       "reason": "activation-time Choice / target selection / declaration / provenance / battle / damage/LP: exact 1103 processing for \"自分フィールド上に存在するモンスター1体が相手のカードの効果によって破壊され墓地へ送られた時、相手フィールド上に存在するモンスター1体を選択して墓地へ送り、その元々の攻撃力分のダメージを相手ライフに与える。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "ヘル・ブラスト": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / battle / damage/LP: exact 1103 processing for \"自分フィールド上に表側表示で存在するモンスターが破壊され墓地へ送られた時に発動する事ができる。 フィールド上の攻撃力が一番低い表側表示モンスター1体を破壊し、お互いにその攻撃力の半分のダメージを受ける。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "ミステリーサークル": {
       "status": "ENGINE_GAP",

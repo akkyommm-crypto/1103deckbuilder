@@ -14893,6 +14893,56 @@
         "tools/test_s03_u443_traps_revive.js"
       ],
       "evidence": "Exact script. Text (carddata). A 「リチュア」 Ritual Monster of the hand is Special Summoned, cannot attack and returns to the hand at the End Phase; not activatable without one. Test: tools/test_s03_u443_traps_revive.js (Replay audit). スカーレッド・カーペット chooses its 1-2 Resonators at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "スパイダー・エッグ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U444",
+      "tests": [
+        "tools/test_s03_u444_event_traps.js"
+      ],
+      "evidence": "Exact script. Text (carddata). At the opponent direct attack with 3 Insects in my Graveyard the attack is negated (no damage) and 3 スパイダー・トークン (ATK 100) stand in Attack Position; not offered with only 2 Insects. Test: tools/test_s03_u444_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スリップ・サモン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U444",
+      "tests": [
+        "tools/test_s03_u444_event_traps.js"
+      ],
+      "evidence": "Exact script. Text (carddata). When the opponent summons a monster a Level 4 or lower monster of my hand is Special Summoned face-up Defense Position and returns to my hand at the End Phase; my own summon does not trigger it. Test: tools/test_s03_u444_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "パイナップル爆弾",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U444",
+      "tests": [
+        "tools/test_s03_u444_event_traps.js"
+      ],
+      "evidence": "Exact script. Text (carddata). My Normal Summon with the opponent controlling more monsters: the opponent chooses as many of their own cards as the difference and they are destroyed; equal counts → nothing. Test: tools/test_s03_u444_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ブロークン・ブロッカー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U444",
+      "tests": [
+        "tools/test_s03_u444_event_traps.js"
+      ],
+      "evidence": "Exact script. Text (carddata). My DEF 1200 > ATK 300 Defense Position monster destroyed by battle → 2 same-name copies from the Deck stand face-up in Defense Position; a monster whose DEF is not higher (ワイト) does not trigger it. Test: tools/test_s03_u444_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヘル・ブラスト",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U444",
+      "tests": [
+        "tools/test_s03_u444_event_traps.js"
+      ],
+      "evidence": "Exact script. Text (carddata). My face-up monster destroyed and sent to the Graveyard → the lowest-ATK face-up monster (ブラック・マジシャン 2500) is destroyed and both players take 1250; an opponent monster destroyed does not trigger it. Test: tools/test_s03_u444_event_traps.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

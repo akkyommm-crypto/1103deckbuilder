@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 393,
+    "ENGINE_GAP": 388,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3527
+    "TESTED": 3532
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1599,
+    "legacy": 1604,
     "sin": 5,
     "unified": 1403
   },
-  "static_registration_name_count": 3537,
+  "static_registration_name_count": 3542,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -31562,12 +31562,19 @@
       "subtype": "",
       "date": "2009-07-18",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / provenance / battle / continuous rule: exact 1103 processing for \"相手が直接攻撃を宣言した時、自分の墓地に昆虫族モンスターが3体以上存在する場合に発動する事ができる。 そのモンスターの攻撃を無効にし、自分フィールド上に「スパイダー・トークン」(昆虫族・地・星1・攻/守100)3体を攻撃\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZB_claude_s03_u444_event_traps.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u444_event_traps.js",
         "tools\\test_v890_batch40.js"
       ]
     },
@@ -32274,12 +32281,19 @@
       "subtype": "",
       "date": "2009-07-18",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "provenance / delayed/scheduled processing: exact 1103 processing for \"相手がモンスターの召喚・反転召喚・特殊召喚に成功した時に発動する事ができる。 手札からレベル4以下のモンスター1体を表側守備表示で特殊召喚する。 この効果で特殊召喚したモンスターはエンドフェイズ時に持ち主の手札に戻る。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZB_claude_s03_u444_event_traps.js",
+          "line": 36
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u444_event_traps.js",
         "tools\\test_v890_batch40.js"
       ]
     },
@@ -45356,12 +45370,19 @@
       "subtype": "",
       "date": "2002-07-18",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / provenance: exact 1103 processing for \"自分がモンスターの召喚に成功した時に発動する事ができる。 相手フィールド上のモンスターの数が自分のコントロールするモンスターの数より多い場合、同じ数になるように相手のカードを破壊する。 破壊するカードは相手が選択する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZB_claude_s03_u444_event_traps.js",
+          "line": 72
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u444_event_traps.js",
         "tools\\test_v890_batch40.js"
       ]
     },
@@ -50286,12 +50307,19 @@
       "subtype": "",
       "date": "2008-04-19",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "resolution-time Choice / provenance / battle: exact 1103 processing for \"自分フィールド上に存在する攻撃力よりも守備力の高い守備表示モンスターが、戦闘によって破壊された場合に発動する事ができる。 そのモンスターと同名モンスターを2体まで自分のデッキから表側守備表示で特殊召喚する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZB_claude_s03_u444_event_traps.js",
+          "line": 119
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u444_event_traps.js",
         "tools\\test_v890_batch40.js"
       ]
     },
@@ -51108,12 +51136,19 @@
       "subtype": "",
       "date": "2005-08-11",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "provenance / battle / damage/LP: exact 1103 processing for \"自分フィールド上に表側表示で存在するモンスターが破壊され墓地へ送られた時に発動する事ができる。 フィールド上の攻撃力が一番低い表側表示モンスター1体を破壊し、お互いにその攻撃力の半分のダメージを受ける。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZB_claude_s03_u444_event_traps.js",
+          "line": 96
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u444_event_traps.js",
         "tools\\test_v890_batch40.js"
       ]
     },

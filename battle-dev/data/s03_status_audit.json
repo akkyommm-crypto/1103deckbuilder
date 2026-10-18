@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 393,
+    "ENGINE_GAP": 388,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3527
+    "TESTED": 3532
   },
   "delta": {
-    "ENGINE_GAP": -223,
+    "ENGINE_GAP": -228,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1478
+    "TESTED": 1483
   },
   "status_changes": [
     {
@@ -2527,6 +2527,12 @@
       "unit": "S03-U203"
     },
     {
+      "name": "スパイダー・エッグ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U444"
+    },
+    {
       "name": "スピリッツ・オブ・ファラオ",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2561,6 +2567,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U429"
+    },
+    {
+      "name": "スリップ・サモン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U444"
     },
     {
       "name": "スレイブタイガー",
@@ -3553,6 +3565,12 @@
       "unit": "S03-U156"
     },
     {
+      "name": "パイナップル爆弾",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U444"
+    },
+    {
       "name": "パペット・プラント",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -3853,6 +3871,12 @@
       "unit": "S03-U432"
     },
     {
+      "name": "ブロークン・ブロッカー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U444"
+    },
+    {
       "name": "プチトマボー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3893,6 +3917,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U156"
+    },
+    {
+      "name": "ヘル・ブラスト",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U444"
     },
     {
       "name": "ヘル・ポリマー",
