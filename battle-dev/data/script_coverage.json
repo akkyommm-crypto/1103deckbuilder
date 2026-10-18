@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 404,
+    "ENGINE_GAP": 400,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 420,
     "PARTIAL": 10,
-    "TESTED": 3515
+    "TESTED": 3519
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1590,
+    "legacy": 1593,
     "sin": 5,
-    "unified": 1400
+    "unified": 1401
   },
-  "static_registration_name_count": 3525,
+  "static_registration_name_count": 3529,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -47442,12 +47442,19 @@
       "subtype": "",
       "date": "2006-05-18",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs hand Elemental HERO summon selection, a turn attack prohibition and End Phase owner-hand return linked to that summoned card.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZY_claude_s03_u441_hand_choices.js",
+          "line": 96
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u441_hand_choices.js",
         "tools\\test_v770_batch29.js"
       ]
     },
@@ -58326,12 +58333,19 @@
       "subtype": null,
       "date": "2001-09-06",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "simultaneous hidden-hand discard / battle provenance: both players choose and discard one hand card, plus the exact battling monster receives a permanent 500 reduction.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZY_claude_s03_u441_hand_choices.js",
+          "line": 52
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u441_hand_choices.js",
         "tools\\test_v910_batch42.js"
       ]
     },
@@ -78830,12 +78844,19 @@
       "subtype": "",
       "date": "2009-07-18",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs targeted send-to-Grave of a Special Summoned monster followed by a separate replay-safe resolution-time hand selection and Special Summon of a low-Level Normal Monster.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZY_claude_s03_u441_hand_choices.js",
+          "line": 71
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u441_hand_choices.js",
         "tools\\test_v720_batch24.js"
       ]
     },
@@ -79459,12 +79480,19 @@
       "subtype": "速攻",
       "date": "2007-10-20",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs blocking private exact-two hand selection by each player, simultaneous send-to-Grave and simultaneous draw while preserving replay secrecy and deterministic ordering.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZY_claude_s03_u441_hand_choices.js",
+          "line": 32
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u441_hand_choices.js",
         "tools\\test_v720_batch24.js"
       ]
     },

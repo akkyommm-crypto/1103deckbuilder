@@ -14773,6 +14773,46 @@
         "tools/test_s03_u440_traps_flipless.js"
       ],
       "evidence": "Exact script. Text (carddata). Every face-down Defense monster of both fields turned face-up (Defense Position kept) without its Flip effect (アイヴィ・ウォール summons no token); I recover 400 for each Effect Monster (the Normal Monster ワイト does not count); not activatable without a face-down Defense monster. Test: tools/test_s03_u440_traps_flipless.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "フェイク・ヒーロー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U441",
+      "tests": [
+        "tools/test_s03_u441_hand_choices.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A hand 「E・HERO」 is Special Summoned, cannot attack, and returns to the hand at the End Phase; not without one in hand. Test: tools/test_s03_u441_hand_choices.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "リグラス・リーパー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U441",
+      "tests": [
+        "tools/test_s03_u441_hand_choices.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Flipped by an attack → each player discards the hand card of their own choice; destroyed in battle by a monster → that monster loses 500 ATK / DEF. Test: tools/test_s03_u441_hand_choices.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "悪魔への貢物",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U441",
+      "tests": [
+        "tools/test_s03_u441_hand_choices.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A Special Summoned monster of the field goes to the Graveyard and a Level 4 or lower Normal Monster of the hand is Special Summoned; not without a Special Summoned monster, not without a Normal Monster in hand (an Effect Monster does not count). Test: tools/test_s03_u441_hand_choices.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "手札断殺",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U441",
+      "tests": [
+        "tools/test_s03_u441_hand_choices.js"
+      ],
+      "evidence": "Exact script. Text (carddata). I choose 2 hand cards, then the opponent chooses 2 of their own, all go to the Graveyard, then both draw 2; not activatable when the opponent has fewer than 2 hand cards or I have fewer than 2 other cards. Test: tools/test_s03_u441_hand_choices.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

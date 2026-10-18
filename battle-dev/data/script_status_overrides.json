@@ -625,14 +625,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs private opponent-hand inspection and conditional Spirit selection/discard without leaking unrelated hidden card identities to logs or replay UI."
     },
-    "悪魔への貢物": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs targeted send-to-Grave of a Special Summoned monster followed by a separate replay-safe resolution-time hand selection and Special Summon of a low-Level Normal Monster."
-    },
-    "手札断殺": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs blocking private exact-two hand selection by each player, simultaneous send-to-Grave and simultaneous draw while preserving replay secrecy and deterministic ordering."
-    },
     "断層地帯": {
       "status": "ENGINE_GAP",
       "reason": "Needs a central pre-damage battle modifier detecting an attacked Defense Position Rock and doubling only reflected battle damage to the attacking monster's controller."
@@ -844,10 +836,6 @@
     "ピクシーガーディアン": {
       "status": "ENGINE_GAP",
       "reason": "Needs same-turn opponent-caused Spell Graveyard provenance, self-tribute cost and eligible Deck-bottom recovery selection."
-    },
-    "フェイク・ヒーロー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs hand Elemental HERO summon selection, a turn attack prohibition and End Phase owner-hand return linked to that summoned card."
     },
     "フルール・シンクロン": {
       "status": "ENGINE_GAP",
@@ -1560,10 +1548,6 @@
     "ポセイドン・オオカブト": {
       "status": "ENGINE_GAP",
       "reason": "Battle repeated-target attack counter: up to two continued attacks against the same surviving attack-position monster require target-locked per-turn counters."
-    },
-    "リグラス・リーパー": {
-      "status": "ENGINE_GAP",
-      "reason": "simultaneous hidden-hand discard / battle provenance: both players choose and discard one hand card, plus the exact battling monster receives a permanent 500 reduction."
     },
     "レインボー・ヴェール": {
       "status": "ENGINE_GAP",
