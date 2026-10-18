@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 481,
+    "NOT_STARTED": 478,
     "PARTIAL": 10,
-    "TESTED": 3390
+    "TESTED": 3393
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -826,
+    "NOT_STARTED": -829,
     "PARTIAL": -172,
-    "TESTED": 1341
+    "TESTED": 1344
   },
   "status_changes": [
     {
@@ -227,6 +227,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U374"
+    },
+    {
+      "name": "D・パワーユニット",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U412"
     },
     {
       "name": "D・マグネンI",
@@ -1637,6 +1643,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U321"
+    },
+    {
+      "name": "コアバスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U412"
     },
     {
       "name": "コア・ブラスト",
@@ -6467,6 +6479,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U119"
+    },
+    {
+      "name": "災いの装備品",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U412"
     },
     {
       "name": "炎塵爆発",

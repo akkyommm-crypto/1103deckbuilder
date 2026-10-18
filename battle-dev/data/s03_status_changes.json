@@ -13523,6 +13523,36 @@
         "tools/test_s03_u411_equipself.js"
       ],
       "evidence": "Exact script. Text (carddata). Destroyed in battle by 青眼の白龍: optional Graveyard trigger equips it from the Graveyard to the attacker (API.equipFromGrave), whose ATK drops by 1800 (3000 -> 1200, continuous apply of the Equip); when the host is later destroyed (ブラック・ホール) the Dragon goes to the Graveyard and Special Summons itself (the host uid is kept in the player flag u411Cuff because the equip link is cleared when the Equip card goes to the Graveyard). Test: tools/test_s03_u411_equipself.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "災いの装備品",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U412",
+      "tests": [
+        "tools/test_s03_u412_equips.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Equipped to an OPPONENT monster (the host choice offers the opponent's monsters, 青眼): ATK 3000 - 600 x my 2 monsters = 1800; the equipped Equip Spell is not offered its equip activation again; destroyed on the field (サイクロン) its Graveyard trigger equips it to another opponent monster (ライオウ 1900 - 1200 = 700) and 青眼 is back to 3000. Test: tools/test_s03_u412_equips.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D・パワーユニット",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U412",
+      "tests": [
+        "tools/test_s03_u412_equips.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Equips only a Level 3 「D」 monster (not a ワイト); D・ボードン original ATK 500 doubled to 1000; still in place at the first own Standby Phase after the activation; at the 2nd (turn >= stamp + 4) it is destroyed and I take the original ATK 500. Test: tools/test_s03_u412_equips.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアバスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U412",
+      "tests": [
+        "tools/test_s03_u412_equips.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Equips only 「コアキメイル」 monsters; the host (ATK 1400) attacking 青眼の白龍 (LIGHT, ATK 3000) destroys it without damage calculation (no damage to me); an EARTH monster (きのこマン) is fought normally; when the host leaves the field (ブラック・ホール) the Equip goes to the Graveyard and returns to my hand. Test: tools/test_s03_u412_equips.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

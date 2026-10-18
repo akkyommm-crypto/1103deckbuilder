@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 481,
+    "NOT_STARTED": 478,
     "PARTIAL": 10,
-    "TESTED": 3390
+    "TESTED": 3393
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -80,6 +80,7 @@
     "helper:u364Combo": 2,
     "helper:u364Counter": 2,
     "helper:u388TokenMaker": 2,
+    "helper:u412Define": 3,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
@@ -119,7 +120,7 @@
     "sin": 5,
     "unified": 1305
   },
-  "static_registration_name_count": 3400,
+  "static_registration_name_count": 3403,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -2979,12 +2980,20 @@
       "subtype": "装備",
       "date": "2008-07-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u412Define",
+          "source": "cards\\HZZZZZZZZZV_claude_s03_u412_equips.js",
+          "line": 57
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u412_equips.js"
+      ]
     },
     {
       "index": 112,
@@ -22204,12 +22213,20 @@
       "subtype": "装備",
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u412Define",
+          "source": "cards\\HZZZZZZZZZV_claude_s03_u412_equips.js",
+          "line": 82
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u412_equips.js"
+      ]
     },
     {
       "index": 1003,
@@ -87457,12 +87474,20 @@
       "subtype": "装備",
       "date": "2010-04-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u412Define",
+          "source": "cards\\HZZZZZZZZZV_claude_s03_u412_equips.js",
+          "line": 34
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u412_equips.js"
+      ]
     },
     {
       "index": 4039,
