@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 484,
+    "NOT_STARTED": 481,
     "PARTIAL": 10,
-    "TESTED": 3387
+    "TESTED": 3390
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -823,
+    "NOT_STARTED": -826,
     "PARTIAL": -172,
-    "TESTED": 1338
+    "TESTED": 1341
   },
   "status_changes": [
     {
@@ -5749,6 +5749,12 @@
       "unit": "S03-U112"
     },
     {
+      "name": "手錠龍",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U411"
+    },
+    {
       "name": "打ち出の小槌",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -6745,6 +6751,12 @@
       "unit": "S03-U206"
     },
     {
+      "name": "瞬着ボマー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U411"
+    },
+    {
       "name": "砂塵の大竜巻",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -6959,6 +6971,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U350"
+    },
+    {
+      "name": "精神寄生体",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U411"
     },
     {
       "name": "精神操作",

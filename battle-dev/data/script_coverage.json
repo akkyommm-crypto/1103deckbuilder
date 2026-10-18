@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 484,
+    "NOT_STARTED": 481,
     "PARTIAL": 10,
-    "TESTED": 3387
+    "TESTED": 3390
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,9 +117,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1564,
     "sin": 5,
-    "unified": 1302
+    "unified": 1305
   },
-  "static_registration_name_count": 3397,
+  "static_registration_name_count": 3400,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -78752,12 +78752,20 @@
       "subtype": null,
       "date": "2008-04-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZU_claude_s03_u411_equipself.js",
+          "line": 65
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u411_equipself.js"
+      ]
     },
     {
       "index": 3632,
@@ -91215,12 +91223,20 @@
       "subtype": null,
       "date": "2005-11-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZU_claude_s03_u411_equipself.js",
+          "line": 38
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u411_equipself.js"
+      ]
     },
     {
       "index": 4213,
@@ -93775,12 +93791,20 @@
       "subtype": null,
       "date": "2002-06-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZU_claude_s03_u411_equipself.js",
+          "line": 48
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u411_equipself.js"
+      ]
     },
     {
       "index": 4336,

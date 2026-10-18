@@ -1654,6 +1654,9 @@
   "path": "cards/HZZZZZZZZZT_claude_s03_u410_inti.js"
  },
  {
+  "path": "cards/HZZZZZZZZZU_claude_s03_u411_equipself.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

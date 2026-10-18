@@ -13493,6 +13493,36 @@
         "tools/test_s03_u410_inti.js"
       ],
       "evidence": "Exact script. Text (carddata). Cannot be Normal Summoned; the Special Summon procedure from the hand banishes a スカル・フレイム of my Graveyard (legal only with one there); once-per-turn burn 400 x the バーニング・スカルヘッド in my Graveyard (2 -> 800); sent from the field to the Graveyard (ブラック・ホール) it Special Summons a スカル・フレイム of the Graveyard. Test: tools/test_s03_u410_inti.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "瞬着ボマー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U411",
+      "tests": [
+        "tools/test_s03_u411_equipself.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Attacked by 青眼の白龍 while face-down: at step 2 of the damage step (before the calculation) it becomes an Equip card of the attacker in my Spell & Trap Zone (cross-side API.equipMonster), no damage to me, the battle ends without a calculation; in the next Standby Phase of the opponent the equipped monster is destroyed (not in the turn it equipped); face-up Defense Position: fought normally. Test: tools/test_s03_u411_equipself.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "精神寄生体",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U411",
+      "tests": [
+        "tools/test_s03_u411_equipself.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Same equip when attacked face-down; at each Standby Phase of the opponent I recover half of the equipped monster's ATK (3000 -> 1500). Test: tools/test_s03_u411_equipself.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "手錠龍",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U411",
+      "tests": [
+        "tools/test_s03_u411_equipself.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroyed in battle by 青眼の白龍: optional Graveyard trigger equips it from the Graveyard to the attacker (API.equipFromGrave), whose ATK drops by 1800 (3000 -> 1200, continuous apply of the Equip); when the host is later destroyed (ブラック・ホール) the Dragon goes to the Graveyard and Special Summons itself (the host uid is kept in the player flag u411Cuff because the equip link is cleared when the Equip card goes to the Graveyard). Test: tools/test_s03_u411_equipself.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
