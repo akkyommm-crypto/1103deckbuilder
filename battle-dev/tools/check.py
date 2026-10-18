@@ -713,6 +713,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u419_unique_more.js')],check=Tru
 subprocess.run(['node',str(ROOT/'tools/test_s03_u420_foe_field.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u421_procedures.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u422_revival_st.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u423_st_shields.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 439,
+    "NOT_STARTED": 436,
     "PARTIAL": 10,
-    "TESTED": 3432
+    "TESTED": 3435
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -868,
+    "NOT_STARTED": -871,
     "PARTIAL": -172,
-    "TESTED": 1383
+    "TESTED": 1386
   },
   "status_changes": [
     {
@@ -3373,6 +3373,12 @@
       "unit": "S03-U366"
     },
     {
+      "name": "フィールドバリア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U423"
+    },
+    {
       "name": "フェアリー・アーチャー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5533,6 +5539,12 @@
       "unit": "S03-U230"
     },
     {
+      "name": "安全地帯",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U423"
+    },
+    {
       "name": "完全防音壁",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5621,6 +5633,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U370"
+    },
+    {
+      "name": "宮廷のしきたり",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U423"
     },
     {
       "name": "寡黙なるサイコプリースト",

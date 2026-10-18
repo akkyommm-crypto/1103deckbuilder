@@ -13943,6 +13943,36 @@
         "tools/test_s03_u422_revival_st.js"
       ],
       "evidence": "Exact script. Text (carddata). Continuous Trap: Set Spell / Trap Cards cannot be activated (the opponent's Set trap is refused, a hand activation is not), destroyed at my 2nd Standby Phase after the activation, and destroyed at once when another Spell / Trap Card of mine is on the field. Test: tools/test_s03_u422_revival_st.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "フィールドバリア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U423",
+      "tests": [
+        "tools/test_s03_u423_st_shields.js"
+      ],
+      "evidence": "Exact script. Text (carddata). While face-up no Field Spell can be destroyed (effect or Field Zone mass destruction) and no Field Spell can be activated (hand 竜の渓谷 refused), other Spell / Trap Cards are still destroyed; controls without it; a second face-up copy of mine (later slot) is destroyed by the one-copy rule. Test: tools/test_s03_u423_st_shields.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "宮廷のしきたり",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U423",
+      "tests": [
+        "tools/test_s03_u423_st_shields.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The face-up Continuous Traps of both players are not destroyed by card effects, it does not protect itself; control without it destroys them; a second copy of mine is destroyed by the one-copy rule. Test: tools/test_s03_u423_st_shields.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "安全地帯",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U423",
+      "tests": [
+        "tools/test_s03_u423_st_shields.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Activatable with a face-up Attack Position monster; the host cannot attack directly, is not destroyed by the opponent's effect or by battle (青眼 vs ブラック・マジシャン), the Trap leaving destroys the host and the host leaving destroys the Trap; not activatable with only a Defense Position monster. Test: tools/test_s03_u423_st_shields.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
