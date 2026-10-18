@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 468,
+    "ENGINE_GAP": 465,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 428,
+    "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3443
+    "TESTED": 3447
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1571,
+    "legacy": 1575,
     "sin": 5,
     "unified": 1348
   },
-  "static_registration_name_count": 3453,
+  "static_registration_name_count": 3457,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -35813,12 +35813,20 @@
       "subtype": null,
       "date": "2010-07-17",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「シンクロ素材とする場合、獣族モンスターのシンクロ召喚にしか使用できない」を書けない。cannotSynchroMaterial は全面禁止の宣言（20_effect_primitives_ex.js:486）で、召喚先の種族による条件付き制限にできない（cycle 37 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 26,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZJ_claude_s03_u426_material_gifts.js",
+          "line": 28
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u426_material_gifts.js"
+      ]
     },
     {
       "index": 1630,
@@ -39149,12 +39157,20 @@
       "subtype": null,
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 31,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZJ_claude_s03_u426_material_gifts.js",
+          "line": 22
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u426_material_gifts.js"
+      ]
     },
     {
       "index": 1788,
@@ -42249,12 +42265,19 @@
       "subtype": null,
       "date": "2010-07-17",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "battle / provenance: needs Synchro Material identity inherited by the resulting Synchro Monster and central piercing battle-damage permission.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZJ_claude_s03_u426_material_gifts.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u426_material_gifts.js",
         "tools\\test_v860_batch37.js"
       ]
     },
@@ -48264,12 +48287,19 @@
       "subtype": null,
       "date": "2010-02-20",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs Synchro material provenance and a material-granted persistent ATK modifier applied to the resulting Synchro Monster.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 1,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZJ_claude_s03_u426_material_gifts.js",
+          "line": 20
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u426_material_gifts.js",
         "tools\\test_v580_batch10.js"
       ]
     },

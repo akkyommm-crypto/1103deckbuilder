@@ -1696,14 +1696,14 @@ function applyActionBodyV31(gs, a){
       const killDef = ()=>{
         if(protDef){ logIt(gs, `${cardName(defCard)} は戦闘では破壊されない`); return false; }
         const r = protV21(defCard, atkCard, 'defender');
-        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(defCard)} は戦闘では破壊されない`); return false; }
+        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(defCard)} は戦闘では破壊されない`); if(typeof r.afterUseS03==='function') r.afterUseS03(defCard, gs); return false; }
         defCard.battleDestroyed = true;
         return true;
       };
       const killAtk = ()=>{
         if(protAtk){ logIt(gs, `${cardName(atkCard)} は戦闘では破壊されない`); return false; }
         const r = protV21(atkCard, defCard, 'attacker');
-        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(atkCard)} は戦闘では破壊されない`); return false; }
+        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(atkCard)} は戦闘では破壊されない`); if(typeof r.afterUseS03==='function') r.afterUseS03(atkCard, gs); return false; }
         atkCard.battleDestroyed = true;
         return true;
       };
@@ -2950,6 +2950,8 @@ function applyActionBodyV31(gs, a){
       const Q=gs.players[q.player],ex=q.exCard;
       if(q.kind==='xyz') ex.xyz=(q.materialCards||[]).map(c=>reset(c)).filter(Boolean);
       if(q.kind==='synchro') ex.v380SummonMaterials=(q.synMaterialSnapshot||[]).map(x=>Object.assign({},x));
+      /* S03-U426: フレア・リゾネーター — the Synchro Monster gets the permanent ATK / DEF bonus of a material script's synchroMatModS03 {atk, def} */
+      if(q.kind==='synchro') (ex.v380SummonMaterials||[]).forEach(m=>{ const sM = CARD_SCRIPTS[m && m.name], mod = sM && sM.synchroMatModS03; if(mod){ ex.mods = ex.mods || []; ex.mods.push({atk:Number(mod.atk)||0, def:Number(mod.def)||0, until:'permanent', label:String(m.name), turn:gs.turn}); } });
       ex.face='up'; ex.pos=q.pos||'atk'; ex.specialSummoned=true; ex.specialSummonedFrom='ex'; ex.specialSummonKind=q.kind; Q.mz.push(ex); ensureCardUid(gs,ex); ex.properlySummonedS03=true;   /* S03-U127 */
       Q.ssHistory.push({name:cardName(ex),from:'ex',turn:gs.turn,lv:curLV(ex),kind:ex.specialSummonKind});
       gs.pendingExV2=null;
@@ -3007,6 +3009,7 @@ function applyActionBodyV31(gs, a){
       }
       if(a.kind === 'synchro'){
         exCard.v380SummonMaterials = matCards.map(c=>({name:cardName(c), tuner:isTuner(dbOf(c)), lv:curLV(c), at:matAttrS03.get(c)||null}));
+        (exCard.v380SummonMaterials||[]).forEach(m=>{ const sM = CARD_SCRIPTS[m && m.name], mod = sM && sM.synchroMatModS03; if(mod){ exCard.mods = exCard.mods || []; exCard.mods.push({atk:Number(mod.atk)||0, def:Number(mod.def)||0, until:'permanent', label:String(m.name), turn:gs.turn}); } });   /* S03-U426 */
       }
       P.mz.push(exCard);
       P.ssHistory.push({name:cardName(exCard),from:'ex',turn:gs.turn,fromPlayer:a.player,
@@ -4381,6 +4384,9 @@ function applyPiercingDamage(info){
     /* A target omitted from the serialized grant means every Defense Position battle this turn (H－ヒートハート).
        The original single-battle grant continues to require its stamped defender. */
     if(g && Number(g.turn)===Number(gameState.turn) && info.defCard && (g.target==null || info.defCard.uid===g.target)) amount = Math.max(0, Number(info.amount)||0); }
+  /* S03-U426: ニードル・ガンナー — a Synchro Monster that used a card with synchroMatPierceS03 as material pierces too */
+  if(info && info.atkCard && Array.isArray(info.atkCard.v380SummonMaterials) && info.atkCard.v380SummonMaterials.some(m=>{ const sM = CARD_SCRIPTS[m && m.name]; return !!sM && sM.synchroMatPierceS03===true; }))
+    amount = Math.max(amount, Math.max(0, Number(info.amount)||0));
   continuousSources().forEach(src=>{
     const f = src.sc.continuous && src.sc.continuous.piercingDamage;
     if(typeof f !== 'function') return;
@@ -9792,6 +9798,13 @@ function protRecordsForV21(gs, card, ctx){
   const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
   const own = sc && sc.protectV21;
   if(own) out.push(resolveProtSpecV21(own, 'self', card, card, ctx));
+  /* S03-U426: トラスト・ガーディアン — a Synchro Monster inherits synchroMatProtectV21 of the scripts of its materials (v380SummonMaterials) */
+  if(Array.isArray(card.v380SummonMaterials)){
+    card.v380SummonMaterials.forEach(m=>{
+      const scM = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[m && m.name] : null, specM = scM && scM.synchroMatProtectV21;
+      if(specM) out.push(resolveProtSpecV21(specM, 'mat:'+m.name, card, card, ctx));
+    });
+  }
 
   /* ② 継続効果による付与 */
   if(typeof continuousSources==='function'){
@@ -9835,6 +9848,7 @@ function resolveProtSpecV21(spec, key, srcCard, target, ctx){
        （precedent: BF－孤高のシルバー・ウィンド）。 */
     perTurnScope: spec.perTurnScope==='source' ? 'source' : 'target',
     sourceCard: srcCard || null,
+    afterUseS03: (typeof spec.afterUseS03==='function') ? spec.afterUseS03 : null,   /* S03-U426: runs inside the battle reducer when this protection saved the card */
     sourceKind: spec.sourceKind || null,
     nonTargetingOnly: !!spec.nonTargetingOnly,
     opponentOnly: !!spec.opponentOnly,
@@ -92227,6 +92241,39 @@ defineUnifiedCardV4('共鳴破', [{
 defineScript('トラパート', u419Passive({
   synchroMatTrapLockS03:true,
   synchroMaterialRestriction(info){ return !!(info && info.exDb && info.exDb.ra==='戦士'); } }));
+/* S03-U426: フレア・リゾネーター, ニードル・ガンナー, トラスト・ガーディアン, チェーンドッグ (NOT_STARTED cards: effects handed to the Synchro Monster that used them as material, carddata texts).
+
+   フレア・リゾネーター  （チューナー）このカードをシンクロ素材としたシンクロモンスターの攻撃力は300ポイントアップする。
+   ニードル・ガンナー    このカードをシンクロ素材としたシンクロモンスターが守備表示モンスターを攻撃した時、その守備力を攻撃力が超えていれば、その数値だけ相手ライフに戦闘ダメージを与える。
+   トラスト・ガーディアン  （チューナー）このカードをシンクロ素材とする場合、レベル7以上のシンクロモンスターのシンクロ召喚にしか使用できない。このカードをシンクロ素材としたシンクロモンスターは、1ターンに1度だけ戦闘では破壊されない。この効果を適用したダメージステップ終了時、そのシンクロモンスターの攻撃力・守備力は400ポイントダウンする。
+   チェーンドッグ        自分フィールド上に獣族モンスターが表側表示で2体存在する場合、このカードを墓地から特殊召喚する事ができる。この効果で特殊召喚したこのカードはフィールド上から離れた場合、ゲームから除外される。このカードをシンクロ素材とする場合、獣族モンスターのシンクロ召喚にしか使用できない。
+
+   Notes
+   - NEW engine (S03-U426), all read from the Synchro Monster's v380SummonMaterials (names of the materials) and the SCRIPT of each material:
+       synchroMatModS03:{atk, def}      EX_SUMMON_COMMIT_V42 / FX_EX_SUMMON push a permanent card.mods entry on the Synchro Monster (フレア・リゾネーター: +300 ATK)
+       synchroMatPierceS03:true         applyPiercingDamage: the Synchro Monster pierces (ニードル・ガンナー)
+       synchroMatProtectV21:{...}       engine/1K protRecordsForV21: a protectV21 record of the Synchro Monster itself (トラスト・ガーディアン: battle, perTurn 1); afterUseS03(card, gs) runs inside the battle reducer when the protection saved it (the −400 ATK / DEF is a permanent card.mods entry — taken at the moment of the protection, i.e. the end of that battle's damage calculation)
+   - チェーンドッグ: summonProcedure from the Graveyard (exactly 2 face-up Beast monsters on my field, as D・マグネンI's 「2体存在する場合」); afterSummonS03 stamps banishWhenLeavesField; synchroMaterialRestriction: Beast Synchro Monsters only. */
+
+function u426Passive(extra){
+  return Object.assign({type:'monster', priority:1, timing:['free'],
+    condition(ctx){ ctx.reason = '永続効果のみのカードです'; return false; }, resolve(){}, afterResolve(){}}, extra || {});
+}
+
+defineScript('フレア・リゾネーター', u426Passive({synchroMatModS03:{atk:300}}));
+defineScript('ニードル・ガンナー', u426Passive({synchroMatPierceS03:true}));
+defineScript('トラスト・ガーディアン', u426Passive({
+  synchroMaterialRestriction(info){ return !!(info && info.exDb && Number(info.exDb.lv)>=7); },
+  synchroMatProtectV21:{ key:'u426.trust', battle:true, effect:false, perTurn:1, label:'トラスト・ガーディアン',
+    afterUseS03(card, gs){ card.mods = card.mods || []; card.mods.push({atk:-400, def:-400, until:'permanent', label:'トラスト・ガーディアン', turn:gs.turn}); } } }));
+
+function u426Beasts(p){ return API.fieldCards({player:p, zone:'mz', filter:x=>x.card.face==='up' && x.db.k==='m' && x.db.ra==='獣'}); }
+defineScript('チェーンドッグ', u426Passive({includesSpecialSummon:true,
+  synchroMaterialRestriction(info){ return !!(info && info.exDb && info.exDb.ra==='獣'); },
+  summonProcedure:{ from:['grave'], positions:['atk','def'],
+    condition(ctx){ if(u426Beasts(ctx.player).length!==2){ ctx.reason = '自分フィールドに表側表示の獣族モンスターがちょうど2体必要です'; return false; } return true; },
+    cost(ctx, done){ ctx.procedureDataS03 = {}; done(true); },
+    afterSummonS03(h){ if(h && h.zone==='mz') API.setCardFlag(h, 'banishWhenLeavesField', true, 'チェーンドッグ', {silent:true}); } } }));
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

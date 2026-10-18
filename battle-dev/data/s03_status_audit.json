@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 468,
+    "ENGINE_GAP": 465,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 428,
+    "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3443
+    "TESTED": 3447
   },
   "delta": {
-    "ENGINE_GAP": -148,
+    "ENGINE_GAP": -151,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -879,
+    "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1394
+    "TESTED": 1398
   },
   "status_changes": [
     {
@@ -2587,6 +2587,12 @@
       "unit": "S03-U340"
     },
     {
+      "name": "チェーンドッグ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U426"
+    },
+    {
       "name": "チューニング・サポーター",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -2863,6 +2869,12 @@
       "unit": "S03-U269"
     },
     {
+      "name": "トラスト・ガーディアン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U426"
+    },
+    {
       "name": "トラップ・イーター",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -3119,6 +3131,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U254"
+    },
+    {
+      "name": "ニードル・ガンナー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U426"
     },
     {
       "name": "ネオス・ワイズマン",
@@ -3485,6 +3503,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U247"
+    },
+    {
+      "name": "フレア・リゾネーター",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U426"
     },
     {
       "name": "フレムベル・デスガンナー",

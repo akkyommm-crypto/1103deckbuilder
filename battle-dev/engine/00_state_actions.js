@@ -737,14 +737,14 @@ function applyActionBodyV31(gs, a){
       const killDef = ()=>{
         if(protDef){ logIt(gs, `${cardName(defCard)} は戦闘では破壊されない`); return false; }
         const r = protV21(defCard, atkCard, 'defender');
-        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(defCard)} は戦闘では破壊されない`); return false; }
+        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(defCard)} は戦闘では破壊されない`); if(typeof r.afterUseS03==='function') r.afterUseS03(defCard, gs); return false; }
         defCard.battleDestroyed = true;
         return true;
       };
       const killAtk = ()=>{
         if(protAtk){ logIt(gs, `${cardName(atkCard)} は戦闘では破壊されない`); return false; }
         const r = protV21(atkCard, defCard, 'attacker');
-        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(atkCard)} は戦闘では破壊されない`); return false; }
+        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(atkCard)} は戦闘では破壊されない`); if(typeof r.afterUseS03==='function') r.afterUseS03(atkCard, gs); return false; }
         atkCard.battleDestroyed = true;
         return true;
       };
@@ -1991,6 +1991,8 @@ function applyActionBodyV31(gs, a){
       const Q=gs.players[q.player],ex=q.exCard;
       if(q.kind==='xyz') ex.xyz=(q.materialCards||[]).map(c=>reset(c)).filter(Boolean);
       if(q.kind==='synchro') ex.v380SummonMaterials=(q.synMaterialSnapshot||[]).map(x=>Object.assign({},x));
+      /* S03-U426: フレア・リゾネーター — the Synchro Monster gets the permanent ATK / DEF bonus of a material script's synchroMatModS03 {atk, def} */
+      if(q.kind==='synchro') (ex.v380SummonMaterials||[]).forEach(m=>{ const sM = CARD_SCRIPTS[m && m.name], mod = sM && sM.synchroMatModS03; if(mod){ ex.mods = ex.mods || []; ex.mods.push({atk:Number(mod.atk)||0, def:Number(mod.def)||0, until:'permanent', label:String(m.name), turn:gs.turn}); } });
       ex.face='up'; ex.pos=q.pos||'atk'; ex.specialSummoned=true; ex.specialSummonedFrom='ex'; ex.specialSummonKind=q.kind; Q.mz.push(ex); ensureCardUid(gs,ex); ex.properlySummonedS03=true;   /* S03-U127 */
       Q.ssHistory.push({name:cardName(ex),from:'ex',turn:gs.turn,lv:curLV(ex),kind:ex.specialSummonKind});
       gs.pendingExV2=null;
@@ -2048,6 +2050,7 @@ function applyActionBodyV31(gs, a){
       }
       if(a.kind === 'synchro'){
         exCard.v380SummonMaterials = matCards.map(c=>({name:cardName(c), tuner:isTuner(dbOf(c)), lv:curLV(c), at:matAttrS03.get(c)||null}));
+        (exCard.v380SummonMaterials||[]).forEach(m=>{ const sM = CARD_SCRIPTS[m && m.name], mod = sM && sM.synchroMatModS03; if(mod){ exCard.mods = exCard.mods || []; exCard.mods.push({atk:Number(mod.atk)||0, def:Number(mod.def)||0, until:'permanent', label:String(m.name), turn:gs.turn}); } });   /* S03-U426 */
       }
       P.mz.push(exCard);
       P.ssHistory.push({name:cardName(exCard),from:'ex',turn:gs.turn,fromPlayer:a.player,
@@ -3422,6 +3425,9 @@ function applyPiercingDamage(info){
     /* A target omitted from the serialized grant means every Defense Position battle this turn (H－ヒートハート).
        The original single-battle grant continues to require its stamped defender. */
     if(g && Number(g.turn)===Number(gameState.turn) && info.defCard && (g.target==null || info.defCard.uid===g.target)) amount = Math.max(0, Number(info.amount)||0); }
+  /* S03-U426: ニードル・ガンナー — a Synchro Monster that used a card with synchroMatPierceS03 as material pierces too */
+  if(info && info.atkCard && Array.isArray(info.atkCard.v380SummonMaterials) && info.atkCard.v380SummonMaterials.some(m=>{ const sM = CARD_SCRIPTS[m && m.name]; return !!sM && sM.synchroMatPierceS03===true; }))
+    amount = Math.max(amount, Math.max(0, Number(info.amount)||0));
   continuousSources().forEach(src=>{
     const f = src.sc.continuous && src.sc.continuous.piercingDamage;
     if(typeof f !== 'function') return;

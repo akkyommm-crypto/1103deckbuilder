@@ -14053,6 +14053,46 @@
         "tools/test_s03_u425_synchro_mats.js"
       ],
       "evidence": "Exact script. Text (carddata). Usable only for a Warrior Synchro Monster (not for 氷結界の龍 ブリューナク); the Synchro Monster that used it attacks → the opponent's Set trap (攻撃の無力化) cannot be activated; control without the material: the trap is activated. Test: tools/test_s03_u425_synchro_mats.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "フレア・リゾネーター",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U426",
+      "tests": [
+        "tools/test_s03_u426_material_gifts.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The Synchro Monster that used it (ガイアナイト) has +300 ATK (2900); control with another Tuner stays 2600. Test: tools/test_s03_u426_material_gifts.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ニードル・ガンナー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U426",
+      "tests": [
+        "tools/test_s03_u426_material_gifts.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The Synchro Monster that used it pierces a Defense Position monster (2600 - DEF 200 = 2400 damage to the opponent); control without it deals none. Test: tools/test_s03_u426_material_gifts.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "トラスト・ガーディアン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U426",
+      "tests": [
+        "tools/test_s03_u426_material_gifts.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The Synchro Monster (Lv7 エンシェント・フェアリー・ドラゴン) is not destroyed by the first battle of the turn, ATK / DEF -400 afterwards, destroyed by the second attack; not usable for a Level 6 Synchro Monster. Test: tools/test_s03_u426_material_gifts.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "チェーンドッグ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U426",
+      "tests": [
+        "tools/test_s03_u426_material_gifts.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Special Summon from the Graveyard with exactly two face-up Beast monsters (not with one or three), banished when it leaves the field; usable as Synchro Material only for Beast Synchro Monsters. Test: tools/test_s03_u426_material_gifts.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

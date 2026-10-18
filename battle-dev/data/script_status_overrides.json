@@ -213,10 +213,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe activation-time mode selection plus a reusable way to invoke one declared effect mode of a canonical source monster."
     },
-    "フレア・リゾネーター": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs Synchro material provenance and a material-granted persistent ATK modifier applied to the resulting Synchro Monster."
-    },
     "ハングリーバーガー": {
       "status": "GENERIC_OK",
       "reason": "Effectless Ritual Monster; card-specific behavior is fully described by the future generic Ritual Summon recipe/pipeline."
@@ -1237,10 +1233,6 @@
       "status": "ENGINE_GAP",
       "reason": "provenance / activation cost: needs hand quick-effect response to Trap activation, Deck-top mill cost, and self Special Summon from hand on either turn."
     },
-    "ニードル・ガンナー": {
-      "status": "ENGINE_GAP",
-      "reason": "battle / provenance: needs Synchro Material identity inherited by the resulting Synchro Monster and central piercing battle-damage permission."
-    },
     "ハードアームドラゴン": {
       "status": "ENGINE_GAP",
       "reason": "activation cost / provenance / continuous rule: needs hand summon cost selection and Tribute Summon material inheritance granting effect-destruction immunity to a Level-7-or-higher result."
@@ -2030,10 +2022,6 @@
     "ワーム・ホール": {
       "status": "ENGINE_GAP",
       "reason": "「除外している間、そのモンスターカードゾーンは使用できない」を表現できない。mz は配列で管理されており固定スロットを持たないため、特定のゾーンだけを塞ぐ概念が engine に無い（cycle 37 実測）。"
-    },
-    "チェーンドッグ": {
-      "status": "ENGINE_GAP",
-      "reason": "「シンクロ素材とする場合、獣族モンスターのシンクロ召喚にしか使用できない」を書けない。cannotSynchroMaterial は全面禁止の宣言（20_effect_primitives_ex.js:486）で、召喚先の種族による条件付き制限にできない（cycle 37 実測）。"
     },
     "ダメージ・イーター": {
       "status": "ENGINE_GAP",

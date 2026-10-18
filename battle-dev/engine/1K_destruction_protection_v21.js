@@ -84,6 +84,13 @@ function protRecordsForV21(gs, card, ctx){
   const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
   const own = sc && sc.protectV21;
   if(own) out.push(resolveProtSpecV21(own, 'self', card, card, ctx));
+  /* S03-U426: トラスト・ガーディアン — a Synchro Monster inherits synchroMatProtectV21 of the scripts of its materials (v380SummonMaterials) */
+  if(Array.isArray(card.v380SummonMaterials)){
+    card.v380SummonMaterials.forEach(m=>{
+      const scM = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[m && m.name] : null, specM = scM && scM.synchroMatProtectV21;
+      if(specM) out.push(resolveProtSpecV21(specM, 'mat:'+m.name, card, card, ctx));
+    });
+  }
 
   /* ② 継続効果による付与 */
   if(typeof continuousSources==='function'){
@@ -127,6 +134,7 @@ function resolveProtSpecV21(spec, key, srcCard, target, ctx){
        （precedent: BF－孤高のシルバー・ウィンド）。 */
     perTurnScope: spec.perTurnScope==='source' ? 'source' : 'target',
     sourceCard: srcCard || null,
+    afterUseS03: (typeof spec.afterUseS03==='function') ? spec.afterUseS03 : null,   /* S03-U426: runs inside the battle reducer when this protection saved the card */
     sourceKind: spec.sourceKind || null,
     nonTargetingOnly: !!spec.nonTargetingOnly,
     opponentOnly: !!spec.opponentOnly,
