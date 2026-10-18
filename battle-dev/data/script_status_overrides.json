@@ -281,10 +281,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe hand selection and owner-to-opponent-field Special Summon routing for a canonical Gladiator Beast before drawing."
     },
-    "バスター・モード": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative /Buster identity metadata and a replay-safe Deck selection pipeline matching the released Synchro Monster's canonical name."
-    },
     "ブローニング・パワー": {
       "status": "ENGINE_GAP",
       "reason": "Needs one generic Counter Trap interface spanning Spell/Trap activation negation and Normal/Special Summon negation after a Psychic tribute cost."

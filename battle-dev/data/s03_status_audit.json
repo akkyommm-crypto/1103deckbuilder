@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 469,
+    "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 497,
+    "NOT_STARTED": 491,
     "PARTIAL": 10,
-    "TESTED": 3373
+    "TESTED": 3380
   },
   "delta": {
-    "ENGINE_GAP": -147,
+    "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -810,
+    "NOT_STARTED": -816,
     "PARTIAL": -172,
-    "TESTED": 1324
+    "TESTED": 1331
   },
   "status_changes": [
     {
@@ -865,6 +865,12 @@
       "unit": "S03-U138"
     },
     {
+      "name": "アーカナイト・マジシャン／バスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U408"
+    },
+    {
       "name": "アーケイン・ファイロ",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -1487,6 +1493,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U122"
+    },
+    {
+      "name": "ギガンテック・ファイター／バスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U408"
     },
     {
       "name": "ギブ&テイク",
@@ -2227,6 +2239,12 @@
       "unit": "S03-U367"
     },
     {
+      "name": "スターダスト・ドラゴン／バスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U408"
+    },
+    {
       "name": "スターライト・ロード",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2519,6 +2537,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U343"
+    },
+    {
+      "name": "デスカイザー・ドラゴン／バスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U408"
     },
     {
       "name": "デステニー・シグナル",
@@ -3019,6 +3043,12 @@
       "unit": "S03-U372"
     },
     {
+      "name": "ハイパーサイコガンナー／バスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U408"
+    },
+    {
       "name": "ハネクリボー LV10",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3089,6 +3119,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U198"
+    },
+    {
+      "name": "バスター・モード",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U408"
     },
     {
       "name": "バックファイア",
@@ -4037,6 +4073,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U72"
+    },
+    {
+      "name": "レッド・デーモンズ・ドラゴン／バスター",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U408"
     },
     {
       "name": "レプティレス・ガードナー",

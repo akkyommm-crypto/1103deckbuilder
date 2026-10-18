@@ -13353,6 +13353,76 @@
         "tools/test_s03_u407_titan.js"
       ],
       "evidence": "Exact script. Text (carddata). Cannot be Special Summoned; ignition: half of my LP (8000 -> 4000) paid, every other card of the field (my ワイト, 青眼, the Set 激流葬) is destroyed and banished and the Dragon gains 300 each (ATK 900); summoned (Normal / Flip) in the turn it goes to the Graveyard at the End Phase, otherwise it stays. Test: tools/test_s03_u407_titan.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "バスター・モード",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U408",
+      "tests": [
+        "tools/test_s03_u408_buster.js"
+      ],
+      "evidence": "Exact script. Text (carddata); the former gap (Buster identity metadata + Deck selection) is closed by the NAME rule: the Deck monster is named '<released Synchro name>／バスター'. Normal Spell: a face-up Synchro of mine with a matching Buster in the Deck is released (cost) and the Buster is Special Summoned from the Deck in Attack Position (selectCard; the answer is journaled); not activatable without a matching Buster in the Deck or without a Synchro Monster; a Buster cannot be Special Summoned by another effect (死者蘇生). Test: tools/test_s03_u408_buster.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "レッド・デーモンズ・ドラゴン／バスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U408",
+      "tests": [
+        "tools/test_s03_u408_buster.js"
+      ],
+      "evidence": "Exact script. Text (carddata). After the damage calculation of its attack all other monsters of the field are destroyed (onDamageStep leave); destroyed on the field (by ブラック・ホール) it Special Summons レッド・デーモンズ・ドラゴン from my Graveyard. Test: tools/test_s03_u408_buster.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ハイパーサイコガンナー／バスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U408",
+      "tests": [
+        "tools/test_s03_u408_buster.js"
+      ],
+      "evidence": "Exact script. Text (carddata). After a battle with an opponent monster: the opponent takes its DEF (200) and I recover its ATK (300) in addition to the battle damage (3200); the revival trigger shares the common Buster helper. Test: tools/test_s03_u408_buster.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "アーカナイト・マジシャン／バスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U408",
+      "tests": [
+        "tools/test_s03_u408_buster.js"
+      ],
+      "evidence": "Exact script. Text (carddata). On its Special Summon two Spell Counters are placed (ATK 900 + 2 x 1000 = 2900); removing 2 counters destroys all cards of the opponent (青眼, a Set Spell) and ATK returns to 900; not offered without an opposing card. Test: tools/test_s03_u408_buster.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ギガンテック・ファイター／バスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U408",
+      "tests": [
+        "tools/test_s03_u408_buster.js"
+      ],
+      "evidence": "Exact script. Text (carddata). On its Special Summon up to 2 Warriors of the Deck go to the Graveyard; opposing ATK -100 x the Warriors in my Graveyard (3 -> 青眼 2700). Test: tools/test_s03_u408_buster.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スターダスト・ドラゴン／バスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U408",
+      "tests": [
+        "tools/test_s03_u408_buster.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Quick effect answering the activation of ブラック・ホール (events onActivateSuccess, declareActivationResponseS03): released, ブラック・ホール negated and destroyed; Special Summoned back at the End Phase (v46 stardust return helpers). Test: tools/test_s03_u408_buster.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デスカイザー・ドラゴン／バスター",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U408",
+      "tests": [
+        "tools/test_s03_u408_buster.js"
+      ],
+      "evidence": "Exact script. Text (carddata). On its Special Summon Undead monsters of both Graveyards (my ゴースト, the opponent's ワイト) are Special Summoned to my field, their effects negated and destroyed at the End Phase (scheduled). Test: tools/test_s03_u408_buster.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

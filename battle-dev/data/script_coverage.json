@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 469,
+    "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 497,
+    "NOT_STARTED": 491,
     "PARTIAL": 10,
-    "TESTED": 3373
+    "TESTED": 3380
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -115,11 +115,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1563,
+    "legacy": 1564,
     "sin": 5,
-    "unified": 1289
+    "unified": 1295
   },
-  "static_registration_name_count": 3383,
+  "static_registration_name_count": 3390,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -10692,12 +10692,20 @@
       "subtype": null,
       "date": "2008-11-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZR_claude_s03_u408_buster.js",
+          "line": 107
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u408_buster.js"
+      ]
     },
     {
       "index": 465,
@@ -19608,12 +19616,20 @@
       "subtype": null,
       "date": "2008-11-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZR_claude_s03_u408_buster.js",
+          "line": 129
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u408_buster.js"
+      ]
     },
     {
       "index": 881,
@@ -30579,14 +30595,21 @@
       "subtype": null,
       "date": "2009-10-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 29,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZR_claude_s03_u408_buster.js",
+          "line": 147
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_p4_setcode_recovery.js",
-        "tools\\test_s03_u224_ns16.js"
+        "tools\\test_s03_u224_ns16.js",
+        "tools\\test_s03_u408_buster.js"
       ]
     },
     {
@@ -36836,12 +36859,20 @@
       "subtype": null,
       "date": "2008-11-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZR_claude_s03_u408_buster.js",
+          "line": 183
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u408_buster.js"
+      ]
     },
     {
       "index": 1685,
@@ -42721,12 +42752,20 @@
       "subtype": null,
       "date": "2008-11-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 27,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZR_claude_s03_u408_buster.js",
+          "line": 93
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u408_buster.js"
+      ]
     },
     {
       "index": 1959,
@@ -44087,15 +44126,22 @@
       "subtype": "",
       "date": "2008-11-15",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative /Buster identity metadata and a replay-safe Deck selection pipeline matching the released Synchro Monster's canonical name.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZR_claude_s03_u408_buster.js",
+          "line": 49
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle16.js",
         "tools\\test_s03_u198_partial2.js",
         "tools\\test_s03_u202_partial6.js",
+        "tools\\test_s03_u408_buster.js",
         "tools\\test_v620_batch14.js"
       ]
     },
@@ -59684,12 +59730,20 @@
       "subtype": null,
       "date": "2008-11-15",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 23,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZR_claude_s03_u408_buster.js",
+          "line": 78
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u408_buster.js"
+      ]
     },
     {
       "index": 2763,
