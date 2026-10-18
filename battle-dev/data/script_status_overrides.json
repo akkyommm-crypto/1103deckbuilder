@@ -941,21 +941,9 @@
       "status": "ENGINE_GAP",
       "reason": "Needs the reusable Ritual Summon pipeline, resolution-time Ritual Monster choice, exact Level-sum Normal Monster material selection from Deck, and retained Ritual Summon provenance."
     },
-    "オーバーリミット": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs same-turn battle-destruction provenance for every eligible Normal Monster, retained printed ATK at destruction, and a resolution-time multi-card Special Summon choice constrained by current Monster Zone capacity."
-    },
-    "ガスタへの祈り": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs activation-time target selection retaining the exact two Gusto cards returned as activation cost and the separately targeted Gusto monster to revive, with ordered shuffle and target revalidation; resolution-time P1 cannot substitute for these targets."
-    },
     "グリード": {
       "status": "ENGINE_GAP",
       "reason": "Needs effect-draw provenance and per-player draw counts accumulated only while this Continuous Trap remains face-up, followed by correctly scheduled End Phase damage and serializable counter reset."
-    },
-    "スカーレッド・カーペット": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative Resonator archetype metadata before activation-time target selection of up to two Graveyard Resonators can be represented without card-name string matching, plus simultaneous revival handling."
     },
     "スネーク・チョーク": {
       "status": "ENGINE_GAP",
@@ -980,10 +968,6 @@
     "ワンダーガレージ": {
       "status": "ENGINE_GAP",
       "reason": "provenance / resolution-time Choice: needs set-card effect-destruction provenance, authoritative roid metadata, and optional Level-4-or-lower Machine hand Special Summon."
-    },
-    "儀水鏡の幻影術": {
-      "status": "ENGINE_GAP",
-      "reason": "resolution-time Choice / delayed processing: needs hand Gishki Ritual selection plus linked attack prohibition and scheduled End Phase owner-hand return."
     },
     "呪われた棺": {
       "status": "ENGINE_GAP",

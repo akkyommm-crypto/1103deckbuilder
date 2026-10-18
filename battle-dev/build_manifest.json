@@ -1750,6 +1750,9 @@
   "path": "cards/HZZZZZZZZZZZ_claude_s03_u442_dice_discard.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZA_claude_s03_u443_traps_revive.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

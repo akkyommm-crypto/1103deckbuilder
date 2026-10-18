@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 397,
+    "ENGINE_GAP": 393,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3523
+    "TESTED": 3527
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1595,
+    "legacy": 1599,
     "sin": 5,
     "unified": 1403
   },
-  "static_registration_name_count": 3533,
+  "static_registration_name_count": 3537,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -16113,12 +16113,19 @@
       "subtype": "",
       "date": "2007-07-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs same-turn battle-destruction provenance for every eligible Normal Monster, retained printed ATK at destruction, and a resolution-time multi-card Special Summon choice constrained by current Monster Zone capacity.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZA_claude_s03_u443_traps_revive.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u443_traps_revive.js",
         "tools\\test_v820_batch33.js"
       ]
     },
@@ -18285,12 +18292,19 @@
       "subtype": "",
       "date": "2010-08-03",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs activation-time target selection retaining the exact two Gusto cards returned as activation cost and the separately targeted Gusto monster to revive, with ordered shuffle and target revalidation; resolution-time P1 cannot substitute for these targets.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZA_claude_s03_u443_traps_revive.js",
+          "line": 78
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u443_traps_revive.js",
         "tools\\test_v820_batch33.js"
       ]
     },
@@ -30048,12 +30062,19 @@
       "subtype": "",
       "date": "2011-02-11",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative Resonator archetype metadata before activation-time target selection of up to two Graveyard Resonators can be represented without card-name string matching, plus simultaneous revival handling.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZA_claude_s03_u443_traps_revive.js",
+          "line": 94
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u443_traps_revive.js",
         "tools\\test_v820_batch33.js"
       ]
     },
@@ -66139,12 +66160,19 @@
       "subtype": "",
       "date": "2011-04-26",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "resolution-time Choice / delayed processing: needs hand Gishki Ritual selection plus linked attack prohibition and scheduled End Phase owner-hand return.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZA_claude_s03_u443_traps_revive.js",
+          "line": 41
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u443_traps_revive.js",
         "tools\\test_v830_batch34.js"
       ]
     },

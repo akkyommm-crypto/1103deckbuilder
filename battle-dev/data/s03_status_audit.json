@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 397,
+    "ENGINE_GAP": 393,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3523
+    "TESTED": 3527
   },
   "delta": {
-    "ENGINE_GAP": -219,
+    "ENGINE_GAP": -223,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1474
+    "TESTED": 1478
   },
   "status_changes": [
     {
@@ -1381,6 +1381,12 @@
       "unit": "S03-U167"
     },
     {
+      "name": "オーバーリミット",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U443"
+    },
+    {
       "name": "オーバーロード・フュージョン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1535,6 +1541,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U210"
+    },
+    {
+      "name": "ガスタへの祈り",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U443"
     },
     {
       "name": "ガスタ・イグル",
@@ -2363,6 +2375,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U65 / S03-U207"
+    },
+    {
+      "name": "スカーレッド・カーペット",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U443"
     },
     {
       "name": "スカー・ウォリアー",
@@ -5063,6 +5081,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U202"
+    },
+    {
+      "name": "儀水鏡の幻影術",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U443"
     },
     {
       "name": "充電池メン",

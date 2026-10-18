@@ -14853,6 +14853,46 @@
         "tools/test_s03_u442_dice_discard.js"
       ],
       "evidence": "Exact script. Text (carddata). Both players choose 2 hand cards to discard and draw 2; the opponent may instead discard 1 hand card to negate the effect (nothing else happens); not activatable with fewer than 2 hand cards. Test: tools/test_s03_u442_dice_discard.js (Replay audit). Bad End Queen Dragon counts only face-up Continuous Spells of mine for its procedure and its revival cost."
+    },
+    {
+      "name": "オーバーリミット",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U443",
+      "tests": [
+        "tools/test_s03_u443_traps_revive.js"
+      ],
+      "evidence": "Exact script. Text (carddata). 500 LP paid; the Normal Monsters (printed ATK 1000 or less) destroyed by battle this turn from both Graveyards are Special Summoned to my field (the ATK 3000 one is not); not counted when destroyed by an effect or in an earlier turn. Test: tools/test_s03_u443_traps_revive.js (Replay audit). スカーレッド・カーペット chooses its 1-2 Resonators at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "ガスタへの祈り",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U443",
+      "tests": [
+        "tools/test_s03_u443_traps_revive.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Two 「ガスタ」 of the Graveyard go back to the Deck (shuffled), then a third is Special Summoned; not activatable with only two. Test: tools/test_s03_u443_traps_revive.js (Replay audit). スカーレッド・カーペット chooses its 1-2 Resonators at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "スカーレッド・カーペット",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U443",
+      "tests": [
+        "tools/test_s03_u443_traps_revive.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With a Dragon Synchro Monster on the field both 「リゾネーター」 of my Graveyard are Special Summoned (the non-Resonator stays); not activatable without a Dragon Synchro Monster. Test: tools/test_s03_u443_traps_revive.js (Replay audit). スカーレッド・カーペット chooses its 1-2 Resonators at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "儀水鏡の幻影術",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U443",
+      "tests": [
+        "tools/test_s03_u443_traps_revive.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A 「リチュア」 Ritual Monster of the hand is Special Summoned, cannot attack and returns to the hand at the End Phase; not activatable without one. Test: tools/test_s03_u443_traps_revive.js (Replay audit). スカーレッド・カーペット chooses its 1-2 Resonators at the resolution (ChoiceRequest) instead of as activation targets."
     }
   ],
   "restored_to_baseline": [
