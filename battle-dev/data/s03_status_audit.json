@@ -12,16 +12,16 @@
     "ENGINE_GAP": 409,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 427,
+    "NOT_STARTED": 424,
     "PARTIAL": 10,
-    "TESTED": 3503
+    "TESTED": 3506
   },
   "delta": {
     "ENGINE_GAP": -207,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -880,
+    "NOT_STARTED": -883,
     "PARTIAL": -172,
-    "TESTED": 1454
+    "TESTED": 1457
   },
   "status_changes": [
     {
@@ -563,6 +563,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U137"
+    },
+    {
+      "name": "RAI－JIN",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U437"
     },
     {
       "name": "RAI－MEI",
@@ -1253,6 +1259,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U432"
+    },
+    {
+      "name": "エレメント・マジシャン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U437"
     },
     {
       "name": "エレメント・ヴァルキリー",
@@ -6923,6 +6935,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U356"
+    },
+    {
+      "name": "海竜神－ネオダイダロス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U437"
     },
     {
       "name": "深海のディーヴァ",

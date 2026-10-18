@@ -14653,6 +14653,36 @@
         "tools/test_s03_u436_coin_pierce.js"
       ],
       "evidence": "Exact script. Text (carddata). End Phase of its summon turn adds a Spell of my Graveyard to the hand (not when it was not summoned this turn); banished when it leaves the field; the monster it destroys in battle is banished. Test: tools/test_s03_u436_coin_pierce.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "RAI－JIN",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U437",
+      "tests": [
+        "tools/test_s03_u437_misc_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Light monsters of mine gain 100 x my Graveyard LIGHT monsters (1600 → 1800 with 2), a DARK monster is unchanged; my End Phase destroys a LIGHT monster of my choice (not on the opponent End Phase); only one face-up copy may exist. Test: tools/test_s03_u437_misc_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エレメント・マジシャン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U437",
+      "tests": [
+        "tools/test_s03_u437_misc_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With a WIND monster on the field it attacks once more after destroying a monster (not without WIND); with a WATER monster its control cannot be changed (s03ControlLockedU251), otherwise it can. Test: tools/test_s03_u437_misc_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "海竜神－ネオダイダロス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U437",
+      "tests": [
+        "tools/test_s03_u437_misc_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Special Summonable from the hand by releasing a 「海竜－ダイダロス」 (not without one); paying my 「海」 sends every other card of both hands and fields to the Graveyard; not available without 「海」. Test: tools/test_s03_u437_misc_more.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
