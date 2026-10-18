@@ -421,10 +421,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a central successful exact-source Spell activation event plus replay-safe optional extra draw offered to that Spell's activating player."
     },
-    "戦士ラーズ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a blocking replay-safe resolution-time Deck selection transaction that moves a non-self Level-4-or-lower Warrior to the top without advancing the Chain early."
-    },
     "氷結界の三方陣": {
       "status": "ENGINE_GAP",
       "reason": "Needs exact three-distinct-name hand reveal as activation cost, fixed opponent-card targeting, then a separate replay-safe resolution-time Ice Barrier hand summon choice."
@@ -448,10 +444,6 @@
     "折れ竹光": {
       "status": "GENERIC_OK",
       "reason": "An Equip Spell whose printed ATK modifier is exactly zero; the existing generic Equip attachment and leave-field rules completely describe its behavior."
-    },
-    "薔薇の妖精": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs an add-to-hand event with source-zone and effect provenance plus a replay-safe optional self Special Summon from hand after being added from Deck by an effect."
     },
     "辺境の大賢者": {
       "status": "ENGINE_GAP",
@@ -877,10 +869,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs private Deck-top inspection and replay-safe top-or-bottom choice without exposing hidden identity outside the controller."
     },
-    "ダーク・ヴァージャー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a Plant Tuner Normal Summon event and optional self-revival from Graveyard with attack-position enforcement."
-    },
     "ネコマネキング": {
       "status": "ENGINE_GAP",
       "reason": "Needs opponent-turn opponent-effect send-to-Grave provenance and an immediate serializable forced turn termination action."
@@ -1213,14 +1201,6 @@
       "status": "ENGINE_GAP",
       "reason": "provenance: needs opponent-effect Deck-to-Grave provenance for the exact card and atomic owner Deck return/shuffle of every own Graveyard card."
     },
-    "ホープ・オブ・フィフス": {
-      "status": "ENGINE_GAP",
-      "reason": "target selection / resolution-time Choice: needs exact-five Elemental HERO Graveyard selection plus activation-state snapshot deciding draw two versus three after return/shuffle."
-    },
-    "マザー・スパイダー": {
-      "status": "ENGINE_GAP",
-      "reason": "summon procedure / activation cost: needs validation that the Graveyard contains only Insects and exact-two opponent face-up Defense monsters sent as a non-tribute summon cost."
-    },
     "ミスター・ボンバー": {
       "status": "TESTED",
       "reason": "activation cost / target selection: needs own-Standby ignition window, self tribute and activation-time exact-two face-up ATK-1000-or-less targets."
@@ -1256,10 +1236,6 @@
     "レプティレス・メデューサ": {
       "status": "ENGINE_GAP",
       "reason": "activation-time Choice / target selection / declaration / battle: exact 1103 processing for \"手札を1枚墓地へ送り、相手フィールド上に表側表示で存在するモンスター1体を選択して発動する。 選択したモンスターは攻撃力が0になり、表示形式を変更する事ができなくなる。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "ローズ・バード": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / battle: exact 1103 processing for \"自分フィールド上に表側攻撃表示で存在するこのカードが相手モンスターの攻撃によって破壊され墓地へ送られた時、デッキから植物族チューナー2体を表側守備表示で特殊召喚できる。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "ワーム・アグリィ": {
       "status": "ENGINE_GAP",

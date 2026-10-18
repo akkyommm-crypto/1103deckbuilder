@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 440,
+    "ENGINE_GAP": 434,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3472
+    "TESTED": 3478
   },
   "delta": {
-    "ENGINE_GAP": -176,
+    "ENGINE_GAP": -182,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1423
+    "TESTED": 1429
   },
   "status_changes": [
     {
@@ -2665,6 +2665,12 @@
       "unit": "S03-U130"
     },
     {
+      "name": "ダーク・ヴァージャー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U431"
+    },
+    {
       "name": "チェンジ・デステニー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3757,6 +3763,12 @@
       "unit": "S03-U251"
     },
     {
+      "name": "ホープ・オブ・フィフス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U431"
+    },
+    {
       "name": "ホーリーライフバリアー",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -3809,6 +3821,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U214"
+    },
+    {
+      "name": "マザー・スパイダー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U431"
     },
     {
       "name": "マシュマロン",
@@ -4433,6 +4451,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U345"
+    },
+    {
+      "name": "ローズ・バード",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U431"
     },
     {
       "name": "ロード・ウォリアー",
@@ -6097,6 +6121,12 @@
       "unit": "S03-U377"
     },
     {
+      "name": "戦士ラーズ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U431"
+    },
+    {
       "name": "戦線復活の代償",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -7655,6 +7685,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U160"
+    },
+    {
+      "name": "薔薇の妖精",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U431"
     },
     {
       "name": "虚栄の大猿",

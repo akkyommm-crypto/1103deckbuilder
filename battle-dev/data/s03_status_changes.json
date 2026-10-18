@@ -14343,6 +14343,66 @@
         "tools/test_s03_u430_guardians.js"
       ],
       "evidence": "Exact script. Text (carddata). Summonable only with 「破邪の大剣－バオウ」 on my field; destroying a monster in battle gives +1000 ATK and negates the destroyed Effect Monster (キラー・トマト summons nothing). Test: tools/test_s03_u430_guardians.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ダーク・ヴァージャー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U431",
+      "tests": [
+        "tools/test_s03_u431_gap_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A Plant Tuner (ウィード) was Normal Summoned → Special Summoned from the Graveyard in Attack Position; not for a non-Plant-Tuner. Test: tools/test_s03_u431_gap_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ホープ・オブ・フィフス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U431",
+      "tests": [
+        "tools/test_s03_u431_gap_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Five 「E・HERO」 cards of the Graveyard return to the Deck, shuffle, draw 2 (3 when no other card was in my hand or on my field); not activatable with only four. Test: tools/test_s03_u431_gap_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "マザー・スパイダー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U431",
+      "tests": [
+        "tools/test_s03_u431_gap_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Special Summonable from the hand when my Graveyard holds only Insects and two face-up Defense Position opponent monsters exist; both are sent to the Graveyard; not with a non-Insect in the Graveyard, not with one such monster. Test: tools/test_s03_u431_gap_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ローズ・バード",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U431",
+      "tests": [
+        "tools/test_s03_u431_gap_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroyed in Attack Position by 青眼's attack → two Plant Tuners of the Deck Special Summoned face-up in Defense Position; not when destroyed in Defense Position. Test: tools/test_s03_u431_gap_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "戦士ラーズ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U431",
+      "tests": [
+        "tools/test_s03_u431_gap_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Summoned → a chosen Level 4 or lower Warrior of the Deck is put on top of the Deck; nothing without one. Test: tools/test_s03_u431_gap_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "薔薇の妖精",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U431",
+      "tests": [
+        "tools/test_s03_u431_gap_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Added to the hand from the Deck by an effect → Special Summoned; not when returned from the Graveyard. Test: tools/test_s03_u431_gap_misc.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
