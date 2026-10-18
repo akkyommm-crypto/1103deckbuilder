@@ -99,7 +99,7 @@ function destroySubOptionsS03(gs, card, p, cause, excl){
     (gs.players[p].grave||[]).forEach(c=>{
       if(!c || excl.indexOf(c.uid)>=0) return;
       ensureCardUid(gs, c);
-      if(dbOf(c).k!=='m') return;
+      if(dbOf(c).k!=='m' && !decl.anyKind) return;   /* S03-U424: anyKind — a Spell / Trap Card of the Graveyard (ライフ・ストリーム・ドラゴン: an Equip Spell) */
       if(typeof decl.filter==='function' && !decl.filter(c)) return;
       outB.push({kind:'banish', uid:c.uid, name:cardName(c)});
     });

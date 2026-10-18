@@ -13973,6 +13973,46 @@
         "tools/test_s03_u423_st_shields.js"
       ],
       "evidence": "Exact script. Text (carddata). Activatable with a face-up Attack Position monster; the host cannot attack directly, is not destroyed by the opponent's effect or by battle (青眼 vs ブラック・マジシャン), the Trap leaving destroys the host and the host leaving destroys the Trap; not activatable with only a Defense Position monster. Test: tools/test_s03_u423_st_shields.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D・ライトン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U424",
+      "tests": [
+        "tools/test_s03_u424_lp_replace.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Attack Position: the effect damage of the opponent's Volcanic Queen (a card effect of the opponent) was dealt to the opponent instead (lp 8000 / 7000); Defense Position and a control without it take the damage; Defense Position destroyed by battle: the battle damage to me is 0 for the rest of the turn (the second, direct attack deals none). Test: tools/test_s03_u424_lp_replace.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エクストラ・ヴェーラー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U424",
+      "tests": [
+        "tools/test_s03_u424_lp_replace.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The opponent's Special Summon makes it Special Summon itself from the hand and the opponent's effect damage is dealt to the opponent this turn; my own Special Summon does not trigger it. Test: tools/test_s03_u424_lp_replace.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ライフ・ストリーム・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U424",
+      "tests": [
+        "tools/test_s03_u424_lp_replace.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Effect damage to me is 0; its Synchro Summon sets my LP to 4000 (not a non-Synchro Special Summon); destroyed by ブラック・ホール an Equip Spell of the Graveyard is banished instead (destroyed when there is none). Test: tools/test_s03_u424_lp_replace.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ブラックフェザー・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U424",
+      "tests": [
+        "tools/test_s03_u424_lp_replace.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Effect damage to me is replaced by a 黒羽 counter (ATK -700 each); the once-per-turn ignition removes all counters, lowers a face-up opponent monster by 700 x n and deals that damage to the opponent; not offered without counters. Test: tools/test_s03_u424_lp_replace.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

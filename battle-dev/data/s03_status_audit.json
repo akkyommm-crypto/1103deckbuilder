@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 436,
+    "NOT_STARTED": 432,
     "PARTIAL": 10,
-    "TESTED": 3435
+    "TESTED": 3439
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -871,
+    "NOT_STARTED": -875,
     "PARTIAL": -172,
-    "TESTED": 1386
+    "TESTED": 1390
   },
   "status_changes": [
     {
@@ -245,6 +245,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U359"
+    },
+    {
+      "name": "D・ライトン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U424"
     },
     {
       "name": "D・リペアユニット",
@@ -1097,6 +1103,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U218"
+    },
+    {
+      "name": "エクストラ・ヴェーラー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U424"
     },
     {
       "name": "エクストリオの牙",
@@ -3481,6 +3493,12 @@
       "unit": "S03-U212"
     },
     {
+      "name": "ブラックフェザー・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U424"
+    },
+    {
       "name": "ブラック・サンダー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4007,6 +4025,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U377"
+    },
+    {
+      "name": "ライフ・ストリーム・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U424"
     },
     {
       "name": "ランドオルスのヒカリゴケ",
