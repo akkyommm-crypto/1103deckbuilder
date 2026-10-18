@@ -13553,6 +13553,36 @@
         "tools/test_s03_u412_equips.js"
       ],
       "evidence": "Exact script. Text (carddata). Equips only 「コアキメイル」 monsters; the host (ATK 1400) attacking 青眼の白龍 (LIGHT, ATK 3000) destroys it without damage calculation (no damage to me); an EARTH monster (きのこマン) is fought normally; when the host leaves the field (ブラック・ホール) the Equip goes to the Graveyard and returns to my hand. Test: tools/test_s03_u412_equips.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "輝石融合",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U413",
+      "tests": [
+        "tools/test_s03_u413_fusion.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Trap on the Fusion-Spell profile {hand, field, Graveyard, ジェムナイト}: a Set card is activatable with ガネット + サフィア in the hand, only the 「ジェムナイト」 Fusion Monster is offered (not ガトリング・ドラゴン), ジェムナイト・ルビーズ is Fusion Summoned and the materials and the Trap go to the Graveyard; not activatable without a summonable 「ジェムナイト」 Fusion Monster. Test: tools/test_s03_u413_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "パーティカル・フュージョン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U413",
+      "tests": [
+        "tools/test_s03_u413_fusion.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Spell, materials from the FIELD only (hand-only materials: not activatable): ジェムナイト・ルビーズ Fusion Summoned; the Spell is stamped on the summoned monster (u413Particle) and its Graveyard trigger (onSpecialSummon, onOtherSummon) banishes itself and adds the chosen 「ジェムナイト」 material's ATK until the End Phase (ATK 2500 + 1900), back to 2500 afterwards. Test: tools/test_s03_u413_fusion.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "融合禁止エリア",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U413",
+      "tests": [
+        "tools/test_s03_u413_fusion.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap with the flag fusionSummonBanS03 (engine/1ZZU deckLockSourceS03): while face-up 融合 cannot be activated (fusionSpellOptionsS03 is empty) and API.specialSummon with summonKind 'fusion' is refused (the monster stays in the Extra Deck); a control without it: 融合 is activatable. Test: tools/test_s03_u413_fusion.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 478,
+    "NOT_STARTED": 475,
     "PARTIAL": 10,
-    "TESTED": 3393
+    "TESTED": 3396
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -829,
+    "NOT_STARTED": -832,
     "PARTIAL": -172,
-    "TESTED": 1344
+    "TESTED": 1347
   },
   "status_changes": [
     {
@@ -3221,6 +3221,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U156"
+    },
+    {
+      "name": "パーティカル・フュージョン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U413"
     },
     {
       "name": "ヒエラコスフィンクス",
@@ -7255,6 +7261,12 @@
       "unit": "S03-U349"
     },
     {
+      "name": "融合禁止エリア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U413"
+    },
+    {
       "name": "融合賢者",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -7397,6 +7409,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U404"
+    },
+    {
+      "name": "輝石融合",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U413"
     },
     {
       "name": "迅雷の魔王－スカル・デーモン",
