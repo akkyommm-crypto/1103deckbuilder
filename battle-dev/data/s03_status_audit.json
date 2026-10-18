@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 423,
+    "ENGINE_GAP": 418,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3489
+    "TESTED": 3494
   },
   "delta": {
-    "ENGINE_GAP": -193,
+    "ENGINE_GAP": -198,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1440
+    "TESTED": 1445
   },
   "status_changes": [
     {
@@ -965,6 +965,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U161"
+    },
+    {
+      "name": "インセクト・プリンセス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U434"
     },
     {
       "name": "インフィニティ・ダーク",
@@ -2735,6 +2741,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U119"
+    },
+    {
+      "name": "ツインヘッド・ケルベロス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U434"
     },
     {
       "name": "ツタン仮面",
@@ -4877,6 +4889,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U118"
+    },
+    {
+      "name": "代打バッター",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U434"
     },
     {
       "name": "仮面竜",
@@ -7219,6 +7237,12 @@
       "unit": "S03-U221"
     },
     {
+      "name": "白兵戦型お手伝いロボ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U434"
+    },
+    {
       "name": "白竜の聖騎士",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -7445,6 +7469,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U226"
+    },
+    {
+      "name": "穿孔虫",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U434"
     },
     {
       "name": "突進",

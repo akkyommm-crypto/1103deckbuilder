@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 423,
+    "ENGINE_GAP": 418,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3489
+    "TESTED": 3494
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1582,
+    "legacy": 1583,
     "sin": 5,
-    "unified": 1383
+    "unified": 1387
   },
-  "static_registration_name_count": 3499,
+  "static_registration_name_count": 3504,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -11601,12 +11601,19 @@
       "subtype": null,
       "date": "2004-03-01",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / battle provenance: forced battle position for opposing Insects and permanent gain per Insect destroyed in battle require central continuous enforcement.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZR_claude_s03_u434_battle_misc.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u434_battle_misc.js",
         "tools\\test_v900_batch41.js"
       ]
     },
@@ -36381,12 +36388,19 @@
       "subtype": null,
       "date": "2001-09-20",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "battle / provenance: needs battle-destroyed Flip monster identity and source-specific suppression of that exact Flip effect when another face-up Fiend exists.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZR_claude_s03_u434_battle_misc.js",
+          "line": 31
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u434_battle_misc.js",
         "tools\\test_v850_batch36.js"
       ]
     },
@@ -64946,12 +64960,19 @@
       "subtype": null,
       "date": "2004-03-01",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs field-to-Grave trigger provenance plus an optional resolution-time private hand selection and Insect Special Summon without treating the selected card as an activation target.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZR_claude_s03_u434_battle_misc.js",
+          "line": 45
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u434_battle_misc.js",
         "tools\\test_v780_batch30.js"
       ]
     },
@@ -91103,12 +91124,19 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / battle: exact 1103 processing for \"このカードが戦闘によって相手モンスターを破壊する度に、自分はカードを1枚ドローした後手札からカードを1枚選択してデッキの一番下に戻す。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZR_claude_s03_u434_battle_misc.js",
+          "line": 76
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u434_battle_misc.js",
         "tools\\test_v880_batch39.js"
       ]
     },
@@ -93618,12 +93646,19 @@
       "subtype": null,
       "date": "2000-12-14",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "provenance / battle / damage/LP: exact 1103 processing for \"このカードが相手ライフに戦闘ダメージを与えた時、自分のデッキに存在する自分の「寄生虫パラサイド」1枚をデッキの一番上に置く事ができる。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZR_claude_s03_u434_battle_misc.js",
+          "line": 61
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u434_battle_misc.js",
         "tools\\test_v880_batch39.js"
       ]
     },

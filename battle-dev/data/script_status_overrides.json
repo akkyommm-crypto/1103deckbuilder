@@ -889,10 +889,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a generic replay-safe arbitrary Spell-effect copy/use pipeline from the opponent Graveyard, including activation legality, costs, targets and resolution identity."
     },
-    "代打バッター": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs field-to-Grave trigger provenance plus an optional resolution-time private hand selection and Insect Special Summon without treating the selected card as an activation target."
-    },
     "伝説の爆炎使い": {
       "status": "ENGINE_GAP",
       "reason": "Needs the reusable Ritual Summon pipeline, per-source Spell-activation counter accumulation, and a three-counter cost for mass destruction excluding itself."
@@ -1137,10 +1133,6 @@
       "status": "ENGINE_GAP",
       "reason": "provenance / resolution-time Choice: needs Flip-armed later Graveyard trigger and serializable choices by both players for attack-up or set-defense revival."
     },
-    "ツインヘッド・ケルベロス": {
-      "status": "ENGINE_GAP",
-      "reason": "battle / provenance: needs battle-destroyed Flip monster identity and source-specific suppression of that exact Flip effect when another face-up Fiend exists."
-    },
     "デスガエル": {
       "status": "ENGINE_GAP",
       "reason": "provenance / resolution-time Choice: needs Tribute Summon provenance, canonical grave count and selection of up to that many copies across hand/Deck for simultaneous summon."
@@ -1293,10 +1285,6 @@
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / provenance: exact 1103 processing for \"カード名を1つ宣言する。 相手の手札を確認し、宣言したカードが相手の手札に存在する場合、そのカード1枚をゲームから除外する。 宣言したカードが相手の手札に存在しなかった場合、自分の手札をランダムに1枚ゲームから除外する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "白兵戦型お手伝いロボ": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / battle: exact 1103 processing for \"このカードが戦闘によって相手モンスターを破壊する度に、自分はカードを1枚ドローした後手札からカードを1枚選択してデッキの一番下に戻す。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "皆既日蝕の書": {
       "status": "ENGINE_GAP",
       "reason": "delayed/scheduled processing: exact 1103 processing for \"①:フィールドの表側表示モンスターを全て裏側守備表示にする。 このターンのエンドフェイズに、相手フィールドの裏側守備表示モンスターを全て表側守備表示にし、その後、この効果で表側守備表示にしたモンスターの数だけ相手はデッキ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
@@ -1308,10 +1296,6 @@
     "種子弾丸": {
       "status": "ENGINE_GAP",
       "reason": "resolution-time Choice / damage/LP: exact 1103 processing for \"植物族モンスターが召喚・反転召喚・特殊召喚される度に、このカードにプラントカウンターを1つ置く(最大5つまで)。 フィールド上に存在するこのカードを墓地へ送る事で、このカードに乗っているプラントカウンターの数×500ポイ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "穿孔虫": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / battle / damage/LP: exact 1103 processing for \"このカードが相手ライフに戦闘ダメージを与えた時、自分のデッキに存在する自分の「寄生虫パラサイド」1枚をデッキの一番上に置く事ができる。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "竜の渓谷": {
       "status": "TESTED",
@@ -1516,10 +1500,6 @@
     "イグザリオン・ユニバース": {
       "status": "ENGINE_GAP",
       "reason": "Battle activation window / temporary piercing modifier: the Battle Step ignition timing and until-end-turn ATK reduction plus piercing grant need an activation-window primitive."
-    },
-    "インセクト・プリンセス": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / battle provenance: forced battle position for opposing Insects and permanent gain per Insect destroyed in battle require central continuous enforcement."
     },
     "インフェルニティ・ネクロマンサー": {
       "status": "ENGINE_GAP",

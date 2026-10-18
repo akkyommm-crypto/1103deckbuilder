@@ -14513,6 +14513,56 @@
         "tools/test_s03_u433_koaki_misc.js"
       ],
       "evidence": "Exact script. Text (carddata). Special Summonable from the hand when only the opponent controls a monster; its original ATK / DEF are halved (1000 / 1200); not when I control a monster or the opponent has none. Test: tools/test_s03_u433_koaki_misc.js (Replay audit). Power Hand negates the battle partner only while the battle lasts (gameState.battle), not for the rest of the Battle Phase."
+    },
+    {
+      "name": "インセクト・プリンセス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U434",
+      "tests": [
+        "tools/test_s03_u434_battle_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A face-up opposing Insect is forced to Attack Position (other races not); destroying an Insect in battle gives +500 ATK (1900 → 2400), a non-Insect does not. Test: tools/test_s03_u434_battle_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ツインヘッド・ケルベロス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U434",
+      "tests": [
+        "tools/test_s03_u434_battle_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With another face-up Fiend on my field the Flip effect of the monster it destroyed in battle is negated (アイヴィ・ウォール summons no token); not without a Fiend; a non-Flip effect (キラー・トマト) is not negated. Test: tools/test_s03_u434_battle_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "代打バッター",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U434",
+      "tests": [
+        "tools/test_s03_u434_battle_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Sent from my field to the Graveyard (destroyed by 青眼) → an Insect of my hand is Special Summoned; not when discarded from the hand. Test: tools/test_s03_u434_battle_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "白兵戦型お手伝いロボ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U434",
+      "tests": [
+        "tools/test_s03_u434_battle_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroying a monster in battle → draw 1, then a chosen hand card goes to the bottom of the Deck; no draw when it is destroyed itself. Test: tools/test_s03_u434_battle_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "穿孔虫",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U434",
+      "tests": [
+        "tools/test_s03_u434_battle_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Dealing battle damage to the opponent (direct attack, 1100) puts a 寄生虫パラサイド of the Deck on top; no placement without battle damage. Test: tools/test_s03_u434_battle_misc.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -3,7 +3,7 @@ const ROOT=path.resolve(__dirname,'..');
 const ov=JSON.parse(fs.readFileSync(path.join(ROOT,'data','script_status_overrides.json'),'utf8')).cards;
 /* LeaveField primitive(System v9) で解消。当時 ENGINE_GAP だった記録として残す。 */
 const leaveUnlocked=["蘇りし魂","闇次元の解放"];/* StatModifier primitive(System v14) で解消。当時 ENGINE_GAP だった記録として残す。 */const statUnlocked=['カラテマン','グレート・スピリット','シンクロ・ギフト'];/* Position primitive(System v10) で解消。当時 ENGINE_GAP だった記録として残す。 */const positionUnlocked=['ガジェット・ドライバー'];
-const reviewed=["虹の引力","虹の行方","裁きの光","連鎖除外","銀幕の鏡壁","鎖付き爆弾","D・クロックン","E－HERO ヘル・ブラット","おとり人形","おジャマ・カントリー","アポカテクイル","イグザリオン・ユニバース","インセクト・プリンセス","インフェルニティ・ネクロマンサー","エキセントリック・ボーイ","エンペラー・ストゥム","カラクリ粉","ガーディアン・トライス","グリード・クエーサー","コアキメイル・フルバリア","ゴースト王－パンプキング－","システム・ダウン","ジェルエンデュオ","ジャンク・ディフェンダー"];
+const reviewed=["虹の引力","虹の行方","裁きの光","連鎖除外","銀幕の鏡壁","鎖付き爆弾","D・クロックン","E－HERO ヘル・ブラット","おとり人形","おジャマ・カントリー","アポカテクイル","イグザリオン・ユニバース","インフェルニティ・ネクロマンサー","エキセントリック・ボーイ","エンペラー・ストゥム","カラクリ粉","ガーディアン・トライス","グリード・クエーサー","コアキメイル・フルバリア","ゴースト王－パンプキング－","システム・ダウン","ジェルエンデュオ","ジャンク・ディフェンダー"];
 const classAUnlocked=['D・ビデオン'];let fail=0;
 /* P26 Control primitive で解禁し、実装・テスト済み。当時 ENGINE_GAP だった記録として残す。 */
 const p26Unlocked=['ガスタの疾風 リーズ'];
@@ -27,3 +27,4 @@ const pierceUnlocked=['クロスソード・ハンター','インフェルニテ
 for(const name of pierceUnlocked){const okPB=!ov[name];console.log((okPB?'PASS ':'FAIL ')+'Class A pierce unlocked '+name);if(!okPB)fail++;}
 if(fail)process.exit(2);
 /* S03-U432: implemented and tested; its ENGINE_GAP override was removed. Kept as the record that it was ENGINE_GAP then. */['エレメント・ザウルス','エレメント・ドラゴン','ゴーレム'].forEach(n=>{const okU=!ov[n];console.log((okU?'PASS ':'FAIL ')+'U432 unlocked '+n);if(!okU)process.exitCode=2;});
+/* S03-U434: implemented and tested; its ENGINE_GAP override was removed. Kept as the record that it was ENGINE_GAP then. */['インセクト・プリンセス'].forEach(n=>{const okU=!ov[n];console.log((okU?'PASS ':'FAIL ')+'U434 unlocked '+n);if(!okU)process.exitCode=2;});
