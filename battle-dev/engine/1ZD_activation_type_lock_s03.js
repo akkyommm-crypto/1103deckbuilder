@@ -86,6 +86,17 @@ function summonTrapLockReasonS03(card, zone, db, opts){
    turn (LINGER_ADD_S03, S03-U257: ランドオルスのヒカリゴケ, 古代の機械砲台) lock too, wherever the used card is. */
 function monsterActivationLockReasonS03(p, card, zone, db, opts){
   if(!db || (db.k!=='s' && db.k!=='t' && db.k!=='m') || typeof CARD_SCRIPTS==='undefined') return '';
+  /* S03-U425: トラパート — while a Synchro Monster that used a card with synchroMatTrapLockS03 as its material attacks (from the declaration until the Damage Step ends), the opponent cannot activate Trap Cards */
+  if(db.k==='t' && gameState){
+    let atkT = null, ownerT = null;
+    const bT = gameState.battle, paT = gameState.pendingAttack;
+    if(bT && bT.step!=='end'){ atkT = ((gameState.players[bT.player]||{}).mz || [])[bT.atkIdx] || null; ownerT = bT.player; }
+    else if(paT && paT.attackerUid!=null){ const hT = findCardByUid(paT.attackerUid); if(hT && hT.zone==='mz'){ atkT = hT.card; ownerT = hT.p; } }
+    if(atkT && atkT.face==='up' && p!==ownerT && Array.isArray(atkT.v380SummonMaterials)){
+      const hitT = atkT.v380SummonMaterials.find(m=>{ const scT = CARD_SCRIPTS[m && m.name]; return !!scT && scT.synchroMatTrapLockS03===true; });
+      if(hitT) return `${hitT.name}の効果により罠カードを発動できません`;
+    }
+  }
   /* S03-U393: 封魔の呪印 — a Spell name banned for this player for the rest of the duel (effectFlags.activationBanNamesS03) */
   { const banL = gameState.players[p] && gameState.players[p].effectFlags && gameState.players[p].effectFlags.activationBanNamesS03;
     if(db.k==='s' && Array.isArray(banL) && banL.indexOf(db.n)>=0) return `封魔の呪印の効果により${db.n}を発動できません`; }

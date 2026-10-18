@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 432,
+    "NOT_STARTED": 428,
     "PARTIAL": 10,
-    "TESTED": 3439
+    "TESTED": 3443
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -875,
+    "NOT_STARTED": -879,
     "PARTIAL": -172,
-    "TESTED": 1390
+    "TESTED": 1394
   },
   "status_changes": [
     {
@@ -2887,6 +2887,12 @@
       "unit": "S03-U252"
     },
     {
+      "name": "トラパート",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U425"
+    },
+    {
       "name": "トラファスフィア",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -3907,6 +3913,12 @@
       "unit": "S03-U372"
     },
     {
+      "name": "モノケロース",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U425"
+    },
+    {
       "name": "モロコシーナ",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -4823,6 +4835,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U224"
+    },
+    {
+      "name": "共鳴破",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U425"
     },
     {
       "name": "共鳴虫",
@@ -7253,6 +7271,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U376"
+    },
+    {
+      "name": "紅蓮地帯を飛ぶ鷹",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U425"
     },
     {
       "name": "紅蓮魔竜の壺",

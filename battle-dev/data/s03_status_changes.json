@@ -14013,6 +14013,46 @@
         "tools/test_s03_u424_lp_replace.js"
       ],
       "evidence": "Exact script. Text (carddata). Effect damage to me is replaced by a 黒羽 counter (ATK -700 each); the once-per-turn ignition removes all counters, lowers a face-up opponent monster by 700 x n and deals that damage to the opponent; not offered without counters. Test: tools/test_s03_u424_lp_replace.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "モノケロース",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U425",
+      "tests": [
+        "tools/test_s03_u425_synchro_mats.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Hand procedure banishing a hand Spell (not without one); Synchro Summon with it and a Beast Tuner (X－セイバー エアベルン) → the Beast Tuner is Special Summoned back from the Graveyard (not for a Machine Tuner). Test: tools/test_s03_u425_synchro_mats.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "紅蓮地帯を飛ぶ鷹",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U425",
+      "tests": [
+        "tools/test_s03_u425_synchro_mats.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Used as a Synchro Material with 3 kinds of 「ラヴァル」 in the Graveyard → Special Summoned back, banished when it leaves the field; not with only 2 kinds. Test: tools/test_s03_u425_synchro_mats.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "共鳴破",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U425",
+      "tests": [
+        "tools/test_s03_u425_synchro_mats.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap: a 「リゾネーター」 sent as a Synchro Material destroys a chosen card of the opponent's field (not for a non-Resonator Tuner); the ACTIVATE stamps the expiry (my 2nd End Phase: +2) and it is destroyed then. Test: tools/test_s03_u425_synchro_mats.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "トラパート",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U425",
+      "tests": [
+        "tools/test_s03_u425_synchro_mats.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Usable only for a Warrior Synchro Monster (not for 氷結界の龍 ブリューナク); the Synchro Monster that used it attacks → the opponent's Set trap (攻撃の無力化) cannot be activated; control without the material: the trap is activated. Test: tools/test_s03_u425_synchro_mats.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 432,
+    "NOT_STARTED": 428,
     "PARTIAL": 10,
-    "TESTED": 3439
+    "TESTED": 3443
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1570,
+    "legacy": 1571,
     "sin": 5,
-    "unified": 1345
+    "unified": 1348
   },
-  "static_registration_name_count": 3449,
+  "static_registration_name_count": 3453,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -39379,12 +39379,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 27,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZI_claude_s03_u425_synchro_mats.js",
+          "line": 102
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u425_synchro_mats.js"
+      ]
     },
     {
       "index": 1798,
@@ -55561,12 +55569,20 @@
       "subtype": null,
       "date": "2010-04-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 25,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZI_claude_s03_u425_synchro_mats.js",
+          "line": 46
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u425_synchro_mats.js"
+      ]
     },
     {
       "index": 2560,
@@ -67067,12 +67083,20 @@
       "subtype": "永続",
       "date": "2011-02-11",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZI_claude_s03_u425_synchro_mats.js",
+          "line": 80
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u425_synchro_mats.js"
+      ]
     },
     {
       "index": 3083,
@@ -94321,12 +94345,20 @@
       "subtype": null,
       "date": "2010-04-27",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZI_claude_s03_u425_synchro_mats.js",
+          "line": 23
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u425_synchro_mats.js"
+      ]
     },
     {
       "index": 4345,
