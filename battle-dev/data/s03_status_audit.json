@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 377,
+    "ENGINE_GAP": 372,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3543
+    "TESTED": 3548
   },
   "delta": {
-    "ENGINE_GAP": -239,
+    "ENGINE_GAP": -244,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1494
+    "TESTED": 1499
   },
   "status_changes": [
     {
@@ -2843,6 +2843,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U223"
+    },
+    {
+      "name": "ツーマンセルバトル",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U447"
     },
     {
       "name": "テラ・フォーミング",
@@ -5815,6 +5821,12 @@
       "unit": "S03-U292"
     },
     {
+      "name": "城壁壊しの大槍",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U447"
+    },
+    {
       "name": "堕天使アスモディウス",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -6169,6 +6181,12 @@
       "unit": "S03-U64"
     },
     {
+      "name": "封神鏡",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U447"
+    },
+    {
       "name": "封魔の呪印",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6485,6 +6503,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U353"
+    },
+    {
+      "name": "挑発",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U447"
     },
     {
       "name": "援護射撃",
@@ -7103,6 +7127,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U216"
+    },
+    {
+      "name": "波動障壁",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U447"
     },
     {
       "name": "洗脳光線",

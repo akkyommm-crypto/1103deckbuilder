@@ -15053,6 +15053,56 @@
         "tools/test_s03_u446_traps_more.js"
       ],
       "evidence": "Exact script. Text (carddata). The opponent activates a Spell → 1000 LP paid and a random opponent hand card discarded (the Spell resolves separately). Test: tools/test_s03_u446_traps_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ツーマンセルバトル",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U447",
+      "tests": [
+        "tools/test_s03_u447_lock_lance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). At my End Phase a Level 4 Normal Monster of my hand was Special Summoned on request; declining leaves it in the hand. Test: tools/test_s03_u447_lock_lance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "城壁壊しの大槍",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U447",
+      "tests": [
+        "tools/test_s03_u447_lock_lance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The equipped ATK 1000 monster attacking a face-down Defense ブラック・マジシャン gets +1500 and destroys it; unequipped it does not; a face-up Defense target gets no bonus. Test: tools/test_s03_u447_lock_lance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "封神鏡",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U447",
+      "tests": [
+        "tools/test_s03_u447_lock_lance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The opponent hand is revealed and the chosen Spirit monster discarded (the other card stays); nothing is discarded without a Spirit. Test: tools/test_s03_u447_lock_lance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "挑発",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U447",
+      "tests": [
+        "tools/test_s03_u447_lock_lance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Activated in the opponent Main Phase 1 on a monster of mine, the opponent may attack only that monster (the other is refused); not activatable in my own turn. Test: tools/test_s03_u447_lock_lance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "波動障壁",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U447",
+      "tests": [
+        "tools/test_s03_u447_lock_lance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). At the opponent attack declaration my Synchro Monster is released, every Attack Position monster of the opponent turns Defense Position and the attacker's DEF (2500) is dealt to the opponent; not offered without a Synchro Monster. Test: tools/test_s03_u447_lock_lance.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

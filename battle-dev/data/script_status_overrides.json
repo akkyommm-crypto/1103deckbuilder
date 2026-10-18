@@ -461,10 +461,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs deterministic hidden opponent Extra Deck random selection of exactly two Fusion Monsters with journaled RNG and simultaneous Graveyard movement."
     },
-    "挑発": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a serializable turn-duration mandatory attack-target restriction integrated with Battle Command legality, attack replay and the no-legal-attacker case."
-    },
     "救出劇": {
       "status": "ENGINE_GAP",
       "reason": "Needs source-aware targeting detection for an Archetype monster, hand-return resolution, then a separate replay-safe resolution-time hand Special Summon choice."
@@ -472,10 +468,6 @@
     "旅人の試練": {
       "status": "ENGINE_GAP",
       "reason": "Needs private deterministic random opponent-hand selection, replay-safe card-type declaration, controlled reveal and conditional attacker hand return."
-    },
-    "波動障壁": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs attack-declaration Synchro tribute cost, simultaneous opponent position conversion and a resolution-time attacking-monster DEF snapshot for damage."
     },
     "裸の王様": {
       "status": "ENGINE_GAP",
@@ -533,10 +525,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a Counter Trap activation-success event, optional DARK tribute response from hand, then a distinct summon-success destruction trigger with replay-safe targeting."
     },
-    "ツーマンセルバトル": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs optional per-player End Phase windows, Level 4 Normal Monster hand selection and one-use-per-own-End-Phase state for a shared Continuous Spell."
-    },
     "ドングリス": {
       "status": "ENGINE_GAP",
       "reason": "Needs opponent Special Summon event-group counting plus an ignition counter cost and replay-safe targeted destruction from accumulated source counters."
@@ -581,17 +569,9 @@
       "status": "ENGINE_GAP",
       "reason": "Needs activation-time facedown reveal with Flip-effect suppression plus Battle-Phase-end destruction scheduling for every monster that attacked while the Field Spell remained active."
     },
-    "城壁壊しの大槍": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs an Equip-source-linked Damage Step modifier triggered only when the equipped monster attacks a facedown Defense Position monster and reset after damage calculation."
-    },
     "墓地封印": {
       "status": "ENGINE_GAP",
       "reason": "Needs a turn-duration central negation rule for all effects activated in Graveyards, enforced at Chain activation and resolution without blocking non-activated continuous state."
-    },
-    "封神鏡": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs private opponent-hand inspection and conditional Spirit selection/discard without leaking unrelated hidden card identities to logs or replay UI."
     },
     "断層地帯": {
       "status": "ENGINE_GAP",

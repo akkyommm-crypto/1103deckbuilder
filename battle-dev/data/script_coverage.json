@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 377,
+    "ENGINE_GAP": 372,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3543
+    "TESTED": 3548
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -70,7 +70,7 @@
     "helper:u183DefineArms": 3,
     "helper:u310Define": 5,
     "helper:u311Define": 6,
-    "helper:u312Define": 16,
+    "helper:u312Define": 17,
     "helper:u328Define": 5,
     "helper:u342HandSS": 2,
     "helper:u343Helios": 2,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1612,
+    "legacy": 1615,
     "sin": 5,
-    "unified": 1404
+    "unified": 1405
   },
-  "static_registration_name_count": 3552,
+  "static_registration_name_count": 3557,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -36654,12 +36654,19 @@
       "subtype": "永続",
       "date": "2004-05-27",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs optional per-player End Phase windows, Level 4 Normal Monster hand selection and one-use-per-own-End-Phase state for a shared Continuous Spell.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZE_claude_s03_u447_lock_lance.js",
+          "line": 75
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u447_lock_lance.js",
         "tools\\test_v700_batch22.js"
       ]
     },
@@ -71941,12 +71948,19 @@
       "subtype": "装備",
       "date": "2004-08-05",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs an Equip-source-linked Damage Step modifier triggered only when the equipped monster attacks a facedown Defense Position monster and reset after damage calculation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u312Define",
+          "source": "cards\\HZZZZZZZZZZZE_claude_s03_u447_lock_lance.js",
+          "line": 60
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u447_lock_lance.js",
         "tools\\test_v710_batch23.js"
       ]
     },
@@ -75930,12 +75944,19 @@
       "subtype": "",
       "date": "2001-11-29",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs private opponent-hand inspection and conditional Spirit selection/discard without leaking unrelated hidden card identities to logs or replay UI.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZE_claude_s03_u447_lock_lance.js",
+          "line": 90
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u447_lock_lance.js",
         "tools\\test_v710_batch23.js"
       ]
     },
@@ -79892,12 +79913,19 @@
       "subtype": "",
       "date": "2004-05-27",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a serializable turn-duration mandatory attack-target restriction integrated with Battle Command legality, attack replay and the no-legal-attacker case.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZE_claude_s03_u447_lock_lance.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u447_lock_lance.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -86543,12 +86571,19 @@
       "subtype": "",
       "date": "2010-04-17",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs attack-declaration Synchro tribute cost, simultaneous opponent position conversion and a resolution-time attacking-monster DEF snapshot for damage.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZE_claude_s03_u447_lock_lance.js",
+          "line": 33
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u447_lock_lance.js",
         "tools\\test_v690_batch21.js"
       ]
     },
