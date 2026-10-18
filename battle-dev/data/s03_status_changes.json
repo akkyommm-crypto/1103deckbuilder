@@ -13903,6 +13903,46 @@
         "tools/test_s03_u421_procedures.js"
       ],
       "evidence": "Exact script. Text (carddata). Procedure banishing every Machine LIGHT monster of my Graveyard and field (not without one); base ATK / DEF 500 x the number banished (1000 for two); its Special Summon sends all the other face-up monsters of the field to the Graveyard. Test: tools/test_s03_u421_procedures.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "巻きすぎた発条",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U422",
+      "tests": [
+        "tools/test_s03_u422_revival_st.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Normal Spell: a 「ゼンマイ」 monster of my Graveyard is Special Summoned face-up in Defense Position, its effect permanently negated, it cannot be Released and cannot be a Synchro Material; not activatable without one. Test: tools/test_s03_u422_revival_st.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スクラップ・オイルゾーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U422",
+      "tests": [
+        "tools/test_s03_u422_revival_st.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Spell: a 「スクラップ」 monster of the Graveyard Special Summoned with its effects negated, no Battle Phase this turn, the two links of linkOnLeave (the Spell leaves → the monster is destroyed; the monster leaves → the Spell is destroyed); not activatable without a target. Test: tools/test_s03_u422_revival_st.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "増草剤",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U422",
+      "tests": [
+        "tools/test_s03_u422_revival_st.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Spell placed without an effect; its once-per-turn ignition Special Summons a Plant of my Graveyard, no Normal Summon this turn, and the Spell is destroyed when that Plant leaves the field; not offered without a Plant. Test: tools/test_s03_u422_revival_st.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "血の沼地",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U422",
+      "tests": [
+        "tools/test_s03_u422_revival_st.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap: Set Spell / Trap Cards cannot be activated (the opponent's Set trap is refused, a hand activation is not), destroyed at my 2nd Standby Phase after the activation, and destroyed at once when another Spell / Trap Card of mine is on the field. Test: tools/test_s03_u422_revival_st.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 443,
+    "NOT_STARTED": 439,
     "PARTIAL": 10,
-    "TESTED": 3428
+    "TESTED": 3432
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -118,9 +118,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1570,
     "sin": 5,
-    "unified": 1334
+    "unified": 1338
   },
-  "static_registration_name_count": 3438,
+  "static_registration_name_count": 3442,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -29985,12 +29985,20 @@
       "subtype": "永続",
       "date": "2010-07-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZF_claude_s03_u422_revival_st.js",
+          "line": 59
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u422_revival_st.js"
+      ]
     },
     {
       "index": 1353,
@@ -72119,12 +72127,20 @@
       "subtype": "永続",
       "date": "2008-07-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZF_claude_s03_u422_revival_st.js",
+          "line": 83
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u422_revival_st.js"
+      ]
     },
     {
       "index": 3316,
@@ -75915,12 +75931,20 @@
       "subtype": "",
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZF_claude_s03_u422_revival_st.js",
+          "line": 36
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u422_revival_st.js"
+      ]
     },
     {
       "index": 3493,
@@ -97292,12 +97316,20 @@
       "subtype": "永続",
       "date": "2008-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZF_claude_s03_u422_revival_st.js",
+          "line": 109
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u422_revival_st.js"
+      ]
     },
     {
       "index": 4482,

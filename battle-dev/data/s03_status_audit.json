@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 443,
+    "NOT_STARTED": 439,
     "PARTIAL": 10,
-    "TESTED": 3428
+    "TESTED": 3432
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -864,
+    "NOT_STARTED": -868,
     "PARTIAL": -172,
-    "TESTED": 1379
+    "TESTED": 1383
   },
   "status_changes": [
     {
@@ -2213,6 +2213,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U05"
+    },
+    {
+      "name": "スクラップ・オイルゾーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U422"
     },
     {
       "name": "スクラップ・オルトロス",
@@ -5377,6 +5383,12 @@
       "unit": "S03-U379"
     },
     {
+      "name": "増草剤",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U422"
+    },
+    {
       "name": "夜薔薇の騎士",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5675,6 +5687,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U328"
+    },
+    {
+      "name": "巻きすぎた発条",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U422"
     },
     {
       "name": "干ばつの結界像",
@@ -7463,6 +7481,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U104"
+    },
+    {
+      "name": "血の沼地",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U422"
     },
     {
       "name": "衰弱の霧",
