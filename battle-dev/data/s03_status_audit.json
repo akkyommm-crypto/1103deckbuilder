@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 487,
+    "NOT_STARTED": 484,
     "PARTIAL": 10,
-    "TESTED": 3384
+    "TESTED": 3387
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -820,
+    "NOT_STARTED": -823,
     "PARTIAL": -172,
-    "TESTED": 1335
+    "TESTED": 1338
   },
   "status_changes": [
     {
@@ -2285,6 +2285,12 @@
       "before": "NOT_STARTED",
       "after": "PARTIAL",
       "unit": "S03-U65"
+    },
+    {
+      "name": "スピード・キング☆スカル・フレイム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U410"
     },
     {
       "name": "スポーア",
@@ -5329,6 +5335,12 @@
       "unit": "S03-U365"
     },
     {
+      "name": "太陽龍インティ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U410"
+    },
+    {
       "name": "奇跡の蘇生",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5927,6 +5939,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U85"
+    },
+    {
+      "name": "月影龍クイラ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U410"
     },
     {
       "name": "未来サムライ",

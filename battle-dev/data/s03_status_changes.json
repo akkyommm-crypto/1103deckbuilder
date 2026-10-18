@@ -13463,6 +13463,36 @@
         "tools/test_s03_u409_blackflare.js"
       ],
       "evidence": "Exact script. Text (carddata). Special Summonable only for the reason 黒炎の騎士－ブラック・フレア・ナイト－ (not 死者蘇生); in the damage calculation its ATK 2800 + the partner's printed ATK 1900 = 4700 (2800 battle damage), back to 2800 afterwards; it battled this turn -> banished at the End Phase; without a battle it stays. Test: tools/test_s03_u409_blackflare.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "太陽龍インティ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U410",
+      "tests": [
+        "tools/test_s03_u410_inti.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroyed in battle by 青眼の究極竜 (ATK 4500): the destroyer is destroyed and half its ATK (2250) is dealt to the opponent (a3SelfBattleDestroyed / a3BattleOther), and - destroyed on the field - a Standby-Phase schedule of the next turn Special Summons 月影龍クイラ from my Graveyard (it is still in the Graveyard right after the battle). One forced effect carries both parts. Test: tools/test_s03_u410_inti.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "月影龍クイラ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U410",
+      "tests": [
+        "tools/test_s03_u410_inti.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Selected as the attack target: forced onAttackDeclare recovers half of the attacker's ATK; destroyed on the field it Special Summons 太陽龍インティ of the Graveyard (optional Graveyard trigger). Test: tools/test_s03_u410_inti.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スピード・キング☆スカル・フレイム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U410",
+      "tests": [
+        "tools/test_s03_u410_inti.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Cannot be Normal Summoned; the Special Summon procedure from the hand banishes a スカル・フレイム of my Graveyard (legal only with one there); once-per-turn burn 400 x the バーニング・スカルヘッド in my Graveyard (2 -> 800); sent from the field to the Graveyard (ブラック・ホール) it Special Summons a スカル・フレイム of the Graveyard. Test: tools/test_s03_u410_inti.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

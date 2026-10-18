@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 487,
+    "NOT_STARTED": 484,
     "PARTIAL": 10,
-    "TESTED": 3384
+    "TESTED": 3387
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,9 +117,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1564,
     "sin": 5,
-    "unified": 1299
+    "unified": 1302
   },
-  "static_registration_name_count": 3394,
+  "static_registration_name_count": 3397,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -31624,12 +31624,20 @@
       "subtype": null,
       "date": "2009-03-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZT_claude_s03_u410_inti.js",
+          "line": 80
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u410_inti.js"
+      ]
     },
     {
       "index": 1431,
@@ -73430,12 +73438,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZT_claude_s03_u410_inti.js",
+          "line": 25
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u410_inti.js"
+      ]
     },
     {
       "index": 3386,
@@ -81298,12 +81314,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZT_claude_s03_u410_inti.js",
+          "line": 49
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u410_inti.js"
+      ]
     },
     {
       "index": 3754,
