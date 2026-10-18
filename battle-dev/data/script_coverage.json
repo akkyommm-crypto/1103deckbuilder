@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 383,
+    "ENGINE_GAP": 377,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3537
+    "TESTED": 3543
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -81,6 +81,7 @@
     "helper:u364Counter": 2,
     "helper:u388TokenMaker": 2,
     "helper:u412Define": 3,
+    "helper:u446Swap": 1,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
@@ -116,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1608,
+    "legacy": 1612,
     "sin": 5,
     "unified": 1404
   },
-  "static_registration_name_count": 3547,
+  "static_registration_name_count": 3552,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -19287,8 +19288,8 @@
       "subtype": "",
       "date": "2004-11-25",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs returned-monster Level provenance plus replay-safe resolution-time hand selection of a same-Level Beast for Special Summon.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
       "registrations": [
         {
@@ -78319,12 +78320,19 @@
       "subtype": "",
       "date": "2008-04-19",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance identifying the opposing attacker and a resolution-time snapshot of that surviving monster's current ATK for LP recovery.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZD_claude_s03_u446_traps_more.js",
+          "line": 104
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u446_traps_more.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -91318,12 +91326,19 @@
       "subtype": "",
       "date": "2011-07-16",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs canonical Wind-Up metadata plus target hand return followed by a distinct replay-safe resolution-time hand summon choice constrained to the returned Level.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u446Swap",
+          "source": "cards\\HZZZZZZZZZZZD_claude_s03_u446_traps_more.js",
+          "line": 94
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u446_traps_more.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -92770,12 +92785,19 @@
       "subtype": "",
       "date": "1999-07-08",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs private facedown-monster reveal without firing Flip effects, conditional DEF-based destruction, and legal restoration to the prior facedown position.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZD_claude_s03_u446_traps_more.js",
+          "line": 55
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u446_traps_more.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -102980,12 +103002,19 @@
       "subtype": "",
       "date": "2007-11-23",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs tribute-cost handling plus a private opponent optional Spell reveal decision whose result conditionally prevents the controller's two-card draw.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZD_claude_s03_u446_traps_more.js",
+          "line": 35
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u446_traps_more.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -106068,12 +106097,19 @@
       "subtype": "",
       "date": "2007-02-15",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a central opponent Spell activation response event retaining controller identity before a replay-safe random hand discard.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 1,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZD_claude_s03_u446_traps_more.js",
+          "line": 16
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u446_traps_more.js",
         "tools\\test_v550_batch07.js"
       ]
     },

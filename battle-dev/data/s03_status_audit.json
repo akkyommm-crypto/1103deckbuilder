@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 383,
+    "ENGINE_GAP": 377,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3537
+    "TESTED": 3543
   },
   "delta": {
-    "ENGINE_GAP": -233,
+    "ENGINE_GAP": -239,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1488
+    "TESTED": 1494
   },
   "status_changes": [
     {
@@ -1637,6 +1637,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U174"
+    },
+    {
+      "name": "キャトルミューティレーション",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U446"
     },
     {
       "name": "キラーザウルス",
@@ -6337,6 +6343,12 @@
       "unit": "S03-U367"
     },
     {
+      "name": "念導力",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U446"
+    },
+    {
       "name": "怒れる類人猿",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -7483,6 +7495,12 @@
       "unit": "S03-U267"
     },
     {
+      "name": "発条の巻き戻し",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U446"
+    },
+    {
       "name": "白兵戦",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -7601,6 +7619,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U387"
+    },
+    {
+      "name": "硫酸のたまった落とし穴",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U446"
     },
     {
       "name": "磁力の指輪",
@@ -8473,6 +8497,12 @@
       "unit": "S03-U232"
     },
     {
+      "name": "闇霊術－「欲」",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U446"
+    },
+    {
       "name": "防御輪",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -8717,6 +8747,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U380"
+    },
+    {
+      "name": "魔の取引",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U446"
     },
     {
       "name": "魔人 ダーク・バルター",

@@ -14993,6 +14993,66 @@
         "tools/test_s03_u445_more_st.js"
       ],
       "evidence": "Exact script. Text (carddata). All face-up monsters of both fields become face-down Defense; at the End Phase the opponent face-down Defense monsters (2) are turned face-up Defense and the opponent draws 2; not activatable without a face-up monster. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "キャトルミューティレーション",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U446",
+      "tests": [
+        "tools/test_s03_u280_gap5.js"
+      ],
+      "evidence": "Exact script (S03-U280, cards/HZZZZZH_claude_s03_u280_gap5.js): already implemented and covered by tools/test_s03_u280_gap5.js (the Beast returned to the hand, the same-Level Beast of the hand chosen at resolution, the position chosen by the summoning player); only the stale ENGINE_GAP override was removed in S03-U446. No known deviation."
+    },
+    {
+      "name": "念導力",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U446",
+      "tests": [
+        "tools/test_s03_u446_traps_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). My Psychic defender destroyed by the attack of an opponent monster → the attacker (青眼) is destroyed and I recover its ATK 3000 (the optional カバリスト search paid 800 on top, net 2200); a non-Psychic destroyed does not trigger it. Test: tools/test_s03_u446_traps_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "発条の巻き戻し",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U446",
+      "tests": [
+        "tools/test_s03_u446_traps_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A Level 4 ゼンマイ of my field returns to the hand and a Level 4 ゼンマイ of the hand is Special Summoned. Test: tools/test_s03_u446_traps_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "硫酸のたまった落とし穴",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U446",
+      "tests": [
+        "tools/test_s03_u446_traps_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A face-down Defense target is turned face-up without its Flip effect: DEF 1200 (アイヴィ・ウォール) → destroyed with no token; DEF 2100 (ブラック・マジシャン) → turned back face-down Defense. Test: tools/test_s03_u446_traps_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "闇霊術－「欲」",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U446",
+      "tests": [
+        "tools/test_s03_u446_traps_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A DARK monster released; with no Spell in the opponent hand I draw 2; when the opponent shows a Spell (it stays in hand) the effect is negated and I draw nothing; not activatable without a DARK monster. Test: tools/test_s03_u446_traps_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "魔の取引",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U446",
+      "tests": [
+        "tools/test_s03_u446_traps_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The opponent activates a Spell → 1000 LP paid and a random opponent hand card discarded (the Spell resolves separately). Test: tools/test_s03_u446_traps_more.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

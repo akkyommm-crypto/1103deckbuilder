@@ -137,10 +137,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a first-class replay-safe Synchro Summon processor callable during either Battle Phase, including material choice and summon response timing."
     },
-    "魔の取引": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a central opponent Spell activation response event retaining controller identity before a replay-safe random hand discard."
-    },
     "アドバンス・フォース": {
       "status": "ENGINE_GAP",
       "reason": "Needs a generic continuous Tribute Summon requirement modifier integrated with every summon/set legality and processing path."
@@ -252,10 +248,6 @@
     "要塞クジラ": {
       "status": "GENERIC_OK",
       "reason": "Effectless Ritual Monster; card-specific behavior is fully described by the future generic Ritual Summon recipe/pipeline."
-    },
-    "キャトルミューティレーション": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs returned-monster Level provenance plus replay-safe resolution-time hand selection of a same-Level Beast for Special Summon."
     },
     "セイバー・ホール": {
       "status": "ENGINE_GAP",
@@ -461,10 +453,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe Deck activation of an exact Field Spell during an attack Chain plus opponent optional draw when replacing their active Field Spell."
     },
-    "念導力": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance identifying the opposing attacker and a resolution-time snapshot of that surviving monster's current ATK for LP recovery."
-    },
     "悲劇の引き金": {
       "status": "ENGINE_GAP",
       "reason": "Needs source-aware effect-target redirection during Chain construction, restricted to one correct controller-owned field target and a legal opponent substitute."
@@ -489,14 +477,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs attack-declaration Synchro tribute cost, simultaneous opponent position conversion and a resolution-time attacking-monster DEF snapshot for damage."
     },
-    "発条の巻き戻し": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs canonical Wind-Up metadata plus target hand return followed by a distinct replay-safe resolution-time hand summon choice constrained to the returned Level."
-    },
-    "硫酸のたまった落とし穴": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs private facedown-monster reveal without firing Flip effects, conditional DEF-based destruction, and legal restoration to the prior facedown position."
-    },
     "裸の王様": {
       "status": "ENGINE_GAP",
       "reason": "Needs central continuous negation of all Equip Spell effects while preserving Equip attachment, destruction rules and source visibility."
@@ -504,10 +484,6 @@
     "連鎖破壊": {
       "status": "ENGINE_GAP",
       "reason": "Needs summon-event target provenance plus hidden hand/Deck canonical-copy search and simultaneous destruction without incorrectly destroying the summoned monster."
-    },
-    "闇霊術－「欲」": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs tribute-cost handling plus a private opponent optional Spell reveal decision whose result conditionally prevents the controller's two-card draw."
     },
     "魔のデッキ破壊ウイルス": {
       "status": "ENGINE_GAP",
