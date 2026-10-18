@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 455,
+    "NOT_STARTED": 451,
     "PARTIAL": 10,
-    "TESTED": 3416
+    "TESTED": 3420
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -852,
+    "NOT_STARTED": -856,
     "PARTIAL": -172,
-    "TESTED": 1367
+    "TESTED": 1371
   },
   "status_changes": [
     {
@@ -823,6 +823,12 @@
       "unit": "S03-U348"
     },
     {
+      "name": "アマゾネスペット虎",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U419"
+    },
+    {
       "name": "アルカナフォースEX－THE LIGHT RULER",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1265,6 +1271,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U361"
+    },
+    {
+      "name": "エーリアン・リベンジャー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U419"
     },
     {
       "name": "オアシスの使者",
@@ -4183,6 +4195,12 @@
       "unit": "S03-U239"
     },
     {
+      "name": "レプティレス・ヴァースキ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U419"
+    },
+    {
       "name": "レベル調整",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6341,6 +6359,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U260"
+    },
+    {
+      "name": "氷結界の伝道師",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U419"
     },
     {
       "name": "氷結界の守護陣",

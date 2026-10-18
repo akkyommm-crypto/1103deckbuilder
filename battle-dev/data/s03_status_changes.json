@@ -13783,6 +13783,46 @@
         "tools/test_s03_u418_unique_name.js"
       ],
       "evidence": "Exact script. Text (carddata). Ignition from the hand: Special Summon in Attack Position (not with a face-up copy of mine); at the opponent's next End Phase a forced trigger returns it and a chosen face-up opponent monster to the hands (nothing without a face-up opponent monster). Test: tools/test_s03_u418_unique_name.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "エーリアン・リベンジャー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U419",
+      "tests": [
+        "tools/test_s03_u419_unique_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Hand summonProcedure removing 2 A Counters one by one from the field (not with 1, not with a face-up copy of mine); once-per-turn ignition puts an A Counter on every face-up opponent monster; alienContinuousS03 penalty. Test: tools/test_s03_u419_unique_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "アマゾネスペット虎",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U419",
+      "tests": [
+        "tools/test_s03_u419_unique_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). ATK +400 per face-up アマゾネス monster of mine (itself included: 1500, with 剣士 1900); the opponent cannot attack my other アマゾネス monsters (剣士 unharmed) but can attack the tiger; control without it loses 剣士; one face-up copy on my field. Test: tools/test_s03_u419_unique_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "レプティレス・ヴァースキ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U419",
+      "tests": [
+        "tools/test_s03_u419_unique_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). cannotNormalSummon; hand procedure releasing two face-up ATK 0 monsters of either field (not with one, not with another ヴァースキ face-up on either field); once-per-turn ignition destroys a chosen face-up opponent monster. Test: tools/test_s03_u419_unique_more.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷結界の伝道師",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U419",
+      "tests": [
+        "tools/test_s03_u419_unique_more.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Hand procedure with a face-up 「氷結界」 monster of mine (not without); the turn it is Special Summoned this way a Level 5+ Special Summon is refused (banSummonS03 {lvmin:5}), a Level 4 or lower one is not; the release ignition Special Summons a 「氷結界」 monster of the Graveyard (not offered without one). Test: tools/test_s03_u419_unique_more.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

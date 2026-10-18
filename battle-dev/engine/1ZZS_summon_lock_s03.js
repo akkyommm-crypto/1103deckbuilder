@@ -22,6 +22,7 @@ function summonBanMatchS03(match, db){
   const st = (db && db.st) || [];
   if(match && match.effect && st.indexOf('効果') < 0) return false;
   if(match && match.synchro && st.indexOf('シンクロ') < 0) return false;
+  if(match && match.lvmin && !(Number(db && db.lv || 0) >= Number(match.lvmin))) return false;   /* S03-U419: Level N or higher */
   return true;
 }
 function summonLockReasonS03(p, db, kind){
