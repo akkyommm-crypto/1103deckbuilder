@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 467,
+    "NOT_STARTED": 463,
     "PARTIAL": 10,
-    "TESTED": 3404
+    "TESTED": 3408
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -840,
+    "NOT_STARTED": -844,
     "PARTIAL": -172,
-    "TESTED": 1355
+    "TESTED": 1359
   },
   "status_changes": [
     {
@@ -3757,6 +3757,12 @@
       "unit": "S03-U243"
     },
     {
+      "name": "ミンゲイドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U416"
+    },
+    {
       "name": "メカウサー",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -4079,6 +4085,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U312"
+    },
+    {
+      "name": "レアル・ジェネクス・オラクル",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U416"
     },
     {
       "name": "レアル・ジェネクス・クラッシャー",
@@ -4457,6 +4469,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U244"
+    },
+    {
+      "name": "不死武士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U416"
     },
     {
       "name": "不死王リッチー",
@@ -5837,6 +5855,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U215"
+    },
+    {
+      "name": "救世竜 セイヴァー・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U416"
     },
     {
       "name": "救急救命",

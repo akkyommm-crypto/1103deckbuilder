@@ -13663,6 +13663,46 @@
         "tools/test_s03_u415_locks.js"
       ],
       "evidence": "Exact script. Text (carddata). Continuous Spell with the new flag fieldBounceBanishS03: a non-Extra-Deck monster returning from the field to the hand is banished instead (either side), an Extra Deck monster still returns to the Extra Deck; forced Standby trigger pays 500 Life Points and destroys the card when 500 or less remain; a control returns to the hand. Test: tools/test_s03_u415_locks.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "救世竜 セイヴァー・ドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U416",
+      "tests": [
+        "tools/test_s03_u416_revivers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). synchroMaterialRestriction: usable (with スターダスト・ドラゴン + クリボー) for セイヴァー・スター・ドラゴン, no combination for ガイアナイト (Lv1 + Lv5), while a Lv3 Tuner + Lv3 non-Tuner still make the Lv6 monster. Test: tools/test_s03_u416_revivers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "レアル・ジェネクス・オラクル",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U416",
+      "tests": [
+        "tools/test_s03_u416_revivers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). onAddToHand from the Deck whose reason names a 「ジェネクス」 card Special Summons it from the hand (not when searched by ワイト); synchroMaterialRestriction: Tuner of A・ジェネクス・アクセル, not usable for ガイアナイト. Test: tools/test_s03_u416_revivers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ミンゲイドラゴン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U416",
+      "tests": [
+        "tools/test_s03_u416_revivers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). tributeValue 2 for Dragons: the single card pays the Lv7 エビルナイト・ドラゴン Advance Summon (not offered for Lv7 ブラック・マジシャン); my Standby Phase revival from the Graveyard (empty field, only Dragons in the Graveyard) in Attack Position with banishWhenLeavesField; blocked by a non-Dragon in the Graveyard or a monster on my field. Test: tools/test_s03_u416_revivers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "不死武士",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U416",
+      "tests": [
+        "tools/test_s03_u416_revivers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). my Standby Phase revival from the Graveyard (empty field, only Warriors in the Graveyard); blocked by a non-Warrior or a monster on my field; Tributable only for Warrior Advance Summons (noAdvanceTributeS03 function form). Test: tools/test_s03_u416_revivers.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [
