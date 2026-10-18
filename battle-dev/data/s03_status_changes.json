@@ -13743,6 +13743,46 @@
         "tools/test_s03_u417_trap_equips.js"
       ],
       "evidence": "Exact script. Text (carddata). Set Trap answers the opponent's Special Summon (the event candidate of the summon-success window), becomes an Equip Card on that monster (ATK +500) and deals 500 damage to the opponent at each of their Standby Phases; my own Special Summon does not offer it. Test: tools/test_s03_u417_trap_equips.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "神禽王アレクトール",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U418",
+      "tests": [
+        "tools/test_s03_u418_unique_name.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Hand summonProcedure when two face-up opponent monsters share an attribute (not with different attributes, not while another アレクトール is face-up on either field); once-per-turn ignition negates the effects of a chosen face-up card until the End of the turn. Test: tools/test_s03_u418_unique_name.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "渋い忍者",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U418",
+      "tests": [
+        "tools/test_s03_u418_unique_name.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Flipped by an attack it offers the 「忍者」 of the hand and Graveyard (v46PickAnyAtLeastOne) and Special Summons them face-down in Defense Position; nothing without any; only one face-up copy on either field. Test: tools/test_s03_u418_unique_name.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ガガガマジシャン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U418",
+      "tests": [
+        "tools/test_s03_u418_unique_name.js"
+      ],
+      "evidence": "Exact script. Text (carddata). cannotSynchroMaterial; only one face-up copy on MY field (a copy on the opponent field does not matter); once-per-turn ignition declares Level 1-8 (API.setLevel until the End Phase). Test: tools/test_s03_u418_unique_name.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジェスター・コンフィ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U418",
+      "tests": [
+        "tools/test_s03_u418_unique_name.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Ignition from the hand: Special Summon in Attack Position (not with a face-up copy of mine); at the opponent's next End Phase a forced trigger returns it and a chosen face-up opponent monster to the hands (nothing without a face-up opponent monster). Test: tools/test_s03_u418_unique_name.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

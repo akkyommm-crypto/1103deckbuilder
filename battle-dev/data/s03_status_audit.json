@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 459,
+    "NOT_STARTED": 455,
     "PARTIAL": 10,
-    "TESTED": 3412
+    "TESTED": 3416
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -848,
+    "NOT_STARTED": -852,
     "PARTIAL": -172,
-    "TESTED": 1363
+    "TESTED": 1367
   },
   "status_changes": [
     {
@@ -1423,6 +1423,12 @@
       "unit": "S03-U267"
     },
     {
+      "name": "ガガガマジシャン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U418"
+    },
+    {
       "name": "ガスタの神官 ムスト",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1949,6 +1955,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U167"
+    },
+    {
+      "name": "ジェスター・コンフィ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U418"
     },
     {
       "name": "ジェネクス・ウンディーネ",
@@ -6481,6 +6493,12 @@
       "unit": "S03-U178"
     },
     {
+      "name": "渋い忍者",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U418"
+    },
+    {
       "name": "滅びの爆裂疾風弾",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6947,6 +6965,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U55"
+    },
+    {
+      "name": "神禽王アレクトール",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U418"
     },
     {
       "name": "神竜アクアバザル",

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 459,
+    "NOT_STARTED": 455,
     "PARTIAL": 10,
-    "TESTED": 3412
+    "TESTED": 3416
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -118,9 +118,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1567,
     "sin": 5,
-    "unified": 1321
+    "unified": 1325
   },
-  "static_registration_name_count": 3422,
+  "static_registration_name_count": 3426,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -17843,12 +17843,20 @@
       "subtype": null,
       "date": "2011-04-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZB_claude_s03_u418_unique_name.js",
+          "line": 81
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u418_unique_name.js"
+      ]
     },
     {
       "index": 795,
@@ -27382,12 +27390,20 @@
       "subtype": null,
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZB_claude_s03_u418_unique_name.js",
+          "line": 101
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u418_unique_name.js"
+      ]
     },
     {
       "index": 1239,
@@ -86640,12 +86656,20 @@
       "subtype": null,
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZB_claude_s03_u418_unique_name.js",
+          "line": 54
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u418_unique_name.js"
+      ]
     },
     {
       "index": 3997,
@@ -92382,12 +92406,20 @@
       "subtype": null,
       "date": "2008-04-04",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZB_claude_s03_u418_unique_name.js",
+          "line": 29
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u418_unique_name.js"
+      ]
     },
     {
       "index": 4262,

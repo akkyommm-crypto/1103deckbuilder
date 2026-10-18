@@ -1675,6 +1675,9 @@
   "path": "cards/HZZZZZZZZZZA_claude_s03_u417_trap_equips.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZB_claude_s03_u418_unique_name.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

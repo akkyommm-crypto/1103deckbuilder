@@ -17,17 +17,31 @@ function uniqueFaceUpMembersS03(gs, group){
   gs.players.forEach((P, p)=>(P.mz || []).forEach(c=>{ if(c && c.face==='up' && typeof groupMemberNowS03==='function' && groupMemberNowS03(c, group)) out.push({p, card:c}); }));
   return out;
 }
-function uniqueFaceUpReasonS03(db){
+/* S03-U418: 「X」はフィールド上に1体しか表側表示で存在できない — a script declares uniqueNameS03:'any' (either field: 神禽王アレクトール, 渋い忍者) or 'own'
+   (「自分フィールドに」: ガガガマジシャン, ジェスター・コンフィ); the card's own name is the group */
+function uniqueNameScopeS03(db){ const sc = (db && db.n && typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[db.n] : null; return (sc && sc.uniqueNameS03) || null; }
+function uniqueNameMembersS03(gs, name, side){
+  gs = gs || gameState; const out = [];
+  gs.players.forEach((P, p)=>{ if(side!=null && p!==side) return; (P.mz || []).forEach(c=>{ if(c && c.face==='up' && cardName(c)===name) out.push({p, card:c}); }); });
+  return out;
+}
+function uniqueFaceUpReasonS03(db, p){
   const g = uniqueGroupOfS03(db);
-  if(!g) return '';
-  return uniqueFaceUpMembersS03(gameState, g).length ? '「地縛神」と名のついたモンスターはフィールド上に1体しか表側表示で存在できません' : '';
+  if(g) return uniqueFaceUpMembersS03(gameState, g).length ? '「地縛神」と名のついたモンスターはフィールド上に1体しか表側表示で存在できません' : '';
+  const sn = uniqueNameScopeS03(db);
+  if(sn && uniqueNameMembersS03(gameState, db.n, sn==='own' ? p : null).length) return `「${db.n}」はフィールド上に1体しか表側表示で存在できません`;
+  return '';
 }
 /* engine/19: a card turned face-up from face-down — flag it when another member of its group is already face-up */
 function uniqueFlipViolationS03(gs, uid){
   const h = (typeof findCardByUidInState==='function') ? findCardByUidInState(gs, uid) : null;
   if(!h || h.zone!=='mz' || h.card.face!=='up') return;
   const g = uniqueGroupOfS03(dbOf(h.card));
-  if(!g) return;
+  if(!g){
+    const sn = uniqueNameScopeS03(dbOf(h.card));   /* S03-U418 */
+    if(sn && uniqueNameMembersS03(gs, cardName(h.card), sn==='own' ? h.p : null).some(x=>x.card!==h.card)) h.card.uniqueViolationS03 = true;
+    return;
+  }
   if(uniqueFaceUpMembersS03(gs, g).some(x=>x.card!==h.card)) h.card.uniqueViolationS03 = true;
 }
 /* engine/1ZZF: a face-up source protecting this card from destruction by its own effect */

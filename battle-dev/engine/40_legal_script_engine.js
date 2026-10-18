@@ -122,7 +122,7 @@ function v46FaceUpSummonRestrictionReason(p,db,kind){
   /* S03-U384: summon locks by kind (engine/1ZZS): the summoned card's own condition, face-up locking cards, turn-ranged bans */
   { const slS03 = (typeof summonLockReasonS03==='function') ? summonLockReasonS03(p, db, kind) : ''; if(slS03) return slS03; }
   /* S03-U282: 「…はフィールド上に1体しか表側表示で存在できない」 (地縛神, engine/1ZZM) */
-  { const uS03 = (typeof uniqueFaceUpReasonS03==='function') ? uniqueFaceUpReasonS03(db) : ''; if(uS03) return uS03; }
+  { const uS03 = (typeof uniqueFaceUpReasonS03==='function') ? uniqueFaceUpReasonS03(db, p) : ''; if(uS03) return uS03; }
   /* S03-U129: 「このカードを発動するターン、自分はこのカードの効果以外ではモンスターを召喚・反転召喚・特殊召喚できない」（スケープ・ゴート） */
   { const tf = gameState.players[p] && gameState.players[p].temporaryFlags; if(tf && tf.noSummonS03) return `「${tf.noSummonS03}」を発動したターンはモンスターを召喚・反転召喚・特殊召喚できません`; }
   for(const r of v46ActiveFieldRestrictions()){
