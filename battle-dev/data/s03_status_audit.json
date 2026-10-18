@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 388,
+    "ENGINE_GAP": 383,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3532
+    "TESTED": 3537
   },
   "delta": {
-    "ENGINE_GAP": -228,
+    "ENGINE_GAP": -233,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1483
+    "TESTED": 1488
   },
   "status_changes": [
     {
@@ -1957,6 +1957,12 @@
       "unit": "S03-U348"
     },
     {
+      "name": "サイバネティック・ヒドゥン・テクノロジー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U445"
+    },
+    {
       "name": "サイバー・エルタニン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2879,6 +2885,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U192"
+    },
+    {
+      "name": "デステニー・ミラージュ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U445"
     },
     {
       "name": "デストラクション・ジャマー",
@@ -3887,6 +3899,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U231"
+    },
+    {
+      "name": "ヘイト・クレバス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U445"
     },
     {
       "name": "ヘリオス・デュオ・メギストス",
@@ -6283,6 +6301,12 @@
       "unit": "S03-U01"
     },
     {
+      "name": "強欲なカケラ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U445"
+    },
+    {
       "name": "強烈なはたき落とし",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -7487,6 +7511,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U379"
+    },
+    {
+      "name": "皆既日蝕の書",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U445"
     },
     {
       "name": "盗賊の七つ道具",

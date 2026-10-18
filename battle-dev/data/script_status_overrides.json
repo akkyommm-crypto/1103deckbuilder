@@ -1185,10 +1185,6 @@
       "status": "ENGINE_GAP",
       "reason": "activation cost / provenance / battle: exact 1103 processing for \"①:このカード以外の自分の手札が2枚以上存在し、自分フィールドに「神炎皇ウリア」または「降雷皇ハモン」が存在する場合、手札を全て墓地へ送って発動できる。 自分フィールドに「幻魔の殉教者トークン」(悪魔族・闇・星1・攻/守\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "強欲なカケラ": {
-      "status": "ENGINE_GAP",
-      "reason": "activation cost / continuous rule: exact 1103 processing for \"①:このカードが魔法&罠ゾーンに存在する限り、自分ドローフェイズに通常のドローをする度に、このカードに強欲カウンターを1つ置く。 ②:強欲カウンターが2つ以上置かれているこのカードを墓地へ送って発動できる。 自分はデッキ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "急転直下": {
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / provenance: exact 1103 processing for \"相手が墓地に存在するカードを対象とする魔法・罠・効果モンスターの効果を発動した場合このカードを破壊する。 このカードの効果によってこのカードが破壊され墓地へ送られた時、相手は墓地に存在するカードを全てデッキに加えてシャッ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
@@ -1220,10 +1216,6 @@
     "異次元の指名者": {
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / provenance: exact 1103 processing for \"カード名を1つ宣言する。 相手の手札を確認し、宣言したカードが相手の手札に存在する場合、そのカード1枚をゲームから除外する。 宣言したカードが相手の手札に存在しなかった場合、自分の手札をランダムに1枚ゲームから除外する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "皆既日蝕の書": {
-      "status": "ENGINE_GAP",
-      "reason": "delayed/scheduled processing: exact 1103 processing for \"①:フィールドの表側表示モンスターを全て裏側守備表示にする。 このターンのエンドフェイズに、相手フィールドの裏側守備表示モンスターを全て表側守備表示にし、その後、この効果で表側守備表示にしたモンスターの数だけ相手はデッキ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "盗賊の極意": {
       "status": "ENGINE_GAP",
@@ -1289,10 +1281,6 @@
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / provenance: exact 1103 processing for \"自分フィールド上にモンスターが存在しない場合に発動できる。 自分の墓地の「ガスタ」と名のついたモンスター2体を選択してデッキに戻す。 その後、デッキから守備力1000以下の「ガスタ」と名のついたモンスター1体を特殊召喚す\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "サイバネティック・ヒドゥン・テクノロジー": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / activation cost / battle: exact 1103 processing for \"相手モンスターが攻撃宣言を行う度に、自分フィールド上の「サイバー・ドラゴン」または融合素材として「サイバー・ドラゴン」が記されている融合モンスター1体を墓地へ送って発動できる。 その攻撃モンスター1体を選択して破壊する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "ジェム・エンハンス": {
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / activation cost: exact 1103 processing for \"自分フィールド上の「ジェムナイト」と名のついたモンスター1体をリリースし、自分の墓地の「ジェムナイト」と名のついたモンスター1体を選択して発動できる。 選択したモンスターを墓地から特殊召喚する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
@@ -1309,10 +1297,6 @@
       "status": "ENGINE_GAP",
       "reason": "provenance / battle / damage/LP: exact 1103 processing for \"自分フィールド上に「剣闘獣」と名のついたモンスターが表側表示で存在する場合のみ発動する事ができる。 このターン自分フィールド上に存在するモンスターは戦闘では破壊されず、自分への戦闘ダメージは0になる。 発動後、このカード\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "デステニー・ミラージュ": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance: exact 1103 processing for \"自分フィールド上の「D－HERO」と名のついたモンスターが相手のカードの効果によって破壊され墓地へ送られた時に発動する事ができる。 このターンに破壊され墓地へ送られた「D－HERO」と名のついたモンスターを、全て自分フィ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "ニードル・ウォール": {
       "status": "ENGINE_GAP",
       "reason": "provenance / delayed/scheduled processing: exact 1103 processing for \"自分のスタンバイフェイズ時に1度だけ、サイコロを1回振る。 相手のモンスターカードゾーンを、このカードのコントローラーから見て右から1～5とし、出た目のモンスターカードゾーンに存在するモンスターを破壊する。 6の目が出た\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
@@ -1320,10 +1304,6 @@
     "フォーチュン・インハーリット": {
       "status": "ENGINE_GAP",
       "reason": "resolution-time Choice / provenance / delayed/scheduled processing: exact 1103 processing for \"自分フィールド上に表側表示で存在する「フォーチュンレディ」と名のついたモンスターが破壊されたターンに発動する事ができる。 次の自分のスタンバイフェイズ時に手札から「フォーチュンレディ」と名のついたモンスターを2体まで特殊\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "ヘイト・クレバス": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / provenance / battle / damage/LP: exact 1103 processing for \"自分フィールド上に存在するモンスター1体が相手のカードの効果によって破壊され墓地へ送られた時、相手フィールド上に存在するモンスター1体を選択して墓地へ送り、その元々の攻撃力分のダメージを相手ライフに与える。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "ミステリーサークル": {
       "status": "ENGINE_GAP",

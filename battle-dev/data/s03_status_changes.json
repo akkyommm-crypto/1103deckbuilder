@@ -14943,6 +14943,56 @@
         "tools/test_s03_u444_event_traps.js"
       ],
       "evidence": "Exact script. Text (carddata). My face-up monster destroyed and sent to the Graveyard → the lowest-ATK face-up monster (ブラック・マジシャン 2500) is destroyed and both players take 1250; an opponent monster destroyed does not trigger it. Test: tools/test_s03_u444_event_traps.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイバネティック・ヒドゥン・テクノロジー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U445",
+      "tests": [
+        "tools/test_s03_u445_more_st.js"
+      ],
+      "evidence": "Exact script. Text (carddata). At the opponent attack declaration my サイバー・ドラゴン goes to the Graveyard (cost) and the attacker is destroyed; not offered without a サイバー・ドラゴン. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デステニー・ミラージュ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U445",
+      "tests": [
+        "tools/test_s03_u445_more_st.js"
+      ],
+      "evidence": "Exact script. Text (carddata). My 「D－HERO」 destroyed by an opponent card effect (地割れ) is Special Summoned back; a non-「D－HERO」 does not trigger it. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヘイト・クレバス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U445",
+      "tests": [
+        "tools/test_s03_u445_more_st.js"
+      ],
+      "evidence": "Exact script. Text (carddata). My ワイト destroyed by the opponent 地割れ → the chosen opponent monster (青眼) goes to the Graveyard and its printed ATK 3000 is dealt to the opponent; not when destroyed by my own effect. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "強欲なカケラ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U445",
+      "tests": [
+        "tools/test_s03_u445_more_st.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Each of my normal draws puts a 強欲 counter on it (1, then 2); the ignition needs 2 counters, sends the card to the Graveyard as the cost and draws 2. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "皆既日蝕の書",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U445",
+      "tests": [
+        "tools/test_s03_u445_more_st.js"
+      ],
+      "evidence": "Exact script. Text (carddata). All face-up monsters of both fields become face-down Defense; at the End Phase the opponent face-down Defense monsters (2) are turned face-up Defense and the opponent draws 2; not activatable without a face-up monster. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

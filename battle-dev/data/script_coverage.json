@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 388,
+    "ENGINE_GAP": 383,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3532
+    "TESTED": 3537
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1604,
+    "legacy": 1608,
     "sin": 5,
-    "unified": 1403
+    "unified": 1404
   },
-  "static_registration_name_count": 3542,
+  "static_registration_name_count": 3547,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24532,12 +24532,19 @@
       "subtype": "永続",
       "date": "2007-11-23",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / activation cost / battle: exact 1103 processing for \"相手モンスターが攻撃宣言を行う度に、自分フィールド上の「サイバー・ドラゴン」または融合素材として「サイバー・ドラゴン」が記されている融合モンスター1体を墓地へ送って発動できる。 その攻撃モンスター1体を選択して破壊する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZC_claude_s03_u445_more_st.js",
+          "line": 64
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u445_more_st.js",
         "tools\\test_v890_batch40.js"
       ]
     },
@@ -37467,12 +37474,19 @@
       "subtype": "",
       "date": "2006-05-18",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "provenance: exact 1103 processing for \"自分フィールド上の「D－HERO」と名のついたモンスターが相手のカードの効果によって破壊され墓地へ送られた時に発動する事ができる。 このターンに破壊され墓地へ送られた「D－HERO」と名のついたモンスターを、全て自分フィ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZC_claude_s03_u445_more_st.js",
+          "line": 42
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u445_more_st.js",
         "tools\\test_v890_batch40.js"
       ]
     },
@@ -50748,12 +50762,19 @@
       "subtype": "",
       "date": "2011-07-16",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / provenance / battle / damage/LP: exact 1103 processing for \"自分フィールド上に存在するモンスター1体が相手のカードの効果によって破壊され墓地へ送られた時、相手フィールド上に存在するモンスター1体を選択して墓地へ送り、その元々の攻撃力分のダメージを相手ライフに与える。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZC_claude_s03_u445_more_st.js",
+          "line": 22
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u445_more_st.js",
         "tools\\test_v890_batch40.js"
       ]
     },
@@ -77623,12 +77644,19 @@
       "subtype": "永続",
       "date": "2011-07-16",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation cost / continuous rule: exact 1103 processing for \"①:このカードが魔法&罠ゾーンに存在する限り、自分ドローフェイズに通常のドローをする度に、このカードに強欲カウンターを1つ置く。 ②:強欲カウンターが2つ以上置かれているこのカードを墓地へ送って発動できる。 自分はデッキ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZC_claude_s03_u445_more_st.js",
+          "line": 106
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u445_more_st.js",
         "tools\\test_v870_batch38.js"
       ]
     },
@@ -91648,12 +91676,19 @@
       "subtype": "速攻",
       "date": "2008-04-19",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "delayed/scheduled processing: exact 1103 processing for \"①:フィールドの表側表示モンスターを全て裏側守備表示にする。 このターンのエンドフェイズに、相手フィールドの裏側守備表示モンスターを全て表側守備表示にし、その後、この効果で表側守備表示にしたモンスターの数だけ相手はデッキ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZC_claude_s03_u445_more_st.js",
+          "line": 92
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u445_more_st.js",
         "tools\\test_v880_batch39.js"
       ]
     },
