@@ -14453,6 +14453,66 @@
         "tools/test_s03_u432_continuous_rules.js"
       ],
       "evidence": "Exact script. Text (carddata). Destroyed when my Graveyard has no Undead (stays with one); a face-up destruction deals its original ATK (1900) to its controller. Test: tools/test_s03_u432_continuous_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "G・コザッキー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U433",
+      "tests": [
+        "tools/test_s03_u433_koaki_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Stays while a face-up コザッキー is on the field; destroyed when none is left, dealing its original ATK (2500) to its controller. Test: tools/test_s03_u433_koaki_misc.js (Replay audit). Power Hand negates the battle partner only while the battle lasts (gameState.battle), not for the rest of the Battle Phase."
+    },
+    {
+      "name": "コアキメイル・デビル",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U433",
+      "tests": [
+        "tools/test_s03_u433_koaki_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Upkeep: 鋼核 to the Graveyard, else a Fiend shown, else destroyed; in the Main Phase the effects of face-up LIGHT and DARK monsters are negated (EARTH not), in the Battle Phase nothing. Test: tools/test_s03_u433_koaki_misc.js (Replay audit). Power Hand negates the battle partner only while the battle lasts (gameState.battle), not for the rest of the Battle Phase."
+    },
+    {
+      "name": "コアキメイル・パワーハンド",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U433",
+      "tests": [
+        "tools/test_s03_u433_koaki_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Upkeep: 鋼核, else a Normal Trap shown (a Continuous Trap does not count), else destroyed; the effect of a LIGHT/DARK monster it battles is negated (other LIGHT monsters, EARTH partners and the Main Phase 2 are not). Test: tools/test_s03_u433_koaki_misc.js (Replay audit). Power Hand negates the battle partner only while the battle lasts (gameState.battle), not for the rest of the Battle Phase."
+    },
+    {
+      "name": "ターレット・ウォリアー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U433",
+      "tests": [
+        "tools/test_s03_u433_koaki_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Special Summonable from the hand by sending a Warrior of my field away; its ATK rises by the Warrior's original ATK (1200 + 1000); not without a Warrior. Test: tools/test_s03_u433_koaki_misc.js (Replay audit). Power Hand negates the battle partner only while the battle lasts (gameState.battle), not for the rest of the Battle Phase."
+    },
+    {
+      "name": "デス・カンガルー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U433",
+      "tests": [
+        "tools/test_s03_u433_koaki_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Attacked in Defense Position by a monster with ATK below its DEF (1200 < 1700) the attacker is destroyed; not by a stronger attacker (3000) nor in Attack Position. Test: tools/test_s03_u433_koaki_misc.js (Replay audit). Power Hand negates the battle partner only while the battle lasts (gameState.battle), not for the rest of the Battle Phase."
+    },
+    {
+      "name": "バイス・ドラゴン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U433",
+      "tests": [
+        "tools/test_s03_u433_koaki_misc.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Special Summonable from the hand when only the opponent controls a monster; its original ATK / DEF are halved (1000 / 1200); not when I control a monster or the opponent has none. Test: tools/test_s03_u433_koaki_misc.js (Replay audit). Power Hand negates the battle partner only while the battle lasts (gameState.battle), not for the rest of the Battle Phase."
     }
   ],
   "restored_to_baseline": [

@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 429,
+    "ENGINE_GAP": 423,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3483
+    "TESTED": 3489
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1580,
+    "legacy": 1582,
     "sin": 5,
-    "unified": 1379
+    "unified": 1383
   },
-  "static_registration_name_count": 3493,
+  "static_registration_name_count": 3499,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -5381,12 +5381,19 @@
       "subtype": null,
       "date": "2005-05-26",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs continuous self-destruction tied to canonical Kozaky presence and destruction-event controller provenance for original-ATK effect damage.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZQ_claude_s03_u433_koaki_misc.js",
+          "line": 41
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u433_koaki_misc.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -22111,12 +22118,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「メインフェイズ時に発動する光・闇属性モンスターの効果を無効化する」を表現できない。[[コアキメイル・パワーハンド]] と同じくモンスター発の negateEffect が他のモンスターへ届かず、さらに「発動する効果だけ」を選り分ける層も無い（cycle 30 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZQ_claude_s03_u433_koaki_misc.js",
+          "line": 22
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u433_koaki_misc.js"
+      ]
     },
     {
       "index": 991,
@@ -22172,12 +22187,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「戦闘を行う光・闇属性モンスターの効果をバトルフェイズの間だけ無効化する」を表現できない。continuous.negateEffect は外側（sz / field）のソースが mz のモンスターを無効化する層で、モンスター同士では effectNegatedBy の対象にならない（00_state_actions.js:2520-2522 実測、cycle 30）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZQ_claude_s03_u433_koaki_misc.js",
+          "line": 32
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u433_koaki_misc.js"
+      ]
     },
     {
       "index": 994,
@@ -34026,12 +34049,19 @@
       "subtype": null,
       "date": "2008-11-15",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs an in-hand Special Summon procedure with Warrior tribute selection and cost-time original-ATK provenance transferred into a persistent self modifier.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZQ_claude_s03_u433_koaki_misc.js",
+          "line": 51
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u433_koaki_misc.js",
         "tools\\test_v650_batch17.js"
       ]
     },
@@ -37515,12 +37545,19 @@
       "subtype": null,
       "date": "2003-04-24",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a post-damage-calculation battle event retaining attacker/defender positions and calculation-time ATK/DEF for conditional destruction.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 1,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZQ_claude_s03_u433_koaki_misc.js",
+          "line": 80
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u433_koaki_misc.js",
         "tools\\test_v570_batch09.js"
       ]
     },
@@ -44058,13 +44095,20 @@
       "subtype": null,
       "date": "2008-09-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a hand Special Summon procedure that records its exact procedure identity and applies replay-safe original ATK/DEF halving only when summoned by that procedure.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZQ_claude_s03_u433_koaki_misc.js",
+          "line": 62
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_destruction_protection_cards.js",
+        "tools\\test_s03_u433_koaki_misc.js",
         "tools\\test_v450_native_cards.js",
         "tools\\test_v660_batch18.js"
       ]

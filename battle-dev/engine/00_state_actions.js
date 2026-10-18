@@ -3087,6 +3087,20 @@ function locateCard(card){
    スキルドレイン等は魔法＆罠ゾーンからモンスターの効果を無効にするので、
    先に mz 以外を集めてから、無効化されていないモンスターを足す2段階で求める。 */
 function gs2Turn(){ return gameState.turn; }
+const NEGATE_FROM_MZ_S03 = new Set();   /* S03-U432 */
+function declareNegateFromMzS03(name){ NEGATE_FROM_MZ_S03.add(name); }
+/* S03-U433: does a declared face-up MONSTER source (ゴーレム / コアキメイル・デビル ...) negate this monster's effects, continuous ones included?
+   collectSources(['mz'], true) asks it so that the negated monster's continuous effect is not collected (the raw scan below never calls continuousSources, no recursion). */
+function mzNegateS03(card, loc){
+  if(!NEGATE_FROM_MZ_S03.size) return false;
+  const srcs = [];
+  for(let p=0; p<2; p++) (gameState.players[p].mz||[]).forEach((c,i)=>{
+    if(!c || c.face!=='up' || !NEGATE_FROM_MZ_S03.has(cardName(c)) || c.negated || c.negatedUntilTurn===gs2Turn() || battleDestroyConfirmed(c)) return;
+    if(typeof negatedByV13==='function' && negatedByV13(c, gameState)) return;
+    const sc = CARD_SCRIPTS[dbOf(c).n]; if(sc && sc.continuous) srcs.push({p, zone:'mz', index:i, card:c, sc});
+  });
+  return srcs.length>0 && effectNegatedBy(srcs, card, loc);
+}
 function collectSources(zones, skipNegated){
   const out = [];
   /* System v29: 墓地ソースの宣言集合は1回だけ引く（カードごとに引かない）。 */
@@ -3101,7 +3115,7 @@ function collectSources(zones, skipNegated){
       if(card.negatedUntilTurn === gs2Turn()) return;   // 聖杯などによる一時的な無効化
       if(typeof negatedByV13==='function' && negatedByV13(card, gameState)) return;  // System v13
       if(battleDestroyConfirmed(card)) return;    // 戦闘破壊が確定している
-      if(skipNegated && effectNegatedBy(out, card, {p, zone})) return;
+      if(skipNegated && (effectNegatedBy(out, card, {p, zone}) || mzNegateS03(card, {p, zone}))) return;
       const sc = CARD_SCRIPTS[dbOf(card).n];
       if(!sc || !sc.continuous) return;
       const from = sc.continuous.from || ['mz','sz','field'];
@@ -3176,8 +3190,6 @@ function continuousSources(){
 }
 
 /* 与えられた効果元の集合が、対象カードの効果を無効にしているか */
-const NEGATE_FROM_MZ_S03 = new Set();   /* S03-U432 */
-function declareNegateFromMzS03(name){ NEGATE_FROM_MZ_S03.add(name); }
 function effectNegatedBy(sources, card, loc){
   return sources.some(src=>{
     const f = src.sc.continuous && src.sc.continuous.negateEffect;

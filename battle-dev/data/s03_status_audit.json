@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 429,
+    "ENGINE_GAP": 423,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3483
+    "TESTED": 3489
   },
   "delta": {
-    "ENGINE_GAP": -187,
+    "ENGINE_GAP": -193,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1434
+    "TESTED": 1440
   },
   "status_changes": [
     {
@@ -515,6 +515,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U404"
+    },
+    {
+      "name": "G・コザッキー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U433"
     },
     {
       "name": "HERO’S ボンド",
@@ -1735,10 +1741,22 @@
       "unit": "S03-U321"
     },
     {
+      "name": "コアキメイル・デビル",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U433"
+    },
+    {
       "name": "コアキメイル・ドラゴ",
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U429"
+    },
+    {
+      "name": "コアキメイル・パワーハンド",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U433"
     },
     {
       "name": "コアキメイル・マキシマム",
@@ -2587,6 +2605,12 @@
       "unit": "S03-U427"
     },
     {
+      "name": "ターレット・ウォリアー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U433"
+    },
+    {
       "name": "ダイガスタ・イグルス",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2795,6 +2819,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U270"
+    },
+    {
+      "name": "デス・カンガルー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U433"
     },
     {
       "name": "デス・デンドル",
@@ -3347,6 +3377,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U156"
+    },
+    {
+      "name": "バイス・ドラゴン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U433"
     },
     {
       "name": "バグ・ロード",

@@ -173,10 +173,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs battle-participant provenance plus a serializable five-turn delayed destruction counter attached to the attacked monster."
     },
-    "デス・カンガルー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a post-damage-calculation battle event retaining attacker/defender positions and calculation-time ATK/DEF for conditional destruction."
-    },
     "ジャベリンビートル": {
       "status": "GENERIC_OK",
       "reason": "Effectless Ritual Monster; card-specific behavior is fully described by the future generic Ritual Summon recipe/pipeline."
@@ -373,10 +369,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a facedown defender battle trigger that compares the attacker's current ATK with this card's DEF after reveal, destroys the attacker at the historically correct Damage Step boundary, and remains replay deterministic."
     },
-    "ターレット・ウォリアー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs an in-hand Special Summon procedure with Warrior tribute selection and cost-time original-ATK provenance transferred into a persistent self modifier."
-    },
     "テールスイング": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe selection of up to two opponent monsters while enforcing the mixed facedown-or-lower-Level eligibility rule against one targeted Level-5-or-higher Dinosaur."
@@ -388,10 +380,6 @@
     "トマボー": {
       "status": "ENGINE_GAP",
       "reason": "Needs a central opponent Spell/Trap targeting event retaining the targeted Plant, source controller and Chain timing before the self-tribute cost and draw-two resolution."
-    },
-    "バイス・ドラゴン": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a hand Special Summon procedure that records its exact procedure identity and applies replay-safe original ATK/DEF halving only when summoned by that procedure."
     },
     "パトロイド": {
       "status": "ENGINE_GAP",
@@ -556,10 +544,6 @@
     "BF－熱風のギブリ": {
       "status": "ENGINE_GAP",
       "reason": "Needs a direct-attack response window for hand Special Summon plus a serializable until-End-Phase base-ATK/base-DEF swap modifier."
-    },
-    "G・コザッキー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs continuous self-destruction tied to canonical Kozaky presence and destruction-event controller provenance for original-ATK effect damage."
     },
     "きまぐれの女神": {
       "status": "ENGINE_GAP",
@@ -1802,14 +1786,6 @@
     "ガントレット・ウォリアー": {
       "status": "ENGINE_GAP",
       "reason": "「そのモンスターが戦闘を行ったダメージステップ終了時まで」という持続を表現できない。STAT_MOD_V14 の until は endPhase / endTurn / endBattlePhase / permanent の4種（1D_stat_modifier_v14.js:122）で、モンスターごとの戦闘単位の期限が無い（cycle 29 実測）。"
-    },
-    "コアキメイル・パワーハンド": {
-      "status": "ENGINE_GAP",
-      "reason": "「戦闘を行う光・闇属性モンスターの効果をバトルフェイズの間だけ無効化する」を表現できない。continuous.negateEffect は外側（sz / field）のソースが mz のモンスターを無効化する層で、モンスター同士では effectNegatedBy の対象にならない（00_state_actions.js:2520-2522 実測、cycle 30）。"
-    },
-    "コアキメイル・デビル": {
-      "status": "ENGINE_GAP",
-      "reason": "「メインフェイズ時に発動する光・闇属性モンスターの効果を無効化する」を表現できない。[[コアキメイル・パワーハンド]] と同じくモンスター発の negateEffect が他のモンスターへ届かず、さらに「発動する効果だけ」を選り分ける層も無い（cycle 30 実測）。"
     },
     "ギルフォード・ザ・レジェンド": {
       "status": "ENGINE_GAP",
