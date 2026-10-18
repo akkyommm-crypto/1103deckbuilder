@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 471,
+    "NOT_STARTED": 467,
     "PARTIAL": 10,
-    "TESTED": 3400
+    "TESTED": 3404
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -118,9 +118,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1566,
     "sin": 5,
-    "unified": 1310
+    "unified": 1314
   },
-  "static_registration_name_count": 3410,
+  "static_registration_name_count": 3414,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -37558,12 +37558,20 @@
       "subtype": "永続",
       "date": "2008-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZY_claude_s03_u415_locks.js",
+          "line": 32
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u415_locks.js"
+      ]
     },
     {
       "index": 1715,
@@ -63646,12 +63654,20 @@
       "subtype": "永続",
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 24,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZY_claude_s03_u415_locks.js",
+          "line": 47
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u415_locks.js"
+      ]
     },
     {
       "index": 2932,
@@ -89038,12 +89054,20 @@
       "subtype": "永続",
       "date": "2008-06-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZY_claude_s03_u415_locks.js",
+          "line": 57
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u415_locks.js"
+      ]
     },
     {
       "index": 4110,
@@ -95057,12 +95081,20 @@
       "subtype": "永続",
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZY_claude_s03_u415_locks.js",
+          "line": 61
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u415_locks.js"
+      ]
     },
     {
       "index": 4391,

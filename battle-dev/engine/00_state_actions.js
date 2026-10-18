@@ -1750,6 +1750,10 @@ function applyActionBodyV31(gs, a){
       if(!card) break;
       dropXyzMaterials(P, card, gs); dropEquips(P, card, gs);
       if(card.token){ logIt(gs, `${cardName(card)} は消滅した`); break; }  // トークンは手札に戻らない
+      if(a.zone==='mz' && dbOf(card).k==='m' && !dbOf(card).ex && typeof fieldBounceBanishedS03==='function' && fieldBounceBanishedS03(gs)){   /* S03-U415: 縮退回路 */
+        const ownerB=cardOwnerIndex(gs,card,a.player); pushZone(gs.players[ownerB].banish,card);
+        logIt(gs, `縮退回路：${cardName(card)} は手札へ戻らず除外`); break;
+      }
       if(v350BanishWhenLeavesField(card,a.zone,'hand',a)){
         const owner=cardOwnerIndex(gs,card,a.player); pushZone(gs.players[owner].banish,card);
         logIt(gs, `${a.reason||"効果"}：${cardName(card)} は手札へ戻らず除外`); break;
@@ -1766,6 +1770,7 @@ function applyActionBodyV31(gs, a){
     /* 除外。a:{player, zone, index, reason}
        コントロールが移っているカードも、除外領域は持ち主側に置く。 */
     case "FX_BANISH": {
+      if(typeof banishLockedS03==='function' && banishLockedS03(gs)){ logIt(gs, '王宮の鉄壁：カードを除外できない'); break; }   /* S03-U415 */
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
       noteLeftFieldByEffectS03(card, a.zone, 'banish', a);   /* S03-U238 */
@@ -1779,6 +1784,7 @@ function applyActionBodyV31(gs, a){
     /* System v3.8.0: 「破壊して除外」を通常の除外と分離する。
        《奈落の落とし穴》などは破壊された事実を残しつつ、墓地を経由せず除外する。 */
     case "FX_DESTROY_BANISH": {
+      if(typeof banishLockedS03==='function' && banishLockedS03(gs)){ logIt(gs, '王宮の鉄壁：カードを除外できない'); break; }   /* S03-U415 */
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
       noteLeftFieldByEffectS03(card, a.zone, 'banish', a);   /* S03-U238 */

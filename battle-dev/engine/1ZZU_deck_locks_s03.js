@@ -20,3 +20,6 @@ function deckLockSourceS03(gs, key){
 function fieldReturnLockedS03(gs){ return deckLockSourceS03(gs, 'fieldReturnLockS03'); }
 function deckToGraveLockedS03(gs){ return deckLockSourceS03(gs, 'deckToGraveLockS03'); }
 function graveToDeckBanishedS03(gs){ return deckLockSourceS03(gs, 'graveToDeckBanishS03'); }
+function banishLockedS03(gs){ return deckLockSourceS03(gs, 'banishBanS03'); }              /* S03-U415: 王宮の鉄壁 — nobody can banish cards */
+function deckSummonBannedS03(gs){ return deckLockSourceS03(gs, 'deckSummonBanS03'); }      /* S03-U415: デッキロック — no Special Summon from the Deck */
+function fieldBounceBanishedS03(gs){ return deckLockSourceS03(gs, 'fieldBounceBanishS03'); } /* S03-U415: 縮退回路 — a monster returning from the field to the hand is banished */

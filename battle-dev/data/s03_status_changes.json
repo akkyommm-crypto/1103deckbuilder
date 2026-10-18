@@ -13623,6 +13623,46 @@
         "tools/test_s03_u414_inverz.js"
       ],
       "evidence": "Exact script. Text (carddata). Normal Summoned → Defense Position (forced trigger; the Flip Summon trigger shares the body); once-per-turn ignition: an Xyz Material of a monster of mine detached (API.detachMaterial) and ゾンビ・マスター (Level 4 Undead) Special Summoned from the Graveyard; not offered without an Xyz Material. Test: tools/test_s03_u414_inverz.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "デッキロック",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U415",
+      "tests": [
+        "tools/test_s03_u415_locks.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Spell: while face-up continuous.lockDeckToHand (as ライオウ) refuses searches for both players, the new flag deckSummonBanS03 refuses API.specialSummon from the Deck, drawing is unaffected; destroyed at my 2nd Standby Phase after the activation (u415N counts my face-up Standby Phases because a Continuous Spell placed from the hand has no chain link); a control without it searches and Special Summons from the Deck. Test: tools/test_s03_u415_locks.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "不協和音",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U415",
+      "tests": [
+        "tools/test_s03_u415_locks.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap: summonLockS03 refuses the Special Summon of Synchro Monsters for both players (a non-Synchro one is unaffected), the activation stamps u415End = activation turn + 4 (own turn) and the card goes to the Graveyard at my 3rd End Phase; a control without it allows the Synchro Summon. Test: tools/test_s03_u415_locks.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "王宮の鉄壁",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U415",
+      "tests": [
+        "tools/test_s03_u415_locks.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Trap with the new flag banishBanS03: FX_BANISH and FX_DESTROY_BANISH are refused for both players (cards stay in the Graveyard / on the field); a control banishes normally. Test: tools/test_s03_u415_locks.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "縮退回路",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U415",
+      "tests": [
+        "tools/test_s03_u415_locks.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Spell with the new flag fieldBounceBanishS03: a non-Extra-Deck monster returning from the field to the hand is banished instead (either side), an Extra Deck monster still returns to the Extra Deck; forced Standby trigger pays 500 Life Points and destroys the card when 500 or less remain; a control returns to the hand. Test: tools/test_s03_u415_locks.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

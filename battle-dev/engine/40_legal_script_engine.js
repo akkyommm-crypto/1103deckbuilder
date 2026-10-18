@@ -797,6 +797,8 @@ const API = {
     const extra = Object.assign({}, opts && typeof opts === 'object' ? opts : {});
     /* S03-U413: 融合禁止エリア — a face-up card with fusionSummonBanS03 stops every Fusion Summon (summonKind 'fusion') of both players */
     if(extra.summonKind==='fusion' && typeof deckLockSourceS03==='function' && deckLockSourceS03(gameState,'fusionSummonBanS03')){ trace('specialSummon blocked: fusion summon ban',false); showToast('融合召喚はできません'); return false; }
+    /* S03-U415: デッキロック — no Special Summon from the Deck while a face-up card with deckSummonBanS03 stands */
+    if(from==='deck' && typeof deckSummonBannedS03==='function' && deckSummonBannedS03(gameState)){ trace('specialSummon blocked: deck summon ban',false); showToast('デッキからの特殊召喚はできません'); return false; }
     /* S03-U281 (Opus review): 「…の効果によって特殊召喚」 — when the caller names no source, the card whose chain link is resolving is the source
        (summonSrcS03, S03-U238); journaled in the FX_SPECIAL_SUMMON action, so Replay records the same. */
     if(extra.summonSrcS03==null && typeof RESOLVING_LINK_S03!=='undefined' && RESOLVING_LINK_S03 && RESOLVING_LINK_S03.name) extra.summonSrcS03 = RESOLVING_LINK_S03.name;

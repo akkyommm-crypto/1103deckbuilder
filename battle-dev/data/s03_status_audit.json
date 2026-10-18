@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 471,
+    "NOT_STARTED": 467,
     "PARTIAL": 10,
-    "TESTED": 3400
+    "TESTED": 3404
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -836,
+    "NOT_STARTED": -840,
     "PARTIAL": -172,
-    "TESTED": 1351
+    "TESTED": 1355
   },
   "status_changes": [
     {
@@ -2635,6 +2635,12 @@
       "unit": "S03-U364"
     },
     {
+      "name": "デッキロック",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U415"
+    },
+    {
       "name": "デッド・ガードナー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4421,6 +4427,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U204"
+    },
+    {
+      "name": "不協和音",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U415"
     },
     {
       "name": "不吉な占い",
@@ -6637,6 +6649,12 @@
       "unit": "S03-U46"
     },
     {
+      "name": "王宮の鉄壁",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U415"
+    },
+    {
       "name": "王家の呪い",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -7139,6 +7157,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U200"
+    },
+    {
+      "name": "縮退回路",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U415"
     },
     {
       "name": "罰ゲーム!",
