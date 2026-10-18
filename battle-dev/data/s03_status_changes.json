@@ -14163,6 +14163,66 @@
         "tools/test_s03_u427_gap_cards.js"
       ],
       "evidence": "Exact script. Text (carddata). Hand ignition: a 「魔轟神」 monster of the hand is discarded (cost) and it is Special Summoned; not offered without one. Test: tools/test_s03_u427_gap_cards.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "インフェルニティ・ナイト",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U428",
+      "tests": [
+        "tools/test_s03_u428_provenance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroyed on the field → two hand cards are discarded (cost) and it is Special Summoned from the Graveyard; not with fewer than two hand cards. Test: tools/test_s03_u428_provenance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "グリード・グラード",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U428",
+      "tests": [
+        "tools/test_s03_u428_provenance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Quick-Play Spell: not activatable before destroying a Synchro Monster; after my 青眼 destroyed the opponent's face-up ガイアナイト in battle it is activatable and draws 2; not activatable after destroying a non-Synchro monster (destroyedThisTurnV30 + the destroyed card's type). Test: tools/test_s03_u428_provenance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コカローチ・ナイト",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U428",
+      "tests": [
+        "tools/test_s03_u428_provenance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Sent to the Graveyard → returned to the top of the Deck (forced trigger). Test: tools/test_s03_u428_provenance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ジュラック・イグアノン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U428",
+      "tests": [
+        "tools/test_s03_u428_provenance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). After destroying a monster in battle an opponent Set card returns to the opponent's hand; nothing without a Set card. Test: tools/test_s03_u428_provenance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "バルーン・リザード",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U428",
+      "tests": [
+        "tools/test_s03_u428_provenance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). A counter at each of my Standby Phases (flag u428Cnt mirrors the count); destroyed by 青眼 with 2 counters → the destroyer's controller takes 2 x 400; with no counter no damage. Test: tools/test_s03_u428_provenance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ブリザード・ウォリアー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U428",
+      "tests": [
+        "tools/test_s03_u428_provenance.js"
+      ],
+      "evidence": "Exact script. Text (carddata). After destroying a monster in battle the controller is shown the opponent's top card; answer no moves it to the bottom (FX_RETURN_DECK zone deck toBottom), answer yes keeps it on top. Test: tools/test_s03_u428_provenance.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

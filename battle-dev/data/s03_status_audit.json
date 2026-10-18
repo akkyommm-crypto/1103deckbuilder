@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 458,
+    "ENGINE_GAP": 452,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3454
+    "TESTED": 3460
   },
   "delta": {
-    "ENGINE_GAP": -158,
+    "ENGINE_GAP": -164,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1405
+    "TESTED": 1411
   },
   "status_changes": [
     {
@@ -973,6 +973,12 @@
       "unit": "S03-U206"
     },
     {
+      "name": "インフェルニティ・ナイト",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U428"
+    },
+    {
       "name": "インフェルニティ・ビースト",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1621,6 +1627,12 @@
       "unit": "S03-U226"
     },
     {
+      "name": "グリード・グラード",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U428"
+    },
+    {
       "name": "グリーン・ガジェット",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -1721,6 +1733,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U313"
+    },
+    {
+      "name": "コカローチ・ナイト",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U428"
     },
     {
       "name": "コダロス",
@@ -2165,6 +2183,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U225"
+    },
+    {
+      "name": "ジュラック・イグアノン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U428"
     },
     {
       "name": "ジュラック・グアイバ",
@@ -3301,6 +3325,12 @@
       "unit": "S03-U202"
     },
     {
+      "name": "バルーン・リザード",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U428"
+    },
+    {
       "name": "バーサーキング",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3569,6 +3599,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U339"
+    },
+    {
+      "name": "ブリザード・ウォリアー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U428"
     },
     {
       "name": "ブリザード・プリンセス",

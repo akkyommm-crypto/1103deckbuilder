@@ -853,10 +853,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs exact-two WATER tribute summon procedure, counter placement and self-tribute Ice-Counter mass destruction."
     },
-    "インフェルニティ・ナイト": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs destruction-to-Grave provenance and a replay-safe exact-two hand discard cost before self-revival."
-    },
     "エーリアン・ハンター": {
       "status": "ENGINE_GAP",
       "reason": "Needs battle-destruction provenance retaining A-Counter state and an additional-attack grant."
@@ -864,14 +860,6 @@
     "キューキューロイド": {
       "status": "ENGINE_GAP",
       "reason": "Needs an add-to-hand event with Graveyard source and canonical Roid provenance plus optional summon of that exact newly added card."
-    },
-    "グリード・グラード": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs same-turn destruction provenance proving the controller destroyed an opponent face-up Synchro by battle or effect."
-    },
-    "コカローチ・ナイト": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a mandatory any-zone sent-to-Grave replacement/trigger that returns this exact card to Deck top without recursion."
     },
     "コクーン・リボーン": {
       "status": "ENGINE_GAP",
@@ -924,10 +912,6 @@
     "ブランチ": {
       "status": "ENGINE_GAP",
       "reason": "Needs Fusion destruction provenance and retained exact Fusion-material identities for optional Graveyard revival."
-    },
-    "ブリザード・ウォリアー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance and private opponent Deck-top inspection with replay-safe top-or-bottom choice."
     },
     "リゾネーター・エンジン": {
       "status": "ENGINE_GAP",
@@ -1173,10 +1157,6 @@
       "status": "ENGINE_GAP",
       "reason": "provenance / resolution-time Choice: needs retained exact Synchro Material identities, Extra Deck return, and optional simultaneous revival only when the complete material set remains in Graveyard."
     },
-    "ジュラック・イグアノン": {
-      "status": "ENGINE_GAP",
-      "reason": "battle / target selection: needs exact opponent-monster battle-destruction provenance followed by an optional activation-time target among opponent set cards."
-    },
     "スター・ブラスト": {
       "status": "ENGINE_GAP",
       "reason": "declaration / activation-time Choice / damage/LP: needs numeric 500-multiple LP declaration, hand-or-field monster target, and generic turn-duration Level reduction."
@@ -1220,10 +1200,6 @@
     "ハーピィ・レディ3": {
       "status": "ENGINE_GAP",
       "reason": "battle / delayed processing: needs battle-opponent identity and an opponent-turn-counted two-turn attack prohibition linked to that physical monster."
-    },
-    "バルーン・リザード": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / damage/LP: needs Standby counters and retained destroyer controller identity so destruction damage is routed to the correct player."
     },
     "パトロール・ロボ": {
       "status": "ENGINE_GAP",
