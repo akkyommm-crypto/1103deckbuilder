@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 413,
+    "ENGINE_GAP": 409,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3499
+    "TESTED": 3503
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1585,
+    "legacy": 1586,
     "sin": 5,
-    "unified": 1390
+    "unified": 1393
   },
-  "static_registration_name_count": 3509,
+  "static_registration_name_count": 3513,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -10254,12 +10254,19 @@
       "subtype": null,
       "date": "2008-02-23",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "provenance / continuous rule: needs summon-event deterministic coin result persisted on the card and authoritative Arcana Force metadata for the signed field-wide aura.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZT_claude_s03_u436_coin_pierce.js",
+          "line": 41
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u436_coin_pierce.js",
         "tools\\test_v840_batch35.js"
       ]
     },
@@ -40973,12 +40980,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「①の貫通効果を適用して戦闘ダメージを与えた時」を判定できない。applyPiercingDamage（00_state_actions.js:2692）は金額を返すだけで、どのソースが適用したかも与えた事実もイベント／state に残らない（cycle 24 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZT_claude_s03_u436_coin_pierce.js",
+          "line": 25
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u436_coin_pierce.js"
+      ]
     },
     {
       "index": 1861,
@@ -65344,12 +65359,19 @@
       "subtype": null,
       "date": "2007-07-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation cost / provenance: exact 1103 processing for \"コイントスを3回行う。 3回とも表だった場合、相手フィールド上モンスターを全て破壊する。 2回表だった場合、相手の手札をランダムに1枚捨てる。 1回表だった場合、自分フィールド上に存在するカード1枚を破壊する。 3回とも\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZT_claude_s03_u436_coin_pierce.js",
+          "line": 64
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u436_coin_pierce.js",
         "tools\\test_v870_batch38.js"
       ]
     },
@@ -87132,13 +87154,20 @@
       "subtype": null,
       "date": "2004-03-01",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "③「表側表示のこのカードはフィールドから離れた場合に除外される」を宣言できない。banishWhenLeavesField はカード実体に立てるフラグで、効果解決の中でしか書けない（00_state_actions.js:2351）。召喚された事実だけで立てる宣言点が無く、①②だけ実装すると半実装になる（cycle 26 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 41,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZT_claude_s03_u436_coin_pierce.js",
+          "line": 88
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_class_a_recovery_02.js"
+        "tools\\test_class_a_recovery_02.js",
+        "tools\\test_s03_u436_coin_pierce.js"
       ]
     },
     {

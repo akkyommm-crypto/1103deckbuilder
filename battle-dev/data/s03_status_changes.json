@@ -14613,6 +14613,46 @@
         "tools/test_s03_u435_misc_gap.js"
       ],
       "evidence": "Exact script. Text (carddata). Banishing a hand Undead destroys every face-up Undead of both fields (Dragon and the Thunder virus stay); not available without a hand monster. Test: tools/test_s03_u435_misc_gap.js (Replay audit). Zero Guardner's battle-damage prevention covers all battle damage of that turn (the LP rule), not only damage from battles with opponent monsters; the two coincide in a duel."
+    },
+    {
+      "name": "アルカナフォースIV－THE EMPEROR",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U436",
+      "tests": [
+        "tools/test_s03_u436_coin_pierce.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Heads (replay RNG on summon): every face-up Arcana Force of mine +500 ATK, tails -500; non-Arcana and the opponent monsters are unaffected. Test: tools/test_s03_u436_coin_pierce.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ドリル・シンクロン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U436",
+      "tests": [
+        "tools/test_s03_u436_coin_pierce.js"
+      ],
+      "evidence": "Exact script. Text (carddata). My Warrior (ATK 1600) destroying a Defense Position monster (DEF 200) deals 1400 piercing damage and I draw 1; no piercing without it, none for a non-Warrior attacker. Test: tools/test_s03_u436_coin_pierce.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "伝説の賭博師",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U436",
+      "tests": [
+        "tools/test_s03_u436_coin_pierce.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Three tosses: 3 heads destroy all opponent monsters; 2 heads discard a random opponent hand card; 1 head destroys a chosen card of mine; 0 heads discard my hand; once per turn. Test: tools/test_s03_u436_coin_pierce.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "混沌の黒魔術師",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U436",
+      "tests": [
+        "tools/test_s03_u436_coin_pierce.js"
+      ],
+      "evidence": "Exact script. Text (carddata). End Phase of its summon turn adds a Spell of my Graveyard to the hand (not when it was not summoned this turn); banished when it leaves the field; the monster it destroys in battle is banished. Test: tools/test_s03_u436_coin_pierce.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -1081,10 +1081,6 @@
       "status": "ENGINE_GAP",
       "reason": "target selection / continuous rule: needs arbitrary monster name-and-effect copying, complete copied effect legality, and End Phase reset without copying identity hacks."
     },
-    "アルカナフォースIV－THE EMPEROR": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / continuous rule: needs summon-event deterministic coin result persisted on the card and authoritative Arcana Force metadata for the signed field-wide aura."
-    },
     "イビリチュア・マインドオーガス": {
       "status": "ENGINE_GAP",
       "reason": "ritual / provenance / resolution-time Choice: needs Ritual Summon pipeline and optional selection of up to five cards across both Graveyards with owner Deck routing."
@@ -1220,10 +1216,6 @@
     "伝説のフィッシャーマン": {
       "status": "ENGINE_GAP",
       "reason": "activation-time Choice / target selection / declaration / battle / continuous rule: exact 1103 processing for \"①:このカードがモンスターゾーンに存在し、フィールドに「海」が存在する限り、このカードは魔法カードの効果を受けない。 ②:このカードがモンスターゾーンに存在し、フィールドに「海」が存在する限り、このカードは攻撃対象にされ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "伝説の賭博師": {
-      "status": "ENGINE_GAP",
-      "reason": "activation cost / provenance: exact 1103 processing for \"コイントスを3回行う。 3回とも表だった場合、相手フィールド上モンスターを全て破壊する。 2回表だった場合、相手の手札をランダムに1枚捨てる。 1回表だった場合、自分フィールド上に存在するカード1枚を破壊する。 3回とも\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "俊足のギラザウルス": {
       "status": "ENGINE_GAP",
@@ -1691,10 +1683,6 @@
       "status": "ENGINE_GAP",
       "reason": "「相手のカードの効果によってセットされた」provenance が無い。moveProvenance を刻む P3_AUTO_MOVE_TYPES は墓地送り系5種だけで、セットは対象外（12_provenance_v3.js:139、cycle 24 実測）。"
     },
-    "ドリル・シンクロン": {
-      "status": "ENGINE_GAP",
-      "reason": "「①の貫通効果を適用して戦闘ダメージを与えた時」を判定できない。applyPiercingDamage（00_state_actions.js:2692）は金額を返すだけで、どのソースが適用したかも与えた事実もイベント／state に残らない（cycle 24 実測）。"
-    },
     "レプティレス・ラミア": {
       "status": "ENGINE_GAP",
       "reason": "シンクロ素材条件の「「レプティレス」チューナー」を宣言できない。SETCODE にも p4 overlay の GROUP にも レプティレス が無く、名前の部分一致は禁止（cycle 24 実測）。"
@@ -1706,10 +1694,6 @@
     "タイムカプセル": {
       "status": "ENGINE_GAP",
       "reason": "「裏側表示でゲームから除外」が無い。除外は常に表向きで、除外したカードは相手にも見える。名前を伏せたまま除外する経路が無く、隠匿情報が漏れる（cycle 25 実測）。"
-    },
-    "混沌の黒魔術師": {
-      "status": "ENGINE_GAP",
-      "reason": "③「表側表示のこのカードはフィールドから離れた場合に除外される」を宣言できない。banishWhenLeavesField はカード実体に立てるフラグで、効果解決の中でしか書けない（00_state_actions.js:2351）。召喚された事実だけで立てる宣言点が無く、①②だけ実装すると半実装になる（cycle 26 実測）。"
     },
     "サイ・ガール": {
       "status": "ENGINE_GAP",

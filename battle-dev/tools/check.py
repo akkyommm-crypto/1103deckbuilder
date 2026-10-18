@@ -726,6 +726,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u432_continuous_rules.js')],chec
 subprocess.run(['node',str(ROOT/'tools/test_s03_u433_koaki_misc.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u434_battle_misc.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u435_misc_gap.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u436_coin_pierce.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
