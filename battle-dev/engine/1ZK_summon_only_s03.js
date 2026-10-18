@@ -122,6 +122,8 @@ function noGraveSummonReasonS03(card, from){
   const txt = String((d && d.e) || '');
   /* S03-U395: 「このカードはデッキ・墓地からの特殊召喚はできない」 (堕天使アスモディウス) and 「デッキからの…」 */
   if(from==='grave' && /このカードは(デッキ・)?墓地からの特殊召喚はできない/.test(txt)) return `${cardName(card)}は墓地から特殊召喚できません`;
+  /* S03-U429: 「このカードは墓地へ送られたターンには墓地からの特殊召喚はできない」 (D－HERO ディスクガイ) — the turn it was sent (graveInfo.turn) */
+  if(from==='grave' && /このカードは墓地へ送られたターンには墓地からの特殊召喚はできない/.test(txt) && card.graveInfo && Number(card.graveInfo.turn)===Number(gameState.turn)) return `${cardName(card)}は墓地へ送られたターンには墓地から特殊召喚できません`;
   if(from==='deck' && /このカードは(デッキ・墓地|デッキ)からの特殊召喚はできない/.test(txt)) return `${cardName(card)}はデッキから特殊召喚できません`;
   return '';
 }

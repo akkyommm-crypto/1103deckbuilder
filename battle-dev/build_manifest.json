@@ -1708,6 +1708,9 @@
   "path": "cards/HZZZZZZZZZZL_claude_s03_u428_provenance.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZM_claude_s03_u429_summon_rules.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

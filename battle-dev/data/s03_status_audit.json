@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 452,
+    "ENGINE_GAP": 445,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3460
+    "TESTED": 3467
   },
   "delta": {
-    "ENGINE_GAP": -164,
+    "ENGINE_GAP": -171,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1411
+    "TESTED": 1418
   },
   "status_changes": [
     {
@@ -281,6 +281,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U335"
+    },
+    {
+      "name": "D－HERO ディスクガイ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U429"
     },
     {
       "name": "D－HERO デビルガイ",
@@ -1687,6 +1693,12 @@
       "unit": "S03-U321"
     },
     {
+      "name": "コアキメイル・ドラゴ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U429"
+    },
+    {
       "name": "コアキメイル・マキシマム",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -2417,6 +2429,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U201"
+    },
+    {
+      "name": "スライム増殖炉",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U429"
     },
     {
       "name": "スレイブタイガー",
@@ -4471,6 +4489,12 @@
       "unit": "S03-U326"
     },
     {
+      "name": "ワーム・ベイト",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U429"
+    },
+    {
       "name": "ワーム・ミリディス",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6253,6 +6277,12 @@
       "unit": "S03-U227"
     },
     {
+      "name": "暴君の自暴自棄",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U429"
+    },
+    {
       "name": "月の書",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -6539,6 +6569,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U350"
+    },
+    {
+      "name": "氷の女王",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U429"
     },
     {
       "name": "氷岩魔獣",
@@ -7799,6 +7835,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U383"
+    },
+    {
+      "name": "迷える仔羊",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U429"
     },
     {
       "name": "迷宮変化",

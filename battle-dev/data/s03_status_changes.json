@@ -14223,6 +14223,76 @@
         "tools/test_s03_u428_provenance.js"
       ],
       "evidence": "Exact script. Text (carddata). After destroying a monster in battle the controller is shown the opponent's top card; answer no moves it to the bottom (FX_RETURN_DECK zone deck toBottom), answer yes keeps it on top. Test: tools/test_s03_u428_provenance.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "D－HERO ディスクガイ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U429",
+      "tests": [
+        "tools/test_s03_u429_summon_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Special Summoned from the Graveyard → draws 2; sent to the Graveyard this turn it cannot be Special Summoned from there (new text rule); a later turn it can, but the draw works once per duel. Test: tools/test_s03_u429_summon_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "コアキメイル・ドラゴ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U429",
+      "tests": [
+        "tools/test_s03_u429_summon_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). While face-up neither player can Special Summon LIGHT / DARK monsters (a WIND monster can be); the End Phase upkeep (no 鋼核 / Dragon in the hand) destroys it; control without it allows the summon. Test: tools/test_s03_u429_summon_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "スライム増殖炉",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U429",
+      "tests": [
+        "tools/test_s03_u429_summon_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Continuous Spell: I cannot summon / Special Summon monsters (the opponent can); at my Standby Phase a 「スライムモンスタートークン」 is Special Summoned. Test: tools/test_s03_u429_summon_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ワーム・ベイト",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U429",
+      "tests": [
+        "tools/test_s03_u429_summon_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With an Insect, two 「ワームトークン」 are Special Summoned and the Spell goes to the Graveyard; this turn Level 3 and 4 summons / Special Summons are refused (Levels 2 and 5 are not); not activatable without an Insect. Test: tools/test_s03_u429_summon_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "暴君の自暴自棄",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U429",
+      "tests": [
+        "tools/test_s03_u429_summon_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Releasing two non-Token Normal Monsters activates it; neither player can summon / Special Summon Effect Monsters (Normal Monsters unaffected); not activatable with one Normal Monster. Test: tools/test_s03_u429_summon_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "氷の女王",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U429",
+      "tests": [
+        "tools/test_s03_u429_summon_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Destroyed on the field with 3+ Spellcasters in the Graveyard → a Spell of the Graveyard is added to the hand (not with only 2 Spellcasters); it cannot be Special Summoned from the Graveyard (the existing text rule). Test: tools/test_s03_u429_summon_rules.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "迷える仔羊",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U429",
+      "tests": [
+        "tools/test_s03_u429_summon_rules.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Two 「仔羊トークン」 in Defense Position; this turn I cannot summon / flip summon / Special Summon any monster, the opponent can; not activatable with only one free Monster Zone. Test: tools/test_s03_u429_summon_rules.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

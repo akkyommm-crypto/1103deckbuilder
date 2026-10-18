@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 452,
+    "ENGINE_GAP": 445,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3460
+    "TESTED": 3467
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -118,9 +118,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1575,
     "sin": 5,
-    "unified": 1361
+    "unified": 1368
   },
-  "static_registration_name_count": 3470,
+  "static_registration_name_count": 3477,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -3464,12 +3464,20 @@
       "subtype": null,
       "date": "2007-03-15",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「墓地へ送られたターンには墓地からの特殊召喚はできない」を宣言できない。領域を限定した特殊召喚禁止の consumer が無く（[[氷の女王]] と同じ層）、ドロー効果だけ実装すると半実装になる（cycle 34 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 22,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZM_claude_s03_u429_summon_rules.js",
+          "line": 51
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u429_summon_rules.js"
+      ]
     },
     {
       "index": 133,
@@ -22089,12 +22097,20 @@
       "subtype": null,
       "date": "2009-02-14",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「お互いに光・闇属性モンスターを特殊召喚できない」を宣言できない。v46GlobalSpecialSummonRestrictionReason はカード名の直書き（40_legal_script_engine.js:97）で、スクリプト側から条件を足す hook が無い（cycle 30 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZM_claude_s03_u429_summon_rules.js",
+          "line": 59
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u429_summon_rules.js"
+      ]
     },
     {
       "index": 993,
@@ -32080,12 +32096,20 @@
       "subtype": "永続",
       "date": "2001-04-19",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「特定のトークン以外を召喚・反転召喚・特殊召喚できない」を宣言できない。sc.restriction は属性/種族（key が at / ra）専用（40_legal_script_engine.js:68）で、カード単位の召喚禁止は表現できない（cycle 25 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZM_claude_s03_u429_summon_rules.js",
+          "line": 97
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u429_summon_rules.js"
+      ]
     },
     {
       "index": 1447,
@@ -62208,12 +62232,20 @@
       "subtype": "",
       "date": "2009-09-17",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「このカードを発動するターン、自分はレベル3・4のモンスターを召喚・特殊召喚できない」を宣言できない。レベルを条件にした召喚禁止の consumer が engine に無い（cycle 38 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZM_claude_s03_u429_summon_rules.js",
+          "line": 74
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u429_summon_rules.js"
+      ]
     },
     {
       "index": 2850,
@@ -81450,12 +81482,20 @@
       "subtype": "永続",
       "date": "2011-07-16",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「お互いに効果モンスターを召喚・特殊召喚する事ができない」を宣言できない。カードの種別を条件にした召喚禁止の層が無い（cycle 38 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZM_claude_s03_u429_summon_rules.js",
+          "line": 64
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u429_summon_rules.js"
+      ]
     },
     {
       "index": 3741,
@@ -84935,12 +84975,20 @@
       "subtype": null,
       "date": "2008-10-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「このカードは墓地からの特殊召喚はできない」を表現できない。cannotSpecialSummon は領域を問わない全面禁止で、墓地からだけを禁じる宣言が無い（cycle 26 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZM_claude_s03_u429_summon_rules.js",
+          "line": 29
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u429_summon_rules.js"
+      ]
     },
     {
       "index": 3901,
@@ -99320,12 +99368,20 @@
       "subtype": "",
       "date": "2004-03-01",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「このカードの効果以外ではモンスターを召喚・反転召喚・特殊召喚できない」を宣言できない。[[ワーム・ベイト]] と同じく、条件付きの召喚禁止の層が無い（cycle 38 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZM_claude_s03_u429_summon_rules.js",
+          "line": 87
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u429_summon_rules.js"
+      ]
     },
     {
       "index": 4566,
