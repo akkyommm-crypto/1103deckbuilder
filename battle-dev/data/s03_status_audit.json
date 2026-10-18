@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 463,
+    "NOT_STARTED": 459,
     "PARTIAL": 10,
-    "TESTED": 3408
+    "TESTED": 3412
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -844,
+    "NOT_STARTED": -848,
     "PARTIAL": -172,
-    "TESTED": 1359
+    "TESTED": 1363
   },
   "status_changes": [
     {
@@ -1043,6 +1043,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U351"
+    },
+    {
+      "name": "イービル・ブラスト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U417"
     },
     {
       "name": "ウィキッド・リボーン",
@@ -6049,6 +6055,12 @@
       "unit": "S03-U288"
     },
     {
+      "name": "植物連鎖",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U417"
+    },
+    {
       "name": "椿姫ティタニアル",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6617,6 +6629,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U232"
+    },
+    {
+      "name": "燃える闘志",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U417"
     },
     {
       "name": "燃え盛るヒータ",
@@ -7463,6 +7481,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U357"
+    },
+    {
+      "name": "身剣一体",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U417"
     },
     {
       "name": "軍荼利",

@@ -13703,6 +13703,46 @@
         "tools/test_s03_u416_revivers.js"
       ],
       "evidence": "Exact script. Text (carddata). my Standby Phase revival from the Graveyard (empty field, only Warriors in the Graveyard); blocked by a non-Warrior or a monster on my field; Tributable only for Warrior Advance Summons (noAdvanceTributeS03 function form). Test: tools/test_s03_u416_revivers.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "植物連鎖",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U417",
+      "tests": [
+        "tools/test_s03_u417_trap_equips.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Set Trap activation chooses a face-up Plant of mine, becomes an Equip Card (ATK +500); destroyed by a card effect it offers the optional Graveyard revival of a Plant of my Graveyard (not when merely sent to the Graveyard); not activatable without a Plant. Test: tools/test_s03_u417_trap_equips.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "燃える闘志",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U417",
+      "tests": [
+        "tools/test_s03_u417_trap_equips.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Equip Card on any face-up monster of mine; in a Damage Step involving the host and while an opponent's monster has an ATK above the host's printed ATK the host's ATK is set to twice its printed ATK (setFinalAtk), unchanged outside battle and when no such monster exists; a control without it loses the battle. Test: tools/test_s03_u417_trap_equips.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "身剣一体",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U417",
+      "tests": [
+        "tools/test_s03_u417_trap_equips.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Activatable only when an 「X－セイバー」 is my only monster (not with another monster, not with a lone non-X monster); Equip Card ATK +800; the host destroying a monster in battle draws a card. Test: tools/test_s03_u417_trap_equips.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "イービル・ブラスト",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U417",
+      "tests": [
+        "tools/test_s03_u417_trap_equips.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Set Trap answers the opponent's Special Summon (the event candidate of the summon-success window), becomes an Equip Card on that monster (ATK +500) and deals 500 damage to the opponent at each of their Standby Phases; my own Special Summon does not offer it. Test: tools/test_s03_u417_trap_equips.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 463,
+    "NOT_STARTED": 459,
     "PARTIAL": 10,
-    "TESTED": 3408
+    "TESTED": 3412
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -118,9 +118,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1567,
     "sin": 5,
-    "unified": 1317
+    "unified": 1321
   },
-  "static_registration_name_count": 3418,
+  "static_registration_name_count": 3422,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -12605,12 +12605,20 @@
       "subtype": "",
       "date": "2007-11-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZA_claude_s03_u417_trap_equips.js",
+          "line": 101
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u417_trap_equips.js"
+      ]
     },
     {
       "index": 552,
@@ -82124,12 +82132,20 @@
       "subtype": "",
       "date": "2008-07-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZA_claude_s03_u417_trap_equips.js",
+          "line": 46
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u417_trap_equips.js"
+      ]
     },
     {
       "index": 3788,
@@ -88386,12 +88402,20 @@
       "subtype": "",
       "date": "2011-07-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZA_claude_s03_u417_trap_equips.js",
+          "line": 78
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u417_trap_equips.js"
+      ]
     },
     {
       "index": 4076,
@@ -98574,12 +98598,20 @@
       "subtype": "",
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZA_claude_s03_u417_trap_equips.js",
+          "line": 84
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u417_trap_equips.js"
+      ]
     },
     {
       "index": 4549,
