@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 418,
+    "ENGINE_GAP": 413,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 427,
     "PARTIAL": 10,
-    "TESTED": 3494
+    "TESTED": 3499
   },
   "delta": {
-    "ENGINE_GAP": -198,
+    "ENGINE_GAP": -203,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -880,
     "PARTIAL": -172,
-    "TESTED": 1445
+    "TESTED": 1450
   },
   "status_changes": [
     {
@@ -2533,6 +2533,12 @@
       "unit": "S03-U405"
     },
     {
+      "name": "ゼロ・ガードナー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U435"
+    },
+    {
       "name": "ゼンマイウォリアー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3281,6 +3287,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U254"
+    },
+    {
+      "name": "ニュート",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U435"
     },
     {
       "name": "ニードル・ガンナー",
@@ -4471,6 +4483,12 @@
       "unit": "S03-U239"
     },
     {
+      "name": "レッサー・デーモン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U435"
+    },
+    {
       "name": "レッド・ガジェット",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -5305,6 +5323,12 @@
       "unit": "S03-U380"
     },
     {
+      "name": "創世竜",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U435"
+    },
+    {
       "name": "創造の代行者 ヴィーナス",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -5447,6 +5471,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U272"
+    },
+    {
+      "name": "同族感電ウィルス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U435"
     },
     {
       "name": "名推理",

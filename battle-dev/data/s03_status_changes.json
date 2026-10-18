@@ -14563,6 +14563,56 @@
         "tools/test_s03_u434_battle_misc.js"
       ],
       "evidence": "Exact script. Text (carddata). Dealing battle damage to the opponent (direct attack, 1100) puts a 寄生虫パラサイド of the Deck on top; no placement without battle damage. Test: tools/test_s03_u434_battle_misc.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ゼロ・ガードナー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U435",
+      "tests": [
+        "tools/test_s03_u435_misc_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Released as the cost: this turn my weak attacker (300 vs 3000) is not destroyed and I take no battle damage; without it the attacker is destroyed and the damage is taken. Test: tools/test_s03_u435_misc_gap.js (Replay audit). Zero Guardner's battle-damage prevention covers all battle damage of that turn (the LP rule), not only damage from battles with opponent monsters; the two coincide in a duel."
+    },
+    {
+      "name": "ニュート",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U435",
+      "tests": [
+        "tools/test_s03_u435_misc_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Flipped by an attack → ATK / DEF +500 permanently (2400 / 900); destroyed in battle by a monster → that monster loses 500 ATK / DEF (3000 / 2500 → 2500 / 2000); destroyed by an effect → nothing. Test: tools/test_s03_u435_misc_gap.js (Replay audit). Zero Guardner's battle-damage prevention covers all battle damage of that turn (the LP rule), not only damage from battles with opponent monsters; the two coincide in a duel."
+    },
+    {
+      "name": "レッサー・デーモン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U435",
+      "tests": [
+        "tools/test_s03_u435_misc_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The monster it destroyed in battle is banished instead of going to the Graveyard; another attacker sends it to the Graveyard. Test: tools/test_s03_u435_misc_gap.js (Replay audit). Zero Guardner's battle-damage prevention covers all battle damage of that turn (the LP rule), not only damage from battles with opponent monsters; the two coincide in a duel."
+    },
+    {
+      "name": "創世竜",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U435",
+      "tests": [
+        "tools/test_s03_u435_misc_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Once per turn a hand Dragon to the Graveyard returns a Graveyard Dragon to the hand (not without a hand Dragon); sent from the field to the Graveyard → every Dragon of the Graveyard (itself included) returns to the Deck, a non-Dragon stays. Test: tools/test_s03_u435_misc_gap.js (Replay audit). Zero Guardner's battle-damage prevention covers all battle damage of that turn (the LP rule), not only damage from battles with opponent monsters; the two coincide in a duel."
+    },
+    {
+      "name": "同族感電ウィルス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U435",
+      "tests": [
+        "tools/test_s03_u435_misc_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Banishing a hand Undead destroys every face-up Undead of both fields (Dragon and the Thunder virus stay); not available without a hand monster. Test: tools/test_s03_u435_misc_gap.js (Replay audit). Zero Guardner's battle-damage prevention covers all battle damage of that turn (the LP rule), not only damage from battles with opponent monsters; the two coincide in a duel."
     }
   ],
   "restored_to_baseline": [

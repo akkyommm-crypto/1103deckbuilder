@@ -1553,10 +1553,6 @@
       "status": "ENGINE_GAP",
       "reason": "linked banish-return lifecycle / zone placement: the exact card banished by this summon must return set when the same summon generation leaves the field."
     },
-    "ゼロ・ガードナー": {
-      "status": "ENGINE_GAP",
-      "reason": "player-scoped Battle prevention rule: all own monsters gain battle indestructibility and own battle damage becomes zero for the turn."
-    },
     "ターボ・シンクロン": {
       "status": "ENGINE_GAP",
       "reason": "attack-declare position change / battle-damage hand summon: two distinct Battle windows and damage-bounded activation-time hand selection are required."
@@ -1576,10 +1572,6 @@
     "ナイルの恵み": {
       "status": "ENGINE_GAP",
       "reason": "discard provenance event: must distinguish opponent-controlled effect discard from costs, rules, and own effects for each discarded card."
-    },
-    "ニュート": {
-      "status": "ENGINE_GAP",
-      "reason": "battle destruction provenance / persistent modifier: the exact battling monster must receive a permanent 500 ATK/DEF reduction after this card is battle-destroyed."
     },
     "バーサーク・デッド・ドラゴン": {
       "status": "ENGINE_GAP",
@@ -1617,10 +1609,6 @@
       "status": "ENGINE_GAP",
       "reason": "ContinuousRule / targeting immunity / destruction immunity: ritual-monster battle damage prevention and monster-effect protections require category-aware central rules."
     },
-    "創世竜": {
-      "status": "ENGINE_GAP",
-      "reason": "activation discard cost / target selection / bulk deck return: Dragon discard and grave recovery plus optional all-Dragon grave return need atomic pile operations."
-    },
     "反目の従者": {
       "status": "ENGINE_GAP",
       "reason": "equip metadata / control-change event / original-ATK snapshot: damage must trigger for the equipped monster's controller change using authoritative base stats."
@@ -1628,10 +1616,6 @@
     "召喚雲": {
       "status": "ENGINE_GAP",
       "reason": "continuous Spell ignition / source-zone choice / linked self-destruction: hand-or-grave Cloudian summon and grave-origin destruction of this card need provenance."
-    },
-    "同族感電ウィルス": {
-      "status": "ENGINE_GAP",
-      "reason": "activation banish cost snapshot / filtered bulk destroy: selected hand monster's Race must be retained after banish and all matching face-up monsters destroyed."
     },
     "墓掘りグール": {
       "status": "ENGINE_GAP",
@@ -1660,10 +1644,6 @@
     "死王リッチーロード": {
       "status": "ENGINE_GAP",
       "reason": "summon procedure / release provenance: Tribute Summon materials must be DARK and effect-release-to-grave must be distinguished from costs and rules."
-    },
-    "レッサー・デーモン": {
-      "status": "ENGINE_GAP",
-      "reason": "Same continuous battle-destruction replacement as 異次元の狂獣, additionally gated on this card remaining face-up on the field. Needs a continuous 'battle-destroyed by this card is banished' hook consumed by BATTLE_CLEANUP."
     },
     "モルティング・エスケープ": {
       "status": "ENGINE_GAP",

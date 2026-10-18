@@ -1,7 +1,7 @@
 const fs=require('fs'),path=require('path');
 const ROOT=path.resolve(__dirname,'..');
 const ov=JSON.parse(fs.readFileSync(path.join(ROOT,'data','script_status_overrides.json'),'utf8')).cards;
-const reviewed=["レインボー・ヴェール","レベルダウン!?","ヴェノム・ショット","儀式の檻","創世竜","反目の従者","召喚雲","同族感電ウィルス","墓掘りグール","大進化薬","奇跡の発掘","暗黒界の導師 セルリ","暗黒界の魔神 レイン","武闘円舞","死王リッチーロード"];
+const reviewed=["レインボー・ヴェール","レベルダウン!?","ヴェノム・ショット","儀式の檻","反目の従者","召喚雲","墓掘りグール","大進化薬","奇跡の発掘","暗黒界の導師 セルリ","暗黒界の魔神 レイン","武闘円舞","死王リッチーロード"];
 /* Counter primitive(System v22) で解消。当時 ENGINE_GAP だった記録として残す。 */const counterUnlocked=['古代遺跡コードA'];const classAUnlocked=['執念の剣','守護神の矛','心眼の鉾'];let fail=0;for(const name of reviewed){const x=ov[name];const ok=!!x&&x.status==='ENGINE_GAP'&&x.reason.includes(':')&&x.reason.length>=80;console.log((ok?'PASS ':'FAIL ')+'batch43 precise ENGINE_GAP '+name);if(!ok)fail++;}for(const name of counterUnlocked){const okC22=!ov[name];console.log((okC22?'PASS ':'FAIL ')+'Counter unlocked '+name);if(!okC22)fail++;}/* P23 materialFilter で解禁し、実装・テスト済み。当時 ENGINE_GAP だった記録として残す。 */for(const name of ['凛天使クイーン・オブ・ローズ']){const okP23=!ov[name];console.log((okP23?'PASS ':'FAIL ')+'P23 unlocked '+name);if(!okP23)fail++;}for(const name of classAUnlocked){const okA=!ov[name];console.log((okA?'PASS ':'FAIL ')+'Class A unlocked '+name);if(!okA)fail++;}
 /* Class A bulk（既存engineのみ・貫通）で実装・テスト済み。当時 ENGINE_GAP だった記録として残す。 */
 const pierceUnlocked=['天空騎士パーシアス','地獄将軍・メフィスト'];
@@ -22,3 +22,4 @@ for(const name of gladiatorUnlockedU180){const okG=!ov[name];console.log((okG?'P
 /* S03-U266: ワンショット・ブースター TESTED (Normal Summon success record + battle record); its old precise-gap check becomes this one. */
 for(const name of ['ワンショット・ブースター','ヴェノム・スワンプ']){const okW=!ov[name];console.log((okW?'PASS ':'FAIL ')+'U266 unlocked '+name);if(!okW)fail++;}
 if(fail)process.exit(2);
+/* S03-U435: implemented and tested; its ENGINE_GAP override was removed. Kept as the record that it was ENGINE_GAP then. */['創世竜','同族感電ウィルス'].forEach(n=>{const okU=!ov[n];console.log((okU?'PASS ':'FAIL ')+'U435 unlocked '+n);if(!okU)process.exitCode=2;});
