@@ -285,10 +285,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs simultaneous per-player replay-safe Deck selections and summons of ATK-2000-or-lower Spellcasters during an attack-declaration Chain."
     },
-    "モンスターレリーフ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe sequential selection to return one own monster and then Special Summon a Level 4 monster from hand during an attack Chain."
-    },
     "召喚制限－猛突するモンスター": {
       "status": "ENGINE_GAP",
       "reason": "Needs a serializable mandatory-attack rule for each newly Special Summoned monster integrated with Battle Command and legal-target selection."
@@ -317,10 +313,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a continuous per-player two-monster field cap integrated with every Normal Summon, Special Summon, movement, UI and replay path."
     },
-    "生命力吸収魔術": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs simultaneous no-Flip-effect reveal of all face-down Defense monsters followed by accurate effect-monster counting and recovery."
-    },
     "誘惑のシャドウ": {
       "status": "ENGINE_GAP",
       "reason": "Needs a central opponent Set-monster event and a no-Flip-effect face-up Attack transition for that exact set monster."
@@ -336,10 +328,6 @@
     "黒羽の導き": {
       "status": "ENGINE_GAP",
       "reason": "Needs a central effect-damage-received event plus replay-safe resolution-time hand selection of a Level-4-or-lower canonical Blackwing."
-    },
-    "A・O・J リサーチャー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a no-Flip-effect face-up Attack transition for one targeted face-down Defense monster, centrally suppressing its Flip effect."
     },
     "さまようミイラ": {
       "status": "ENGINE_GAP",
@@ -480,10 +468,6 @@
     "ラスト・リゾート": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe Deck activation of an exact Field Spell during an attack Chain plus opponent optional draw when replacing their active Field Spell."
-    },
-    "六武派二刀流": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe exact-two opponent-field selection after proving the controller has exactly one face-up Attack Position Six Samurai monster, followed by simultaneous hand return."
     },
     "念導力": {
       "status": "ENGINE_GAP",

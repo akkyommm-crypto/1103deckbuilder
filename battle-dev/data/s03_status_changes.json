@@ -14733,6 +14733,46 @@
         "tools/test_s03_u439_garden_rock.js"
       ],
       "evidence": "Exact script. Text (carddata). An opponent Effect Monster (氷結界の龍 グングニール) cannot target my 氷結界 monsters (only ワイト is offered); a Trap (強制脱出装置) still can; without it the monster can be targeted. Test: tools/test_s03_u439_garden_rock.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "A・O・J リサーチャー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U440",
+      "tests": [
+        "tools/test_s03_u440_traps_flipless.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Once per turn it discards a hand card and turns an opponent face-down Defense monster face-up Attack Position without its Flip effect; not available without such a monster. Test: tools/test_s03_u440_traps_flipless.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "モンスターレリーフ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U440",
+      "tests": [
+        "tools/test_s03_u440_traps_flipless.js"
+      ],
+      "evidence": "Exact script. Text (carddata). At the opponent attack declaration the chosen monster returns to the hand and a Level 4 monster of the hand (キラー・トマト) is Special Summoned; not offered without a monster of mine. Test: tools/test_s03_u440_traps_flipless.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "六武派二刀流",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U440",
+      "tests": [
+        "tools/test_s03_u440_traps_flipless.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With only one face-up Attack Position 六武衆 on my field it returns two chosen opponent cards (a monster and a Set card) to the hand; not activatable with another monster on my field. Test: tools/test_s03_u440_traps_flipless.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "生命力吸収魔術",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U440",
+      "tests": [
+        "tools/test_s03_u440_traps_flipless.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Every face-down Defense monster of both fields turned face-up (Defense Position kept) without its Flip effect (アイヴィ・ウォール summons no token); I recover 400 for each Effect Monster (the Normal Monster ワイト does not count); not activatable without a face-down Defense monster. Test: tools/test_s03_u440_traps_flipless.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

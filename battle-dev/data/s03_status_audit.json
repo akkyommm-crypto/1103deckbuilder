@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 408,
+    "ENGINE_GAP": 404,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 420,
     "PARTIAL": 10,
-    "TESTED": 3511
+    "TESTED": 3515
   },
   "delta": {
-    "ENGINE_GAP": -208,
+    "ENGINE_GAP": -212,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -887,
     "PARTIAL": -172,
-    "TESTED": 1462
+    "TESTED": 1466
   },
   "status_changes": [
     {
@@ -53,6 +53,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U82"
+    },
+    {
+      "name": "A・O・J リサーチャー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U440"
     },
     {
       "name": "A・O・J リバース・ブレイク",
@@ -4213,6 +4219,12 @@
       "unit": "S03-U194"
     },
     {
+      "name": "モンスターレリーフ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U440"
+    },
+    {
       "name": "モンタージュ・ドラゴン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5099,6 +5111,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U204"
+    },
+    {
+      "name": "六武派二刀流",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U440"
     },
     {
       "name": "六武衆の影武者",
@@ -7247,6 +7265,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U193"
+    },
+    {
+      "name": "生命力吸収魔術",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U440"
     },
     {
       "name": "生者の書－禁断の呪術－",

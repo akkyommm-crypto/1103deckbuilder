@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 408,
+    "ENGINE_GAP": 404,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 420,
     "PARTIAL": 10,
-    "TESTED": 3511
+    "TESTED": 3515
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -116,11 +116,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1587,
+    "legacy": 1590,
     "sin": 5,
-    "unified": 1399
+    "unified": 1400
   },
-  "static_registration_name_count": 3521,
+  "static_registration_name_count": 3525,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -1017,12 +1017,19 @@
       "subtype": null,
       "date": "2008-09-22",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a no-Flip-effect face-up Attack transition for one targeted face-down Defense monster, centrally suppressing its Flip effect.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZX_claude_s03_u440_traps_flipless.js",
+          "line": 85
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u440_traps_flipless.js",
         "tools\\test_v640_batch16.js"
       ]
     },
@@ -56078,12 +56085,19 @@
       "subtype": "",
       "date": "2002-05-28",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe sequential selection to return one own monster and then Special Summon a Level 4 monster from hand during an attack Chain.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZX_claude_s03_u440_traps_flipless.js",
+          "line": 17
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u440_traps_flipless.js",
         "tools\\test_v630_batch15.js"
       ]
     },
@@ -66927,12 +66941,19 @@
       "subtype": "",
       "date": "2011-02-11",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe exact-two opponent-field selection after proving the controller has exactly one face-up Attack Position Six Samurai monster, followed by simultaneous hand return.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZX_claude_s03_u440_traps_flipless.js",
+          "line": 46
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u440_traps_flipless.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -90158,12 +90179,19 @@
       "subtype": "",
       "date": "2002-09-19",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs simultaneous no-Flip-effect reveal of all face-down Defense monsters followed by accurate effect-monster counting and recovery.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZX_claude_s03_u440_traps_flipless.js",
+          "line": 70
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u440_traps_flipless.js",
         "tools\\test_v630_batch15.js"
       ]
     },
