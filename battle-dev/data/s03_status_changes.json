@@ -13863,6 +13863,46 @@
         "tools/test_s03_u420_foe_field.js"
       ],
       "evidence": "Exact script. Text (carddata). Procedure releasing two opponent monsters (not with one); stands on the opponent field, no Normal Summon this turn; 1000 damage to its controller at their Standby Phase. Test: tools/test_s03_u420_foe_field.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ヴァンパイアジェネシス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U421",
+      "tests": [
+        "tools/test_s03_u421_procedures.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Procedure banishing my face-up ヴァンパイア・ロード (not without one); once-per-turn ignition discards an Undead of the hand and Special Summons a lower-Level Undead of the Graveyard (not when the Graveyard Undead is not lower). Test: tools/test_s03_u421_procedures.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "異次元の一角戦士",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U421",
+      "tests": [
+        "tools/test_s03_u421_procedures.js"
+      ],
+      "evidence": "Exact script. Text (carddata). cannotNormalSummon; procedure with an opponent monster and my face-up Tuner (not without either), no Normal Summon this turn; its own procedure summon offers a banished non-Tuner Level 3 monster, Special Summoned with its effects negated. Test: tools/test_s03_u421_procedures.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "ネオス・ワイズマン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U421",
+      "tests": [
+        "tools/test_s03_u421_procedures.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Procedure sending ネオス and ユベル from the field (not without ユベル); not destroyed by a card effect; after a battle the partner's ATK is dealt to the opponent and my LP recovers by its DEF. Test: tools/test_s03_u421_procedures.js (Replay audit). No known deviation."
+    },
+    {
+      "name": "サイバー・エルタニン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U421",
+      "tests": [
+        "tools/test_s03_u421_procedures.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Procedure banishing every Machine LIGHT monster of my Graveyard and field (not without one); base ATK / DEF 500 x the number banished (1000 for two); its Special Summon sends all the other face-up monsters of the field to the Graveyard. Test: tools/test_s03_u421_procedures.js (Replay audit). No known deviation."
     }
   ],
   "restored_to_baseline": [

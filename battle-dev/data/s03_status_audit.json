@@ -12,16 +12,16 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 447,
+    "NOT_STARTED": 443,
     "PARTIAL": 10,
-    "TESTED": 3424
+    "TESTED": 3428
   },
   "delta": {
     "ENGINE_GAP": -148,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -860,
+    "NOT_STARTED": -864,
     "PARTIAL": -172,
-    "TESTED": 1375
+    "TESTED": 1379
   },
   "status_changes": [
     {
@@ -1789,6 +1789,12 @@
       "unit": "S03-U348"
     },
     {
+      "name": "サイバー・エルタニン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U421"
+    },
+    {
       "name": "サイバー・オーガ・2",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3089,6 +3095,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U254"
+    },
+    {
+      "name": "ネオス・ワイズマン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U421"
     },
     {
       "name": "ネオフレムベル・ガルーダ",
@@ -4397,6 +4409,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U149"
+    },
+    {
+      "name": "ヴァンパイアジェネシス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U421"
     },
     {
       "name": "ヴィクティム・カウンター",
@@ -6797,6 +6815,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U155"
+    },
+    {
+      "name": "異次元の一角戦士",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U421"
     },
     {
       "name": "異次元の狂獣",

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 468,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 447,
+    "NOT_STARTED": 443,
     "PARTIAL": 10,
-    "TESTED": 3424
+    "TESTED": 3428
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -118,9 +118,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1570,
     "sin": 5,
-    "unified": 1330
+    "unified": 1334
   },
-  "static_registration_name_count": 3434,
+  "static_registration_name_count": 3438,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24453,12 +24453,20 @@
       "subtype": null,
       "date": "2009-08-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZE_claude_s03_u421_procedures.js",
+          "line": 116
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u421_procedures.js"
+      ]
     },
     {
       "index": 1103,
@@ -42403,12 +42411,20 @@
       "subtype": null,
       "date": "2008-03-28",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 28,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZE_claude_s03_u421_procedures.js",
+          "line": 90
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u421_procedures.js"
+      ]
     },
     {
       "index": 1938,
@@ -62793,12 +62809,20 @@
       "subtype": null,
       "date": "2004-12-09",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZE_claude_s03_u421_procedures.js",
+          "line": 24
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u421_procedures.js"
+      ]
     },
     {
       "index": 2887,
@@ -89894,12 +89918,20 @@
       "subtype": null,
       "date": "2010-04-17",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZE_claude_s03_u421_procedures.js",
+          "line": 62
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u421_procedures.js"
+      ]
     },
     {
       "index": 4144,
