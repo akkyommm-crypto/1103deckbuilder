@@ -744,6 +744,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u450_pile_spells.js')],check=Tru
 subprocess.run(['node',str(ROOT/'tools/test_s03_u451_mixed_gap.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u452_grave_banish.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u453_gorgon_light.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u454_scope_unity.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

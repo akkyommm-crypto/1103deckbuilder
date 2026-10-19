@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 350,
+    "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3570
+    "TESTED": 3576
   },
   "delta": {
-    "ENGINE_GAP": -266,
+    "ENGINE_GAP": -272,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1521
+    "TESTED": 1527
   },
   "status_changes": [
     {
@@ -1877,6 +1877,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U428"
+    },
+    {
+      "name": "コザッキーの研究成果",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U454"
     },
     {
       "name": "コダロス",
@@ -5617,6 +5623,12 @@
       "unit": "S03-U427"
     },
     {
+      "name": "友情 YU－JYO",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U454"
+    },
+    {
       "name": "反撃の毒牙",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -5701,6 +5713,12 @@
       "unit": "S03-U144"
     },
     {
+      "name": "古代の遠眼鏡",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U454"
+    },
+    {
       "name": "召喚僧サモンプリースト",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5723,6 +5741,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U186"
+    },
+    {
+      "name": "同姓同名同盟条約",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U454"
     },
     {
       "name": "同族感染ウィルス",
@@ -6527,6 +6551,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U246"
+    },
+    {
+      "name": "成功確率0%",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U454"
     },
     {
       "name": "成金ゴブリン",
@@ -8783,6 +8813,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U344"
+    },
+    {
+      "name": "電磁シールド",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U454"
     },
     {
       "name": "霊魂の護送船",

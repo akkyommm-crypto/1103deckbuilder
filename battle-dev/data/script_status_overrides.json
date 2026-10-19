@@ -65,10 +65,6 @@
       "status": "GENERIC_OK",
       "reason": "Effectless Ritual Monster; card-specific behavior is fully described by the future generic Ritual Summon recipe/pipeline."
     },
-    "古代の遠眼鏡": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe private-information reveal UI for up to five ordered opponent Deck cards without changing their order."
-    },
     "天変地異": {
       "status": "ENGINE_GAP",
       "reason": "Needs a player Deck face-orientation model integrated with rendering, draws, searches, shuffles, serialization and replay digest."
@@ -84,10 +80,6 @@
     "終焉の地": {
       "status": "ENGINE_GAP",
       "reason": "Needs a first-class activate-Field-Spell-from-Deck operation that runs replacement, activation and resolution lifecycle correctly."
-    },
-    "コザッキーの研究成果": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe private Deck inspection and arbitrary ordering of the top three cards without exposing them to the opponent."
     },
     "闇の指名者": {
       "status": "ENGINE_GAP",
@@ -449,10 +441,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs source-aware effect-target redirection during Chain construction, restricted to one correct controller-owned field target and a legal opponent substitute."
     },
-    "成功確率0%": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs deterministic hidden opponent Extra Deck random selection of exactly two Fusion Monsters with journaled RNG and simultaneous Graveyard movement."
-    },
     "救出劇": {
       "status": "ENGINE_GAP",
       "reason": "Needs source-aware targeting detection for an Archetype monster, hand-return resolution, then a separate replay-safe resolution-time hand Special Summon choice."
@@ -549,10 +537,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs the Ritual pipeline's single-material full-Level substitution for WATER Ritual Monsters in addition to its hand discard search effect."
     },
-    "友情 YU－JYO": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe opponent handshake decision, mandatory Unity reveal override and deterministic half-total LP assignment including odd-total rounding rules."
-    },
     "古の森": {
       "status": "ENGINE_GAP",
       "reason": "Needs activation-time facedown reveal with Flip-effect suppression plus Battle-Phase-end destruction scheduling for every monster that attacked while the Field Spell remained active."
@@ -644,10 +628,6 @@
     "反撃準備": {
       "status": "ENGINE_GAP",
       "reason": "Needs attack-declaration coin-face declaration, deterministic toss, conditional target position change and alternate reflected-difference damage calculation."
-    },
-    "同姓同名同盟条約": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs canonical-identity grouping excluding Tokens, exact group-count mode selection and replay-safe one-target versus mass Spell/Trap destruction."
     },
     "墓場からの誘い": {
       "status": "ENGINE_GAP",
@@ -820,10 +800,6 @@
     "鉄壁の機皇兵": {
       "status": "ENGINE_GAP",
       "reason": "Needs authoritative Meklord Army metadata plus continuous source-specific effect negation and conditional battle-destruction immunity for face-up Attack Position members."
-    },
-    "電磁シールド": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs conditional battle-destruction immunity for face-up Defense Position Level-3-or-lower Thunder monsters and a central continuous self-destruction enforcement loop when any own Attack Position monster exists."
     },
     "霧の王": {
       "status": "ENGINE_GAP",

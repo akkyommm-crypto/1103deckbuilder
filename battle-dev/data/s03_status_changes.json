@@ -15327,6 +15327,66 @@
         "tools/test_s03_u453_gorgon_light.js"
       ],
       "evidence": "Exact script. Text (carddata). When a monster with ATK 1000 or less is summoned it is banished with every same-name card of the opponent's hand and Deck; a stronger monster does not trigger it. Test: tools/test_s03_u453_gorgon_light.js (Replay audit). ゴーゴンの眼: like every effect negation in the engine the activation of the negated monster is still offered, its effect is not applied."
+    },
+    {
+      "name": "同姓同名同盟条約",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U454",
+      "tests": [
+        "tools/test_s03_u454_scope_unity.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With 2 same-name face-up monsters one chosen opponent Spell/Trap is destroyed, with 3 all of them; not activatable with one or with different names. Test: tools/test_s03_u454_scope_unity.js (Replay audit). 古代の遠眼鏡 / コザッキーの研究成果 show the cards to the controller through the ChoiceRequest labels or candidates (no separate reveal log). 同姓同名同盟条約 uses the largest same-name group."
+    },
+    {
+      "name": "古代の遠眼鏡",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U454",
+      "tests": [
+        "tools/test_s03_u454_scope_unity.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The names of the top 5 cards of the opponent Deck are shown to the activator; the Deck is unchanged; not activatable with an empty opponent Deck. Test: tools/test_s03_u454_scope_unity.js (Replay audit). 古代の遠眼鏡 / コザッキーの研究成果 show the cards to the controller through the ChoiceRequest labels or candidates (no separate reveal log). 同姓同名同盟条約 uses the largest same-name group."
+    },
+    {
+      "name": "コザッキーの研究成果",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U454",
+      "tests": [
+        "tools/test_s03_u454_scope_unity.js"
+      ],
+      "evidence": "Exact script. Text (carddata). The top three cards of my Deck are put back in the order I choose; the card below stays; not activatable with an empty Deck. Test: tools/test_s03_u454_scope_unity.js (Replay audit). 古代の遠眼鏡 / コザッキーの研究成果 show the cards to the controller through the ChoiceRequest labels or candidates (no separate reveal log). 同姓同名同盟条約 uses the largest same-name group."
+    },
+    {
+      "name": "成功確率0%",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U454",
+      "tests": [
+        "tools/test_s03_u454_scope_unity.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Two random Fusion Monsters of the opponent Extra Deck are sent to the Graveyard. Test: tools/test_s03_u454_scope_unity.js (Replay audit). 古代の遠眼鏡 / コザッキーの研究成果 show the cards to the controller through the ChoiceRequest labels or candidates (no separate reveal log). 同姓同名同盟条約 uses the largest same-name group."
+    },
+    {
+      "name": "電磁シールド",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U454",
+      "tests": [
+        "tools/test_s03_u454_scope_unity.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Level 3 or lower Thunder monsters of mine in face-up Defense Position are not destroyed by battle (others are); the card is destroyed while a face-up Attack Position monster of mine exists. Test: tools/test_s03_u454_scope_unity.js (Replay audit). 古代の遠眼鏡 / コザッキーの研究成果 show the cards to the controller through the ChoiceRequest labels or candidates (no separate reveal log). 同姓同名同盟条約 uses the largest same-name group."
+    },
+    {
+      "name": "友情 YU－JYO",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U454",
+      "tests": [
+        "tools/test_s03_u454_scope_unity.js"
+      ],
+      "evidence": "Exact script. Text (carddata). If the opponent shakes hands both LP become half the total; if refused nothing happens; showing 結束 UNITY from the hand applies it without asking. Test: tools/test_s03_u454_scope_unity.js (Replay audit). 古代の遠眼鏡 / コザッキーの研究成果 show the cards to the controller through the ChoiceRequest labels or candidates (no separate reveal log). 同姓同名同盟条約 uses the largest same-name group."
     }
   ],
   "restored_to_baseline": [
