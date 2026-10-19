@@ -485,10 +485,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs retained tribute-material archetype provenance so the ignition effect exists only when this card was Tribute Summoned using an Invellz monster."
     },
-    "エア・サーキュレーター": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe exact-two hand selection and simultaneous Deck return plus a central destruction event that triggers the draw for every valid destruction source."
-    },
     "エーリアン・ドッグ": {
       "status": "ENGINE_GAP",
       "reason": "Needs an optional hand Special Summon response to another canonical Alien Normal Summon and a post-summon replay-safe opponent-monster A-Counter target."
@@ -580,10 +576,6 @@
     "氷結界の虎将 ライホウ": {
       "status": "ENGINE_GAP",
       "reason": "Needs a resolution-time private opponent discard decision for every opponent field-activated monster effect, with conditional negation of that exact Chain link."
-    },
-    "浅すぎた墓穴": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs one private Graveyard choice per player followed by simultaneous facedown Defense Position Special Summons and grouped summon-event handling."
     },
     "盗人の煙玉": {
       "status": "ENGINE_GAP",
@@ -745,10 +737,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs Gemini second-summon state mutation and an End Phase hand-return schedule linked to the selected monster."
     },
-    "ダーク・リペアラー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs private Deck-top inspection and replay-safe top-or-bottom choice without exposing hidden identity outside the controller."
-    },
     "ネコマネキング": {
       "status": "ENGINE_GAP",
       "reason": "Needs opponent-turn opponent-effect send-to-Grave provenance and an immediate serializable forced turn termination action."
@@ -820,10 +808,6 @@
     "砂塵の結界": {
       "status": "ENGINE_GAP",
       "reason": "Needs centrally enforced immunity to opponent Spell effects for all face-up Normal Monsters plus a serializable second-own-Standby self-destruction counter."
-    },
-    "赤鬼": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs activation-time selection of any number of hand cards as a send-to-Grave cost and activation-time selection of exactly the same number of field targets; resolution-time P1 would be the wrong timing."
     },
     "進化の奇跡": {
       "status": "ENGINE_GAP",
@@ -1436,10 +1420,6 @@
     "暗黒界の導師 セルリ": {
       "status": "ENGINE_GAP",
       "reason": "discard provenance / opponent-field summon / effect-source provenance: discard-by-effect and Dark World-origin special summon must be distinguished."
-    },
-    "暗黒界の魔神 レイン": {
-      "status": "ENGINE_GAP",
-      "reason": "opponent-effect discard provenance / activation-time mode: revival and destroy-all-monsters-or-S/T choice depend on exact opposing source."
     },
     "武闘円舞": {
       "status": "ENGINE_GAP",

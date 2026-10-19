@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 362,
+    "ENGINE_GAP": 357,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3558
+    "TESTED": 3563
   },
   "delta": {
-    "ENGINE_GAP": -254,
+    "ENGINE_GAP": -259,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1509
+    "TESTED": 1514
   },
   "status_changes": [
     {
@@ -1145,6 +1145,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U209"
+    },
+    {
+      "name": "エア・サーキュレーター",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U451"
     },
     {
       "name": "エクシーズエフェクト",
@@ -2801,6 +2807,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U130"
+    },
+    {
+      "name": "ダーク・リペアラー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U451"
     },
     {
       "name": "ダーク・ヴァージャー",
@@ -6709,6 +6721,12 @@
       "unit": "S03-U112"
     },
     {
+      "name": "暗黒界の魔神 レイン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U451"
+    },
+    {
       "name": "暗黒界の龍神 グラファ",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -7199,6 +7217,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U188"
+    },
+    {
+      "name": "浅すぎた墓穴",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U451"
     },
     {
       "name": "海底に潜む深海竜",
@@ -8291,6 +8315,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U371"
+    },
+    {
+      "name": "赤鬼",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U451"
     },
     {
       "name": "超伝導恐獣",

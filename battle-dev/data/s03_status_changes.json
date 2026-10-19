@@ -15207,6 +15207,56 @@
         "tools/test_s03_u450_pile_spells.js"
       ],
       "evidence": "Exact script. Text (carddata). 800 LP paid; the top 4 cards are revealed and only Level 3 or lower Normal Monsters are Special Summoned, the rest return to the Deck (shuffled); not activatable with an empty Deck. Test: tools/test_s03_u450_pile_spells.js (Replay audit). ブレンD chooses its two targets at the activation (targets) and the opponent chooses which is destroyed at the resolution."
+    },
+    {
+      "name": "エア・サーキュレーター",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U451",
+      "tests": [
+        "tools/test_s03_u451_mixed_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Summon: two hand cards back to the Deck, shuffle, draw 2 (not used with fewer than 2 hand cards); destroyed by an effect or by battle: draw 1. Test: tools/test_s03_u451_mixed_gap.js (Replay audit). 赤鬼 sends the hand cards and chooses the field cards at the resolution (the 「事で」 wording is effect processing, not a cost). 浅すぎた墓穴 is activatable when at least one player has a monster in the Graveyard."
+    },
+    {
+      "name": "ダーク・リペアラー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U451",
+      "tests": [
+        "tools/test_s03_u451_mixed_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Sent from my field to the Graveyard (destroyed): the top card of the Deck is looked at and stays on top or goes to the bottom; sent from the hand: nothing. Test: tools/test_s03_u451_mixed_gap.js (Replay audit). 赤鬼 sends the hand cards and chooses the field cards at the resolution (the 「事で」 wording is effect processing, not a cost). 浅すぎた墓穴 is activatable when at least one player has a monster in the Graveyard."
+    },
+    {
+      "name": "浅すぎた墓穴",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U451",
+      "tests": [
+        "tools/test_s03_u451_mixed_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Both players choose a monster of their own Graveyard (the activator first) and Set it face-down Defense on their own field; a player without a monster sets nothing; not activatable with no monster in either Graveyard. Test: tools/test_s03_u451_mixed_gap.js (Replay audit). 赤鬼 sends the hand cards and chooses the field cards at the resolution (the 「事で」 wording is effect processing, not a cost). 浅すぎた墓穴 is activatable when at least one player has a monster in the Graveyard."
+    },
+    {
+      "name": "暗黒界の魔神 レイン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U451",
+      "tests": [
+        "tools/test_s03_u451_mixed_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Discarded from the hand by the OPPONENT's effect: Special Summoned from the Graveyard, then all opponent monsters or all opponent Spell & Trap Cards are destroyed (chosen); discarded by my own effect: nothing. Test: tools/test_s03_u451_mixed_gap.js (Replay audit). 赤鬼 sends the hand cards and chooses the field cards at the resolution (the 「事で」 wording is effect processing, not a cost). 浅すぎた墓穴 is activatable when at least one player has a monster in the Graveyard."
+    },
+    {
+      "name": "赤鬼",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U451",
+      "tests": [
+        "tools/test_s03_u451_mixed_gap.js"
+      ],
+      "evidence": "Exact script. Text (carddata). On its Normal Summon the chosen number of hand cards go to the Graveyard and the same number of field cards (itself included) return to their owners' hands; sending none returns none. Test: tools/test_s03_u451_mixed_gap.js (Replay audit). 赤鬼 sends the hand cards and chooses the field cards at the resolution (the 「事で」 wording is effect processing, not a cost). 浅すぎた墓穴 is activatable when at least one player has a monster in the Graveyard."
     }
   ],
   "restored_to_baseline": [

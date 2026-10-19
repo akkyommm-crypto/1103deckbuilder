@@ -1771,6 +1771,9 @@
   "path": "cards/HZZZZZZZZZZZG_claude_s03_u450_pile_spells.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZH_claude_s03_u451_mixed_gap.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
