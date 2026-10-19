@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 357,
+    "ENGINE_GAP": 350,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3563
+    "TESTED": 3570
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1626,
+    "legacy": 1633,
     "sin": 5,
     "unified": 1409
   },
-  "static_registration_name_count": 3572,
+  "static_registration_name_count": 3579,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -23735,12 +23735,19 @@
       "subtype": "",
       "date": "2004-05-27",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs turn-duration central negation of every Defense Position monster's effects with immediate updates when battle position changes.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZJ_claude_s03_u453_gorgon_light.js",
+          "line": 14
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u453_gorgon_light.js",
         "tools\\test_v730_batch25.js"
       ]
     },
@@ -26538,12 +26545,19 @@
       "subtype": "",
       "date": "2005-05-26",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation LP cost / bulk zone operation: paying 1000 LP then atomically banishing all opposing Machine monsters from field and grave needs a reusable filtered multi-zone operation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZI_claude_s03_u452_grave_banish.js",
+          "line": 31
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u452_grave_banish.js",
         "tools\\test_v900_batch41.js"
       ]
     },
@@ -39942,12 +39956,19 @@
       "subtype": "",
       "date": "2006-08-10",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs control-transfer provenance identifying an own monster transferred specifically by an opponent card effect, plus retained current ATK and destruction-result handling before effect damage.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZI_claude_s03_u452_grave_banish.js",
+          "line": 79
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u452_grave_banish.js",
         "tools\\test_v820_batch33.js"
       ]
     },
@@ -72664,12 +72685,19 @@
       "subtype": "",
       "date": "1999-05-27",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation-time one-or-two target selection: exact cardinality choice over opponent grave monsters must be serializable and committed before resolution.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZI_claude_s03_u452_grave_banish.js",
+          "line": 19
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u452_grave_banish.js",
         "tools\\test_v920_batch43.js"
       ]
     },
@@ -74469,12 +74497,19 @@
       "subtype": "",
       "date": "2002-12-12",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "activation-time exact-three banish targets: legality requires at least five banished monsters and exactly three committed owner-routed returns.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZI_claude_s03_u452_grave_banish.js",
+          "line": 45
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u452_grave_banish.js",
         "tools\\test_v920_batch43.js"
       ]
     },
@@ -98309,12 +98344,19 @@
       "subtype": "",
       "date": "2004-06-01",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "hidden information / activation-time mode and selection: opponent hand inspection and card choice cannot be represented by the current public-information Choice flow.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZJ_claude_s03_u453_gorgon_light.js",
+          "line": 46
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u453_gorgon_light.js",
         "tools\\test_v900_batch41.js"
       ]
     },
@@ -100596,12 +100638,19 @@
       "subtype": "",
       "date": "2003-04-24",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "summon event / hidden information / atomic deck operation: must banish the summoned low-ATK monster and every same-name copy from opponent hand and deck atomically.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZJ_claude_s03_u453_gorgon_light.js",
+          "line": 88
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u453_gorgon_light.js",
         "tools\\test_v900_batch41.js"
       ]
     },

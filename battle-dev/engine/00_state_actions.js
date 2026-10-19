@@ -3244,7 +3244,7 @@ function effectNegated(card){
   /* S03-U118: 無効化されている罠カード（トラップ・スタン／王宮のお触れ／サイコ・ショッカー）の negateEffect は数えない。
      continuousSources() の魔法＆罠・フィールド部分がその判定済みの集合（collectSources を直接見ると素通りする）。 */
   const stSources = (typeof trapSourcesFilterS03==='function')
-    ? continuousSources().filter(x=>x.zone==='sz'||x.zone==='field')
+    ? continuousSources().filter(x=>x.zone==='sz'||x.zone==='field'||x.zone==='linger')   /* S03-U453: a lingering source's negateEffect (ゴーゴンの眼) */
     : collectSources(['sz','field'], false);
   if(effectNegatedBy(stSources, card, loc)) return true;
   /* S03-U432: ゴーレム — a face-up MONSTER whose name was declared with declareNegateFromMzS03 negates other monsters through its continuous.negateEffect (the sz / field layer above never saw monster sources) */

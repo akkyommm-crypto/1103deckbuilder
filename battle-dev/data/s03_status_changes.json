@@ -15257,6 +15257,76 @@
         "tools/test_s03_u451_mixed_gap.js"
       ],
       "evidence": "Exact script. Text (carddata). On its Normal Summon the chosen number of hand cards go to the Graveyard and the same number of field cards (itself included) return to their owners' hands; sending none returns none. Test: tools/test_s03_u451_mixed_gap.js (Replay audit). 赤鬼 sends the hand cards and chooses the field cards at the resolution (the 「事で」 wording is effect processing, not a cost). 浅すぎた墓穴 is activatable when at least one player has a monster in the Graveyard."
+    },
+    {
+      "name": "システム・ダウン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U452",
+      "tests": [
+        "tools/test_s03_u452_grave_banish.js"
+      ],
+      "evidence": "Exact script. Text (carddata). 1000 LP paid; the face-up Machine monsters of the opponent's field and the Machines of the opponent's Graveyard are banished (face-down, other races and my own cards stay); not activatable at 1000 LP or less. Test: tools/test_s03_u452_grave_banish.js (Replay audit). 墓掘りグール chooses its one or two monsters at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "トロイボム",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U452",
+      "tests": [
+        "tools/test_s03_u452_grave_banish.js"
+      ],
+      "evidence": "Exact script. Text (carddata). When my monster's control moves to the opponent by an opponent's card effect (心変わり), it is destroyed and the opponent takes its ATK as damage; not activatable without the control change. Test: tools/test_s03_u452_grave_banish.js (Replay audit). 墓掘りグール chooses its one or two monsters at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "墓掘りグール",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U452",
+      "tests": [
+        "tools/test_s03_u452_grave_banish.js"
+      ],
+      "evidence": "Exact script. Text (carddata). One or two chosen monsters of the opponent Graveyard are banished (Spells stay); not activatable without a monster in the opponent Graveyard. Test: tools/test_s03_u452_grave_banish.js (Replay audit). 墓掘りグール chooses its one or two monsters at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "奇跡の発掘",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U452",
+      "tests": [
+        "tools/test_s03_u452_grave_banish.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With 5 or more banished monsters of mine, the three chosen targets return to the Graveyard; Spells do not count; not activatable with 4. Test: tools/test_s03_u452_grave_banish.js (Replay audit). 墓掘りグール chooses its one or two monsters at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "ゴーゴンの眼",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U453",
+      "tests": [
+        "tools/test_s03_u453_gorgon_light.js"
+      ],
+      "evidence": "Exact script. Text (carddata). This turn the effects of Defense Position monsters of both fields are negated (an Attack Position monster is not; the next turn nothing is); a negated ignition effect changes nothing. Test: tools/test_s03_u453_gorgon_light.js (Replay audit). ゴーゴンの眼: like every effect negation in the engine the activation of the negated monster is still offered, its effect is not applied."
+    },
+    {
+      "name": "裁きの光",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U453",
+      "tests": [
+        "tools/test_s03_u453_gorgon_light.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With 天空の聖域 on the field, a LIGHT monster of the hand is discarded as the cost; mode 1 sends a chosen card of the opponent's hand to the Graveyard, mode 2 a chosen opponent field card (sent, not destroyed); not activatable without 天空の聖域 or without a LIGHT monster in the hand. Test: tools/test_s03_u453_gorgon_light.js (Replay audit). ゴーゴンの眼: like every effect negation in the engine the activation of the negated monster is still offered, its effect is not applied."
+    },
+    {
+      "name": "連鎖除外",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U453",
+      "tests": [
+        "tools/test_s03_u453_gorgon_light.js"
+      ],
+      "evidence": "Exact script. Text (carddata). When a monster with ATK 1000 or less is summoned it is banished with every same-name card of the opponent's hand and Deck; a stronger monster does not trigger it. Test: tools/test_s03_u453_gorgon_light.js (Replay audit). ゴーゴンの眼: like every effect negation in the engine the activation of the negated monster is still offered, its effect is not applied."
     }
   ],
   "restored_to_baseline": [

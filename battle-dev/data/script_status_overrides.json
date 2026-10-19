@@ -629,10 +629,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a replay-safe Trap-Monster primitive occupying both Trap and Monster state with copied canonical name and Level while retaining printed Race, Attribute and zero stats."
     },
-    "ゴーゴンの眼": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs turn-duration central negation of every Defense Position monster's effects with immediate updates when battle position changes."
-    },
     "リミッター・ブレイク": {
       "status": "ENGINE_GAP",
       "reason": "Needs a zone-agnostic sent-to-Grave event plus replay-safe exact canonical Speed Warrior selection across hand, Deck and Graveyard for Special Summon."
@@ -848,10 +844,6 @@
     "スネーク・チョーク": {
       "status": "ENGINE_GAP",
       "reason": "Needs central source-specific conditional battle-destruction immunity for opponent face-up Attack Position monsters whose current ATK is zero only while they battle a canonical Reptilianne monster."
-    },
-    "トロイボム": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs control-transfer provenance identifying an own monster transferred specifically by an opponent card effect, plus retained current ATK and destruction-result handling before effect damage."
     },
     "フェイク・フェザー": {
       "status": "ENGINE_GAP",
@@ -1257,14 +1249,6 @@
       "status": "ENGINE_GAP",
       "reason": "activation cost selection / attack-declare response / named predicate search: the Crystal Beast S/T cost must be committed at activation and the Ultimate Crystal God search must use authoritative membership."
     },
-    "裁きの光": {
-      "status": "ENGINE_GAP",
-      "reason": "hidden information / activation-time mode and selection: opponent hand inspection and card choice cannot be represented by the current public-information Choice flow."
-    },
-    "連鎖除外": {
-      "status": "ENGINE_GAP",
-      "reason": "summon event / hidden information / atomic deck operation: must banish the summoned low-ATK monster and every same-name copy from opponent hand and deck atomically."
-    },
     "銀幕の鏡壁": {
       "status": "ENGINE_GAP",
       "reason": "ContinuousRule / standby maintenance choice: opponent attacking-monster ATK halving and pay-2000-or-destroy processing need a reusable continuous rule and maintenance-cost window."
@@ -1328,10 +1312,6 @@
     "ゴースト王－パンプキング－": {
       "status": "ENGINE_GAP",
       "reason": "ContinuousRule / bounded recurring standby schedule: conditional stats and exactly four cumulative standby increments require live dependency and bounded counter lifetime."
-    },
-    "システム・ダウン": {
-      "status": "ENGINE_GAP",
-      "reason": "activation LP cost / bulk zone operation: paying 1000 LP then atomically banishing all opposing Machine monsters from field and grave needs a reusable filtered multi-zone operation."
     },
     "ジェルエンデュオ": {
       "status": "ENGINE_GAP",
@@ -1405,17 +1385,9 @@
       "status": "ENGINE_GAP",
       "reason": "continuous Spell ignition / source-zone choice / linked self-destruction: hand-or-grave Cloudian summon and grave-origin destruction of this card need provenance."
     },
-    "墓掘りグール": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time one-or-two target selection: exact cardinality choice over opponent grave monsters must be serializable and committed before resolution."
-    },
     "大進化薬": {
       "status": "ENGINE_GAP",
       "reason": "activation tribute cost / ContinuousRule / opponent-turn scheduler: tribute-free high-Level Dinosaur summons persist through the third opponent End Phase."
-    },
-    "奇跡の発掘": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time exact-three banish targets: legality requires at least five banished monsters and exactly three committed owner-routed returns."
     },
     "暗黒界の導師 セルリ": {
       "status": "ENGINE_GAP",

@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 357,
+    "ENGINE_GAP": 350,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3563
+    "TESTED": 3570
   },
   "delta": {
-    "ENGINE_GAP": -259,
+    "ENGINE_GAP": -266,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1514
+    "TESTED": 1521
   },
   "status_changes": [
     {
@@ -1951,6 +1951,12 @@
       "unit": "S03-U64"
     },
     {
+      "name": "ゴーゴンの眼",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U453"
+    },
+    {
       "name": "ゴーレム",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -2105,6 +2111,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U266"
+    },
+    {
+      "name": "システム・ダウン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U452"
     },
     {
       "name": "シャインエルフ",
@@ -3185,6 +3197,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U186"
+    },
+    {
+      "name": "トロイボム",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U452"
     },
     {
       "name": "トーチ・ゴーレム",
@@ -5941,6 +5959,12 @@
       "unit": "S03-U327"
     },
     {
+      "name": "墓掘りグール",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U452"
+    },
+    {
       "name": "墓穴の道連れ",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -6065,6 +6089,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U410"
+    },
+    {
+      "name": "奇跡の発掘",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U452"
     },
     {
       "name": "奇跡の蘇生",
@@ -8245,6 +8275,12 @@
       "unit": "S03-U273"
     },
     {
+      "name": "裁きの光",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U453"
+    },
+    {
       "name": "裁きの龍",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -8453,6 +8489,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U354"
+    },
+    {
+      "name": "連鎖除外",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U453"
     },
     {
       "name": "進化する翼",
