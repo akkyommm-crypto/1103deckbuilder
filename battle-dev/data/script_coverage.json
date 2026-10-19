@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 367,
+    "ENGINE_GAP": 362,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3553
+    "TESTED": 3558
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1619,
+    "legacy": 1624,
     "sin": 5,
     "unified": 1406
   },
-  "static_registration_name_count": 3562,
+  "static_registration_name_count": 3567,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -44918,12 +44918,19 @@
       "subtype": "",
       "date": "2001-11-29",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs blocking private arbitrary hand/field selections by each affected player until exactly five total cards remain, with simultaneous Graveyard movement.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZG_claude_s03_u450_pile_spells.js",
+          "line": 118
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u450_pile_spells.js",
         "tools\\test_v730_batch25.js"
       ]
     },
@@ -50208,12 +50215,19 @@
       "subtype": "",
       "date": "2008-11-15",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative Morphtronic identity for the activation condition, exact two-card opponent-field selection and a replay-safe opponent choice of which selected card is destroyed.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 3,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZG_claude_s03_u450_pile_spells.js",
+          "line": 81
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u450_pile_spells.js",
         "tools\\test_v680_batch20.js"
       ]
     },
@@ -63833,12 +63847,19 @@
       "subtype": "",
       "date": "2007-02-15",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative Volcanic archetype metadata plus replay-safe selection of one to three Graveyard monsters and simultaneous Deck return and shuffle.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZG_claude_s03_u450_pile_spells.js",
+          "line": 44
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u450_pile_spells.js",
         "tools\\test_v740_batch26.js"
       ]
     },
@@ -84150,12 +84171,19 @@
       "subtype": "",
       "date": "2004-03-01",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs both-player simultaneous mass Special Summon from banishment, per-player position choices, zone-capacity truncation and one grouped summon event.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZG_claude_s03_u450_pile_spells.js",
+          "line": 55
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u450_pile_spells.js",
         "tools\\test_v720_batch24.js"
       ]
     },
@@ -106195,12 +106223,19 @@
       "subtype": "",
       "date": "2004-02-26",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe top-four reveal transaction, selective simultaneous summons of eligible Normal Monsters and deterministic shuffle-back of the remainder.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZG_claude_s03_u450_pile_spells.js",
+          "line": 17
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u450_pile_spells.js",
         "tools\\test_v610_batch13.js"
       ]
     },

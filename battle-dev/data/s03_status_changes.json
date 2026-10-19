@@ -15157,6 +15157,56 @@
         "tools/test_s03_u448_search_spells.js"
       ],
       "evidence": "Exact script. Text (carddata). With 3 face-up 六武衆 one of three modes: all face-up monsters / all face-up Spell & Trap Cards / all Set Spell & Trap Cards of the opponent are destroyed (each mode tested, the others stay); not activatable with only two 六武衆. Test: tools/test_s03_u448_search_spells.js (Replay audit). サイコパス and リゾネーター・エンジン choose their targets at the resolution (ChoiceRequest) instead of as activation targets."
+    },
+    {
+      "name": "バブル・クラッシュ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U450",
+      "tests": [
+        "tools/test_s03_u450_pile_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Each player with 6 or more cards in hand and field chooses cards to send to the Graveyard until 5 remain; not activatable when nobody has 6. Test: tools/test_s03_u450_pile_spells.js (Replay audit). ブレンD chooses its two targets at the activation (targets) and the opponent chooses which is destroyed at the resolution."
+    },
+    {
+      "name": "ブレンD",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U450",
+      "tests": [
+        "tools/test_s03_u450_pile_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). With 2 face-up 「D」 (Morphtronic) monsters two opponent cards are chosen and the opponent picks the one destroyed (the other stays); not activatable with one 「D」. Test: tools/test_s03_u450_pile_spells.js (Replay audit). ブレンD chooses its two targets at the activation (targets) and the opponent chooses which is destroyed at the resolution."
+    },
+    {
+      "name": "ヴォルカニック・チャージ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U450",
+      "tests": [
+        "tools/test_s03_u450_pile_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Up to 3 「ヴォルカニック」 monsters of my Graveyard return to the Deck (others stay); not activatable without one. Test: tools/test_s03_u450_pile_spells.js (Replay audit). ブレンD chooses its two targets at the activation (targets) and the opponent chooses which is destroyed at the resolution."
+    },
+    {
+      "name": "次元融合",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U450",
+      "tests": [
+        "tools/test_s03_u450_pile_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). 2000 LP paid; the banished monsters of both players are Special Summoned to their own fields; not activatable without a banished monster. Test: tools/test_s03_u450_pile_spells.js (Replay audit). ブレンD chooses its two targets at the activation (targets) and the opponent chooses which is destroyed at the resolution."
+    },
+    {
+      "name": "魔の試着部屋",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U450",
+      "tests": [
+        "tools/test_s03_u450_pile_spells.js"
+      ],
+      "evidence": "Exact script. Text (carddata). 800 LP paid; the top 4 cards are revealed and only Level 3 or lower Normal Monsters are Special Summoned, the rest return to the Deck (shuffled); not activatable with an empty Deck. Test: tools/test_s03_u450_pile_spells.js (Replay audit). ブレンD chooses its two targets at the activation (targets) and the opponent chooses which is destroyed at the resolution."
     }
   ],
   "restored_to_baseline": [

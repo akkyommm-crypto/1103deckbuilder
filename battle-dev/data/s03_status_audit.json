@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 367,
+    "ENGINE_GAP": 362,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 419,
     "PARTIAL": 10,
-    "TESTED": 3553
+    "TESTED": 3558
   },
   "delta": {
-    "ENGINE_GAP": -249,
+    "ENGINE_GAP": -254,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -888,
     "PARTIAL": -172,
-    "TESTED": 1504
+    "TESTED": 1509
   },
   "status_changes": [
     {
@@ -3571,6 +3571,12 @@
       "unit": "S03-U202"
     },
     {
+      "name": "バブル・クラッシュ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U450"
+    },
+    {
       "name": "バブル・シャッフル",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -3905,6 +3911,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U432"
+    },
+    {
+      "name": "ブレンD",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U450"
     },
     {
       "name": "ブロークン・ブロッカー",
@@ -4955,6 +4967,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U420"
+    },
+    {
+      "name": "ヴォルカニック・チャージ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U450"
     },
     {
       "name": "ヴォルカニック・ハンマー",
@@ -6925,6 +6943,12 @@
       "unit": "S03-U40"
     },
     {
+      "name": "次元融合",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U450"
+    },
+    {
       "name": "次元要塞兵器",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -8813,6 +8837,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U446"
+    },
+    {
+      "name": "魔の試着部屋",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U450"
     },
     {
       "name": "魔人 ダーク・バルター",
