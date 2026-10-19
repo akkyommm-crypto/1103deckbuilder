@@ -443,10 +443,28 @@ function applyActionBodyV31(gs, a){
         sourceUid:(a.sourceUid!=null?a.sourceUid:null),
         byPlayer:((a.byPlayer===0||a.byPlayer===1)?a.byPlayer:null),
         chainLinkOneS03:(a.chainLinkOneS03===true)});   /* S03-U50 */
-      if(TP.lp===0 && gs.loser==null){
-        gs.loser = who ?? gs.activePlayer;
-        gs.duelEndedReason = 'lp0';
-        logIt(gs, `<b>${nameOf(gs.loser)} のライフが0 — 敗北</b>`);
+      /* S03-U449 (audit): 「お互いにダメージを受ける」 (破壊輪, 2011 text) — the two LP Actions of one simultaneous damage are bracketed by
+         simulHoldS03 (the first: a player at 0 LP is only remembered in gs.lpHoldS03) and simulFinalS03 (the second decides): both at 0 → a draw,
+         one → that player loses. An Action without the flags behaves exactly as before. */
+      const zeroS03 = TP.lp===0;
+      if(a.simulHoldS03===true){
+        if(zeroS03 && gs.loser==null && gs.lpHoldS03==null) gs.lpHoldS03 = who;
+      }else{
+        const heldS03 = gs.lpHoldS03; if(heldS03!=null) delete gs.lpHoldS03;
+        if(gs.loser==null){
+          if(zeroS03 && heldS03!=null && heldS03!==who){
+            gs.loser = -1; gs.duelEndedReason = 'draw';
+            logIt(gs, `<b>両者のライフが同時に0 — 引き分け</b>`);
+          }else if(zeroS03){
+            gs.loser = who ?? gs.activePlayer;
+            gs.duelEndedReason = 'lp0';
+            logIt(gs, `<b>${nameOf(gs.loser)} のライフが0 — 敗北</b>`);
+          }else if(heldS03!=null){
+            gs.loser = heldS03;
+            gs.duelEndedReason = 'lp0';
+            logIt(gs, `<b>${nameOf(gs.loser)} のライフが0 — 敗北</b>`);
+          }
+        }
       }
       break;
     }

@@ -167,12 +167,13 @@ function quake(){gameState.activePlayer=1;const e=mk('地割れ',1);gameState.pl
 { fresh();const tr=setTrap(CYB,0),cd=mon('サイバー・ドラゴン',0),f=mon('青眼の白龍',1);gameState.players[0].sz=[tr];gameState.players[0].mz=[cd];gameState.players[1].mz=[f];
   gameState.activePlayer=1;gameState.phase='battle';baselineA();
   foeAttack(f,0);const ok1=toPoint('attackDeclare');const off=ok1&&offered(tr);if(off){PREFER=[uid(cd),uid(f)];pointActivateV27(0,'sz',0);}drive();PREFER=[];
-  ok('サイバネティック・ヒドゥン・テクノロジー: at the opponent attack declaration — my サイバー・ドラゴン was sent to the Graveyard (cost) and the attacker destroyed',off&&z(cd)==='grave'&&z(f)==='grave',JSON.stringify([off,z(cd),z(f)]));
+  /* S03-U449 (ChatGPT audit): changed expectation. The old assertion treated the card as a Normal Trap (cost + destruction on the first activation); it is a Continuous Trap - the activation from the Set position only places it face-up (2011 wiki: the effect is activated at each attack declaration while it is face-up). The full effect flow is tested in test_s03_u449_audit_fixes.js. */
+  ok('サイバネティック・ヒドゥン・テクノロジー: at the opponent attack declaration the Set Continuous Trap is activated as a card (stays face-up); nothing is paid and the attacker is not destroyed (the attack goes on and the Cyber Dragon, the attack target, is destroyed by battle instead)',off&&z(tr)==='sz'&&C(tr).face==='up'&&z(cd)==='grave'&&z(f)==='mz',JSON.stringify([off,z(tr),C(tr)&&C(tr).face,z(cd),z(f)]));
   audit('サイバネ 1'); }
-{ fresh();const tr=setTrap(CYB,0),w=mon('ワイト',0),f=mon('青眼の白龍',1);gameState.players[0].sz=[tr];gameState.players[0].mz=[w];gameState.players[1].mz=[f];
+{ fresh();const tr=mk(CYB,0,'up'),w=mon('ワイト',0),f=mon('青眼の白龍',1);gameState.players[0].sz=[tr];gameState.players[0].mz=[w];gameState.players[1].mz=[f];
   gameState.activePlayer=1;gameState.phase='battle';baselineA();
   foeAttack(f,0);const ok1=toPoint('attackDeclare');
-  ok('サイバネティック・ヒドゥン・テクノロジー negative: no サイバー・ドラゴン on my field → not offered',!(ok1&&offered(tr)),String(ok1&&offered(tr))); }
+  /* S03-U449: the trap is face-up here - a Set one is always offered for its card activation (no cost) */ ok('サイバネティック・ヒドゥン・テクノロジー negative: face-up, no サイバー・ドラゴン on my field → the effect is not offered',!(ok1&&offered(tr)),String(ok1&&offered(tr))); }
 
 /* ===== 皆既日蝕の書 ===== */
 { fresh();const sp=mk(ECL,0),a=mon('ワイト',0),b=mon('ブラック・マジシャン',1),c=mk('ワイト',1,'down','def');c.setTurn=3;gameState.players[0].hand=[sp];gameState.players[0].mz=[a];gameState.players[1].mz=[b,c];baselineA();

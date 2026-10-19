@@ -67,7 +67,8 @@ function legal(c,zone,p){return strictSummonProcedureLegality?null:null;}
   const off=respond(1,ren);
   ok('連鎖爆撃: offered as chain link 2 (the opponent set it)',off===true&&gameState.chain.length>=2,JSON.stringify({off,len:gameState.chain.length}));
   drive();
-  ok('連鎖爆撃: 1 stacked link x 400 = 400 damage to the chain starter',lp(0)===l0-400&&lp(1)===l1,JSON.stringify({d0:l0-lp(0),d1:l1-lp(1)}));
+  /* S03-U449 (ChatGPT audit): changed expectation 400 → 800. 「発動時に積まれているチェーンの数」 includes the card itself (yugioh-wiki FAQ, backup 2011-03-28: チェーンブロック3で発動 → 1200 = 3x400), so as chain link 2 it deals 2 x 400. */
+  ok('連鎖爆撃: as chain link 2 (itself included) 2 x 400 = 800 damage to the chain starter',lp(0)===l0-800&&lp(1)===l1,JSON.stringify({d0:l0-lp(0),d1:l1-lp(1)}));
   ok('連鎖爆撃: サイクロン still resolved (target destroyed)',pz(dm)==='grave',pz(dm));
   audit('連鎖爆撃 1'); }
 

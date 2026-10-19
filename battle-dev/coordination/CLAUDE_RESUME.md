@@ -141,7 +141,8 @@
 - Gate after U445 (commit f4ae1dc, pushed): 21720 PASS, FAIL 0; coverage TESTED 3537 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 383.
 - Gate after U446 (commit 78ecf95, pushed): 21735 PASS, FAIL 0; coverage TESTED 3543 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 377.
 - Gate after U447 (commit 50e8d73, pushed): 21754 PASS, FAIL 0; coverage TESTED 3548 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 372.
-- Gate after U448 (expected): 21771 PASS = 21754 + 17; coverage TESTED 3553 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 367.
+- Gate after U448 (commit 80ba808, pushed): 21771 PASS, FAIL 0; coverage TESTED 3553 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 367.
+- Gate after U449 (expected): 21820 PASS = 21771 + 49; coverage unchanged (TESTED 3553 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 367). U449 = ChatGPT independent audit fixes (破壊輪 2011 text, 連鎖爆撃 count, サイバネ Continuous Trap; 皆既日蝕の書 verified, no change); see docs/S03_U449_REPORT.md. The unit loop resumes at U450 (drafts: 魔の試着部屋, ヴォルカニック・チャージ, 次元融合, ブレンD, バブル・クラッシュ).
 - DISK TIP: each gate leaves ~5.4 MB `tmp*.js` files in %TEMP% (about 40 per gate); delete the ones of 5–6 MB after every gate or C: fills up.
 - DISK: C: hit 0 bytes free on 2026-10-13. 38.7 GB is an old session task-output folder (`%TEMP%claudeC--Users-81806-OneDrive-…a897e0c6…	asks`, 2026-10-10) — NOT deleted, the user decides. Gate runs leave ~7 MB each in %TEMP% (gate log, tmp*.js). Workflow notes: `finish-work.ps1` needs `git checkout -- battle-dev/dist/battle.html` first if `dist` was rebuilt by hand; a card added to a hand after `baselineA()` breaks the Replay audit; unified Equip Spells are offered through `getLegalHandActions`.
 - OPEN ENGINE ITEM (needs design, Opus): 「cannot be targeted」 — a central filter on target selection. Consumers (9): ヴァイロン・セグメント, ヴァイロン・エプシロン, オベリスクの巨神兵, ジュラック・タイタン, ターボ・ウォリアー, 救世の儀式, 機皇城, 氷結界の御庭番.

@@ -7,7 +7,7 @@
 
    Notes
    - 「チェーンN以降」 = this card would be link N or later: the chain already holds N-1 or more links when it is activated (gameState.chain.length >= N-1). 「同一チェーン上に複数回同名カードの効果が発動している」 = any name appears twice among the links (gameState.chain[].name).
-   - 連鎖爆撃: the damage counts the links stacked when it was activated, so the count is taken at activation (cost step) and stored on the card. */
+   - 連鎖爆撃: the damage counts the links stacked when it was activated INCLUDING the card itself (S03-U449 fix: it counted only the links below it), so the count (stacked links + 1) is taken at activation (cost step) and stored on the card. */
 
 function u354ChainOk(ctx, n){
   const ch = gameState.chain || [];
@@ -21,7 +21,8 @@ function u354ChainOk(ctx, n){
 defineScript('連鎖爆撃', {
   type:'spell', priority:2, quickEffect:true,
   condition(ctx){ return u354ChainOk(ctx, 2); },
-  cost(ctx, done){ const h = locateCardAnyV4(ctx.card); if(h) API.setCardFlag(h, 'u354Links', (gameState.chain||[]).length, '連鎖爆撃', {silent:true}); done(true); },
+  /* S03-U449 (audit): 「発動時に積まれているチェーンの数」 includes this card itself (yugioh-wiki FAQ, backup 2011-03-28: チェーンブロック3で発動 → 1200 = 3x400); the cost step runs before the card is added, so the stacked links + 1 */
+  cost(ctx, done){ const h = locateCardAnyV4(ctx.card); if(h) API.setCardFlag(h, 'u354Links', (gameState.chain||[]).length + 1, '連鎖爆撃', {silent:true}); done(true); },
   resolve(ctx){ const n = Number(ctx.card.u354Links)||0; if(n>0) API.damageLP(ctx.opponent, n*400, '連鎖爆撃'); },
   afterResolve(){}
 });

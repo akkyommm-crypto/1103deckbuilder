@@ -1078,11 +1078,12 @@ const API = {
   /* System v8: カードの効果によるドローは byEffect:true を明示する。 */
   draw(p, n){ trace(`draw: ${n||1}`); act({type:"DRAW", player:p, n:n||1, byEffect:true}); },
   /* System v18: cause を明示して中央の置換点に載せる。 */
-  damageLP(p, amount){ trace(`damage: ${nameOf(p)} -${amount}`);
+  damageLP(p, amount, reason, o){ trace(`damage: ${nameOf(p)} -${amount}`);
     /* S03-U50: チェーンの解決中なら発生源（プレイヤー・カード・チェーン1か）を載せる（新しい Action だけ）。 */
     const r=(typeof RESOLVING_LINK_S03!=='undefined')?RESOLVING_LINK_S03:null;
     act(Object.assign({type:"LP", player:p, delta:-Math.abs(amount), cause:'effect'},
-      (r&&(r.player===0||r.player===1))?{byPlayer:r.player}:{}, (r&&r.uid!=null)?{sourceUid:r.uid}:{}, (r&&r.chainLinkOne===true)?{chainLinkOneS03:true}:{}, (r&&r.chainId!=null)?{chainIdS03:r.chainId}:{})); },   /* S03-U267: chainIdS03 */
+      (r&&(r.player===0||r.player===1))?{byPlayer:r.player}:{}, (r&&r.uid!=null)?{sourceUid:r.uid}:{}, (r&&r.chainLinkOne===true)?{chainLinkOneS03:true}:{}, (r&&r.chainId!=null)?{chainIdS03:r.chainId}:{},
+      (o&&o.simulHoldS03===true)?{simulHoldS03:true}:{}, (o&&o.simulFinalS03===true)?{simulFinalS03:true}:{})); },   /* S03-U449: 4th argument {simulHoldS03} / {simulFinalS03} brackets one simultaneous damage of both players */   /* S03-U267: chainIdS03 */
   recoverLP(p, amount){ trace(`recover: ${nameOf(p)} +${amount}`); act({type:"LP", player:p, delta:Math.abs(amount), cause:'recover'}); },
   payCost(p, amount){ trace(`payCost: ${amount}`); act({type:"LP", player:p, delta:-Math.abs(amount), cause:'cost'}); },
   /* --- System v18: LP変化の規則 --- */

@@ -1399,10 +1399,28 @@ function applyActionBodyV31(gs, a){
         sourceUid:(a.sourceUid!=null?a.sourceUid:null),
         byPlayer:((a.byPlayer===0||a.byPlayer===1)?a.byPlayer:null),
         chainLinkOneS03:(a.chainLinkOneS03===true)});   /* S03-U50 */
-      if(TP.lp===0 && gs.loser==null){
-        gs.loser = who ?? gs.activePlayer;
-        gs.duelEndedReason = 'lp0';
-        logIt(gs, `<b>${nameOf(gs.loser)} のライフが0 — 敗北</b>`);
+      /* S03-U449 (audit): 「お互いにダメージを受ける」 (破壊輪, 2011 text) — the two LP Actions of one simultaneous damage are bracketed by
+         simulHoldS03 (the first: a player at 0 LP is only remembered in gs.lpHoldS03) and simulFinalS03 (the second decides): both at 0 → a draw,
+         one → that player loses. An Action without the flags behaves exactly as before. */
+      const zeroS03 = TP.lp===0;
+      if(a.simulHoldS03===true){
+        if(zeroS03 && gs.loser==null && gs.lpHoldS03==null) gs.lpHoldS03 = who;
+      }else{
+        const heldS03 = gs.lpHoldS03; if(heldS03!=null) delete gs.lpHoldS03;
+        if(gs.loser==null){
+          if(zeroS03 && heldS03!=null && heldS03!==who){
+            gs.loser = -1; gs.duelEndedReason = 'draw';
+            logIt(gs, `<b>両者のライフが同時に0 — 引き分け</b>`);
+          }else if(zeroS03){
+            gs.loser = who ?? gs.activePlayer;
+            gs.duelEndedReason = 'lp0';
+            logIt(gs, `<b>${nameOf(gs.loser)} のライフが0 — 敗北</b>`);
+          }else if(heldS03!=null){
+            gs.loser = heldS03;
+            gs.duelEndedReason = 'lp0';
+            logIt(gs, `<b>${nameOf(gs.loser)} のライフが0 — 敗北</b>`);
+          }
+        }
       }
       break;
     }
@@ -19793,11 +19811,12 @@ const API = {
   /* System v8: カードの効果によるドローは byEffect:true を明示する。 */
   draw(p, n){ trace(`draw: ${n||1}`); act({type:"DRAW", player:p, n:n||1, byEffect:true}); },
   /* System v18: cause を明示して中央の置換点に載せる。 */
-  damageLP(p, amount){ trace(`damage: ${nameOf(p)} -${amount}`);
+  damageLP(p, amount, reason, o){ trace(`damage: ${nameOf(p)} -${amount}`);
     /* S03-U50: チェーンの解決中なら発生源（プレイヤー・カード・チェーン1か）を載せる（新しい Action だけ）。 */
     const r=(typeof RESOLVING_LINK_S03!=='undefined')?RESOLVING_LINK_S03:null;
     act(Object.assign({type:"LP", player:p, delta:-Math.abs(amount), cause:'effect'},
-      (r&&(r.player===0||r.player===1))?{byPlayer:r.player}:{}, (r&&r.uid!=null)?{sourceUid:r.uid}:{}, (r&&r.chainLinkOne===true)?{chainLinkOneS03:true}:{}, (r&&r.chainId!=null)?{chainIdS03:r.chainId}:{})); },   /* S03-U267: chainIdS03 */
+      (r&&(r.player===0||r.player===1))?{byPlayer:r.player}:{}, (r&&r.uid!=null)?{sourceUid:r.uid}:{}, (r&&r.chainLinkOne===true)?{chainLinkOneS03:true}:{}, (r&&r.chainId!=null)?{chainIdS03:r.chainId}:{},
+      (o&&o.simulHoldS03===true)?{simulHoldS03:true}:{}, (o&&o.simulFinalS03===true)?{simulFinalS03:true}:{})); },   /* S03-U449: 4th argument {simulHoldS03} / {simulFinalS03} brackets one simultaneous damage of both players */   /* S03-U267: chainIdS03 */
   recoverLP(p, amount){ trace(`recover: ${nameOf(p)} +${amount}`); act({type:"LP", player:p, delta:Math.abs(amount), cause:'recover'}); },
   payCost(p, amount){ trace(`payCost: ${amount}`); act({type:"LP", player:p, delta:-Math.abs(amount), cause:'cost'}); },
   /* --- System v18: LP変化の規則 --- */
@@ -84641,7 +84660,7 @@ u348Revive('サイコ・チューン', {
 
    ヘル・ポリマー   相手が融合モンスターを融合召喚した時に発動できる。自分フィールドのモンスター1体を生け贄に捧げる事で、その融合モンスター1体のコントロールを得る。
    痛恨の訴え       相手モンスターの直接攻撃によって自分が戦闘ダメージを受けた時に発動できる。相手フィールドの表側表示で守備力が一番高いモンスター1体のコントロールを次の自分のエンドフェイズ時まで得る。そのモンスターの効果は無効化され、攻撃宣言できない。
-   破壊輪           （1ターンに1枚）相手ターンに、相手LPの数値以下の攻撃力を持つ相手の表側表示モンスター1体を対象として発動できる。破壊し、自分はそのモンスターの元々の攻撃力分のダメージを受ける。その後、自分が受けたダメージと同じ数値分のダメージを相手に与える。
+   破壊輪           （2011年当時の通常罠）フィールド上に表側表示で存在するモンスター1体を破壊し、お互いにその攻撃力分のダメージを受ける。（S03-U349 は2015年のエラッタ後の文面で実装していた → S03-U449 で修正）
    融合回収         ①:自分の墓地の「融合」1枚と融合召喚に使用した融合素材モンスター1体を対象として発動できる。そのカードを手札に加える。
 
    Notes
@@ -84717,22 +84736,29 @@ defineScript('痛恨の訴え', {
   passive:{ onDirectBattleDamage(ctx){ return ctx.card.face==='down' && ctx.zone==='sz' && u349DirectHit(ctx); } }
 });
 
-/* ---- 破壊輪 ---- */
-function u349Ring(ctx){ return API.fieldCards({player:ctx.opponent, zone:'mz', filter:x=>x.card.face==='up' && curATK(x.card)<=gameState.players[ctx.opponent].lp}); }
+/* ---- 破壊輪 ----
+   S03-U449 (ChatGPT audit): the 2011 text, not the 2015 errata. Pre-errata Normal Trap (yugioh-wiki 《破壊輪》, section 'エラッタ前のテキスト'):
+   「フィールド上に表側表示で存在するモンスター1体を破壊し、お互いにその攻撃力分のダメージを受ける。」 Differences from the current text, all the 2011 behaviour:
+   no once-per-turn-by-name limit; also in my own turn; my own monsters can be the target; no 'ATK <= opponent LP' condition; the damage is the ATK as changed on
+   the field; the destruction and the damage to both players are simultaneous (both at 0 LP → a draw; damage reducing effects of one player do not change the other's).
+   Targets (黒曜岩竜 ruling 08/03/19), no damage if the target was not destroyed (スタンピング・クラッシュ FAQ 2011-08-13: 《破壊輪》と同様、破壊に失敗した場合は発生しません).
+   The damage is taken when the monster is no longer on the field (マテリアルドラゴン ruling 08/09/16): the ATK is read before the destruction. */
+registerDestroyAfterS03('s03u449.ring', a=>{
+  if(!API.destroyedSinceS03(a.mark, [a.uid]).length) return;
+  const n = Number(a.n) || 0; if(n<=0) return;
+  API.damageLP(a.p0, n, '破壊輪', {simulHoldS03:true}); API.damageLP(a.p1, n, '破壊輪', {simulFinalS03:true});
+});
+function u349Ring(){ return API.fieldCards({zone:'mz', filter:x=>x.card.face==='up' && x.db.k==='m'}); }
 defineScript('破壊輪', {
-  type:'trap', priority:2, targets:true, countLimit:1,
-  condition(ctx){
-    if(gameState.activePlayer!==ctx.opponent){ ctx.reason = '相手ターンに発動できます'; return false; }
-    if(!u349Ring(ctx).length){ ctx.reason = '相手LP以下の攻撃力を持つ相手の表側表示モンスターがいません'; return false; }
-    return true;
-  },
-  selectTargets(ctx, done){ API.selectCard('破壊輪：破壊する相手モンスター', u349Ring(ctx), t=>done([t])); },
+  type:'trap', priority:2, targets:true,
+  condition(ctx){ if(!u349Ring().length){ ctx.reason = 'フィールドに表側表示のモンスターがいません'; return false; } return true; },
+  selectTargets(ctx, done){ API.selectCard('破壊輪：破壊するモンスター', u349Ring(), t=>done([t])); },
   resolve(ctx){
     const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t);
-    if(!r || r.zone!=='mz' || r.p!==ctx.opponent || r.card.face!=='up') return;
-    const n = Number(dbOf(r.card).atk) || 0;
+    if(!r || r.zone!=='mz' || r.card.face!=='up') return;
+    const n = Math.max(0, curATK(r.card)), uid = ensureCardUid(gameState, r.card), mark = API.destroyMarkS03();
     API.destroy(r, '破壊輪');
-    if(n>0){ API.damageLP(ctx.player, n, '破壊輪'); API.damageLP(ctx.opponent, n, '破壊輪'); }
+    API.afterDestroyS03('s03u449.ring', {mark, uid, n, p0:ctx.player, p1:ctx.opponent});
   },
   afterResolve(){}
 });
@@ -85201,7 +85227,7 @@ defineUnifiedCardV4('平和の使者', [{
 
    Notes
    - 「チェーンN以降」 = this card would be link N or later: the chain already holds N-1 or more links when it is activated (gameState.chain.length >= N-1). 「同一チェーン上に複数回同名カードの効果が発動している」 = any name appears twice among the links (gameState.chain[].name).
-   - 連鎖爆撃: the damage counts the links stacked when it was activated, so the count is taken at activation (cost step) and stored on the card. */
+   - 連鎖爆撃: the damage counts the links stacked when it was activated INCLUDING the card itself (S03-U449 fix: it counted only the links below it), so the count (stacked links + 1) is taken at activation (cost step) and stored on the card. */
 
 function u354ChainOk(ctx, n){
   const ch = gameState.chain || [];
@@ -85215,7 +85241,8 @@ function u354ChainOk(ctx, n){
 defineScript('連鎖爆撃', {
   type:'spell', priority:2, quickEffect:true,
   condition(ctx){ return u354ChainOk(ctx, 2); },
-  cost(ctx, done){ const h = locateCardAnyV4(ctx.card); if(h) API.setCardFlag(h, 'u354Links', (gameState.chain||[]).length, '連鎖爆撃', {silent:true}); done(true); },
+  /* S03-U449 (audit): 「発動時に積まれているチェーンの数」 includes this card itself (yugioh-wiki FAQ, backup 2011-03-28: チェーンブロック3で発動 → 1200 = 3x400); the cost step runs before the card is added, so the stacked links + 1 */
+  cost(ctx, done){ const h = locateCardAnyV4(ctx.card); if(h) API.setCardFlag(h, 'u354Links', (gameState.chain||[]).length + 1, '連鎖爆撃', {silent:true}); done(true); },
   resolve(ctx){ const n = Number(ctx.card.u354Links)||0; if(n>0) API.damageLP(ctx.opponent, n*400, '連鎖爆撃'); },
   afterResolve(){}
 });
@@ -94072,7 +94099,7 @@ defineScript('ブロークン・ブロッカー', {
 
    Notes
    - ヘイト・クレバス / デステニー・ミラージュ: Set Traps on a monster of mine sent from the field to the Graveyard by DESTRUCTION this turn (graveInfo.byDestroy, not battle, byPlayer = the opponent; the U444 pattern). ヘイト・クレバス: the opponent monster of my choice goes to the Graveyard and its printed ATK is dealt to the opponent. デステニー・ミラージュ: every 「D－HERO」 of my Graveyard destroyed this turn (graveInfo.byDestroy, turn) is Special Summoned while Monster Zones are free.
-   - サイバネティック・ヒドゥン・テクノロジー: attack-declaration Trap (pendingAttack by the opponent); the cost sends my face-up 「サイバー・ドラゴン」 or a Fusion Monster listing it among its materials (the printed Cyber Dragon Fusion Monsters) to the Graveyard; the attacker is destroyed.
+   - サイバネティック・ヒドゥン・テクノロジー: (S03-U449 rewrite) a Continuous Trap: the card activation (u422Act-style, Spell Speed 2) only places it face-up; its effect is a separate TRIGGER activation at every attack declaration of the opponent while it is face-up - the cost sends my face-up 「サイバー・ドラゴン」 or a Fusion Monster listing it among its materials to the Graveyard, the attacker (the target) is destroyed.
    - 皆既日蝕の書: face-up monsters of both fields -> face-down Defense (FX_SET_STATE); a scheduled End Phase handler turns the opponent's face-down Defense monsters face-up Defense (the Flip effect trigger of an effect-turned monster, v10FlipEffect) and the opponent draws that many cards.
    - 強欲なカケラ: u422Act(false) activation; forced onDrawCard of my normal draw (event.normalDraw) adds a 「強欲」 counter; an ignition from the Spell & Trap Zone with 2+ counters sends the card to the Graveyard as the cost and draws 2. */
 
@@ -94119,19 +94146,25 @@ defineScript('デステニー・ミラージュ', {
   passive:{ onSendToGrave(ctx){ return ctx.zone==='sz' && ctx.card.face==='down' && !!u445FellByFoe(ctx, u445DHero); } }
 });
 
-/* ---- サイバネティック・ヒドゥン・テクノロジー ---- */
-const U445_CYBER_FUSIONS = ['サイバー・ツイン・ドラゴン','サイバー・エンド・ドラゴン','キメラテック・フォートレス・ドラゴン','キメラテック・オーバー・ドラゴン','キメラテック・ランページ・ドラゴン','サイバー・ブレイダー'];
+/* ---- サイバネティック・ヒドゥン・テクノロジー ----
+   S03-U449 (ChatGPT audit): a Continuous Trap (永続罠). Activating the Set card only places it face-up (the card activation, Spell Speed 2, u422Fresh); the
+   effect is a separate activation made each time the opponent declares an attack WHILE the card is face-up (yugioh-wiki 《サイバネティック・ヒドゥン・テクノロジー》:
+   「効果の発動の度にコストを要求する」「複数回の効果の発動ができる」, FAQ 08/03/19 墓地へ送るのはコストです; the effect targets the attacker). No once-per-turn limit.
+   The cost: a 「サイバー・ドラゴン」 (name as it stands, so cards treated as it count) or a Fusion Monster written with 「サイバー・ドラゴン」 as a material - the printed
+   サイバー・ツイン / サイバー・エンド / キメラテック・フォートレス / キメラテック・オーバー・ドラゴン (not the 「サイバー・ドラゴンモンスター」 ones: ランページ, メガフリート). */
+const U445_CYBER_FUSIONS = ['サイバー・ツイン・ドラゴン','サイバー・エンド・ドラゴン','キメラテック・フォートレス・ドラゴン','キメラテック・オーバー・ドラゴン'];
 function u445CyberCost(p){
-  return API.fieldCards({player:p, zone:'mz', filter:x=>x.card.face==='up' && x.db.k==='m' && (x.db.n==='サイバー・ドラゴン' || (U445_CYBER_FUSIONS.indexOf(x.db.n)>=0 && (x.db.st||[]).indexOf('融合')>=0 && (x.db.n==='サイバー・ツイン・ドラゴン' || x.db.n==='サイバー・エンド・ドラゴン' || x.db.n==='キメラテック・フォートレス・ドラゴン' || x.db.n==='キメラテック・オーバー・ドラゴン')))});
+  return API.fieldCards({player:p, zone:'mz', filter:x=>x.card.face==='up' && x.db.k==='m' && (x.db.n==='サイバー・ドラゴン' || currentNameV17(x.card)==='サイバー・ドラゴン' || ((x.db.st||[]).indexOf('融合')>=0 && U445_CYBER_FUSIONS.indexOf(x.db.n)>=0))});
 }
 function u445Attacker(ctx){ const a = gameState.pendingAttack; if(!a || a.player!==ctx.opponent || a.attackerUid==null) return null; const h = findCardByUid(a.attackerUid); return (h && h.zone==='mz') ? h : null; }
-defineScript('サイバネティック・ヒドゥン・テクノロジー', {
-  type:'trap', priority:2, targets:true,
-  condition(ctx){
-    if(!u445Attacker(ctx)){ ctx.reason = '相手モンスターの攻撃宣言時に発動します'; return false; }
-    if(!u445CyberCost(ctx.player).length){ ctx.reason = '墓地へ送る「サイバー・ドラゴン」がいません'; return false; }
-    return true;
-  },
+function u445CybReady(ctx){ return ctx.zone==='sz' && ctx.card.face==='up' && !ctx.card.activationPending && !!u445Attacker(ctx) && u445CyberCost(ctx.player).length>0; }
+defineUnifiedCardV4('サイバネティック・ヒドゥン・テクノロジー', [{
+  key:'activate', type:EFFECT_TYPE.ACTIVATE, range:LOCATION.SZONE, speed:2, events:['activate'],
+  condition(ctx){ return u422Fresh(ctx); },
+  operation(){}, afterResolve(){}
+},{
+  key:'smite', type:EFFECT_TYPE.TRIGGER, range:LOCATION.SZONE, speed:2, events:['onAttackDeclare'],
+  condition(ctx){ if(!u445CybReady(ctx)){ ctx.reason = '表側表示で、相手モンスターの攻撃宣言時に、墓地へ送る「サイバー・ドラゴン」が必要です'; return false; } return true; },
   cost(ctx, done){
     const pool = u445CyberCost(ctx.player); if(!pool.length){ done(false); return; }
     API.selectCard('サイバネティック・ヒドゥン・テクノロジー：墓地へ送る「サイバー・ドラゴン」', pool, t=>{
@@ -94139,11 +94172,10 @@ defineScript('サイバネティック・ヒドゥン・テクノロジー', {
       API.sendToGrave(r, 'サイバネティック・ヒドゥン・テクノロジー（コスト）'); done(true);
     });
   },
-  selectTargets(ctx, done){ const h = u445Attacker(ctx); done(h ? [h] : []); },
-  resolve(ctx){ const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t); if(r && r.zone==='mz') API.destroy(r, 'サイバネティック・ヒドゥン・テクノロジー'); },
-  afterResolve(){},
-  passive:{ onAttackDeclare(ctx){ const a = gameState.pendingAttack; return ctx.zone==='sz' && ctx.card.face==='down' && !!a && a.player===ctx.opponent && u445CyberCost(ctx.player).length>0; } }
-});
+  target(ctx, done){ const h = u445Attacker(ctx); done(h ? [h] : []); },
+  operation(ctx){ const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t); if(r && r.zone==='mz') API.destroy(r, 'サイバネティック・ヒドゥン・テクノロジー'); },
+  afterResolve(){}
+}], {type:'trap', priority:2, targets:true, forced:false, activateFrom:['sz'], passive:{ onAttackDeclare(ctx){ return u445CybReady(ctx); } }});
 
 /* ---- 皆既日蝕の書 ---- */
 API.registerScheduleHandler('s03u445.eclipse-end', (args)=>{

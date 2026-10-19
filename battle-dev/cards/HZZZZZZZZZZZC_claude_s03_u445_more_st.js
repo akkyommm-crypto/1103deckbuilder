@@ -8,7 +8,7 @@
 
    Notes
    - ヘイト・クレバス / デステニー・ミラージュ: Set Traps on a monster of mine sent from the field to the Graveyard by DESTRUCTION this turn (graveInfo.byDestroy, not battle, byPlayer = the opponent; the U444 pattern). ヘイト・クレバス: the opponent monster of my choice goes to the Graveyard and its printed ATK is dealt to the opponent. デステニー・ミラージュ: every 「D－HERO」 of my Graveyard destroyed this turn (graveInfo.byDestroy, turn) is Special Summoned while Monster Zones are free.
-   - サイバネティック・ヒドゥン・テクノロジー: attack-declaration Trap (pendingAttack by the opponent); the cost sends my face-up 「サイバー・ドラゴン」 or a Fusion Monster listing it among its materials (the printed Cyber Dragon Fusion Monsters) to the Graveyard; the attacker is destroyed.
+   - サイバネティック・ヒドゥン・テクノロジー: (S03-U449 rewrite) a Continuous Trap: the card activation (u422Act-style, Spell Speed 2) only places it face-up; its effect is a separate TRIGGER activation at every attack declaration of the opponent while it is face-up - the cost sends my face-up 「サイバー・ドラゴン」 or a Fusion Monster listing it among its materials to the Graveyard, the attacker (the target) is destroyed.
    - 皆既日蝕の書: face-up monsters of both fields -> face-down Defense (FX_SET_STATE); a scheduled End Phase handler turns the opponent's face-down Defense monsters face-up Defense (the Flip effect trigger of an effect-turned monster, v10FlipEffect) and the opponent draws that many cards.
    - 強欲なカケラ: u422Act(false) activation; forced onDrawCard of my normal draw (event.normalDraw) adds a 「強欲」 counter; an ignition from the Spell & Trap Zone with 2+ counters sends the card to the Graveyard as the cost and draws 2. */
 
@@ -55,19 +55,25 @@ defineScript('デステニー・ミラージュ', {
   passive:{ onSendToGrave(ctx){ return ctx.zone==='sz' && ctx.card.face==='down' && !!u445FellByFoe(ctx, u445DHero); } }
 });
 
-/* ---- サイバネティック・ヒドゥン・テクノロジー ---- */
-const U445_CYBER_FUSIONS = ['サイバー・ツイン・ドラゴン','サイバー・エンド・ドラゴン','キメラテック・フォートレス・ドラゴン','キメラテック・オーバー・ドラゴン','キメラテック・ランページ・ドラゴン','サイバー・ブレイダー'];
+/* ---- サイバネティック・ヒドゥン・テクノロジー ----
+   S03-U449 (ChatGPT audit): a Continuous Trap (永続罠). Activating the Set card only places it face-up (the card activation, Spell Speed 2, u422Fresh); the
+   effect is a separate activation made each time the opponent declares an attack WHILE the card is face-up (yugioh-wiki 《サイバネティック・ヒドゥン・テクノロジー》:
+   「効果の発動の度にコストを要求する」「複数回の効果の発動ができる」, FAQ 08/03/19 墓地へ送るのはコストです; the effect targets the attacker). No once-per-turn limit.
+   The cost: a 「サイバー・ドラゴン」 (name as it stands, so cards treated as it count) or a Fusion Monster written with 「サイバー・ドラゴン」 as a material - the printed
+   サイバー・ツイン / サイバー・エンド / キメラテック・フォートレス / キメラテック・オーバー・ドラゴン (not the 「サイバー・ドラゴンモンスター」 ones: ランページ, メガフリート). */
+const U445_CYBER_FUSIONS = ['サイバー・ツイン・ドラゴン','サイバー・エンド・ドラゴン','キメラテック・フォートレス・ドラゴン','キメラテック・オーバー・ドラゴン'];
 function u445CyberCost(p){
-  return API.fieldCards({player:p, zone:'mz', filter:x=>x.card.face==='up' && x.db.k==='m' && (x.db.n==='サイバー・ドラゴン' || (U445_CYBER_FUSIONS.indexOf(x.db.n)>=0 && (x.db.st||[]).indexOf('融合')>=0 && (x.db.n==='サイバー・ツイン・ドラゴン' || x.db.n==='サイバー・エンド・ドラゴン' || x.db.n==='キメラテック・フォートレス・ドラゴン' || x.db.n==='キメラテック・オーバー・ドラゴン')))});
+  return API.fieldCards({player:p, zone:'mz', filter:x=>x.card.face==='up' && x.db.k==='m' && (x.db.n==='サイバー・ドラゴン' || currentNameV17(x.card)==='サイバー・ドラゴン' || ((x.db.st||[]).indexOf('融合')>=0 && U445_CYBER_FUSIONS.indexOf(x.db.n)>=0))});
 }
 function u445Attacker(ctx){ const a = gameState.pendingAttack; if(!a || a.player!==ctx.opponent || a.attackerUid==null) return null; const h = findCardByUid(a.attackerUid); return (h && h.zone==='mz') ? h : null; }
-defineScript('サイバネティック・ヒドゥン・テクノロジー', {
-  type:'trap', priority:2, targets:true,
-  condition(ctx){
-    if(!u445Attacker(ctx)){ ctx.reason = '相手モンスターの攻撃宣言時に発動します'; return false; }
-    if(!u445CyberCost(ctx.player).length){ ctx.reason = '墓地へ送る「サイバー・ドラゴン」がいません'; return false; }
-    return true;
-  },
+function u445CybReady(ctx){ return ctx.zone==='sz' && ctx.card.face==='up' && !ctx.card.activationPending && !!u445Attacker(ctx) && u445CyberCost(ctx.player).length>0; }
+defineUnifiedCardV4('サイバネティック・ヒドゥン・テクノロジー', [{
+  key:'activate', type:EFFECT_TYPE.ACTIVATE, range:LOCATION.SZONE, speed:2, events:['activate'],
+  condition(ctx){ return u422Fresh(ctx); },
+  operation(){}, afterResolve(){}
+},{
+  key:'smite', type:EFFECT_TYPE.TRIGGER, range:LOCATION.SZONE, speed:2, events:['onAttackDeclare'],
+  condition(ctx){ if(!u445CybReady(ctx)){ ctx.reason = '表側表示で、相手モンスターの攻撃宣言時に、墓地へ送る「サイバー・ドラゴン」が必要です'; return false; } return true; },
   cost(ctx, done){
     const pool = u445CyberCost(ctx.player); if(!pool.length){ done(false); return; }
     API.selectCard('サイバネティック・ヒドゥン・テクノロジー：墓地へ送る「サイバー・ドラゴン」', pool, t=>{
@@ -75,11 +81,10 @@ defineScript('サイバネティック・ヒドゥン・テクノロジー', {
       API.sendToGrave(r, 'サイバネティック・ヒドゥン・テクノロジー（コスト）'); done(true);
     });
   },
-  selectTargets(ctx, done){ const h = u445Attacker(ctx); done(h ? [h] : []); },
-  resolve(ctx){ const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t); if(r && r.zone==='mz') API.destroy(r, 'サイバネティック・ヒドゥン・テクノロジー'); },
-  afterResolve(){},
-  passive:{ onAttackDeclare(ctx){ const a = gameState.pendingAttack; return ctx.zone==='sz' && ctx.card.face==='down' && !!a && a.player===ctx.opponent && u445CyberCost(ctx.player).length>0; } }
-});
+  target(ctx, done){ const h = u445Attacker(ctx); done(h ? [h] : []); },
+  operation(ctx){ const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t); if(r && r.zone==='mz') API.destroy(r, 'サイバネティック・ヒドゥン・テクノロジー'); },
+  afterResolve(){}
+}], {type:'trap', priority:2, targets:true, forced:false, activateFrom:['sz'], passive:{ onAttackDeclare(ctx){ return u445CybReady(ctx); } }});
 
 /* ---- 皆既日蝕の書 ---- */
 API.registerScheduleHandler('s03u445.eclipse-end', (args)=>{

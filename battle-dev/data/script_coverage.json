@@ -117,9 +117,9 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1620,
+    "legacy": 1619,
     "sin": 5,
-    "unified": 1405
+    "unified": 1406
   },
   "static_registration_name_count": 3562,
   "auto_table_name_count": 201,
@@ -24545,14 +24545,15 @@
       "complexity_score": 6,
       "registrations": [
         {
-          "kind": "legacy",
+          "kind": "unified",
           "source": "cards\\HZZZZZZZZZZZC_claude_s03_u445_more_st.js",
-          "line": 64
+          "line": 70
         }
       ],
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u445_more_st.js",
+        "tools\\test_s03_u449_audit_fixes.js",
         "tools\\test_v890_batch40.js"
       ]
     },
@@ -64180,7 +64181,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZZZP_claude_s03_u354_chain.js",
-          "line": 30
+          "line": 31
         }
       ],
       "auto_table": false,
@@ -74457,7 +74458,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZZZP_claude_s03_u354_chain.js",
-          "line": 58
+          "line": 59
         }
       ],
       "auto_table": false,
@@ -77708,7 +77709,7 @@
         {
           "kind": "unified",
           "source": "cards\\HZZZZZZZZZZZC_claude_s03_u445_more_st.js",
-          "line": 106
+          "line": 111
         }
       ],
       "auto_table": false,
@@ -91768,12 +91769,13 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZZZZZZZC_claude_s03_u445_more_st.js",
-          "line": 92
+          "line": 97
         }
       ],
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u445_more_st.js",
+        "tools\\test_s03_u449_audit_fixes.js",
         "tools\\test_v880_batch39.js"
       ]
     },
@@ -92690,12 +92692,13 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZZZK_claude_s03_u349_event_traps.js",
-          "line": 83
+          "line": 94
         }
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u349_event_traps.js"
+        "tools\\test_s03_u349_event_traps.js",
+        "tools\\test_s03_u449_audit_fixes.js"
       ]
     },
     {
@@ -93857,7 +93860,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZZZP_claude_s03_u354_chain.js",
-          "line": 45
+          "line": 46
         }
       ],
       "auto_table": false,
@@ -97971,7 +97974,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZZZK_claude_s03_u349_event_traps.js",
-          "line": 104
+          "line": 111
         }
       ],
       "auto_table": false,
@@ -100501,7 +100504,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u354_chain.js"
+        "tools\\test_s03_u354_chain.js",
+        "tools\\test_s03_u449_audit_fixes.js"
       ]
     },
     {

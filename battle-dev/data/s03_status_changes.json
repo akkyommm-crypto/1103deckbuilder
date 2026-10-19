@@ -11140,9 +11140,10 @@
       "to": "TESTED",
       "unit": "S03-U349",
       "tests": [
-        "tools/test_s03_u349_event_traps.js"
+        "tools/test_s03_u349_event_traps.js",
+        "tools/test_s03_u449_audit_fixes.js"
       ],
-      "evidence": "Text (carddata). opponent's turn: the chosen monster (青眼, ATK 3000 ≤ their LP) destroyed, I take 3000 and then they take 3000; refused when its ATK exceeds their LP or in my own turn. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
+      "evidence": "Text (carddata). opponent's turn: the chosen monster (青眼, ATK 3000 ≤ their LP) destroyed, I take 3000 and then they take 3000; refused when its ATK exceeds their LP or in my own turn. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation. S03-U449 (ChatGPT audit) CORRECTION: the script now implements the 2011 pre-errata Normal Trap (any turn, any face-up monster, ATK as on the field, simultaneous damage to both players, draw when both reach 0, no once-per-turn-by-name limit); the earlier evidence text above described the 2015 errata and is superseded. Sources: yugioh-wiki 《破壊輪》 (pre-errata section), 黒曜岩竜 ruling 08/03/19, スタンピング・クラッシュ FAQ 2011-08-13. Tests: tools/test_s03_u449_audit_fixes.js."
     },
     {
       "name": "融合回収",
@@ -11350,9 +11351,10 @@
       "to": "TESTED",
       "unit": "S03-U354",
       "tests": [
-        "tools/test_s03_u354_chain.js"
+        "tools/test_s03_u354_chain.js",
+        "tools/test_s03_u449_audit_fixes.js"
       ],
-      "evidence": "Text (carddata). not activatable without a chain; chained to サイクロン as link 2: 1 stacked link x 400 = 400 damage to the opponent of the activator, サイクロン still resolves. Test: tools/test_s03_u354_chain.js (Replay audit). No known deviation."
+      "evidence": "Text (carddata). not activatable without a chain; chained to サイクロン as link 2: 1 stacked link x 400 = 400 damage to the opponent of the activator, サイクロン still resolves. Test: tools/test_s03_u354_chain.js (Replay audit). No known deviation. S03-U449 (ChatGPT audit) CORRECTION: the damage counts the stacked chain links INCLUDING the card itself (chain 2 → 800, chain 3 → 1200, chain 4 → 1600; yugioh-wiki FAQ, backup 2011-03-28); the earlier evidence text above counted only the links below it. Tests: tools/test_s03_u449_audit_fixes.js."
     },
     {
       "name": "一陣の風",
@@ -14950,9 +14952,10 @@
       "to": "TESTED",
       "unit": "S03-U445",
       "tests": [
-        "tools/test_s03_u445_more_st.js"
+        "tools/test_s03_u445_more_st.js",
+        "tools/test_s03_u449_audit_fixes.js"
       ],
-      "evidence": "Exact script. Text (carddata). At the opponent attack declaration my サイバー・ドラゴン goes to the Graveyard (cost) and the attacker is destroyed; not offered without a サイバー・ドラゴン. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation."
+      "evidence": "Exact script. Text (carddata). At the opponent attack declaration my サイバー・ドラゴン goes to the Graveyard (cost) and the attacker is destroyed; not offered without a サイバー・ドラゴン. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation. S03-U449 (ChatGPT audit) CORRECTION: it is a Continuous Trap - the activation from the Set position is only the card activation (no cost, no destruction); the effect is activated at every attack declaration of the opponent while it is face-up (cost: a サイバー・ドラゴン or a listed Fusion Monster, target: the attacker, no per-turn limit; yugioh-wiki 《サイバネティック・ヒドゥン・テクノロジー》, FAQ 08/03/19). The earlier evidence text above described a Normal Trap and is superseded. Tests: tools/test_s03_u449_audit_fixes.js."
     },
     {
       "name": "デステニー・ミラージュ",
@@ -14990,9 +14993,10 @@
       "to": "TESTED",
       "unit": "S03-U445",
       "tests": [
-        "tools/test_s03_u445_more_st.js"
+        "tools/test_s03_u445_more_st.js",
+        "tools/test_s03_u449_audit_fixes.js"
       ],
-      "evidence": "Exact script. Text (carddata). All face-up monsters of both fields become face-down Defense; at the End Phase the opponent face-down Defense monsters (2) are turned face-up Defense and the opponent draws 2; not activatable without a face-up monster. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation."
+      "evidence": "Exact script. Text (carddata). All face-up monsters of both fields become face-down Defense; at the End Phase the opponent face-down Defense monsters (2) are turned face-up Defense and the opponent draws 2; not activatable without a face-up monster. Test: tools/test_s03_u445_more_st.js (Replay audit). No known deviation. S03-U449 (ChatGPT audit) VERIFIED: the Quick-Play Spell is activatable from the hand in my turn, from the Set position in either turn and as a Spell Speed 2 chain response; the End Phase part, the Flip effect (ruling 08/04/22), the draw count, Replay and save / resume are tested in tools/test_s03_u449_audit_fixes.js - no engine change was needed."
     },
     {
       "name": "キャトルミューティレーション",
