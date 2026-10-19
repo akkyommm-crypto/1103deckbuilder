@@ -54,9 +54,13 @@ jobs:
         working-directory: battle-dev
         run: python tools/build.py
 
+      - name: Verify parallel gate runner
+        working-directory: battle-dev
+        run: python tools/test_check_parallel.py
+
       - name: Run full battle gate
         working-directory: battle-dev
-        run: python tools/check.py
+        run: python tools/check_parallel.py --workers 4
 
       - name: Build Acode artifact
         working-directory: battle-dev

@@ -13,3 +13,5 @@ At a coherent stopping point, run the required verified completion command from 
 ```
 
 The command must succeed before the work is reported as committed and pushed. A push failure leaves the local commit intact for retry.
+
+For an intermediate development checkpoint, `finish-work.ps1 -AsyncGate -Message "..."` may be used after the unit's dedicated/nearby/negative-control validation. It pushes a quick-gate checkpoint so GitHub Actions can run the authoritative full gate without blocking further development. Do not call that commit fully verified, integrate it, or publish it until the exact SHA's `verify-battle` job is green. Release candidates continue to use the blocking full gate; `-ParallelGate` runs the same `tools/check.py` Node command set with bounded parallel workers.
