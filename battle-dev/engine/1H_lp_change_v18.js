@@ -97,6 +97,8 @@ function resolveLpChangeV18(gs, info){
       if(typeof f !== 'function') return;
       let r = null;
       try{ r = f({player:info.player, delta, cause, byPlayer:(info.byPlayer===0||info.byPlayer===1)?info.byPlayer:null}, src.card); }catch(e){ r = null; }   /* S03-U271: byPlayer */
+      /* S03-U424: a source may also return {delta, redirectTo} — the damage is dealt to the other player instead (D・ライトン) */
+      if(r && typeof r === 'object'){ if(r.redirectTo === 0 || r.redirectTo === 1) info.redirectTo = r.redirectTo; r = r.delta; }
       if(r != null && Number.isFinite(Number(r))) delta = Number(r);
     });
   }

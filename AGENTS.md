@@ -39,6 +39,14 @@ The preserved historical workflow remains authoritative for gameplay implementat
 - If validation fails, no commit is created. If push fails, the local commit is deliberately retained.
 - A task is not complete merely because a local test passed; report the commit SHA, branch, gate result, and push result.
 
+### Non-blocking development checkpoints
+
+- A development branch may use `scripts/finish-work.ps1 -AsyncGate -Message "..."` after its required dedicated, nearby, Replay, and negative-control checks. The script automatically runs the build, audits, generated-JavaScript syntax check, and changed `tools/test_*.js` files before commit and push.
+- The push starts the full `verify-battle` GitHub Actions gate for that exact commit. An async checkpoint is **pending**, not fully verified, until that job succeeds.
+- Claude/Codex may continue on later development commits while GitHub verifies the fixed pushed commit. Never transfer a green result to a different SHA.
+- Pull requests to `main`, integration, publication, and release claims still require a successful full gate for the exact candidate SHA. Use the default `finish-work.ps1` path or `-ParallelGate` for a blocking local full gate.
+- `tools/check_parallel.py` only parallelizes the Node commands declared by authoritative `tools/check.py`; it does not remove tests. Use `-GateWorkers 2` if memory pressure is observed.
+
 ## Security and preservation
 
 - Never commit API keys, credentials, `.env` files, private keys, archives, generated scratch logs, or files larger than the repository safety limit.

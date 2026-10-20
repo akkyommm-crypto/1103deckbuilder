@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U407",
+  "category": "card",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "three NOT_STARTED monsters (Jurrac Titan, Thunder Unicorn, Destruction Dragon Gandora); dedicated test, negative control, audit",
+  "outcome": "waiting",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-19T12:30:00+09:00",
+  "finished_at": null,
+  "gate_owner": "sonnet-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: per-unit tokens not available in this session",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Single Sonnet session, continuous mode. gate_exit to be filled from the final finish-work gate."
+}

@@ -131,6 +131,7 @@ function fusionCombosS03(pool, spec, fusionDb, limit){
   return out;
 }
 function fusionSpellOptionsS03(p, spell){
+  if(typeof deckLockSourceS03==='function' && deckLockSourceS03(gameState,'fusionSummonBanS03')) return [];   /* S03-U413: 融合禁止エリア */
   const P = gameState.players[p];
   const prof = fusionSpellProfileS03(spell);
   const pool = fusionSpellPoolS03(p, prof);

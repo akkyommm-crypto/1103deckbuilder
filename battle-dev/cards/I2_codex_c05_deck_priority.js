@@ -1,30 +1,7 @@
 /* CODEX-C05 — deck-priority automation selected from the user's
    スキドレギアバレー / レヴァライダー / ガリスフルモン lists. */
 
-/* ---- ミンゲイドラゴン ------------------------------------------------- */
-function c05MingeiReady(ctx){
-  const P=API.me(ctx);
-  return ctx.zone==='grave'&&ctx.player===gameState.activePlayer&&P.mz.length===0
-    &&hasMonsterZoneSpace(ctx.player)
-    &&P.grave.every(c=>dbOf(c).k!=='m'||dbOf(c).ra==='ドラゴン');
-}
-
-defineUnifiedCardV4('ミンゲイドラゴン',[{
-  key:'standby-revive',type:EFFECT_TYPE.TRIGGER,range:LOCATION.GRAVE,speed:1,events:['onStandbyPhase'],
-  condition(ctx){return c05MingeiReady(ctx);},
-  operation(ctx){
-    if(!c05MingeiReady(ctx))return;
-    const i=API.me(ctx).grave.indexOf(ctx.card);if(i<0)return;
-    ensureCardUid(gameState,ctx.card);const uid=ctx.card.uid;
-    API.specialSummon(ctx.player,'grave',i,'atk','ミンゲイドラゴン');
-    const now=findCardByUid(uid);
-    if(now&&now.zone==='mz')API.setCardFlag(now,'banishWhenLeavesField',true,'ミンゲイドラゴン',{silent:true});
-  },afterResolve(){}
-}],{
-  type:'monster',priority:1,activateFrom:['grave'],timing:['standby'],includesSpecialSummon:true,blocksIfNoSpecialSummon:true,
-  tributeValue:{value:2,condition(targetDb){return !!targetDb&&targetDb.ra==='ドラゴン';}},
-  passive:{onStandbyPhase:ctx=>c05MingeiReady(ctx)}
-});
+/* ミンゲイドラゴン is provided by S03-U416. Keep one runtime writer. */
 
 /* ---- 時械神メタイオン ------------------------------------------------- */
 function c05MetaionDamage(info){

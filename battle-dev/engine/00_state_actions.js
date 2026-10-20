@@ -443,10 +443,28 @@ function applyActionBodyV31(gs, a){
         sourceUid:(a.sourceUid!=null?a.sourceUid:null),
         byPlayer:((a.byPlayer===0||a.byPlayer===1)?a.byPlayer:null),
         chainLinkOneS03:(a.chainLinkOneS03===true)});   /* S03-U50 */
-      if(TP.lp===0 && gs.loser==null){
-        gs.loser = who ?? gs.activePlayer;
-        gs.duelEndedReason = 'lp0';
-        logIt(gs, `<b>${nameOf(gs.loser)} のライフが0 — 敗北</b>`);
+      /* S03-U449 (audit): 「お互いにダメージを受ける」 (破壊輪, 2011 text) — the two LP Actions of one simultaneous damage are bracketed by
+         simulHoldS03 (the first: a player at 0 LP is only remembered in gs.lpHoldS03) and simulFinalS03 (the second decides): both at 0 → a draw,
+         one → that player loses. An Action without the flags behaves exactly as before. */
+      const zeroS03 = TP.lp===0;
+      if(a.simulHoldS03===true){
+        if(zeroS03 && gs.loser==null && gs.lpHoldS03==null) gs.lpHoldS03 = who;
+      }else{
+        const heldS03 = gs.lpHoldS03; if(heldS03!=null) delete gs.lpHoldS03;
+        if(gs.loser==null){
+          if(zeroS03 && heldS03!=null && heldS03!==who){
+            gs.loser = -1; gs.duelEndedReason = 'draw';
+            logIt(gs, `<b>両者のライフが同時に0 — 引き分け</b>`);
+          }else if(zeroS03){
+            gs.loser = who ?? gs.activePlayer;
+            gs.duelEndedReason = 'lp0';
+            logIt(gs, `<b>${nameOf(gs.loser)} のライフが0 — 敗北</b>`);
+          }else if(heldS03!=null){
+            gs.loser = heldS03;
+            gs.duelEndedReason = 'lp0';
+            logIt(gs, `<b>${nameOf(gs.loser)} のライフが0 — 敗北</b>`);
+          }
+        }
       }
       break;
     }
@@ -738,14 +756,14 @@ function applyActionBodyV31(gs, a){
       const killDef = ()=>{
         if(protDef){ logIt(gs, `${cardName(defCard)} は戦闘では破壊されない`); return false; }
         const r = protV21(defCard, atkCard, 'defender');
-        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(defCard)} は戦闘では破壊されない`); return false; }
+        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(defCard)} は戦闘では破壊されない`); if(typeof r.afterUseS03==='function') r.afterUseS03(defCard, gs); return false; }
         defCard.battleDestroyed = true;
         return true;
       };
       const killAtk = ()=>{
         if(protAtk){ logIt(gs, `${cardName(atkCard)} は戦闘では破壊されない`); return false; }
         const r = protV21(atkCard, defCard, 'attacker');
-        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(atkCard)} は戦闘では破壊されない`); return false; }
+        if(r){ logIt(gs, `${r.label||'効果'}：${cardName(atkCard)} は戦闘では破壊されない`); if(typeof r.afterUseS03==='function') r.afterUseS03(atkCard, gs); return false; }
         atkCard.battleDestroyed = true;
         return true;
       };
@@ -1454,6 +1472,7 @@ function applyActionBodyV31(gs, a){
     /* 指定ゾーンのカードを墓地へ（破壊・墓地送り共通）
        a:{player, zone:'mz'|'sz'|'field', index, reason} */
     case "FX_TO_GRAVE": {
+      if(a.zone==='deck' && typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       /* System v21: 効果破壊だけを防ぐ。墨地送り・除外・バウンスは防がない。
          場を離れる前に見るので、守れた場合カードは一切動かない。 */
       if(a.byDestroy===true && ['mz','sz','field'].includes(a.zone)
@@ -1707,6 +1726,7 @@ function applyActionBodyV31(gs, a){
 
     /* デッキ→墓地（落とす）。a:{player, deckIndex, reason} */
     case "FX_MILL": {
+      if(typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       const card = removeFrom(P, "deck", a.deckIndex);
       if(!card) break;
       pushZone(P.grave, card);
@@ -1724,6 +1744,7 @@ function applyActionBodyV31(gs, a){
 
     /* デッキトップから n 枚墓地へ。a:{player, n, reason} */
     case "FX_MILL_TOP": {
+      if(typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       const n = a.n||1; const names=[],sent=[];
       for(let i=0;i<n;i++){
         if(!P.deck.length) break;
@@ -1752,6 +1773,10 @@ function applyActionBodyV31(gs, a){
       if(!card) break;
       dropXyzMaterials(P, card, gs); dropEquips(P, card, gs);
       if(card.token){ logIt(gs, `${cardName(card)} は消滅した`); break; }  // トークンは手札に戻らない
+      if(a.zone==='mz' && dbOf(card).k==='m' && !dbOf(card).ex && typeof fieldBounceBanishedS03==='function' && fieldBounceBanishedS03(gs)){   /* S03-U415: 縮退回路 */
+        const ownerB=cardOwnerIndex(gs,card,a.player); pushZone(gs.players[ownerB].banish,card);
+        logIt(gs, `縮退回路：${cardName(card)} は手札へ戻らず除外`); break;
+      }
       if(v350BanishWhenLeavesField(card,a.zone,'hand',a)){
         const owner=cardOwnerIndex(gs,card,a.player); pushZone(gs.players[owner].banish,card);
         logIt(gs, `${a.reason||"効果"}：${cardName(card)} は手札へ戻らず除外`); break;
@@ -1768,6 +1793,7 @@ function applyActionBodyV31(gs, a){
     /* 除外。a:{player, zone, index, reason}
        コントロールが移っているカードも、除外領域は持ち主側に置く。 */
     case "FX_BANISH": {
+      if(typeof banishLockedS03==='function' && banishLockedS03(gs)){ logIt(gs, '王宮の鉄壁：カードを除外できない'); break; }   /* S03-U415 */
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
       noteLeftFieldByEffectS03(card, a.zone, 'banish', a);   /* S03-U238 */
@@ -1781,6 +1807,7 @@ function applyActionBodyV31(gs, a){
     /* System v3.8.0: 「破壊して除外」を通常の除外と分離する。
        《奈落の落とし穴》などは破壊された事実を残しつつ、墓地を経由せず除外する。 */
     case "FX_DESTROY_BANISH": {
+      if(typeof banishLockedS03==='function' && banishLockedS03(gs)){ logIt(gs, '王宮の鉄壁：カードを除外できない'); break; }   /* S03-U415 */
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
       noteLeftFieldByEffectS03(card, a.zone, 'banish', a);   /* S03-U238 */
@@ -1987,6 +2014,8 @@ function applyActionBodyV31(gs, a){
       const Q=gs.players[q.player],ex=q.exCard;
       if(q.kind==='xyz') ex.xyz=(q.materialCards||[]).map(c=>reset(c)).filter(Boolean);
       if(q.kind==='synchro') ex.v380SummonMaterials=(q.synMaterialSnapshot||[]).map(x=>Object.assign({},x));
+      /* S03-U426: フレア・リゾネーター — the Synchro Monster gets the permanent ATK / DEF bonus of a material script's synchroMatModS03 {atk, def} */
+      if(q.kind==='synchro') (ex.v380SummonMaterials||[]).forEach(m=>{ const sM = CARD_SCRIPTS[m && m.name], mod = sM && sM.synchroMatModS03; if(mod){ ex.mods = ex.mods || []; ex.mods.push({atk:Number(mod.atk)||0, def:Number(mod.def)||0, until:'permanent', label:String(m.name), turn:gs.turn}); } });
       ex.face='up'; ex.pos=q.pos||'atk'; ex.specialSummoned=true; ex.specialSummonedFrom='ex'; ex.specialSummonKind=q.kind; Q.mz.push(ex); ensureCardUid(gs,ex); ex.properlySummonedS03=true;   /* S03-U127 */
       Q.ssHistory.push({name:cardName(ex),from:'ex',turn:gs.turn,lv:curLV(ex),kind:ex.specialSummonKind});
       gs.pendingExV2=null;
@@ -2044,6 +2073,7 @@ function applyActionBodyV31(gs, a){
       }
       if(a.kind === 'synchro'){
         exCard.v380SummonMaterials = matCards.map(c=>({name:cardName(c), tuner:isTuner(dbOf(c)), lv:curLV(c), at:matAttrS03.get(c)||null}));
+        (exCard.v380SummonMaterials||[]).forEach(m=>{ const sM = CARD_SCRIPTS[m && m.name], mod = sM && sM.synchroMatModS03; if(mod){ exCard.mods = exCard.mods || []; exCard.mods.push({atk:Number(mod.atk)||0, def:Number(mod.def)||0, until:'permanent', label:String(m.name), turn:gs.turn}); } });   /* S03-U426 */
       }
       P.mz.push(exCard);
       P.ssHistory.push({name:cardName(exCard),from:'ex',turn:gs.turn,fromPlayer:a.player,
@@ -2197,6 +2227,7 @@ function applyActionBodyV31(gs, a){
     /* セット（魔法・罠）。a:{player, handIndex, toField} */
     case "SET_ST": {
       if(P.temporaryFlags && Number(P.temporaryFlags.noSetS03)===Number(gs.turn)){ logIt(gs, `このターンはカードをセットできません`); break; }   /* S03-U266 */
+      if(typeof setBannedS03==='function' && setBannedS03(gs, P)){ logIt(gs, `大寒波：魔法・罠カードをセットできません`); break; }   /* S03-U392 */
       const zone = a.toField ? "field" : "sz";
       if(zone==="sz" && P.sz.length >= ZONE_LIMITS.sz){ logIt(gs, `魔法・罠ゾーンが一杯です`); break; }
       if(zone==="field" && P.field){ logIt(gs, `フィールドゾーンが埋まっています`); break; }
@@ -2212,8 +2243,13 @@ function applyActionBodyV31(gs, a){
     /* デッキへ戻す。a:{player, zone, index, toBottom}
        元々EXデッキのモンスターはメインデッキへ混ざらず、持ち主のEXデッキへ戻す。 */
     case "FX_RETURN_DECK": {
+      if(['mz','sz','field'].includes(a.zone) && typeof fieldReturnLockedS03==='function' && fieldReturnLockedS03(gs)){ logIt(gs, 'G・B・ハンター：フィールドのカードをデッキに戻せない'); break; }   /* S03-U404 */
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
+      if(a.zone==='grave' && typeof graveToDeckBanishedS03==='function' && graveToDeckBanishedS03(gs)){   /* S03-U404: 転生断絶 */
+        const ownerT=cardOwnerIndex(gs,card,a.player); pushZone(gs.players[ownerT].banish,card);
+        logIt(gs, `転生断絶：${cardName(card)} はデッキへ戻らず除外`); break;
+      }
       dropXyzMaterials(P, card, gs); dropEquips(P, card, gs, a.zone==='mz' ? 'deck' : null);   /* S03-U183: 闘器 */
       if(card.token){ logIt(gs, `${cardName(card)} は消滅した`); break; }
       if(v350BanishWhenLeavesField(card,a.zone,'deck',a)){
@@ -2437,6 +2473,7 @@ function applyActionBodyV31(gs, a){
         if(a.copiedFromUid != null) t.tokenV11.copiedFromUid = a.copiedFromUid;
         if(a.noAdvanceTributeS03) t.noAdvanceTributeS03 = true;   /* S03-U129: アドバンス召喚のためにはリリースできない */
         if(a.noAdvanceTributeNonDarkS03) t.noAdvanceTributeNonDarkS03 = true;
+        if(a.advanceTributeOnlyForS03) t.advanceTributeOnlyForS03 = String(a.advanceTributeOnlyForS03);   /* S03-U388: 「○○と名のついたカード以外の生け贄召喚のための生け贄にはできない」 */
         if(Number(a.destroyDamageS03) > 0) t.destroyDamageS03 = Number(a.destroyDamageS03);   /* S03-U195: おジャマトークン */   /* S03-U188: 闇属性以外のアドバンス召喚のためにはリリースできない */
         P.mz.push(t);
         ensureCardUid(gs, t);
@@ -2522,12 +2559,13 @@ function applyActionBodyV31(gs, a){
     case "FX_MONSTER_EQUIP_V46": {
       if(P.sz.length>=ZONE_LIMITS.sz){ logIt(gs,'魔法・罠ゾーンが一杯です'); break; }
       const FP=gs.players[a.fromPlayer], TP=gs.players[a.targetPlayer==null?a.player:a.targetPlayer], mon=TP&&TP.mz[a.targetMz];
-      const eq=FP&&FP.mz[a.fromIndex];
+      const eq=FP&&(a.fromHandS03 ? FP.hand[a.fromIndex] : FP.mz[a.fromIndex]);   /* S03-U402: fromHandS03 — a hand monster is equipped directly (竜操術) */
       if(!eq||!mon){ logIt(gs,'装備するモンスターまたは装備先が見つかりません'); break; }
       if(eq===mon){ logIt(gs,'自身を装備カードにはできません'); break; }
       ensureCardUid(gs,eq); ensureCardUid(gs,mon);
-      FP.mz.splice(a.fromIndex,1);
-      dropXyzMaterials(FP,eq,gs); dropEquips(FP,eq,gs);
+      if(a.fromHandS03){ FP.hand.splice(a.fromIndex,1); }
+      else { FP.mz.splice(a.fromIndex,1);
+        dropXyzMaterials(FP,eq,gs); dropEquips(FP,eq,gs); }
       if(eq.owner==null) eq.owner=a.fromPlayer;
       eq.controller=a.player; eq.face='up'; eq.pos='atk';
       eq.v46MonsterEquip=true; eq.equipUid=eq.equipUid||eq.uid;
@@ -2605,6 +2643,7 @@ function applyActionBodyV31(gs, a){
       const card = removeFrom(P, "hand", hIdx);
       if(!card) break;
       card.face='up'; card.pos=a.pos||'atk'; card.attacked=false; card.specialSummoned=true; card.properlySummonedS03=true;   /* S03-U127 */
+      card.specialSummonKind='ritual';   /* S03-U369: 「儀式召喚に成功した時」 (リチュアルバスター) reads the kind */
       /* P3: 儀式召喚の provenance。素材の identity と snapshot を残す。 */
       applySummonProvenanceP3(gs, card, a, 'ritual');
       P.mz.push(card);
@@ -2858,7 +2897,7 @@ const ZONE_LOCAL_KEYS = [
   'oppTargetImmuneTurnS03','fusionMaterialS03',   // S03-U130: ダーク・フュージョン / 融合召喚に使用した融合素材
   'attackAllS03',   // S03-U149: the monsters an attack-all card attacked this turn
   'u155ReturnTurn','u155CoffinTurn',   // S03-U155: 異次元からの帰還 / 封印の黄金櫃 marks
-  'battledWithS03','u161ViceMarkedBy','u161ViceTargetUid','u165TempesterBy','u165TempesterUids','noSynchroMaterialTurnS03',                    // S03-U160: uids of the monsters this card battled while on the field (「このカードと戦闘を行ったモンスター」)
+  'battledWithS03','u161ViceMarkedBy','u161ViceTargetUid','u165TempesterBy','u165TempesterUids','noSynchroMaterialTurnS03','noSynchroMaterialS03',                    // S03-U160: uids of the monsters this card battled while on the field (「このカードと戦闘を行ったモンスター」)
   'u154SwordsTurn','u154LimiterTurn',   // S03-U154: 光の護封剣 / リミッター解除 marks belong to this stay on the field
   'd4WeaponSrcUid','d4WeaponUntilTurn',   // S03-U151: ウェポンチェンジ's swap belongs to the monster's stay on the field
   'battledTurnS03','gladiatorSummonedS03',   // S03-U180 (engine/1ZZ)
@@ -3071,6 +3110,20 @@ function locateCard(card){
    スキルドレイン等は魔法＆罠ゾーンからモンスターの効果を無効にするので、
    先に mz 以外を集めてから、無効化されていないモンスターを足す2段階で求める。 */
 function gs2Turn(){ return gameState.turn; }
+const NEGATE_FROM_MZ_S03 = new Set();   /* S03-U432 */
+function declareNegateFromMzS03(name){ NEGATE_FROM_MZ_S03.add(name); }
+/* S03-U433: does a declared face-up MONSTER source (ゴーレム / コアキメイル・デビル ...) negate this monster's effects, continuous ones included?
+   collectSources(['mz'], true) asks it so that the negated monster's continuous effect is not collected (the raw scan below never calls continuousSources, no recursion). */
+function mzNegateS03(card, loc){
+  if(!NEGATE_FROM_MZ_S03.size) return false;
+  const srcs = [];
+  for(let p=0; p<2; p++) (gameState.players[p].mz||[]).forEach((c,i)=>{
+    if(!c || c.face!=='up' || !NEGATE_FROM_MZ_S03.has(cardName(c)) || c.negated || c.negatedUntilTurn===gs2Turn() || battleDestroyConfirmed(c)) return;
+    if(typeof negatedByV13==='function' && negatedByV13(c, gameState)) return;
+    const sc = CARD_SCRIPTS[dbOf(c).n]; if(sc && sc.continuous) srcs.push({p, zone:'mz', index:i, card:c, sc});
+  });
+  return srcs.length>0 && effectNegatedBy(srcs, card, loc);
+}
 function collectSources(zones, skipNegated){
   const out = [];
   /* System v29: 墓地ソースの宣言集合は1回だけ引く（カードごとに引かない）。 */
@@ -3085,7 +3138,7 @@ function collectSources(zones, skipNegated){
       if(card.negatedUntilTurn === gs2Turn()) return;   // 聖杯などによる一時的な無効化
       if(typeof negatedByV13==='function' && negatedByV13(card, gameState)) return;  // System v13
       if(battleDestroyConfirmed(card)) return;    // 戦闘破壊が確定している
-      if(skipNegated && effectNegatedBy(out, card, {p, zone})) return;
+      if(skipNegated && (effectNegatedBy(out, card, {p, zone}) || mzNegateS03(card, {p, zone}))) return;
       const sc = CARD_SCRIPTS[dbOf(card).n];
       if(!sc || !sc.continuous) return;
       const from = sc.continuous.from || ['mz','sz','field'];
@@ -3196,9 +3249,15 @@ function effectNegated(card){
   /* S03-U118: 無効化されている罠カード（トラップ・スタン／王宮のお触れ／サイコ・ショッカー）の negateEffect は数えない。
      continuousSources() の魔法＆罠・フィールド部分がその判定済みの集合（collectSources を直接見ると素通りする）。 */
   const stSources = (typeof trapSourcesFilterS03==='function')
-    ? continuousSources().filter(x=>x.zone==='sz'||x.zone==='field')
+    ? continuousSources().filter(x=>x.zone==='sz'||x.zone==='field'||x.zone==='linger')   /* S03-U453: a lingering source's negateEffect (ゴーゴンの眼) */
     : collectSources(['sz','field'], false);
-  return effectNegatedBy(stSources, card, loc);
+  if(effectNegatedBy(stSources, card, loc)) return true;
+  /* S03-U432: ゴーレム — a face-up MONSTER whose name was declared with declareNegateFromMzS03 negates other monsters through its continuous.negateEffect (the sz / field layer above never saw monster sources) */
+  if(NEGATE_FROM_MZ_S03.size){
+    const mzS = continuousSources().filter(x=>x.zone==='mz' && NEGATE_FROM_MZ_S03.has(cardName(x.card)));
+    if(mzS.length && effectNegatedBy(mzS, card, loc)) return true;
+  }
+  return false;
 }
 
 /* このモンスターが攻撃宣言できないか */
@@ -3409,6 +3468,9 @@ function applyPiercingDamage(info){
     /* A target omitted from the serialized grant means every Defense Position battle this turn (H－ヒートハート).
        The original single-battle grant continues to require its stamped defender. */
     if(g && Number(g.turn)===Number(gameState.turn) && info.defCard && (g.target==null || info.defCard.uid===g.target)) amount = Math.max(0, Number(info.amount)||0); }
+  /* S03-U426: ニードル・ガンナー — a Synchro Monster that used a card with synchroMatPierceS03 as material pierces too */
+  if(info && info.atkCard && Array.isArray(info.atkCard.v380SummonMaterials) && info.atkCard.v380SummonMaterials.some(m=>{ const sM = CARD_SCRIPTS[m && m.name]; return !!sM && sM.synchroMatPierceS03===true; }))
+    amount = Math.max(amount, Math.max(0, Number(info.amount)||0));
   continuousSources().forEach(src=>{
     const f = src.sc.continuous && src.sc.continuous.piercingDamage;
     if(typeof f !== 'function') return;

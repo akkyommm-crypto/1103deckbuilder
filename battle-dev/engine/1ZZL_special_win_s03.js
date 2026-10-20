@@ -15,6 +15,13 @@ function specialWinMetS03(gs, p){
     if(!sw || !Array.isArray(sw.hand)) continue;
     if(sw.hand.every(x=>handNames.indexOf(x) >= 0)) return sw.label || n;
   }
+  /* S03-U401: the field form specialWinS03:{field:[names…]} (ウィジャ盤) — every named card stands face-up in the player's Spell & Trap Zone */
+  const szNames = (P.sz || []).filter(c=>c && c.face==='up' && !c.activationPending).map(c=>cardName(c));
+  for(const n of szNames){
+    const sw = (CARD_SCRIPTS[n] || {}).specialWinS03;
+    if(!sw || !Array.isArray(sw.field)) continue;
+    if(sw.field.every(x=>szNames.indexOf(x) >= 0)) return sw.label || n;
+  }
   return null;
 }
 function specialWinCheckS03(gs){

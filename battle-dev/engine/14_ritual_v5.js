@@ -306,6 +306,11 @@ function ritualFinishV5(player, spellName, monsterUid, picked){
        tributes:mats.map(h=>({p:h.p, zone:h.zone, index:h.index})),
        p3Materials:snaps, p3SummonType:'ritual',
        pos:'atk', reason:spellName});
+  /* S03-U369: a Ritual Summon is a Special Summon that succeeds: queue the success event (「儀式召喚に成功した時」, リチュアルバスター) */
+  if(PLAY_MODE===PLAY_MODES.DUEL && typeof queueSpecialSummonSuccessV2==='function'){
+    const rh = findCardByUid(monsterUid);
+    if(rh && rh.zone==='mz' && rh.p===player) queueSpecialSummonSuccessV2(player, rh.card, 'ritual');
+  }
   return true;
 }
 

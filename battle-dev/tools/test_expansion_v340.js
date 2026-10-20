@@ -4,8 +4,9 @@ const stateSrc=fs.readFileSync(path.join(ROOT,'engine','00_state_actions.js'),'u
 const procSrc=fs.readFileSync(path.join(ROOT,'engine','30_processor_chain_battle.js'),'utf8');
 const legalSrc=fs.readFileSync(path.join(ROOT,'engine','40_legal_script_engine.js'),'utf8');
 const expSrc=fs.readFileSync(path.join(ROOT,'cards','36_1103_expansion_v340.js'),'utf8');
-const allCards=fs.readdirSync(path.join(ROOT,'cards')).filter(x=>x.endsWith('.js'))
-  .map(x=>fs.readFileSync(path.join(ROOT,'cards',x),'utf8')).join('\n');
+const manifest=JSON.parse(fs.readFileSync(path.join(ROOT,'build_manifest.json'),'utf8'));
+const allCards=manifest.map(x=>x.path).filter(x=>x.startsWith('cards/')&&x.endsWith('.js'))
+  .map(x=>fs.readFileSync(path.join(ROOT,x),'utf8')).join('\n');
 const rows=[];
 const assert=(name,v,detail='')=>{rows.push({name,ok:!!v,detail}); if(!v) throw new Error(name+(detail?' '+detail:''));};
 const names=[...allCards.matchAll(/defineScript\(\s*["']([^"']+)["']/g)].map(m=>m[1]);

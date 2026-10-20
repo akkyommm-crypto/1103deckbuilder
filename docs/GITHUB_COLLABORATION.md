@@ -22,7 +22,9 @@ The original OneDrive checkpoint, logs, and shared files were left untouched. A 
 | `battle-dev/coordination/` | Current checkpoint pointer, resume state, work queue, capability notes, and governing prompt |
 | `AGENTS.md` | Codex and repository-wide Git safety rules |
 | `CLAUDE.md` | Claude Code entry point and branch boundary |
-| `scripts/finish-work.ps1` | Test -> commit -> push workflow |
+| `scripts/finish-work.ps1` | Gate -> commit -> push workflow, with full and non-blocking checkpoint modes |
+| `battle-dev/tools/check_quick.py` | Fast development checkpoint; never substitutes for the full release gate |
+| `battle-dev/tools/check_parallel.py` | Full gate using the authoritative `tools/check.py` command list with isolated parallel Node tests |
 | `scripts/setup-worktrees.ps1` | Idempotent worktree setup for Codex and Claude Code |
 | `.github/workflows/battle-ci.yml` | Pull-request and agent-branch verification |
 
@@ -42,9 +44,13 @@ The original OneDrive checkpoint, logs, and shared files were left untouched. A 
 1. Fetch without overwriting local work.
 2. Confirm the current branch and read the coordination documents.
 3. Edit only the owning worktree and battle scope.
-4. Run `.\scripts\finish-work.ps1 -Message "..."`.
-5. Open a pull request to `main` after the branch is pushed.
-6. Merge only when the `Battle verification` CI job succeeds and the diff has been reviewed.
+4. At an intermediate development checkpoint, run the focused positive and negative controls, then use `.\scripts\finish-work.ps1 -Message "..." -AsyncGate`. This runs the quick gate, commits, and pushes without waiting locally for the full gate.
+5. A pushed agent commit is pending until GitHub's `Battle verification` workflow succeeds for that exact SHA. Development may continue on later commits, but a green result must never be transferred from an older SHA.
+6. For a locally verified release candidate, run `.\scripts\finish-work.ps1 -Message "..." -ParallelGate -GateWorkers 4`. Omit `-ParallelGate` to retain the original sequential full gate.
+7. Open a pull request to `main` after the branch is pushed.
+8. Merge or publish only when the full `Battle verification` job succeeds for the exact candidate SHA and the diff has been reviewed.
+
+`-AsyncGate` is a non-blocking development checkpoint, not release evidence. The parallel full gate preserves the existing `tools/check.py` command list and pass/fail criteria while isolating temporary output for each Node process. If memory is constrained, use `-GateWorkers 2`.
 
 The finish script never force-pushes. Failed validation leaves the working changes uncommitted. A failed push leaves the successful local commit available for a later retry.
 
