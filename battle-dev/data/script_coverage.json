@@ -63110,12 +63110,13 @@
         {
           "kind": "helper:u312Define",
           "source": "cards\\HZZZZZZZZN_claude_s03_u378_targetlocks.js",
-          "line": 22
+          "line": 31
         }
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u378_targetlocks.js"
+        "tools\\test_s03_u378_targetlocks.js",
+        "tools\\test_s03_u456_target_source.js"
       ]
     },
     {
@@ -85976,6 +85977,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u439_garden_rock.js",
+        "tools\\test_s03_u456_target_source.js",
         "tools\\test_v670_batch19.js"
       ]
     },
@@ -87784,7 +87786,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZZZZN_claude_s03_u378_targetlocks.js",
-          "line": 46
+          "line": 55
         }
       ],
       "auto_table": false,
@@ -102581,12 +102583,13 @@
         {
           "kind": "unified",
           "source": "cards\\HZZZZZZZZN_claude_s03_u378_targetlocks.js",
-          "line": 35
+          "line": 44
         }
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u378_targetlocks.js"
+        "tools\\test_s03_u378_targetlocks.js",
+        "tools\\test_s03_u456_target_source.js"
       ]
     },
     {

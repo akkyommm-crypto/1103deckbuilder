@@ -983,7 +983,7 @@ function resolveOnePreparedLinkV27(link){
            （このresolveOnePreparedLinkV27）では一度も呼ばれておらず、cards/88_p3_provenance_recovery.js
            の各カードは自前のテストヘルパーでしか検証されていなかった —
            real DUEL 経路では movedByOpponentEffect が常に false になる ENGINE_MISSING だった。 */
-        if(typeof p3BeginEffectContextV3==='function') p3BeginEffectContextV3(link.player);
+        if(typeof p3BeginEffectContextV3==='function') p3BeginEffectContextV3(link.player, link.uid, link.name);
         try{ sc.resolve(ctx); }catch(e){
           gameState.systemFault=`${link.name} 解決エラー：${e.message||e}`;
           logIt(gameState,`<b>システム</b>：${gameState.systemFault}`);

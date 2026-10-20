@@ -14,9 +14,9 @@ defineScript('氷結界の御庭番', {
   type:'monster', priority:1, timing:['free'],
   condition(ctx){ ctx.reason = '永続効果のみのカードです'; return false; }, resolve(){}, afterResolve(){},
   continuous:{ scope:'ownMonsters', from:['mz'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(self.face!=='up' || !card || card.face!=='up' || dbOf(card).k!=='m' || String(dbOf(card).n||'').indexOf('氷結界')<0) return false;
-      const host = locateCardAnyV4(card), src = u378Source(); if(!host || !src || src.player===host.p) return false;
+      const host = locateCardAnyV4(card), src = u378SrcOf(effectInfo); if(!host || !src || src.player===host.p) return false;
       return src.db.k==='m' && (src.db.st||[]).indexOf('効果')>=0;
     } } });
 

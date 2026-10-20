@@ -4519,7 +4519,7 @@ let ACTIVE_SCRIPT = null;              // 実行中のスクリプト（対象�
 /* 対象耐性を持つか。スクリプトの continuous.immuneToTarget を優先し、
    無ければ効果テキストから自身への耐性を推定する。 */
 const TARGET_IMMUNE_CACHE = new Map();
-function targetImmune(card){
+function targetImmune(card, effectInfo){
   if(!card || card.face !== 'up') return false;
   const db = dbOf(card);
   const nm = db.n; if(!nm) return false;
@@ -4531,7 +4531,10 @@ function targetImmune(card){
       if(!cont.immuneToTarget) continue;
       if(!continuousReaches(cont.scope||'self', src.p, loc, src.card, card)) continue;
       let r = false;
-      try{ r = cont.immuneToTarget(card, src.card); }catch(e){ r = false; }
+      /* CODEX-C03: the third argument identifies the effect that is choosing a
+         target. Existing declarations ignore it; conditional declarations can
+         distinguish controller, Monster/Spell/Trap, Level, Synchro, etc. */
+      try{ r = cont.immuneToTarget(card, src.card, effectInfo||null); }catch(e){ r = false; }
       if(r) return true;
     }
   }
@@ -4553,8 +4556,9 @@ function targetImmune(card){
 }
 
 /* 対象を取る効果の候補から、耐性を持つカードを除く */
-function filterTargetable(cands, byPlayer){
+function filterTargetable(cands, byPlayer, effectInfo){
   if(!Array.isArray(cands)) return cands;
+  const srcInfo = effectInfo || (typeof targetEffectSourceS03==='function' ? targetEffectSourceS03(byPlayer) : {player:byPlayer});
   return cands.filter(x=>{
     if(!x || !x.card) return true;
     // 対象耐性は場のカードにのみ意味がある
@@ -4562,7 +4566,7 @@ function filterTargetable(cands, byPlayer){
     if(battleDestroyConfirmed(x.card)) return false;   // 戦闘破壊確定は対象に取れない
     /* S03-U130: 「このターン相手の効果の対象にならない」（ダーク・フュージョン）— 対象を取るプレイヤーが分かる時だけ判定する */
     if(typeof oppTargetImmuneNowS03==='function' && oppTargetImmuneNowS03(x.card, x.p, byPlayer)) return false;
-    return !targetImmune(x.card);
+    return !targetImmune(x.card, srcInfo);
   });
 }
 
@@ -5084,8 +5088,15 @@ function attachMoveProvenanceV3(card, prov){
      入れない。provenance は act() の時点で Action へ焼き込むので、再生は
      Journal の Action だけで完全に決まる（隠れ globals に依存しない）。      */
 let P3_EFFECT_CONTEXT = null;
-function p3BeginEffectContextV3(player){
-  P3_EFFECT_CONTEXT = (player===0||player===1) ? {player:player} : null;
+function p3BeginEffectContextV3(player, source, sourceName){
+  if(player!==0 && player!==1){ P3_EFFECT_CONTEXT=null; return; }
+  const ctx={player:player};
+  if(source && typeof source==='object'){
+    if(source.uid!=null) ctx.uid=source.uid;
+    if(!sourceName && typeof cardName==='function') sourceName=cardName(source);
+  }else if(source!=null && Number.isFinite(Number(source))) ctx.uid=Number(source);
+  if(sourceName) ctx.name=String(sourceName);
+  P3_EFFECT_CONTEXT=ctx;
 }
 function p3EndEffectContextV3(){ P3_EFFECT_CONTEXT = null; }
 /* 自動付与する移動 Action。ここを増やすときは必ずテストも足す。 */
@@ -14789,6 +14800,77 @@ registerChoiceHandlerV49(ATTACK_RETURN_COST_HANDLER_S03, function(answer, args){
   attackRequestNowS03(args.player, args.attackerUid, args.target, true);   /* the paid cost travels in the ATTACK payload */
 });
 /* =========================================================================
+   CODEX-C03 — source-aware targeting immunity
+   -------------------------------------------------------------------------
+   `continuous.immuneToTarget(target, self, effectInfo)` may now decide from:
+     player, name, uid, card, db, cardType ('m'|'s'|'t'), subtype,
+     level, isEffectMonster, isSynchro.
+
+   Target choice happens in three different paths: activation preparation,
+   resolution-time choice, and direct runScript. This helper normalizes their
+   transient source metadata without storing functions or new duel state.
+   ========================================================================= */
+function targetEffectSourceS03(byPlayer, explicit){
+  if(explicit && typeof explicit==='object'){
+    const copy=Object.assign({}, explicit);
+    if(byPlayer===0 || byPlayer===1) copy.player=byPlayer;
+    return targetEffectSourceDetailsS03(copy);
+  }
+  let raw=null;
+  if(typeof ACTIVATION_PREP_S03!=='undefined' && ACTIVATION_PREP_S03){
+    raw={player:ACTIVATION_PREP_S03.player,uid:ACTIVATION_PREP_S03.uid,name:ACTIVATION_PREP_S03.name};
+  }else if(typeof RESOLVING_LINK_S03!=='undefined' && RESOLVING_LINK_S03){
+    raw={player:RESOLVING_LINK_S03.player,uid:RESOLVING_LINK_S03.uid,name:RESOLVING_LINK_S03.name};
+  }else if(typeof P3_EFFECT_CONTEXT!=='undefined' && P3_EFFECT_CONTEXT){
+    raw={player:P3_EFFECT_CONTEXT.player,uid:P3_EFFECT_CONTEXT.uid,name:P3_EFFECT_CONTEXT.name};
+  }else if(typeof ACTIVE_SCRIPT!=='undefined' && ACTIVE_SCRIPT){
+    raw={player:null,name:ACTIVE_SCRIPT.name||null};
+  }else raw={player:null};
+  if(byPlayer===0 || byPlayer===1) raw.player=byPlayer;
+  return targetEffectSourceDetailsS03(raw);
+}
+
+function targetEffectSourceDetailsS03(raw){
+  raw=raw||{};
+  let hit=null;
+  if(raw.uid!=null && typeof findCardByUid==='function') hit=findCardByUid(raw.uid);
+  const card=raw.card || (hit&&hit.card) || null;
+  let name=raw.name || (card&&typeof cardName==='function' ? cardName(card) : null);
+  let db=raw.db || (card&&typeof dbOf==='function' ? dbOf(card) : null);
+  if((!db || !db.n) && name && typeof findCardIndex==='function' && typeof CARD_DB!=='undefined'){
+    const i=findCardIndex(name); if(i>=0) db=CARD_DB[i]||null;
+  }
+  if(!name && db) name=db.n||null;
+  const st=(db&&Array.isArray(db.st))?db.st:[];
+  let level=Number(db&&db.lv||0);
+  if(card && db && db.k==='m' && typeof curLV==='function') level=curLV(card);
+  return {
+    player:(raw.player===0||raw.player===1)?raw.player:null,
+    name:name||null,
+    uid:raw.uid!=null?raw.uid:(card&&card.uid!=null?card.uid:null),
+    card:card,
+    db:db||null,
+    cardType:db&&db.k||null,
+    subtype:db&&db.sub||'',
+    level:level,
+    isEffectMonster:!!(db&&db.k==='m'&&st.indexOf('効果')>=0),
+    isSynchro:!!(db&&db.k==='m'&&st.indexOf('シンクロ')>=0)
+  };
+}
+
+/* Small declarative matcher for the remaining target-immunity consumers. */
+function targetEffectMatchesS03(info, spec){
+  info=targetEffectSourceDetailsS03(info||{}); spec=spec||{};
+  if(spec.opponentOf===0 || spec.opponentOf===1){
+    if(info.player==null || info.player===spec.opponentOf) return false;
+  }
+  if(Array.isArray(spec.cardTypes) && spec.cardTypes.indexOf(info.cardType)<0) return false;
+  if(spec.effectMonster===true && !info.isEffectMonster) return false;
+  if(spec.synchro===true && !info.isSynchro) return false;
+  if(spec.maxLevel!=null && !(info.level>0 && info.level<=Number(spec.maxLevel))) return false;
+  return true;
+}
+/* =========================================================================
    S03-U383 — 「このカードが相手のコントロールするカードの効果の対象になり、その処理を行う時にサイコロを1回振る。
               X が出た場合、その効果を無効にし破壊する。」 (the 2003 「デーモン」 monsters)
    -------------------------------------------------------------------------
@@ -17740,7 +17822,7 @@ function resolveOnePreparedLinkV27(link){
            （このresolveOnePreparedLinkV27）では一度も呼ばれておらず、cards/88_p3_provenance_recovery.js
            の各カードは自前のテストヘルパーでしか検証されていなかった —
            real DUEL 経路では movedByOpponentEffect が常に false になる ENGINE_MISSING だった。 */
-        if(typeof p3BeginEffectContextV3==='function') p3BeginEffectContextV3(link.player);
+        if(typeof p3BeginEffectContextV3==='function') p3BeginEffectContextV3(link.player, link.uid, link.name);
         try{ sc.resolve(ctx); }catch(e){
           gameState.systemFault=`${link.name} 解決エラー：${e.message||e}`;
           logIt(gameState,`<b>システム</b>：${gameState.systemFault}`);
@@ -19996,6 +20078,14 @@ const API = {
   registerChoiceHandler(name, fn){ return registerChoiceHandlerV49(name, fn); },
   answerChoice(keys){ return answerChoiceV49(keys); },
   cancelChoice(){ return cancelChoiceV49(); },
+  /* CODEX-C03: common target-immunity consumers use the same source-aware
+     filter as API.selectCard / ChoiceRequest. */
+  targetEffectInfoS03(byPlayer){
+    return (typeof targetEffectSourceS03==='function') ? targetEffectSourceS03(byPlayer) : {player:byPlayer};
+  },
+  targetableCardsS03(candidates, byPlayer){
+    return (typeof filterTargetable==='function') ? filterTargetable(candidates||[], byPlayer) : (candidates||[]);
+  },
 
   /* --- 以下は legacy 互換層 --------------------------------------------
      onPick がクロージャなのでレジストリ化できない。シグネチャ互換のため
@@ -20324,7 +20414,7 @@ function runScript(name, p, zone, index, opts){
   const card = zone ? zoneCard(P, zone, index) : null;
   const ctx = makeContext(p, card, zone, index, "activate", opts||{});
   ACTIVE_SCRIPT = sc;                  // 対象耐性の判定に使う
-  p3BeginEffectContextV3(p);           // P3: この効果のコントローラを provenance に使う
+  p3BeginEffectContextV3(p, card, name); // P3 / CODEX-C03: controller and source identity
   beginCostSnapshotsV3(gameState);     // P3: コストsnapshotのバッファを毎回空にする
   SCRIPT_ZONE = zone;                  // 「墓地で発動する効果」の判定に使う
   beginResolve(name);                  // 中断したときに巻き戻す位置を覚える
@@ -87681,6 +87771,15 @@ declareActivationResponseS03(['椿姫ティタニアル']);
    - ベリアル' attack part: continuous.cannotBeAttackTarget (as 魔知ガエル S03-U371), every other face-up monster of its controller is protected.
    - 滅びの爆裂疾風弾: the used Spell registers itself as a lingering source (API.lingerS03 + continuous.from:['linger'], S03-U257) with a turn stamp; continuous.cannotAttack stops every 「青眼の白龍」 of its controller for that turn, also one Special Summoned afterwards. */
 
+/* ---- CODEX-C03: 対象を選んでいる効果のソース ----
+   filterTargetable() が1回だけ正規化して第3引数で渡してくるので、それを最優先で使う。
+   発動準備・チェーン解決・直接 runScript の3経路すべてをカバーできる。
+   u378Source() は effectInfo が渡らない経路のためのフォールバックとして残す
+   （こちらは ACTIVATION_PREP_S03 がある間しか返さない）。 */
+function u378SrcOf(effectInfo){
+  if(effectInfo && effectInfo.player!=null && effectInfo.db) return effectInfo;
+  return u378Source();
+}
 /* ---- the card that is being activated (its effect is the one that targets) ---- */
 function u378Source(){
   const prep = (typeof ACTIVATION_PREP_S03!=='undefined' && ACTIVATION_PREP_S03 && ACTIVATION_PREP_S03.uid!=null) ? ACTIVATION_PREP_S03 : null;
@@ -87691,9 +87790,9 @@ function u378Source(){
 
 /* ---- ヴァイロン・セグメント ---- */
 u312Define('ヴァイロン・セグメント', {pred:u312IsVylon, effects:[u312VylonSearchEffect('ヴァイロン・セグメント')], meta:u312VylonMeta(),
-  continuous:{ immuneToTarget(card, self){
+  continuous:{ immuneToTarget(card, self, effectInfo){
     if(!equippedS03(card, self)) return false;
-    const host = locateCardAnyV4(card), src = u378Source(); if(!host || !src || src.player===host.p) return false;
+    const host = locateCardAnyV4(card), src = u378SrcOf(effectInfo); if(!host || !src || src.player===host.p) return false;
     return src.db.k==='t' || (src.db.k==='m' && (src.db.st||[]).indexOf('効果')>=0);
   } } });
 
@@ -87706,9 +87805,9 @@ function u378Mine(self, target){
 defineUnifiedCardV4('闇の侯爵ベリアル', [], {type:'monster', priority:1,
   continuous:{ scope:'allMonsters', from:['mz'], apply(){ return null; },
     cannotBeAttackTarget(target, self){ return u378Mine(self, target); },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(!u378Mine(self, card)) return false;
-      const host = findCardByUid(self.uid), src = u378Source(); if(!host || !src || src.player===host.p) return false;
+      const host = findCardByUid(self.uid), src = u378SrcOf(effectInfo); if(!host || !src || src.player===host.p) return false;
       return src.db.k==='s' || src.db.k==='t';
     } } });
 
@@ -93460,9 +93559,9 @@ defineScript('氷結界の御庭番', {
   type:'monster', priority:1, timing:['free'],
   condition(ctx){ ctx.reason = '永続効果のみのカードです'; return false; }, resolve(){}, afterResolve(){},
   continuous:{ scope:'ownMonsters', from:['mz'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(self.face!=='up' || !card || card.face!=='up' || dbOf(card).k!=='m' || String(dbOf(card).n||'').indexOf('氷結界')<0) return false;
-      const host = locateCardAnyV4(card), src = u378Source(); if(!host || !src || src.player===host.p) return false;
+      const host = locateCardAnyV4(card), src = u378SrcOf(effectInfo); if(!host || !src || src.player===host.p) return false;
       return src.db.k==='m' && (src.db.st||[]).indexOf('効果')>=0;
     } } });
 

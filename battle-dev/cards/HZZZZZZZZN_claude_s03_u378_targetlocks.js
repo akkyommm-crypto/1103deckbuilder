@@ -10,6 +10,15 @@
    - ベリアル' attack part: continuous.cannotBeAttackTarget (as 魔知ガエル S03-U371), every other face-up monster of its controller is protected.
    - 滅びの爆裂疾風弾: the used Spell registers itself as a lingering source (API.lingerS03 + continuous.from:['linger'], S03-U257) with a turn stamp; continuous.cannotAttack stops every 「青眼の白龍」 of its controller for that turn, also one Special Summoned afterwards. */
 
+/* ---- CODEX-C03: 対象を選んでいる効果のソース ----
+   filterTargetable() が1回だけ正規化して第3引数で渡してくるので、それを最優先で使う。
+   発動準備・チェーン解決・直接 runScript の3経路すべてをカバーできる。
+   u378Source() は effectInfo が渡らない経路のためのフォールバックとして残す
+   （こちらは ACTIVATION_PREP_S03 がある間しか返さない）。 */
+function u378SrcOf(effectInfo){
+  if(effectInfo && effectInfo.player!=null && effectInfo.db) return effectInfo;
+  return u378Source();
+}
 /* ---- the card that is being activated (its effect is the one that targets) ---- */
 function u378Source(){
   const prep = (typeof ACTIVATION_PREP_S03!=='undefined' && ACTIVATION_PREP_S03 && ACTIVATION_PREP_S03.uid!=null) ? ACTIVATION_PREP_S03 : null;
@@ -20,9 +29,9 @@ function u378Source(){
 
 /* ---- ヴァイロン・セグメント ---- */
 u312Define('ヴァイロン・セグメント', {pred:u312IsVylon, effects:[u312VylonSearchEffect('ヴァイロン・セグメント')], meta:u312VylonMeta(),
-  continuous:{ immuneToTarget(card, self){
+  continuous:{ immuneToTarget(card, self, effectInfo){
     if(!equippedS03(card, self)) return false;
-    const host = locateCardAnyV4(card), src = u378Source(); if(!host || !src || src.player===host.p) return false;
+    const host = locateCardAnyV4(card), src = u378SrcOf(effectInfo); if(!host || !src || src.player===host.p) return false;
     return src.db.k==='t' || (src.db.k==='m' && (src.db.st||[]).indexOf('効果')>=0);
   } } });
 
@@ -35,9 +44,9 @@ function u378Mine(self, target){
 defineUnifiedCardV4('闇の侯爵ベリアル', [], {type:'monster', priority:1,
   continuous:{ scope:'allMonsters', from:['mz'], apply(){ return null; },
     cannotBeAttackTarget(target, self){ return u378Mine(self, target); },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(!u378Mine(self, card)) return false;
-      const host = findCardByUid(self.uid), src = u378Source(); if(!host || !src || src.player===host.p) return false;
+      const host = findCardByUid(self.uid), src = u378SrcOf(effectInfo); if(!host || !src || src.player===host.p) return false;
       return src.db.k==='s' || src.db.k==='t';
     } } });
 
