@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U455",
+  "category": "card",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "regression fixes for two U454 cards: 成功確率0% (only Fusion Monsters are candidates, duelRandomInt(max, gameState)) and 同姓同名同盟条約 (4+ same-name monsters: activatable, no effect); extended in place in the U454 card / test files; no engine change",
+  "outcome": "gate 21944 PASS / 0 FAIL",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-20T00:00:00+09:00",
+  "finished_at": "2026-10-20T00:00:00+09:00",
+  "gate_owner": "sonnet-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: per-unit tokens not available in this session",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Single Sonnet subagent session. Scope switched mid-unit from a restriction-card theme (no files written). gate_exit to be filled from the final gate."
+}

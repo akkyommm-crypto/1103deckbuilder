@@ -11,8 +11,8 @@
    - 古代の遠眼鏡: the controller sees the names in a 'declare' ChoiceRequest (one OK candidate whose label lists the top cards); nothing moves.
    - コザッキーの研究成果: the top three cards are picked one after another by the controller (ChoiceRequest, the last one is automatic) and put back with DECK_ORDER_V20 (the first picked ends up on top).
    - 電磁シールド: continuous.battleProof (scope 'ownMonsters', from the Spell & Trap Zone) for face-up Defense Position Level 3 or lower Thunder monsters; selfDestroyWhenS03 while a face-up Attack Position monster of mine exists (also at the activation, like the other S03 Continuous Spells).
-   - 同姓同名同盟条約: the largest group of face-up non-Token monsters with one name decides (2 → one opponent Spell / Trap chosen at the resolution, 3 or more → all of them; the opponent's Field Zone counts as a Spell Card).
-   - 成功確率0%: two random Fusion Monsters of the opponent's Extra Deck (duelRandomInt) are sent to the Graveyard; fewer than two → all.
+   - 同姓同名同盟条約: the largest group of face-up non-Token monsters with one name decides (2 → one opponent Spell / Trap chosen at the resolution, exactly 3 → all of them; the opponent's Field Zone counts as a Spell Card). S03-U455: with 4 or more it is still activatable (2体以上) but neither bullet applies (U454 wrongly treated 4+ as 3). RULING_UNRESOLVED: the repo has no ruling data for 4+ or for two different-name pairs.
+   - 成功確率0%: two random Fusion Monsters of the opponent's Extra Deck (duelRandomInt) are sent to the Graveyard; fewer than two → all of those. S03-U455: the candidates are only the Fusion Monsters of the Extra Deck (U454 drew from the whole Extra Deck, so Synchro / Xyz Monsters could be sent); the card is activatable with 0 or 1 Fusion Monsters (no activation condition in the text; RULING_UNRESOLVED: no ruling data in the repo).
    - 友情 YU－JYO: LP are set (LP Action without a cause) to half of the sum; the opponent answers a 'declare' ChoiceRequest (shake hands or not); a 「結束 UNITY」 in my hand can be shown instead, which needs no answer. */
 
 /* ---- 古代の遠眼鏡 ---- */
@@ -78,8 +78,9 @@ defineScript('同姓同名同盟条約', {
   type:'trap', priority:2,
   condition(ctx){ if(u454Group(ctx.player)<2){ ctx.reason = '自分フィールドにトークン以外の同名の表側表示モンスターが2体以上必要です'; return false; } return true; },
   resolve(ctx){
-    const n = u454Group(ctx.player), pool = u454FoeSt(ctx.opponent); if(n<2 || !pool.length) return;
-    if(n>=3){ pool.map(x=>ensureCardUid(gameState, x.card)).forEach(u=>{ const h = findCardByUid(u); if(h) API.destroy(h, '同姓同名同盟条約'); }); return; }
+    /* S03-U455: the text names only the 2-monster and the 3-monster effect. 4 or more same-name monsters still allow the activation (「2体以上存在する場合に発動できる」), but neither bullet applies. */
+    const n = u454Group(ctx.player), pool = u454FoeSt(ctx.opponent); if(n<2 || n>3 || !pool.length) return;
+    if(n===3){ pool.map(x=>ensureCardUid(gameState, x.card)).forEach(u=>{ const h = findCardByUid(u); if(h) API.destroy(h, '同姓同名同盟条約'); }); return; }
     pool.forEach(x=>ensureCardUid(gameState, x.card));
     API.requestChoice({kind:'card', title:'同姓同名同盟条約：破壊する相手の魔法・罠カード', candidates:pool, min:1, max:1, player:ctx.player, cancelable:false, resume:{handler:'s03u454.treaty', args:{foe:ctx.opponent}}});
   },
@@ -91,11 +92,12 @@ defineScript('成功確率0%', {
   type:'trap', priority:2,
   condition(ctx){ return true; },
   resolve(ctx){
-    for(let i=0; i<2; i++){
-      const ex = (gameState.players[ctx.opponent].ex || []); if(!ex.length) return;
-      const k = duelRandomInt(ex.length), c = ex[k];
-      const h = findCardByUid(ensureCardUid(gameState, c)); if(h) API.sendToGrave(h, '成功確率0%');
-    }
+    /* S03-U455: only Fusion Monsters of the Extra Deck are candidates (Synchro / Xyz are never picked); up to two are drawn from that subset
+       with the journaled duel RNG. The text has no activation condition, so 0 or 1 Fusion Monsters still allow the activation (all that exist are sent). */
+    const pool = (gameState.players[ctx.opponent].ex || []).filter(c=>{ const d = dbOf(c); return !!d && (d.st || []).indexOf('融合') >= 0; });
+    const picked = [];
+    while(picked.length < 2 && pool.length) picked.push(pool.splice(duelRandomInt(pool.length, gameState), 1)[0]);
+    picked.forEach(c=>{ const h = findCardByUid(ensureCardUid(gameState, c)); if(h) API.sendToGrave(h, '成功確率0%'); });
   },
   afterResolve(){}
 });

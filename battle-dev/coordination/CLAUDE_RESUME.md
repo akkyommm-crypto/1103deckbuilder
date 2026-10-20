@@ -147,7 +147,8 @@
 - Gate after U451 (commit 4a0a1ae, pushed): 21864 PASS, FAIL 0; coverage TESTED 3563 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 357.
 - Gate after U452 (commit 4a0a1ae, pushed): 21878 PASS, FAIL 0; coverage TESTED 3567 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 353.
 - Gate after U453 (commit cb2382f, pushed): 21895 PASS, FAIL 0; coverage TESTED 3570 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 350.
-- Gate after U454 (expected): 21922 PASS = 21895 + 27; coverage TESTED 3576 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 344.
+- Gate after U454 (measured in U455 on the clean tree 491dcfc): 21922 PASS = 21895 + 27, GATE_EXIT=0, FAIL 0; coverage TESTED 3576 / PARTIAL 10 / NOT_STARTED 419 / ENGINE_GAP 344.
+- Gate after U455 (expected): 21944 PASS = 21922 + 22; coverage unchanged. U455 fixed two U454 cards in place: 成功確率0% (only Fusion Monsters are candidates) and 同姓同名同盟条約 (4+ same-name: activatable, no effect). RULING_UNRESOLVED: 成功確率0% with 0/1 Fusion Monsters (chose activatable); 同姓同名同盟条約 with 4+ or two different-name pairs (chose literal text: no bullet applies, largest group counts). See docs/S03_U455_REPORT.md.
 - DISK TIP: each gate leaves ~5.4 MB `tmp*.js` files in %TEMP% (about 40 per gate); delete the ones of 5–6 MB after every gate or C: fills up.
 - DISK: C: hit 0 bytes free on 2026-10-13. 38.7 GB is an old session task-output folder (`%TEMP%claudeC--Users-81806-OneDrive-…a897e0c6…	asks`, 2026-10-10) — NOT deleted, the user decides. Gate runs leave ~7 MB each in %TEMP% (gate log, tmp*.js). Workflow notes: `finish-work.ps1` needs `git checkout -- battle-dev/dist/battle.html` first if `dist` was rebuilt by hand; a card added to a hand after `baselineA()` breaks the Replay audit; unified Equip Spells are offered through `getLegalHandActions`.
 - OPEN ENGINE ITEM (needs design, Opus): 「cannot be targeted」 — a central filter on target selection. Consumers (9): ヴァイロン・セグメント, ヴァイロン・エプシロン, オベリスクの巨神兵, ジュラック・タイタン, ターボ・ウォリアー, 救世の儀式, 機皇城, 氷結界の御庭番.

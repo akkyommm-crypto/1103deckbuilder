@@ -214,4 +214,59 @@ function treatyBoard(n){fresh();const tr=setTrap(TRE,0),ws=[],s1=mk('サイク�
   cast(0,YUJ,['unity']);
   ok('友情 YU－JYO: showing 結束 UNITY applies the effect without asking the opponent',lp(0)===5000&&lp(1)===5000&&!pc(),JSON.stringify([lp(0),lp(1)]));
   audit('友情 3'); }
+
+/* ===== S03-U455 regression: 成功確率0% (only Fusion Monsters are candidates) ===== */
+const FUS=['E・HERO アクア・ネオス','E・HERO エアー・ネオス','E・HERO グロー・ネオス','E・HERO ガイア'],SYN=['A・O・J カタストル','C・ドラゴン','TG ハイパー・ライブラリアン'],XYZ=['No.11 ビッグ・アイ'];
+function zeroBoard(fus,oth,seed){fresh();gameState.rngInitialSeed=gameState.rngState=seed;const tr=setTrap(ZER,0),f=fus.map(n=>mk(n,1)),o=oth.map(n=>mk(n,1)),ex=[];
+  for(let i=0;i<Math.max(f.length,o.length);i++){if(o[i])ex.push(o[i]);if(f[i])ex.push(f[i]);}
+  gameState.players[0].sz=[tr];gameState.players[1].ex=ex;baselineA();return {tr,f,o,ex};}
+function nm(cs){return cs.map(c=>cardName(c)).join('|');}
+function expectPicks(names,seed){const g=gameState,keep=g.rngState;g.rngState=seed;const pool=names.slice(),out=[];while(out.length<2&&pool.length)out.push(pool.splice(duelRandomInt(pool.length,g),1)[0]);g.rngState=keep;return out;}
+{ /* mixed Fusion + Synchro + Xyz over many seeds: only Fusion Monsters are ever sent, always exactly two */
+  const surv={};let bad=0,badSyn=0,badEx=0,n=0,matchRng=0;
+  for(let i=0;i<24;i++){const seed=(0x4350001+i*7919)>>>0,fus=FUS.slice(0,3),B=zeroBoard(fus,SYN.concat(XYZ),seed),want=expectPicks(fus,seed);actSz(0);n++;
+    const sent=B.f.filter(c=>z(c)==='grave'),other=B.o.filter(c=>z(c)==='grave');
+    if(sent.length!==2)bad++;if(other.length)badSyn++;
+    if(B.o.some(c=>z(c)!=='ex'))badEx++;
+    sent.forEach(c=>{});B.f.filter(c=>z(c)==='ex').forEach(c=>{surv[cardName(c)]=(surv[cardName(c)]||0)+1;});
+    if(nm(sent.slice().sort((a,b)=>a.uid-b.uid))===nm(B.f.filter(c=>want.indexOf(cardName(c))>=0)))matchRng++;}
+  ok('成功確率0% (U455) mixed pile: 24 seeds, every time exactly two Fusion Monsters are sent',bad===0&&n===24,'bad='+bad);
+  ok('成功確率0% (U455) mixed pile: no Synchro / Xyz Monster is ever sent; all of them stay in the Extra Deck',badSyn===0&&badEx===0,JSON.stringify({badSyn,badEx}));
+  ok('成功確率0% (U455) the pick is random inside the Fusion subset (each of the 3 Fusion Monsters survived in some seed)',Object.keys(surv).length===3,JSON.stringify(surv));
+  ok('成功確率0% (U455) the picks are exactly the journaled duelRandomInt draws (replay-safe RNG, not Math.random)',matchRng===24,'match='+matchRng); }
+{ const seed=0x1234567,B=zeroBoard(FUS,SYN,seed),want=expectPicks(B.ex.filter(c=>dbOf(c).st.indexOf('融合')>=0).map(c=>cardName(c)),seed);actSz(0);
+  const sent=B.f.filter(c=>z(c)==='grave');
+  ok('成功確率0% (U455) 4 Fusion + 3 Synchro: exactly two Fusion Monsters sent, confined to the Fusion subset, matching the seeded draw',sent.length===2&&B.o.every(c=>z(c)==='ex')&&nm(sent.slice().sort((a,b)=>a.uid-b.uid))===nm(B.f.filter(c=>want.indexOf(cardName(c))>=0))&&gameState.players[1].ex.length===5&&z(B.tr)==='grave',JSON.stringify({sent:nm(sent),want}));
+  audit('成功確率0% U455 4 Fusion'); }
+{ const seed=0x1234567,run=()=>{const B=zeroBoard(FUS,SYN,seed);actSz(0);return nm(B.f.filter(c=>z(c)==='grave'));},r1=run(),r2=run();
+  ok('成功確率0% (U455) same seed, same Fusion Monsters: the pick is replay-deterministic',r1===r2&&r1.length>0,r1+' / '+r2); }
+{ const B=zeroBoard([],SYN.concat(XYZ),0x2222);
+  ok('成功確率0% (U455) 0 Fusion Monsters: the text has no activation condition, so it is still activatable',legalT(0)===true,'');
+  actSz(0);
+  ok('成功確率0% (U455) 0 Fusion Monsters: nothing is sent (Synchro / Xyz stay), the Trap is used up',B.o.every(c=>z(c)==='ex')&&gameState.players[1].ex.length===4&&z(B.tr)==='grave',JSON.stringify(B.o.map(z)));
+  audit('成功確率0% U455 0 Fusion'); }
+{ const B=zeroBoard([FUS[0]],SYN,0x3333);
+  ok('成功確率0% (U455) exactly 1 Fusion Monster: still activatable',legalT(0)===true,'');
+  actSz(0);
+  ok('成功確率0% (U455) exactly 1 Fusion Monster: that one is sent and no Synchro Monster is taken in its place',z(B.f[0])==='grave'&&B.o.every(c=>z(c)==='ex')&&gameState.players[1].ex.length===3,JSON.stringify([z(B.f[0]),B.o.map(z)]));
+  audit('成功確率0% U455 1 Fusion'); }
+{ const B=zeroBoard(FUS.slice(0,2),SYN,0x4444);actSz(0);
+  ok('成功確率0% (U455) exactly 2 Fusion Monsters: both are sent, the Synchro Monsters stay',B.f.every(c=>z(c)==='grave')&&B.o.every(c=>z(c)==='ex'),JSON.stringify([B.f.map(z),B.o.map(z)])); }
+
+/* ===== S03-U455 regression: 同姓同名同盟条約 boundary (2 / 3 / 4+ same-name monsters) ===== */
+{ const B=treatyBoard(4);
+  ok('同姓同名同盟条約 (U455) 4 same-name monsters: still activatable (「2体以上存在する場合に発動できる」)',legalT(0)===true,'');
+  actSz(0);
+  ok('同姓同名同盟条約 (U455) 4 same-name monsters: neither the 2-monster nor the 3-monster effect applies (no opponent Spell / Trap destroyed), the Trap is used up',z(B.s1)==='sz'&&z(B.s2)==='sz'&&z(B.tr)==='grave'&&gameState.players[0].mz.length===4,JSON.stringify([z(B.s1),z(B.s2),z(B.tr)]));
+  audit('同盟条約 U455 4'); }
+{ const B=treatyBoard(5);actSz(0);
+  ok('同姓同名同盟条約 (U455) 5 same-name monsters: no opponent Spell / Trap destroyed either',z(B.s1)==='sz'&&z(B.s2)==='sz'&&z(B.tr)==='grave',JSON.stringify([z(B.s1),z(B.s2),z(B.tr)])); }
+{ const B=treatyBoard(3);
+  ok('同姓同名同盟条約 (U455) boundary 3: activatable and destroys every opponent Spell / Trap',legalT(0)===true,'');
+  actSz(0);
+  ok('同姓同名同盟条約 (U455) boundary 3: both opponent Spell / Trap Cards destroyed',z(B.s1)==='grave'&&z(B.s2)==='grave',JSON.stringify([z(B.s1),z(B.s2)])); }
+{ const B=treatyBoard(2);
+  ok('同姓同名同盟条約 (U455) boundary 2: activatable',legalT(0)===true,'');
+  actSz(0);
+  ok('同姓同名同盟条約 (U455) boundary 2: exactly one opponent Spell / Trap destroyed',[z(B.s1),z(B.s2)].filter(x=>x==='grave').length===1,JSON.stringify([z(B.s1),z(B.s2)])); }
 `);
