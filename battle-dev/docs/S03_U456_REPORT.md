@@ -50,3 +50,30 @@
 - 他のCodexブランチ7本（`codex/deck-priority-1`、`engine-target-immunity` の残り、`flip-suppress-position`、`invellz-gatekeeper`、`phase-priority`、`rabbit-laggia`、`safe-zone`）は未統合。すべて `0a5866c` から分岐し、エンジン中核と生成物で `claude/work` と重なる。ブランチマージではなく、機能コミットのcherry-pickと生成物の再生成で進める。
 - CIのゲート検証手順は `check_parallel.py` の最終行規則（インラインPython検証を先に出し、Node出力を後で再生するため最終行が `PARALLEL_NODE_DONE …` になり、PASS数も異なる）に合わせて更新が必要。CIワークフローは本単位の対象外なので記録のみ。
 - 詳細な調査メモ: `docs/CODEX_INTEGRATION_FINDINGS_20261020.md`（Opus、CI並列ゲート・Codex競合・ドライラン）。
+
+## 統合後の検証スイープ（Opus、2026-10-20）
+
+ユーザー指示「統合後の Replay・セーブ再開・実機テスト」に対する実測。
+`claude/work` `8fb6d34` のビルドに対し 28 duel を実行した。
+ツリーは改変せず、`R1_HARNESS` に外部ハーネス（ROOT 固定・`vm` 上限 900s）を指定して、
+`astra_harness.js` の 120s 上限による人為的な失敗を測定から排除している。
+
+| セット | 内容 | 本数 |
+|---|---|---|
+| A | 8シード × 先攻/後攻、`R1_RESPOND=1` + **`R1_SAVELOAD=1`（全停止点でセーブ再開）** | 16 |
+| B | 8シード、`R1_RESPOND=1` + **`HARNESS_UI=1`（実UIコードを走らせる）** | 8 |
+| C | 4シード、`R1_RESPOND=1` + `R1_POLICY=random`（別の行動経路） | 4 |
+
+### 結果: 28/28 クリーン、所見 0 件
+- 全 28 本が `completed:true`・`reason:"lp0"`（ライフ0による通常決着）。
+  `blocker` なし、`errors` 空、`unsupported` 空、`digestDiff` なし。
+- **Replay 監査: 合計 16,174 アクションが全件一致**（全 duel で `replay.ok:true`）。
+- **セーブ再開: 停止点 4,237 箇所すべてで往復成功**（`stops == done`、`skipped` 0）。
+  最大セーブサイズ 5.11 MB を往復しても再開後の digest が一致。
+- 実UIコードは実際に走っている（`render` 4,318回 / `closeSheet` 1,206回 /
+  `openChainPriorityV2` 313回 / `showToast` 12回）。**UI 例外 0 件**。
+- ターン数 5〜31（中央値 14）、決着は P0 敗北 20 / P1 敗北 8。
+
+### 実機テスト
+`dist/battle_acode.html`（`cards=4996`、SHA256 先頭 `bc4f48db942db3e8`）をユーザーへ提出済み。
+実機での確認はユーザー待ち。

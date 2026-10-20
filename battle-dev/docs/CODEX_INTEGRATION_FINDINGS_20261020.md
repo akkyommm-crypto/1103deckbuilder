@@ -286,11 +286,11 @@ PASS negative control: 自分の効果なら対象に取れる :: kept=1
 
 ---
 
-## ドライラン 第2段: **単一箇所修正**（推奨案を差し替え）
+## ドライラン 第2段: 2つの案を比較し、**effectInfo 版を採用**した
 
-段階Bではカードを1枚ずつ移植したが、engine の `targetEffectSourceS03()` が
-`db` も含めて返すため、**`u378Source()` 自体を engine へ委譲すれば3枚とも同時に直る**。
-カード側の述語（`src.db.k` / `src.db.st`）は無改変で済む。こちらを採る。
+engine の `targetEffectSourceS03()` が `db` も含めて返すため、
+**`u378Source()` 自体を engine へ委譲する案**（単一箇所修正）も成立する。実際に試して動いた。
+ただし最終的には採用しなかった。理由は下記「採否」。
 
 ```js
 function u378Source(){
@@ -306,6 +306,20 @@ function u378Source(){
   …従来の ACTIVATION_PREP_S03 経路（フォールバック）…
 }
 ```
+
+### 採否: この案は**採用しない**
+`filterTargetable()` は `effectInfo` を**1回だけ**正規化して
+`immuneToTarget(card, self, effectInfo)` の第3引数で渡してくる。
+`u378Source()` の中で `targetEffectSourceS03()` を呼ぶと、
+**候補 × 継続効果ソースの組み合わせごとに正規化をやり直す**ことになり、
+primitive が用意した受け渡しを無駄にする。
+そのため採用したのは **カード側で `effectInfo` を受け取る版**（下記 U456 の実装）。
+
+なお両案の実行時間は交互計測で区別できなかった（重い duel で委譲版 47/46秒、
+engine のみ 45/49秒、duel 結果はいずれも `turn:12 journal:424` で同一）。
+よってこれは**性能ではなく設計の選択**である。
+（計測を単発で行うと同時実行中のゲートの負荷を拾って 76〜82秒まで伸びる。
+ 比較は必ず交互に取ること。）
 
 `targetEffectSourceS03()` の探索順は
 `ACTIVATION_PREP_S03` → `RESOLVING_LINK_S03` → `P3_EFFECT_CONTEXT` → `ACTIVE_SCRIPT` で、
@@ -328,7 +342,9 @@ function u378Source(){
 1. `engine/1ZZR_target_source_s03.js` を `ce361fa` から取得（新規・競合なし）
 2. engine 4ファイルの差分を `git apply --3way`（**全て clean に適用されることを実測済み**）
 3. `build_manifest.json` に **engine/1ZZR のみ**登録（Codex のカードは登録しない）
-4. `cards/HZZZZZZZZN_claude_s03_u378_targetlocks.js` の `u378Source()` を上記の委譲版へ
+4. カード側は `immuneToTarget(card, self, effectInfo)` にして
+   `u378SrcOf(effectInfo)`（= `effectInfo` 優先、無ければ従来の `u378Source()`）を使う。
+   対象は `u378_targetlocks.js` の2枚と `u439_garden_rock.js` の1枚。`u378Source()` 本体は無改変。
 5. 解決時の耐性を固定する回帰テストを追加（上記プローブをテスト化。3枚 × prep/解決/negative）
 6. 生成物を再生成（`build.py` → `build_acode.py` → `script_coverage.py` → status audit）
 7. フルゲート（逐次 `check.py`）で `21922 + 新規アサーション数` を確認
@@ -338,4 +354,19 @@ function u378Source(){
   ReferenceError 0 / `PASS no duplicate top-level function declarations` あり /
   `PARALLEL_NODE_DONE commands=679 errors=0` / GATE_EXIT=0**、Acode `cards=4996`。
   → CODEX-C03 の engine 追加は 21922 アサーション全体に対して無回帰。
-- 単一箇所修正版のフルゲートも実行中（結果は別途）。
+- 単一箇所修正版のフルゲート: PASS 21915 / FAIL 1。唯一の FAIL は
+  `test_s03_u305_ui_harness.js` の `Error: Script execution timed out after 120000ms`
+  （`tools/astra_harness.js` の `vm.runInNewContext(..., {timeout:120000})`）。
+  **これは変更由来ではない**: 同テストは単体では 16/0 で通り、
+  その duel は単独 ~46秒に対して上限が 120秒という元々薄い余裕しかない。
+  並列ゲートの実負荷（各ワーカーがさらに子プロセスを生む）で上限を超え得る。
+  手動で同じ duel を4並列にしても 75秒で落ちなかったので、競合の内訳はゲート全体の負荷による。
+  → **既存の脆さ**として記録する。対処案: ハーネスの VM 上限を引数化する、
+  重い実 duel テストを直列枠で走らせる、ワーカー数を下げる。
+
+## 最終: S03-U456 として統合済み
+commit `8fb6d34`（基点 `6e454b4`）。
+新規テスト `tools/test_s03_u456_target_source.js` 28 / 0、
+カード側修正のみ戻した negative control は 6 FAIL / 22 PASS。
+フルゲート（逐次）**21972 PASS = 21944 + 28**、FAIL 0、GATE_EXIT=0、
+末尾行 `PASS no duplicate top-level function declarations`。カバレッジ変化なし。
