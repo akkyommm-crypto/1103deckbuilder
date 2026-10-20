@@ -63,9 +63,9 @@ gameState.players[0].mz=[a,b,high];gameState.players[0].hand=[mk('クリボー',
 const sc=CARD_SCRIPTS['連鎖除外'],ctx=makeContext(1,trap,'sz',0,'onSpecialSummon',{event:{player:0,cards:[a,b,high],kind:'effect'}});
 ok('C: simultaneous batch with low-ATK face-up monsters is legal',!!sc&&sc.condition(ctx)===true);
 ok('C: effect is non-targeting',!!sc&&typeof sc.selectTargets!=='function');
-if(sc)sc.resolve(ctx);
-ok('C: every qualifying summoned monster is banished, but 1600 ATK is not',z(a)==='banish'&&z(b)==='banish'&&z(high)==='mz');
-ok('C: hand/Deck copies for both banished names are removed',gameState.players[0].hand.length===0&&gameState.players[0].deck.length===0);
+if(sc){sc.resolve(ctx);drive();}
+ok('C: one qualifying summoned monster is chosen and banished; the others remain',z(a)==='banish'&&z(b)==='mz'&&z(high)==='mz');
+ok('C: hand/Deck copies only for the chosen banished name are removed',gameState.players[0].hand.length===1&&gameState.players[0].deck.length===1&&dbOf(gameState.players[0].hand[0]).n==='ワイト'&&dbOf(gameState.players[0].deck[0]).n==='ワイト');
 audit('C');
 `);
 harness(COMMON+String.raw`

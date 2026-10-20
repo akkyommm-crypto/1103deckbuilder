@@ -21,7 +21,10 @@ function applyTargetedSelfDestroyS03(){
     const h = (t && t.card) ? locateCardAnyV4(t.card) : null;
     if(!h || h.zone !== 'mz' || !h.card || h.card.face !== 'up') return;
     const name = dbOf(h.card).n;
-    if(!TARGETED_SELF_DESTROY_S03[name]) return;
+    const specS03 = TARGETED_SELF_DESTROY_S03[name];
+    if(!specS03) return;
+    /* S03-U384: spec.kinds narrows the source of the effect to Spells / Traps / monsters (レプティレス・サーヴァント: 魔法・罠カードの効果のみ) */
+    if(Array.isArray(specS03.kinds)){ const sdb = (link.cardId != null && CARD_DB[link.cardId]) ? CARD_DB[link.cardId] : null; if(!sdb || specS03.kinds.indexOf(sdb.k) < 0) return; }
     if(typeof effectNegated === 'function' && effectNegated(h.card)) return;
     API.destroy(h, `${name}（カードの効果の対象になった）`);
     hit = true;

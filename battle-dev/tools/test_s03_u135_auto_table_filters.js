@@ -48,7 +48,8 @@ for(const [name,ent] of Object.entries(AUTO_DECK_TABLE)){
   if(got.some(n=>n==='ワイト'||n==='サンダー・ボルト')) leak.push(name);
   if(ok1.length && !got.length) lost.push(name);
 }
-ok('A: all live identity-filter entries checked',checked>=80,String(checked));
+/* S03-U372: six entries (ハイエナ, スーパイ, クロス・ポーター, メンタルマスター, リバース・オブ・ネオス, トライアングル・エリア) became exact card scripts and left the auto table, so the live count fell from 82 to 76; the floor is 70. S03-U373: five more left (ヴァイロン・マテリアル, 極星宝ドラウプニル, スクラップ・シャーク, 見習い魔術師, 機皇城); the PARTIAL auto-table entries are being replaced one batch at a time, so the floor is lowered to 50 (no behaviour expectation changes). */
+ok('A: all live identity-filter entries checked',checked>=50,String(checked));
 ok('A: no entry offers a non-matching card (ワイト / サンダー・ボルト)',leak.length===0,JSON.stringify(leak));
 ok('A: every entry still finds its named card / group member',lost.length===0,JSON.stringify(lost));
 `);
@@ -56,13 +57,16 @@ ok('A: every entry still finds its named card / group member',lost.length===0,JS
 /* ===== B. real DUEL activation: D・リモコン (group D) and バード・フェイス (canonical ハーピィ・レディ) only offer matching cards ===== */
 harness(COMMON+String.raw`
 fresh();
+/* S03-U374: D・リモコン now has its exact script (Attack Position: banish a 「D」 monster from the GY, add a same-Level 「D」 monster from the Deck), so this check of the group filter uses it: the Deck choice must offer only the same-Level 「D」 monster. */
 const rc=mk('D・リモコン',0,'up');gameState.players[0].mz=[rc];
-const dm=DB.find(d=>d.k==='m'&&isCardInGroupV4(d,GROUP.D_MORPHTRONIC)&&d.n!=='D・リモコン');
-gameState.players[0].deck=[mk('ワイト',0),mk(dm.n,0),mk('サンダー・ボルト',0)];
+const dms=DB.filter(d=>d.k==='m'&&isCardInGroupV4(d,GROUP.D_MORPHTRONIC)&&d.n!=='D・リモコン'&&!d.ex);
+const dm=dms[0], dm2=dms.find(d=>Number(d.lv)!==Number(dm.lv));
+gameState.players[0].grave=[mk(dm.n,0)];
+gameState.players[0].deck=[mk('ワイト',0),mk(dm.n,0),mk(dm2.n,0),mk('サンダー・ボルト',0)];
 baselineA();
 duelActivateFromZone(0,'mz',0);drive();
-const q=SEEN.find(s=>/D・リモコン/.test(s.title));
-ok('B: D・リモコン offers only the D monster ('+dm.n+')',!!q&&JSON.stringify(q.cands)===JSON.stringify([dm.n]),JSON.stringify(SEEN));
+const q=SEEN.find(s=>/D・リモコン：手札に加える/.test(s.title));
+ok('B: D・リモコン offers only the same-Level D monster ('+dm.n+')',!!q&&JSON.stringify(q.cands)===JSON.stringify([dm.n]),JSON.stringify(SEEN));
 ok('B: … and adds it to the hand',gameState.players[0].hand.map(nm).indexOf(dm.n)>=0);
 audit('B');
 /* S03-U156: バード・フェイス is 「このカードが戦闘によって破壊され墓地へ送られた時」 (it was an ignition effect from the field here):

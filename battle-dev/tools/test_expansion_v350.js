@@ -7,8 +7,9 @@ const coreSrc=fs.readFileSync(path.join(ROOT,'cards','00_generic_core.js'),'utf8
 const karaSrc=fs.readFileSync(path.join(ROOT,'cards','10_themes_a.js'),'utf8');
 const ctrlSrc=fs.readFileSync(path.join(ROOT,'cards','20_control_counter.js'),'utf8');
 const expSrc=fs.readFileSync(path.join(ROOT,'cards','37_1103_expansion_v350.js'),'utf8');
-const allCards=fs.readdirSync(path.join(ROOT,'cards')).filter(x=>x.endsWith('.js'))
-  .map(x=>fs.readFileSync(path.join(ROOT,'cards',x),'utf8')).join('\n');
+const manifest=JSON.parse(fs.readFileSync(path.join(ROOT,'build_manifest.json'),'utf8'));
+const allCards=manifest.map(x=>x.path).filter(x=>x.startsWith('cards/')&&x.endsWith('.js'))
+  .map(x=>fs.readFileSync(path.join(ROOT,x),'utf8')).join('\n');
 const rows=[];
 const assert=(name,v,detail='')=>{rows.push({name,ok:!!v,detail}); if(!v) throw new Error(name+(detail?' '+detail:''));};
 const names=[...allCards.matchAll(/defineScript\(\s*["']([^"']+)["']/g)].map(m=>m[1]);

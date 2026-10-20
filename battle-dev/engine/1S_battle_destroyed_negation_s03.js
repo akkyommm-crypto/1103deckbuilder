@@ -35,10 +35,19 @@ function battleNegatorUidForVictimS03(gs, victim){
 function battleDestroyedLinkNegatedS03(link, srcCard){
   if(!link || !srcCard) return false;
   /* S03-U255: also a card banished by that battle (banishInfo, 漆黒の魔王 LV8) */
-  const here = locateCardAnyV4(srcCard); if(!here || (here.zone !== 'grave' && here.zone !== 'banish')) return false;
-  const g = here.zone === 'grave' ? srcCard.graveInfo : srcCard.banishInfo;
-  if(!g || g.battleNegatorUidS03 == null || g.turn !== gameState.turn) return false;
-  const d = findCardByUid(g.battleNegatorUidS03);
+  const here = locateCardAnyV4(srcCard); if(!here || (here.zone !== 'grave' && here.zone !== 'banish' && here.zone !== 'mz')) return false;
+  let negUid;
+  if(here.zone === 'mz'){
+    /* S03-U432: a Flip effect chain resolves while the battle-destroyed victim is still on the field (card.battleDestroyed, the move to the Graveyard comes at BATTLE_CLEANUP) */
+    if(!srcCard.battleDestroyed || typeof battleNegatorUidForVictimS03 !== 'function') return false;
+    negUid = battleNegatorUidForVictimS03(gameState, srcCard);
+    if(negUid == null) return false;
+  }else{
+    const g = here.zone === 'grave' ? srcCard.graveInfo : srcCard.banishInfo;
+    if(!g || g.battleNegatorUidS03 == null || g.turn !== gameState.turn) return false;
+    negUid = g.battleNegatorUidS03;
+  }
+  const d = findCardByUid(negUid);
   if(!d || d.zone !== 'mz' || !d.card || d.card.face !== 'up') return false;
   const spec = battleDestroyedNegatorSpecS03(dbOf(d.card).n); if(!spec) return false;
   if(typeof effectNegated === 'function' && effectNegated(d.card)) return false;

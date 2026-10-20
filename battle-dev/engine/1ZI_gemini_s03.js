@@ -43,7 +43,7 @@ function geminiSummonBlockedS03(card, p){
   if(!R.normalSummon) return '今は通常召喚できません';
   if(!normalRightFreeS03(gameState.players[p])) return 'このターンは既に通常召喚しています';   /* S03-U274: 二重召喚 */
   if(gameState.chain.length || gameState.pendingSummon || gameState.pendingAttack || gameState.battle) return '処理中です';
-  const lock = typeof v46FaceUpSummonRestrictionReason==='function' ? v46FaceUpSummonRestrictionReason(p, dbOf(card)) : '';
+  const lock = typeof v46FaceUpSummonRestrictionReason==='function' ? v46FaceUpSummonRestrictionReason(p, dbOf(card), 'normal') : '';
   if(lock) return lock;
   return '';
 }

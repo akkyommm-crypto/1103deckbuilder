@@ -5,10 +5,6 @@
       "status": "PARTIAL",
       "reason": "S03-U276 implemented it for exactly 3 face-up same-name Normal Monsters (not Tokens): this turn those 3 may attack directly (lingering grant on the recorded uids). PARTIAL because the case of 4 or more same-name Normal Monsters (activatable or not, and which 3) is an open ruling under the 2026-10-03 TESTED rule."
     },
-    "不死王リッチー": {
-      "status": "PARTIAL",
-      "reason": "S03-U66 implemented its cannotNormalSummon restriction and its continuous protection (negate and destroy the activation of a Spell/Trap targeting it, same shape as 大神官デ・ザード's own first effect, via declareTargetingNegatorS03) since it is now reachable as a real Special Summon target of 大神官デ・ザード's second effect; its once-per-turn self-Set-face-down-defense effect and its on-reversal GY-Undead-revival effect are not implemented, so the card is not complete."
-    },
     "コアキメイルの鋼核": {
       "status": "PARTIAL",
       "reason": "S03-U65 implemented its Draw Phase replacement (instead of the normal draw, add this card from the GY to hand) through C-S03-26; its alternate cost-based effect (discard a Koa'ki Meiru monster from hand during the Draw Phase to add this card from the GY to hand, a separate activation window from the draw-replacement offer) is not implemented, so the card is not complete."
@@ -69,10 +65,6 @@
       "status": "GENERIC_OK",
       "reason": "Effectless Ritual Monster; card-specific behavior is fully described by the future generic Ritual Summon recipe/pipeline."
     },
-    "古代の遠眼鏡": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe private-information reveal UI for up to five ordered opponent Deck cards without changing their order."
-    },
     "天変地異": {
       "status": "ENGINE_GAP",
       "reason": "Needs a player Deck face-orientation model integrated with rendering, draws, searches, shuffles, serialization and replay digest."
@@ -88,14 +80,6 @@
     "終焉の地": {
       "status": "ENGINE_GAP",
       "reason": "Needs a first-class activate-Field-Spell-from-Deck operation that runs replacement, activation and resolution lifecycle correctly."
-    },
-    "グラディアル・チェンジ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe mandatory opponent hand choice at resolution after a canonical Gladiator Beast Special Summon event."
-    },
-    "コザッキーの研究成果": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe private Deck inspection and arbitrary ordering of the top three cards without exposing them to the opponent."
     },
     "闇の指名者": {
       "status": "ENGINE_GAP",
@@ -145,10 +129,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a first-class replay-safe Synchro Summon processor callable during either Battle Phase, including material choice and summon response timing."
     },
-    "魔の取引": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a central opponent Spell activation response event retaining controller identity before a replay-safe random hand discard."
-    },
     "アドバンス・フォース": {
       "status": "ENGINE_GAP",
       "reason": "Needs a generic continuous Tribute Summon requirement modifier integrated with every summon/set legality and processing path."
@@ -176,10 +156,6 @@
     "ゾーン・イーター": {
       "status": "ENGINE_GAP",
       "reason": "Needs battle-participant provenance plus a serializable five-turn delayed destruction counter attached to the attacked monster."
-    },
-    "デス・カンガルー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a post-damage-calculation battle event retaining attacker/defender positions and calculation-time ATK/DEF for conditional destruction."
     },
     "ジャベリンビートル": {
       "status": "GENERIC_OK",
@@ -216,10 +192,6 @@
     "パワーカプセル": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe activation-time mode selection plus a reusable way to invoke one declared effect mode of a canonical source monster."
-    },
-    "フレア・リゾネーター": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs Synchro material provenance and a material-granted persistent ATK modifier applied to the resulting Synchro Monster."
     },
     "ハングリーバーガー": {
       "status": "GENERIC_OK",
@@ -261,21 +233,9 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a first-class Ritual Summon pipeline plus a multi-Attribute identity model shared by effect filters, legality, rendering and replay."
     },
-    "魔の試着部屋": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe top-four reveal transaction, selective simultaneous summons of eligible Normal Monsters and deterministic shuffle-back of the remainder."
-    },
-    "魔轟神獣チャワ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe in-hand ignition Special Summon procedure whose activation cost selects and discards another canonical Fabled monster."
-    },
     "要塞クジラ": {
       "status": "GENERIC_OK",
       "reason": "Effectless Ritual Monster; card-specific behavior is fully described by the future generic Ritual Summon recipe/pipeline."
-    },
-    "キャトルミューティレーション": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs returned-monster Level provenance plus replay-safe resolution-time hand selection of a same-Level Beast for Special Summon."
     },
     "セイバー・ホール": {
       "status": "ENGINE_GAP",
@@ -284,10 +244,6 @@
     "トロイの剣闘獣": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe hand selection and owner-to-opponent-field Special Summon routing for a canonical Gladiator Beast before drawing."
-    },
-    "バスター・モード": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative /Buster identity metadata and a replay-safe Deck selection pipeline matching the released Synchro Monster's canonical name."
     },
     "ブローニング・パワー": {
       "status": "ENGINE_GAP",
@@ -304,10 +260,6 @@
     "マジシャンズ・サークル": {
       "status": "ENGINE_GAP",
       "reason": "Needs simultaneous per-player replay-safe Deck selections and summons of ATK-2000-or-lower Spellcasters during an attack-declaration Chain."
-    },
-    "モンスターレリーフ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe sequential selection to return one own monster and then Special Summon a Level 4 monster from hand during an attack Chain."
     },
     "召喚制限－猛突するモンスター": {
       "status": "ENGINE_GAP",
@@ -329,17 +281,9 @@
       "status": "ENGINE_GAP",
       "reason": "Needs opponent-Deck top reveal and ownership-preserving Special Summon to the controller's field, with fallback movement to the opponent's hand."
     },
-    "暗黒の謀略": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs simultaneous two-card hand selections by both players plus a replay-safe opponent optional extra-discard veto before drawing."
-    },
     "狭き通路": {
       "status": "ENGINE_GAP",
       "reason": "Needs a continuous per-player two-monster field cap integrated with every Normal Summon, Special Summon, movement, UI and replay path."
-    },
-    "生命力吸収魔術": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs simultaneous no-Flip-effect reveal of all face-down Defense monsters followed by accurate effect-monster counting and recovery."
     },
     "誘惑のシャドウ": {
       "status": "ENGINE_GAP",
@@ -356,10 +300,6 @@
     "黒羽の導き": {
       "status": "ENGINE_GAP",
       "reason": "Needs a central effect-damage-received event plus replay-safe resolution-time hand selection of a Level-4-or-lower canonical Blackwing."
-    },
-    "A・O・J リサーチャー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a no-Flip-effect face-up Attack transition for one targeted face-down Defense monster, centrally suppressing its Flip effect."
     },
     "さまようミイラ": {
       "status": "ENGINE_GAP",
@@ -388,10 +328,6 @@
     "ジャイアントマミー": {
       "status": "ENGINE_GAP",
       "reason": "Needs a facedown defender battle trigger that compares the attacker's current ATK with this card's DEF after reveal, destroys the attacker at the historically correct Damage Step boundary, and remains replay deterministic."
-    },
-    "ターレット・ウォリアー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs an in-hand Special Summon procedure with Warrior tribute selection and cost-time original-ATK provenance transferred into a persistent self modifier."
     },
     "テールスイング": {
       "status": "ENGINE_GAP",
@@ -433,10 +369,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a central successful exact-source Spell activation event plus replay-safe optional extra draw offered to that Spell's activating player."
     },
-    "戦士ラーズ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a blocking replay-safe resolution-time Deck selection transaction that moves a non-self Level-4-or-lower Warrior to the top without advancing the Chain early."
-    },
     "氷結界の三方陣": {
       "status": "ENGINE_GAP",
       "reason": "Needs exact three-distinct-name hand reveal as activation cost, fixed opponent-card targeting, then a separate replay-safe resolution-time Ice Barrier hand summon choice."
@@ -456,10 +388,6 @@
     "折れ竹光": {
       "status": "GENERIC_OK",
       "reason": "An Equip Spell whose printed ATK modifier is exactly zero; the existing generic Equip attachment and leave-field rules completely describe its behavior."
-    },
-    "薔薇の妖精": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs an add-to-hand event with source-zone and effect provenance plus a replay-safe optional self Special Summon from hand after being added from Deck by an effect."
     },
     "辺境の大賢者": {
       "status": "ENGINE_GAP",
@@ -501,10 +429,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs source-aware Spell/Trap targeting and attack-target events plus controller-selected legal target redirection integrated with Chain and Battle Command."
     },
-    "ブレンD": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative Morphtronic identity for the activation condition, exact two-card opponent-field selection and a replay-safe opponent choice of which selected card is destroyed."
-    },
     "ポールポジション": {
       "status": "ENGINE_GAP",
       "reason": "Needs dynamically recomputed highest-ATK Spell immunity with tie handling plus a leave-field trigger that destroys all then-highest face-up monsters without feedback loops."
@@ -513,25 +437,9 @@
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe Deck activation of an exact Field Spell during an attack Chain plus opponent optional draw when replacing their active Field Spell."
     },
-    "六武派二刀流": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe exact-two opponent-field selection after proving the controller has exactly one face-up Attack Position Six Samurai monster, followed by simultaneous hand return."
-    },
-    "念導力": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance identifying the opposing attacker and a resolution-time snapshot of that surviving monster's current ATK for LP recovery."
-    },
     "悲劇の引き金": {
       "status": "ENGINE_GAP",
       "reason": "Needs source-aware effect-target redirection during Chain construction, restricted to one correct controller-owned field target and a legal opponent substitute."
-    },
-    "成功確率0%": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs deterministic hidden opponent Extra Deck random selection of exactly two Fusion Monsters with journaled RNG and simultaneous Graveyard movement."
-    },
-    "挑発": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a serializable turn-duration mandatory attack-target restriction integrated with Battle Command legality, attack replay and the no-legal-attacker case."
     },
     "救出劇": {
       "status": "ENGINE_GAP",
@@ -541,18 +449,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs private deterministic random opponent-hand selection, replay-safe card-type declaration, controlled reveal and conditional attacker hand return."
     },
-    "波動障壁": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs attack-declaration Synchro tribute cost, simultaneous opponent position conversion and a resolution-time attacking-monster DEF snapshot for damage."
-    },
-    "発条の巻き戻し": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs canonical Wind-Up metadata plus target hand return followed by a distinct replay-safe resolution-time hand summon choice constrained to the returned Level."
-    },
-    "硫酸のたまった落とし穴": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs private facedown-monster reveal without firing Flip effects, conditional DEF-based destruction, and legal restoration to the prior facedown position."
-    },
     "裸の王様": {
       "status": "ENGINE_GAP",
       "reason": "Needs central continuous negation of all Equip Spell effects while preserving Equip attachment, destruction rules and source visibility."
@@ -560,10 +456,6 @@
     "連鎖破壊": {
       "status": "ENGINE_GAP",
       "reason": "Needs summon-event target provenance plus hidden hand/Deck canonical-copy search and simultaneous destruction without incorrectly destroying the summoned monster."
-    },
-    "闇霊術－「欲」": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs tribute-cost handling plus a private opponent optional Spell reveal decision whose result conditionally prevents the controller's two-card draw."
     },
     "魔のデッキ破壊ウイルス": {
       "status": "ENGINE_GAP",
@@ -573,10 +465,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a direct-attack response window for hand Special Summon plus a serializable until-End-Phase base-ATK/base-DEF swap modifier."
     },
-    "G・コザッキー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs continuous self-destruction tied to canonical Kozaky presence and destruction-event controller provenance for original-ATK effect damage."
-    },
     "きまぐれの女神": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe coin-face declaration, deterministic coin resolution and a precise until-End-Phase doubled-or-halved current ATK modifier."
@@ -585,10 +473,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs retained tribute-material archetype provenance so the ignition effect exists only when this card was Tribute Summoned using an Invellz monster."
     },
-    "エア・サーキュレーター": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe exact-two hand selection and simultaneous Deck return plus a central destruction event that triggers the draw for every valid destruction source."
-    },
     "エーリアン・ドッグ": {
       "status": "ENGINE_GAP",
       "reason": "Needs an optional hand Special Summon response to another canonical Alien Normal Summon and a post-summon replay-safe opponent-monster A-Counter target."
@@ -596,14 +480,6 @@
     "エーリアン・ベーダー": {
       "status": "ENGINE_GAP",
       "reason": "Needs explicit five-column Monster Zone topology, adjacent-zone movement and column-aware direct-attack legality covering opposing Monster and Spell/Trap zones."
-    },
-    "ガーディアン・グラール": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs central summon-legality restriction bound to an exact Equip Spell identity across Normal, Flip and Special Summon plus its one-card-hand summon procedure."
-    },
-    "ガーディアン・ケースト": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs central summon-legality restriction bound to an exact Equip Spell, complete Spell-effect immunity and exclusion from opponent attack-target candidates."
     },
     "コクーン・パーティ": {
       "status": "ENGINE_GAP",
@@ -624,10 +500,6 @@
     "ダーク・ボルテニス": {
       "status": "ENGINE_GAP",
       "reason": "Needs a Counter Trap activation-success event, optional DARK tribute response from hand, then a distinct summon-success destruction trigger with replay-safe targeting."
-    },
-    "ツーマンセルバトル": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs optional per-player End Phase windows, Level 4 Normal Monster hand selection and one-use-per-own-End-Phase state for a shared Continuous Spell."
     },
     "ドングリス": {
       "status": "ENGINE_GAP",
@@ -665,33 +537,13 @@
       "status": "ENGINE_GAP",
       "reason": "Needs the Ritual pipeline's single-material full-Level substitution for WATER Ritual Monsters in addition to its hand discard search effect."
     },
-    "友情 YU－JYO": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a replay-safe opponent handshake decision, mandatory Unity reveal override and deterministic half-total LP assignment including odd-total rounding rules."
-    },
     "古の森": {
       "status": "ENGINE_GAP",
       "reason": "Needs activation-time facedown reveal with Flip-effect suppression plus Battle-Phase-end destruction scheduling for every monster that attacked while the Field Spell remained active."
     },
-    "城壁壊しの大槍": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs an Equip-source-linked Damage Step modifier triggered only when the equipped monster attacks a facedown Defense Position monster and reset after damage calculation."
-    },
     "墓地封印": {
       "status": "ENGINE_GAP",
       "reason": "Needs a turn-duration central negation rule for all effects activated in Graveyards, enforced at Chain activation and resolution without blocking non-activated continuous state."
-    },
-    "封神鏡": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs private opponent-hand inspection and conditional Spirit selection/discard without leaking unrelated hidden card identities to logs or replay UI."
-    },
-    "悪魔への貢物": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs targeted send-to-Grave of a Special Summoned monster followed by a separate replay-safe resolution-time hand selection and Special Summon of a low-Level Normal Monster."
-    },
-    "手札断殺": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs blocking private exact-two hand selection by each player, simultaneous send-to-Grave and simultaneous draw while preserving replay secrecy and deterministic ordering."
     },
     "断層地帯": {
       "status": "ENGINE_GAP",
@@ -705,17 +557,9 @@
       "status": "ENGINE_GAP",
       "reason": "Needs an optional opponent-Standby payment loop with deterministic private random hand inspection and no leakage of unrelated hidden hand state."
     },
-    "次元融合": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs both-player simultaneous mass Special Summon from banishment, per-player position choices, zone-capacity truncation and one grouped summon event."
-    },
     "氷結界の虎将 ライホウ": {
       "status": "ENGINE_GAP",
       "reason": "Needs a resolution-time private opponent discard decision for every opponent field-activated monster effect, with conditional negation of that exact Chain link."
-    },
-    "浅すぎた墓穴": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs one private Graveyard choice per player followed by simultaneous facedown Defense Position Special Summons and grouped summon-event handling."
     },
     "盗人の煙玉": {
       "status": "ENGINE_GAP",
@@ -769,14 +613,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a replay-safe Trap-Monster primitive occupying both Trap and Monster state with copied canonical name and Level while retaining printed Race, Attribute and zero stats."
     },
-    "ゴーゴンの眼": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs turn-duration central negation of every Defense Position monster's effects with immediate updates when battle position changes."
-    },
-    "バブル・クラッシュ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs blocking private arbitrary hand/field selections by each affected player until exactly five total cards remain, with simultaneous Graveyard movement."
-    },
     "リミッター・ブレイク": {
       "status": "ENGINE_GAP",
       "reason": "Needs a zone-agnostic sent-to-Grave event plus replay-safe exact canonical Speed Warrior selection across hand, Deck and Graveyard for Special Summon."
@@ -785,10 +621,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a persistent Trap-to-monster target relation, one-use targeted Spell-effect negation and automatic source destruction when that Machine target leaves."
     },
-    "ヴォルカニック・チャージ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative Volcanic archetype metadata plus replay-safe selection of one to three Graveyard monsters and simultaneous Deck return and shuffle."
-    },
     "二重の落とし穴": {
       "status": "ENGINE_GAP",
       "reason": "Needs battle-destruction provenance retaining a Gemini monster's second-summoned state and a response window before mass opponent-monster destruction."
@@ -796,10 +628,6 @@
     "反撃準備": {
       "status": "ENGINE_GAP",
       "reason": "Needs attack-declaration coin-face declaration, deterministic toss, conditional target position change and alternate reflected-difference damage calculation."
-    },
-    "同姓同名同盟条約": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs canonical-identity grouping excluding Tokens, exact group-count mode selection and replay-safe one-target versus mass Spell/Trap destruction."
     },
     "墓場からの誘い": {
       "status": "ENGINE_GAP",
@@ -861,10 +689,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs exact-two WATER tribute summon procedure, counter placement and self-tribute Ice-Counter mass destruction."
     },
-    "インフェルニティ・ナイト": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs destruction-to-Grave provenance and a replay-safe exact-two hand discard cost before self-revival."
-    },
     "エーリアン・ハンター": {
       "status": "ENGINE_GAP",
       "reason": "Needs battle-destruction provenance retaining A-Counter state and an additional-attack grant."
@@ -873,29 +697,13 @@
       "status": "ENGINE_GAP",
       "reason": "Needs an add-to-hand event with Graveyard source and canonical Roid provenance plus optional summon of that exact newly added card."
     },
-    "グリード・グラード": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs same-turn destruction provenance proving the controller destroyed an opponent face-up Synchro by battle or effect."
-    },
-    "コカローチ・ナイト": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a mandatory any-zone sent-to-Grave replacement/trigger that returns this exact card to Deck top without recursion."
-    },
     "コクーン・リボーン": {
       "status": "ENGINE_GAP",
       "reason": "Needs authoritative Chrysalis-to-Neo-Spacian mapping metadata, tribute cost and mapped Graveyard Special Summon."
     },
-    "コロボックリ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs an exact canonical Matsubokkuru hand-send cost and summon-method provenance for self Special Summon."
-    },
     "コンタクト": {
       "status": "ENGINE_GAP",
       "reason": "Needs authoritative Chrysalis-to-Neo-Spacian mapping and simultaneous mass send followed by hand/Deck summon selection."
-    },
-    "サイコパス": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe selection of one or two banished Psychic monsters after an 800 LP cost and simultaneous hand return."
     },
     "サルベージ・ウォリアー": {
       "status": "ENGINE_GAP",
@@ -905,33 +713,13 @@
       "status": "ENGINE_GAP",
       "reason": "Needs Gemini second-summon state mutation and an End Phase hand-return schedule linked to the selected monster."
     },
-    "タイム・イーター": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance and a serializable next-opponent-turn Main Phase 1 skip rule."
-    },
-    "ダーク・リペアラー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs private Deck-top inspection and replay-safe top-or-bottom choice without exposing hidden identity outside the controller."
-    },
-    "ダーク・ヴァージャー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a Plant Tuner Normal Summon event and optional self-revival from Graveyard with attack-position enforcement."
-    },
     "ネコマネキング": {
       "status": "ENGINE_GAP",
       "reason": "Needs opponent-turn opponent-effect send-to-Grave provenance and an immediate serializable forced turn termination action."
     },
-    "バブル・シャッフル": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs exact Bubbleman/opponent position targets, tribute-after-position processing and replay-safe hand Elemental HERO summon selection."
-    },
     "ピクシーガーディアン": {
       "status": "ENGINE_GAP",
       "reason": "Needs same-turn opponent-caused Spell Graveyard provenance, self-tribute cost and eligible Deck-bottom recovery selection."
-    },
-    "フェイク・ヒーロー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs hand Elemental HERO summon selection, a turn attack prohibition and End Phase owner-hand return linked to that summoned card."
     },
     "フルール・シンクロン": {
       "status": "ENGINE_GAP",
@@ -941,33 +729,9 @@
       "status": "ENGINE_GAP",
       "reason": "Needs Fusion destruction provenance and retained exact Fusion-material identities for optional Graveyard revival."
     },
-    "ブリザード・ウォリアー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance and private opponent Deck-top inspection with replay-safe top-or-bottom choice."
-    },
-    "マスクド・チョッパー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance confirming an opponent monster was destroyed before mandatory 2000 damage."
-    },
-    "マツボックル": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs exact source-effect send-to-Grave provenance from canonical Korobokkuru and optional self-revival."
-    },
-    "リゾネーター・エンジン": {
-      "status": "ENGINE_GAP",
-      "reason": "P4 now supplies authoritative Resonator membership, but exact resolution still needs an atomic primitive that adds one Level 4 monster from Deck and returns the surviving activation-time Graveyard targets simultaneously, followed by one deterministic Deck shuffle."
-    },
-    "レベルアップ!": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative LV evolution mapping metadata and a summon-condition-ignoring hand/Deck Special Summon pipeline."
-    },
     "二重魔法": {
       "status": "ENGINE_GAP",
       "reason": "Needs a generic replay-safe arbitrary Spell-effect copy/use pipeline from the opponent Graveyard, including activation legality, costs, targets and resolution identity."
-    },
-    "代打バッター": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs field-to-Grave trigger provenance plus an optional resolution-time private hand selection and Insect Special Summon without treating the selected card as an activation target."
     },
     "伝説の爆炎使い": {
       "status": "ENGINE_GAP",
@@ -977,17 +741,9 @@
       "status": "ENGINE_GAP",
       "reason": "Needs controller-private inspection of all opponent set Spell/Trap cards, private Deck-top-two inspection and deterministic reorder, with two-mode resolution selection."
     },
-    "六武式三段衝": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe resolution mode selection among three legal mass-destruction operations after canonical Six Samurai field-count validation."
-    },
     "剣闘獣の檻－コロッセウム": {
       "status": "ENGINE_GAP",
       "reason": "Needs Deck-origin Special Summon event counting, canonical Gladiator Beast continuous stat scaling, and same-canonical-card discard destruction replacement for a Field Spell."
-    },
-    "原子ホタル": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance identifying the controller of the monster that destroyed this face-up card before mandatory 1000 effect damage."
     },
     "大逆転クイズ": {
       "status": "ENGINE_GAP",
@@ -1029,10 +785,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs centrally enforced immunity to opponent Spell effects for all face-up Normal Monsters plus a serializable second-own-Standby self-destruction counter."
     },
-    "赤鬼": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs activation-time selection of any number of hand cards as a send-to-Grave cost and activation-time selection of exactly the same number of field targets; resolution-time P1 would be the wrong timing."
-    },
     "進化の奇跡": {
       "status": "ENGINE_GAP",
       "reason": "Needs activation-time target validation using Evoltile effect-summon provenance and a turn-duration source-linked replacement preventing both battle and effect destruction."
@@ -1049,10 +801,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs authoritative Meklord Army metadata plus continuous source-specific effect negation and conditional battle-destruction immunity for face-up Attack Position members."
     },
-    "電磁シールド": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs conditional battle-destruction immunity for face-up Defense Position Level-3-or-lower Thunder monsters and a central continuous self-destruction enforcement loop when any own Attack Position monster exists."
-    },
     "霧の王": {
       "status": "ENGINE_GAP",
       "reason": "Needs variable zero-or-one-Tribute Normal Summon procedures, retained original-ATK tribute provenance for base ATK, and a field-wide central prohibition on every Tribute action."
@@ -1065,29 +813,13 @@
       "status": "ENGINE_GAP",
       "reason": "Needs the reusable Ritual Summon pipeline, resolution-time Ritual Monster choice, exact Level-sum Normal Monster material selection from Deck, and retained Ritual Summon provenance."
     },
-    "オーバーリミット": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs same-turn battle-destruction provenance for every eligible Normal Monster, retained printed ATK at destruction, and a resolution-time multi-card Special Summon choice constrained by current Monster Zone capacity."
-    },
-    "ガスタへの祈り": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs activation-time target selection retaining the exact two Gusto cards returned as activation cost and the separately targeted Gusto monster to revive, with ordered shuffle and target revalidation; resolution-time P1 cannot substitute for these targets."
-    },
     "グリード": {
       "status": "ENGINE_GAP",
       "reason": "Needs effect-draw provenance and per-player draw counts accumulated only while this Continuous Trap remains face-up, followed by correctly scheduled End Phase damage and serializable counter reset."
     },
-    "スカーレッド・カーペット": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs authoritative Resonator archetype metadata before activation-time target selection of up to two Graveyard Resonators can be represented without card-name string matching, plus simultaneous revival handling."
-    },
     "スネーク・チョーク": {
       "status": "ENGINE_GAP",
       "reason": "Needs central source-specific conditional battle-destruction immunity for opponent face-up Attack Position monsters whose current ATK is zero only while they battle a canonical Reptilianne monster."
-    },
-    "トロイボム": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs control-transfer provenance identifying an own monster transferred specifically by an opponent card effect, plus retained current ATK and destruction-result handling before effect damage."
     },
     "フェイク・フェザー": {
       "status": "ENGINE_GAP",
@@ -1104,10 +836,6 @@
     "ワンダーガレージ": {
       "status": "ENGINE_GAP",
       "reason": "provenance / resolution-time Choice: needs set-card effect-destruction provenance, authoritative roid metadata, and optional Level-4-or-lower Machine hand Special Summon."
-    },
-    "儀水鏡の幻影術": {
-      "status": "ENGINE_GAP",
-      "reason": "resolution-time Choice / delayed processing: needs hand Gishki Ritual selection plus linked attack prohibition and scheduled End Phase owner-hand return."
     },
     "呪われた棺": {
       "status": "ENGINE_GAP",
@@ -1165,10 +893,6 @@
       "status": "ENGINE_GAP",
       "reason": "target selection / continuous rule: needs arbitrary monster name-and-effect copying, complete copied effect legality, and End Phase reset without copying identity hacks."
     },
-    "アルカナフォースIV－THE EMPEROR": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / continuous rule: needs summon-event deterministic coin result persisted on the card and authoritative Arcana Force metadata for the signed field-wide aura."
-    },
     "イビリチュア・マインドオーガス": {
       "status": "ENGINE_GAP",
       "reason": "ritual / provenance / resolution-time Choice: needs Ritual Summon pipeline and optional selection of up to five cards across both Graveyards with owner Deck routing."
@@ -1201,10 +925,6 @@
       "status": "ENGINE_GAP",
       "reason": "provenance / resolution-time Choice: needs retained exact Synchro Material identities, Extra Deck return, and optional simultaneous revival only when the complete material set remains in Graveyard."
     },
-    "ジュラック・イグアノン": {
-      "status": "ENGINE_GAP",
-      "reason": "battle / target selection: needs exact opponent-monster battle-destruction provenance followed by an optional activation-time target among opponent set cards."
-    },
     "スター・ブラスト": {
       "status": "ENGINE_GAP",
       "reason": "declaration / activation-time Choice / damage/LP: needs numeric 500-multiple LP declaration, hand-or-field monster target, and generic turn-duration Level reduction."
@@ -1221,10 +941,6 @@
       "status": "ENGINE_GAP",
       "reason": "provenance / resolution-time Choice: needs Flip-armed later Graveyard trigger and serializable choices by both players for attack-up or set-defense revival."
     },
-    "ツインヘッド・ケルベロス": {
-      "status": "ENGINE_GAP",
-      "reason": "battle / provenance: needs battle-destroyed Flip monster identity and source-specific suppression of that exact Flip effect when another face-up Fiend exists."
-    },
     "デスガエル": {
       "status": "ENGINE_GAP",
       "reason": "provenance / resolution-time Choice: needs Tribute Summon provenance, canonical grave count and selection of up to that many copies across hand/Deck for simultaneous summon."
@@ -1236,10 +952,6 @@
     "ナチュル・ロック": {
       "status": "ENGINE_GAP",
       "reason": "provenance / activation cost: needs hand quick-effect response to Trap activation, Deck-top mill cost, and self Special Summon from hand on either turn."
-    },
-    "ニードル・ガンナー": {
-      "status": "ENGINE_GAP",
-      "reason": "battle / provenance: needs Synchro Material identity inherited by the resulting Synchro Monster and central piercing battle-damage permission."
     },
     "ハードアームドラゴン": {
       "status": "ENGINE_GAP",
@@ -1253,17 +965,9 @@
       "status": "ENGINE_GAP",
       "reason": "battle / delayed processing: needs battle-opponent identity and an opponent-turn-counted two-turn attack prohibition linked to that physical monster."
     },
-    "バルーン・リザード": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / damage/LP: needs Standby counters and retained destroyer controller identity so destruction damage is routed to the correct player."
-    },
     "パトロール・ロボ": {
       "status": "ENGINE_GAP",
       "reason": "resolution-time Choice / hidden information: needs private optional selection and inspection of an opponent set card every own Standby without leaking identity in replay/UI."
-    },
-    "ビッグ・ワン・ウォリアー": {
-      "status": "ENGINE_GAP",
-      "reason": "activation cost / summon procedure: needs a hand-resident ignition-like Special Summon procedure that sends another Level-1 hand monster before moving the source."
     },
     "ファイバーポッド": {
       "status": "ENGINE_GAP",
@@ -1280,14 +984,6 @@
     "ペンギン・ナイト": {
       "status": "ENGINE_GAP",
       "reason": "provenance: needs opponent-effect Deck-to-Grave provenance for the exact card and atomic owner Deck return/shuffle of every own Graveyard card."
-    },
-    "ホープ・オブ・フィフス": {
-      "status": "ENGINE_GAP",
-      "reason": "target selection / resolution-time Choice: needs exact-five Elemental HERO Graveyard selection plus activation-state snapshot deciding draw two versus three after return/shuffle."
-    },
-    "マザー・スパイダー": {
-      "status": "ENGINE_GAP",
-      "reason": "summon procedure / activation cost: needs validation that the Graveyard contains only Insects and exact-two opponent face-up Defense monsters sent as a non-tribute summon cost."
     },
     "ミスター・ボンバー": {
       "status": "TESTED",
@@ -1325,10 +1021,6 @@
       "status": "ENGINE_GAP",
       "reason": "activation-time Choice / target selection / declaration / battle: exact 1103 processing for \"手札を1枚墓地へ送り、相手フィールド上に表側表示で存在するモンスター1体を選択して発動する。 選択したモンスターは攻撃力が0になり、表示形式を変更する事ができなくなる。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "ローズ・バード": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / battle: exact 1103 processing for \"自分フィールド上に表側攻撃表示で存在するこのカードが相手モンスターの攻撃によって破壊され墓地へ送られた時、デッキから植物族チューナー2体を表側守備表示で特殊召喚できる。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "ワーム・アグリィ": {
       "status": "ENGINE_GAP",
       "reason": "activation cost / provenance / battle: exact 1103 processing for \"このカードをリリースして「ワーム」と名のついた爬虫類族モンスターのアドバンス召喚に成功した時、自分の墓地のこのカードを相手フィールド上に表側攻撃表示で特殊召喚できる。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
@@ -1336,10 +1028,6 @@
     "伝説のフィッシャーマン": {
       "status": "ENGINE_GAP",
       "reason": "activation-time Choice / target selection / declaration / battle / continuous rule: exact 1103 processing for \"①:このカードがモンスターゾーンに存在し、フィールドに「海」が存在する限り、このカードは魔法カードの効果を受けない。 ②:このカードがモンスターゾーンに存在し、フィールドに「海」が存在する限り、このカードは攻撃対象にされ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "伝説の賭博師": {
-      "status": "ENGINE_GAP",
-      "reason": "activation cost / provenance: exact 1103 processing for \"コイントスを3回行う。 3回とも表だった場合、相手フィールド上モンスターを全て破壊する。 2回表だった場合、相手の手札をランダムに1枚捨てる。 1回表だった場合、自分フィールド上に存在するカード1枚を破壊する。 3回とも\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "俊足のギラザウルス": {
       "status": "ENGINE_GAP",
@@ -1364,10 +1052,6 @@
     "幻魔の殉教者": {
       "status": "ENGINE_GAP",
       "reason": "activation cost / provenance / battle: exact 1103 processing for \"①:このカード以外の自分の手札が2枚以上存在し、自分フィールドに「神炎皇ウリア」または「降雷皇ハモン」が存在する場合、手札を全て墓地へ送って発動できる。 自分フィールドに「幻魔の殉教者トークン」(悪魔族・闇・星1・攻/守\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "強欲なカケラ": {
-      "status": "ENGINE_GAP",
-      "reason": "activation cost / continuous rule: exact 1103 processing for \"①:このカードが魔法&罠ゾーンに存在する限り、自分ドローフェイズに通常のドローをする度に、このカードに強欲カウンターを1つ置く。 ②:強欲カウンターが2つ以上置かれているこのカードを墓地へ送って発動できる。 自分はデッキ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "急転直下": {
       "status": "TESTED",
@@ -1401,14 +1085,6 @@
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / provenance: exact 1103 processing for \"カード名を1つ宣言する。 相手の手札を確認し、宣言したカードが相手の手札に存在する場合、そのカード1枚をゲームから除外する。 宣言したカードが相手の手札に存在しなかった場合、自分の手札をランダムに1枚ゲームから除外する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "白兵戦型お手伝いロボ": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / battle: exact 1103 processing for \"このカードが戦闘によって相手モンスターを破壊する度に、自分はカードを1枚ドローした後手札からカードを1枚選択してデッキの一番下に戻す。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "皆既日蝕の書": {
-      "status": "ENGINE_GAP",
-      "reason": "delayed/scheduled processing: exact 1103 processing for \"①:フィールドの表側表示モンスターを全て裏側守備表示にする。 このターンのエンドフェイズに、相手フィールドの裏側守備表示モンスターを全て表側守備表示にし、その後、この効果で表側守備表示にしたモンスターの数だけ相手はデッキ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "盗賊の極意": {
       "status": "ENGINE_GAP",
       "reason": "activation-time Choice / target selection / declaration / activation cost / battle / damage/LP: exact 1103 processing for \"メインフェイズ1でのみ発動する事ができる。 フィールド上に表側表示で存在するモンスターを1体選択する。 このターン、選択したモンスターが相手プレイヤーに戦闘ダメージを与える度に、相手はランダムにカードを1枚捨てる。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
@@ -1416,10 +1092,6 @@
     "種子弾丸": {
       "status": "ENGINE_GAP",
       "reason": "resolution-time Choice / damage/LP: exact 1103 processing for \"植物族モンスターが召喚・反転召喚・特殊召喚される度に、このカードにプラントカウンターを1つ置く(最大5つまで)。 フィールド上に存在するこのカードを墓地へ送る事で、このカードに乗っているプラントカウンターの数×500ポイ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "穿孔虫": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / battle / damage/LP: exact 1103 processing for \"このカードが相手ライフに戦闘ダメージを与えた時、自分のデッキに存在する自分の「寄生虫パラサイド」1枚をデッキの一番上に置く事ができる。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "竜の渓谷": {
       "status": "TESTED",
@@ -1477,21 +1149,9 @@
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / provenance: exact 1103 processing for \"自分フィールド上にモンスターが存在しない場合に発動できる。 自分の墓地の「ガスタ」と名のついたモンスター2体を選択してデッキに戻す。 その後、デッキから守備力1000以下の「ガスタ」と名のついたモンスター1体を特殊召喚す\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "サイバネティック・ヒドゥン・テクノロジー": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / activation cost / battle: exact 1103 processing for \"相手モンスターが攻撃宣言を行う度に、自分フィールド上の「サイバー・ドラゴン」または融合素材として「サイバー・ドラゴン」が記されている融合モンスター1体を墓地へ送って発動できる。 その攻撃モンスター1体を選択して破壊する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "ジェム・エンハンス": {
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / activation cost: exact 1103 processing for \"自分フィールド上の「ジェムナイト」と名のついたモンスター1体をリリースし、自分の墓地の「ジェムナイト」と名のついたモンスター1体を選択して発動できる。 選択したモンスターを墓地から特殊召喚する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "スパイダー・エッグ": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / provenance / battle / continuous rule: exact 1103 processing for \"相手が直接攻撃を宣言した時、自分の墓地に昆虫族モンスターが3体以上存在する場合に発動する事ができる。 そのモンスターの攻撃を無効にし、自分フィールド上に「スパイダー・トークン」(昆虫族・地・星1・攻/守100)3体を攻撃\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "スリップ・サモン": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / delayed/scheduled processing: exact 1103 processing for \"相手がモンスターの召喚・反転召喚・特殊召喚に成功した時に発動する事ができる。 手札からレベル4以下のモンスター1体を表側守備表示で特殊召喚する。 この効果で特殊召喚したモンスターはエンドフェイズ時に持ち主の手札に戻る。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "スーパージュニア対決!": {
       "status": "ENGINE_GAP",
@@ -1505,33 +1165,13 @@
       "status": "ENGINE_GAP",
       "reason": "provenance / battle / damage/LP: exact 1103 processing for \"自分フィールド上に「剣闘獣」と名のついたモンスターが表側表示で存在する場合のみ発動する事ができる。 このターン自分フィールド上に存在するモンスターは戦闘では破壊されず、自分への戦闘ダメージは0になる。 発動後、このカード\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "デステニー・ミラージュ": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance: exact 1103 processing for \"自分フィールド上の「D－HERO」と名のついたモンスターが相手のカードの効果によって破壊され墓地へ送られた時に発動する事ができる。 このターンに破壊され墓地へ送られた「D－HERO」と名のついたモンスターを、全て自分フィ\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "ニードル・ウォール": {
       "status": "ENGINE_GAP",
       "reason": "provenance / delayed/scheduled processing: exact 1103 processing for \"自分のスタンバイフェイズ時に1度だけ、サイコロを1回振る。 相手のモンスターカードゾーンを、このカードのコントローラーから見て右から1～5とし、出た目のモンスターカードゾーンに存在するモンスターを破壊する。 6の目が出た\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
-    "パイナップル爆弾": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / provenance: exact 1103 processing for \"自分がモンスターの召喚に成功した時に発動する事ができる。 相手フィールド上のモンスターの数が自分のコントロールするモンスターの数より多い場合、同じ数になるように相手のカードを破壊する。 破壊するカードは相手が選択する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
     "フォーチュン・インハーリット": {
       "status": "ENGINE_GAP",
       "reason": "resolution-time Choice / provenance / delayed/scheduled processing: exact 1103 processing for \"自分フィールド上に表側表示で存在する「フォーチュンレディ」と名のついたモンスターが破壊されたターンに発動する事ができる。 次の自分のスタンバイフェイズ時に手札から「フォーチュンレディ」と名のついたモンスターを2体まで特殊\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "ブロークン・ブロッカー": {
-      "status": "ENGINE_GAP",
-      "reason": "resolution-time Choice / provenance / battle: exact 1103 processing for \"自分フィールド上に存在する攻撃力よりも守備力の高い守備表示モンスターが、戦闘によって破壊された場合に発動する事ができる。 そのモンスターと同名モンスターを2体まで自分のデッキから表側守備表示で特殊召喚する。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "ヘイト・クレバス": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time Choice / target selection / declaration / provenance / battle / damage/LP: exact 1103 processing for \"自分フィールド上に存在するモンスター1体が相手のカードの効果によって破壊され墓地へ送られた時、相手フィールド上に存在するモンスター1体を選択して墓地へ送り、その元々の攻撃力分のダメージを相手ライフに与える。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "ヘル・ブラスト": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / battle / damage/LP: exact 1103 processing for \"自分フィールド上に表側表示で存在するモンスターが破壊され墓地へ送られた時に発動する事ができる。 フィールド上の攻撃力が一番低い表側表示モンスター1体を破壊し、お互いにその攻撃力の半分のダメージを受ける。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "ミステリーサークル": {
       "status": "ENGINE_GAP",
@@ -1585,10 +1225,8 @@
       "status": "ENGINE_GAP",
       "reason": "activation cost selection / attack-declare response / named predicate search: the Crystal Beast S/T cost must be committed at activation and the Ultimate Crystal God search must use authoritative membership."
     },
-    "裁きの光": {
-      "status": "ENGINE_GAP",
-      "reason": "hidden information / activation-time mode and selection: opponent hand inspection and card choice cannot be represented by the current public-information Choice flow."
-    },
+
+
     "銀幕の鏡壁": {
       "status": "ENGINE_GAP",
       "reason": "ContinuousRule / standby maintenance choice: opponent attacking-monster ATK halving and pay-2000-or-destroy processing need a reusable continuous rule and maintenance-cost window."
@@ -1621,10 +1259,6 @@
       "status": "ENGINE_GAP",
       "reason": "Battle activation window / temporary piercing modifier: the Battle Step ignition timing and until-end-turn ATK reduction plus piercing grant need an activation-window primitive."
     },
-    "インセクト・プリンセス": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / battle provenance: forced battle position for opposing Insects and permanent gain per Insect destroyed in battle require central continuous enforcement."
-    },
     "インフェルニティ・ネクロマンサー": {
       "status": "ENGINE_GAP",
       "reason": "summon-position rule / ignition target selection: mandatory defense position on Normal Summon and once-per-turn Infernity revival need a reusable summon-position enforcement hook."
@@ -1632,14 +1266,6 @@
     "エキセントリック・ボーイ": {
       "status": "ENGINE_GAP",
       "reason": "summon procedure / material-zone rule / summoned-monster restrictions: hand-only non-Tuner material, effect lock, and leave-field banish must attach to the resulting Synchro generation."
-    },
-    "エレメント・ザウルス": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / effect negation provenance: attribute-presence ATK gain and negating a battle-destroyed Effect Monster need live attribute rules and destruction-source metadata."
-    },
-    "エレメント・ドラゴン": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / Battle extra attack: attribute-presence ATK gain and the WIND-dependent battle-destroy extra attack require a live conditional rule."
     },
     "エンペラー・ストゥム": {
       "status": "ENGINE_GAP",
@@ -1665,14 +1291,6 @@
       "status": "ENGINE_GAP",
       "reason": "ContinuousRule / bounded recurring standby schedule: conditional stats and exactly four cumulative standby increments require live dependency and bounded counter lifetime."
     },
-    "ゴーレム": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / effect negation / Battle extra attack: blanket LIGHT monster negation and a battle-destroy-dependent extra attack need central rule hooks."
-    },
-    "システム・ダウン": {
-      "status": "ENGINE_GAP",
-      "reason": "activation LP cost / bulk zone operation: paying 1000 LP then atomically banishing all opposing Machine monsters from field and grave needs a reusable filtered multi-zone operation."
-    },
     "ジェルエンデュオ": {
       "status": "ENGINE_GAP",
       "reason": "summon procedure / Damage event: double-tribute permission for LIGHT Fairy summons and self-destruction after any received damage require reusable procedure and damage routing."
@@ -1689,10 +1307,6 @@
       "status": "ENGINE_GAP",
       "reason": "linked banish-return lifecycle / zone placement: the exact card banished by this summon must return set when the same summon generation leaves the field."
     },
-    "ゼロ・ガードナー": {
-      "status": "ENGINE_GAP",
-      "reason": "player-scoped Battle prevention rule: all own monsters gain battle indestructibility and own battle damage becomes zero for the turn."
-    },
     "ターボ・シンクロン": {
       "status": "ENGINE_GAP",
       "reason": "attack-declare position change / battle-damage hand summon: two distinct Battle windows and damage-bounded activation-time hand selection are required."
@@ -1701,10 +1315,6 @@
       "status": "ENGINE_GAP",
       "reason": "set-card target / bilateral End Phase self-check: LP-cost destruction plus mandatory self-destruction at either player's End Phase need a generic recurring phase condition."
     },
-    "デンジャラスマシン TYPE－6": {
-      "status": "ENGINE_GAP",
-      "reason": "recurring standby random branch / hidden hand discard: six deterministic RNG outcomes include opponent hand selection and must journal each phase trigger."
-    },
     "ドラグニティ－パルチザン": {
       "status": "ENGINE_GAP",
       "reason": "monster-as-equip metadata / tuner type modifier: special summoned Winged Beast must receive this monster as an Equip and become a Tuner through that link."
@@ -1712,10 +1322,6 @@
     "ナイルの恵み": {
       "status": "ENGINE_GAP",
       "reason": "discard provenance event: must distinguish opponent-controlled effect discard from costs, rules, and own effects for each discarded card."
-    },
-    "ニュート": {
-      "status": "ENGINE_GAP",
-      "reason": "battle destruction provenance / persistent modifier: the exact battling monster must receive a permanent 500 ATK/DEF reduction after this card is battle-destroyed."
     },
     "バーサーク・デッド・ドラゴン": {
       "status": "ENGINE_GAP",
@@ -1729,21 +1335,9 @@
       "status": "ENGINE_GAP",
       "reason": "equip metadata / self-return deck operation: target legality depends on Flint equip identity and this Spell optionally returns itself after resolution."
     },
-    "ブレイドナイト": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / battle-destroyed flip-effect negation: live hand/field conditions and suppression of the destroyed Flip monster's effect need rule-layer negation provenance."
-    },
     "ポセイドン・オオカブト": {
       "status": "ENGINE_GAP",
       "reason": "Battle repeated-target attack counter: up to two continued attacks against the same surviving attack-position monster require target-locked per-turn counters."
-    },
-    "マンモス・ゾンビ": {
-      "status": "ENGINE_GAP",
-      "reason": "ContinuousRule / destruction provenance snapshot: immediate self-destruction without Zombies and original-ATK damage to the controller at destruction need exact cause/time snapshots."
-    },
-    "リグラス・リーパー": {
-      "status": "ENGINE_GAP",
-      "reason": "simultaneous hidden-hand discard / battle provenance: both players choose and discard one hand card, plus the exact battling monster receives a permanent 500 reduction."
     },
     "レインボー・ヴェール": {
       "status": "ENGINE_GAP",
@@ -1761,10 +1355,6 @@
       "status": "ENGINE_GAP",
       "reason": "ContinuousRule / targeting immunity / destruction immunity: ritual-monster battle damage prevention and monster-effect protections require category-aware central rules."
     },
-    "創世竜": {
-      "status": "ENGINE_GAP",
-      "reason": "activation discard cost / target selection / bulk deck return: Dragon discard and grave recovery plus optional all-Dragon grave return need atomic pile operations."
-    },
     "反目の従者": {
       "status": "ENGINE_GAP",
       "reason": "equip metadata / control-change event / original-ATK snapshot: damage must trigger for the equipped monster's controller change using authoritative base stats."
@@ -1773,29 +1363,13 @@
       "status": "ENGINE_GAP",
       "reason": "continuous Spell ignition / source-zone choice / linked self-destruction: hand-or-grave Cloudian summon and grave-origin destruction of this card need provenance."
     },
-    "同族感電ウィルス": {
-      "status": "ENGINE_GAP",
-      "reason": "activation banish cost snapshot / filtered bulk destroy: selected hand monster's Race must be retained after banish and all matching face-up monsters destroyed."
-    },
-    "墓掘りグール": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time one-or-two target selection: exact cardinality choice over opponent grave monsters must be serializable and committed before resolution."
-    },
     "大進化薬": {
       "status": "ENGINE_GAP",
       "reason": "activation tribute cost / ContinuousRule / opponent-turn scheduler: tribute-free high-Level Dinosaur summons persist through the third opponent End Phase."
     },
-    "奇跡の発掘": {
-      "status": "ENGINE_GAP",
-      "reason": "activation-time exact-three banish targets: legality requires at least five banished monsters and exactly three committed owner-routed returns."
-    },
     "暗黒界の導師 セルリ": {
       "status": "ENGINE_GAP",
       "reason": "discard provenance / opponent-field summon / effect-source provenance: discard-by-effect and Dark World-origin special summon must be distinguished."
-    },
-    "暗黒界の魔神 レイン": {
-      "status": "ENGINE_GAP",
-      "reason": "opponent-effect discard provenance / activation-time mode: revival and destroy-all-monsters-or-S/T choice depend on exact opposing source."
     },
     "武闘円舞": {
       "status": "ENGINE_GAP",
@@ -1804,10 +1378,6 @@
     "死王リッチーロード": {
       "status": "ENGINE_GAP",
       "reason": "summon procedure / release provenance: Tribute Summon materials must be DARK and effect-release-to-grave must be distinguished from costs and rules."
-    },
-    "レッサー・デーモン": {
-      "status": "ENGINE_GAP",
-      "reason": "Same continuous battle-destruction replacement as 異次元の狂獣, additionally gated on this card remaining face-up on the field. Needs a continuous 'battle-destroyed by this card is banished' hook consumed by BATTLE_CLEANUP."
     },
     "モルティング・エスケープ": {
       "status": "ENGINE_GAP",
@@ -1855,10 +1425,6 @@
       "status": "ENGINE_GAP",
       "reason": "「相手のカードの効果によってセットされた」provenance が無い。moveProvenance を刻む P3_AUTO_MOVE_TYPES は墓地送り系5種だけで、セットは対象外（12_provenance_v3.js:139、cycle 24 実測）。"
     },
-    "ドリル・シンクロン": {
-      "status": "ENGINE_GAP",
-      "reason": "「①の貫通効果を適用して戦闘ダメージを与えた時」を判定できない。applyPiercingDamage（00_state_actions.js:2692）は金額を返すだけで、どのソースが適用したかも与えた事実もイベント／state に残らない（cycle 24 実測）。"
-    },
     "レプティレス・ラミア": {
       "status": "ENGINE_GAP",
       "reason": "シンクロ素材条件の「「レプティレス」チューナー」を宣言できない。SETCODE にも p4 overlay の GROUP にも レプティレス が無く、名前の部分一致は禁止（cycle 24 実測）。"
@@ -1870,18 +1436,6 @@
     "タイムカプセル": {
       "status": "ENGINE_GAP",
       "reason": "「裏側表示でゲームから除外」が無い。除外は常に表向きで、除外したカードは相手にも見える。名前を伏せたまま除外する経路が無く、隠匿情報が漏れる（cycle 25 実測）。"
-    },
-    "スライム増殖炉": {
-      "status": "ENGINE_GAP",
-      "reason": "「特定のトークン以外を召喚・反転召喚・特殊召喚できない」を宣言できない。sc.restriction は属性/種族（key が at / ra）専用（40_legal_script_engine.js:68）で、カード単位の召喚禁止は表現できない（cycle 25 実測）。"
-    },
-    "混沌の黒魔術師": {
-      "status": "ENGINE_GAP",
-      "reason": "③「表側表示のこのカードはフィールドから離れた場合に除外される」を宣言できない。banishWhenLeavesField はカード実体に立てるフラグで、効果解決の中でしか書けない（00_state_actions.js:2351）。召喚された事実だけで立てる宣言点が無く、①②だけ実装すると半実装になる（cycle 26 実測）。"
-    },
-    "氷の女王": {
-      "status": "ENGINE_GAP",
-      "reason": "「このカードは墓地からの特殊召喚はできない」を表現できない。cannotSpecialSummon は領域を問わない全面禁止で、墓地からだけを禁じる宣言が無い（cycle 26 実測）。"
     },
     "サイ・ガール": {
       "status": "ENGINE_GAP",
@@ -1919,21 +1473,11 @@
       "status": "ENGINE_GAP",
       "reason": "「そのモンスターが戦闘を行ったダメージステップ終了時まで」という持続を表現できない。STAT_MOD_V14 の until は endPhase / endTurn / endBattlePhase / permanent の4種（1D_stat_modifier_v14.js:122）で、モンスターごとの戦闘単位の期限が無い（cycle 29 実測）。"
     },
-    "コアキメイル・パワーハンド": {
-      "status": "ENGINE_GAP",
-      "reason": "「戦闘を行う光・闇属性モンスターの効果をバトルフェイズの間だけ無効化する」を表現できない。continuous.negateEffect は外側（sz / field）のソースが mz のモンスターを無効化する層で、モンスター同士では effectNegatedBy の対象にならない（00_state_actions.js:2520-2522 実測、cycle 30）。"
-    },
-    "ガーディアン・エルマ": {
-      "status": "ENGINE_GAP",
-      "reason": "「墓地の装備魔法をこのカードに装備する」経路が無い。API.equipSpell は sz にある装備カードしか装備先へ結べず（40_legal_script_engine.js:677）、墓地から魔法・罠ゾーンへ置き直す action が無い（cycle 31 実測）。"
-    },
+
+
     "ギルフォード・ザ・レジェンド": {
       "status": "ENGINE_GAP",
       "reason": "「墓地の装備魔法を可能な限り装備する」経路が無い。[[ガーディアン・エルマ]] と同じく墓地からの装備が書けない（cycle 31 実測）。"
-    },
-    "ガーディアン・シール": {
-      "status": "ENGINE_GAP",
-      "reason": "「「流星の弓－シール」が存在する時のみ召喚・反転召喚・特殊召喚できる」を表現できない。通常召喚は normalSummonProcedure の condition で縛れるが、特殊召喚は cannotSpecialSummon の全面禁止しか無く、条件付きで許可できない（cycle 31 実測）。"
     },
     "コンビネーション・アタック": {
       "status": "ENGINE_GAP",
@@ -1971,10 +1515,6 @@
       "status": "ENGINE_GAP",
       "reason": "「相手の手札をランダムに1枚裏側表示で除外する」が書けない。裏側での除外が無く、表向きに除外すると本来伏せたままの手札が公開される（[[タイムカプセル]] [[サイ・ガール]] と同じ層の不足、cycle 33 実測）。"
     },
-    "D－HERO ディスクガイ": {
-      "status": "ENGINE_GAP",
-      "reason": "「墓地へ送られたターンには墓地からの特殊召喚はできない」を宣言できない。領域を限定した特殊召喚禁止の consumer が無く（[[氷の女王]] と同じ層）、ドロー効果だけ実装すると半実装になる（cycle 34 実測）。"
-    },
     "サイバー・フェニックス": {
       "status": "ENGINE_GAP",
       "reason": "「自分の機械族を対象とする魔法・罠の効果を無効にする」を**継続効果として**書けない。無効化の入口は negateChainLink（＝チェーンに乗る誘発）だけで、継続効果として対象を取る効果だけを無効にする層が無い（cycle 34 実測）。"
@@ -1999,10 +1539,6 @@
         "tools/test_astra01_primitive.js"
       ]
     },
-    "ガーディアン・バオウ": {
-      "status": "ENGINE_GAP",
-      "reason": "「「破邪の大剣－バオウ」が自分フィールドに存在する時のみ召喚・反転召喚・特殊召喚できる」を表現できない。特殊召喚を条件付きで許可する宣言が無い（[[ガーディアン・シール]] と同じ層、cycle 35 実測）。"
-    },
     "サイバー・オーガ": {
       "status": "ENGINE_GAP",
       "reason": "「自分フィールドの「サイバー・オーガ」1体が行う戦闘を1度だけ無効にする」を書けない。攻撃宣言の無効化（negateAttack）はあるが、ダメージステップに入った戦闘そのものを無効にして続く戦闘に効果を持ち越す層が無い（cycle 35 実測）。"
@@ -2019,10 +1555,6 @@
       "status": "ENGINE_GAP",
       "reason": "「除外している間、そのモンスターカードゾーンは使用できない」を表現できない。mz は配列で管理されており固定スロットを持たないため、特定のゾーンだけを塞ぐ概念が engine に無い（cycle 37 実測）。"
     },
-    "チェーンドッグ": {
-      "status": "ENGINE_GAP",
-      "reason": "「シンクロ素材とする場合、獣族モンスターのシンクロ召喚にしか使用できない」を書けない。cannotSynchroMaterial は全面禁止の宣言（20_effect_primitives_ex.js:486）で、召喚先の種族による条件付き制限にできない（cycle 37 実測）。"
-    },
     "ダメージ・イーター": {
       "status": "ENGINE_GAP",
       "reason": "「その効果はライフポイントを回復する効果になる」を、その1つの効果だけに限定できない。LP 規則（addLpRuleV18）の convertRecover はプレイヤー＋原因＋ターン単位で、発動中の1つの効果を単位にできない（[[死力のタッグ・チェンジ]] と同じ層、cycle 37 実測）。"
@@ -2030,18 +1562,6 @@
     "サイコ・リアクター": {
       "status": "ENGINE_GAP",
       "reason": "通常罠なので解決後は墓地にあるが、「このターン戦闘を行った時」の監視を墓地から続ける必要がある。墓地ソース（System v29）の opt-in は残り1枠しかなく、同等の効果は他の書き方で表せないため保留（cycle 37 実測）。"
-    },
-    "ワーム・ベイト": {
-      "status": "ENGINE_GAP",
-      "reason": "「このカードを発動するターン、自分はレベル3・4のモンスターを召喚・特殊召喚できない」を宣言できない。レベルを条件にした召喚禁止の consumer が engine に無い（cycle 38 実測）。"
-    },
-    "迷える仔羊": {
-      "status": "ENGINE_GAP",
-      "reason": "「このカードの効果以外ではモンスターを召喚・反転召喚・特殊召喚できない」を宣言できない。[[ワーム・ベイト]] と同じく、条件付きの召喚禁止の層が無い（cycle 38 実測）。"
-    },
-    "暴君の自暴自棄": {
-      "status": "ENGINE_GAP",
-      "reason": "「お互いに効果モンスターを召喚・特殊召喚する事ができない」を宣言できない。カードの種別を条件にした召喚禁止の層が無い（cycle 38 実測）。"
     },
     "セカンド・チャンス": {
       "status": "ENGINE_GAP",

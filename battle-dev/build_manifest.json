@@ -265,10 +265,24 @@
   "path": "engine/1ZZQ_attack_cost_s03.js"
  },
  {
+
   "path": "engine/1ZZR_target_source_s03.js"
  },
  {
-  "path": "engine/1ZZS_field_link_negation_s03.js"
+ "path": "engine/1ZZS_field_link_negation_s03.js"
+ },
+ {
+ "path": "engine/1ZZR_dice_demon_s03.js"
+ },
+ {
+  "path": "engine/1ZZS_summon_lock_s03.js"
+ },
+ {
+  "path": "engine/1ZZT_set_ban_s03.js"
+ },
+ {
+  "path": "engine/1ZZU_deck_locks_s03.js"
+
  },
  {
   "path": "ui/10_render_input.js",
@@ -1465,28 +1479,327 @@
   "path": "cards/HZZZZZZZK_claude_s03_u349_event_traps.js"
  },
  {
-  "path": "cards/I0_codex_c03_target_immunity.js"
- },
- {
-  "path": "cards/I1_codex_c04_safe_zone.js"
- },
- {
+
   "path": "cards/I2_codex_c05_deck_priority.js"
- },
- {
-  "path": "cards/I3_codex_c06_deck_priority.js"
- },
- {
-  "path": "cards/I4_codex_c07_chain_disappearance.js"
- },
- {
-  "path": "cards/I5_codex_c08_koaki_doom.js"
  },
  {
   "path": "cards/I6_codex_c09_light_and_darkness_dragon.js"
  },
  {
-  "path": "cards/I7_codex_c14_skill_successor.js"
+ "path": "cards/I7_codex_c14_skill_successor.js"
+ },
+ {
+ "path": "cards/HZZZZZZZL_claude_s03_u350_guards.js"
+ },
+ {
+  "path": "cards/HZZZZZZZM_claude_s03_u351_smallmon.js"
+ },
+ {
+  "path": "cards/HZZZZZZZN_claude_s03_u352_battle_upkeep.js"
+ },
+ {
+  "path": "cards/HZZZZZZZO_claude_s03_u353_holds.js"
+ },
+ {
+  "path": "cards/HZZZZZZZP_claude_s03_u354_chain.js"
+ },
+ {
+  "path": "cards/HZZZZZZZQ_claude_s03_u355_counters.js"
+ },
+ {
+  "path": "cards/HZZZZZZZR_claude_s03_u356_counters2.js"
+ },
+ {
+  "path": "cards/HZZZZZZZS_claude_s03_u357_rituals.js"
+ },
+ {
+  "path": "cards/HZZZZZZZT_claude_s03_u358_infernity.js"
+ },
+ {
+  "path": "cards/HZZZZZZZU_claude_s03_u359_dmonsters.js"
+ },
+ {
+  "path": "cards/HZZZZZZZV_claude_s03_u360_misc.js"
+ },
+ {
+  "path": "cards/HZZZZZZZW_claude_s03_u361_alien2.js"
+ },
+ {
+  "path": "cards/HZZZZZZZX_claude_s03_u362_lightdark.js"
+ },
+ {
+  "path": "cards/HZZZZZZZY_claude_s03_u363_fusion_subs.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZ_claude_s03_u364_counters3.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZA_claude_s03_u365_tenma.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZB_claude_s03_u366_battletraps.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZC_claude_s03_u367_contraps.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZD_claude_s03_u368_linktraps.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZE_claude_s03_u369_misc4.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZF_claude_s03_u370_ritual_react.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZG_claude_s03_u371_misc5.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZH_claude_s03_u372_autotable.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZI_claude_s03_u373_autotable2.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZJ_claude_s03_u374_autotable3.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZK_claude_s03_u375_traps2.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZL_claude_s03_u376_chainers.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZM_claude_s03_u377_negators.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZN_claude_s03_u378_targetlocks.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZO_claude_s03_u379_spells.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZP_claude_s03_u380_counters4.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZQ_claude_s03_u381_fusions.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZR_claude_s03_u382_misc6.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZS_claude_s03_u383_dice_demons.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZT_claude_s03_u384_summon_locks.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZU_claude_s03_u385_misc7.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZV_claude_s03_u386_blaze.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZW_claude_s03_u387_control.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZX_claude_s03_u388_tokens_dragunity.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZY_claude_s03_u389_traps3.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZ_claude_s03_u390_partials.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZA_claude_s03_u391_gravity.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZB_claude_s03_u392_freeze.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZC_claude_s03_u393_seal.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZD_claude_s03_u394_cannon.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZE_claude_s03_u395_asmo.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZF_claude_s03_u396_scent.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZG_claude_s03_u397_cat.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZH_claude_s03_u398_light.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZI_claude_s03_u399_princess.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZJ_claude_s03_u400_coffin.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZK_claude_s03_u401_ouija.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZL_claude_s03_u402_chosen.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZM_claude_s03_u403_isolate.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZN_claude_s03_u404_decklock.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZO_claude_s03_u405_fusions.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZP_claude_s03_u406_puppet.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZQ_claude_s03_u407_titan.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZR_claude_s03_u408_buster.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZS_claude_s03_u409_blackflare.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZT_claude_s03_u410_inti.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZU_claude_s03_u411_equipself.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZV_claude_s03_u412_equips.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZW_claude_s03_u413_fusion.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZX_claude_s03_u414_inverz.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZY_claude_s03_u415_locks.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZ_claude_s03_u416_revivers.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZA_claude_s03_u417_trap_equips.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZB_claude_s03_u418_unique_name.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZC_claude_s03_u419_unique_more.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZD_claude_s03_u420_foe_field.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZE_claude_s03_u421_procedures.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZF_claude_s03_u422_revival_st.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZG_claude_s03_u423_st_shields.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZH_claude_s03_u424_lp_replace.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZI_claude_s03_u425_synchro_mats.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZJ_claude_s03_u426_material_gifts.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZK_claude_s03_u427_gap_cards.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZL_claude_s03_u428_provenance.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZM_claude_s03_u429_summon_rules.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZN_claude_s03_u430_guardians.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZO_claude_s03_u431_gap_misc.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZP_claude_s03_u432_continuous_rules.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZQ_claude_s03_u433_koaki_misc.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZR_claude_s03_u434_battle_misc.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZS_claude_s03_u435_misc_gap.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZT_claude_s03_u436_coin_pierce.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZU_claude_s03_u437_misc_more.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZV_claude_s03_u438_water_equip.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZW_claude_s03_u439_garden_rock.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZX_claude_s03_u440_traps_flipless.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZY_claude_s03_u441_hand_choices.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZ_claude_s03_u442_dice_discard.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZA_claude_s03_u443_traps_revive.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZB_claude_s03_u444_event_traps.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZC_claude_s03_u445_more_st.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZD_claude_s03_u446_traps_more.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZE_claude_s03_u447_lock_lance.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZF_claude_s03_u448_search_spells.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZG_claude_s03_u450_pile_spells.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZH_claude_s03_u451_mixed_gap.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZI_claude_s03_u452_grave_banish.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZJ_claude_s03_u453_gorgon_light.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZK_claude_s03_u454_scope_unity.js"
+
  },
  {
   "path": "cards/40_auto_interpreter.js",

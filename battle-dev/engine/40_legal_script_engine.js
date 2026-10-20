@@ -117,10 +117,12 @@ function v46ActiveFieldRestrictions(){
   });
   return out;
 }
-function v46FaceUpSummonRestrictionReason(p,db){
+function v46FaceUpSummonRestrictionReason(p,db,kind){
   if(!db || db.k!=='m') return '';
+  /* S03-U384: summon locks by kind (engine/1ZZS): the summoned card's own condition, face-up locking cards, turn-ranged bans */
+  { const slS03 = (typeof summonLockReasonS03==='function') ? summonLockReasonS03(p, db, kind) : ''; if(slS03) return slS03; }
   /* S03-U282: 「…はフィールド上に1体しか表側表示で存在できない」 (地縛神, engine/1ZZM) */
-  { const uS03 = (typeof uniqueFaceUpReasonS03==='function') ? uniqueFaceUpReasonS03(db) : ''; if(uS03) return uS03; }
+  { const uS03 = (typeof uniqueFaceUpReasonS03==='function') ? uniqueFaceUpReasonS03(db, p) : ''; if(uS03) return uS03; }
   /* S03-U129: 「このカードを発動するターン、自分はこのカードの効果以外ではモンスターを召喚・反転召喚・特殊召喚できない」（スケープ・ゴート） */
   { const tf = gameState.players[p] && gameState.players[p].temporaryFlags; if(tf && tf.noSummonS03) return `「${tf.noSummonS03}」を発動したターンはモンスターを召喚・反転召喚・特殊召喚できません`; }
   for(const r of v46ActiveFieldRestrictions()){
@@ -157,7 +159,7 @@ function v46GlobalSpecialSummonRestrictionReason(p){
   return '';
 }
 function v46SpecialSummonRestrictionReason(p,db){
-  return v46GlobalSpecialSummonRestrictionReason(p) || v46FaceUpSummonRestrictionReason(p,db) || scriptSpecialSummonLockS03(p,db);
+  return v46GlobalSpecialSummonRestrictionReason(p) || v46FaceUpSummonRestrictionReason(p,db,'special') || scriptSpecialSummonLockS03(p,db);
 }
 /* S03-U211: 「このカードがフィールド上に表側表示で存在する限り、お互いに○○を特殊召喚できない」 — a face-up monster whose script declares
    specialSummonLockS03(db, p, srcCard, srcPlayer) → true forbids that special summon (A・O・J D.D.チェッカー). Negated sources do not lock. */
@@ -250,7 +252,9 @@ function strictSummonProcedureLegality(name,p,zone,index){
   if(p!==gameState.activePlayer) return {ok:false,reason:'自分のターンに行います'};
   if(!rules().exSummon) return {ok:false,reason:`${phaseJp(gameState.phase)}ではこの特殊召喚を行えません`};
   /* S03-U175: a procedure whose cost removes one of the player's own monsters (contact fusion, engine/1ZW) frees a zone */
-  if(!hasMonsterZoneSpace(p) && !(typeof summonProcedureFreesZoneS03==='function' && summonProcedureFreesZoneS03(name,p,sp))) return {ok:false,reason:'モンスターゾーンが一杯です'};
+  /* S03-U420: summonProcedure.toFoeS03 — the card is Special Summoned onto the OPPONENT's field (エーリアン・スカル, ヴォルカニック・クイーン …); freesFoeZoneS03: the cost releases an opponent monster */
+  if(sp.toFoeS03){ if(!hasMonsterZoneSpace(p===0?1:0) && !sp.freesFoeZoneS03) return {ok:false,reason:'相手のモンスターゾーンが一杯です'}; }
+  else if(!hasMonsterZoneSpace(p) && !(typeof summonProcedureFreesZoneS03==='function' && summonProcedureFreesZoneS03(name,p,sp))) return {ok:false,reason:'モンスターゾーンが一杯です'};
   // 既存v3.4回帰の明示ガードを保持し、その後v4.6の常時制約も確認する。
   if(gameState.players[p].temporaryFlags && gameState.players[p].temporaryFlags.noSpecialSummon)
     return {ok:false,reason:'このターンは特殊召喚できません'};
@@ -347,13 +351,14 @@ function finishSummonProcedure(name,p,zone,index,pos){
 function doSpecialFromZoneUidV370(uid,pos,reason,procedureDataS03){
   const hit=findCardByUid(uid); if(!hit) return;
   const card=hit.card, nm=cardName(card), p=hit.p;
-  act({type:'FX_SPECIAL_SUMMON',player:p,from:hit.zone,fromIndex:hit.index,pos:pos||'atk',reason:reason||nm,summonKind:'procedure'});   /* S03-U127: 召喚手順＝正規の方法 */
+  const spT=(CARD_SCRIPTS[nm]||{}).summonProcedure, toFoeS03=!!(spT&&spT.toFoeS03), dest=toFoeS03?(p===0?1:0):p;   /* S03-U420: onto the opponent's field */
+  act(Object.assign({type:'FX_SPECIAL_SUMMON',player:dest,from:hit.zone,fromIndex:hit.index,pos:pos||'atk',reason:reason||nm,summonKind:'procedure'},toFoeS03?{fromPlayer:p}:{}));   /* S03-U127: 召喚手順＝正規の方法 */
   const h=locateCard(card);
-  if(h && h.p===p && h.zone==='mz' && procedureDataS03!==undefined){
+  if(h && h.p===dest && h.zone==='mz' && procedureDataS03!==undefined){
     const spS03=(CARD_SCRIPTS[nm]||{}).summonProcedure;
     if(spS03 && typeof spS03.afterSummonS03==='function') spS03.afterSummonS03({p:h.p,zone:h.zone,index:h.index,card},procedureDataS03);
   }
-  if(h && h.p===p && h.zone==='mz') queueDeferredEventV2('onSpecialSummon',{player:p,name:nm,card,kind:'procedure'});
+  if(h && h.p===dest && h.zone==='mz') queueDeferredEventV2('onSpecialSummon',{player:dest,name:nm,card,kind:'procedure'});
   flushDeferredEventsV2();
 }
 function doSpecialFromHandV2(index,pos,reason){
@@ -373,7 +378,7 @@ function getLegalHandActions(p, i){
       const SL=strictSummonProcedureLegality(nm,p,'hand',i);
       if(SL.ok) out.push({id:'specialSummonProcedure', label:'特殊召喚', cls:'gold', run:`runSummonProcedure(${jsStr(nm)},${p},'hand',${i})`});
     }
-    const summonLock=v46FaceUpSummonRestrictionReason(p,db);
+    const summonLock=v46FaceUpSummonRestrictionReason(p,db,'normal');
     const ns = R.normalSummon && normalRightFreeS03(P) && hasMonsterZoneSpace(p) && canPayNormalTribute(db,p) && !summonLock;
     if(ns) out.push({id:'normalSummon', label:'通常召喚', cls:'gold', run:`doNormalSummon(${i},'atk')`});
     const extraKey=R.normalSummon&&hasMonsterZoneSpace(p)&&canPayNormalTribute(db,p)&&!summonLock?extraNormalSummonKeyV370(p,db):null;
@@ -439,7 +444,7 @@ function canFlipSummonLegal(card,p){
   if(!(gameState.phase==='main1'||gameState.phase==='main2')) return false;
   if(card.setTurn===gameState.turn || card.summonedTurn===gameState.turn) return false;
   const owner=p!=null?p:(locateCard(card)||{}).p;
-  if(owner!=null && v46FaceUpSummonRestrictionReason(owner,dbOf(card))) return false;
+  if(owner!=null && v46FaceUpSummonRestrictionReason(owner,dbOf(card),'flip')) return false;
   return true;
 }
 
@@ -794,6 +799,10 @@ const API = {
     const sr=before?v46SpecialSummonRestrictionReason(p,dbOf(before)):v46GlobalSpecialSummonRestrictionReason(p);
     if(sr){ trace(`specialSummon blocked: ${sr}`,false); showToast(sr); return false; }
     const extra = Object.assign({}, opts && typeof opts === 'object' ? opts : {});
+    /* S03-U413: 融合禁止エリア — a face-up card with fusionSummonBanS03 stops every Fusion Summon (summonKind 'fusion') of both players */
+    if(extra.summonKind==='fusion' && typeof deckLockSourceS03==='function' && deckLockSourceS03(gameState,'fusionSummonBanS03')){ trace('specialSummon blocked: fusion summon ban',false); showToast('融合召喚はできません'); return false; }
+    /* S03-U415: デッキロック — no Special Summon from the Deck while a face-up card with deckSummonBanS03 stands */
+    if(from==='deck' && typeof deckSummonBannedS03==='function' && deckSummonBannedS03(gameState)){ trace('specialSummon blocked: deck summon ban',false); showToast('デッキからの特殊召喚はできません'); return false; }
     /* S03-U281 (Opus review): 「…の効果によって特殊召喚」 — when the caller names no source, the card whose chain link is resolving is the source
        (summonSrcS03, S03-U238); journaled in the FX_SPECIAL_SUMMON action, so Replay records the same. */
     if(extra.summonSrcS03==null && typeof RESOLVING_LINK_S03!=='undefined' && RESOLVING_LINK_S03 && RESOLVING_LINK_S03.name) extra.summonSrcS03 = RESOLVING_LINK_S03.name;
@@ -812,6 +821,9 @@ const API = {
     /* S03-U127: 正規の方法で特殊召喚されていない特殊召喚モンスター */
     const properS03 = (!ignoreCondS03 && before && typeof properlySummonedReasonS03==='function') ? properlySummonedReasonS03(before, extra.summonKind||null, reason, from) : '';
     if(properS03){ trace(`specialSummon blocked: ${properS03}`,false); showToast(properS03); logIt(gameState, `${reason||'効果'}：${properS03}`); return false; }
+    /* S03-U358: 「このカードは墓地からの特殊召喚はできない」 */
+    const noGraveS03 = (!ignoreCondS03 && before && typeof noGraveSummonReasonS03==='function') ? noGraveSummonReasonS03(before, from) : '';
+    if(noGraveS03){ trace(`specialSummon blocked: ${noGraveS03}`,false); showToast(noGraveS03); logIt(gameState, `${reason||'効果'}：${noGraveS03}`); return false; }
     trace(`specialSummon: ${from}[${index}] → ${pos||'atk'}`);
     act(Object.assign({type:"FX_SPECIAL_SUMMON", player:p, fromPlayer:sp, from, fromIndex:index, pos:pos||'atk', reason}, extra));
     // System v3.4.0: 特殊召喚が制約等で失敗した時、既存の最後尾モンスターを誤って「召喚成功」にしない。
@@ -884,6 +896,15 @@ const API = {
     act({type:'FX_MONSTER_EQUIP_V46',player:p,fromPlayer:r.p,fromIndex:r.index,targetPlayer:h.p,targetMz:h.index,reason});
     return !!(gameState.players[p].sz||[]).find(c=>c===r.card&&c.v46MonsterEquip);
   },
+  /* S03-U402: a monster of the hand equipped directly (竜操術), without being Special Summoned */
+  equipMonsterFromHand(p,handIndex,target,reason){
+    const h=resolveTarget(target), c=gameState.players[p].hand[handIndex];
+    if(!h||h.zone!=='mz'||!c) return false;
+    if(gameState.players[p].sz.length>=ZONE_LIMITS.sz) return false;
+    ensureCardUid(gameState,c);
+    act({type:'FX_MONSTER_EQUIP_V46',player:p,fromPlayer:p,fromIndex:handIndex,fromHandS03:true,targetPlayer:h.p,targetMz:h.index,reason});
+    return !!(gameState.players[p].sz||[]).find(x=>x===c&&x.v46MonsterEquip);
+  },
   equipSpell(source,target,reason){
     const s=resolveTarget(source),t=resolveTarget(target);
     if(!s||!t||s.zone!=='sz'||t.zone!=='mz') return false;
@@ -940,6 +961,7 @@ const API = {
          atk:def.atk, def:def.def, lv:def.lv, ra:def.ra, at:def.at,
          pos:def.pos||'def', n:n||1}, def.noAdvanceTributeS03 ? {noAdvanceTributeS03:true} : {},
          def.noAdvanceTributeNonDarkS03 ? {noAdvanceTributeNonDarkS03:true} : {},
+         def.advanceTributeOnlyForS03 ? {advanceTributeOnlyForS03:String(def.advanceTributeOnlyForS03)} : {},
          Number(def.destroyDamageS03) > 0 ? {destroyDamageS03:Number(def.destroyDamageS03)} : {}));
     /* S03-U289: the summoning player chooses the position when the text gives none (engine/1ZZK) */
     if(typeof ssPositionQueueTokensS03==='function')   /* the text decides: a position written only in the script is not the text's */
@@ -1060,11 +1082,12 @@ const API = {
   /* System v8: カードの効果によるドローは byEffect:true を明示する。 */
   draw(p, n){ trace(`draw: ${n||1}`); act({type:"DRAW", player:p, n:n||1, byEffect:true}); },
   /* System v18: cause を明示して中央の置換点に載せる。 */
-  damageLP(p, amount){ trace(`damage: ${nameOf(p)} -${amount}`);
+  damageLP(p, amount, reason, o){ trace(`damage: ${nameOf(p)} -${amount}`);
     /* S03-U50: チェーンの解決中なら発生源（プレイヤー・カード・チェーン1か）を載せる（新しい Action だけ）。 */
     const r=(typeof RESOLVING_LINK_S03!=='undefined')?RESOLVING_LINK_S03:null;
     act(Object.assign({type:"LP", player:p, delta:-Math.abs(amount), cause:'effect'},
-      (r&&(r.player===0||r.player===1))?{byPlayer:r.player}:{}, (r&&r.uid!=null)?{sourceUid:r.uid}:{}, (r&&r.chainLinkOne===true)?{chainLinkOneS03:true}:{}, (r&&r.chainId!=null)?{chainIdS03:r.chainId}:{})); },   /* S03-U267: chainIdS03 */
+      (r&&(r.player===0||r.player===1))?{byPlayer:r.player}:{}, (r&&r.uid!=null)?{sourceUid:r.uid}:{}, (r&&r.chainLinkOne===true)?{chainLinkOneS03:true}:{}, (r&&r.chainId!=null)?{chainIdS03:r.chainId}:{},
+      (o&&o.simulHoldS03===true)?{simulHoldS03:true}:{}, (o&&o.simulFinalS03===true)?{simulFinalS03:true}:{})); },   /* S03-U449: 4th argument {simulHoldS03} / {simulFinalS03} brackets one simultaneous damage of both players */   /* S03-U267: chainIdS03 */
   recoverLP(p, amount){ trace(`recover: ${nameOf(p)} +${amount}`); act({type:"LP", player:p, delta:Math.abs(amount), cause:'recover'}); },
   payCost(p, amount){ trace(`payCost: ${amount}`); act({type:"LP", player:p, delta:-Math.abs(amount), cause:'cost'}); },
   /* --- System v18: LP変化の規則 --- */

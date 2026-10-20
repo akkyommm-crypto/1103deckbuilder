@@ -127,7 +127,21 @@ function sweepProperlySummonedS03(gs){
 /* S03-U144: can this card be Special Summoned by this effect from this zone? For candidate lists (e.g. 死者蘇生), so that a card
    the summon would refuse (「特殊召喚できない」, a 「〜でしか」 condition, or a special-summon monster that was never properly
    summoned) is not offered as a target in the first place. */
+
+/* S03-U358: 「このカードは墓地からの特殊召喚はできない」 (インフェルニティ・ミラージュ / ハ・デス / 地獄詩人ヘルポエマー) — a standing rule read from the card text; applies to every effect Special Summon from the Graveyard. */
+function noGraveSummonReasonS03(card, from){
+  if(!card || (from!=='grave' && from!=='deck')) return '';
+  const d = (typeof dbOf==='function') ? dbOf(card) : null;
+  const txt = String((d && d.e) || '');
+  /* S03-U395: 「このカードはデッキ・墓地からの特殊召喚はできない」 (堕天使アスモディウス) and 「デッキからの…」 */
+  if(from==='grave' && /このカードは(デッキ・)?墓地からの特殊召喚はできない/.test(txt)) return `${cardName(card)}は墓地から特殊召喚できません`;
+  /* S03-U429: 「このカードは墓地へ送られたターンには墓地からの特殊召喚はできない」 (D－HERO ディスクガイ) — the turn it was sent (graveInfo.turn) */
+  if(from==='grave' && /このカードは墓地へ送られたターンには墓地からの特殊召喚はできない/.test(txt) && card.graveInfo && Number(card.graveInfo.turn)===Number(gameState.turn)) return `${cardName(card)}は墓地へ送られたターンには墓地から特殊召喚できません`;
+  if(from==='deck' && /このカードは(デッキ・墓地|デッキ)からの特殊召喚はできない/.test(txt)) return `${cardName(card)}はデッキから特殊召喚できません`;
+  return '';
+}
 function canEffectSpecialSummonS03(card, from, reason, summonKind){
+
   if(!card) return false;
   const sc = (typeof CARD_SCRIPTS!=='undefined') ? CARD_SCRIPTS[cardName(card)] : null;
   if(sc && sc.cannotSpecialSummon===true) return false;
@@ -135,7 +149,10 @@ function canEffectSpecialSummonS03(card, from, reason, summonKind){
   if(typeof sinUniqueReasonS03==='function' && sinUniqueReasonS03(card)) return false;   /* S03-U187 */
   /* S03-U211: a face-up monster's 「お互いに…特殊召喚できない」 lock (A・O・J D.D.チェッカー) also removes the card from effect candidate lists */
   if(typeof scriptSpecialSummonLockS03==='function'){ const l = (typeof locateCard==='function') ? locateCard(card) : null; if(scriptSpecialSummonLockS03(l && (l.p===0||l.p===1) ? l.p : 0, dbOf(card))) return false; }
+  /* S03-U384: summon locks by kind (engine/1ZZS) — a turn-ranged ban or a locking card also removes the card from effect candidate lists */
+  if(typeof summonLockReasonS03==='function'){ const o = (card.owner===0||card.owner===1) ? card.owner : 0; if(summonLockReasonS03(o, dbOf(card), 'special')) return false; }
   if(summonOnlyReasonS03(card, summonKind||null, reason)) return false;
   if(properlySummonedReasonS03(card, summonKind||null, reason, from)) return false;
+  if(noGraveSummonReasonS03(card, from)) return false;
   return true;
 }

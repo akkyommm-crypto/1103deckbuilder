@@ -79,12 +79,13 @@ function regret(){fresh();const tr=setCard(REG,0),a=mon('ワイト',1),bm=mon('�
   PREFER=[uid(b)];duelActivateFromZone(0,'sz',0);drive();PREFER=[];
   ok('破壊輪: in the opponent\'s turn the chosen monster (青眼, ATK 3000 ≤ their LP 8000) destroyed; I take 3000, then they take 3000',z(b)==='grave'&&z(a)==='mz'&&lp(0)===5000&&lp(1)===5000,JSON.stringify({b:z(b),lp0:lp(0),lp1:lp(1)}));
   audit('破壊輪 ①'); }
+/* S03-U449 (ChatGPT audit): the two negative cases below asserted the 2015 errata (LP condition, opponent turn only). The 2011 card (pre-errata Normal Trap, yugioh-wiki 《破壊輪》) has neither limit, so they are positive now; the complete 2011 behaviour is in test_s03_u449_audit_fixes.js. */
 { fresh();gameState.activePlayer=1;const tr=setCard(RNG,0),b=mon('青眼の白龍',1);gameState.players[0].sz=[tr];gameState.players[1].mz=[b];gameState.players[1].lp=2000;baselineA();
   PREFER=[uid(b)];duelActivateFromZone(0,'sz',0);drive();PREFER=[];
-  ok('破壊輪 negative: ATK 3000 above their LP 2000 → not a candidate / not activated',z(b)==='mz'&&z(tr)==='sz',JSON.stringify({b:z(b),tr:z(tr)})); }
+  ok('破壊輪 (2011): ATK 3000 above their LP 2000 can still be destroyed; they are reduced to 0 (I take 3000 too and survive)',z(b)==='grave'&&lp(1)===0&&lp(0)===5000,JSON.stringify({b:z(b),tr:z(tr),lp0:lp(0),lp1:lp(1)})); }
 { fresh();const tr=setCard(RNG,0),b=mon('青眼の白龍',1);gameState.players[0].sz=[tr];gameState.players[1].mz=[b];baselineA();
-  duelActivateFromZone(0,'sz',0);drive();
-  ok('破壊輪 negative: in my own turn → not activated',z(b)==='mz'&&z(tr)==='sz',JSON.stringify({b:z(b),tr:z(tr)})); }
+  PREFER=[uid(b)];duelActivateFromZone(0,'sz',0);drive();PREFER=[];
+  ok('破壊輪 (2011): also activatable in my own turn',z(b)==='grave'&&lp(0)===5000&&lp(1)===5000,JSON.stringify({b:z(b),tr:z(tr),lp0:lp(0),lp1:lp(1)})); }
 
 /* ===== 融合回収 ===== */
 { const x=fuseP(0,E('サンダー・ジャイアント'),'スパークマン','クレイマン',()=>{gameState.players[0].hand.push(mk('融合回収',0));});drive();PREFER=[];

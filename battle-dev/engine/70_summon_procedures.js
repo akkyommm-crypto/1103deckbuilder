@@ -167,19 +167,20 @@ function tributeCandidates(p, targetDb){
      S03-U188: 黒焔トークン 「闇属性モンスター以外のアドバンス召喚のためにはリリースできない」 (card flag; needs the summoned monster's db) */
   return API.fieldCards({zone:'mz', player:p, filter:x=>x.card && !x.card.cannotTribute && !x.card.noAdvanceTributeS03
     && !(x.card.noAdvanceTributeNonDarkS03 && !(targetDb && targetDb.at==='闇'))
-    && !(()=>{ const v=(CARD_SCRIPTS[cardName(x.card)]||{}).noAdvanceTributeS03; try{ return typeof v==='function' ? !!v(x.card) : !!v; }catch(e){ return false; } })()});   /* S03-U266: a function form (きつね火: only while face-up) */
+    && !(x.card.advanceTributeOnlyForS03 && !(targetDb && String(targetDb.n||'').indexOf(x.card.advanceTributeOnlyForS03)>=0))   /* S03-U388: only for the Advance Summon of monsters whose name has it (雲魔物トークン / ジュラックトークン) */
+    && !(()=>{ const v=(CARD_SCRIPTS[cardName(x.card)]||{}).noAdvanceTributeS03; try{ return typeof v==='function' ? !!v(x.card, targetDb) : !!v;   /* S03-U414: the summoned monster's db is the 2nd argument (インヴェルズの魔細胞) */ }catch(e){ return false; } })()});   /* S03-U266: a function form (きつね火: only while face-up) */
 }
 
 function doNormalSummon(i, pos){
   const p=gameState.activePlayer,c=gameState.players[p].hand[i];
-  const why=c?v46FaceUpSummonRestrictionReason(p,dbOf(c)):'';
+  const why=c?v46FaceUpSummonRestrictionReason(p,dbOf(c),'normal'):'';
   if(why){showToast(why);return;}
   chooseNormalSummonMethod(i,'summon',(m,payment)=>finishNormalSummon(i,pos,payment,m.id,null));
 }
 /* v3.7.0: 効果で得た追加通常召喚権を通常召喚権と分離して消費する。 */
 function doExtraNormalSummonV370(i, extraNormalKey){
   const p=gameState.activePlayer,c=gameState.players[p].hand[i];
-  const why=c?v46FaceUpSummonRestrictionReason(p,dbOf(c)):'';
+  const why=c?v46FaceUpSummonRestrictionReason(p,dbOf(c),'normal'):'';
   if(why){showToast(why);return;}
   chooseNormalSummonMethod(i,'summon',(m,payment)=>finishNormalSummon(i,'atk',payment,m.id,extraNormalKey));
 }
