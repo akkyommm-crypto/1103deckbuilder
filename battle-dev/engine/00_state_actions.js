@@ -3414,6 +3414,11 @@ function continuousReaches(scope, srcP, tgtLoc, src, target){
     case 'equippedMonster':
       return !!(src && src.equipTo && target && target.uid != null
                 && src.equipTo.uid === target.uid && tgtLoc.zone === 'mz');
+    /* S03-U457: 逆方向。モンスター(src)に装備されている装備カード(魔法＆罠ゾーン)だけに届く
+       （「このカードに装備された装備カードは、カードの効果の対象にならない」ヴァイロン・エプシロン）。 */
+    case 'equippedCards':
+      return !!(src && src.uid != null && target && target.equipTo
+                && target.equipTo.uid === src.uid && tgtLoc.zone === 'sz');
     case 'ownMonsters': return tgtLoc.p === srcP && tgtLoc.zone === 'mz';
     case 'oppMonsters': return tgtLoc.p !== srcP && tgtLoc.zone === 'mz';
     case 'allMonsters': return tgtLoc.zone === 'mz';

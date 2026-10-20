@@ -15387,6 +15387,44 @@
         "tools/test_s03_u454_scope_unity.js"
       ],
       "evidence": "Exact script. Text (carddata). If the opponent shakes hands both LP become half the total; if refused nothing happens; showing 結束 UNITY from the hand applies it without asking. Test: tools/test_s03_u454_scope_unity.js (Replay audit). 古代の遠眼鏡 / コザッキーの研究成果 show the cards to the controller through the ChoiceRequest labels or candidates (no separate reveal log). 同姓同名同盟条約 uses the largest same-name group."
+    },
+    {
+      "name": "ヴァイロン・エプシロン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U457",
+      "tests": [
+        "tools/test_s03_u457_target_consumers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Equipped cards cannot be targeted by any card effect (new continuous scope equippedCards; activation-prep and resolution-time pinned); the Graveyard cost is not a target; opposing monster destroyed; once per turn; refused with no equip card / no legal target. Rulings: wiki 2010-05-07 (cost), 2010-08-04 (opponent equip spells can be sent), 2010-04-30 (multi-target cannot select the equips). Test: tools/test_s03_u457_target_consumers.js (Replay audit)."
+    },
+    {
+      "name": "ターボ・ウォリアー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U457",
+      "tests": [
+        "tools/test_s03_u457_target_consumers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Immune to the effects of Level 6 or lower Effect Monsters only (it had been immune to every effect through the text fallback of targetImmune); attack declaration against a Level 6+ Synchro Monster halves its ATK until the end of the Damage Step. Rulings: wiki 2008-07-20, 2008-11-26, 2010-05-04. Test: tools/test_s03_u457_target_consumers.js (Replay audit)."
+    },
+    {
+      "name": "救世の儀式",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U457",
+      "tests": [
+        "tools/test_s03_u457_target_consumers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Ritual Summon of 救世の美神ノースウェムコ (Level sum 7 or more, hand and field) through the shared ritual pipeline; Graveyard ignition: banish as cost, target a face-up Ritual Monster of mine, which cannot be targeted by card effects this turn (lingering source). Rulings: wiki 2009-07-19 (chain 1 of my Main Phase only), 2009-08-01 (cost; targets). Test: tools/test_s03_u457_target_consumers.js (Replay audit)."
+    },
+    {
+      "name": "オベリスクの巨神兵",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U457",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: needs a 3-Tribute requirement, an un-negatable summon and an all-kinds summon-success activation lock; see data/script_status_overrides.json for the measured file:line evidence."
     }
   ],
   "restored_to_baseline": [

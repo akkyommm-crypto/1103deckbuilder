@@ -4373,6 +4373,11 @@ function continuousReaches(scope, srcP, tgtLoc, src, target){
     case 'equippedMonster':
       return !!(src && src.equipTo && target && target.uid != null
                 && src.equipTo.uid === target.uid && tgtLoc.zone === 'mz');
+    /* S03-U457: 逆方向。モンスター(src)に装備されている装備カード(魔法＆罠ゾーン)だけに届く
+       （「このカードに装備された装備カードは、カードの効果の対象にならない」ヴァイロン・エプシロン）。 */
+    case 'equippedCards':
+      return !!(src && src.uid != null && target && target.equipTo
+                && target.equipTo.uid === src.uid && tgtLoc.zone === 'sz');
     case 'ownMonsters': return tgtLoc.p === srcP && tgtLoc.zone === 'mz';
     case 'oppMonsters': return tgtLoc.p !== srcP && tgtLoc.zone === 'mz';
     case 'allMonsters': return tgtLoc.zone === 'mz';
@@ -82699,9 +82704,10 @@ defineScript('エレキリギリス', {
   resolve(){}, afterResolve(){},
   continuous:{ scope:'ownMonsters', from:['mz'], apply(){ return null; },
     cannotBeAttackTarget(target, self){ return u336Grass(target, self); },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(!u336Grass(card, self)) return false;
-      const me = locateCardAnyV4(self), tp = u336TargetingPlayer();
+      /* S03-U457: filterTargetable が渡す effectInfo.player を最優先（直接 runScript でも効く）。無ければ従来の文脈から読む。 */
+      const me = locateCardAnyV4(self), tp = (effectInfo && effectInfo.player!=null) ? effectInfo.player : u336TargetingPlayer();
       return !(tp!=null && me && tp===me.p);   /* 「相手は」: my own effects may still target */
     } }
 });
@@ -87148,7 +87154,7 @@ defineScript('トライアングル・エリア', {
    - 極星宝ドラウプニル / 機皇城: the search (極星宝 cards are Traps except ドラウプニル itself: nameHas, any card kind) is the shared Deck trigger (engine/1ZT: deckTriggerHappenedS03 'fieldToGrave', faceUp) plus a destruction filter on graveInfo:
      ドラウプニル only a destruction BY A CARD EFFECT (graveInfo.byDestroy, not battle, not the equip rule that sends an Equip Spell to the GY with its host);
      機皇城 any destruction of the face-up Field Spell.
-   - 機皇城 ①: continuous.immuneToTarget on my 「機皇帝」 monsters, only while the targeting effect belongs to a Synchro Monster on the field (ACTIVATION_PREP_S03 names the effect's source card).
+   - 機皇城 ①: continuous.immuneToTarget on my 「機皇帝」 monsters, only while the targeting effect belongs to a Synchro Monster (the source comes from effectInfo, S03-U457; before it was the prep-only ACTIVATION_PREP_S03 lookup and a Synchro Monster on the field).
    - スクラップ・シャーク: a forced trigger on onActivateSuccess (any activation of a Spell, Trap or monster effect); it destroys itself, and that destruction by its own Scrap-named effect is the same
      graveInfo.srcUidS03 test as スクラップ・コング (S03-U208): the optional Deck-to-Graveyard mill of one 「スクラップ」 monster follows.
    - 見習い魔術師: ① the Spell Counter capable cards on the field are read with counterCapableCardsV22 (engine/1L); ② the shared Deck trigger (pos faceDownDef). */
@@ -87238,19 +87244,19 @@ const U373_APPRENTICE = {when:'battleToGrave', action:'summon', optional:true, p
 /* ---- 機皇城 ---- */
 const U373_CASTLE = {when:'fieldToGrave', faceUp:true, action:'search', from:['deck'], optional:true, max:1, filter:{nameHas:'機皇帝'}};
 function u373CastleDestroyed(ctx){ const g = ctx.card && ctx.card.graveInfo; return !!g && !!g.byDestroy && Number(g.turn)===Number(gameState.turn); }
-function u373SynchroSource(){
-  const prep = (typeof ACTIVATION_PREP_S03!=='undefined' && ACTIVATION_PREP_S03 && ACTIVATION_PREP_S03.uid!=null) ? ACTIVATION_PREP_S03 : null;
-  if(!prep) return false;
-  const h = findCardByUid(prep.uid);
-  return !!h && h.zone==='mz' && (dbOf(h.card).st||[]).indexOf('シンクロ')>=0;
+/* S03-U457: 対象を選んでいる効果の出所は filterTargetable が渡す effectInfo を最優先で使う（解決時の選択でも出所が残る）。
+   「Sモンスターの効果」は出所がシンクロモンスターかどうかだけで決まる（効果の発動場所は問わない）。 */
+function u373SynchroSource(effectInfo){
+  const src = u378SrcOf(effectInfo);
+  return !!src && targetEffectMatchesS03(src, {synchro:true});
 }
 defineUnifiedCardV4('機皇城', [{
   key:'activate', type:EFFECT_TYPE.ACTIVATE, range:LOCATION.FIELD, speed:1, events:['activate'], operation(){}, afterResolve(){}
 }, u373SearchEffect('機皇城', U373_CASTLE, u373CastleDestroyed)], u373SearchMeta(U373_CASTLE, u373CastleDestroyed, {type:'spell', priority:1,
   continuous:{ scope:'ownMonsters', from:['field'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(!self || self.face!=='up' || !card || card.face!=='up' || String(dbOf(card).n||'').indexOf('機皇帝')!==0 || dbOf(card).k!=='m') return false;
-      return u373SynchroSource();
+      return u373SynchroSource(effectInfo);
     } } }));
 /* S03-U374: three more PARTIAL auto-table entries replaced by exact scripts (carddata texts).
 
@@ -88132,7 +88138,7 @@ defineUnifiedCardV4('世界樹', [{
 
    Notes
    - セルケト: selfDestroyWhenS03 (engine/1ZZF) for ①, battleVictimBanishS03 (S03-U255) for ②, a forced onDamageStep trigger after the battle (a6DestroyedFoeInBattle, as 聖導騎士イシュザーク) for ③ (a permanent stat modifier until it leaves / turns face-down; one count per victim).
-   - ガイアドレイク: continuous.immuneToTarget with the effect source read from ACTIVATION_PREP_S03 (u378Source, S03-U378), and protectV21 (engine/1K) {effect, sourceKind ['m']} for the destruction part. A Fusion Monster is placed on the field directly in the test (its Fusion Summon is the engine's).
+   - ガイアドレイク: continuous.immuneToTarget with the effect source from effectInfo (u378SrcOf, S03-U457; the prep-only u378Source() lost it at resolution), and protectV21 (engine/1K) {effect, sourceKind ['m']} for the destruction part. A Fusion Monster is placed on the field directly in the test (its Fusion Summon is the engine's).
    - ナイトメアを駆る死霊: declareTargetedSelfDestroyS03 (engine/1ZM, S03-U137) for the self-destruction when targeted; battleProof (text), continuous.grantsDirectAttack, and the random discard on onDirectBattleDamage (as エレキリム S03-U336, duelRandomInt). */
 
 /* ---- 聖獣セルケト ---- */
@@ -88164,10 +88170,11 @@ defineScript('地天の騎士ガイアドレイク', {
   resolve(){}, afterResolve(){},
   protectV21:{key:'u381.drake', effect:true, sourceKind:['m'], label:'地天の騎士ガイアドレイク'},
   continuous:{ scope:'self', from:['mz'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(card!==self || self.face!=='up') return false;
-      const src = u378Source();
-      return !!src && src.db.k==='m' && (src.db.st||[]).indexOf('効果')>=0;
+      /* S03-U457: u378Source() は発動準備中しか出所を返さず、解決時の対象選択で耐性が外れていた。filterTargetable の effectInfo を最優先で使う。 */
+      const src = u378SrcOf(effectInfo);
+      return !!src && targetEffectMatchesS03(src, {cardTypes:['m'], effectMonster:true});
     } }
 });
 
@@ -90428,7 +90435,7 @@ defineUnifiedCardV4('不退の荒武者', [{
    破壊竜ガンドラ  このカードは特殊召喚できない。①:LPを半分払って発動できる。このカード以外のフィールドのカードを全て破壊し除外する。このカードの攻撃力は、この効果で破壊したカードの数×300アップする。②:このカードを召喚・反転召喚したターンのエンドフェイズに発動する。このカードを墓地へ送る。
 
    Notes
-   - タイタン: cannotSpecialSummon + continuous.immuneToTarget with the effect source from ACTIVATION_PREP_S03 (u378Source, S03-U378/U381): a Trap or an Effect Monster cannot target it; the ignition banishes a 「ジュラック」 (ATK 1700 or less) of the Graveyard (cost) for +1000 ATK until the End Phase (v4RegisterStatModifier).
+   - タイタン: cannotSpecialSummon + continuous.immuneToTarget with the effect source from filterTargetable's effectInfo (u378SrcOf, S03-U457; it was the prep-only u378Source() and lost the immunity at resolution): a Trap or an Effect Monster cannot target it; the ignition banishes a 「ジュラック」 (ATK 1700 or less) of the Graveyard (cost) for +1000 ATK until the End Phase (v4RegisterStatModifier).
    - ユニコーン: once-per-turn ignition lowering the chosen monster by 500 x my monster count until the End Phase; a card stamp (u407Turn) + continuous cannotAttack on my other monsters.
    - ガンドラ: LP halved as the cost; every other card of the field (monsters, Spell & Trap Zones, Field Zones) is destroyed and the destroyed ones are banished from the Graveyard; ATK + 300 each (modifier until it leaves the field); a forced End Phase trigger sends it to the Graveyard in the turn it was Summoned / Flip Summoned (summonedTurn / flipSummonedTurnS03). */
 
@@ -90453,10 +90460,11 @@ defineUnifiedCardV4('ジュラック・タイタン', [{
   afterResolve(){}
 }], {type:'monster', priority:1, cannotSpecialSummon:true, countLimit:{n:1, effects:['boost']}, timing:['free'],
   continuous:{ scope:'self', from:['mz'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(card!==self || self.face!=='up') return false;
-      const src = u378Source();
-      return !!src && (src.db.k==='t' || (src.db.k==='m' && (src.db.st||[]).indexOf('効果')>=0));
+      /* S03-U457: 出所は filterTargetable が渡す effectInfo を最優先（発動準備・解決時・直接 runScript の3経路）。 */
+      const src = u378SrcOf(effectInfo);
+      return !!src && (targetEffectMatchesS03(src, {cardTypes:['t']}) || targetEffectMatchesS03(src, {cardTypes:['m'], effectMonster:true}));
     } } });
 
 /* ---- サンダー・ユニコーン ---- */
@@ -92135,7 +92143,7 @@ defineUnifiedCardV4('血の沼地', [u422Act(true), {
    - Destruction immunity of Spell / Trap Cards = continuous.protectV21 with scope 'allCards' and an effect / battle function over the protected card (engine/1K applyDestructionProtectionV21 already guards FX_TO_GRAVE and FX_WIPE_ZONE for mz / sz / field cards).
    - フィールドバリア: protectV21 for every Field Spell (either field); activationLockS03 refuses the card activation of a Field Spell (hand or Set); a second face-up copy of mine (a later slot) is destroyed by selfDestroyWhenS03 (the "1枚しか表側表示で存在できない" rule; the one in the LATER Spell & Trap slot goes).
    - 宮廷のしきたり: protectV21 effect + battle for every face-up Continuous Trap but 「宮廷のしきたり」; the same one-copy rule.
-   - 安全地帯: the ACTIVATE chooses a face-up Attack Position monster of either field; the host uid is the card flag u423Host; continuous (scope allMonsters) = immuneToTarget against the OPPONENT's effects (u378Source), protectV21 (battle and the opponent's effects) and cannotDirectAttack, and the two linkOnLeave destroy links. */
+   - 安全地帯: the ACTIVATE chooses a face-up Attack Position monster of either field; the host uid is the card flag u423Host; continuous (scope allMonsters) = immuneToTarget against the OPPONENT's effects (u378SrcOf(effectInfo), S03-U457), protectV21 (battle and the opponent's effects) and cannotDirectAttack, and the two linkOnLeave destroy links. */
 
 function u423Dup(name){
   return (card, p)=>{
@@ -92185,9 +92193,10 @@ defineUnifiedCardV4('安全地帯', [{
 }], {
   type:'trap', priority:2, targets:true,
   continuous:{ scope:'allMonsters', from:['sz'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(!u423Shield(card, self)) return false;
-      const s = u378Source(), h = locateCardAnyV4(card);
+      /* S03-U457: 解決時の対象選択でも出所（effectInfo）が残るよう u378SrcOf を使う（旧: 発動準備中のみの u378Source()） */
+      const s = u378SrcOf(effectInfo), h = locateCardAnyV4(card);
       return !!s && !!h && s.player!==h.p;
     },
     protectV21:{ key:'u423.safe', battle:(t, src)=>u423Shield(t, src), effect:(t, src)=>u423Shield(t, src), opponentOnly:true, label:'安全地帯' },
@@ -95300,6 +95309,133 @@ defineScript('友情 YU－JYO', {
   },
   afterResolve(){}
 });
+/* S03-U457: CODEX-C03（出所を見る対象耐性）の残りの消費者 — ヴァイロン・エプシロン, ターボ・ウォリアー, 救世の儀式 (NOT_STARTED cards, carddata texts).
+
+   ヴァイロン・エプシロン  光属性チューナー＋チューナー以外のモンスター1体以上 このカードに装備された装備カードは、カードの効果の対象にならない。また、1ターンに1度、このカードに装備された装備カード1枚を墓地へ送って発動できる。相手フィールド上のモンスター1体を選択して破壊する。
+   ターボ・ウォリアー      「ターボ・シンクロン」＋チューナー以外のモンスター1体以上 レベル6以上のシンクロモンスターを攻撃対象としたこのカードの攻撃宣言時、攻撃対象モンスターの攻撃力をダメージステップ終了時まで半分にする。フィールド上のこのカードはレベル6以下の効果モンスターの効果の対象にならない。
+   救世の儀式              「救世の美神ノースウェムコ」の降臨に必要。自分の手札・フィールド上から、レベルの合計が7以上になるようにモンスターをリリースしなければならない。また、自分のメインフェイズ時に墓地のこのカードをゲームから除外し、自分フィールド上の儀式モンスター1体を選択して発動できる。このターン選択した自分の儀式モンスターはカードの効果の対象にならない。
+
+   Notes
+   - NEW engine scope (engine/00 continuousReaches): continuous.scope 'equippedCards' reaches only the equip cards (Spell & Trap Zone) that are equipped to the source monster (the reverse of v15 'equippedMonster'). Consumer: エプシロン.
+   - エプシロン: immuneToTarget protects the equipped cards from every card effect (either player; not a targeting-player condition). The cost (send an equipped card to the Graveyard) is NOT a target, so its choice is opened with targeting:false (P1.1 activationV11, as ドラグニティナイト－ヴァジュランダ) - otherwise the card's own targeting filter would refuse the immune equip cards - and the destruction target (an opposing monster) is chosen after the cost with targeting:true, filtered with the real effect source.
+   - ターボ・ウォリアー: immuneToTarget(card, self, effectInfo) uses targetEffectMatchesS03 {cardTypes:['m'], effectMonster:true, maxLevel:6} - activation preparation, chain resolution and direct runScript all see the source. (The old text fallback of targetImmune made the card immune to EVERY effect: its text matches /このカードは…効果の対象にならない/.) 「レベル6以下」 excludes Xyz Monsters (they have no Level).
+     The ATK halving is a forced trigger at the attack declaration (the declared target must be a face-up Level 6 or higher Synchro Monster): it records the amount lost (card flag u457Half on the target = {by, turn, loss}, rounded up) and the continuous apply takes it away only while that very attack (pendingAttack / battle) is in progress, i.e. until the end of the Damage Step.
+   - 救世の儀式: registerRitualSpecV24 (atLeast 7) + the shared ritual pipeline; the Graveyard clause is an ignition from the Graveyard (cost: banish itself; target: a face-up Ritual Monster of mine). The banished Spell stays as a lingering source for the turn (API.lingerS03, continuous.from:['linger'], S03-U257) carrying {uid, turn} of the selected monster, which is immune to every card effect's targeting that turn. */
+
+function u457Main(ctx){ return ctx.player===gameState.activePlayer && (gameState.phase==='main1' || gameState.phase==='main2'); }
+/* 対象を選ぶ効果の出所を明示して filterTargetable にかける（発動条件の判定・候補の事前絞り込み用） */
+function u457Targetable(cands, player, src){
+  return filterTargetable(cands, player, targetEffectSourceS03(player, src));
+}
+
+/* ---- ヴァイロン・エプシロン ---- */
+function u457EquipsOf(card){
+  const uid = card && card.uid;
+  return uid==null ? [] : API.fieldCards({zone:'sz', filter:x=>!!x.card.equipTo && x.card.equipTo.uid===uid});
+}
+function u457EpsFoes(player, card){
+  return u457Targetable(API.fieldCards({player:1-player, zone:'mz'}), player, {uid:card.uid, name:'ヴァイロン・エプシロン'});
+}
+API.registerChoiceHandler('u457.eps-cost', (answer, args)=>{
+  const d = args.activation, picked = p11cCards(answer)[0], eq = picked && p11cHit(picked.uid), self = p11cHit(d.uid);
+  if(answer.cancelled || !eq || !self || eq.zone!=='sz' || !eq.card.equipTo || eq.card.equipTo.uid!==self.card.uid) return p11cAbort(d);
+  const foes = u457EpsFoes(d.player, self.card);
+  if(!foes.length) return p11cAbort(d);
+  API.recordActivationCost(p11cCtx(d.player), 'send', [eq], [], 1);
+  API.sendToGrave(eq, d.name+'（コスト）');
+  p11cOpen(d, {title:d.name+'：破壊する相手モンスター', candidates:foes, targeting:true}, 'p11cards.commit-targets', {mode:'destroy'});
+});
+defineUnifiedCardV4('ヴァイロン・エプシロン', [{
+  key:'destroy', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, speed:1, events:['activate'], targetRange:LOCATION.MZONE, targetSide:'opponent',
+  condition(ctx){
+    if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason = 'フィールドに表側表示で存在する必要があります'; return false; }
+    if(!u457Main(ctx)){ ctx.reason = '自分のメインフェイズに発動できます'; return false; }
+    if(!u457EquipsOf(ctx.card).length){ ctx.reason = 'このカードに装備された装備カードがありません'; return false; }
+    if(!u457EpsFoes(ctx.player, ctx.card).length){ ctx.reason = '対象にできる相手モンスターがいません'; return false; }
+    return true;
+  },
+  operation(ctx){
+    const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t);
+    if(r && r.zone==='mz' && r.p===ctx.opponent) API.destroy(r, 'ヴァイロン・エプシロン');
+  },
+  afterResolve(){}
+}], {type:'monster', priority:1, targets:true, destroysFieldV46:true, timing:['mainPhase'], countLimit:{n:1, effects:['destroy']},
+  activationV11(ctx, d){
+    p11cOpen(d, {title:d.name+'：墓地へ送る装備カード', candidates:u457EquipsOf(ctx.card), targeting:false}, 'u457.eps-cost', {});
+  },
+  continuous:{ scope:'equippedCards', from:['mz'], apply(){ return null; },
+    immuneToTarget(card, self){ return !!self && self.face==='up' && !!card && !!card.equipTo && card.equipTo.uid===self.uid; } } });
+
+/* ---- ターボ・ウォリアー ---- */
+function u457TurboTarget(ctx){
+  const a = gameState.pendingAttack;
+  if(!a || a.attackerUid!==ctx.card.uid || a.targetUid==null) return null;
+  const h = findCardByUid(a.targetUid);
+  if(!h || h.zone!=='mz' || h.p!==ctx.opponent || h.card.face!=='up') return null;
+  const db = dbOf(h.card);
+  return (db.k==='m' && (db.st||[]).indexOf('シンクロ')>=0 && curLV(h.card)>=6) ? h : null;
+}
+function u457TurboHalved(card, self){
+  const f = card && card.u457Half;
+  if(!f || !self || self.face!=='up' || f.by!==self.uid || Number(f.turn)!==Number(gameState.turn)) return 0;
+  const a = gameState.pendingAttack, b = gameState.battle;
+  const live = (a && a.attackerUid===self.uid && a.targetUid===card.uid) || (b && b.atkUid===self.uid && b.targetUid===card.uid);
+  return live ? Number(f.loss)||0 : 0;
+}
+defineUnifiedCardV4('ターボ・ウォリアー', [{
+  key:'halve', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:['onAttackDeclare'], forced:true,
+  condition(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && !!u457TurboTarget(ctx); },
+  operation(ctx){
+    const h = u457TurboTarget(ctx); if(!h) return;
+    const n = curATK(h.card), half = Math.ceil(n/2);
+    API.setCardFlag(h, 'u457Half', {by:ctx.card.uid, turn:gameState.turn, loss:n-half}, 'ターボ・ウォリアー', {silent:true});
+  },
+  afterResolve(){}
+}], {type:'monster', priority:1, forced:true, timing:['free'],
+  passive:{ onAttackDeclare(ctx){ return ctx.zone==='mz' && ctx.card.face==='up' && !!u457TurboTarget(ctx); } },
+  continuous:{ scope:'allMonsters', from:['mz'],
+    apply(card, self){ const n = u457TurboHalved(card, self); return n>0 ? {atk:-n} : null; },
+    immuneToTarget(card, self, effectInfo){
+      if(card!==self || self.face!=='up') return false;
+      const src = u378SrcOf(effectInfo);
+      return !!src && targetEffectMatchesS03(src, {cardTypes:['m'], effectMonster:true, maxLevel:6}) && (src.db.st||[]).indexOf('エクシーズ')<0;
+    } } });
+
+/* ---- 救世の儀式 ---- */
+registerRitualSpecV24('救世の儀式', {monsters:['救世の美神ノースウェムコ'], level:7, levelMode:'atLeast'});
+function u457Rituals(player, card){
+  return u457Targetable(API.fieldCards({player, zone:'mz', filter:x=>x.card.face==='up' && x.db.k==='m' && (x.db.st||[]).indexOf('儀式')>=0}),
+    player, {uid:card.uid, name:'救世の儀式'});
+}
+defineUnifiedCardV4('救世の儀式', [{
+  key:'ritual-summon', type:EFFECT_TYPE.ACTIVATE, range:LOCATION.SZONE, speed:1, events:['activate'],
+  condition(ctx){ return API.ritualCanActivate(ctx.player, '救世の儀式'); },
+  operation(ctx){ API.ritualSummon(ctx, '救世の儀式'); },
+  afterResolve(){}
+}, {
+  key:'guard', type:EFFECT_TYPE.IGNITION, range:LOCATION.GRAVE, speed:1, events:['activate'], targetRange:LOCATION.MZONE, targetSide:'self',
+  condition(ctx){
+    if(ctx.zone!=='grave'){ ctx.reason = '墓地で発動します'; return false; }
+    if(!u457Main(ctx)){ ctx.reason = '自分のメインフェイズに発動できます'; return false; }
+    if(!u457Rituals(ctx.player, ctx.card).length){ ctx.reason = '対象にできる自分の儀式モンスターがいません'; return false; }
+    return true;
+  },
+  cost(ctx, done){ const me = locateCardAnyV4(ctx.card); if(!me || me.zone!=='grave'){ done(false); return; } API.banish(me, '救世の儀式（コスト）'); done(true); },
+  target(ctx, done){ API.selectCard('救世の儀式：対象にならなくする自分の儀式モンスター', u457Rituals(ctx.player, ctx.card), t=>done([t])); },
+  operation(ctx){
+    const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t);
+    const me = locateCardAnyV4(ctx.card);
+    if(!r || r.zone!=='mz' || r.p!==ctx.player || r.card.face!=='up' || !me) return;
+    API.setCardFlag(me, 'u457Guard', {uid:r.card.uid, turn:gameState.turn}, '救世の儀式', {silent:true});
+    const me2 = locateCardAnyV4(ctx.card); if(me2) API.lingerS03(ctx.player, me2, '救世の儀式');
+  },
+  afterResolve(){}
+}], {type:'spell', priority:1, targets:true, includesSpecialSummon:true, activateFrom:['sz','hand','grave'],
+  continuous:{ scope:'allMonsters', from:['linger'], apply(){ return null; },
+    immuneToTarget(card, self){
+      const g = self && self.u457Guard;
+      return !!g && Number(g.turn)===Number(gameState.turn) && !!card && g.uid===card.uid;
+    } } });
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

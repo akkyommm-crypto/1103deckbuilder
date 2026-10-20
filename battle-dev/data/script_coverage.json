@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 344,
+    "ENGINE_GAP": 345,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 419,
+    "NOT_STARTED": 415,
     "PARTIAL": 10,
-    "TESTED": 3576
+    "TESTED": 3579
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1638,
     "sin": 5,
-    "unified": 1410
+    "unified": 1413
   },
-  "static_registration_name_count": 3585,
+  "static_registration_name_count": 3588,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -14339,7 +14339,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u336_elec.js"
+        "tools\\test_s03_u336_elec.js",
+        "tools\\test_s03_u457_target_consumers.js"
       ]
     },
     {
@@ -14357,7 +14358,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZZX_claude_s03_u336_elec.js",
-          "line": 110
+          "line": 111
         }
       ],
       "auto_table": false,
@@ -14478,7 +14479,7 @@
         {
           "kind": "helper:a3PreDamageDestroy",
           "source": "cards\\HZZZZZZX_claude_s03_u336_elec.js",
-          "line": 129
+          "line": 130
         }
       ],
       "auto_table": false,
@@ -15982,8 +15983,8 @@
       "subtype": null,
       "date": "2008-12-20",
       "extra": false,
-      "status": "NOT_STARTED",
-      "reason": "",
+      "status": "ENGINE_GAP",
+      "reason": "S03-U457 measured: three parts of the text have no engine path. (1) 「このカードを通常召喚する場合、3体をリリースして召喚しなければならない」: engine/60_damage_segoc_ui_helpers.js:651 tributesNeeded() returns 2 for any Level 7+ monster and has no per-card override, so the Normal Summon would accept 2 Tributes. (2) 「①:このカードの召喚は無効化されない」: engine/30_processor_chain_battle.js:1779 summonNegatorsV2() and :1813 summonNegatePendingV2() never look at the summoned card, and no script flag for an un-negatable summon exists (0 scripts declare one), so 神の宣告 / 昇天の黒角笛 style negation would still apply. (3) 「②:このカードの召喚成功時には、魔法・罠・モンスターの効果は発動できない」: engine/1ZD_activation_type_lock_s03.js:68 summonTrapLockReasonS03() locks TRAP card activations only (db.k!=='t' returns ''), there is no lock for Spell / monster effects (including Trigger Effects) at a summon-success timing. Only ③ (targeting immunity, which the text fallback in targetImmune() already gives) and ④ ⑤ would be expressible, so a script would be half the card. Needs a general summon-success activation lock (all kinds, both players) + an un-negatable-summon flag + a per-card required-Tribute count in the summon pipeline; ラーの翼神竜 / オシリスの天空竜 / 神炎皇ウリア share (1)-(3).",
       "complexity_score": 21,
       "registrations": [],
       "auto_table": false,
@@ -26256,7 +26257,7 @@
         {
           "kind": "unified",
           "source": "cards\\HZZZZZZZZZQ_claude_s03_u407_titan.js",
-          "line": 41
+          "line": 42
         }
       ],
       "auto_table": false,
@@ -29611,7 +29612,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u407_titan.js"
+        "tools\\test_s03_u407_titan.js",
+        "tools\\test_s03_u457_target_consumers.js"
       ]
     },
     {
@@ -34155,12 +34157,20 @@
       "subtype": null,
       "date": "2008-07-19",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZL_claude_s03_u457_target_consumers.js",
+          "line": 74
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u457_target_consumers.js"
+      ]
     },
     {
       "index": 1537,
@@ -41397,7 +41407,7 @@
         {
           "kind": "unified",
           "source": "cards\\HZZZZZZZZQ_claude_s03_u381_fusions.js",
-          "line": 54
+          "line": 55
         }
       ],
       "auto_table": false,
@@ -62911,12 +62921,20 @@
       "subtype": null,
       "date": "2010-04-27",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 15,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZL_claude_s03_u457_target_consumers.js",
+          "line": 37
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u457_target_consumers.js"
+      ]
     },
     {
       "index": 2860,
@@ -71238,7 +71256,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u381_fusions.js"
+        "tools\\test_s03_u381_fusions.js",
+        "tools\\test_s03_u457_target_consumers.js"
       ]
     },
     {
@@ -75314,7 +75333,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u423_st_shields.js"
+        "tools\\test_s03_u423_st_shields.js",
+        "tools\\test_s03_u457_target_consumers.js"
       ]
     },
     {
@@ -80408,12 +80428,20 @@
       "subtype": "儀式",
       "date": "2009-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZL_claude_s03_u457_target_consumers.js",
+          "line": 99
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u457_target_consumers.js"
+      ]
     },
     {
       "index": 3660,
@@ -83985,7 +84013,8 @@
       "auto_table": true,
       "tests": [
         "tools\\test_s03_u292_gap9.js",
-        "tools\\test_s03_u373_autotable2.js"
+        "tools\\test_s03_u373_autotable2.js",
+        "tools\\test_s03_u457_target_consumers.js"
       ]
     },
     {
@@ -92797,7 +92826,7 @@
         {
           "kind": "unified",
           "source": "cards\\HZZZZZZZZZQ_claude_s03_u407_titan.js",
-          "line": 69
+          "line": 70
         }
       ],
       "auto_table": false,

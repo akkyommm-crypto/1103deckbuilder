@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 344,
+    "ENGINE_GAP": 345,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 419,
+    "NOT_STARTED": 415,
     "PARTIAL": 10,
-    "TESTED": 3576
+    "TESTED": 3579
   },
   "delta": {
-    "ENGINE_GAP": -272,
+    "ENGINE_GAP": -271,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -888,
+    "NOT_STARTED": -892,
     "PARTIAL": -172,
-    "TESTED": 1527
+    "TESTED": 1530
   },
   "status_changes": [
     {
@@ -1387,6 +1387,12 @@
       "unit": "S03-U167"
     },
     {
+      "name": "オベリスクの巨神兵",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U457"
+    },
+    {
       "name": "オーバーリミット",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -2723,6 +2729,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U427"
+    },
+    {
+      "name": "ターボ・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U457"
     },
     {
       "name": "ターレット・ウォリアー",
@@ -4891,6 +4903,12 @@
       "unit": "S03-U136"
     },
     {
+      "name": "ヴァイロン・エプシロン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U457"
+    },
+    {
       "name": "ヴァイロン・コンポーネント",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6647,6 +6665,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U215"
+    },
+    {
+      "name": "救世の儀式",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U457"
     },
     {
       "name": "救世竜 セイヴァー・ドラゴン",

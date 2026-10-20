@@ -6,7 +6,7 @@
 
    Notes
    - セルケト: selfDestroyWhenS03 (engine/1ZZF) for ①, battleVictimBanishS03 (S03-U255) for ②, a forced onDamageStep trigger after the battle (a6DestroyedFoeInBattle, as 聖導騎士イシュザーク) for ③ (a permanent stat modifier until it leaves / turns face-down; one count per victim).
-   - ガイアドレイク: continuous.immuneToTarget with the effect source read from ACTIVATION_PREP_S03 (u378Source, S03-U378), and protectV21 (engine/1K) {effect, sourceKind ['m']} for the destruction part. A Fusion Monster is placed on the field directly in the test (its Fusion Summon is the engine's).
+   - ガイアドレイク: continuous.immuneToTarget with the effect source from effectInfo (u378SrcOf, S03-U457; the prep-only u378Source() lost it at resolution), and protectV21 (engine/1K) {effect, sourceKind ['m']} for the destruction part. A Fusion Monster is placed on the field directly in the test (its Fusion Summon is the engine's).
    - ナイトメアを駆る死霊: declareTargetedSelfDestroyS03 (engine/1ZM, S03-U137) for the self-destruction when targeted; battleProof (text), continuous.grantsDirectAttack, and the random discard on onDirectBattleDamage (as エレキリム S03-U336, duelRandomInt). */
 
 /* ---- 聖獣セルケト ---- */
@@ -38,10 +38,11 @@ defineScript('地天の騎士ガイアドレイク', {
   resolve(){}, afterResolve(){},
   protectV21:{key:'u381.drake', effect:true, sourceKind:['m'], label:'地天の騎士ガイアドレイク'},
   continuous:{ scope:'self', from:['mz'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(card!==self || self.face!=='up') return false;
-      const src = u378Source();
-      return !!src && src.db.k==='m' && (src.db.st||[]).indexOf('効果')>=0;
+      /* S03-U457: u378Source() は発動準備中しか出所を返さず、解決時の対象選択で耐性が外れていた。filterTargetable の effectInfo を最優先で使う。 */
+      const src = u378SrcOf(effectInfo);
+      return !!src && targetEffectMatchesS03(src, {cardTypes:['m'], effectMonster:true});
     } }
 });
 
