@@ -51511,12 +51511,13 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 113
+          "line": 119
         }
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle23.js"
+        "tools\\test_auto_cycle23.js",
+        "tools\\test_s03_u459_opponent_targeting.js"
       ]
     },
     {
@@ -52068,7 +52069,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 342
+          "line": 348
         }
       ],
       "auto_table": false,
@@ -53260,7 +53261,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 363
+          "line": 369
         }
       ],
       "auto_table": false,
@@ -53529,7 +53530,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 27
+          "line": 33
         }
       ],
       "auto_table": false,
@@ -53562,7 +53563,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 158
+          "line": 164
         }
       ],
       "auto_table": false,
@@ -53613,7 +53614,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 69
+          "line": 75
         }
       ],
       "auto_table": false,
@@ -55538,12 +55539,13 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 132
+          "line": 138
         }
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle23.js"
+        "tools\\test_auto_cycle23.js",
+        "tools\\test_s03_u459_opponent_targeting.js"
       ]
     },
     {
@@ -57464,7 +57466,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 199
+          "line": 205
         }
       ],
       "auto_table": false,
@@ -57803,7 +57805,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 222
+          "line": 228
         }
       ],
       "auto_table": false,
@@ -60687,7 +60689,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 263
+          "line": 269
         }
       ],
       "auto_table": false,
@@ -61567,7 +61569,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 94
+          "line": 100
         }
       ],
       "auto_table": false,
@@ -63540,7 +63542,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 310
+          "line": 316
         }
       ],
       "auto_table": false,
@@ -82405,6 +82407,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_auto_cycle23.js",
         "tools\\test_s03_u219_counters.js",
         "tools\\test_s03_u222_ns14.js",
         "tools\\test_s03_u251_lv.js",

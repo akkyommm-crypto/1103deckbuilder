@@ -1,0 +1,21 @@
+{
+  "example": false,
+  "unit": "S03-U459",
+  "category": "bugfix",
+  "mode": "codex-handoff",
+  "workflow_profile": "v3-batch3",
+  "scope": "source-aware opponent-only targeting immunity for ホルスのしもべ and メタルシルバー・アーマー; new real-path Moon Book and Replay test",
+  "outcome": "focused tests 222 PASS / 0 FAIL; full gate deferred to the three-unit checkpoint",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-21T00:00:00+09:00",
+  "finished_at": "2026-10-21T00:00:00+09:00",
+  "gate_owner": "codex",
+  "usage": {
+    "source": "not recorded",
+    "by_model": []
+  },
+  "notes": "Negative control on the U458 build: 5 FAIL. After the source fix: U459 15, auto_cycle23 68, U456 28, U457 111 PASS. Coverage unchanged: TESTED 3579 / ENGINE_GAP 345 / NOT_STARTED 415."
+}

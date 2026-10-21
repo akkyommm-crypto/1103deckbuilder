@@ -120,13 +120,16 @@ ok('ロード・オブ・ドラゴン negative: このカードがいなけれ�
 reset0();
 let hs=mk('ホルスのしもべ',0),horus=mk('ホルスの黒炎竜 LV6',0),other=mk(BIG,0);
 gameState.players[0].mz=[hs,horus,other];
-ok('ホルスのしもべ positive: 「ホルスの黒炎竜」は効果の対象にできない',
-   targetImmune(horus)===true);
+let foeTarget={player:1,db:dbOf(mk('月の書',1))},ownTarget={player:0,db:dbOf(mk('月の書',0))};
+ok('ホルスのしもべ positive: 相手は「ホルスの黒炎竜」を効果の対象にできない',
+   targetImmune(horus,foeTarget)===true);
+ok('ホルスのしもべ negative: 自分は「ホルスの黒炎竜」を効果の対象にできる',
+   targetImmune(horus,ownTarget)===false);
 ok('ホルスのしもべ ruling: 他のドラゴン族は対象にできる',
-   targetImmune(other)===false);
+   targetImmune(other,foeTarget)===false);
 ok('ホルスのしもべ ruling: 名前は3枚を明示列挙している（部分一致していない）',
-   sc('ホルスのしもべ').continuous.immuneToTarget(mk('ホルスの黒炎竜 LV4',0),hs)===true
-   &&sc('ホルスのしもべ').continuous.immuneToTarget(mk('ホルスの黒炎竜 LV8',0),hs)===true);
+   sc('ホルスのしもべ').continuous.immuneToTarget(mk('ホルスの黒炎竜 LV4',0),hs,foeTarget)===true
+   &&sc('ホルスのしもべ').continuous.immuneToTarget(mk('ホルスの黒炎竜 LV8',0),hs,foeTarget)===true);
 
 /* ============ メタルシルバー・アーマー ============ */
 reset0();
@@ -138,9 +141,11 @@ ok('メタルシルバー・アーマー ruling: モンスターにのみ装備�
    sc('メタルシルバー・アーマー').equipSpec.canEquip({db:dbOf(host)})===true
    &&sc('メタルシルバー・アーマー').equipSpec.canEquip({db:dbOf(mk('落とし穴',0))})===false);
 ok('メタルシルバー・アーマー positive: 装備モンスター以外は効果の対象にできない',
-   targetImmune(otherMon)===true&&targetImmune(foeMon)===true);
+   targetImmune(otherMon,foeTarget)===true&&targetImmune(foeMon,foeTarget)===true);
+ok('メタルシルバー・アーマー negative: 自分は装備モンスター以外も効果の対象にできる',
+   targetImmune(otherMon,ownTarget)===false&&targetImmune(foeMon,ownTarget)===false);
 ok('メタルシルバー・アーマー ruling: 装備モンスター自身は対象にできる',
-   targetImmune(host)===false);
+   targetImmune(host,foeTarget)===false);
 
 /* ============ マジック・ストライカー ============ */
 reset0();

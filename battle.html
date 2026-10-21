@@ -53530,6 +53530,12 @@ function d2FaceUpMz(ctx){
   const me = locateCardAnyV4(ctx.card);
   return !!(me && me.zone === 'mz' && me.card.face === 'up');
 }
+/* S03-U459: 「相手は～対象にできない」は対象を選ぶ効果のプレイヤーを判定する。
+   filterTargetable() が CODEX-C03 の effectInfo を第3引数で渡す。 */
+function d2OpponentTargets(self, effectInfo){
+  const me = locateCardAnyV4(self), by = effectInfo && effectInfo.player;
+  return !!me && (by===0 || by===1) && by!==me.p;
+}
 /* 相手が魔法カードを発動したか */
 function d2FoeSpell(ctx){
   const e = ctx.event;
@@ -53636,11 +53642,11 @@ defineScript('ホルスのしもべ', {
   continuous:{
     scope:'allMonsters', from:['mz'],
     apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       const me = locateCardAnyV4(self);
       if(!me || me.zone !== 'mz' || me.card.face !== 'up') return false;
       /* 名前は「全てのレベルを含む」ので3枚を明示列挙する（部分一致はしない） */
-      return D2_HORUS.indexOf(dbOf(card).n) >= 0;
+      return D2_HORUS.indexOf(dbOf(card).n) >= 0 && d2OpponentTargets(self, effectInfo);
     }
   }
 });
@@ -53656,7 +53662,7 @@ defineScript('メタルシルバー・アーマー', {
   continuous:{
     scope:'allMonsters', from:['sz'],
     apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       const me = locateCardAnyV4(self);
       if(!me || me.zone !== 'sz' || me.card.face !== 'up') return false;
       const hostUid = me.card.equipTo && me.card.equipTo.uid;
@@ -53664,7 +53670,7 @@ defineScript('メタルシルバー・アーマー', {
       const host = findCardByUid(hostUid);
       if(!host || host.zone !== 'mz' || host.p !== me.p) return false;
       /* 装備モンスター以外を守る */
-      return card.uid !== hostUid;
+      return card.uid !== hostUid && d2OpponentTargets(self, effectInfo);
     }
   }
 });
