@@ -6,9 +6,9 @@
     "ENGINE_GAP": 345,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 415,
+    "NOT_STARTED": 414,
     "PARTIAL": 10,
-    "TESTED": 3579
+    "TESTED": 3580
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -80,7 +80,7 @@
     "helper:u364Combo": 2,
     "helper:u364Counter": 2,
     "helper:u388TokenMaker": 2,
-    "helper:u412Define": 3,
+    "helper:u412Define": 4,
     "helper:u446Swap": 1,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
@@ -121,7 +121,7 @@
     "sin": 5,
     "unified": 1413
   },
-  "static_registration_name_count": 3588,
+  "static_registration_name_count": 3589,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -97296,12 +97296,20 @@
       "subtype": "装備",
       "date": "2008-04-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 13,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u412Define",
+          "source": "cards\\HZZZZZZZZZZZM_codex_s03_u460_kusanagi.js",
+          "line": 9
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u460_kusanagi.js"
+      ]
     },
     {
       "index": 4435,

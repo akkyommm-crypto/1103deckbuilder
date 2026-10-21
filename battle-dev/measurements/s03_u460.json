@@ -1,0 +1,21 @@
+{
+  "example": false,
+  "unit": "S03-U460",
+  "category": "card-automation",
+  "mode": "codex-handoff",
+  "workflow_profile": "v3-batch3",
+  "scope": "草薙剣: Spirit-only equip, piercing damage, host-bounce self-return, negative destruction control, and Replay",
+  "outcome": "focused tests 135 PASS / 0 FAIL; full gate deferred to the three-unit checkpoint",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 1,
+  "later_defects": null,
+  "started_at": "2026-10-21T00:00:00+09:00",
+  "finished_at": "2026-10-21T00:00:00+09:00",
+  "gate_owner": "codex",
+  "usage": {
+    "source": "not recorded",
+    "by_model": []
+  },
+  "notes": "Negative control failed registration and all new behaviors. After implementation: U460 11, auto_cycle33 69, U312 41, U412 14 PASS. Coverage: TESTED 3580 / ENGINE_GAP 345 / NOT_STARTED 414."
+}

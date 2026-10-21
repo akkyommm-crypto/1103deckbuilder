@@ -12,16 +12,16 @@
     "ENGINE_GAP": 345,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 415,
+    "NOT_STARTED": 414,
     "PARTIAL": 10,
-    "TESTED": 3579
+    "TESTED": 3580
   },
   "delta": {
     "ENGINE_GAP": -271,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -892,
+    "NOT_STARTED": -893,
     "PARTIAL": -172,
-    "TESTED": 1530
+    "TESTED": 1531
   },
   "status_changes": [
     {
@@ -8219,6 +8219,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U221"
+    },
+    {
+      "name": "草薙剣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U460"
     },
     {
       "name": "荒ぶるアウス",

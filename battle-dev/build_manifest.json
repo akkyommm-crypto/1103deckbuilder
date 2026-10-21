@@ -1789,6 +1789,9 @@
   "path": "cards/HZZZZZZZZZZZL_claude_s03_u457_target_consumers.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZM_codex_s03_u460_kusanagi.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
