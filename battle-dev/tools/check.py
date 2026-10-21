@@ -749,6 +749,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u456_target_source.js')],check=T
 subprocess.run(['node',str(ROOT/'tools/test_s03_u457_target_consumers.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u459_opponent_targeting.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u460_kusanagi.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u461_baou.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

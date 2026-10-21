@@ -10728,6 +10728,19 @@ function damageStepModifyAllowedS03(info){
 const BATTLE_DESTROYED_NEGATOR_S03 = {};
 function declareBattleDestroyedNegatorS03(name, spec){ BATTLE_DESTROYED_NEGATOR_S03[name] = Object.assign({effectOnly:true}, spec||{}); }
 function battleDestroyedNegatorSpecS03(name){ return BATTLE_DESTROYED_NEGATOR_S03[name] || null; }
+/* S03-U461: the same continuous clause may be supplied by an Equip Spell.
+   Resolve it from the live equip relation so removing/negating the Equip before resolution also removes the negation. */
+function battleDestroyedNegatorSpecForCardS03(card, gs){
+  if(!card) return null;
+  const own = battleDestroyedNegatorSpecS03(dbOf(card).n); if(own) return own;
+  const equips = (typeof equipsOnV15==='function') ? equipsOnV15(card, gs) : [];
+  for(const h of equips){
+    if(!h || !h.card || h.card.face!=='up') continue;
+    if(typeof effectNegated==='function' && effectNegated(h.card)) continue;
+    const spec = battleDestroyedNegatorSpecS03(dbOf(h.card).n); if(spec) return spec;
+  }
+  return null;
+}
 
 /* reducer（BATTLE_CLEANUP）用：victim を戦闘で破壊した宣言済みモンスターの uid。無ければ null。 */
 function battleNegatorUidForVictimS03(gs, victim){
@@ -10738,7 +10751,7 @@ function battleNegatorUidForVictimS03(gs, victim){
   if(destroyerUid == null || destroyerDestroyed) return null;
   const h = (typeof findCardByUidInState === 'function') ? findCardByUidInState(gs, destroyerUid) : null;
   if(!h || !h.card || h.zone !== 'mz') return null;
-  return battleDestroyedNegatorSpecS03(dbOf(h.card).n) ? destroyerUid : null;
+  return battleDestroyedNegatorSpecForCardS03(h.card, gs) ? destroyerUid : null;
 }
 
 /* 解決用：このリンクの効果が、戦闘で破壊したモンスターの永続効果で無効か。 */
@@ -10759,7 +10772,7 @@ function battleDestroyedLinkNegatedS03(link, srcCard){
   }
   const d = findCardByUid(negUid);
   if(!d || d.zone !== 'mz' || !d.card || d.card.face !== 'up') return false;
-  const spec = battleDestroyedNegatorSpecS03(dbOf(d.card).n); if(!spec) return false;
+  const spec = battleDestroyedNegatorSpecForCardS03(d.card, gameState); if(!spec) return false;
   if(typeof effectNegated === 'function' && effectNegated(d.card)) return false;
   if(spec.effectOnly && !((dbOf(srcCard).st || []).includes('効果'))) return false;
   if(typeof spec.condition === 'function'){ try{ if(!spec.condition(d.card, srcCard)) return false; }catch(e){ return false; } }
@@ -95484,6 +95497,31 @@ u412Define('草薙剣', {
     return Math.max(0,curATK(info.atkCard)-curDEF(info.defCard));
   } }
 });
+/* S03-U461: 破邪の大剣－バオウ — discard/send one other hand card to Equip, +500 ATK,
+   and negate the effect of an opponent monster destroyed in battle by the equipped monster. */
+function u461BaouCost(ctx){
+  return API.pileCards(ctx.player, 'hand', x=>x.card!==ctx.card);
+}
+const u461BaouEquip = u412EquipEffect('破邪の大剣－バオウ', x=>x.db.k==='m', null, false);
+const u461BaouBaseCondition = u461BaouEquip.condition;
+u461BaouEquip.condition = function(ctx){
+  if(!u461BaouCost(ctx).length){ ctx.reason='手札から墓地へ送るカードがありません'; return false; }
+  return u461BaouBaseCondition(ctx);
+};
+u461BaouEquip.cost = function(ctx, done){
+  const pool=u461BaouCost(ctx);
+  if(!pool.length){ done(false); return; }
+  API.selectCard('破邪の大剣－バオウ：墓地へ送る手札', pool, t=>{
+    const h=t&&resolveTarget(t);
+    if(h&&h.zone==='hand'&&h.p===ctx.player) API.sendHandToGrave(ctx.player,h.index,'破邪の大剣－バオウ（コスト）');
+    done(!!h);
+  });
+};
+defineUnifiedCardV4('破邪の大剣－バオウ', [u461BaouEquip], {
+  type:'spell', priority:1, targets:true,
+  continuous:{scope:'allMonsters',from:['sz'],apply(card,self){return equippedS03(card,self)?{atk:500}:null;}}
+});
+declareBattleDestroyedNegatorS03('破邪の大剣－バオウ', {});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

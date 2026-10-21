@@ -6,9 +6,9 @@
     "ENGINE_GAP": 345,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 414,
+    "NOT_STARTED": 413,
     "PARTIAL": 10,
-    "TESTED": 3580
+    "TESTED": 3581
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1638,
     "sin": 5,
-    "unified": 1413
+    "unified": 1414
   },
-  "static_registration_name_count": 3589,
+  "static_registration_name_count": 3590,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -93003,12 +93003,20 @@
       "subtype": "装備",
       "date": "2002-11-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZN_codex_s03_u461_baou.js",
+          "line": 21
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u461_baou.js"
+      ]
     },
     {
       "index": 4238,

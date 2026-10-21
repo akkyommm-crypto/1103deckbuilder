@@ -15435,6 +15435,16 @@
         "tools/test_s03_u460_kusanagi.js"
       ],
       "evidence": "Exact script from 2011-era card text in carddata. Spirit-only real Equip activation; piercing battle damage; the Equip records its host uid and returns itself from the Graveyard when that host returns from the controller's field to the hand; destruction-to-Grave is a negative control. Replay audited."
+    },
+    {
+      "name": "破邪の大剣－バオウ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U461",
+      "tests": [
+        "tools/test_s03_u461_baou.js"
+      ],
+      "evidence": "Exact script from 2011-era card text in carddata. Real Equip activation sends one other hand card to the Graveyard as cost, grants +500 ATK, and extends the existing battle-destroyed effect-negation primitive to a live Equip source. Missing-cost, no-Equip, and removed-Equip controls plus Replay are covered."
     }
   ],
   "restored_to_baseline": [

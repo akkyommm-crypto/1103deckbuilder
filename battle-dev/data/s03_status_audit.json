@@ -12,16 +12,16 @@
     "ENGINE_GAP": 345,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 414,
+    "NOT_STARTED": 413,
     "PARTIAL": 10,
-    "TESTED": 3580
+    "TESTED": 3581
   },
   "delta": {
     "ENGINE_GAP": -271,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -893,
+    "NOT_STARTED": -894,
     "PARTIAL": -172,
-    "TESTED": 1531
+    "TESTED": 1532
   },
   "status_changes": [
     {
@@ -7811,6 +7811,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U387"
+    },
+    {
+      "name": "破邪の大剣－バオウ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U461"
     },
     {
       "name": "硫酸のたまった落とし穴",
