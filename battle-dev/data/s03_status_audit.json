@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 345,
+    "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 413,
     "PARTIAL": 10,
-    "TESTED": 3581
+    "TESTED": 3582
   },
   "delta": {
-    "ENGINE_GAP": -271,
+    "ENGINE_GAP": -272,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -894,
     "PARTIAL": -172,
-    "TESTED": 1532
+    "TESTED": 1533
   },
   "status_changes": [
     {
@@ -1061,6 +1061,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U259"
+    },
+    {
+      "name": "インヴェルズの門番",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U462"
     },
     {
       "name": "インヴェルズの魔細胞",

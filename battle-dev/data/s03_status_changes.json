@@ -15445,6 +15445,16 @@
         "tools/test_s03_u461_baou.js"
       ],
       "evidence": "Exact script from 2011-era card text in carddata. Real Equip activation sends one other hand card to the Graveyard as cost, grants +500 ATK, and extends the existing battle-destroyed effect-negation primitive to a live Equip source. Missing-cost, no-Equip, and removed-Equip controls plus Replay are covered."
+    },
+    {
+      "name": "インヴェルズの門番",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U462",
+      "tests": [
+        "tools/test_s03_u462_invellz_gatekeeper.js"
+      ],
+      "evidence": "2011 card text and ruling: a live face-up Gatekeeper that witnesses a face-up Invellz Advance Summon grants one shared additional Normal Summon or Set for that turn. The serializable source-local turn stamp, shared consumption key, face-down reset, source self-Tribute, non-Advance/non-Invellz/face-down negatives, and Replay are covered."
     }
   ],
   "restored_to_baseline": [

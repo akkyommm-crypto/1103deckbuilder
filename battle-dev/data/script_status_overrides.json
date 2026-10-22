@@ -309,10 +309,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a first-class Ritual Summon pipeline plus private random inspection of up to two opponent hand cards and resolution-time Deck return choice."
     },
-    "インヴェルズの門番": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs successful Advance Summon material/setcode provenance and a serializable conditional extra Normal Summon grant for the current turn."
-    },
     "ウェザー・レポート": {
       "status": "ENGINE_GAP",
       "reason": "Needs a serializable extra Battle Phase grant for the next own turn after successfully destroying canonical Swords of Revealing Light."

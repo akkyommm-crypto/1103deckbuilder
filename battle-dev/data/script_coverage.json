@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 345,
+    "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 413,
     "PARTIAL": 10,
-    "TESTED": 3581
+    "TESTED": 3582
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1638,
+    "legacy": 1639,
     "sin": 5,
     "unified": 1414
   },
-  "static_registration_name_count": 3590,
+  "static_registration_name_count": 3591,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -457,6 +457,7 @@
         "tools\\test_s03_u43_dragunity_aklys.js",
         "tools\\test_s03_u44_trigger_forced_per_effect.js",
         "tools\\test_s03_u45_legacy_choice_picked_db.js",
+        "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
         "tools\\test_s03_u48_vayu_resolution.js",
@@ -12313,7 +12314,8 @@
       "tests": [
         "tools\\test_class_a_recovery_04.js",
         "tools\\test_s03_u221_ns13.js",
-        "tools\\test_s03_u414_inverz.js"
+        "tools\\test_s03_u414_inverz.js",
+        "tools\\test_s03_u462_invellz_gatekeeper.js"
       ]
     },
     {
@@ -12347,15 +12349,22 @@
       "subtype": null,
       "date": "2010-08-03",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs successful Advance Summon material/setcode provenance and a serializable conditional extra Normal Summon grant for the current turn.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 2,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZO_codex_s03_u462_invellz_gatekeeper.js",
+          "line": 5
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u205_partial8.js",
         "tools\\test_s03_u215_ns7.js",
         "tools\\test_s03_u221_ns13.js",
+        "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_v640_batch16.js"
       ]
     },
@@ -12540,6 +12549,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_class_a_recovery_04.js",
+        "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_v640_batch16.js"
       ]
     },
@@ -28068,6 +28078,7 @@
         "tools\\test_s03_u287_hand_limit_triggers.js",
         "tools\\test_s03_u288_gap8.js",
         "tools\\test_s03_u296_battle_refs_resume.js",
+        "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -32672,6 +32683,7 @@
         "tools\\test_s03_u224_ns16.js",
         "tools\\test_s03_u229_ns21.js",
         "tools\\test_s03_u230_ns22.js",
+        "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -38708,7 +38720,8 @@
         "tools\\test_battle_cards.js",
         "tools\\test_s03_u188_staples.js",
         "tools\\test_s03_u205_partial8.js",
-        "tools\\test_s03_u296_choice_release_replay.js"
+        "tools\\test_s03_u296_choice_release_replay.js",
+        "tools\\test_s03_u462_invellz_gatekeeper.js"
       ]
     },
     {
@@ -61862,6 +61875,7 @@
         "tools\\test_s03_u43_dragunity_aklys.js",
         "tools\\test_s03_u44_trigger_forced_per_effect.js",
         "tools\\test_s03_u45_legacy_choice_picked_db.js",
+        "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u49_battle_fader_once_per_chain.js",
         "tools\\test_s03_u50_gorz.js",

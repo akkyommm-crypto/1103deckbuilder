@@ -1928,6 +1928,8 @@ function applyActionBodyV31(gs, a){
       if(a.face==='down' && card.dualUp) delete card.dualUp;
       /* S03-U211: characteristic mods that last only while face-up (魔轟神ミーズトージ) end when the monster is turned face-down. */
       if(a.face==='down' && Array.isArray(card.charV17)){ card.charV17 = card.charV17.filter(m=>!m.faceUpOnlyS03); if(!card.charV17.length) delete card.charV17; }
+      /* S03-U462: a conditional extra-Normal grant belongs to that face-up instance. */
+      if(a.face==='down' && card.extraNormalS03Turn!=null) delete card.extraNormalS03Turn;
       /* 手動で状態を付け外しする。スクリプトが無いカードの効果を
          プレイヤーが自分で再現できるようにするための逃げ道。 */
       if(a.flag){
@@ -2180,6 +2182,7 @@ function applyActionBodyV31(gs, a){
          素材側にも usedAsMaterial を残し、素材自身が誘発するカードが辿れるようにする。 */
       applySummonProvenanceP3(gs, card, a, 'normal');
       P.mz.push(card);
+      if(typeof recordConditionalExtraNormalSummonS03==='function') recordConditionalExtraNormalSummonS03(a.player,card);   /* S03-U462 */
       if(a.summonMethod && typeof applyNormalSummonMethod==='function')
         applyNormalSummonMethod(card, dbOf(card), a.player, a.summonMethod, 'summon');
       if(!a.prepaid) consumeNormalRightS03(P);   /* S03-U274 */
@@ -2195,7 +2198,11 @@ function applyActionBodyV31(gs, a){
     case "SET_MONSTER": {
       /* S03-U266: 「このターン相手プレイヤーはフィールド上にカードをセットする事ができない」 (サーチライトメン) — a turn stamp on the banned player */
       if(P.temporaryFlags && Number(P.temporaryFlags.noSetS03)===Number(gs.turn)){ logIt(gs, `このターンはカードをセットできません`); break; }
-      if(!normalRightFreeS03(P)){ logIt(gs, `このターンは既に通常召喚しています`); break; }   /* S03-U274 */
+      if(a.extraNormalKey){
+        const ek=String(a.extraNormalKey), uk=ek.indexOf('src:')===0 ? ek.slice(4)+'XnUsedS03' : ek;
+        if(ek.indexOf('src:')===0 ? !!P.temporaryFlags[uk] : Number(P.temporaryFlags[uk]||0)<=0){ logIt(gs, `追加の通常召喚権がありません`); break; }
+        if(ek.indexOf('src:')===0) P.temporaryFlags[uk]=true; else P.temporaryFlags[uk]=Number(P.temporaryFlags[uk]||0)-1;
+      }else if(!normalRightFreeS03(P)){ logIt(gs, `このターンは既に通常召喚しています`); break; }   /* S03-U274 / S03-U462 */
       if(P.mz.length >= ZONE_LIMITS.mz){ logIt(gs, `モンスターゾーンが一杯です`); break; }
       const card = removeFrom(P, "hand", a.handIndex);
       if(!card) break;
@@ -2211,7 +2218,7 @@ function applyActionBodyV31(gs, a){
       P.mz.push(card);
       if(a.summonMethod && typeof applyNormalSummonMethod==='function')
         applyNormalSummonMethod(card, dbOf(card), a.player, a.summonMethod, 'set');
-      consumeNormalRightS03(P);   /* S03-U274 */
+      if(!a.extraNormalKey) consumeNormalRightS03(P);   /* S03-U274 / S03-U462 */
       /* S03-U194: 聖なる輝き 「モンスターをセットする場合は表側守備表示にしなければならない」 — decided by the caller (mustSetFaceUp) and stamped
          on the Action; still a set, not a summon */
       if(a.faceUpSetS03){ card.face='up'; card.pos='def'; logIt(gs, `セット：モンスターを表側守備表示で置いた（聖なる輝き）`); break; }
@@ -2912,7 +2919,7 @@ const ZONE_LOCAL_KEYS = [
   'stLinkTargetS03','stLinkByS03',   // S03-U188: a continuous Trap's selected monster (デモンズ・チェーン): the trap holds the target uid, the target the trap uid
   'negLinkS03','negLinkTargetS03',   // S03-U177: a monster's 「表側表示で存在する限り、選択したモンスターの効果は無効化される」 link (engine/1ZY)
   's03SummonedByUid',   // S03-U148: 「この効果で特殊召喚した」 monster → the summoner's uid (地獄の門番イル・ブラッド / 魔族召喚師)
-  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn',
+  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn','extraNormalS03Turn',
   'banishWhenLeavesField','v350BureidoDrawTurn','v350ExtraNormalFrogTurn','v350OnlyAttackerUid',
   'v370FrogExtraTurn','v370TragoControlTurn','v370TragoLevelTurn','v370TragoLevelResetTurn','v380SummonMaterials','v380DirectOnlyTurn','v380DoubleEdgeTurn','v380LylaLockThroughTurn',
   // System v2.3: 通常召喚手順・発動待ち状態は場を離れたら失われる
