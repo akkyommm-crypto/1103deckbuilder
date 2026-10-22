@@ -15455,6 +15455,16 @@
         "tools/test_s03_u462_invellz_gatekeeper.js"
       ],
       "evidence": "2011 card text and ruling: a live face-up Gatekeeper that witnesses a face-up Invellz Advance Summon grants one shared additional Normal Summon or Set for that turn. The serializable source-local turn stamp, shared consumption key, face-down reset, source self-Tribute, non-Advance/non-Invellz/face-down negatives, and Replay are covered."
+    },
+    {
+      "name": "超合魔獣ラプテノス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U463",
+      "tests": [
+        "tools/test_s03_u463_raptenos.js"
+      ],
+      "evidence": "Exact 2011 card text: while a live face-up Raptinus remains in a Monster Zone, every face-up Gemini monster on either field is treated as Gemini Summoned. The rule is derived dynamically from continuousSources rather than writing dualUp. Own/opponent effects, real Pyron activation, Gemini Summon legality, negated/face-down controls and Replay are covered."
     }
   ],
   "restored_to_baseline": [

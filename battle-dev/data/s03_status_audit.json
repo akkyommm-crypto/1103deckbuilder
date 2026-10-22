@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 413,
+    "NOT_STARTED": 412,
     "PARTIAL": 10,
-    "TESTED": 3582
+    "TESTED": 3583
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -894,
+    "NOT_STARTED": -895,
     "PARTIAL": -172,
-    "TESTED": 1533
+    "TESTED": 1534
   },
   "status_changes": [
     {
@@ -8453,6 +8453,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U374"
+    },
+    {
+      "name": "超合魔獣ラプテノス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U463"
     },
     {
       "name": "超融合",
