@@ -5,8 +5,14 @@ Date: 2026-10-24 JST
 ## Verified source
 
 - Remote branch: `origin/codex/battle-u465`
-- Base already shared before this batch: `20d1355` (S03-U464)
-- Apply these commits in order to a clean `claude/work` tree:
+- `claude/work` was verified clean at `fc74bf8`, which is a strict ancestor of this handoff branch. Import the handoff with a fast-forward only (no cherry-pick or merge commit):
+
+  ```powershell
+  git fetch origin
+  git merge --ff-only origin/codex/battle-u465
+  ```
+
+- The fast-forward includes S03-U459–U467. The last three gameplay commits are:
   1. `2b7f44a` — S03-U465 スーペルヴィス
   2. `f45359a` — S03-U466 スペシャル・デュアル・サモン
   3. `fcf15c7` — S03-U467 二重の落とし穴
@@ -25,8 +31,8 @@ Date: 2026-10-24 JST
 
 ## Resume rule
 
-- U465–U467 are complete; do not reconstruct them.
-- Resume with the next numbered unit, S03-U468, after importing the three commits above.
+- U459–U467 are present after the fast-forward; do not reconstruct them.
+- Resume with the next numbered unit, S03-U468, after the fast-forward above.
 - Keep the single-writer rule: only `claude/work` is edited while Claude is active.
 - Preserve 1103 rulings, real DUEL path, fixed RNG, Save/Load, Replay, negative controls, and the three-unit full-gate cadence.
 - Finish a verified work boundary from the Claude worktree root with `./scripts/finish-work.ps1 -Message "type: concise description"`.

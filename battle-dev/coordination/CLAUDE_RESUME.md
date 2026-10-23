@@ -10,7 +10,7 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
-- Codex handoff (2026-10-24): U465–U467 are complete and pushed on `origin/codex/battle-u465` (`2b7f44a`, `f45359a`, `fcf15c7`). The authoritative serial full gate is `22211 PASS / 0 FAIL`, coverage is TESTED 3587 / ENGINE_GAP 341. Import those three commits in order into a clean `claude/work`, then resume at S03-U468. Full details and the parallel-gate timeout note: `coordination/CODEX_TO_CLAUDE_U467.md`.
+- Codex handoff (2026-10-24): `claude/work` at `fc74bf8` is a clean strict ancestor of `origin/codex/battle-u465`. Fast-forward it with `git fetch origin` then `git merge --ff-only origin/codex/battle-u465`; this imports U459–U467. U465–U467 end at `fcf15c7`. The authoritative serial full gate is `22211 PASS / 0 FAIL`, coverage is TESTED 3587 / ENGINE_GAP 341. Resume at S03-U468. Full details and the parallel-gate timeout note: `coordination/CODEX_TO_CLAUDE_U467.md`.
 - GitHub migration (2026-10-10): the published U302 clean checkpoint was imported byte-for-byte into `battle-dev/`; root `battle.html` now mirrors its verified `dist/battle.html`. The old GitHub artifact was U287. The migration branch must pass a fresh baseline gate before it is proposed to `main`.
 - Collaboration: Codex writes `codex/work`; Claude Code writes `claude/work`; `main` is PR-only. Separate Git worktrees are mandatory. Use repository-root `scripts/finish-work.ps1` for test -> commit -> push.
 - Preservation note: U303 recorded no source change. The U304 scratch tree was not recovered; its idea (duels with the real UI code) was re-implemented as U305 and is not claimed to reproduce U304 numbers.
