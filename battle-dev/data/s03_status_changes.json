@@ -15475,6 +15475,16 @@
         "tools/test_s03_u464_cocoon.js"
       ],
       "evidence": "Exact pre-2011 effect: activate the monster from the hand by equipping it to a face-up Petit Moth. The real DUEL hand-effect path, target persistence through the chain, monster-as-Equip move, printed 0/2000 stat replacement, removal rollback, full Spell/Trap Zone and invalid-host negative controls, and Replay digest are covered."
+    },
+    {
+      "name": "スーペルヴィス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U465",
+      "tests": [
+        "tools/test_s03_u465_supervise.js"
+      ],
+      "evidence": "Exact 2011 card text: real Equip activation targets a face-up Gemini monster on either field; a live scoped continuous source treats only that host as Gemini Summoned without writing dualUp. Negation/removal revoke the grant immediately. A face-up field-to-Grave transition triggers the optional targeted revival of a Normal monster with summon-position choice. Invalid host, live negation, Cyclone destruction and Replay controls are covered."
     }
   ],
   "restored_to_baseline": [

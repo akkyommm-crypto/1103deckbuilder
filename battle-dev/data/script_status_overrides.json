@@ -1572,8 +1572,11 @@
       "reason": "「墓地のこのカードを装備カード扱いとしてそのモンスターに装備する」経路が無い。API.equipSpell は sz のカードだけを装備先へ結べる（[[ガーディアン・エルマ]] [[トラックロイド]] と同じ層、cycle 39 実測）。"
     },
     "スーペルヴィス": {
-      "status": "ENGINE_GAP",
-      "reason": "「装備モンスターはもう1度召喚された状態として扱う」が書けない。デュアル（再度召喚）の機構そのものが無い（[[デュアル・サモナー]] [[マジック・スライム]] と同じ層、cycle 39 実測）。"
+      "status": "TESTED",
+      "reason": "S03-U465: real Equip activation, dynamically scoped Gemini-Summoned treatment, live negation/removal rollback, face-up field-to-Grave trigger, targeted Normal-monster revival with position choice, negative controls and Replay are covered.",
+      "tests": [
+        "tools/test_s03_u465_supervise.js"
+      ]
     },
     "暗黒のマンティコア": {
       "status": "ENGINE_GAP",

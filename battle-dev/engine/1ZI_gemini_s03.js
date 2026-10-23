@@ -31,12 +31,25 @@ function geminiFieldGrantS03(){
   if(typeof continuousSources!=='function') return false;
   return continuousSources().some(src=>!!(src && src.sc && src.sc.continuous && src.sc.continuous.geminiAllDualS03));
 }
+/* S03-U465: a live Equip source (Supervise) may treat only its equipped
+   monster as Gemini Summoned. Use the existing continuous-source and scope
+   rules so negation, removal and an invalid host stop the grant immediately. */
+function geminiEquipGrantS03(card){
+  if(!card || typeof continuousSources!=='function' || typeof continuousReaches!=='function' || typeof locateCardAnyV4!=='function') return false;
+  const loc=locateCardAnyV4(card);
+  if(!loc || loc.zone!=='mz') return false;
+  return continuousSources().some(src=>{
+    const cont=src&&src.sc&&src.sc.continuous;
+    return !!(cont && cont.treatEquippedAsGeminiSummonedS03===true
+      && continuousReaches(cont.scope||'equippedMonster',src.p,loc,src.card,card));
+  });
+}
 /* the Gemini card currently has its effects: Gemini-Summoned (dualUp), or
-   covered by a live field-wide grant, and face-up in a Monster Zone */
+   covered by a live field-wide / Equip grant, and face-up in a Monster Zone */
 function geminiActiveS03(card){
   if(!isGeminiS03(card) || card.face!=='up') return false;
   const h = typeof locateCardAnyV4==='function' ? locateCardAnyV4(card) : null;
-  return !!(h && h.zone==='mz' && (card.dualUp || geminiFieldGrantS03()));
+  return !!(h && h.zone==='mz' && (card.dualUp || geminiFieldGrantS03() || geminiEquipGrantS03(card)));
 }
 /* why this face-up Gemini monster cannot be Gemini Summoned now ('' = it can) */
 function geminiSummonBlockedS03(card, p){

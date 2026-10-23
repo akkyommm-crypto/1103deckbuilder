@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 344,
+    "ENGINE_GAP": 343,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 411,
     "PARTIAL": 10,
-    "TESTED": 3584
+    "TESTED": 3585
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1640,
     "sin": 5,
-    "unified": 1415
+    "unified": 1416
   },
-  "static_registration_name_count": 3593,
+  "static_registration_name_count": 3594,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -32622,12 +32622,20 @@
       "subtype": "装備",
       "date": "2009-06-20",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「装備モンスターはもう1度召喚された状態として扱う」が書けない。デュアル（再度召喚）の機構そのものが無い（[[デュアル・サモナー]] [[マジック・スライム]] と同じ層、cycle 39 実測）。",
+      "status": "TESTED",
+      "reason": "S03-U465: real Equip activation, dynamically scoped Gemini-Summoned treatment, live negation/removal rollback, face-up field-to-Grave trigger, targeted Normal-monster revival with position choice, negative controls and Replay are covered.",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZR_codex_s03_u465_supervise.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u465_supervise.js"
+      ]
     },
     {
       "index": 1462,

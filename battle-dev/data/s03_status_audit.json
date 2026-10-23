@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 344,
+    "ENGINE_GAP": 343,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 411,
     "PARTIAL": 10,
-    "TESTED": 3584
+    "TESTED": 3585
   },
   "delta": {
-    "ENGINE_GAP": -272,
+    "ENGINE_GAP": -273,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -896,
     "PARTIAL": -172,
-    "TESTED": 1535
+    "TESTED": 1536
   },
   "status_changes": [
     {
@@ -2651,6 +2651,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U405"
+    },
+    {
+      "name": "スーペルヴィス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U465"
     },
     {
       "name": "ゼロ・ガードナー",
