@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 412,
+    "NOT_STARTED": 411,
     "PARTIAL": 10,
-    "TESTED": 3583
+    "TESTED": 3584
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -895,
+    "NOT_STARTED": -896,
     "PARTIAL": -172,
-    "TESTED": 1534
+    "TESTED": 1535
   },
   "status_changes": [
     {
@@ -8579,6 +8579,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U256"
+    },
+    {
+      "name": "進化の繭",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U464"
     },
     {
       "name": "道連れ",

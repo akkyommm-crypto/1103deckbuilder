@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 412,
+    "NOT_STARTED": 411,
     "PARTIAL": 10,
-    "TESTED": 3583
+    "TESTED": 3584
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1640,
     "sin": 5,
-    "unified": 1414
+    "unified": 1415
   },
-  "static_registration_name_count": 3592,
+  "static_registration_name_count": 3593,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -459,6 +459,7 @@
         "tools\\test_s03_u45_legacy_choice_picked_db.js",
         "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_s03_u463_raptenos.js",
+        "tools\\test_s03_u464_cocoon.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
         "tools\\test_s03_u48_vayu_resolution.js",
@@ -24108,6 +24109,7 @@
         "tools\\test_s03_u37_manual_prompt_interrupted_activation.js",
         "tools\\test_s03_u43_dragunity_aklys.js",
         "tools\\test_s03_u44_trigger_forced_per_effect.js",
+        "tools\\test_s03_u464_cocoon.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
@@ -50593,7 +50595,9 @@
       "complexity_score": 0,
       "registrations": [],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u464_cocoon.js"
+      ]
     },
     {
       "index": 2296,
@@ -61878,6 +61882,7 @@
         "tools\\test_s03_u44_trigger_forced_per_effect.js",
         "tools\\test_s03_u45_legacy_choice_picked_db.js",
         "tools\\test_s03_u462_invellz_gatekeeper.js",
+        "tools\\test_s03_u464_cocoon.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u49_battle_fader_once_per_chain.js",
         "tools\\test_s03_u50_gorz.js",
@@ -100874,12 +100879,20 @@
       "subtype": null,
       "date": "1999-07-22",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 6,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZQ_codex_s03_u464_cocoon.js",
+          "line": 8
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u464_cocoon.js"
+      ]
     },
     {
       "index": 4598,

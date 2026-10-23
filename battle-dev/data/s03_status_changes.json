@@ -15465,6 +15465,16 @@
         "tools/test_s03_u463_raptenos.js"
       ],
       "evidence": "Exact 2011 card text: while a live face-up Raptinus remains in a Monster Zone, every face-up Gemini monster on either field is treated as Gemini Summoned. The rule is derived dynamically from continuousSources rather than writing dualUp. Own/opponent effects, real Pyron activation, Gemini Summon legality, negated/face-down controls and Replay are covered."
+    },
+    {
+      "name": "進化の繭",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U464",
+      "tests": [
+        "tools/test_s03_u464_cocoon.js"
+      ],
+      "evidence": "Exact pre-2011 effect: activate the monster from the hand by equipping it to a face-up Petit Moth. The real DUEL hand-effect path, target persistence through the chain, monster-as-Equip move, printed 0/2000 stat replacement, removal rollback, full Spell/Trap Zone and invalid-host negative controls, and Replay digest are covered."
     }
   ],
   "restored_to_baseline": [
