@@ -2105,6 +2105,9 @@ function applyActionBodyV31(gs, a){
           if(!c || !c.battleDestroyed) continue;
           /* S03-U183: an equip destroyed instead (engine/1ZZB) */
           if(typeof equipSubstituteDestroyS03==='function' && equipSubstituteDestroyS03(gs, c, 'battle')){ delete c.battleDestroyed; continue; }
+          /* S03-U467: snapshot the live Gemini-Summoned treatment before
+             battle cleanup removes Equip/field continuous sources. */
+          const sentGeminiActiveS03 = typeof geminiActiveS03==='function' && geminiActiveS03(c);
           dropXyzMaterials(PP, c, gs); dropEquips(PP, c, gs);
           PP.mz.splice(i,1);
           delete c.battleDestroyed;
@@ -2151,6 +2154,7 @@ function applyActionBodyV31(gs, a){
             pushZone(ownerB.grave, c);
             const putB = graveLastIsS03(ownerB.grave, c);
             if(putB) putB.graveInfo = {turn:gs.turn, from:'mz', byDestroy:true, lv:sentLv, face:sentFace, pos:sentPos, byPlayer:pi===0?1:0, battle:true, attrS03:sentAttrS03, ctrlS03:pi};   /* S03-U185: battle; S03-U293: attribute and controller on the field */
+            if(putB && sentGeminiActiveS03) putB.graveInfo.geminiActiveS03 = true;   /* S03-U467: 二重の落とし穴 */
             if(Number(sentLv)>=8 && gs.players[pi]) gs.players[pi].lv8ToGraveTurnS03 = gs.turn;   /* S03-U206: デーモンとの駆け引き */
             if(putB && reversedB) putB.graveInfo.reversedS03 = true;
             /* S03-U25: 「戦闘で破壊したモンスターの効果は無効化される」を宣言したモンスターが破壊した場合だけ、そのカードを記録する。 */
@@ -3878,7 +3882,7 @@ const ZONE_LOCAL_KEYS = [
   'stLinkTargetS03','stLinkByS03',   // S03-U188: a continuous Trap's selected monster (デモンズ・チェーン): the trap holds the target uid, the target the trap uid
   'negLinkS03','negLinkTargetS03',   // S03-U177: a monster's 「表側表示で存在する限り、選択したモンスターの効果は無効化される」 link (engine/1ZY)
   's03SummonedByUid',   // S03-U148: 「この効果で特殊召喚した」 monster → the summoner's uid (地獄の門番イル・ブラッド / 魔族召喚師)
-  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn','extraNormalS03Turn',
+  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn','extraNormalS03Turn','u466ReturnTurn',
   'banishWhenLeavesField','v350BureidoDrawTurn','v350ExtraNormalFrogTurn','v350OnlyAttackerUid',
   'v370FrogExtraTurn','v370TragoControlTurn','v370TragoLevelTurn','v370TragoLevelResetTurn','v380SummonMaterials','v380DirectOnlyTurn','v380DoubleEdgeTurn','v380LylaLockThroughTurn',
   // System v2.3: 通常召喚手順・発動待ち状態は場を離れたら失われる
@@ -11869,12 +11873,25 @@ function geminiFieldGrantS03(){
   if(typeof continuousSources!=='function') return false;
   return continuousSources().some(src=>!!(src && src.sc && src.sc.continuous && src.sc.continuous.geminiAllDualS03));
 }
+/* S03-U465: a live Equip source (Supervise) may treat only its equipped
+   monster as Gemini Summoned. Use the existing continuous-source and scope
+   rules so negation, removal and an invalid host stop the grant immediately. */
+function geminiEquipGrantS03(card){
+  if(!card || typeof continuousSources!=='function' || typeof continuousReaches!=='function' || typeof locateCardAnyV4!=='function') return false;
+  const loc=locateCardAnyV4(card);
+  if(!loc || loc.zone!=='mz') return false;
+  return continuousSources().some(src=>{
+    const cont=src&&src.sc&&src.sc.continuous;
+    return !!(cont && cont.treatEquippedAsGeminiSummonedS03===true
+      && continuousReaches(cont.scope||'equippedMonster',src.p,loc,src.card,card));
+  });
+}
 /* the Gemini card currently has its effects: Gemini-Summoned (dualUp), or
-   covered by a live field-wide grant, and face-up in a Monster Zone */
+   covered by a live field-wide / Equip grant, and face-up in a Monster Zone */
 function geminiActiveS03(card){
   if(!isGeminiS03(card) || card.face!=='up') return false;
   const h = typeof locateCardAnyV4==='function' ? locateCardAnyV4(card) : null;
-  return !!(h && h.zone==='mz' && (card.dualUp || geminiFieldGrantS03()));
+  return !!(h && h.zone==='mz' && (card.dualUp || geminiFieldGrantS03() || geminiEquipGrantS03(card)));
 }
 /* why this face-up Gemini monster cannot be Gemini Summoned now ('' = it can) */
 function geminiSummonBlockedS03(card, p){
@@ -95618,6 +95635,107 @@ defineUnifiedCardV4('進化の繭', [{
     const d=dbOf(self); return {setAtk:Math.max(0,Number(d.atk)||0),setDef:Math.max(0,Number(d.def)||0)};
   } }
 });
+/* S03-U465: スーペルヴィス.
+   Equip only to a face-up Gemini monster. Its live continuous source treats
+   that host as Gemini Summoned; when this face-up Equip is sent from the field
+   to the Graveyard, its optional trigger targets and revives a Normal monster
+   from its controller's Graveyard. */
+function u465SuperviseHosts(){
+  return API.fieldCards({zone:'mz',filter:x=>x.card&&x.card.face==='up'&&isGeminiS03(x.card)});
+}
+function u465SuperviseSent(ctx){
+  const e=ctx.event||{},g=ctx.card&&ctx.card.graveInfo;
+  return ctx.zone==='grave'&&e.uid===ctx.card.uid&&e.toZone==='grave'&&e.fromFace==='up'
+    &&!!g&&(g.from==='sz'||g.from==='field')&&Number(g.turn)===Number(gameState.turn);
+}
+function u465SuperviseNormals(ctx){
+  return API.pileCards(ctx.player,'grave',x=>x.card!==ctx.card&&x.db.k==='m'
+    &&treatedAsNormal(x.card)&&canEffectSpecialSummonS03(x.card,'grave','スーペルヴィス'));
+}
+defineUnifiedCardV4('スーペルヴィス',[{
+  key:'equip',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,
+  targetRange:LOCATION.MZONE,targetSide:'both',speed:1,events:['activate'],
+  condition(){return u465SuperviseHosts().length>0;},
+  target(ctx,done){API.selectCard('スーペルヴィス：装備するデュアルモンスター',u465SuperviseHosts(),t=>done([t]));},
+  operation(ctx){
+    const source=locateCardAnyV4(ctx.card),target=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);
+    if(source&&target&&target.zone==='mz'&&target.card.face==='up'&&isGeminiS03(target.card)) API.equipSpell(source,target,'スーペルヴィス');
+  },
+  afterResolve(){}
+},{
+  key:'field-grave-revive-normal',type:EFFECT_TYPE.TRIGGER,range:LOCATION.GRAVE,
+  targetRange:LOCATION.GRAVE,targetSide:'self',speed:1,events:['onLeaveField'],
+  condition(ctx){return u465SuperviseSent(ctx)&&hasMonsterZoneSpace(ctx.player)&&u465SuperviseNormals(ctx).length>0;},
+  target(ctx,done){API.selectCard('スーペルヴィス：特殊召喚する通常モンスター',u465SuperviseNormals(ctx),t=>done([t]));},
+  operation(ctx){
+    const target=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);
+    if(!target||target.zone!=='grave'||target.p!==ctx.player||!treatedAsNormal(target.card)||!hasMonsterZoneSpace(ctx.player)) return;
+    specialSummonPositionsS03(ctx.player,[{uid:target.card.uid,from:'grave'}],'スーペルヴィス');
+  },
+  afterResolve(){}
+}],{type:'spell',priority:1,targets:true,activateFrom:['hand','sz','grave'],
+  includesSpecialSummon:true,blocksIfNoSpecialSummon(ctx){return ctx&&ctx.zone==='grave';},
+  equipSpec:{canEquip(h){return !!(h&&h.card&&h.card.face==='up'&&isGeminiS03(h.card));},label:'デュアルモンスターのみ'},
+  passive:{onLeaveField(ctx){return u465SuperviseSent(ctx);}},
+  continuous:{scope:'equippedMonster',from:['sz'],treatEquippedAsGeminiSummonedS03:true,apply(){return null;}}
+});
+/* S03-U466: スペシャル・デュアル・サモン.
+   The target becomes Gemini Summoned without using a Normal Summon, then the
+   same stay on the field returns to its owner's hand at this turn's End Phase.
+   u466ReturnTurn is zone-local, so leaving and returning does not inherit the
+   delayed return. */
+function u466GeminiTargets(p){
+  return API.fieldCards({player:p,zone:'mz',filter:x=>x.card&&x.card.face==='up'&&isGeminiS03(x.card)});
+}
+API.registerScheduleHandler('s03u466.return-gemini',(args)=>{
+  const h=args&&args.uid!=null?findCardByUid(args.uid):null;
+  if(h&&h.zone==='mz'&&Number(h.card.u466ReturnTurn)===Number(args.turn)) API.returnToHand(h,'スペシャル・デュアル・サモン');
+});
+defineUnifiedCardV4('スペシャル・デュアル・サモン',[{
+  key:'gemini-now-return-end',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,
+  targetRange:LOCATION.MZONE,targetSide:'self',speed:2,events:['activate'],
+  condition(ctx){return u466GeminiTargets(ctx.player).length>0;},
+  target(ctx,done){API.selectCard('スペシャル・デュアル・サモン：再度召喚した状態にするデュアル',u466GeminiTargets(ctx.player),t=>done([t]));},
+  operation(ctx){
+    const target=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);
+    if(!target||target.p!==ctx.player||target.zone!=='mz'||target.card.face!=='up'||!isGeminiS03(target.card)) return;
+    const uid=ensureCardUid(gameState,target.card),turn=gameState.turn;
+    API.setCardFlag(target,'dualUp',true,'スペシャル・デュアル・サモン',{silent:true});
+    API.setCardFlag(target,'u466ReturnTurn',turn,'スペシャル・デュアル・サモン',{silent:true});
+    API.schedule({at:'endPhase',turns:0,player:ctx.player,handler:'s03u466.return-gemini',args:{uid,turn},note:'スペシャル・デュアル・サモン'});
+  },
+  afterResolve(){}
+}],{type:'spell',priority:2,quickEffect:true,targets:true});
+/* S03-U467: 二重の落とし穴.
+   When an own Gemini monster that was treated as Gemini Summoned is destroyed
+   by battle, this Normal Trap destroys every monster on the opponent's field. */
+function u467GeminiBattleVictim(ctx){
+  const e=ctx.event||{};
+  if(e.uid==null) return null;
+  const h=findCardByUid(e.uid);
+  if(!h || h.zone!=='grave' || !h.card || !isGeminiS03(h.card)) return null;
+  const g=h.card.graveInfo;
+  if(!g || g.from!=='mz' || !g.byDestroy || !g.battle || g.geminiActiveS03!==true) return null;
+  if(Number(g.turn)!==Number(gameState.turn) || Number(g.ctrlS03)!==Number(ctx.player)) return null;
+  return h;
+}
+function u467CanTrigger(ctx){
+  if(ctx.zone!=='sz' || !u467GeminiBattleVictim(ctx)) return false;
+  return API.fieldCards({player:ctx.opponent,zone:'mz'}).length>0;
+}
+defineUnifiedCardV4('二重の落とし穴',[{
+  key:'gemini-battle-wipe',type:EFFECT_TYPE.TRIGGER,range:LOCATION.SZONE,
+  speed:2,events:['onSendToGrave'],targetRange:LOCATION.MZONE,targetSide:'opponent',
+  condition(ctx){return u467CanTrigger(ctx);},
+  operation(ctx){
+    API.fieldCards({player:ctx.opponent,zone:'mz'}).slice().forEach(h=>{
+      const live=findCardByUid(h.card.uid);
+      if(live&&live.p===ctx.opponent&&live.zone==='mz') API.destroy(live,'二重の落とし穴');
+    });
+  },
+  afterResolve(){}
+}],{type:'trap',priority:2,destroysFieldV46:true,
+  passive:{onSendToGrave(ctx){return u467CanTrigger(ctx);}}});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

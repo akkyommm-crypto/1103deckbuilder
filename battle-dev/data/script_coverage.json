@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 342,
+    "ENGINE_GAP": 341,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 411,
     "PARTIAL": 10,
-    "TESTED": 3586
+    "TESTED": 3587
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1640,
     "sin": 5,
-    "unified": 1417
+    "unified": 1418
   },
-  "static_registration_name_count": 3595,
+  "static_registration_name_count": 3596,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -64943,12 +64943,19 @@
       "subtype": "",
       "date": "2007-11-23",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs battle-destruction provenance retaining a Gemini monster's second-summoned state and a response window before mass opponent-monster destruction.",
+      "status": "TESTED",
+      "reason": "S03-U467: the battle cleanup snapshots live Gemini-Summoned treatment before continuous sources leave, then the real event/chain path offers the Set Trap and destroys every opponent monster. Non-active Gemini and effect-destruction negative controls plus Replay are covered.",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZT_codex_s03_u467_double_trap_hole.js",
+          "line": 18
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u467_double_trap_hole.js",
         "tools\\test_v740_batch26.js"
       ]
     },

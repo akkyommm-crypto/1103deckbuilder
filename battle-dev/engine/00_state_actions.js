@@ -1146,6 +1146,9 @@ function applyActionBodyV31(gs, a){
           if(!c || !c.battleDestroyed) continue;
           /* S03-U183: an equip destroyed instead (engine/1ZZB) */
           if(typeof equipSubstituteDestroyS03==='function' && equipSubstituteDestroyS03(gs, c, 'battle')){ delete c.battleDestroyed; continue; }
+          /* S03-U467: snapshot the live Gemini-Summoned treatment before
+             battle cleanup removes Equip/field continuous sources. */
+          const sentGeminiActiveS03 = typeof geminiActiveS03==='function' && geminiActiveS03(c);
           dropXyzMaterials(PP, c, gs); dropEquips(PP, c, gs);
           PP.mz.splice(i,1);
           delete c.battleDestroyed;
@@ -1192,6 +1195,7 @@ function applyActionBodyV31(gs, a){
             pushZone(ownerB.grave, c);
             const putB = graveLastIsS03(ownerB.grave, c);
             if(putB) putB.graveInfo = {turn:gs.turn, from:'mz', byDestroy:true, lv:sentLv, face:sentFace, pos:sentPos, byPlayer:pi===0?1:0, battle:true, attrS03:sentAttrS03, ctrlS03:pi};   /* S03-U185: battle; S03-U293: attribute and controller on the field */
+            if(putB && sentGeminiActiveS03) putB.graveInfo.geminiActiveS03 = true;   /* S03-U467: 二重の落とし穴 */
             if(Number(sentLv)>=8 && gs.players[pi]) gs.players[pi].lv8ToGraveTurnS03 = gs.turn;   /* S03-U206: デーモンとの駆け引き */
             if(putB && reversedB) putB.graveInfo.reversedS03 = true;
             /* S03-U25: 「戦闘で破壊したモンスターの効果は無効化される」を宣言したモンスターが破壊した場合だけ、そのカードを記録する。 */

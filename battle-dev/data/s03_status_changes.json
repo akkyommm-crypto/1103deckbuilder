@@ -15495,6 +15495,16 @@
         "tools/test_s03_u466_special_dual_summon.js"
       ],
       "evidence": "Exact 2011 card text: the real Quick-Play path targets an own face-up Gemini monster, grants dualUp without consuming a Normal Summon, and creates a serializable same-turn End Phase return. The return mark is zone-local, so a target that leaves and is Special Summoned again is not incorrectly returned. No-host negative and Replay are covered."
+    },
+    {
+      "name": "二重の落とし穴",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U467",
+      "tests": [
+        "tools/test_s03_u467_double_trap_hole.js"
+      ],
+      "evidence": "Exact 2011 card text: when an own Gemini monster treated as Gemini Summoned is destroyed by battle, the real event/chain path offers the Set Trap and destroys every opponent monster. Battle cleanup snapshots live Gemini state before continuous sources leave; non-active Gemini, effect destruction, mass destruction and Replay controls are covered."
     }
   ],
   "restored_to_baseline": [

@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 342,
+    "ENGINE_GAP": 341,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 411,
     "PARTIAL": 10,
-    "TESTED": 3586
+    "TESTED": 3587
   },
   "delta": {
-    "ENGINE_GAP": -274,
+    "ENGINE_GAP": -275,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -896,
     "PARTIAL": -172,
-    "TESTED": 1537
+    "TESTED": 1538
   },
   "status_changes": [
     {
@@ -5165,6 +5165,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U357"
+    },
+    {
+      "name": "二重の落とし穴",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U467"
     },
     {
       "name": "二重召喚",

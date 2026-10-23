@@ -1810,6 +1810,9 @@
   "path": "cards/HZZZZZZZZZZZS_codex_s03_u466_special_dual_summon.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZT_codex_s03_u467_double_trap_hole.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
