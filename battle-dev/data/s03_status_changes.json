@@ -15485,6 +15485,16 @@
         "tools/test_s03_u465_supervise.js"
       ],
       "evidence": "Exact 2011 card text: real Equip activation targets a face-up Gemini monster on either field; a live scoped continuous source treats only that host as Gemini Summoned without writing dualUp. Negation/removal revoke the grant immediately. A face-up field-to-Grave transition triggers the optional targeted revival of a Normal monster with summon-position choice. Invalid host, live negation, Cyclone destruction and Replay controls are covered."
+    },
+    {
+      "name": "スペシャル・デュアル・サモン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U466",
+      "tests": [
+        "tools/test_s03_u466_special_dual_summon.js"
+      ],
+      "evidence": "Exact 2011 card text: the real Quick-Play path targets an own face-up Gemini monster, grants dualUp without consuming a Normal Summon, and creates a serializable same-turn End Phase return. The return mark is zone-local, so a target that leaves and is Special Summoned again is not incorrectly returned. No-host negative and Replay are covered."
     }
   ],
   "restored_to_baseline": [

@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 343,
+    "ENGINE_GAP": 342,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 411,
     "PARTIAL": 10,
-    "TESTED": 3585
+    "TESTED": 3586
   },
   "delta": {
-    "ENGINE_GAP": -273,
+    "ENGINE_GAP": -274,
     "IMPLEMENTED": -195,
     "NOT_STARTED": -896,
     "PARTIAL": -172,
-    "TESTED": 1536
+    "TESTED": 1537
   },
   "status_changes": [
     {
@@ -2603,6 +2603,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U410"
+    },
+    {
+      "name": "スペシャル・デュアル・サモン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U466"
     },
     {
       "name": "スポーア",

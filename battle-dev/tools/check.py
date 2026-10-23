@@ -754,6 +754,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u462_invellz_gatekeeper.js')],ch
 subprocess.run(['node',str(ROOT/'tools/test_s03_u463_raptenos.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u464_cocoon.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u465_supervise.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u466_special_dual_summon.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

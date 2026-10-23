@@ -706,8 +706,11 @@
       "reason": "Needs Tribute Summon provenance and replay-safe hand-or-Graveyard Tuner selection for optional Special Summon."
     },
     "スペシャル・デュアル・サモン": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs Gemini second-summon state mutation and an End Phase hand-return schedule linked to the selected monster."
+      "status": "TESTED",
+      "reason": "S03-U466: real Quick-Play activation targets an own face-up Gemini, grants the Gemini-Summoned state without consuming a Normal Summon, and schedules a same-turn End Phase return tied to that stay on the field. A leave-and-resummon stale-instance control and Replay are covered.",
+      "tests": [
+        "tools/test_s03_u466_special_dual_summon.js"
+      ]
     },
     "ネコマネキング": {
       "status": "ENGINE_GAP",

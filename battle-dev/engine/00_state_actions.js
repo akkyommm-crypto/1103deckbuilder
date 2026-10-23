@@ -2919,7 +2919,7 @@ const ZONE_LOCAL_KEYS = [
   'stLinkTargetS03','stLinkByS03',   // S03-U188: a continuous Trap's selected monster (デモンズ・チェーン): the trap holds the target uid, the target the trap uid
   'negLinkS03','negLinkTargetS03',   // S03-U177: a monster's 「表側表示で存在する限り、選択したモンスターの効果は無効化される」 link (engine/1ZY)
   's03SummonedByUid',   // S03-U148: 「この効果で特殊召喚した」 monster → the summoner's uid (地獄の門番イル・ブラッド / 魔族召喚師)
-  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn','extraNormalS03Turn',
+  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn','extraNormalS03Turn','u466ReturnTurn',
   'banishWhenLeavesField','v350BureidoDrawTurn','v350ExtraNormalFrogTurn','v350OnlyAttackerUid',
   'v370FrogExtraTurn','v370TragoControlTurn','v370TragoLevelTurn','v370TragoLevelResetTurn','v380SummonMaterials','v380DirectOnlyTurn','v380DoubleEdgeTurn','v380LylaLockThroughTurn',
   // System v2.3: 通常召喚手順・発動待ち状態は場を離れたら失われる

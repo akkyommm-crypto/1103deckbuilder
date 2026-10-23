@@ -539,6 +539,7 @@ CARD_TEST_FOCUS = {
     "test_s03_u460_kusanagi.js": {"草薙剣"},
     "test_s03_u461_baou.js": {"破邪の大剣－バオウ"},
     "test_s03_u465_supervise.js": {"スーペルヴィス"},
+    "test_s03_u466_special_dual_summon.js": {"スペシャル・デュアル・サモン"},
 }
 
 

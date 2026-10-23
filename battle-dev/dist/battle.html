@@ -3875,7 +3875,7 @@ const ZONE_LOCAL_KEYS = [
   'stLinkTargetS03','stLinkByS03',   // S03-U188: a continuous Trap's selected monster (デモンズ・チェーン): the trap holds the target uid, the target the trap uid
   'negLinkS03','negLinkTargetS03',   // S03-U177: a monster's 「表側表示で存在する限り、選択したモンスターの効果は無効化される」 link (engine/1ZY)
   's03SummonedByUid',   // S03-U148: 「この効果で特殊召喚した」 monster → the summoner's uid (地獄の門番イル・ブラッド / 魔族召喚師)
-  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn','extraNormalS03Turn',
+  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn','extraNormalS03Turn','u466ReturnTurn',
   'banishWhenLeavesField','v350BureidoDrawTurn','v350ExtraNormalFrogTurn','v350OnlyAttackerUid',
   'v370FrogExtraTurn','v370TragoControlTurn','v370TragoLevelTurn','v370TragoLevelResetTurn','v380SummonMaterials','v380DirectOnlyTurn','v380DoubleEdgeTurn','v380LylaLockThroughTurn',
   // System v2.3: 通常召喚手順・発動待ち状態は場を離れたら失われる
@@ -95672,6 +95672,33 @@ defineUnifiedCardV4('スーペルヴィス',[{
   passive:{onLeaveField(ctx){return u465SuperviseSent(ctx);}},
   continuous:{scope:'equippedMonster',from:['sz'],treatEquippedAsGeminiSummonedS03:true,apply(){return null;}}
 });
+/* S03-U466: スペシャル・デュアル・サモン.
+   The target becomes Gemini Summoned without using a Normal Summon, then the
+   same stay on the field returns to its owner's hand at this turn's End Phase.
+   u466ReturnTurn is zone-local, so leaving and returning does not inherit the
+   delayed return. */
+function u466GeminiTargets(p){
+  return API.fieldCards({player:p,zone:'mz',filter:x=>x.card&&x.card.face==='up'&&isGeminiS03(x.card)});
+}
+API.registerScheduleHandler('s03u466.return-gemini',(args)=>{
+  const h=args&&args.uid!=null?findCardByUid(args.uid):null;
+  if(h&&h.zone==='mz'&&Number(h.card.u466ReturnTurn)===Number(args.turn)) API.returnToHand(h,'スペシャル・デュアル・サモン');
+});
+defineUnifiedCardV4('スペシャル・デュアル・サモン',[{
+  key:'gemini-now-return-end',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,
+  targetRange:LOCATION.MZONE,targetSide:'self',speed:2,events:['activate'],
+  condition(ctx){return u466GeminiTargets(ctx.player).length>0;},
+  target(ctx,done){API.selectCard('スペシャル・デュアル・サモン：再度召喚した状態にするデュアル',u466GeminiTargets(ctx.player),t=>done([t]));},
+  operation(ctx){
+    const target=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);
+    if(!target||target.p!==ctx.player||target.zone!=='mz'||target.card.face!=='up'||!isGeminiS03(target.card)) return;
+    const uid=ensureCardUid(gameState,target.card),turn=gameState.turn;
+    API.setCardFlag(target,'dualUp',true,'スペシャル・デュアル・サモン',{silent:true});
+    API.setCardFlag(target,'u466ReturnTurn',turn,'スペシャル・デュアル・サモン',{silent:true});
+    API.schedule({at:'endPhase',turns:0,player:ctx.player,handler:'s03u466.return-gemini',args:{uid,turn},note:'スペシャル・デュアル・サモン'});
+  },
+  afterResolve(){}
+}],{type:'spell',priority:2,quickEffect:true,targets:true});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

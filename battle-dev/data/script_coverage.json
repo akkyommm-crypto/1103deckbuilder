@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 343,
+    "ENGINE_GAP": 342,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
     "NOT_STARTED": 411,
     "PARTIAL": 10,
-    "TESTED": 3585
+    "TESTED": 3586
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1640,
     "sin": 5,
-    "unified": 1416
+    "unified": 1417
   },
-  "static_registration_name_count": 3594,
+  "static_registration_name_count": 3595,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -32176,12 +32176,19 @@
       "subtype": "速攻",
       "date": "2007-07-21",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs Gemini second-summon state mutation and an End Phase hand-return schedule linked to the selected monster.",
+      "status": "TESTED",
+      "reason": "S03-U466: real Quick-Play activation targets an own face-up Gemini, grants the Gemini-Summoned state without consuming a Normal Summon, and schedules a same-turn End Phase return tied to that stay on the field. A leave-and-resummon stale-instance control and Replay are covered.",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZS_codex_s03_u466_special_dual_summon.js",
+          "line": 13
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u466_special_dual_summon.js",
         "tools\\test_v760_batch28.js"
       ]
     },
