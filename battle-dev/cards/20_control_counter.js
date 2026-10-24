@@ -956,6 +956,10 @@ defineScript("禁じられた聖槍", {
     if(!API.fieldCards({zone:'mz', filter:x=>x.card && x.card.face==='up'}).length){
       ctx.reason = "表側表示のモンスターがいません"; return false;
     }
+    /* S03-U470: 対象耐性で候補が0になる時は発動の前に断る */
+    if(!API.targetableCardsS03(API.fieldCards({zone:'mz', filter:x=>x.card && x.card.face==='up'}), ctx.player).length){
+      ctx.reason = "効果の対象にできる表側表示のモンスターがいません"; return false;
+    }
     return true;
   },
   selectTargets(ctx, done){
@@ -1040,6 +1044,10 @@ defineScript("精神操作", {
   condition(ctx){
     if(!API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card}).length){
       ctx.reason = "相手フィールドにモンスターがいません"; return false;
+    }
+    /* S03-U470: 対象耐性で候補が0になる時は発動の前に断る */
+    if(!API.targetableCardsS03(API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card}), ctx.player).length){
+      ctx.reason = "効果の対象にできる相手モンスターがいません"; return false;
     }
     return true;
   },

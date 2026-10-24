@@ -543,6 +543,7 @@ CARD_TEST_FOCUS = {
     "test_s03_u467_double_trap_hole.js": {"二重の落とし穴"},
     "test_s03_u468_target_scope.js": {"ホルスのしもべ", "メタルシルバー・アーマー"},
     "test_s03_u469_heavy_weapon.js": {"強化支援メカ・ヘビーウェポン"},
+    "test_s03_u470_condition_targetable.js": {"リビングデッドの呼び声", "リミット・リバース", "幻獣の角", "強制脱出装置", "月の書", "禁じられた聖槍", "精神操作", "ヒーロー・ブラスト", "六武衆の荒行", "デュアルスパーク"},
 }
 
 

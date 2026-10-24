@@ -117,6 +117,8 @@ defineScript("強制脱出装置", {
   type:"trap", priority:2,
   condition(ctx){
     if(!API.fieldCards({zone:'mz'}).length){ ctx.reason = "フィールドにモンスターがいません"; return false; }
+    /* S03-U470: 場のモンスターが全て対象耐性で候補から外れる時は、発動の前に断る（通すと表になったまま不発で残る） */
+    if(!API.targetableCardsS03(API.fieldCards({zone:'mz'}), ctx.player).length){ ctx.reason = "効果の対象にできるモンスターがいません"; return false; }
     return true;
   },
   selectTargets(ctx, done){
@@ -132,6 +134,8 @@ defineScript("月の書", {
   condition(ctx){
     const t = API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'});
     if(!t.length){ ctx.reason = "表側表示のモンスターがいません"; return false; }
+    /* S03-U470: 対象耐性で候補が0になる時は発動の前に断る */
+    if(!API.targetableCardsS03(t, ctx.player).length){ ctx.reason = "効果の対象にできる表側表示のモンスターがいません"; return false; }
     return true;
   },
   selectTargets(ctx, done){
@@ -231,6 +235,11 @@ defineUnifiedCardV4('リビングデッドの呼び声',[{
     if(!hasMonsterZoneSpace(ctx.player)){ ctx.reason='モンスターゾーンが一杯です'; return false; }
     if(!API.pileCards(ctx.player,'grave',x=>x.db.k==='m').length){
       ctx.reason='自分の墓地にモンスターがいません'; return false;
+    }
+    /* S03-U470: 墓地のモンスターが全て対象耐性（メタルシルバー・アーマー）で候補から外れる時は、発動の前に断る
+       （通すと罠が表になったまま、チェーンも選択も無く残る）。 */
+    if(!API.targetableCardsS03(API.pileCards(ctx.player,'grave',x=>x.db.k==='m'), ctx.player).length){
+      ctx.reason='自分の墓地に効果の対象にできるモンスターがいません'; return false;
     }
     return true;
   },

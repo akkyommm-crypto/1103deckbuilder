@@ -25,6 +25,10 @@ defineUnifiedCardV4('リミット・リバース',[{
     if(!s03LimitReverseTargets(ctx.player).length){
       ctx.reason='墓地に攻撃力1000以下のモンスターがいません'; return false;
     }
+    /* S03-U470: 墓地のモンスターが全て対象耐性（メタルシルバー・アーマー）で候補から外れる時は、発動の前に断る */
+    if(!API.targetableCardsS03(s03LimitReverseTargets(ctx.player), ctx.player).length){
+      ctx.reason='墓地に効果の対象にできる攻撃力1000以下のモンスターがいません'; return false;
+    }
     return true;
   },
   target(ctx,done){
