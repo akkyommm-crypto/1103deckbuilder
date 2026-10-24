@@ -177,6 +177,7 @@ defineScript("ライトニング・ボルテックス", {
 /* ---- 貪欲な壺（墓地のモンスター5体をデッキに戻して2ドロー） ---- */
 defineScript("貪欲な壺", {
   targets:true,                 // 対象を取る効果
+  targetCount:5,                // S03-U472: 自分の墓地のモンスター5体を対象にする（複数対象。engine/1ZZR の宣言）
   type:"spell", priority:1, quickEffect:false,
   condition(ctx){
     const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
@@ -1626,6 +1627,7 @@ function godBirdTargetsS03U111(ctx, releasedCard){
 }
 defineScript("ゴッドバードアタック", {
   targets:true,                 // 対象を取る効果
+  targetCount:2,                // S03-U472: 対象はフィールドのカード2枚。鳥獣族1体のリリースはコストで、対象には数えない
   type:"trap", priority:2,
   condition(ctx){
     const birds = godBirdBirdsS03U111(ctx);

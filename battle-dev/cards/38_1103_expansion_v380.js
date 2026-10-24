@@ -298,7 +298,7 @@ defineScript("デルタ・クロウ－アンチ・リバース", {
 
 defineScript("諸刃の活人剣術", {
   auditNote:"墓地の六武衆2体を同時特殊召喚し、End Phaseに残っている個体を破壊して破壊時攻撃力合計分の自分ダメージまで自動化",
-  type:'trap',priority:2,targets:true,blocksIfNoSpecialSummon:true,
+  type:'trap',priority:2,targets:true,targetCount:2/* S03-U472: 墓地の六武衆2体を対象にする */,blocksIfNoSpecialSummon:true,
   condition(ctx){if(API.me(ctx).mz.length>ZONE_LIMITS.mz-2){ctx.reason='モンスターゾーンに2枠必要です';return false;}if(API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&v380IsSix(x.card)).length<2){ctx.reason='墓地に六武衆モンスターが2体必要です';return false;}return true;},
   selectTargets(ctx,done){v380SelectExactly('諸刃の活人剣術：特殊召喚する六武衆',API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&v380IsSix(x.card)),2,done);},
   resolve(ctx){

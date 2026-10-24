@@ -137,6 +137,13 @@ defineScript('ホルスのしもべ', {
       相手は装備モンスター以外のお互いのフィールド・墓地のモンスター及び除外されているモンスターを効果の対象にできない（装備魔法）。
       S03-U468: フィールドだけでなく墓地・除外のモンスターも守る（1103の裁定：相手は墓地のモンスター1体を対象にする効果を発動できない 2009-06-18, WIKI-6B27D6D86996）。
       墓地・除外は continuous.immuneToTargetOffField（engine/1ZZR）。 */
+/* S03-U472: ユーザー裁定（2026-10-25）— 「複数のカードを対象にする効果の場合、発動を制限することはできません。よって発動することができます。」
+   （2009-06-18, WIKI-32A7C5F81B06, メタルシルバー・アーマー）。採用した解釈: アーマーの対象制限は、複数のカードを対象にする効果には掛からない
+   （その効果は装備モンスター以外のモンスターも対象に選べる）。複数かどうかは効果の宣言 `targetCount`（engine/1ZZR の effectInfo）だけで決める。
+   現在の選択の min / max や、コストで選ぶカードの数は見ない。この例外はアーマーだけ（他の対象耐性は変えない）。 */
+function d2ArmorExemptMultiTarget(effectInfo){
+  return !!effectInfo && Number(effectInfo.targetCount) >= 2;
+}
 function d2ArmorHostUid(self){
   const me = locateCardAnyV4(self);
   if(!me || me.zone !== 'sz' || me.card.face !== 'up') return null;
@@ -158,12 +165,12 @@ defineScript('メタルシルバー・アーマー', {
     immuneToTarget(card, self, effectInfo){
       const hostUid = d2ArmorHostUid(self);
       if(hostUid == null) return false;
-      /* 装備モンスター以外を守る */
-      return card.uid !== hostUid && d2OpponentTargets(self, effectInfo);
+      /* 装備モンスター以外を守る（S03-U472: 複数のカードを対象にする効果には掛からない） */
+      return card.uid !== hostUid && d2OpponentTargets(self, effectInfo) && !d2ArmorExemptMultiTarget(effectInfo);
     },
     immuneToTargetOffField(card, self, effectInfo){
       if(d2ArmorHostUid(self) == null) return false;
-      return !!card && dbOf(card).k === 'm' && d2OpponentTargets(self, effectInfo);
+      return !!card && dbOf(card).k === 'm' && d2OpponentTargets(self, effectInfo) && !d2ArmorExemptMultiTarget(effectInfo);
     }
   }
 });

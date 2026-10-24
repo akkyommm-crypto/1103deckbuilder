@@ -546,6 +546,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u470_condition_targetable.js": {"リビングデッドの呼び声", "リミット・リバース", "幻獣の角", "強制脱出装置", "月の書", "禁じられた聖槍", "精神操作", "ヒーロー・ブラスト", "六武衆の荒行", "デュアルスパーク"},
     # S03-U471: only the two cards whose full flow is asserted end to end count as exercised. The multi-target cards (貪欲な壺 etc., RULING_UNRESOLVED) and the 15 survey cards appear as fixtures and must NOT gain TESTED.
     "test_s03_u471_prep_tx.js": {"リビングデッドの呼び声", "月の書"},
+    # S03-U472: the five multi-target cards, each driven through activation -> target selection -> chain -> resolution -> Replay audit (+ a chain-link Save/Load) under the Metal Silver Armor ruling.
+    "test_s03_u472_multi_target_armor.js": {"貪欲な壺", "諸刃の活人剣術", "毒蛇の供物", "TGX3－DX2", "ゴッドバードアタック"},
 }
 
 

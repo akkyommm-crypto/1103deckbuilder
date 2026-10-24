@@ -3,7 +3,8 @@
    -------------------------------------------------------------------------
    `continuous.immuneToTarget(target, self, effectInfo)` may now decide from:
      player, name, uid, card, db, cardType ('m'|'s'|'t'), subtype,
-     level, isEffectMonster, isSynchro.
+     level, isEffectMonster, isSynchro,
+     targetCount, targetsMultiple.   (S03-U472、下記)
 
    Target choice happens in three different paths: activation preparation,
    resolution-time choice, and direct runScript. This helper normalizes their
@@ -27,6 +28,24 @@ function targetEffectSourceS03(byPlayer, explicit){
   }else raw={player:null};
   if(byPlayer===0 || byPlayer===1) raw.player=byPlayer;
   return targetEffectSourceDetailsS03(raw);
+}
+
+/* S03-U472: 効果が「対象にするカードの枚数」の宣言（カード名を知らない一般の宣言経路）。
+   スクリプトに `targetCount: N`（N は 1 以上の整数）を書くと、その効果は**効果自身が**対象にするカードを N 枚取る、という宣言になる。
+   - 数えるのは効果の対象だけ。コスト（リリース・捨てる・LP 等）で選ぶカードは数えない（ゴッドバードアタック＝鳥獣族のリリースはコスト、対象は 2 枚）。
+   - 選択 UI の形（1 枚ずつ開く／まとめて選ぶ）や、その時点の `requestChoice` の min / max からは推測しない。宣言だけを読む。
+   - 宣言が無いスクリプトは null（＝単体の対象として扱う。候補が多くても「1 体を対象にする効果」は複数対象ではない: 強制脱出装置）。
+   - 複数の対象を取る効果と取らない効果を併せ持つスクリプトには、スクリプト単位の宣言は使えない（効果ごとの宣言が要る。現時点で該当なし）。
+   - 明示 effectInfo が targetCount を持つ時はそれを優先する（効果ごとの呼び出し元用）。
+   targetsMultiple は targetCount が 2 以上の時だけ true。保存する状態は無い（純粋な読み取り）。 */
+function targetCountDeclaredS03(raw, name){
+  const valid = v => { const n = Number(v); return (v!=null && Number.isInteger(n) && n>=1) ? n : null; };
+  let n = valid(raw && raw.targetCount);
+  if(n==null && name && typeof CARD_SCRIPTS!=='undefined'){
+    const sc = CARD_SCRIPTS[name];
+    if(sc) n = valid(sc.targetCount);
+  }
+  return n;
 }
 
 function targetEffectSourceDetailsS03(raw){
@@ -53,7 +72,9 @@ function targetEffectSourceDetailsS03(raw){
     subtype:db&&db.sub||'',
     level:level,
     isEffectMonster:!!(db&&db.k==='m'&&st.indexOf('効果')>=0),
-    isSynchro:!!(db&&db.k==='m'&&st.indexOf('シンクロ')>=0)
+    isSynchro:!!(db&&db.k==='m'&&st.indexOf('シンクロ')>=0),
+    targetCount:targetCountDeclaredS03(raw, name||null),
+    targetsMultiple:(targetCountDeclaredS03(raw, name||null)||0)>=2
   };
 }
 

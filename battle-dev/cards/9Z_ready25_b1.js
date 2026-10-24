@@ -229,7 +229,7 @@ defineUnifiedCardV4('毒蛇の供物',[{
       const hh=t&&resolveTarget(t);
       if(hh) API.destroy(hh,'毒蛇の供物');});},
   afterResolve(){}
-}],{type:'trap', priority:2, targets:true, destroysFieldV46:true});
+}],{type:'trap', priority:2, targets:true, targetCount:3/* S03-U472: 自分の爬虫類族1体＋相手フィールドのカード2枚＝対象3つ（①の文言ではいずれも対象。コストは無い） */, destroysFieldV46:true});
 
 /* ===== 9. ドリーム・ピエロ
    「フィールド上に攻撃表示で存在するこのカードが表側守備表示になった時、

@@ -2484,7 +2484,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2095
+          "line": 2097
         }
       ],
       "auto_table": false,
@@ -3455,7 +3455,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1503
+          "line": 1504
         }
       ],
       "auto_table": false,
@@ -3939,7 +3939,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 979
+          "line": 980
         }
       ],
       "auto_table": false,
@@ -5845,7 +5845,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1425
+          "line": 1426
         }
       ],
       "auto_table": false,
@@ -6642,6 +6642,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u472_multi_target_armor.js",
         "tools\\test_v820_batch33.js"
       ]
     },
@@ -7852,7 +7853,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 710
+          "line": 711
         }
       ],
       "auto_table": false,
@@ -7947,7 +7948,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1861
+          "line": 1863
         }
       ],
       "auto_table": false,
@@ -10737,7 +10738,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 862
+          "line": 863
         },
         {
           "kind": "unified",
@@ -13826,7 +13827,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2362
+          "line": 2364
         }
       ],
       "auto_table": false,
@@ -13890,7 +13891,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 643
+          "line": 644
         }
       ],
       "auto_table": false,
@@ -15928,7 +15929,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1387
+          "line": 1388
         }
       ],
       "auto_table": false,
@@ -16765,7 +16766,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 589
+          "line": 590
         }
       ],
       "auto_table": false,
@@ -17750,7 +17751,7 @@
         {
           "kind": "unified",
           "source": "cards\\00_generic_core.js",
-          "line": 1689
+          "line": 1691
         }
       ],
       "auto_table": false,
@@ -21714,7 +21715,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1115
+          "line": 1116
         }
       ],
       "auto_table": false,
@@ -23380,12 +23381,13 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1627
+          "line": 1628
         }
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u111_god_bird_attack.js"
+        "tools\\test_s03_u111_god_bird_attack.js",
+        "tools\\test_s03_u472_multi_target_armor.js"
       ]
     },
     {
@@ -23520,7 +23522,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1305
+          "line": 1306
         }
       ],
       "auto_table": false,
@@ -30846,7 +30848,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 801
+          "line": 802
         }
       ],
       "auto_table": false,
@@ -31548,7 +31550,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 561
+          "line": 562
         }
       ],
       "auto_table": false,
@@ -33784,7 +33786,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1088
+          "line": 1089
         }
       ],
       "auto_table": false,
@@ -34490,7 +34492,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1929
+          "line": 1931
         }
       ],
       "auto_table": false,
@@ -34960,7 +34962,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1541
+          "line": 1542
         }
       ],
       "auto_table": false,
@@ -35365,7 +35367,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1477
+          "line": 1478
         }
       ],
       "auto_table": false,
@@ -35534,7 +35536,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1032
+          "line": 1033
         }
       ],
       "auto_table": false,
@@ -37550,7 +37552,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1522
+          "line": 1523
         }
       ],
       "auto_table": false,
@@ -38407,7 +38409,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 496
+          "line": 497
         }
       ],
       "auto_table": false,
@@ -43647,7 +43649,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 776
+          "line": 777
         }
       ],
       "auto_table": false,
@@ -52106,7 +52108,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 359
+          "line": 366
         }
       ],
       "auto_table": false,
@@ -52539,7 +52541,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1905
+          "line": 1907
         }
       ],
       "auto_table": false,
@@ -52882,7 +52884,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1233
+          "line": 1234
         }
       ],
       "auto_table": false,
@@ -53298,7 +53300,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 380
+          "line": 387
         }
       ],
       "auto_table": false,
@@ -53600,7 +53602,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 175
+          "line": 182
         }
       ],
       "auto_table": false,
@@ -55576,7 +55578,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 149
+          "line": 156
         }
       ],
       "auto_table": false,
@@ -56289,7 +56291,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1821
+          "line": 1823
         }
       ],
       "auto_table": false,
@@ -56756,7 +56758,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1139
+          "line": 1140
         }
       ],
       "auto_table": false,
@@ -57504,7 +57506,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 216
+          "line": 223
         }
       ],
       "auto_table": false,
@@ -57843,7 +57845,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 239
+          "line": 246
         }
       ],
       "auto_table": false,
@@ -59273,7 +59275,7 @@
         {
           "kind": "unified",
           "source": "cards\\00_generic_core.js",
-          "line": 226
+          "line": 227
         }
       ],
       "auto_table": false,
@@ -59411,7 +59413,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1716
+          "line": 1718
         }
       ],
       "auto_table": false,
@@ -60730,7 +60732,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 280
+          "line": 287
         }
       ],
       "auto_table": false,
@@ -61649,7 +61651,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1558
+          "line": 1559
         }
       ],
       "auto_table": false,
@@ -62228,7 +62230,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1590
+          "line": 1591
         }
       ],
       "auto_table": false,
@@ -63585,7 +63587,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C5_auto_cycle23.js",
-          "line": 327
+          "line": 334
         }
       ],
       "auto_table": false,
@@ -66115,7 +66117,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1879
+          "line": 1881
         }
       ],
       "auto_table": false,
@@ -66589,7 +66591,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 749
+          "line": 750
         }
       ],
       "auto_table": false,
@@ -66652,7 +66654,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1746
+          "line": 1748
         }
       ],
       "auto_table": false,
@@ -67979,7 +67981,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 356
+          "line": 357
         },
         {
           "kind": "unified",
@@ -69849,7 +69851,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2273
+          "line": 2275
         }
       ],
       "auto_table": false,
@@ -70765,7 +70767,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1797
+          "line": 1799
         }
       ],
       "auto_table": false,
@@ -71271,7 +71273,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2342
+          "line": 2344
         }
       ],
       "auto_table": false,
@@ -71677,7 +71679,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2322
+          "line": 2324
         }
       ],
       "auto_table": false,
@@ -72904,7 +72906,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 728
+          "line": 729
         }
       ],
       "auto_table": false,
@@ -77836,7 +77838,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 895
+          "line": 896
         }
       ],
       "auto_table": false,
@@ -79597,7 +79599,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 933
+          "line": 934
         }
       ],
       "auto_table": false,
@@ -79966,7 +79968,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2409
+          "line": 2411
         }
       ],
       "auto_table": false,
@@ -83519,7 +83521,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2034
+          "line": 2036
         }
       ],
       "auto_table": false,
@@ -83542,7 +83544,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2073
+          "line": 2075
         }
       ],
       "auto_table": false,
@@ -84342,7 +84344,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 316
+          "line": 317
         }
       ],
       "auto_table": false,
@@ -85331,6 +85333,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_ready25_b1.js",
+        "tools\\test_s03_u472_multi_target_armor.js",
         "tools\\test_v630_batch15.js"
       ]
     },
@@ -86521,7 +86524,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1174
+          "line": 1175
         }
       ],
       "auto_table": false,
@@ -90165,7 +90168,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 471
+          "line": 472
         }
       ],
       "auto_table": false,
@@ -90948,7 +90951,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 524
+          "line": 525
         }
       ],
       "auto_table": false,
@@ -91040,7 +91043,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1254
+          "line": 1255
         }
       ],
       "auto_table": false,
@@ -93297,7 +93300,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 408
+          "line": 409
         }
       ],
       "auto_table": false,
@@ -93418,7 +93421,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 441
+          "line": 442
         }
       ],
       "auto_table": false,
@@ -94371,7 +94374,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2293
+          "line": 2295
         }
       ],
       "auto_table": false,
@@ -95877,7 +95880,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 952
+          "line": 953
         }
       ],
       "auto_table": false,
@@ -95934,7 +95937,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 826
+          "line": 827
         }
       ],
       "auto_table": false,
@@ -96704,7 +96707,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 296
+          "line": 297
         }
       ],
       "auto_table": false,
@@ -98377,7 +98380,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1950
+          "line": 1952
         }
       ],
       "auto_table": false,
@@ -99119,6 +99122,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u45_legacy_choice_picked_db.js",
+        "tools\\test_s03_u472_multi_target_armor.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
         "tools\\test_v380.js"
       ]
@@ -99270,6 +99274,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u472_multi_target_armor.js",
         "tools\\test_v430_replay_hardening.js"
       ]
     },
@@ -100582,7 +100587,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2117
+          "line": 2119
         }
       ],
       "auto_table": false,
@@ -104594,7 +104599,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1341
+          "line": 1342
         }
       ],
       "auto_table": false,
@@ -105278,7 +105283,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 388
+          "line": 389
         }
       ],
       "auto_table": false,
@@ -105809,7 +105814,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 1062
+          "line": 1063
         }
       ],
       "auto_table": false,
@@ -107497,7 +107502,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 848
+          "line": 849
         }
       ],
       "auto_table": false,

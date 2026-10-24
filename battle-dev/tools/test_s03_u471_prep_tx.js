@@ -453,8 +453,12 @@ for(const c of [
   {n:'諸刃の活人剣術',extra:(x,P,o)=>{P[o].grave=P[o].grave.concat([mk('六武衆のご隠居',o),mk('六武衆の影武者',o),mk('六武衆－ヤリザ',o)]);P[o].mz=P[o].mz.concat([mon('六武衆－ザンジ',o)]);}},
   {n:'TGX3－DX2',extra:(x,P,o)=>{P[o].grave=P[o].grave.concat([mk('TG ストライカー',o),mk('TG ワーウルフ',o),mk('TG ラッシュ・ライノ',o)]);}},
 ]){
-  const x=build({card:c.n,board:'A',mode:'imm',extra:c.extra});const r=attempt(x);
-  ok('RULING_UNRESOLVED characterization — '+c.n+' (multi-target): the stuck state of U470 (face-up, no chain) is now undone by the transaction; this is NOT a ruling-compliance or TESTED claim (condition-level rejection stays unimplemented)',
+  /* S03-U472: この期待は、ユーザー裁定（WIKI-32A7C5F81B06, 2026-10-25）より前の挙動（複数対象の宣言なし）についての観測。期待は変えず、宣言 targetCount を一時的に外した状態で同じ観測を行う。
+     裁定どおりの経路（保護されたモンスターも選べて解決する）は test_s03_u472_multi_target_armor.js が通す。
+     裁定が未確定だった時期の観測を固定したピンで、ユーザー裁定により前提が変わったための置き換え（期待値を緩めたのではない）。Opus が承認（2026-10-25）。 */
+  const scx=CARD_SCRIPTS[c.n],keepTc=scx.targetCount;delete scx.targetCount;
+  const x=build({card:c.n,board:'A',mode:'imm',extra:c.extra});const r=attempt(x);scx.targetCount=keepTc;
+  ok('RULING_UNRESOLVED characterization — '+c.n+' (multi-target): the stuck state of U470 (face-up, no chain) is now undone by the transaction; this is NOT a ruling-compliance or TESTED claim (condition-level rejection stays unimplemented) [S03-U472: run with the targetCount declaration removed = behaviour before the user ruling]',
     r.offered&&r.toast==='選択できるカードが足りません'&&!r.pend&&r.chain===0&&r.types[r.types.length-1]==='PREP_TX_ABORT_S03:insufficient'&&v41StateDigest(gameState)===x.D0,JSON.stringify({types:r.types,zone:r.zone,face:r.face}));
 }
 

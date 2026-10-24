@@ -14891,7 +14891,8 @@ registerChoiceHandlerV49(ATTACK_RETURN_COST_HANDLER_S03, function(answer, args){
    -------------------------------------------------------------------------
    `continuous.immuneToTarget(target, self, effectInfo)` may now decide from:
      player, name, uid, card, db, cardType ('m'|'s'|'t'), subtype,
-     level, isEffectMonster, isSynchro.
+     level, isEffectMonster, isSynchro,
+     targetCount, targetsMultiple.   (S03-U472、下記)
 
    Target choice happens in three different paths: activation preparation,
    resolution-time choice, and direct runScript. This helper normalizes their
@@ -14915,6 +14916,24 @@ function targetEffectSourceS03(byPlayer, explicit){
   }else raw={player:null};
   if(byPlayer===0 || byPlayer===1) raw.player=byPlayer;
   return targetEffectSourceDetailsS03(raw);
+}
+
+/* S03-U472: 効果が「対象にするカードの枚数」の宣言（カード名を知らない一般の宣言経路）。
+   スクリプトに `targetCount: N`（N は 1 以上の整数）を書くと、その効果は**効果自身が**対象にするカードを N 枚取る、という宣言になる。
+   - 数えるのは効果の対象だけ。コスト（リリース・捨てる・LP 等）で選ぶカードは数えない（ゴッドバードアタック＝鳥獣族のリリースはコスト、対象は 2 枚）。
+   - 選択 UI の形（1 枚ずつ開く／まとめて選ぶ）や、その時点の `requestChoice` の min / max からは推測しない。宣言だけを読む。
+   - 宣言が無いスクリプトは null（＝単体の対象として扱う。候補が多くても「1 体を対象にする効果」は複数対象ではない: 強制脱出装置）。
+   - 複数の対象を取る効果と取らない効果を併せ持つスクリプトには、スクリプト単位の宣言は使えない（効果ごとの宣言が要る。現時点で該当なし）。
+   - 明示 effectInfo が targetCount を持つ時はそれを優先する（効果ごとの呼び出し元用）。
+   targetsMultiple は targetCount が 2 以上の時だけ true。保存する状態は無い（純粋な読み取り）。 */
+function targetCountDeclaredS03(raw, name){
+  const valid = v => { const n = Number(v); return (v!=null && Number.isInteger(n) && n>=1) ? n : null; };
+  let n = valid(raw && raw.targetCount);
+  if(n==null && name && typeof CARD_SCRIPTS!=='undefined'){
+    const sc = CARD_SCRIPTS[name];
+    if(sc) n = valid(sc.targetCount);
+  }
+  return n;
 }
 
 function targetEffectSourceDetailsS03(raw){
@@ -14941,7 +14960,9 @@ function targetEffectSourceDetailsS03(raw){
     subtype:db&&db.sub||'',
     level:level,
     isEffectMonster:!!(db&&db.k==='m'&&st.indexOf('効果')>=0),
-    isSynchro:!!(db&&db.k==='m'&&st.indexOf('シンクロ')>=0)
+    isSynchro:!!(db&&db.k==='m'&&st.indexOf('シンクロ')>=0),
+    targetCount:targetCountDeclaredS03(raw, name||null),
+    targetsMultiple:(targetCountDeclaredS03(raw, name||null)||0)>=2
   };
 }
 
@@ -21644,6 +21665,7 @@ defineScript("ライトニング・ボルテックス", {
 /* ---- 貪欲な壺（墓地のモンスター5体をデッキに戻して2ドロー） ---- */
 defineScript("貪欲な壺", {
   targets:true,                 // 対象を取る効果
+  targetCount:5,                // S03-U472: 自分の墓地のモンスター5体を対象にする（複数対象。engine/1ZZR の宣言）
   type:"spell", priority:1, quickEffect:false,
   condition(ctx){
     const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
@@ -23093,6 +23115,7 @@ function godBirdTargetsS03U111(ctx, releasedCard){
 }
 defineScript("ゴッドバードアタック", {
   targets:true,                 // 対象を取る効果
+  targetCount:2,                // S03-U472: 対象はフィールドのカード2枚。鳥獣族1体のリリースはコストで、対象には数えない
   type:"trap", priority:2,
   condition(ctx){
     const birds = godBirdBirdsS03U111(ctx);
@@ -29518,7 +29541,7 @@ defineScript("デルタ・クロウ－アンチ・リバース", {
 
 defineScript("諸刃の活人剣術", {
   auditNote:"墓地の六武衆2体を同時特殊召喚し、End Phaseに残っている個体を破壊して破壊時攻撃力合計分の自分ダメージまで自動化",
-  type:'trap',priority:2,targets:true,blocksIfNoSpecialSummon:true,
+  type:'trap',priority:2,targets:true,targetCount:2/* S03-U472: 墓地の六武衆2体を対象にする */,blocksIfNoSpecialSummon:true,
   condition(ctx){if(API.me(ctx).mz.length>ZONE_LIMITS.mz-2){ctx.reason='モンスターゾーンに2枠必要です';return false;}if(API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&v380IsSix(x.card)).length<2){ctx.reason='墓地に六武衆モンスターが2体必要です';return false;}return true;},
   selectTargets(ctx,done){v380SelectExactly('諸刃の活人剣術：特殊召喚する六武衆',API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&v380IsSix(x.card)),2,done);},
   resolve(ctx){
@@ -32205,7 +32228,7 @@ defineUnifiedCardV4('黒魔導師クラン',[{key:'standby-monster-burn',type:EF
 
 defineUnifiedCardV4('BF－バックフラッシュ',[{key:'direct-attack-wipe',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,speed:2,events:['onAttackDeclare'],condition(ctx){const a=gameState.pendingAttack;return !!(a&&a.player===ctx.opponent&&a.target==='direct')&&API.pileCards(ctx.player,'grave',x=>isSetCardV4(x.db,SETCODE.BLACKWING)).length>=5;},operation(ctx){API.fieldCards({player:ctx.opponent,zone:'mz'}).slice().forEach(t=>API.destroy(t,'BF－バックフラッシュ'));},afterResolve(){}}],{type:'trap',priority:2,destroysFieldV46:true,passive:{onAttackDeclare:()=>true}});
 
-defineUnifiedCardV4('TGX3－DX2',[{key:'return-three-tg-draw-two',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,speed:2,events:['activate'],condition(ctx){return API.me(ctx).deck.length>=2&&API.pileCards(ctx.player,'grave',x=>isSetCardV4(x.db,SETCODE.TG)).length>=3;},target(ctx,done){v70SelectExactly('TGX3－DX2：デッキへ戻すTG',API.pileCards(ctx.player,'grave',x=>isSetCardV4(x.db,SETCODE.TG)),3,done);},operation(ctx){(ctx.selectedTargets||[]).forEach(t=>{const h=resolveTarget(t);if(h)API.returnToDeck(h,false,'TGX3－DX2');});API.shuffle(ctx.player);API.draw(ctx.player,2);},afterResolve(){}}],{type:'trap',priority:2,targets:true});
+defineUnifiedCardV4('TGX3－DX2',[{key:'return-three-tg-draw-two',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,speed:2,events:['activate'],condition(ctx){return API.me(ctx).deck.length>=2&&API.pileCards(ctx.player,'grave',x=>isSetCardV4(x.db,SETCODE.TG)).length>=3;},target(ctx,done){v380SelectExactly('TGX3－DX2：デッキへ戻すTG',API.pileCards(ctx.player,'grave',x=>isSetCardV4(x.db,SETCODE.TG)),3,done);},operation(ctx){(ctx.selectedTargets||[]).forEach(t=>{const h=resolveTarget(t);if(h)API.returnToDeck(h,false,'TGX3－DX2');});API.shuffle(ctx.player);API.draw(ctx.player,2);},afterResolve(){}}],{type:'trap',priority:2,targets:true,targetCount:3/* S03-U472: 墓地の「TG」3体を選択する */});
 
 defineUnifiedCardV4('エナジー・ドレイン',[{key:'hand-count-boost',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.MZONE,targetSide:'self',speed:2,events:['activate'],condition(ctx){return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'}).length>0;},target(ctx,done){API.selectCard('エナジー・ドレイン：強化するモンスター',API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'}),t=>done([t]));},operation(ctx){const h=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(h){const n=API.foe(ctx).hand.length*200;v4RegisterStatModifier(h,{atk:n,def:n},{code:'エナジー・ドレイン',resetMask:RESET.END|RESET.LEAVE|RESET.FACE_DOWN});}},afterResolve(){}}],{type:'trap',priority:2,targets:true});
 
@@ -40005,7 +40028,7 @@ defineUnifiedCardV4('毒蛇の供物',[{
       const hh=t&&resolveTarget(t);
       if(hh) API.destroy(hh,'毒蛇の供物');});},
   afterResolve(){}
-}],{type:'trap', priority:2, targets:true, destroysFieldV46:true});
+}],{type:'trap', priority:2, targets:true, targetCount:3/* S03-U472: 自分の爬虫類族1体＋相手フィールドのカード2枚＝対象3つ（①の文言ではいずれも対象。コストは無い） */, destroysFieldV46:true});
 
 /* ===== 9. ドリーム・ピエロ
    「フィールド上に攻撃表示で存在するこのカードが表側守備表示になった時、
@@ -54039,6 +54062,13 @@ defineScript('ホルスのしもべ', {
       相手は装備モンスター以外のお互いのフィールド・墓地のモンスター及び除外されているモンスターを効果の対象にできない（装備魔法）。
       S03-U468: フィールドだけでなく墓地・除外のモンスターも守る（1103の裁定：相手は墓地のモンスター1体を対象にする効果を発動できない 2009-06-18, WIKI-6B27D6D86996）。
       墓地・除外は continuous.immuneToTargetOffField（engine/1ZZR）。 */
+/* S03-U472: ユーザー裁定（2026-10-25）— 「複数のカードを対象にする効果の場合、発動を制限することはできません。よって発動することができます。」
+   （2009-06-18, WIKI-32A7C5F81B06, メタルシルバー・アーマー）。採用した解釈: アーマーの対象制限は、複数のカードを対象にする効果には掛からない
+   （その効果は装備モンスター以外のモンスターも対象に選べる）。複数かどうかは効果の宣言 `targetCount`（engine/1ZZR の effectInfo）だけで決める。
+   現在の選択の min / max や、コストで選ぶカードの数は見ない。この例外はアーマーだけ（他の対象耐性は変えない）。 */
+function d2ArmorExemptMultiTarget(effectInfo){
+  return !!effectInfo && Number(effectInfo.targetCount) >= 2;
+}
 function d2ArmorHostUid(self){
   const me = locateCardAnyV4(self);
   if(!me || me.zone !== 'sz' || me.card.face !== 'up') return null;
@@ -54060,12 +54090,12 @@ defineScript('メタルシルバー・アーマー', {
     immuneToTarget(card, self, effectInfo){
       const hostUid = d2ArmorHostUid(self);
       if(hostUid == null) return false;
-      /* 装備モンスター以外を守る */
-      return card.uid !== hostUid && d2OpponentTargets(self, effectInfo);
+      /* 装備モンスター以外を守る（S03-U472: 複数のカードを対象にする効果には掛からない） */
+      return card.uid !== hostUid && d2OpponentTargets(self, effectInfo) && !d2ArmorExemptMultiTarget(effectInfo);
     },
     immuneToTargetOffField(card, self, effectInfo){
       if(d2ArmorHostUid(self) == null) return false;
-      return !!card && dbOf(card).k === 'm' && d2OpponentTargets(self, effectInfo);
+      return !!card && dbOf(card).k === 'm' && d2OpponentTargets(self, effectInfo) && !d2ArmorExemptMultiTarget(effectInfo);
     }
   }
 });
