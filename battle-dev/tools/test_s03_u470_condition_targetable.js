@@ -12,8 +12,9 @@
    固定する4つの形:
      1. 再現: 発動は始まらず、罠は裏のまま・魔法は手札のまま、チェーンも Journal もコストも動かない。理由が表示される。
      2. 通常発動: 対象に取れるカードがあれば最後まで動く（コントローラー自身の発動はアーマーの影響を受けない、候補が残る場合も含む）。
-     3. 手動キャンセル: 対象選択を開いてやめる — 現行の挙動をそのまま固定する（下のコメント参照: 発動前の状態には戻らない）。
-     4. コスト支払い済みの失敗: 現行の挙動をそのまま固定する（コストは戻らず、カードは表で残る）。part B の設計材料。
+     3. 手動キャンセル: 対象選択を開いてやめる — S03-U471（part B）で発動前の状態へ戻るようになった。U470 で固定していた「戻らない」ピンは、
+        S03-U471 の依頼（ユーザー承認済みの期待値変更）に従って修正済み（下のコメント参照）。
+     4. コスト支払い済みの失敗: S03-U471（part B）でコストもカードも発動前に戻るようになった。同じく期待値を修正済み。
    Save/Load: U468 と同じ2VM方式。 */
 const harness=require('./astra_harness');
 const first=harness(String.raw`
@@ -168,11 +169,11 @@ for(const c of CARDS){
 { const spec={card:'死者蘇生',set:false,board:'A',mode:'imm'};const x=build(spec);const r=attempt(x,spec);
   nothingStarted(r,'死者蘇生 (U468) under the Armor'); }
 
-/* ===== 形3: 手動キャンセル — 現行の挙動をそのまま固定する =====
-   前提の訂正（計測）: 対象選択（legacy API.selectCard）には onCancel が無く、cancelChoiceV49 の継続は「選択を閉じる」だけで中止処理を呼ばない
-   （engine/09 dispatchChoiceContinuationV49: cb.onCancel があれば呼ぶ。selectCard は渡していない）。そのため現状は
-   「発動前の状態に戻る」のではなく、発動の入口で表にしたカードが魔法・罠ゾーンに表のまま残る（チェーン無し・選択無し）。
-   これは part B（単一の中止処理と状態復元）で変わるべき現行の欠陥。ここでは今の挙動を固定するだけで、直さない。 */
+/* ===== 形3: 手動キャンセル =====
+   U470 の計測: 対象選択（legacy API.selectCard）には onCancel が無く、cancelChoiceV49 の継続は「選択を閉じる」だけで中止処理を呼ばなかったため、
+   発動の入口で表にしたカードが魔法・罠ゾーンに表のまま残っていた（チェーン無し・選択無し）— 既知の欠陥として「今の挙動」を固定していた。
+   S03-U471（part B）で発動準備トランザクションが入り、キャンセルは発動前の状態へ戻る。以下の期待値の変更（表→裏のまま／手札に戻る／Journal に中止が1件載る／
+   再び発動できる）は、S03-U471 の依頼でユーザー承認済み（Opus からの指示。「手動キャンセルは区別でき、発動前の状態へ戻す」）。 */
 { const spec={card:'リビングデッドの呼び声',set:true,board:'A',mode:'ctl'};const x=build(spec);
   const g0=gameState.players[1].grave.length,lp0=gameState.players[1].lp;
   const r=attempt(x,spec);
@@ -180,22 +181,24 @@ for(const c of CARDS){
   const j1=V41_ACTION_JOURNAL.length;
   cancelChoiceV49();
   const h=findCardByUid(x.card.uid);
-  ok('cancel pin TODAY (known defect, not pre-activation state): the choice is gone and no chain link exists',!pc()&&gameState.chain.length===0,JSON.stringify({pend:!!pc(),chain:gameState.chain.length}));
-  ok('cancel pin TODAY: the trap stays FACE-UP in the Spell & Trap Zone (it is not turned back face-down)',h.zone==='sz'&&h.card.face==='up',JSON.stringify({zone:h.zone,face:h.card.face}));
+  ok('cancel (S03-U471): the choice is gone and no chain link exists',!pc()&&gameState.chain.length===0,JSON.stringify({pend:!!pc(),chain:gameState.chain.length}));
+  ok('cancel (S03-U471, expectation changed per the U471 brief): the trap is turned back FACE-DOWN in the Spell & Trap Zone (pre-activation state; U470 pinned face-up)',h.zone==='sz'&&h.card.face==='down',JSON.stringify({zone:h.zone,face:h.card.face}));
   ok('cancel pin: nothing else changed — no revival, Graveyard and LP untouched',gameState.players[1].grave.length===g0&&gameState.players[1].lp===lp0&&z(x.gB)==='grave',JSON.stringify({g:gameState.players[1].grave.length,lp:gameState.players[1].lp}));
-  ok('cancel pin: the only journaled step after the choice opened is the cancel itself',V41_ACTION_JOURNAL.length-j1===1&&V41_ACTION_JOURNAL[V41_ACTION_JOURNAL.length-1].action.type==='CHOICE_CANCEL_V49',JSON.stringify(V41_ACTION_JOURNAL.slice(j1).map(e=>e.action.type)));
+  ok('cancel (S03-U471, expectation changed per the U471 brief): after the choice opened the journal gets the cancel and exactly one abort (reason cancel); U470 pinned the cancel alone',V41_ACTION_JOURNAL.length-j1===2&&V41_ACTION_JOURNAL[V41_ACTION_JOURNAL.length-2].action.type==='CHOICE_CANCEL_V49'&&V41_ACTION_JOURNAL[V41_ACTION_JOURNAL.length-1].action.type==='PREP_TX_ABORT_S03'&&V41_ACTION_JOURNAL[V41_ACTION_JOURNAL.length-1].action.reason==='cancel',JSON.stringify(V41_ACTION_JOURNAL.slice(j1).map(e=>e.action.type+':'+(e.action.reason||''))));
   const ids=getLegalZoneActions(1,'sz',x.szIdx).map(a=>a.id);
-  ok('cancel pin TODAY: the stranded face-up trap offers no activation any more (the card is lost for nothing)',ids.indexOf('activateSet')<0&&ids.indexOf('effect')<0,JSON.stringify(ids));
+  ok('cancel (S03-U471, expectation changed per the U471 brief): the trap offers its activation again (re-operable; U470 pinned that the card was lost)',ids.indexOf('activateSet')>=0,JSON.stringify(ids));
   audit('cancel pin (Set trap)'); }
 { const spec={card:'月の書',set:false,board:'C',mode:'ctl'};const x=build(spec);
   const r=attempt(x,spec);
   ok('cancel pin: 月の書 from the hand opens a cancelable target choice (it was moved to the Spell & Trap Zone first)',r.pend&&pc().cancelable===true&&r.zone==='sz'&&r.hand===0,JSON.stringify(r));
   cancelChoiceV49();
   const h=findCardByUid(x.card.uid);
-  ok('cancel pin TODAY (known defect): the Spell is NOT returned to the hand — it stays in the Spell & Trap Zone, no chain link',!pc()&&gameState.chain.length===0&&h.zone==='sz'&&gameState.players[1].hand.length===0,JSON.stringify({zone:h.zone,hand:gameState.players[1].hand.length,chain:gameState.chain.length}));
+  ok('cancel (S03-U471, expectation changed per the U471 brief): the Spell is returned to the hand (pre-activation state), no chain link; U470 pinned that it stayed in the Spell & Trap Zone',!pc()&&gameState.chain.length===0&&h.zone==='hand'&&gameState.players[1].hand.length===1&&gameState.players[1].sz.length===0,JSON.stringify({zone:h.zone,hand:gameState.players[1].hand.length,chain:gameState.chain.length}));
   ok('cancel pin: the monsters on the field are untouched',C(x.m0).face==='up'&&C(x.m1).face==='up',''); audit('cancel pin (hand Spell)'); }
 
-/* ===== 形4: コスト支払い済みの失敗 — 現行の挙動をそのまま固定する =====
+/* ===== 形4: コスト支払い済みの失敗 =====
+   U470 は「コストは戻らず、カードは表で残る」を現行の欠陥として固定していた。S03-U471（part B）の発動準備トランザクションでコストもカードも発動前に戻る
+   （依頼: 洗脳－ブレインコントロール「LP が失われカードが魔法・罠ゾーンに表で残る」→ 修復後は両方戻る）。下の 2 件（コスト／カード）は、その依頼に従った期待値の変更。
    合成カード（スクリプトはテストVM内だけ。実カードが後でガードされても固定が崩れない）: condition が生のプールだけを見て通り、
    cost で 1000LP を払い、その後の対象選択で全候補が対象耐性で消える。実カードの同形（計測、未修正のため参考）:
    洗脳－ブレインコントロール（800LP, オベリスクだけの場）/ 早すぎた埋葬（800LP, アーマー + 墓地）/ 自律行動ユニット（1500LP, アーマー）/
@@ -215,11 +218,11 @@ defineScript('エクスチェンジ',{
 });
 { const spec={card:'アンティ勝負',set:false,board:'C',mode:'imm'};const x=build(spec);
   const r=attempt(x,spec);const h=findCardByUid(x.card.uid);
-  ok('cost-paid failure pin: the synthetic Spell passes condition (the raw pool is not empty) and is offered',r.offered,JSON.stringify(r));
-  ok('cost-paid failure pin TODAY: the cost stays paid (1000 LP lost) and is not refunded',r.lpd===-1000&&gameState.players[1].lp===7000,JSON.stringify({lpd:r.lpd,lp:gameState.players[1].lp}));
-  ok('cost-paid failure pin TODAY: the card is stranded face-up in the Spell & Trap Zone — NOT returned to the hand (onAbort is not called)',h.zone==='sz'&&h.card.face==='up'&&gameState.players[1].hand.length===0,JSON.stringify({zone:h.zone,face:h.card.face,hand:gameState.players[1].hand.length}));
-  ok('cost-paid failure pin TODAY: no chain link and no choice; the player only sees 「選択できるカードが足りません」',r.chain===0&&!r.pend&&r.toast==='選択できるカードが足りません',JSON.stringify({chain:r.chain,pend:r.pend,toast:r.toast}));
-  ok('cost-paid failure pin: the LP payment is journaled (so the loss is part of the Replay)',V41_ACTION_JOURNAL.some(e=>/LP|PAY/.test(e.action.type)),JSON.stringify(V41_ACTION_JOURNAL.map(e=>e.action.type)));
+  ok('cost-paid failure: the synthetic Spell passes condition (the raw pool is not empty) and is offered',r.offered,JSON.stringify(r));
+  ok('cost-paid failure (S03-U471, expectation changed per the U471 brief): the 1000 LP cost is restored (8000); U470 pinned 7000',gameState.players[1].lp===8000,JSON.stringify({lpd:r.lpd,lp:gameState.players[1].lp}));
+  ok('cost-paid failure (S03-U471, expectation changed per the U471 brief): the card is back in the hand, not stranded face-up in the Spell & Trap Zone',h.zone==='hand'&&gameState.players[1].hand.length===1&&gameState.players[1].sz.length===0,JSON.stringify({zone:h.zone,face:h.card.face,hand:gameState.players[1].hand.length}));
+  ok('cost-paid failure: no chain link and no choice; the player sees 「選択できるカードが足りません」',r.chain===0&&!r.pend&&r.toast==='選択できるカードが足りません',JSON.stringify({chain:r.chain,pend:r.pend,toast:r.toast}));
+  ok('cost-paid failure: the LP payment is journaled and then undone by the single abort (Replay carries both)',V41_ACTION_JOURNAL.some(e=>/LP|PAY/.test(e.action.type))&&V41_ACTION_JOURNAL[V41_ACTION_JOURNAL.length-1].action.type==='PREP_TX_ABORT_S03',JSON.stringify(V41_ACTION_JOURNAL.map(e=>e.action.type)));
   audit('cost-paid failure pin'); }
 /* 対照（今も動いている中止）: cost 自体が払えない時は onAbort が走り、カードは手札へ戻りコストも動かない */
 { const spec={card:'エクスチェンジ',set:false,board:'C',mode:'imm'};const x=build(spec);

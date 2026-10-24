@@ -1324,6 +1324,7 @@ const API = {
       meta:{ scriptName: ACTIVE_SCRIPT ? ACTIVE_SCRIPT.name : null }
     });
     if(!ok) render();
+    return ok;   /* S03-U471: 候補不足で断った時は false（明示の合図は CHOICE_INSUFFICIENT_SEQ_S03 にも立つ） */
   },
   selectPlayer(title, onPick){
     requestChoiceV49({

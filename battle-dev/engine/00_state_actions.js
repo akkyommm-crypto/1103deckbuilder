@@ -252,6 +252,10 @@ function applyActionBodyV31(gs, a){
       if(gs.deferredEvents&&gs.deferredEvents.length)gs.deferredEvents.shift();break;
     /* S03-U156: take the queued events of one kind for the given cards out of the queue, so that the caller dispatches them in
        its own simultaneous batch (battle cleanup: the onLeaveField of the battle-destroyed monsters). */
+    /* S03-U471: 発動準備トランザクション（engine/1ZZV）。復元点を gs.prepTxS03 に1つだけ持つ。 */
+    case 'PREP_TX_BEGIN_S03': prepTxBeginReduceS03(gs, a); break;
+    case 'PREP_TX_ABORT_S03': prepTxAbortReduceS03(gs, a); break;
+    case 'PREP_TX_COMMIT_S03': prepTxCommitReduceS03(gs, a); break;
     case 'DESTROY_SUB_S03':   /* S03-U173 (engine/1ZV) */
       if(typeof destroySubReduceS03==='function') destroySubReduceS03(gs, a);
       break;
@@ -1218,6 +1222,8 @@ function applyActionBodyV31(gs, a){
         const src=findCardByUidInState(gs,a.uid);
         if(src&&src.card){ src.card.activationPending=true; delete src.card.activationNegated; }
       }
+      /* S03-U471: チェーンリンクができた時点が発動準備トランザクションの境界。以後の不発・無効ではコストを返さない。 */
+      if(gs.prepTxS03 && (gs.prepTxS03.uid===(a.uid!=null?a.uid:null) || gs.prepTxS03.uid==null)) delete gs.prepTxS03;
       gs.chainSeq = (gs.chainSeq||0) + 1;
       gs.chain.push({
         chainId:gs.chainSeq,

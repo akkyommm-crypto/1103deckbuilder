@@ -759,6 +759,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u467_double_trap_hole.js')],chec
 subprocess.run(['node',str(ROOT/'tools/test_s03_u468_target_scope.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u469_heavy_weapon.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u470_condition_targetable.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u471_prep_tx.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

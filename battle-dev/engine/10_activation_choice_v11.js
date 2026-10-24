@@ -141,7 +141,9 @@ function abortPreparedActivationV11(desc){
     act({type:'DECLARE_V11',player:desc.player,clearPersistUid:desc.persistDeclarationUid});
   }
   clearActivationChoiceV11(desc&&desc.player);
-  if(desc&&desc.abortReturnToHand&&desc.uid!=null){
+  /* S03-U471: 発動準備トランザクションが開いていれば、発動前の状態へ戻す（手札へ戻す MOVE もこれが担う）。無ければ従来どおり。 */
+  const txRestoredS471 = !!(desc&&desc.uid!=null&&typeof prepTxLiveForS03==='function'&&prepTxLiveForS03(desc.uid)&&prepTxAbortS03('p11-abort',desc.uid));
+  if(!txRestoredS471&&desc&&desc.abortReturnToHand&&desc.uid!=null){
     const h=findCardByUid(desc.uid);
     if(h&&(h.zone==='sz'||h.zone==='field')) act({type:'MOVE',player:h.p,from:h.zone,fromIndex:h.index,to:'hand',face:'up'});
   }

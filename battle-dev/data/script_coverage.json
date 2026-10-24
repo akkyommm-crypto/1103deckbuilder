@@ -59281,6 +59281,7 @@
         "tools\\test_s03_u276_gap4.js",
         "tools\\test_s03_u283_ss_position2.js",
         "tools\\test_s03_u470_condition_targetable.js",
+        "tools\\test_s03_u471_prep_tx.js",
         "tools\\test_s03_u89_call_of_the_haunted.js"
       ]
     },
@@ -82476,6 +82477,7 @@
         "tools\\test_s03_u285_gap7.js",
         "tools\\test_s03_u288_gap8.js",
         "tools\\test_s03_u470_condition_targetable.js",
+        "tools\\test_s03_u471_prep_tx.js",
         "tools\\test_s03_u85_book_of_moon.js"
       ]
     },

@@ -544,6 +544,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u468_target_scope.js": {"ホルスのしもべ", "メタルシルバー・アーマー"},
     "test_s03_u469_heavy_weapon.js": {"強化支援メカ・ヘビーウェポン"},
     "test_s03_u470_condition_targetable.js": {"リビングデッドの呼び声", "リミット・リバース", "幻獣の角", "強制脱出装置", "月の書", "禁じられた聖槍", "精神操作", "ヒーロー・ブラスト", "六武衆の荒行", "デュアルスパーク"},
+    # S03-U471: only the two cards whose full flow is asserted end to end count as exercised. The multi-target cards (貪欲な壺 etc., RULING_UNRESOLVED) and the 15 survey cards appear as fixtures and must NOT gain TESTED.
+    "test_s03_u471_prep_tx.js": {"リビングデッドの呼び声", "月の書"},
 }
 
 

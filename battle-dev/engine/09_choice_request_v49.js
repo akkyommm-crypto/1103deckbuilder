@@ -62,6 +62,12 @@ function pruneChoiceLegacyV49(newCid){
   }
 }
 
+/* S03-U471: 「候補が足りず選択を発行できなかった」ことの明示的な合図（gameState の外。実行時だけ）。
+   requestChoiceV49 が false を返しても、legacy の API.selectCard は戻り値を捨てるため、発動準備（engine/1ZZV）はこの合図を見て中止する。
+   進むのは候補不足で断った時だけ。手動キャンセルや「コールバックが来ない」では進まない（区別するため）。 */
+let CHOICE_INSUFFICIENT_SEQ_S03 = 0;
+let CHOICE_INSUFFICIENT_LAST_S03 = null;
+
 /* ---- 移行状況カウンタ（レポート用。ゲーム状態ではない） --------------- */
 let CHOICE_STATS_V49 = {opened:0, migrated:0, legacy:0, answered:0, cancelled:0, lostContinuation:0};
 function choiceStatsV49(){ return Object.assign({}, CHOICE_STATS_V49); }
@@ -192,6 +198,8 @@ function requestChoiceV49(spec){
   /* 達成不可能な選択は発行しない。候補が min に満たなければ
      プレイヤーは決して回答できず、選択待ちのまま進行が止まる。 */
   if(candidates.length < min){
+    CHOICE_INSUFFICIENT_SEQ_S03++;
+    CHOICE_INSUFFICIENT_LAST_S03 = {seq:CHOICE_INSUFFICIENT_SEQ_S03, reason:'insufficient', candidates:candidates.length, min, title:String(spec.title||'')};
     if(typeof trace==='function') trace(`選択候補が不足しています（${candidates.length}/${min}）`, false);
     if(typeof showToast==='function') showToast('選択できるカードが足りません');
     return false;
@@ -296,10 +304,11 @@ function answerChoiceV49(keys){
   const args=(resume&&resume.args)?resume.args:{};
   const handler=(resume&&resume.handler)||'';
 
+  const prepUidA = (pc.meta && pc.meta.activationPrepS03 && pc.meta.activationPrepS03.uid != null) ? pc.meta.activationPrepS03.uid : null;   /* S03-U471 */
   act({type:'CHOICE_ANSWER_V49', player:pc.player, cid, keys:v.keys});
   CHOICE_STATS_V49.answered++;
 
-  dispatchChoiceContinuationV49({cid, isLegacy, handler, args,
+  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid:prepUidA,
     answer:{keys:v.keys, cards:picked, cancelled:false}});
   return true;
 }
@@ -315,10 +324,12 @@ function cancelChoiceV49(){
   const args=(resume&&resume.args)?resume.args:{};
   const handler=(resume&&resume.handler)||'';
 
+  /* S03-U471: 発動の準備中に開いた選択のキャンセルかどうか（発動前の状態へ戻すため） */
+  const prepUid = (pc.meta && pc.meta.activationPrepS03 && pc.meta.activationPrepS03.uid != null) ? pc.meta.activationPrepS03.uid : null;
   act({type:'CHOICE_CANCEL_V49', player:pc.player, cid});
   CHOICE_STATS_V49.cancelled++;
 
-  dispatchChoiceContinuationV49({cid, isLegacy, handler, args,
+  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid,
     answer:{keys:[], cards:[], cancelled:true}});
   return true;
 }
@@ -341,9 +352,17 @@ function dispatchChoiceContinuationV49(job){
       if(typeof abortResolve==='function') abortResolve();
       return;
     }
-    if(job.answer.cancelled){ if(cb.onCancel) cb.onCancel(); if(typeof settleActivationPrepS03==='function') settleActivationPrepS03(); if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03(); return; }
+    if(job.answer.cancelled){
+      if(cb.onCancel) cb.onCancel();
+      /* S03-U471: 発動の準備中の選択をやめた（理由 'cancel'。候補不足とは別）— onCancel が先へ進めず、別の選択待ちも無ければ、発動前の状態へ戻す */
+      if(job.prepUid != null && typeof prepTxLiveForS03==='function' && prepTxLiveForS03(job.prepUid) && !(gameState && gameState.pendingChoice)) prepTxAbortS03('cancel', job.prepUid);
+      if(typeof settleActivationPrepS03==='function') settleActivationPrepS03(); if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03(); return;
+    }
     /* 既存 onPick は候補1件を受け取る形。互換のため先頭を渡す。 */
+    const sigS471 = (typeof choiceInsufficientSeqS03==='function') ? choiceInsufficientSeqS03() : 0;
     if(cb.onPick) cb.onPick(job.answer.cards[0], job.answer.cards);
+    /* S03-U471: 続きの段（コスト後の対象選択など）が候補不足で断られていれば、発動準備を中止する（明示の合図がある時だけ） */
+    if(typeof prepTxCheckInsufficientS03==='function') prepTxCheckInsufficientS03(sigS471, job.prepUid);
     if(typeof settleActivationPrepS03==='function') settleActivationPrepS03();   /* S03-U35 */
     if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03();   /* S03-U41 */
     return;

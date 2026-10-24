@@ -280,6 +280,9 @@
   "path": "engine/1ZZU_deck_locks_s03.js"
  },
  {
+  "path": "engine/1ZZV_prep_tx_s03.js"
+ },
+ {
   "path": "ui/10_render_input.js",
   "start_line": 2683,
   "end_line": 3288,
