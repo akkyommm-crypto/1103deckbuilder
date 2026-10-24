@@ -29,7 +29,8 @@ defineScript("死者蘇生", {
   targets:true,                 // 対象を取る効果
   type:"spell", priority:1,
   condition(ctx){
-    const mons = [0,1].flatMap(p=>API.pileCards(p,'grave',x=>x.db.k==='m' && canEffectSpecialSummonS03(x.card,'grave','死者蘇生')));   /* S03-U144 */
+    /* S03-U468: 墓地のモンスターを効果の対象にできなくする継続効果（メタルシルバー・アーマー）を考慮する：対象に取れるモンスターが1体もいなければ発動できない */
+    const mons = API.targetableCardsS03([0,1].flatMap(p=>API.pileCards(p,'grave',x=>x.db.k==='m' && canEffectSpecialSummonS03(x.card,'grave','死者蘇生'))), ctx.player);   /* S03-U144 */
     if(!mons.length){
       ctx.reason = [0,1].some(p=>API.pileCards(p,'grave',x=>x.db.k==='m').length) ? "墓地に特殊召喚できるモンスターがいません" : "墓地にモンスターがいません";
       return false;

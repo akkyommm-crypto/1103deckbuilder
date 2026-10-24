@@ -541,6 +541,7 @@ CARD_TEST_FOCUS = {
     "test_s03_u465_supervise.js": {"スーペルヴィス"},
     "test_s03_u466_special_dual_summon.js": {"スペシャル・デュアル・サモン"},
     "test_s03_u467_double_trap_hole.js": {"二重の落とし穴"},
+    "test_s03_u468_target_scope.js": {"ホルスのしもべ", "メタルシルバー・アーマー"},
 }
 
 

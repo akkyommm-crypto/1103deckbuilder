@@ -1,0 +1,21 @@
+{
+  "example": false,
+  "unit": "S03-U468",
+  "category": "bugfix",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "target-immunity scope for ホルスのしもべ / メタルシルバー・アーマー (prep + resolution + Save/Load pins; Armor also protects Graveyard / banished monsters via continuous.immuneToTargetOffField)",
+  "outcome": "target_scope 67 PASS; full serial gate 22278 PASS / 0 FAIL = measured base 22211 + 67; negative control 13 FAIL (U459 base) / 25 FAIL (pre-U459)",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-24T00:00:00+09:00",
+  "finished_at": "2026-10-24T00:00:00+09:00",
+  "gate_owner": "sonnet",
+  "usage": {
+    "source": "not recorded",
+    "by_model": []
+  },
+  "notes": "Single writer on claude/work, base dadd902. Scope narrowed mid-unit by the user (Unions moved to U469; a Union gate run 22277 was discarded). Usage not measurable from inside the subagent."
+}

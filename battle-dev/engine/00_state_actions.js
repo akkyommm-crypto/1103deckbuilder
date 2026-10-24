@@ -3622,7 +3622,13 @@ function filterTargetable(cands, byPlayer, effectInfo){
   return cands.filter(x=>{
     if(!x || !x.card) return true;
     // 対象耐性は場のカードにのみ意味がある
-    if(x.zone !== 'mz' && x.zone !== 'sz' && x.zone !== 'field') return true;
+    if(x.zone !== 'mz' && x.zone !== 'sz' && x.zone !== 'field'){
+      /* S03-U468: 墓地・除外ゾーンのカードは、他のカードの continuous.immuneToTargetOffField だけが守る
+         （メタルシルバー・アーマー：「お互いのフィールド・墓地のモンスター及び除外されているモンスター」）。
+         場のカード向けの判定（face・テキスト推定・戦闘破壊確定）は掛けない。 */
+      if((x.zone==='grave' || x.zone==='banish') && typeof targetImmuneOffFieldS03==='function') return !targetImmuneOffFieldS03(x, srcInfo);
+      return true;
+    }
     if(battleDestroyConfirmed(x.card)) return false;   // 戦闘破壊確定は対象に取れない
     /* S03-U130: 「このターン相手の効果の対象にならない」（ダーク・フュージョン）— 対象を取るプレイヤーが分かる時だけ判定する */
     if(typeof oppTargetImmuneNowS03==='function' && oppTargetImmuneNowS03(x.card, x.p, byPlayer)) return false;

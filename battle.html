@@ -4578,7 +4578,13 @@ function filterTargetable(cands, byPlayer, effectInfo){
   return cands.filter(x=>{
     if(!x || !x.card) return true;
     // 対象耐性は場のカードにのみ意味がある
-    if(x.zone !== 'mz' && x.zone !== 'sz' && x.zone !== 'field') return true;
+    if(x.zone !== 'mz' && x.zone !== 'sz' && x.zone !== 'field'){
+      /* S03-U468: 墓地・除外ゾーンのカードは、他のカードの continuous.immuneToTargetOffField だけが守る
+         （メタルシルバー・アーマー：「お互いのフィールド・墓地のモンスター及び除外されているモンスター」）。
+         場のカード向けの判定（face・テキスト推定・戦闘破壊確定）は掛けない。 */
+      if((x.zone==='grave' || x.zone==='banish') && typeof targetImmuneOffFieldS03==='function') return !targetImmuneOffFieldS03(x, srcInfo);
+      return true;
+    }
     if(battleDestroyConfirmed(x.card)) return false;   // 戦闘破壊確定は対象に取れない
     /* S03-U130: 「このターン相手の効果の対象にならない」（ダーク・フュージョン）— 対象を取るプレイヤーが分かる時だけ判定する */
     if(typeof oppTargetImmuneNowS03==='function' && oppTargetImmuneNowS03(x.card, x.p, byPlayer)) return false;
@@ -14920,6 +14926,35 @@ function targetEffectMatchesS03(info, spec){
   if(spec.maxLevel!=null && !(info.level>0 && info.level<=Number(spec.maxLevel))) return false;
   return true;
 }
+
+/* S03-U468: 墓地・除外ゾーンのカードを「効果の対象にできない」継続効果。
+   continuous.immuneToTargetOffField(card, self, effectInfo, loc) — card は墓地 / 除外ゾーンのカード、
+   loc は {p, zone:'grave'|'banish', index}、effectInfo は immuneToTarget と同じ正規化済みの効果ソース。
+   既存の immuneToTarget は場のカード専用（filterTargetable は場以外を素通しする）ので別フックにした。
+   純粋な状態関数なので Save / Replay には何も保存しない。使うカード：メタルシルバー・アーマー。 */
+function targetImmuneOffFieldS03(x, effectInfo){
+  if(!x || !x.card || (x.zone!=='grave' && x.zone!=='banish') || typeof continuousSources!=='function') return false;
+  const loc = {p:x.p, zone:x.zone, index:x.index};
+  /* 安価な事前確認：このフックを宣言したカードが場に1枚も無ければ continuousSources() は呼ばない */
+  let any = false;
+  for(const P of gameState.players){
+    for(const z of ['mz','sz','field']){
+      const arr = z==='field' ? (P.field?[P.field]:[]) : (P[z]||[]);
+      for(const c of arr){ const sc = c && CARD_SCRIPTS[cardName(c)]; if(sc && sc.continuous && typeof sc.continuous.immuneToTargetOffField==='function'){ any = true; break; } }
+      if(any) break;
+    }
+    if(any) break;
+  }
+  if(!any) return false;
+  for(const src of continuousSources()){
+    const f = src.sc && src.sc.continuous && src.sc.continuous.immuneToTargetOffField;
+    if(typeof f!=='function') continue;
+    let r = false;
+    try{ r = !!f(x.card, src.card, effectInfo||null, loc); }catch(e){ r = false; }
+    if(r) return true;
+  }
+  return false;
+}
 /* =========================================================================
    S03-U383 — 「このカードが相手のコントロールするカードの効果の対象になり、その処理を行う時にサイコロを1回振る。
               X が出た場合、その効果を無効にし破壊する。」 (the 2003 「デーモン」 monsters)
@@ -21210,7 +21245,8 @@ defineScript("死者蘇生", {
   targets:true,                 // 対象を取る効果
   type:"spell", priority:1,
   condition(ctx){
-    const mons = [0,1].flatMap(p=>API.pileCards(p,'grave',x=>x.db.k==='m' && canEffectSpecialSummonS03(x.card,'grave','死者蘇生')));   /* S03-U144 */
+    /* S03-U468: 墓地のモンスターを効果の対象にできなくする継続効果（メタルシルバー・アーマー）を考慮する：対象に取れるモンスターが1体もいなければ発動できない */
+    const mons = API.targetableCardsS03([0,1].flatMap(p=>API.pileCards(p,'grave',x=>x.db.k==='m' && canEffectSpecialSummonS03(x.card,'grave','死者蘇生'))), ctx.player);   /* S03-U144 */
     if(!mons.length){
       ctx.reason = [0,1].some(p=>API.pileCards(p,'grave',x=>x.db.k==='m').length) ? "墓地に特殊召喚できるモンスターがいません" : "墓地にモンスターがいません";
       return false;
@@ -53721,7 +53757,18 @@ defineScript('ホルスのしもべ', {
 });
 
 /* 5. メタルシルバー・アーマー — 装備モンスターが自分フィールドに存在する限り、
-      相手は装備モンスター以外のモンスターを効果の対象にできない（装備魔法） */
+      相手は装備モンスター以外のお互いのフィールド・墓地のモンスター及び除外されているモンスターを効果の対象にできない（装備魔法）。
+      S03-U468: フィールドだけでなく墓地・除外のモンスターも守る（1103の裁定：相手は墓地のモンスター1体を対象にする効果を発動できない 2009-06-18, WIKI-6B27D6D86996）。
+      墓地・除外は continuous.immuneToTargetOffField（engine/1ZZR）。 */
+function d2ArmorHostUid(self){
+  const me = locateCardAnyV4(self);
+  if(!me || me.zone !== 'sz' || me.card.face !== 'up') return null;
+  const hostUid = me.card.equipTo && me.card.equipTo.uid;
+  if(hostUid == null) return null;
+  const host = findCardByUid(hostUid);
+  if(!host || host.zone !== 'mz' || host.p !== me.p) return null;
+  return hostUid;
+}
 defineScript('メタルシルバー・アーマー', {
   type:'spell', priority:1,
   equipSpec:{ canEquip(h){ return !!(h && h.db && h.db.k === 'm'); } },
@@ -53732,14 +53779,14 @@ defineScript('メタルシルバー・アーマー', {
     scope:'allMonsters', from:['sz'],
     apply(){ return null; },
     immuneToTarget(card, self, effectInfo){
-      const me = locateCardAnyV4(self);
-      if(!me || me.zone !== 'sz' || me.card.face !== 'up') return false;
-      const hostUid = me.card.equipTo && me.card.equipTo.uid;
+      const hostUid = d2ArmorHostUid(self);
       if(hostUid == null) return false;
-      const host = findCardByUid(hostUid);
-      if(!host || host.zone !== 'mz' || host.p !== me.p) return false;
       /* 装備モンスター以外を守る */
       return card.uid !== hostUid && d2OpponentTargets(self, effectInfo);
+    },
+    immuneToTargetOffField(card, self, effectInfo){
+      if(d2ArmorHostUid(self) == null) return false;
+      return !!card && dbOf(card).k === 'm' && d2OpponentTargets(self, effectInfo);
     }
   }
 });

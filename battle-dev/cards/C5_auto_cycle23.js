@@ -134,7 +134,18 @@ defineScript('ホルスのしもべ', {
 });
 
 /* 5. メタルシルバー・アーマー — 装備モンスターが自分フィールドに存在する限り、
-      相手は装備モンスター以外のモンスターを効果の対象にできない（装備魔法） */
+      相手は装備モンスター以外のお互いのフィールド・墓地のモンスター及び除外されているモンスターを効果の対象にできない（装備魔法）。
+      S03-U468: フィールドだけでなく墓地・除外のモンスターも守る（1103の裁定：相手は墓地のモンスター1体を対象にする効果を発動できない 2009-06-18, WIKI-6B27D6D86996）。
+      墓地・除外は continuous.immuneToTargetOffField（engine/1ZZR）。 */
+function d2ArmorHostUid(self){
+  const me = locateCardAnyV4(self);
+  if(!me || me.zone !== 'sz' || me.card.face !== 'up') return null;
+  const hostUid = me.card.equipTo && me.card.equipTo.uid;
+  if(hostUid == null) return null;
+  const host = findCardByUid(hostUid);
+  if(!host || host.zone !== 'mz' || host.p !== me.p) return null;
+  return hostUid;
+}
 defineScript('メタルシルバー・アーマー', {
   type:'spell', priority:1,
   equipSpec:{ canEquip(h){ return !!(h && h.db && h.db.k === 'm'); } },
@@ -145,14 +156,14 @@ defineScript('メタルシルバー・アーマー', {
     scope:'allMonsters', from:['sz'],
     apply(){ return null; },
     immuneToTarget(card, self, effectInfo){
-      const me = locateCardAnyV4(self);
-      if(!me || me.zone !== 'sz' || me.card.face !== 'up') return false;
-      const hostUid = me.card.equipTo && me.card.equipTo.uid;
+      const hostUid = d2ArmorHostUid(self);
       if(hostUid == null) return false;
-      const host = findCardByUid(hostUid);
-      if(!host || host.zone !== 'mz' || host.p !== me.p) return false;
       /* 装備モンスター以外を守る */
       return card.uid !== hostUid && d2OpponentTargets(self, effectInfo);
+    },
+    immuneToTargetOffField(card, self, effectInfo){
+      if(d2ArmorHostUid(self) == null) return false;
+      return !!card && dbOf(card).k === 'm' && d2OpponentTargets(self, effectInfo);
     }
   }
 });

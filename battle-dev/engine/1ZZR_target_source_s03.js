@@ -69,3 +69,32 @@ function targetEffectMatchesS03(info, spec){
   if(spec.maxLevel!=null && !(info.level>0 && info.level<=Number(spec.maxLevel))) return false;
   return true;
 }
+
+/* S03-U468: 墓地・除外ゾーンのカードを「効果の対象にできない」継続効果。
+   continuous.immuneToTargetOffField(card, self, effectInfo, loc) — card は墓地 / 除外ゾーンのカード、
+   loc は {p, zone:'grave'|'banish', index}、effectInfo は immuneToTarget と同じ正規化済みの効果ソース。
+   既存の immuneToTarget は場のカード専用（filterTargetable は場以外を素通しする）ので別フックにした。
+   純粋な状態関数なので Save / Replay には何も保存しない。使うカード：メタルシルバー・アーマー。 */
+function targetImmuneOffFieldS03(x, effectInfo){
+  if(!x || !x.card || (x.zone!=='grave' && x.zone!=='banish') || typeof continuousSources!=='function') return false;
+  const loc = {p:x.p, zone:x.zone, index:x.index};
+  /* 安価な事前確認：このフックを宣言したカードが場に1枚も無ければ continuousSources() は呼ばない */
+  let any = false;
+  for(const P of gameState.players){
+    for(const z of ['mz','sz','field']){
+      const arr = z==='field' ? (P.field?[P.field]:[]) : (P[z]||[]);
+      for(const c of arr){ const sc = c && CARD_SCRIPTS[cardName(c)]; if(sc && sc.continuous && typeof sc.continuous.immuneToTargetOffField==='function'){ any = true; break; } }
+      if(any) break;
+    }
+    if(any) break;
+  }
+  if(!any) return false;
+  for(const src of continuousSources()){
+    const f = src.sc && src.sc.continuous && src.sc.continuous.immuneToTargetOffField;
+    if(typeof f!=='function') continue;
+    let r = false;
+    try{ r = !!f(x.card, src.card, effectInfo||null, loc); }catch(e){ r = false; }
+    if(r) return true;
+  }
+  return false;
+}
