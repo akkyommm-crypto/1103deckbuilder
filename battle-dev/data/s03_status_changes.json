@@ -15505,6 +15505,56 @@
         "tools/test_s03_u467_double_trap_hole.js"
       ],
       "evidence": "Exact 2011 card text: when an own Gemini monster treated as Gemini Summoned is destroyed by battle, the real event/chain path offers the Set Trap and destroys every opponent monster. Battle cleanup snapshots live Gemini state before continuous sources leave; non-active Gemini, effect destruction, mass destruction and Replay controls are covered."
+    },
+    {
+      "name": "強化支援メカ・ヘビーウェポン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U469",
+      "tests": [
+        "tools/test_s03_u469_heavy_weapon.js"
+      ],
+      "evidence": "carddata 「①:」 text; every behaviour element is attested by a 1103 ruling for this very card: substitute for battle AND effect destruction (2008-09-05 WIKI-0D89609E8794, 2010-11-08 WIKI-BFA4797D19E1, 2011-08-27 WIKI-D032A4FED8D2); ignition equip that targets a Machine (2008-07-15 WIKI-86A8AFF69A68, 2010-11-08 WIKI-003014546AD2); release is a face-up Attack Position Special Summon (2009-01-20 WIKI-8294B5F99F4B / WIKI-3694902B2D8A); simultaneous destruction keeps the host (2010-12-11 WIKI-A171EBB2ACB6, 2011-05-25 WIKI-3ACC61A3F03B). Real DUEL path: the host is a target chosen on activation (a response that removes it fizzles the equip and still spends the use), +500/+500, once per turn, release, battle / effect / real サンダー・ブレイク / リミッター解除 / 最終戦争 substitutes, Replay audits and a two-VM Save/Load. Not modelled (same for every Union, recorded in the report): a Union as an Equip Spell is not negated by マジック・キャンセラー / サイバー・フェニックス."
+    },
+    {
+      "name": "W－ウィング・カタパルト",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "Y－ドラゴン・ヘッド",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "Z－メタル・キャタピラー",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "アーマード・サイバーン",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "マシンナーズ・ピースキーパー",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
     }
   ],
   "restored_to_baseline": [

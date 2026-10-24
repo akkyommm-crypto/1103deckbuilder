@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 341,
+    "ENGINE_GAP": 346,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 411,
+    "NOT_STARTED": 405,
     "PARTIAL": 10,
-    "TESTED": 3587
+    "TESTED": 3588
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -38,7 +38,7 @@
     "helper:caSearch": 3,
     "helper:d8KoakiNegator": 2,
     "helper:d9Koaki": 5,
-    "helper:declareUnionS03": 15,
+    "helper:declareUnionS03": 16,
     "helper:defineAdeptS03": 2,
     "helper:defineBattleLossTrapS03": 2,
     "helper:defineChrysalisS03": 6,
@@ -121,7 +121,7 @@
     "sin": 5,
     "unified": 1418
   },
-  "static_registration_name_count": 3596,
+  "static_registration_name_count": 3597,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -6947,8 +6947,8 @@
       "subtype": null,
       "date": "2005-08-11",
       "extra": false,
-      "status": "NOT_STARTED",
-      "reason": "",
+      "status": "ENGINE_GAP",
+      "reason": "S03-U469 SKIP (RULING_UNRESOLVED, not an engine gap; not half-implemented): the substitute scope (「装備モンスターが戦闘・効果で破壊される場合、代わりにこのカードを破壊する」: battle only, or battle and effect) is not attested for this card. wiki-rulings.js has 2 entries naming it, both about banishing it as a material of VW－タイガー・カタパルト (one of them while it is a Union) (WIKI-18EF8248DFA3 undated, WIKI-9155BFEA5769 2011-04-02); neither states the substitute scope. The only per-card scope ruling in the archive for this 「①:」 family is for 強化支援メカ・ヘビーウェポン itself (substitute for battle AND effect destruction: 2008-09-05 WIKI-0D89609E8794, 2010-11-08 WIKI-BFA4797D19E1, 2011-08-27 WIKI-D032A4FED8D2; implemented in S03-U469) and is not applied to other cards. The archive holds rulings, not card texts, so the 2011 wording of this card cannot be read from it; the carddata 「戦闘・効果で破壊される場合」 is the modern wording. Mechanism (declareUnionS03 with targeted:true and substitute:'battle'|'any', cards/HZZZZZZ_claude_s03_u313_union.js:52,117; the destruction scope is applied by engine/1ZZB_equip_substitute_arms_s03.js:21) is in place after S03-U469, so the only open item is the ruling. ",
       "complexity_score": 19,
       "registrations": [],
       "auto_table": false,
@@ -7503,8 +7503,8 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
-      "reason": "",
+      "status": "ENGINE_GAP",
+      "reason": "S03-U469 SKIP (RULING_UNRESOLVED, not an engine gap; not half-implemented): battle-destruction substitute is attested (2009-06-26 WIKI-862001316DAA, with 絶対魔法禁止区域: when the equipped X－ヘッド・キャノン is destroyed by battle, Y－ドラゴン・ヘッド is destroyed instead) but destruction by an effect is not. The other 2 entries naming the card (WIKI-E64CB3FAF064 undated, WIKI-9066E3EF4316 undated) are about XYZ－ドラゴン・キャノン (its material, and 融合解除). Implementing it with battle only would contradict the carddata 「戦闘・効果」, with both would assert an unattested scope. The only per-card scope ruling in the archive for this 「①:」 family is for 強化支援メカ・ヘビーウェポン itself (substitute for battle AND effect destruction: 2008-09-05 WIKI-0D89609E8794, 2010-11-08 WIKI-BFA4797D19E1, 2011-08-27 WIKI-D032A4FED8D2; implemented in S03-U469) and is not applied to other cards. The archive holds rulings, not card texts, so the 2011 wording of this card cannot be read from it; the carddata 「戦闘・効果で破壊される場合」 is the modern wording. Mechanism (declareUnionS03 with targeted:true and substitute:'battle'|'any', cards/HZZZZZZ_claude_s03_u313_union.js:52,117; the destruction scope is applied by engine/1ZZB_equip_substitute_arms_s03.js:21) is in place after S03-U469, so the only open item is the ruling. ",
       "complexity_score": 19,
       "registrations": [],
       "auto_table": false,
@@ -7560,8 +7560,8 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
-      "reason": "",
+      "status": "ENGINE_GAP",
+      "reason": "S03-U469 SKIP (RULING_UNRESOLVED, not an engine gap; not half-implemented): the substitute scope is not attested for this card. wiki-rulings.js has 3 entries naming it: WIKI-E64CB3FAF064 (undated, material of XYZ－ドラゴン・キャノン while a Union), WIKI-9066E3EF4316 (undated, 融合解除), WIKI-20596CB2591D (2008-08-15: while equipped it is not treated as a Machine, so it cannot be material of キメラテック・フォートレス・ドラゴン — a different aspect, not the substitute). Its host rule (X－ヘッド・キャノン or Y－ドラゴン・ヘッド) and +600 come from the carddata only. The only per-card scope ruling in the archive for this 「①:」 family is for 強化支援メカ・ヘビーウェポン itself (substitute for battle AND effect destruction: 2008-09-05 WIKI-0D89609E8794, 2010-11-08 WIKI-BFA4797D19E1, 2011-08-27 WIKI-D032A4FED8D2; implemented in S03-U469) and is not applied to other cards. The archive holds rulings, not card texts, so the 2011 wording of this card cannot be read from it; the carddata 「戦闘・効果で破壊される場合」 is the modern wording. Mechanism (declareUnionS03 with targeted:true and substitute:'battle'|'any', cards/HZZZZZZ_claude_s03_u313_union.js:52,117; the destruction scope is applied by engine/1ZZB_equip_substitute_arms_s03.js:21) is in place after S03-U469, so the only open item is the ruling. ",
       "complexity_score": 20,
       "registrations": [],
       "auto_table": false,
@@ -10913,8 +10913,8 @@
       "subtype": null,
       "date": "2007-11-23",
       "extra": false,
-      "status": "NOT_STARTED",
-      "reason": "",
+      "status": "ENGINE_GAP",
+      "reason": "S03-U469 SKIP (RULING_UNRESOLVED, not an engine gap; not half-implemented): the substitute scope is not attested for this card. wiki-rulings.js has 4 entries naming it: WIKI-CC03EDE0F237 (2007-12-07, lowering the equipped monster ATK is an effect, not a cost), WIKI-B252DFAD3E7F (2007-12-07, ATK returns when the equip ends), WIKI-99A162E398AD (2009-03-10, destroyed while equipped under 次元の裂け目 it goes to the Graveyard), WIKI-E30BAF458CDE (2009-03-11, control change of the host does not destroy it); none states the substitute scope or the host clause 「サイバー・ドラゴン」を素材とする融合モンスター. Implementing the second effect without the first would be half the card. The only per-card scope ruling in the archive for this 「①:」 family is for 強化支援メカ・ヘビーウェポン itself (substitute for battle AND effect destruction: 2008-09-05 WIKI-0D89609E8794, 2010-11-08 WIKI-BFA4797D19E1, 2011-08-27 WIKI-D032A4FED8D2; implemented in S03-U469) and is not applied to other cards. The archive holds rulings, not card texts, so the 2011 wording of this card cannot be read from it; the carddata 「戦闘・効果で破壊される場合」 is the modern wording. Mechanism (declareUnionS03 with targeted:true and substitute:'battle'|'any', cards/HZZZZZZ_claude_s03_u313_union.js:52,117; the destruction scope is applied by engine/1ZZB_equip_substitute_arms_s03.js:21) is in place after S03-U469, so the only open item is the ruling. ",
       "complexity_score": 22,
       "registrations": [],
       "auto_table": false,
@@ -11021,7 +11021,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 168
+          "line": 177
         }
       ],
       "auto_table": false,
@@ -15794,7 +15794,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 198
+          "line": 207
         }
       ],
       "auto_table": false,
@@ -22622,7 +22622,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 119
+          "line": 128
         }
       ],
       "auto_table": false,
@@ -33809,7 +33809,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 158
+          "line": 167
         }
       ],
       "auto_table": false,
@@ -39395,7 +39395,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 183
+          "line": 192
         }
       ],
       "auto_table": false,
@@ -40145,7 +40145,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 116
+          "line": 125
         }
       ],
       "auto_table": false,
@@ -52945,7 +52945,7 @@
       "date": "2009-12-12",
       "extra": false,
       "status": "PARTIAL",
-      "reason": "S03-U143: ② the Union equip / unequip and its destruction replacement are not implemented (auditNote: 「②ユニオン装備/解除は未自動化」).",
+      "reason": "S03-U143: ② the Union equip / unequip and its destruction replacement are not implemented (auditNote: 「②ユニオン装備/解除は未自動化」). S03-U469 (status kept PARTIAL): the substitute scope of the Union half is not attested for this card (5 entries in wiki-rulings.js: WIKI-60C6623A51E4 2009-12-12 classification only, WIKI-34494D1483AA 2011-01-12, WIKI-58131B61C126 2011-08-20, WIKI-D3C5FD8E763E 2010-09-09, WIKI-BAF80DDE013C 2010-07-12 — none states battle only or battle and effect), so it is left unchanged (RULING_UNRESOLVED). The mechanism (declareUnionS03 targeted:true) exists after S03-U469.",
       "complexity_score": 20,
       "registrations": [
         {
@@ -53045,8 +53045,8 @@
       "subtype": null,
       "date": "2009-12-12",
       "extra": false,
-      "status": "NOT_STARTED",
-      "reason": "",
+      "status": "ENGINE_GAP",
+      "reason": "S03-U469 SKIP (RULING_UNRESOLVED, not an engine gap; not half-implemented): the substitute scope is not attested for this card, although its search is: wiki-rulings.js WIKI-6ED1EFEB7216 (2009-12-12: the search can be activated when it was destroyed as the substitute of the equipped monster), WIKI-75FD5B3A88FE (2009-12-12, the search still works when the Union it is equipped to has itself become an Equip Card), WIKI-C534E16E5B12 (2009-12-12, Set and destroyed face-down), WIKI-4ADF43DFB3D7 (2009-12-12, in the Damage Step), WIKI-D84CDD5FC726 (2009-12-12, classification: the destroyed trigger is a trigger effect, the equip is an ignition effect). None states whether the substitute covers battle only or battle and effect destruction; implementing the search without the scope would be half the card. The only per-card scope ruling in the archive for this 「①:」 family is for 強化支援メカ・ヘビーウェポン itself (substitute for battle AND effect destruction: 2008-09-05 WIKI-0D89609E8794, 2010-11-08 WIKI-BFA4797D19E1, 2011-08-27 WIKI-D032A4FED8D2; implemented in S03-U469) and is not applied to other cards. The archive holds rulings, not card texts, so the 2011 wording of this card cannot be read from it; the carddata 「戦闘・効果で破壊される場合」 is the modern wording. Mechanism (declareUnionS03 with targeted:true and substitute:'battle'|'any', cards/HZZZZZZ_claude_s03_u313_union.js:52,117; the destruction scope is applied by engine/1ZZB_equip_substitute_arms_s03.js:21) is in place after S03-U469, so the only open item is the ruling. ",
       "complexity_score": 23,
       "registrations": [],
       "auto_table": false,
@@ -67364,7 +67364,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 208
+          "line": 217
         }
       ],
       "auto_table": false,
@@ -77704,12 +77704,20 @@
       "subtype": null,
       "date": "2004-08-05",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:declareUnionS03",
+          "source": "cards\\HZZZZZZZZZZZU_claude_s03_u469_heavy_weapon.js",
+          "line": 17
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u469_heavy_weapon.js"
+      ]
     },
     {
       "index": 3534,
@@ -88013,7 +88021,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 127
+          "line": 136
         }
       ],
       "auto_table": false,
@@ -105859,7 +105867,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 135
+          "line": 144
         }
       ],
       "auto_table": false,

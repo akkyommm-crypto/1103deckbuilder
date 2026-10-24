@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 341,
+    "ENGINE_GAP": 346,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 3,
-    "NOT_STARTED": 411,
+    "NOT_STARTED": 405,
     "PARTIAL": 10,
-    "TESTED": 3587
+    "TESTED": 3588
   },
   "delta": {
-    "ENGINE_GAP": -275,
+    "ENGINE_GAP": -270,
     "IMPLEMENTED": -195,
-    "NOT_STARTED": -896,
+    "NOT_STARTED": -902,
     "PARTIAL": -172,
-    "TESTED": 1538
+    "TESTED": 1539
   },
   "status_changes": [
     {
@@ -715,6 +715,12 @@
       "unit": "S03-U136"
     },
     {
+      "name": "W－ウィング・カタパルト",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
+    },
+    {
       "name": "XX－セイバー ガルセム",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -763,10 +769,22 @@
       "unit": "S03-U176"
     },
     {
+      "name": "Y－ドラゴン・ヘッド",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
+    },
+    {
       "name": "ZERO－MAX",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U358"
+    },
+    {
+      "name": "Z－メタル・キャタピラー",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
     },
     {
       "name": "いたずら好きな双子悪魔",
@@ -923,6 +941,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U202"
+    },
+    {
+      "name": "アーマード・サイバーン",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
     },
     {
       "name": "アーマー・ブレイカー",
@@ -4183,6 +4207,12 @@
       "unit": "S03-U202"
     },
     {
+      "name": "マシンナーズ・ピースキーパー",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
+    },
+    {
       "name": "マシンナーズ・フォートレス",
       "before": "TESTED",
       "after": "PARTIAL",
@@ -6467,6 +6497,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U186"
+    },
+    {
+      "name": "強化支援メカ・ヘビーウェポン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U469"
     },
     {
       "name": "強引な安全協定",

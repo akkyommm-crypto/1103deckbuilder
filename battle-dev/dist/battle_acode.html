@@ -79672,12 +79672,16 @@ function unionDamageS03(ctx){
 const UNION_PASSIVE_KILL = ctx=>!!unionKillS03(ctx);
 const UNION_PASSIVE_DAMAGE = ctx=>unionDamageS03(ctx);
 
-/* spec: {host(x), atk, def, substitute:'battle'|'any', effects:[…], continuous:{…}, passive:{…}, script:{…}}; x = a field handle of the candidate host */
+/* spec: {host(x), atk, def, substitute:'battle'|'any', targeted:false, effects:[…], continuous:{…}, passive:{…}, script:{…}}; x = a field handle of the candidate host
+   S03-U469: targeted:true — the 「①:」 wording 「自分フィールドの…1体を対象とし、このカードを装備カード扱いとしてそのモンスターに装備する」: the host is a TARGET chosen on activation (a chain link that records it);
+   if the target is gone or no longer a valid host on resolution the equip does not happen. 「1ターンに1度…発動できる」 is spent by the ACTIVATION (the use flag is stamped in the cost),
+   so a response that removes the host does not give a second use. The default (false) keeps the host choice on resolution of the classic wording (S03-U313). */
 function declareUnionS03(name, spec){
-  const S = Object.assign({atk:0, def:0, substitute:'battle', effects:[], continuous:{}, passive:{}, script:{}}, spec||{});
+  const S = Object.assign({atk:0, def:0, substitute:'battle', targeted:false, effects:[], continuous:{}, passive:{}, script:{}}, spec||{});
   const pool = ctx=>API.fieldCards({player:ctx.player, zone:'mz', filter:x=>x.card!==ctx.card && x.card.face==='up' && x.db.k==='m' && !unionCarriedS03(x.card, ctx.card) && S.host(x)});
   const mainPhase = ()=>gameState.phase==='main1' || gameState.phase==='main2';
-  const effects = [{
+  const stampCost = (ctx, done)=>{ const h = locateCardAnyV4(ctx.card); if(h) API.setCardFlag(h, 'unionTurnS03', gameState.turn, name, {silent:true}); done(true); };
+  const effects = [Object.assign({
     key:'union-equip', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, speed:1, events:['activate'],
     condition(ctx){
       if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason = 'モンスターゾーンに表側表示で存在する必要があります'; return false; }
@@ -79693,15 +79697,20 @@ function declareUnionS03(name, spec){
       const go = t=>{
         const h = t && resolveTarget(t), me = locateCardAnyV4(ctx.card);
         if(!h || h.zone!=='mz' || h.card.face!=='up' || !me || me.zone!=='mz' || unionCarriedS03(h.card, ctx.card)) return;
+        if(S.targeted && (h.p!==ctx.player || !S.host(Object.assign({db:dbOf(h.card)}, h)))) return;   /* the target must still be an own, valid host on resolution */
         API.setCardFlag(me, 'unionTurnS03', gameState.turn, name, {silent:true});
         API.equipMonster(ctx.player, me, h, name);
       };
+      if(S.targeted){ go(ctx.selectedTargets && ctx.selectedTargets[0]); return; }
       const c = pool(ctx);
       if(c.length===1){ go(c[0]); return; }
       API.selectCard(`${name}：装備するモンスター`, c, go);
     },
     afterResolve(){}
-  }, {
+  }, S.targeted ? {
+    targetRange:LOCATION.MZONE, targetSide:'self', cost:stampCost,
+    target(ctx, done){ API.selectCard(`${name}：装備するモンスター`, pool(ctx), t=>done([t])); }
+  } : {}), Object.assign({
     key:'union-release', type:EFFECT_TYPE.IGNITION, range:LOCATION.SZONE, speed:1, events:['activate'],
     condition(ctx){
       const h = locateCardAnyV4(ctx.card);
@@ -79720,7 +79729,7 @@ function declareUnionS03(name, spec){
       if(now && now.zone==='sz') API.specialSummon(ctx.player, 'sz', now.index, 'atk', name);
     },
     afterResolve(){}
-  }].concat(S.effects);
+  }, S.targeted ? {cost:stampCost} : {})].concat(S.effects);
   const cont = Object.assign({
     scope:'allMonsters', from:['sz'],
     apply(card, self){
@@ -79734,7 +79743,7 @@ function declareUnionS03(name, spec){
     timing:['free'],
     equipSubstituteS03: S.substitute==='any' ? true : 'battle',
     continuous:cont, passive:S.passive
-  }, S.script));
+  }, S.targeted ? {targets:true} : {}, S.script));
 }
 const unionOwnRace = ra => (x=>x.db.ra===ra);
 const unionNamed = nm => (x=>x.db.n===nm);
@@ -95783,6 +95792,23 @@ defineUnifiedCardV4('二重の落とし穴',[{
   afterResolve(){}
 }],{type:'trap',priority:2,destroysFieldV46:true,
   passive:{onSendToGrave(ctx){return u467CanTrigger(ctx);}}});
+/* S03-U469: 強化支援メカ・ヘビーウェポン（ユニオン、carddata「①:」表記）— `declareUnionS03` の targeted:true（装備先を発動時に対象に取る、S03-U469）の最初の利用者。
+
+   carddata の原文（「①:」表記）:
+     ①:1ターンに1度、以下の効果から1つを選択して発動できる。
+       ●自分フィールドの機械族モンスター1体を対象とし、このカードを装備カード扱いとしてそのモンスターに装備する。装備モンスターが戦闘・効果で破壊される場合、代わりにこのカードを破壊する。
+       ●装備されているこのカードを特殊召喚する。
+     ②:装備モンスターの攻撃力・守備力は500アップする。
+
+   1103の裁定（wiki-rulings.js、answerDate付き）で、このカード自身について各要素を確認済み:
+   - 身代わりは戦闘破壊・効果破壊のどちらも: 《ゲットライド!》で装備し《奈落の落とし穴》の破壊除外を身代わりで防げる 2008-09-05 WIKI-0D89609E8794 /
+     《リミッター解除》の破壊の身代わり 2011-08-27 WIKI-D032A4FED8D2 /「戦闘破壊・効果破壊どちらの場合でも身代わりになることはできません」（サイバー・フェニックスで無効な場合）2010-11-08 WIKI-BFA4797D19E1。
+   - 装備は起動効果で、装備状態は「機械族を対象にする装備魔法カード」: 2008-07-15 WIKI-86A8AFF69A68 / 2010-11-08 WIKI-003014546AD2。→ 発動時にホストを対象に取る（targeted:true）。
+   - 装備解除は表側攻撃表示で特殊召喚: 2009-01-20 WIKI-8294B5F99F4B / WIKI-3694902B2D8A（declareUnionS03 の解除は 'atk' で特殊召喚する）。
+   - 装備モンスターと同時に破壊される場合、装備モンスターは場に残る: 2010-12-11 WIKI-A171EBB2ACB6 / 2011-05-25 WIKI-3ACC61A3F03B（FX_WIPE_ZONE / FX_TO_GRAVE の身代わり判定が先に働く）。
+   同じ「①:」表記の W－ウィング・カタパルト / Y－ドラゴン・ヘッド / Z－メタル・キャタピラー / アーマード・サイバーン / マシンナーズ・ピースキーパー / マシンナーズ・ギアフレームは、
+   身代わりの範囲（戦闘・効果）がそのカード自身についてはアーカイブで確認できない（Y は戦闘破壊のみ）ため実装しない（data/script_status_overrides.json、docs/S03_U469_REPORT.md）。 */
+declareUnionS03('強化支援メカ・ヘビーウェポン', {host:x=>x.db.ra==='機械', atk:500, def:500, substitute:'any', targeted:true});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、
