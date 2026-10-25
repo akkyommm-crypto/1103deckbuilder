@@ -553,6 +553,8 @@ CARD_TEST_FOCUS = {
     # S03-U474: cost selection is not a target selection. Each card below is driven end to end (activation -> cost choice -> effect target choice / commit -> resolution -> Replay audit) with a target-immune cost candidate.
     # D・クリーナン / アサルト・スピリッツ appear only as classification fixtures (cancelled at the target choice) and must NOT gain TESTED.
     "test_s03_u474_cost_selection_phase.js": {"デュアルスパーク", "ゴッドバードアタック", "サシカエル", "泣き神の石像", "ジェム・エンハンス", "ダーク・アームド・ドラゴン", "ワーム・キング"},
+    # S03-U475: v70SelectExactly (18 target-hook cards: the selection rides the chain; 4 cost-hook cards: resolved in place). Each card is driven activation -> selection -> chain -> resolution -> the chosen cards (by uid) move -> Replay audit; the target-hook cards also a 2-VM Save/Load.
+    "test_s03_u475_v70_select_exactly.js": {"グラディアル・リターン", "サルベージ", "スネーク・レイン", "バッテリーリサイクル", "急速充電器", "悪夢再び", "闇の量産工場", "希望の光", "暗黒よりの軍勢", "狡猾な落とし穴", "転生の予言", "隠された魔導書", "メタボ・シャーク", "原初の種", "ガトムズの緊急指令", "サイコ・チャージ", "儀水鏡の瞑想術", "ガスタの交信", "魔法再生", "魔法石の採掘", "ブラック・ブースト", "ガスタの静寂 カーム"},
 }
 
 

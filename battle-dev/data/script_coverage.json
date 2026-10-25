@@ -13984,7 +13984,7 @@
         {
           "kind": "helper:v70Equip",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 4
+          "line": 6
         }
       ],
       "auto_table": false,
@@ -18158,6 +18158,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v840_batch35.js"
       ]
     },
@@ -18303,6 +18304,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u185_mixed_triggers.js",
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v840_batch35.js"
       ]
     },
@@ -18521,6 +18523,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v820_batch33.js"
       ]
     },
@@ -21046,11 +21049,12 @@
         {
           "kind": "unified",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 9
+          "line": 11
         }
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v700_batch22.js"
       ]
     },
@@ -23243,7 +23247,7 @@
         {
           "kind": "unified",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 10
+          "line": 12
         }
       ],
       "auto_table": false,
@@ -24384,6 +24388,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v820_batch33.js"
       ]
     },
@@ -25204,7 +25209,7 @@
         {
           "kind": "helper:v70Equip",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 8
+          "line": 10
         }
       ],
       "auto_table": false,
@@ -26019,7 +26024,7 @@
         {
           "kind": "helper:v70Equip",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 5
+          "line": 7
         }
       ],
       "auto_table": false,
@@ -26042,11 +26047,12 @@
         {
           "kind": "unified",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 11
+          "line": 13
         }
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v700_batch22.js",
         "tools\\test_v760_batch28.js"
       ]
@@ -26320,7 +26326,7 @@
         {
           "kind": "unified",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 12
+          "line": 14
         }
       ],
       "auto_table": false,
@@ -26806,7 +26812,7 @@
         {
           "kind": "helper:v70Equip",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 6
+          "line": 8
         }
       ],
       "auto_table": false,
@@ -31530,11 +31536,12 @@
         {
           "kind": "unified",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 13
+          "line": 15
         }
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v700_batch22.js"
       ]
     },
@@ -35784,7 +35791,7 @@
         {
           "kind": "unified",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 14
+          "line": 16
         }
       ],
       "auto_table": false,
@@ -40883,7 +40890,7 @@
         {
           "kind": "helper:v70Equip",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 7
+          "line": 9
         }
       ],
       "auto_table": false,
@@ -42646,7 +42653,7 @@
         {
           "kind": "unified",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 15
+          "line": 17
         }
       ],
       "auto_table": false,
@@ -43802,7 +43809,7 @@
         {
           "kind": "unified",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 16
+          "line": 18
         }
       ],
       "auto_table": false,
@@ -44795,11 +44802,12 @@
         {
           "kind": "unified",
           "source": "cards\\70_v70_autobuild_batch22.js",
-          "line": 17
+          "line": 19
         }
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v700_batch22.js"
       ]
     },
@@ -49551,6 +49559,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v820_batch33.js"
       ]
     },
@@ -55540,6 +55549,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v770_batch29.js"
       ]
     },
@@ -66431,6 +66441,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v830_batch34.js"
       ]
     },
@@ -69608,6 +69619,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v780_batch30.js"
       ]
     },
@@ -76835,6 +76847,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v740_batch26.js"
       ]
     },
@@ -78712,6 +78725,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v720_batch24.js"
       ]
     },
@@ -79028,6 +79042,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v720_batch24.js"
       ]
     },
@@ -81468,6 +81483,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v740_batch26.js"
       ]
     },
@@ -89878,6 +89894,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v740_batch26.js"
       ]
     },
@@ -100006,6 +100023,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_s03_u48_vayu_resolution.js",
         "tools\\test_v740_batch26.js"
       ]
@@ -103007,6 +103025,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v730_batch25.js"
       ]
     },
@@ -103693,6 +103712,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v750_batch27.js"
       ]
     },
@@ -107319,6 +107339,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v730_batch25.js"
       ]
     },
@@ -107492,6 +107513,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_v730_batch25.js"
       ]
     },
