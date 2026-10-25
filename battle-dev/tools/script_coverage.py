@@ -548,6 +548,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u471_prep_tx.js": {"リビングデッドの呼び声", "月の書"},
     # S03-U472: the five multi-target cards, each driven through activation -> target selection -> chain -> resolution -> Replay audit (+ a chain-link Save/Load) under the Metal Silver Armor ruling.
     "test_s03_u472_multi_target_armor.js": {"貪欲な壺", "諸刃の活人剣術", "毒蛇の供物", "TGX3－DX2", "ゴッドバードアタック"},
+    # S03-U473: 次元幽閉 (targets:true), driven through attack declaration -> activation -> target selection -> chain -> resolution -> Replay audit, with target immunity (ホルスのしもべ / オベリスクの巨神兵) and a 2-VM Save/Load.
+    "test_s03_u473_dimensional_prison_targeting.js": {"次元幽閉"},
 }
 
 

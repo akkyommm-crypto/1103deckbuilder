@@ -313,9 +313,25 @@ defineScript("聖なるバリア －ミラーフォース－", {
   passive:{ onAttackDeclare(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; } }
 });
 
-/* ---- 次元幽閉 ---- */
+/* ---- 次元幽閉 ----
+   S03-U473: 「攻撃モンスター1体を選択して」発動する対象を取る罠（1103 の文言）。以前は targets:true が無く、API.selectCard が targeting=false を導き、
+   filterTargetable（対象耐性）が一度も掛からなかった。targets:true を宣言し、対象にできる攻撃モンスターが無ければ condition で断る（U470 と同じ形）。
+   候補は「今攻撃宣言したモンスター」（pendingAttack.attackerUid）。以前の「attacked なモンスター全て」は、同じターンに先に攻撃した別のモンスターも
+   選べてしまった（対象が攻撃モンスターでなくなる）ため、現在の攻撃モンスターだけに絞る。 */
+function s03DimensionalCandidates(ctx){
+  const all = API.fieldCards({zone:'mz', player:ctx.opponent,
+    filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+  const pa = gameState.pendingAttack;
+  if(pa && pa.attackerUid!=null){
+    const cur = all.filter(x=>x.card.uid===pa.attackerUid);
+    if(cur.length) return cur;
+  }
+  // 攻撃宣言したモンスターを優先して見せる（現在の攻撃モンスターが特定できない時の従来の挙動）
+  const atkd = all.filter(x=>x.card.attacked);
+  return atkd.length?atkd:all;
+}
 defineScript("次元幽閉", {
-  type:"trap", priority:2,
+  type:"trap", priority:2, targets:true,
   condition(ctx){
     const t = API.fieldCards({zone:'mz', player:ctx.opponent,
       filter:x=>x.card.face==='up' && x.card.pos==='atk'});
@@ -323,15 +339,14 @@ defineScript("次元幽閉", {
     if(gameState.phase!=='battle'){ ctx.reason = "相手モンスターの攻撃宣言時に発動します"; return false; }
     /* S03-U40 (C-S03-31): 相手の攻撃宣言（攻撃中）でなければ発動できない。以前は攻撃する側が自分のカードを発動できた */
     { const pa = gameState.pendingAttack; if(!pa || pa.player!==ctx.opponent){ ctx.reason = "相手モンスターの攻撃宣言時に発動します"; return false; } }
+    /* S03-U473: 攻撃モンスターが対象耐性（ホルスのしもべ・オベリスクの巨神兵など）で選べない時は発動しない */
+    if(!API.targetableCardsS03(s03DimensionalCandidates(ctx), ctx.player).length){ ctx.reason = "効果の対象にできる攻撃モンスターがいません"; return false; }
     return true;
   },
   selectTargets(ctx, done){
-    // 攻撃済みのモンスターを優先して見せる（攻撃宣言したモンスターが対象）
-    const all = API.fieldCards({zone:'mz', player:ctx.opponent,
-      filter:x=>x.card.face==='up' && x.card.pos==='atk'});
-    const atkd = all.filter(x=>x.card.attacked);
-    API.selectCard("次元幽閉：除外する攻撃モンスター", atkd.length?atkd:all, x=>done([x]),
-      atkd.length?"攻撃宣言したモンスター":"攻撃表示のモンスター");
+    const cands = s03DimensionalCandidates(ctx);
+    API.selectCard("次元幽閉：除外する攻撃モンスター", cands, x=>done([x]),
+      "攻撃宣言したモンスター");
   },
   resolve(ctx){ ctx.selectedTargets.forEach(t=>API.banish(t, "次元幽閉")); },
   passive:{ onAttackDeclare(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; } }
