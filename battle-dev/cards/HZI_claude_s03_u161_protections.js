@@ -76,7 +76,7 @@ function viceTargetOnFieldS03(self){
   const h = findCardByUid(self.u161ViceTargetUid);
   return !!(h && h.zone==='mz' && h.card.u161ViceMarkedBy===self.uid);
 }
-defineScript('万力魔神バイサー・デス', {
+defineScript('万力魔神バイサー・デス', { targets:true, /* S03-U476: 「相手フィールドのモンスター1体を対象として発動する」。未宣言だったため対象耐性が掛からなかった */
   type:'monster', priority:1, forced:true, activateFrom:['mz'],
   condition(ctx){
     if(ctx.zone!=='mz' || (ctx.eventName && ctx.eventName!=='onNormalSummon') || !eventIsSelfS03(ctx)){ ctx.reason = 'このカードの召喚に成功した時に発動します'; return false; }

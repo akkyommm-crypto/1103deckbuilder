@@ -471,7 +471,7 @@ function darkWorldInDeck(p){
 /* ---- 暗黒界の龍神 グラファ ----
    ① 自分フィールドの他の「暗黒界」1体を手札に戻して墓地から特殊召喚する。
    ② 効果で手札から捨てられた場合、相手フィールドのカード1枚を選択して破壊する。 */
-defineScript("暗黒界の龍神 グラファ", {
+defineScript("暗黒界の龍神 グラファ", { targets:true, /* S03-U476: 破壊は対象を取る（WIKI-7722BBA38465 2011-06-18）。選択側は targeting:true で耐性済み。ここは srcS03.tg のための宣言。手札に戻すコスト（墓地から蘇生する側）は cost 段階 */
   type:"monster", priority:1, forced:true,   /* S03-U112: 捨てられた時の破壊は強制（forced は誘発にだけ効き、墓地からの起動効果には影響しない） */
   activateFrom:["grave"],
   condition(ctx){
@@ -696,7 +696,7 @@ function togglePosition(t, reason){
    ・攻撃対象に選択された時、表示形式を変更する
    ・戦闘で相手モンスターを破壊した時、墓地のレベル4以下の「カラクリ」を
      表側守備表示で特殊召喚する。 */
-defineScript("カラクリ忍者 九壱九", {
+defineScript("カラクリ忍者 九壱九", { targets:true, /* S03-U476: 「墓地のレベル4以下の「カラクリ」1体を選択して表側守備表示で特殊召喚」は対象を取る（カード文の「選択して」。裁定アーカイブに個別の回答なし） */
   type:"monster", priority:1, forced:true,
   condition(ctx){
     if(!karakuriInGrave(ctx.player).length){
@@ -739,7 +739,7 @@ function karakuriInGrave(p){
 
 /* ---- カラクリ参謀 弐四八 ----
    召喚・特殊召喚に成功した時、フィールドのモンスター1体の表示形式を変更する。 */
-defineScript("カラクリ参謀 弐四八", {
+defineScript("カラクリ参謀 弐四八", { targets:true, /* S03-U476: 表示形式を変更する効果は対象を取る（WIKI-EFE3E370ADDF 2011-06-11「対象をとります」。カード文に「選択」の語は無いが裁定が対象を取ると答えている） */
   type:"monster", priority:1, forced:true,
   condition(ctx){
     if(!API.fieldCards({zone:'mz', filter:x=>x.card}).length){

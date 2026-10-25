@@ -68,7 +68,7 @@ API.registerChoiceHandler('s03u63.venus-summon-sphere', (answer, args) => {
   API.specialSummon(args.player, h.zone, h.index, 'atk', "創造の代行者 ヴィーナス");
 });
 
-defineScript("マスター・ヒュペリオン", {
+defineScript("マスター・ヒュペリオン", { targets:true, /* S03-U476: 「フィールド上に存在するカード1枚を選択して破壊する」は対象を取る。墓地の光・天使族を除外するコストの選択は cost 段階（U474）で対象耐性を掛けない */
   type:"monster", priority:1, countLimit:1, quickEffect:false,
   activateFrom:["hand"],
   condition(ctx){
@@ -190,7 +190,7 @@ defineScript("暗黒界の狩人 ブラウ", {
   passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
 });
 
-defineScript("暗黒界の武神 ゴルド", {
+defineScript("暗黒界の武神 ゴルド", { targets:true, /* S03-U476: 対象を取る（WIKI-9F35337BF8BB 2007-01-13）。選択側は requestChoiceV49 の targeting:true で耐性済み。ここは解決時の発生源 srcS03.tg（対象を取らない効果では破壊されない）のための宣言 */
   type:"monster", priority:2, forced:true,   /* S03-U112 */
   activateFrom:["grave"],
   condition(ctx){

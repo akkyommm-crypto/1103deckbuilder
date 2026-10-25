@@ -26,7 +26,7 @@ function staplerAttackedInDefS03(ctx){
 function staplerOppAtkTargetsS03(ctx){
   return API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card.face==='up' && x.card.pos==='atk'});
 }
-defineScript('D・ステープラン', {
+defineScript('D・ステープラン', { targets:true, /* S03-U476: 守備表示の誘発効果は相手の表側攻撃表示モンスター1体を選択して守備表示にする（WIKI-2FDC4DF69545 2011-02-13「この効果で対象に選択した」）。攻撃表示側の-300は対象を取らない */
   type:'monster', priority:1, forced:true, activateFrom:['mz','grave'], dsTiming:'after',
   condition(ctx){
     if(ctx.zone==='grave'){

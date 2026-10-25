@@ -2857,7 +2857,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u166_d_stapler.js"
+        "tools\\test_s03_u166_d_stapler.js",
+        "tools\\test_s03_u476_selection_targets.js"
       ]
     },
     {
@@ -17165,7 +17166,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u116_karakuri_common.js"
+        "tools\\test_s03_u116_karakuri_common.js",
+        "tools\\test_s03_u476_selection_targets.js"
       ]
     },
     {
@@ -17387,7 +17389,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u116_karakuri_common.js",
-        "tools\\test_s03_u245_ns31.js"
+        "tools\\test_s03_u245_ns31.js",
+        "tools\\test_s03_u476_selection_targets.js"
       ]
     },
     {
@@ -31565,6 +31568,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u476_selection_targets.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs7_targeting_negation_slice.js",
         "tools\\test_v410_replay_rng.js",
@@ -53927,7 +53931,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_architecture_v400.js"
+        "tools\\test_architecture_v400.js",
+        "tools\\test_s03_u476_selection_targets.js"
       ]
     },
     {
@@ -64354,7 +64359,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u161_protections.js"
+        "tools\\test_s03_u161_protections.js",
+        "tools\\test_s03_u476_selection_targets.js"
       ]
     },
     {
@@ -81829,6 +81835,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u125_dark_world_targets.js",
+        "tools\\test_s03_u476_selection_targets.js",
         "tools\\test_s03_u54_dark_world_discard_event.js"
       ]
     },
@@ -82070,6 +82077,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u125_dark_world_targets.js",
+        "tools\\test_s03_u476_selection_targets.js",
         "tools\\test_s03_u54_dark_world_discard_event.js"
       ]
     },

@@ -555,6 +555,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u474_cost_selection_phase.js": {"デュアルスパーク", "ゴッドバードアタック", "サシカエル", "泣き神の石像", "ジェム・エンハンス", "ダーク・アームド・ドラゴン", "ワーム・キング"},
     # S03-U475: v70SelectExactly (18 target-hook cards: the selection rides the chain; 4 cost-hook cards: resolved in place). Each card is driven activation -> selection -> chain -> resolution -> the chosen cards (by uid) move -> Replay audit; the target-hook cards also a 2-VM Save/Load.
     "test_s03_u475_v70_select_exactly.js": {"グラディアル・リターン", "サルベージ", "スネーク・レイン", "バッテリーリサイクル", "急速充電器", "悪夢再び", "闇の量産工場", "希望の光", "暗黒よりの軍勢", "狡猾な落とし穴", "転生の予言", "隠された魔導書", "メタボ・シャーク", "原初の種", "ガトムズの緊急指令", "サイコ・チャージ", "儀水鏡の瞑想術", "ガスタの交信", "魔法再生", "魔法石の採掘", "ブラック・ブースト", "ガスタの静寂 カーム"},
+    # S03-U476: the 8 single-target cards that selected a card without declaring targets:true (the audit pin lists the 39 classified, unfixed candidates). Each is driven trigger/activation -> target choice -> chain -> resolution -> the chosen card (uid) -> Replay audit (+ chain-link Save/Load), with a target-immune candidate (オベリスクの巨神兵 / メタルシルバー・アーマー). The fixture cards (ハネワタ, サイクロン, ライオウ ...) must NOT gain TESTED.
+    "test_s03_u476_selection_targets.js": {"スノーマンイーター", "マスター・ヒュペリオン", "万力魔神バイサー・デス", "D・ステープラン", "カラクリ参謀 弐四八", "カラクリ忍者 九壱九", "暗黒界の龍神 グラファ", "暗黒界の武神 ゴルド"},
 }
 
 

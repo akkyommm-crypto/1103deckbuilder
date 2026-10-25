@@ -574,7 +574,7 @@ defineScript("異次元からの帰還", {
    forced, 「フィールド上から墓地へ送られた時」 only, no 1ターンに1度 / no activation ban (both are later errata). ---- */
 
 /* ---- スノーマンイーター（リバースで破壊） ---- */
-defineScript("スノーマンイーター", {
+defineScript("スノーマンイーター", { targets:true, /* S03-U476: 「フィールド上に表側表示で存在するモンスター1体を選択して破壊する」は対象を取る（WIKI-1C858F044CF1 2008-12-21「対象をとります」）。未宣言だったため対象耐性が掛からなかった */
   type:"monster", priority:1,
   condition(ctx){
     if(!API.fieldCards({zone:'mz'}).filter(x=>x.card.face==='up').length){

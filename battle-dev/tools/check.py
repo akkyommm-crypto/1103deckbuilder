@@ -764,6 +764,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u472_multi_target_armor.js')],ch
 subprocess.run(['node',str(ROOT/'tools/test_s03_u473_dimensional_prison_targeting.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u474_cost_selection_phase.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u475_v70_select_exactly.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u476_selection_targets.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
