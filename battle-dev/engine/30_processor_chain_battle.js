@@ -1540,22 +1540,25 @@ function prepareDuelActivation(name,p,zone,index,opts){
      先に選び、コストを払い、コストで動いたカードを対象から外し、コスト中に ctx へ書かれた値を CHAIN_ADD へ載せる。 */
   if(typeof costSelectionFirstS03==='function' && costSelectionFirstS03(name,sc)){
     const sigCsfS471=choiceInsufficientSeqS03();
-    sc.selectTargets(ctx,targets=>{
+    /* S03-U474: ここの selectTargets は「コストにするカード」を選ぶので、選択の段階は 'cost'（対象耐性を掛けない）。cost を払い終えた後は外す。
+       selectTargets の中に本当の対象選択（装備するモンスター等）がある場合は、スクリプト側で API.selectCard(…, {selection:'effect'}) と明示する。 */
+    withSelectionPhaseS03('cost',()=>sc.selectTargets(ctx,targets=>{
       ctx.selectedTargets=targets||[];
       const beforeS03=costSelectionBeforeS03(ctx);
-      sc.cost(ctx,ok=>{
+      runCostPhaseS03(done=>sc.cost(ctx,done),ok=>{
         if(ok===false){ showToast('コストを払えません'); failPrepare('cost-fail'); return; }
         costSelectionAfterS03(ctx,beforeS03);
         finishPrepare();
       });
-    });
+    }));
     prepTxCheckInsufficientS03(sigCsfS471,card.uid);   /* S03-U471 */
     if(typeof settleActivationPrepS03==='function') settleActivationPrepS03();   /* S03-U35 */
     return true;
   }
   if(sc.cost){
     const sigCostS471=choiceInsufficientSeqS03();
-    sc.cost(ctx,ok=>{ if(ok===false){ showToast('コストを払えません'); failPrepare('cost-fail'); return; } chooseTargets(); });
+    /* S03-U474: コストを払う間は選択の段階が 'cost'（コストの選択に対象耐性を掛けない）。払い終えた継続（done）では外れるので、chooseTargets の対象選択は従来どおり。 */
+    runCostPhaseS03(done=>sc.cost(ctx,done),ok=>{ if(ok===false){ showToast('コストを払えません'); failPrepare('cost-fail'); return; } chooseTargets(); });
     prepTxCheckInsufficientS03(sigCostS471,card.uid);   /* S03-U471: コスト自体の選択が候補不足で断られた場合（捨てる手札が無い等） */
   }
   else chooseTargets();

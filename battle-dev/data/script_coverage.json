@@ -2240,7 +2240,7 @@
         {
           "kind": "legacy",
           "source": "cards\\D3_auto_cycle31.js",
-          "line": 402
+          "line": 403
         }
       ],
       "auto_table": false,
@@ -2714,7 +2714,7 @@
         {
           "kind": "legacy",
           "source": "cards\\D3_auto_cycle31.js",
-          "line": 472
+          "line": 473
         }
       ],
       "auto_table": false,
@@ -23387,7 +23387,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u111_god_bird_attack.js",
-        "tools\\test_s03_u472_multi_target_armor.js"
+        "tools\\test_s03_u472_multi_target_armor.js",
+        "tools\\test_s03_u474_cost_selection_phase.js"
       ]
     },
     {
@@ -25249,7 +25250,7 @@
         {
           "kind": "legacy",
           "source": "cards\\D3_auto_cycle31.js",
-          "line": 550
+          "line": 552
         }
       ],
       "auto_table": false,
@@ -25711,7 +25712,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u231_ns23.js"
+        "tools\\test_s03_u231_ns23.js",
+        "tools\\test_s03_u474_cost_selection_phase.js"
       ]
     },
     {
@@ -28676,7 +28678,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_p11_activation_cards.js"
+        "tools\\test_p11_activation_cards.js",
+        "tools\\test_s03_u474_cost_selection_phase.js"
       ]
     },
     {
@@ -35373,6 +35376,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u127_properly_summoned.js",
+        "tools\\test_s03_u474_cost_selection_phase.js",
         "tools\\test_v700_batch22.js"
       ]
     },
@@ -38453,6 +38457,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u470_condition_targetable.js",
+        "tools\\test_s03_u474_cost_selection_phase.js",
         "tools\\test_s03_u98_dual_spark.js"
       ]
     },
@@ -62434,6 +62439,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_p23_unlocked_cards.js",
+        "tools\\test_s03_u474_cost_selection_phase.js",
         "tools\\test_v710_batch23.js"
       ]
     },
@@ -86864,7 +86870,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle27.js",
-        "tools\\test_s03_u16_cost_selection_first.js"
+        "tools\\test_s03_u16_cost_selection_first.js",
+        "tools\\test_s03_u474_cost_selection_phase.js"
       ]
     },
     {

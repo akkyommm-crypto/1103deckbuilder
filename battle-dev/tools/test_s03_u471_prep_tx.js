@@ -419,14 +419,18 @@ function setupMon(board,m,zone){
   x.D0=v41StateDigest(gameState);return x;}
 function prioSnap(){return JSON.stringify({priority:gameState.priority,chainWindow:gameState.chainWindow,chain:gameState.chain.length,pc:!!pc(),paused:!!gameState.processorPaused,waiting:gameState.processorWaiting,queue:(gameState.processorQueue||[]).length,active:gameState.activePlayer,phase:gameState.phase,evt:typeof EVT_V2_STATE!=='undefined'&&!!EVT_V2_STATE});}
 function monIds(zone,m){const h=findCardByUid(m.uid);return h?(zone==='hand'?getLegalHandActions(1,h.index):getLegalZoneActions(1,h.zone,h.index)).map(a=>a.id).filter(i=>/effect|activate/i.test(i)):[];}
+/* S03-U474 (Opus が承認、2026-10-25。「テストを通すための緩和」ではなく「前提が誤っていた観測の是正」): ダーク・アームド・ドラゴン は この一覧から外した。アーマー（board A）の下で「候補不足」で終わっていたのは、コスト（墓地から闇属性を除外）の候補にまで対象耐性が掛かっていたため
+   （コストは対象ではない）。コストを払える盤面では、対象（フィールドのカード）に自分自身も含まれるので候補不足にならない。同じ盤面の裏返し（コストが開き、対象を選び、解決する）は test_s03_u474_cost_selection_phase.js が固定する。 */
 const MON9=[
-  ['ダーク・アームド・ドラゴン','mz','A'],['トラゴエディア','mz','A'],['BF－暁のシロッコ','mz','A'],['スクラップ・ドラゴン','mz','A'],['ワーム・キング','mz','A'],
+  ['トラゴエディア','mz','A'],['BF－暁のシロッコ','mz','A'],['スクラップ・ドラゴン','mz','A'],['ワーム・キング','mz','C',true],
   ['BF－疾風のゲイル','mz','C'],['ダークエンド・ドラゴン','mz','C'],['カオス・ソーサラー','grave','C'],
 ];
-for(const [m,zone,board] of MON9){
+for(const [m,zone,board,costFirst] of MON9){
   const x=setupMon(board,m,zone);const idx=(gameState.players[1][zone]||[]).indexOf(x.m);
   const ids0=monIds(zone,x.m),pr0=prioSnap();TOASTS.length=0;const j0=V41_ACTION_JOURNAL.length;
   if(zone==='hand')duelActivateFromHand(idx);else duelActivateFromZone(1,zone,idx,{});
+  /* S03-U474 (Opus 承認): コストは対象ではない。ワーム・キング のコスト（「ワーム」をリリース）はアーマーの対象耐性で絞られなくなったので、コストの選択を回答してから、本当の対象選択が尽きる盤面（board C）で同じ「候補不足 → 発動前へ戻す」を確かめる */
+  if(costFirst&&pc())answerChoiceV49([pc().candidates[0].key]);
   ok(m+' ('+zone+', board '+board+'): the effect is offered and ends with 「選択できるカードが足りません」',ids0.length>0&&TOASTS.slice(-1)[0]==='選択できるカードが足りません',JSON.stringify({ids0,toast:TOASTS.slice(-1)[0],types:jt(j0)}));
   ok(m+': preparation flags clear (no live preparation, no pending declaration/cost, no open prompt, no restore record)',!ACTIVATION_PREP_S03&&!gameState.pendingDeclarationV11&&!(gameState.pendingActivationCostV11||[]).length&&!(gameState.pendingCostSnapshots||[]).length&&!(typeof PROMPT_OPEN_S03!=='undefined'&&PROMPT_OPEN_S03)&&!gameState.prepTxS03,JSON.stringify({prep:!!ACTIVATION_PREP_S03,tx:!!gameState.prepTxS03}));
   ok(m+': priority unchanged (priority, chain window, chain length, processor wait, active player, phase)',prioSnap()===pr0,pr0+' -> '+prioSnap());
@@ -435,6 +439,7 @@ for(const [m,zone,board] of MON9){
   ok(m+': re-operable — the same effect is offered again'+(m==='トラゴエディア'?' (before this unit the failed attempt consumed the once-per-turn flag and the effect was no longer offered)':''),ids1.join()===ids0.join()&&ids1.length>0,JSON.stringify({ids0,ids1}));
   const j1=V41_ACTION_JOURNAL.length;TOASTS.length=0;const h1=findCardByUid(x.m.uid);
   if(zone==='hand')duelActivateFromHand(h1.index);else duelActivateFromZone(1,h1.zone,h1.index,{});
+  if(costFirst&&pc())answerChoiceV49([pc().candidates[0].key]);   /* S03-U474 */
   ok(m+': trying again gives the same refusal and the state digest is still the pre-activation digest (no cost, no flag accumulates)',TOASTS.slice(-1)[0]==='選択できるカードが足りません'&&v41StateDigest(gameState)===x.D0,jt(j1).join());
   audit(m);
 }

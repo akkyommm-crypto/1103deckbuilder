@@ -1302,18 +1302,22 @@ const API = {
      legacy でも ChoiceRequest を経由するので、選択待ちが gameState に載り
      CHOICE_OPEN/ANSWER が Journal に記録される点は改善される。
      ただし継続はクロージャのままなので保存・リロードを跨げない。      */
-  selectCard(title, candidates, onPick, note){
+  selectCard(title, candidates, onPick, note, opts){
     /* S03-U130: DUEL の発動準備（prepareDuelActivation）では ACTIVE_SCRIPT が無いため、targets:true のスクリプトでも対象耐性
        （オベリスクの巨神兵、永続効果の immuneToTarget、ダーク・フュージョン等）が候補から除かれていなかった。
        発動準備中のカード（ACTIVATION_PREP_S03）のスクリプトも見る。対象を取るプレイヤーも渡す。 */
     const prepS03 = (!ACTIVE_SCRIPT && typeof ACTIVATION_PREP_S03!=='undefined') ? ACTIVATION_PREP_S03 : null;
     const prepScS03 = prepS03 ? CARD_SCRIPTS[prepS03.name] : null;
-    const targeting = !!((ACTIVE_SCRIPT && ACTIVE_SCRIPT.targets === true) || (prepScS03 && prepScS03.targets === true));
+    /* S03-U474: 選択の「段階」。opts.selection（'cost' | 'effect'）の明示が優先、無ければ発動準備がコストを払っている間（engine/1ZZW）は 'cost'。
+       コストの選択はスクリプトが targets:true でも対象を取る選択ではない（対象耐性を掛けない）。requestChoiceV49 が記録 selection に残す。 */
+    const selectionS03 = (opts && opts.selection != null) ? selectionKindS03(opts.selection)
+      : ((typeof selectionPhaseS03 === 'function' && selectionPhaseS03() === 'cost') ? 'cost' : 'effect');
+    const targeting = selectionS03 !== 'cost' && !!((ACTIVE_SCRIPT && ACTIVE_SCRIPT.targets === true) || (prepScS03 && prepScS03.targets === true));
     const targetingPlayer = prepS03 ? prepS03.player : ((typeof P3_EFFECT_CONTEXT!=='undefined' && P3_EFFECT_CONTEXT) ? P3_EFFECT_CONTEXT.player : null);
     trace(`selectCard(legacy): ${(candidates||[]).length}件`);
     const ok = requestChoiceV49({
       kind:'card', title, note, candidates, min:1, max:1,
-      targeting, targetingPlayer, cancelable:true,
+      targeting, targetingPlayer, selection:selectionS03, cancelable:true,
       /* S03-U150: the effect's controller answers (was the turn player — e.g. 立ちはだかる強敵 in the opponent's turn) */
       player: legacyChooserS03(),
       legacy:{ onPick:(picked)=>{

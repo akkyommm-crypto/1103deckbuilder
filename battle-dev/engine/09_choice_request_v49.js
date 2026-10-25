@@ -170,7 +170,12 @@ function requestChoiceV49(spec){
   spec=spec||{};
 
   const kind = spec.kind || 'card';
-  const targeting = spec.targeting===true;
+  /* S03-U474: 選択の「段階」— コストの選択は対象を取る選択ではない（対象耐性を掛けない）。
+     明示の spec.selection が優先。無ければ、legacy 互換層（API.selectCard / confirm 等）だけが発動準備の段階（engine/1ZZW）を引き継ぐ。
+     登録ハンドラ経路（resume）は自分で決める: コストには targeting:false（省略可）か selection:'cost'。 */
+  const selection = (spec.selection!=null && typeof selectionKindS03==='function') ? selectionKindS03(spec.selection)
+    : ((spec.legacy && typeof selectionPhaseS03==='function' && selectionPhaseS03()==='cost') ? 'cost' : 'effect');
+  const targeting = selection==='cost' ? false : spec.targeting===true;
   const revealed  = spec.revealed!==false;
 
   /* 対象を取る効果は対象耐性を持つカードを候補から除く。
@@ -217,6 +222,7 @@ function requestChoiceV49(spec){
     min, max,
     cancelable: spec.cancelable!==false,
     targeting,
+    selection,   /* S03-U474: 'cost' | 'effect'（'effect' は「コスト以外」の意。登録経路の P1.1 は段階で印を付けず targeting を選択ごとに明示するため、P1.1 のコスト選択も 'effect' と記録される — P1.1 の分類には使えない。決め手は targeting）。記録に残るので保存・再開・Undo/Redo・Replay を跨いでも選択後のコールバックが同じ分類になる */
     revealed,
     candidates,
     legacy: isLegacy,
@@ -305,10 +311,11 @@ function answerChoiceV49(keys){
   const handler=(resume&&resume.handler)||'';
 
   const prepUidA = (pc.meta && pc.meta.activationPrepS03 && pc.meta.activationPrepS03.uid != null) ? pc.meta.activationPrepS03.uid : null;   /* S03-U471 */
+  const selectionA = pc.selection;   /* S03-U474: 継続は記録の段階で実行する（Action 適用前に確定） */
   act({type:'CHOICE_ANSWER_V49', player:pc.player, cid, keys:v.keys});
   CHOICE_STATS_V49.answered++;
 
-  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid:prepUidA,
+  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid:prepUidA, selection:selectionA,
     answer:{keys:v.keys, cards:picked, cancelled:false}});
   return true;
 }
@@ -326,10 +333,11 @@ function cancelChoiceV49(){
 
   /* S03-U471: 発動の準備中に開いた選択のキャンセルかどうか（発動前の状態へ戻すため） */
   const prepUid = (pc.meta && pc.meta.activationPrepS03 && pc.meta.activationPrepS03.uid != null) ? pc.meta.activationPrepS03.uid : null;
+  const selectionC = pc.selection;   /* S03-U474 */
   act({type:'CHOICE_CANCEL_V49', player:pc.player, cid});
   CHOICE_STATS_V49.cancelled++;
 
-  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid,
+  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid, selection:selectionC,
     answer:{keys:[], cards:[], cancelled:true}});
   return true;
 }
@@ -339,6 +347,9 @@ function cancelChoiceV49(){
    順に適用するだけなので、継続を再実行すると二重適用になる）。          */
 function dispatchChoiceContinuationV49(job){
   if(typeof closeSheet==='function') closeSheet();
+  /* S03-U474: 継続（onPick / onCancel / 登録ハンドラ）は、開いた時の選択の段階で実行する。コストの選択の続き（2体目のリリース等）は
+     コストのまま、効果の選択の続きは効果のまま。段階は継続の間だけ（終われば元に戻す）。 */
+  const inSel = (fn)=> (typeof withSelectionPhaseS03==='function') ? withSelectionPhaseS03(job.selection==='cost'?'cost':null, fn) : fn();
 
   if(job.isLegacy){
     /* ここで削除しない。Undoで選択待ちへ戻ったとき再び必要になるため、
@@ -353,14 +364,14 @@ function dispatchChoiceContinuationV49(job){
       return;
     }
     if(job.answer.cancelled){
-      if(cb.onCancel) cb.onCancel();
+      if(cb.onCancel) inSel(()=>cb.onCancel());
       /* S03-U471: 発動の準備中の選択をやめた（理由 'cancel'。候補不足とは別）— onCancel が先へ進めず、別の選択待ちも無ければ、発動前の状態へ戻す */
       if(job.prepUid != null && typeof prepTxLiveForS03==='function' && prepTxLiveForS03(job.prepUid) && !(gameState && gameState.pendingChoice)) prepTxAbortS03('cancel', job.prepUid);
       if(typeof settleActivationPrepS03==='function') settleActivationPrepS03(); if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03(); return;
     }
     /* 既存 onPick は候補1件を受け取る形。互換のため先頭を渡す。 */
     const sigS471 = (typeof choiceInsufficientSeqS03==='function') ? choiceInsufficientSeqS03() : 0;
-    if(cb.onPick) cb.onPick(job.answer.cards[0], job.answer.cards);
+    if(cb.onPick) inSel(()=>cb.onPick(job.answer.cards[0], job.answer.cards));
     /* S03-U471: 続きの段（コスト後の対象選択など）が候補不足で断られていれば、発動準備を中止する（明示の合図がある時だけ） */
     if(typeof prepTxCheckInsufficientS03==='function') prepTxCheckInsufficientS03(sigS471, job.prepUid);
     if(typeof settleActivationPrepS03==='function') settleActivationPrepS03();   /* S03-U35 */
@@ -375,7 +386,7 @@ function dispatchChoiceContinuationV49(job){
     if(typeof abortResolve==='function') abortResolve();
     return;
   }
-  fn(job.answer, job.args, gameState);
+  inSel(()=>fn(job.answer, job.args, gameState));
   /* S03-U41 (C-S03-33): 効果解決中の選択だった場合、待っていたチェーン処理を再開する */
   if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03();
 }

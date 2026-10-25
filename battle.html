@@ -6162,7 +6162,12 @@ function requestChoiceV49(spec){
   spec=spec||{};
 
   const kind = spec.kind || 'card';
-  const targeting = spec.targeting===true;
+  /* S03-U474: 選択の「段階」— コストの選択は対象を取る選択ではない（対象耐性を掛けない）。
+     明示の spec.selection が優先。無ければ、legacy 互換層（API.selectCard / confirm 等）だけが発動準備の段階（engine/1ZZW）を引き継ぐ。
+     登録ハンドラ経路（resume）は自分で決める: コストには targeting:false（省略可）か selection:'cost'。 */
+  const selection = (spec.selection!=null && typeof selectionKindS03==='function') ? selectionKindS03(spec.selection)
+    : ((spec.legacy && typeof selectionPhaseS03==='function' && selectionPhaseS03()==='cost') ? 'cost' : 'effect');
+  const targeting = selection==='cost' ? false : spec.targeting===true;
   const revealed  = spec.revealed!==false;
 
   /* 対象を取る効果は対象耐性を持つカードを候補から除く。
@@ -6209,6 +6214,7 @@ function requestChoiceV49(spec){
     min, max,
     cancelable: spec.cancelable!==false,
     targeting,
+    selection,   /* S03-U474: 'cost' | 'effect'（'effect' は「コスト以外」の意。登録経路の P1.1 は段階で印を付けず targeting を選択ごとに明示するため、P1.1 のコスト選択も 'effect' と記録される — P1.1 の分類には使えない。決め手は targeting）。記録に残るので保存・再開・Undo/Redo・Replay を跨いでも選択後のコールバックが同じ分類になる */
     revealed,
     candidates,
     legacy: isLegacy,
@@ -6297,10 +6303,11 @@ function answerChoiceV49(keys){
   const handler=(resume&&resume.handler)||'';
 
   const prepUidA = (pc.meta && pc.meta.activationPrepS03 && pc.meta.activationPrepS03.uid != null) ? pc.meta.activationPrepS03.uid : null;   /* S03-U471 */
+  const selectionA = pc.selection;   /* S03-U474: 継続は記録の段階で実行する（Action 適用前に確定） */
   act({type:'CHOICE_ANSWER_V49', player:pc.player, cid, keys:v.keys});
   CHOICE_STATS_V49.answered++;
 
-  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid:prepUidA,
+  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid:prepUidA, selection:selectionA,
     answer:{keys:v.keys, cards:picked, cancelled:false}});
   return true;
 }
@@ -6318,10 +6325,11 @@ function cancelChoiceV49(){
 
   /* S03-U471: 発動の準備中に開いた選択のキャンセルかどうか（発動前の状態へ戻すため） */
   const prepUid = (pc.meta && pc.meta.activationPrepS03 && pc.meta.activationPrepS03.uid != null) ? pc.meta.activationPrepS03.uid : null;
+  const selectionC = pc.selection;   /* S03-U474 */
   act({type:'CHOICE_CANCEL_V49', player:pc.player, cid});
   CHOICE_STATS_V49.cancelled++;
 
-  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid,
+  dispatchChoiceContinuationV49({cid, isLegacy, handler, args, prepUid, selection:selectionC,
     answer:{keys:[], cards:[], cancelled:true}});
   return true;
 }
@@ -6331,6 +6339,9 @@ function cancelChoiceV49(){
    順に適用するだけなので、継続を再実行すると二重適用になる）。          */
 function dispatchChoiceContinuationV49(job){
   if(typeof closeSheet==='function') closeSheet();
+  /* S03-U474: 継続（onPick / onCancel / 登録ハンドラ）は、開いた時の選択の段階で実行する。コストの選択の続き（2体目のリリース等）は
+     コストのまま、効果の選択の続きは効果のまま。段階は継続の間だけ（終われば元に戻す）。 */
+  const inSel = (fn)=> (typeof withSelectionPhaseS03==='function') ? withSelectionPhaseS03(job.selection==='cost'?'cost':null, fn) : fn();
 
   if(job.isLegacy){
     /* ここで削除しない。Undoで選択待ちへ戻ったとき再び必要になるため、
@@ -6345,14 +6356,14 @@ function dispatchChoiceContinuationV49(job){
       return;
     }
     if(job.answer.cancelled){
-      if(cb.onCancel) cb.onCancel();
+      if(cb.onCancel) inSel(()=>cb.onCancel());
       /* S03-U471: 発動の準備中の選択をやめた（理由 'cancel'。候補不足とは別）— onCancel が先へ進めず、別の選択待ちも無ければ、発動前の状態へ戻す */
       if(job.prepUid != null && typeof prepTxLiveForS03==='function' && prepTxLiveForS03(job.prepUid) && !(gameState && gameState.pendingChoice)) prepTxAbortS03('cancel', job.prepUid);
       if(typeof settleActivationPrepS03==='function') settleActivationPrepS03(); if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03(); return;
     }
     /* 既存 onPick は候補1件を受け取る形。互換のため先頭を渡す。 */
     const sigS471 = (typeof choiceInsufficientSeqS03==='function') ? choiceInsufficientSeqS03() : 0;
-    if(cb.onPick) cb.onPick(job.answer.cards[0], job.answer.cards);
+    if(cb.onPick) inSel(()=>cb.onPick(job.answer.cards[0], job.answer.cards));
     /* S03-U471: 続きの段（コスト後の対象選択など）が候補不足で断られていれば、発動準備を中止する（明示の合図がある時だけ） */
     if(typeof prepTxCheckInsufficientS03==='function') prepTxCheckInsufficientS03(sigS471, job.prepUid);
     if(typeof settleActivationPrepS03==='function') settleActivationPrepS03();   /* S03-U35 */
@@ -6367,7 +6378,7 @@ function dispatchChoiceContinuationV49(job){
     if(typeof abortResolve==='function') abortResolve();
     return;
   }
-  fn(job.answer, job.args, gameState);
+  inSel(()=>fn(job.answer, job.args, gameState));
   /* S03-U41 (C-S03-33): 効果解決中の選択だった場合、待っていたチェーン処理を再開する */
   if(typeof resumeAfterResolutionChoiceS03==='function') resumeAfterResolutionChoiceS03();
 }
@@ -15334,6 +15345,58 @@ function prepTxCheckInsufficientS03(sigBefore, uid){
 }
 function choiceInsufficientSeqS03(){ return (typeof CHOICE_INSUFFICIENT_SEQ_S03 !== 'undefined') ? CHOICE_INSUFFICIENT_SEQ_S03 : 0; }
 /* =========================================================================
+   S03-U474 — コストの選択と効果の対象の選択を分ける（選択の「段階」）
+   -------------------------------------------------------------------------
+   欠陥: API.selectCard（legacy 互換層、呼び出し約1444箇所）は対象耐性の要否（targeting）を「スクリプト全体の targets:true」から推定していた。
+   スクリプト単位の印なので、同じスクリプトの中の「コストの選択」と「効果の対象の選択」を区別できず、targets:true のカードでは
+   リリース・捨てる・墓地へ送る・除外するカードの候補にまで filterTargetable（対象耐性）が掛かった
+   （targets:true でコストの中に選択を開くカードは 126 ファイル 496 枚）。コストは対象ではない（対象を取るのは「選択して発動する」対象だけ）。
+   既知の症状: デュアルスパークがメタルシルバー・アーマーの下でコスト候補が空になる／ゴッドバードアタックが、効果の対象にならないモンスターを
+   リリースできない。
+   ■ 設計（共通エンジン1か所。カード名を見ない）
+     1. 選択の「段階」を実行時に持つ（SELECTION_PHASE_S03 = 'cost' | null。gameState の外）。発動準備（engine/30 prepareDuelActivation）が
+        コストを払う区間だけ 'cost' にする: 通常経路の sc.cost、COST_SELECTION_FIRST の selectTargets（＝コストにするカードの選択）と cost。
+        コストを払い終えた継続（done）では必ず外し（null）、その先の対象選択は従来どおりスクリプトの targets に従う。try/finally で戻すので
+        中止・失敗・例外でも残らない。
+     2. 選択の記録（gameState.pendingChoice）に selection:'cost'|'effect' を持つ。targeting と並べて置く。'cost' の選択は targeting を false にし、
+        requestChoiceV49 は filterTargetable を掛けない。選択後のコールバック（legacy の onPick / onCancel、登録ハンドラ）は、記録の selection で
+        段階を復元してから実行する（dispatchChoiceContinuationV49）— 続きの段（2体目のリリースを選ぶ・確認を挟む等）も同じ段階になる。
+        記録は JSON なので保存・再開・Undo/Redo・Replay を跨いでも同じ分類になる。
+     3. コスト自体の制約（リリースできない・捨てられない・素材にできない 等）は別の述語（コストの候補を作る側）で、ここは触らない。
+   ■ 注意: 記録 selection の 'effect' は「コスト以外」の意味。P1.1（登録経路、activationV11）の選択は段階で印を付けず targeting を選択ごとに明示するので、
+     P1.1 のコスト選択も 'effect' と記録される（P1.1 の分類には selection を使えない。決め手は targeting。挙動には影響しない）。
+   ■ 将来のカードが「これはコストの選択」と示す方法（優先順）
+     a. cost(ctx, done) の中で API.selectCard を呼ぶ — 何もしなくてよい（発動準備が自動で 'cost' にする）。
+     b. 登録ハンドラ経路（API.requestChoice / p11cOpen）— コストには targeting:false（省略可）か selection:'cost'。
+        selection:'cost' は、誤って targeting:true を書いても対象耐性を掛けない。
+     c. 発動準備の外・cost の外でコストを選ぶ時、または cost/selectTargets の中で本当の対象を選ぶ時 —
+        API.selectCard(title, cands, onPick, note, {selection:'cost'|'effect'}) で明示する（明示は自動の段階より優先）。
+        'effect'（別名 'target'）で、COST_SELECTION_FIRST の selectTargets 内の本当の対象選択（装備するモンスター等）を戻せる。
+   ========================================================================= */
+let SELECTION_PHASE_S03 = null;   // 'cost' | null（実行時のみ。gameState には入れない）
+
+/* 'cost' だけがコスト。それ以外（'effect' / 'target' / 未指定）は効果の選択。 */
+function selectionKindS03(v){ return v === 'cost' ? 'cost' : 'effect'; }
+
+function selectionPhaseS03(){ return SELECTION_PHASE_S03; }
+
+/* phase の間だけ段階を切り替える（'cost' 以外は null＝効果の選択）。戻り値は fn の戻り値。例外でも元に戻す。 */
+function withSelectionPhaseS03(phase, fn){
+  const prev = SELECTION_PHASE_S03;
+  SELECTION_PHASE_S03 = (phase === 'cost') ? 'cost' : null;
+  try{ return fn(); }
+  finally{ SELECTION_PHASE_S03 = prev; }
+}
+
+/* コストを払う区間（発動準備の sc.cost / COST_SELECTION_FIRST の selectTargets と cost）で使う。
+   run(done): done は「コストを払い終えた」継続を段階 null で包んだもの — その中で開く対象選択は効果の選択になる。 */
+function runCostPhaseS03(run, onDone){
+  return withSelectionPhaseS03('cost', ()=>run(function(){
+    const args = arguments;
+    return withSelectionPhaseS03(null, ()=>onDone.apply(null, args));
+  }));
+}
+/* =========================================================================
    RENDER — gameState を読んで描画するだけ
    ========================================================================= */
 function render(){
@@ -18698,22 +18761,25 @@ function prepareDuelActivation(name,p,zone,index,opts){
      先に選び、コストを払い、コストで動いたカードを対象から外し、コスト中に ctx へ書かれた値を CHAIN_ADD へ載せる。 */
   if(typeof costSelectionFirstS03==='function' && costSelectionFirstS03(name,sc)){
     const sigCsfS471=choiceInsufficientSeqS03();
-    sc.selectTargets(ctx,targets=>{
+    /* S03-U474: ここの selectTargets は「コストにするカード」を選ぶので、選択の段階は 'cost'（対象耐性を掛けない）。cost を払い終えた後は外す。
+       selectTargets の中に本当の対象選択（装備するモンスター等）がある場合は、スクリプト側で API.selectCard(…, {selection:'effect'}) と明示する。 */
+    withSelectionPhaseS03('cost',()=>sc.selectTargets(ctx,targets=>{
       ctx.selectedTargets=targets||[];
       const beforeS03=costSelectionBeforeS03(ctx);
-      sc.cost(ctx,ok=>{
+      runCostPhaseS03(done=>sc.cost(ctx,done),ok=>{
         if(ok===false){ showToast('コストを払えません'); failPrepare('cost-fail'); return; }
         costSelectionAfterS03(ctx,beforeS03);
         finishPrepare();
       });
-    });
+    }));
     prepTxCheckInsufficientS03(sigCsfS471,card.uid);   /* S03-U471 */
     if(typeof settleActivationPrepS03==='function') settleActivationPrepS03();   /* S03-U35 */
     return true;
   }
   if(sc.cost){
     const sigCostS471=choiceInsufficientSeqS03();
-    sc.cost(ctx,ok=>{ if(ok===false){ showToast('コストを払えません'); failPrepare('cost-fail'); return; } chooseTargets(); });
+    /* S03-U474: コストを払う間は選択の段階が 'cost'（コストの選択に対象耐性を掛けない）。払い終えた継続（done）では外れるので、chooseTargets の対象選択は従来どおり。 */
+    runCostPhaseS03(done=>sc.cost(ctx,done),ok=>{ if(ok===false){ showToast('コストを払えません'); failPrepare('cost-fail'); return; } chooseTargets(); });
     prepTxCheckInsufficientS03(sigCostS471,card.uid);   /* S03-U471: コスト自体の選択が候補不足で断られた場合（捨てる手札が無い等） */
   }
   else chooseTargets();
@@ -20473,18 +20539,22 @@ const API = {
      legacy でも ChoiceRequest を経由するので、選択待ちが gameState に載り
      CHOICE_OPEN/ANSWER が Journal に記録される点は改善される。
      ただし継続はクロージャのままなので保存・リロードを跨げない。      */
-  selectCard(title, candidates, onPick, note){
+  selectCard(title, candidates, onPick, note, opts){
     /* S03-U130: DUEL の発動準備（prepareDuelActivation）では ACTIVE_SCRIPT が無いため、targets:true のスクリプトでも対象耐性
        （オベリスクの巨神兵、永続効果の immuneToTarget、ダーク・フュージョン等）が候補から除かれていなかった。
        発動準備中のカード（ACTIVATION_PREP_S03）のスクリプトも見る。対象を取るプレイヤーも渡す。 */
     const prepS03 = (!ACTIVE_SCRIPT && typeof ACTIVATION_PREP_S03!=='undefined') ? ACTIVATION_PREP_S03 : null;
     const prepScS03 = prepS03 ? CARD_SCRIPTS[prepS03.name] : null;
-    const targeting = !!((ACTIVE_SCRIPT && ACTIVE_SCRIPT.targets === true) || (prepScS03 && prepScS03.targets === true));
+    /* S03-U474: 選択の「段階」。opts.selection（'cost' | 'effect'）の明示が優先、無ければ発動準備がコストを払っている間（engine/1ZZW）は 'cost'。
+       コストの選択はスクリプトが targets:true でも対象を取る選択ではない（対象耐性を掛けない）。requestChoiceV49 が記録 selection に残す。 */
+    const selectionS03 = (opts && opts.selection != null) ? selectionKindS03(opts.selection)
+      : ((typeof selectionPhaseS03 === 'function' && selectionPhaseS03() === 'cost') ? 'cost' : 'effect');
+    const targeting = selectionS03 !== 'cost' && !!((ACTIVE_SCRIPT && ACTIVE_SCRIPT.targets === true) || (prepScS03 && prepScS03.targets === true));
     const targetingPlayer = prepS03 ? prepS03.player : ((typeof P3_EFFECT_CONTEXT!=='undefined' && P3_EFFECT_CONTEXT) ? P3_EFFECT_CONTEXT.player : null);
     trace(`selectCard(legacy): ${(candidates||[]).length}件`);
     const ok = requestChoiceV49({
       kind:'card', title, note, candidates, min:1, max:1,
-      targeting, targetingPlayer, cancelable:true,
+      targeting, targetingPlayer, selection:selectionS03, cancelable:true,
       /* S03-U150: the effect's controller answers (was the turn player — e.g. 立ちはだかる強敵 in the opponent's turn) */
       player: legacyChooserS03(),
       legacy:{ onPick:(picked)=>{
@@ -58623,8 +58693,9 @@ defineScript('アサルト・スピリッツ', {
         e0WeakInHand(ctx.player), t => done([t]));
       return;
     }
+    /* S03-U474: COST_SELECTION_FIRST の selectTargets は既定ではコストの選択だが、ここは本当の対象（装備するモンスター）なので効果の選択と明示する */
     API.selectCard('アサルト・スピリッツ：装備するモンスター',
-      e0MyFaceUp(ctx.player), t => done([t]));
+      e0MyFaceUp(ctx.player), t => done([t]), undefined, {selection:'effect'});
   },
   cost(ctx, done){
     if(!ctx.card.equipTo){ done(true); return; }
@@ -58751,8 +58822,9 @@ defineScript('D・クリーナン', {
   selectTargets(ctx, done){
     const me = locateCardAnyV4(ctx.card);
     if(me && me.card.pos === 'def'){
+      /* S03-U474: COST_SELECTION_FIRST の selectTargets の中の本当の対象（装備する相手モンスター）— 効果の選択と明示する */
       API.selectCard('D・クリーナン：装備する相手モンスター',
-        e0FoeAtkMonsters(ctx), t => done([t]));
+        e0FoeAtkMonsters(ctx), t => done([t]), undefined, {selection:'effect'});
       return;
     }
     API.selectCard('D・クリーナン（コスト）：墓地へ送る装備カード',

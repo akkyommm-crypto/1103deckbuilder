@@ -67,6 +67,11 @@ Build a stable, mostly automated Yu-Gi-Oh! one-player duel simulator for the his
   (S03-U161 GAERU → P4-v6). Never test names at run time.
 - 「相手のカードの効果によってフィールド上から離れた場合、除外される」: declare `banishIfLeavesByOpponentEffectS03:true` on the script
   (S03-U162). The cause is the move action's P3 stamp — never the live P3_EFFECT_CONTEXT inside applyAction (it is not replayed).
+- Cost selections (S03-U474): a cost is not a target. `API.selectCard` inside `cost(ctx,done)` (and the `selectTargets` of a `declareCostSelectionFirstS03` script) is a cost selection
+  automatically (`engine/1ZZW_cost_selection_phase_s03.js`) — no `filterTargetable`, even when the script declares `targets:true`. A registered choice (`API.requestChoice` / `p11cOpen`)
+  states its own kind: omit `targeting` for a cost (or `selection:'cost'`), `targeting:true` for a target. To override the automatic kind pass
+  `API.selectCard(title, cands, onPick, note, {selection:'cost'|'effect'})` (e.g. a real target chosen inside a CSF `selectTargets`: `'effect'`). The kind is recorded as
+  `pendingChoice.selection` and restored for the callback. Keep the cost's own restrictions (cannot be released etc.) in the candidate predicate.
 - Synchro Summons in tests: take legal materials from `exCombos(p, db).combos` and summon with `beginExSummonV2`. `doExSummon` with
   hand-picked indexes used not to check the materials (S03-U162 found an illegal ゴヨウ・ガーディアン in the U156 test); since S03-U163
   `beginExSummonV2` refuses an illegal set (`exMaterialsLegalS03`).

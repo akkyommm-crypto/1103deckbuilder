@@ -550,6 +550,9 @@ CARD_TEST_FOCUS = {
     "test_s03_u472_multi_target_armor.js": {"貪欲な壺", "諸刃の活人剣術", "毒蛇の供物", "TGX3－DX2", "ゴッドバードアタック"},
     # S03-U473: 次元幽閉 (targets:true), driven through attack declaration -> activation -> target selection -> chain -> resolution -> Replay audit, with target immunity (ホルスのしもべ / オベリスクの巨神兵) and a 2-VM Save/Load.
     "test_s03_u473_dimensional_prison_targeting.js": {"次元幽閉"},
+    # S03-U474: cost selection is not a target selection. Each card below is driven end to end (activation -> cost choice -> effect target choice / commit -> resolution -> Replay audit) with a target-immune cost candidate.
+    # D・クリーナン / アサルト・スピリッツ appear only as classification fixtures (cancelled at the target choice) and must NOT gain TESTED.
+    "test_s03_u474_cost_selection_phase.js": {"デュアルスパーク", "ゴッドバードアタック", "サシカエル", "泣き神の石像", "ジェム・エンハンス", "ダーク・アームド・ドラゴン", "ワーム・キング"},
 }
 
 
