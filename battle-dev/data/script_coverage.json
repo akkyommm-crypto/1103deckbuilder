@@ -1745,7 +1745,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 225
+          "line": 228
         }
       ],
       "auto_table": false,
@@ -1807,7 +1807,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 335
+          "line": 338
         }
       ],
       "auto_table": false,
@@ -1914,7 +1914,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 193
+          "line": 196
         }
       ],
       "auto_table": false,
@@ -2017,7 +2017,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 242
+          "line": 245
         }
       ],
       "auto_table": false,
@@ -2152,7 +2152,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 212
+          "line": 215
         }
       ],
       "auto_table": false,
@@ -18133,12 +18133,13 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 34
+          "line": 38
         }
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_p11_activation_cards.js"
+        "tools\\test_p11_activation_cards.js",
+        "tools\\test_s03_u478_two_target_cards.js"
       ]
     },
     {
@@ -28682,7 +28683,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 35
+          "line": 39
         }
       ],
       "auto_table": false,
@@ -49157,7 +49158,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 36
+          "line": 40
         }
       ],
       "auto_table": false,
@@ -54500,7 +54501,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 37
+          "line": 41
         }
       ],
       "auto_table": false,
@@ -58275,7 +58276,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 38
+          "line": 42
         }
       ],
       "auto_table": false,
@@ -58483,7 +58484,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 39
+          "line": 43
         }
       ],
       "auto_table": false,
@@ -59034,7 +59035,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 40
+          "line": 44
         }
       ],
       "auto_table": false,
@@ -59790,7 +59791,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 41
+          "line": 45
         }
       ],
       "auto_table": false,
@@ -69112,7 +69113,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 42
+          "line": 46
         }
       ],
       "auto_table": false,
@@ -72291,7 +72292,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 43
+          "line": 47
         }
       ],
       "auto_table": false,
@@ -72545,7 +72546,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 156
+          "line": 159
         }
       ],
       "auto_table": false,
@@ -72708,7 +72709,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 143
+          "line": 146
         }
       ],
       "auto_table": false,
@@ -72759,7 +72760,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_expansion_v330.js"
+        "tools\\test_expansion_v330.js",
+        "tools\\test_s03_u478_two_target_cards.js"
       ]
     },
     {
@@ -72795,7 +72797,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 169
+          "line": 172
         }
       ],
       "auto_table": false,
@@ -73155,7 +73157,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 44
+          "line": 48
         }
       ],
       "auto_table": false,
@@ -74294,7 +74296,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 318
+          "line": 321
         }
       ],
       "auto_table": false,
@@ -74583,7 +74585,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 45
+          "line": 49
         }
       ],
       "auto_table": false,
@@ -78703,7 +78705,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 46
+          "line": 50
         }
       ],
       "auto_table": false,
@@ -89058,7 +89060,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 47
+          "line": 51
         }
       ],
       "auto_table": false,
@@ -89419,6 +89421,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u478_two_target_cards.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
     },
@@ -91137,7 +91140,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 48
+          "line": 52
         }
       ],
       "auto_table": false,
@@ -94436,7 +94439,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 49
+          "line": 53
         }
       ],
       "auto_table": false,
@@ -94548,7 +94551,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 51
+          "line": 55
         }
       ],
       "auto_table": false,
@@ -94626,7 +94629,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 52
+          "line": 56
         }
       ],
       "auto_table": false,
@@ -97574,7 +97577,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 297
+          "line": 300
         }
       ],
       "auto_table": false,
@@ -103620,7 +103623,7 @@
         {
           "kind": "legacy",
           "source": "cards\\H8D_claude_s03u68_activation_negated_release_secondary.js",
-          "line": 107
+          "line": 110
         }
       ],
       "auto_table": false,
@@ -106707,7 +106710,7 @@
         {
           "kind": "legacy",
           "source": "cards\\H8D_claude_s03u68_activation_negated_release_secondary.js",
-          "line": 137
+          "line": 140
         }
       ],
       "auto_table": true,
@@ -107594,7 +107597,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 53
+          "line": 57
         }
       ],
       "auto_table": false,
@@ -107989,7 +107992,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 54
+          "line": 58
         }
       ],
       "auto_table": false,
@@ -108059,7 +108062,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 55
+          "line": 59
         }
       ],
       "auto_table": false,
@@ -108099,7 +108102,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 56
+          "line": 60
         }
       ],
       "auto_table": false,
@@ -108902,7 +108905,7 @@
         {
           "kind": "legacy",
           "source": "cards\\35_1103_expansion.js",
-          "line": 264
+          "line": 267
         }
       ],
       "auto_table": false,
@@ -109151,7 +109154,7 @@
         {
           "kind": "legacy",
           "source": "cards\\H8D_claude_s03u68_activation_negated_release_secondary.js",
-          "line": 163
+          "line": 166
         }
       ],
       "auto_table": false,
@@ -109191,7 +109194,7 @@
         {
           "kind": "legacy",
           "source": "cards\\89_p11_activation_choice_recovery.js",
-          "line": 57
+          "line": 61
         }
       ],
       "auto_table": false,

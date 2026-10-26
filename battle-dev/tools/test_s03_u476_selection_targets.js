@@ -283,13 +283,17 @@ for(const name of Object.keys(CARD_SCRIPTS)){ total++;
 }
 cand.sort();
 const NONTARGET=['ライトニング・ボルテックス','ダーク・グレファー','ゾンビキャリア','オネスト','ローンファイア・ブロッサム','ワン・フォー・ワン','血の代償','グリーン・ガジェット','レッド・ガジェット','イエロー・ガジェット','TG カタパルト・ドラゴン','歯車街','No.16 色の支配者ショック・ルーラー','調律','E－エマージェンシーコール','神の居城－ヴァルハラ','レスキューラビット','ジュラック・グアイバ','墓守の偵察者','BF－月影のカルート','BF－蒼炎のシュラ','黒い旋風','真六武衆－カゲキ','紫炎の狼煙','紫炎の足軽','E・HERO フォレストマン','ジュラック・ヴェロー','シャドウ・リチュア','ハーピィ・クィーン','ワンハンドレッド・アイ・ドラゴン','ヴァイロン・エレメント','カラクリ商人 壱七七','カラクリ兵 弐参六'];
-const DEFER_MULTI=['墓守の石版','無欲な壺','霊滅術師 カイクウ'];
+/* S03-U478: 保留していた複数対象 3 枚のうち、固定 2 枚の 墓守の石版 / 無欲な壺 は targets:true と targetCount:2 を宣言した（ユーザー承認の対応範囲の拡張。U472 のピンは 5 → 8）。
+   残る 霊滅術師 カイクウ は対象が 1〜2 体の可変なので、宣言しないまま保留（次の単位）。 */
+const DECLARED_U478=['墓守の石版','無欲な壺'];
+const DEFER_MULTI=['霊滅術師 カイクウ'];
 const OPEN=['暗黒界の術師 スノウ','ダスト・シュート','E・HERO エアーマン'];
 const FIXED=['スノーマンイーター','マスター・ヒュペリオン','万力魔神バイサー・デス','D・ステープラン','カラクリ参謀 弐四八','カラクリ忍者 九壱九','暗黒界の龍神 グラファ','暗黒界の武神 ゴルド'];
 const classified=NONTARGET.concat(DEFER_MULTI,OPEN).sort();
 const un=cand.filter(n=>classified.indexOf(n)<0), stale=classified.filter(n=>cand.indexOf(n)<0);
 ok('audit pin: '+total+' scripts scanned; every script whose selectTargets opens a card selection without targets:true is classified (none unclassified: a new one must be triaged by its 1103 text — declare targets:true or add it to the audited list)',un.length===0,JSON.stringify(un));
 ok('audit pin: no classified name has gone stale (each audited candidate still opens a selection without targets:true)',stale.length===0,JSON.stringify(stale));
-ok('audit pin: the 8 fixed cards are no longer candidates (they declare targets:true) and the classified remainder is 39 = 33 non-targeting + 3 multi-target (targetCount decision pending) + 3 open',FIXED.every(n=>CARD_SCRIPTS[n].targets===true&&cand.indexOf(n)<0)&&cand.length===39&&NONTARGET.length===33,JSON.stringify({cand:cand.length,fixed:FIXED.map(n=>CARD_SCRIPTS[n].targets)}));
-ok('audit pin: the 3 multi-target cards (no targetCount yet: メタルシルバー・アーマー would wrongly restrict them) stay undeclared on purpose — U472 pins exactly five targetCount declarations',DEFER_MULTI.every(n=>CARD_SCRIPTS[n].targets!==true&&CARD_SCRIPTS[n].targetCount==null),JSON.stringify(DEFER_MULTI.map(n=>[CARD_SCRIPTS[n].targets,CARD_SCRIPTS[n].targetCount])));
+ok('audit pin: the 8 fixed cards are no longer candidates (they declare targets:true) and the classified remainder is 37 = 33 non-targeting + 1 variable-count multi-target (カイクウ, held back) + 3 open (S03-U478: 39 → 37, the two fixed-count cards moved out)',FIXED.every(n=>CARD_SCRIPTS[n].targets===true&&cand.indexOf(n)<0)&&cand.length===37&&NONTARGET.length===33,JSON.stringify({cand:cand.length,fixed:FIXED.map(n=>CARD_SCRIPTS[n].targets)}));
+ok('audit pin (S03-U478): 墓守の石版 / 無欲な壺 are no longer candidates — each declares targets:true AND targetCount:2 (a name + count pair; the U472 guard pins the same pairs)',DECLARED_U478.every(n=>CARD_SCRIPTS[n].targets===true&&CARD_SCRIPTS[n].targetCount===2&&cand.indexOf(n)<0),JSON.stringify(DECLARED_U478.map(n=>[CARD_SCRIPTS[n].targets,CARD_SCRIPTS[n].targetCount])));
+ok('audit pin: 霊滅術師 カイクウ (1〜2 targets, variable — decided at activation) stays undeclared on purpose: no targets, no targetCount (a hardcoded targetCount would be wrong for 1 target)',DEFER_MULTI.every(n=>CARD_SCRIPTS[n].targets!==true&&CARD_SCRIPTS[n].targetCount==null),JSON.stringify(DEFER_MULTI.map(n=>[CARD_SCRIPTS[n].targets,CARD_SCRIPTS[n].targetCount])));
 `);

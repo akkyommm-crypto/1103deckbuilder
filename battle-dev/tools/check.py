@@ -766,6 +766,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u474_cost_selection_phase.js')],
 subprocess.run(['node',str(ROOT/'tools/test_s03_u475_v70_select_exactly.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u476_selection_targets.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u477_dark_world_resume.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u478_two_target_cards.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

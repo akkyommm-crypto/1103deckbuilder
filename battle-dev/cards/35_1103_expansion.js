@@ -124,6 +124,9 @@ defineScript("墓守の末裔", {
 /* ---- 墓守の石版 ---- */
 defineScript("墓守の石版", {
   type:"spell", priority:1, ignoresNecrovalley:true,
+  /* S03-U478: 「墓地の『墓守の』モンスター2体を選択して手札に加える」＝固定 2 体を対象にする（WIKI-75BD27DD876A 2009-11-26「はい、対象を取ります」）。
+     targets:true で対象耐性とチェーンリンクの対象（srcS03.tg）が効き、targetCount:2 で メタルシルバー・アーマー の複数対象の例外（engine/1ZZR、S03-U472）が掛かる。 */
+  targets:true, targetCount:2,
   condition(ctx){
     if(API.pileCards(ctx.player,'grave',x=>x.db.k==='m' && String(x.db.n||'').indexOf('墓守の')===0).length<2){
       ctx.reason='墓地に「墓守」モンスターが2体以上必要です'; return false;

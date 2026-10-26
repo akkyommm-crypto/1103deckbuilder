@@ -559,6 +559,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u476_selection_targets.js": {"スノーマンイーター", "マスター・ヒュペリオン", "万力魔神バイサー・デス", "D・ステープラン", "カラクリ参謀 弐四八", "カラクリ忍者 九壱九", "暗黒界の龍神 グラファ", "暗黒界の武神 ゴルド"},
     # S03-U477: the Dark World discard triggers (darkWorldDiscard) recognise the discarded card by uid after a Save/Load. Each of the 5 cards is driven by the controller's own effect (暗黒界の門) and by the opponent's effect (手札抹殺), with and without a save (saveDuel -> new VM -> offerResumeDuel), plus a same-name copy, a cost discard (鳳翼の爆風) and uid-less cards. The fixtures (ワイト, ゴブリン突撃部隊, ギガンテス, 手札抹殺, 鳳翼の爆風 ...) must NOT gain TESTED.
     "test_s03_u477_dark_world_resume.js": {"暗黒界の龍神 グラファ", "暗黒界の武神 ゴルド", "暗黒界の狩人 ブラウ", "暗黒界の軍神 シルバ", "暗黒界の術師 スノウ"},
+    # S03-U478: the three fixed 2-target cards (targets:true + targetCount:2). Each is driven activation -> target selection(s) -> chain -> resolution -> Replay audit, with and without Metal Silver Armor, plus a chain-link Save/Load. The fixtures (サイバー・ドラゴン, ライオウ, ホルスのしもべ, メタルシルバー・アーマー, 強制脱出装置, リビングデッドの呼び声, ワイト and the other Graveyard cards) must NOT gain TESTED.
+    "test_s03_u478_two_target_cards.js": {"墓守の石版", "無欲な壺", "ガスタのつむじ風"},
 }
 
 
