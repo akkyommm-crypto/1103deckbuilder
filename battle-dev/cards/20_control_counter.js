@@ -388,15 +388,31 @@ defineScript("トロイホース", {type:"monster",tributeValue:{value:2,target:
    捨てさせたのが相手なら追加効果が付く（card.discardInfo で判定）。
    ========================================================================= */
 
+/* S03-U477: このイベント（onDiscard）で捨てられたのは ctx.card か。
+   従来は event.card をオブジェクト同一性（ev.card !== ctx.card）で比べていた。チェーンに載ったリンクの event は生のカードを持つが、
+   保存 → 読込で複製になる。同一性では複製を認識できず null（誘発しない扱い）になり、再開後の解決は「捨てられた時の効果」ではなく別の枝に落ちた
+   （グラファは破壊の代わりに墓地から蘇生、ゴルド／シルバ／スノウ／ブラウは「相手のカードの効果で捨てられた場合、さらに…」が消える）。
+   識別は uid で行う（デュエル中の「その 1 枚」。同名の別個体と区別でき、保存・読込・Undo を越えて保たれる）。
+   - 両側に uid がある時だけ uid を比べる。undefined === undefined を一致にしない（uid の無いカード同士を同じカードと見なさない）。
+   - どちらかに uid が無い時は「全く同じオブジェクト」の時だけ一致（複製や別のオブジェクトは一致しない）。実際の道では uid は必ず付く:
+     イベント作成時に queueDeferredEventV2（engine/30）と safeActivationEventV11 が ensureCardUid を呼び、チェーンに載るカードも発動準備で uid を得る。
+     uid が無いのは直接構成した場合だけで、そこでは同一性の比較に退く（推測で一致にしない）。
+   - カードを名指ししないイベント（card も uid も無い）は比べない（従来どおり）。 */
+function darkWorldEventIsSelf(ctx){
+  const c = ctx.card, ev = ctx.event || {};
+  if(!ev.card && ev.uid == null) return true;
+  const evUid = ev.uid != null ? ev.uid : ((ev.card && ev.card.uid != null) ? ev.card.uid : null);
+  if(evUid != null && c && c.uid != null) return evUid === c.uid;
+  return !!ev.card && ev.card === c;
+}
+
 /* 暗黒界の誘発条件。自分の効果で捨てられたなら 'self'、相手なら 'opponent'、
    誘発しないなら null を返す。 */
 function darkWorldDiscard(ctx){
   if(!ctx || ctx.eventName !== 'onDiscard') return null;
   const info = ctx.card && ctx.card.discardInfo;
   if(!info || !info.byEffect) return null;
-  const ev = ctx.event || {};
-  if(ev.card && ev.card !== ctx.card) return null;
-  if(ev.uid != null && ctx.card && ctx.card.uid != null && ev.uid !== ctx.card.uid) return null;
+  if(!darkWorldEventIsSelf(ctx)) return null;   /* S03-U477: 捨てられたカードの識別は uid（下の darkWorldEventIsSelf） */
   if(info.byPlayer !== ctx.player) return 'opponent';
   /* S03-U112: discardInfo.byPlayer は P3 の設計どおり「手札の持ち主」基準のまま（明示指定が無ければ捨てた本人）。
      誰の効果かは P3 provenance（act() 時に焼き込まれる actingPlayer）で判定する。これが無いと相手の《手札抹殺》等で
@@ -432,7 +448,8 @@ defineScript("暗黒界の尖兵 ベージ", {
 API.registerChoiceHandler('s03u62.snow-revive', (answer, args) => {
   const picks = v49P1ChoiceCards(answer);
   const h = picks[0] && locateCardAnyV4(picks[0].card);
-  if(h && h.zone==='grave') API.specialSummon(args.player,'grave',h.index,'def',"暗黒界の術師 スノウ");
+  /* S03-U477: 相手の墓地から特殊召喚する。fromPlayer（h.p）を渡さないと自分の墓地の同じ位置のカードを特殊召喚してしまっていた（Save/Load とは無関係の既存不具合） */
+  if(h && h.zone==='grave') API.specialSummon(args.player,'grave',h.index,'def',"暗黒界の術師 スノウ",h.p);
 });
 defineScript("暗黒界の術師 スノウ", {
   type:"monster", priority:1, forced:true,   /* S03-U112: サーチは強制（相手の効果の場合の追加蘇生だけ任意） */

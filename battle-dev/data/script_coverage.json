@@ -5618,7 +5618,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1305
+          "line": 1322
         }
       ],
       "auto_table": false,
@@ -6327,7 +6327,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1393
+          "line": 1410
         }
       ],
       "auto_table": false,
@@ -6479,7 +6479,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1365
+          "line": 1382
         }
       ],
       "auto_table": false,
@@ -17161,7 +17161,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 742
+          "line": 759
         }
       ],
       "auto_table": false,
@@ -17261,7 +17261,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 839
+          "line": 856
         }
       ],
       "auto_table": false,
@@ -17288,7 +17288,7 @@
         {
           "kind": "unified",
           "source": "cards\\20_control_counter.js",
-          "line": 635
+          "line": 652
         }
       ],
       "auto_table": false,
@@ -17311,7 +17311,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 776
+          "line": 793
         }
       ],
       "auto_table": false,
@@ -17383,7 +17383,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 699
+          "line": 716
         }
       ],
       "auto_table": false,
@@ -17501,7 +17501,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 883
+          "line": 900
         }
       ],
       "auto_table": false,
@@ -26203,7 +26203,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1120
+          "line": 1137
         }
       ],
       "auto_table": false,
@@ -30220,7 +30220,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 930
+          "line": 947
         }
       ],
       "auto_table": false,
@@ -39706,7 +39706,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1238
+          "line": 1255
         }
       ],
       "auto_table": false,
@@ -42106,7 +42106,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1413
+          "line": 1430
         }
       ],
       "auto_table": false,
@@ -55573,7 +55573,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 608
+          "line": 625
         }
       ],
       "auto_table": false,
@@ -66702,7 +66702,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 999
+          "line": 1016
         }
       ],
       "auto_table": false,
@@ -76146,7 +76146,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1256
+          "line": 1273
         }
       ],
       "auto_table": false,
@@ -79856,7 +79856,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1103
+          "line": 1120
         }
       ],
       "auto_table": false,
@@ -81759,7 +81759,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 410
+          "line": 426
         }
       ],
       "auto_table": false,
@@ -81836,6 +81836,7 @@
       "tests": [
         "tools\\test_s03_u125_dark_world_targets.js",
         "tools\\test_s03_u476_selection_targets.js",
+        "tools\\test_s03_u477_dark_world_resume.js",
         "tools\\test_s03_u54_dark_world_discard_event.js"
       ]
     },
@@ -81883,6 +81884,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u265_ns37.js",
+        "tools\\test_s03_u477_dark_world_resume.js",
         "tools\\test_s03_u54_dark_world_discard_event.js"
       ]
     },
@@ -81939,11 +81941,12 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 437
+          "line": 454
         }
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u477_dark_world_resume.js",
         "tools\\test_s03_u54_dark_world_discard_event.js"
       ]
     },
@@ -81967,6 +81970,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u477_dark_world_resume.js",
         "tools\\test_s03_u54_dark_world_discard_event.js"
       ]
     },
@@ -81985,7 +81989,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 567
+          "line": 584
         }
       ],
       "auto_table": false,
@@ -82071,13 +82075,14 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 474
+          "line": 491
         }
       ],
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u125_dark_world_targets.js",
         "tools\\test_s03_u476_selection_targets.js",
+        "tools\\test_s03_u477_dark_world_resume.js",
         "tools\\test_s03_u54_dark_world_discard_event.js"
       ]
     },
@@ -92142,7 +92147,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1221
+          "line": 1238
         }
       ],
       "auto_table": false,
@@ -92680,7 +92685,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1152
+          "line": 1169
         }
       ],
       "auto_table": false,
@@ -93965,7 +93970,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 953
+          "line": 970
         }
       ],
       "auto_table": false,
@@ -95211,7 +95216,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1042
+          "line": 1059
         }
       ],
       "auto_table": false,
@@ -96835,7 +96840,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1027
+          "line": 1044
         }
       ],
       "auto_table": false,
@@ -102990,7 +102995,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1076
+          "line": 1093
         }
       ],
       "auto_table": false,
@@ -107319,7 +107324,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1188
+          "line": 1205
         }
       ],
       "auto_table": false,
