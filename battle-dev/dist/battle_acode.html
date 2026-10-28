@@ -2219,6 +2219,10 @@ function applyActionBodyV31(gs, a){
       if(a.declaration){
         gs.chain[gs.chain.length-1].declaration=JSON.parse(JSON.stringify(a.declaration));
       }
+      /* S03-U480: 発動時に決めた可変対象枚数。0 も実際に対象を選ばなかった宣言として保存する。 */
+      if(Number.isInteger(a.targetCount) && a.targetCount>=0){
+        gs.chain[gs.chain.length-1].targetCount=a.targetCount;
+      }
       if(Array.isArray(a.activationCost) && a.activationCost.length){
         gs.chain[gs.chain.length-1].activationCost=JSON.parse(JSON.stringify(a.activationCost));
       }
@@ -6178,7 +6182,19 @@ function requestChoiceV49(spec){
   let raw = spec.candidates || [];
   if(targeting && typeof filterTargetable==='function' && kind==='card'){
     const before = raw.length;
-    raw = filterTargetable(raw, (spec.targetingPlayer===0||spec.targetingPlayer===1) ? spec.targetingPlayer : spec.player);   /* S03-U130: 対象を取るプレイヤー */
+    /* S03-U479: P1.1 ends activation preparation before activationV11 opens its
+       registered choice, so targetEffectSourceS03() cannot recover the source
+       from ACTIVATION_PREP_S03.  p11cOpen records that source as meta.scriptName.
+       Keep an explicitly supplied effectInfo untouched; otherwise reconstruct
+       only the source identity from that metadata.  The player choosing the
+       answer may differ from the player whose effect targets, so use
+       targetingPlayer solely for the effect source / immunity decision. */
+    const targetingPlayer = (spec.targetingPlayer===0||spec.targetingPlayer===1) ? spec.targetingPlayer : spec.player;
+    const p11Source = !spec.effectInfo && spec.meta && spec.meta.scriptName
+      ? {name:spec.meta.scriptName,v4EffectKey:spec.meta.v4EffectKey||null} : null;
+    const effectInfo = spec.effectInfo || (p11Source && typeof targetEffectSourceS03==='function'
+      ? targetEffectSourceS03(targetingPlayer,p11Source) : null);
+    raw = filterTargetable(raw, targetingPlayer, effectInfo);   /* S03-U130: 対象を取るプレイヤー */
     if(raw.length < before && typeof trace==='function'){
       trace(`対象耐性により ${before-raw.length}枚を除外`);
     }
@@ -6451,7 +6467,6 @@ function assertChoiceSerializableV49(gs){
   if(pc==null) return {ok:true, why:''};
   return choiceJsonSafetyV49(pc, 'pendingChoice');
 }
-
 /* =========================================================================
    System P1.1 — Activation-time Choice / Declaration / Cost identity
    -------------------------------------------------------------------------
@@ -10736,6 +10751,8 @@ function beginLinkResolutionS03(link, sc){
     uid: link.uid!=null ? link.uid : null,
     /* S03-U131: 発動したゾーン（「墓地で発動する効果」の判定。ネクロバレー） */
     from: link.from || null,
+    /* S03-U480: the exact count chosen at activation stays authoritative even if targets later disappear. */
+    targetCount:Number.isInteger(link.targetCount)?link.targetCount:null,
     chainLinkOne: !!(typeof gameState!=='undefined' && gameState && Array.isArray(gameState.chain) && gameState.chain.length===0),
     /* S03-U168: the uids this link targets (only for a targeting script, targets:true — the same rule as the target immunity check).
        Carried into the affecting actions' source stamp (engine/1ZG a.srcS03.tg) for 「対象を取らない効果では破壊されない」. */
@@ -14922,7 +14939,7 @@ function targetEffectSourceS03(byPlayer, explicit){
   if(typeof ACTIVATION_PREP_S03!=='undefined' && ACTIVATION_PREP_S03){
     raw={player:ACTIVATION_PREP_S03.player,uid:ACTIVATION_PREP_S03.uid,name:ACTIVATION_PREP_S03.name};
   }else if(typeof RESOLVING_LINK_S03!=='undefined' && RESOLVING_LINK_S03){
-    raw={player:RESOLVING_LINK_S03.player,uid:RESOLVING_LINK_S03.uid,name:RESOLVING_LINK_S03.name};
+    raw={player:RESOLVING_LINK_S03.player,uid:RESOLVING_LINK_S03.uid,name:RESOLVING_LINK_S03.name,targetCount:RESOLVING_LINK_S03.targetCount};
   }else if(typeof P3_EFFECT_CONTEXT!=='undefined' && P3_EFFECT_CONTEXT){
     raw={player:P3_EFFECT_CONTEXT.player,uid:P3_EFFECT_CONTEXT.uid,name:P3_EFFECT_CONTEXT.name};
   }else if(typeof ACTIVE_SCRIPT!=='undefined' && ACTIVE_SCRIPT){
@@ -14932,22 +14949,40 @@ function targetEffectSourceS03(byPlayer, explicit){
   return targetEffectSourceDetailsS03(raw);
 }
 
-/* S03-U472: 効果が「対象にするカードの枚数」の宣言（カード名を知らない一般の宣言経路）。
+/* S03-U472/U480: 効果が「対象にするカードの枚数」の宣言（カード名を知らない一般の宣言経路）。
    スクリプトに `targetCount: N`（N は 1 以上の整数）を書くと、その効果は**効果自身が**対象にするカードを N 枚取る、という宣言になる。
    - 数えるのは効果の対象だけ。コスト（リリース・捨てる・LP 等）で選ぶカードは数えない（ゴッドバードアタック＝鳥獣族のリリースはコスト、対象は 2 枚）。
    - 選択 UI の形（1 枚ずつ開く／まとめて選ぶ）や、その時点の `requestChoice` の min / max からは推測しない。宣言だけを読む。
    - 宣言が無いスクリプトは null（＝単体の対象として扱う。候補が多くても「1 体を対象にする効果」は複数対象ではない: 強制脱出装置）。
    - 複数の対象を取る効果と取らない効果を併せ持つスクリプトには、スクリプト単位の宣言は使えない（効果ごとの宣言が要る。現時点で該当なし）。
-   - 明示 effectInfo が targetCount を持つ時はそれを優先する（効果ごとの呼び出し元用）。
+   - 明示 effectInfo が targetCount を持つ時はそれを優先する（効果ごとの呼び出し元用）。0 も「対象を選ばなかった」という実数として保持する。
+   - 発動時に枚数を決める効果は `targetCountRange:[min,max]` を宣言し、選択時の明示 targetCount とチェーンリンクに実数を載せる。UI の min/max からは推測しない。
    targetsMultiple は targetCount が 2 以上の時だけ true。保存する状態は無い（純粋な読み取り）。 */
 function targetCountDeclaredS03(raw, name){
-  const valid = v => { const n = Number(v); return (v!=null && Number.isInteger(n) && n>=1) ? n : null; };
-  let n = valid(raw && raw.targetCount);
+  const explicit = v => { const n = Number(v); return (v!=null && Number.isInteger(n) && n>=0) ? n : null; };
+  const fixed = v => { const n = Number(v); return (v!=null && Number.isInteger(n) && n>=1) ? n : null; };
+  let n = explicit(raw && raw.targetCount);
+  /* Zero is meaningful only for an explicitly declared optional variable-target effect (currently ゴルド).
+     It must not override a fixed declaration such as 貪欲な壺's five targets. */
+  if(n===0){ const r=targetCountRangeS03(name); if(!r || r[0]!==0) n=null; }
   if(n==null && name && typeof CARD_SCRIPTS!=='undefined'){
     const sc = CARD_SCRIPTS[name];
-    if(sc) n = valid(sc.targetCount);
+    if(sc) n = fixed(sc.targetCount);
   }
   return n;
+}
+
+function targetCountRangeS03(name){
+  const sc = name && typeof CARD_SCRIPTS!=='undefined' ? CARD_SCRIPTS[name] : null;
+  const r = sc && sc.targetCountRange;
+  if(!Array.isArray(r) || r.length!==2) return null;
+  const min=Number(r[0]),max=Number(r[1]);
+  return Number.isInteger(min)&&Number.isInteger(max)&&min>=0&&max>=min ? [min,max] : null;
+}
+
+function targetCountAllowedS03(name, count){
+  const n=Number(count),r=targetCountRangeS03(name);
+  return !!r && Number.isInteger(n) && n>=r[0] && n<=r[1];
 }
 
 function targetEffectSourceDetailsS03(raw){
@@ -14964,6 +14999,7 @@ function targetEffectSourceDetailsS03(raw){
   const st=(db&&Array.isArray(db.st))?db.st:[];
   let level=Number(db&&db.lv||0);
   if(card && db && db.k==='m' && typeof curLV==='function') level=curLV(card);
+  const count=targetCountDeclaredS03(raw, name||null),range=targetCountRangeS03(name||null);
   return {
     player:(raw.player===0||raw.player===1)?raw.player:null,
     name:name||null,
@@ -14975,8 +15011,9 @@ function targetEffectSourceDetailsS03(raw){
     level:level,
     isEffectMonster:!!(db&&db.k==='m'&&st.indexOf('効果')>=0),
     isSynchro:!!(db&&db.k==='m'&&st.indexOf('シンクロ')>=0),
-    targetCount:targetCountDeclaredS03(raw, name||null),
-    targetsMultiple:(targetCountDeclaredS03(raw, name||null)||0)>=2
+    targetCount:count,
+    targetCountRange:range,
+    targetsMultiple:(count||0)>=2
   };
 }
 
@@ -18596,7 +18633,17 @@ function preparedActivationDescriptorV11(name,p,zone,index,opts,ctx,card,db,sc,s
 function commitPreparedActivationV11(desc,data){
   data=data||{}; if(!desc||desc.uid==null) return false;
   const hit=findCardByUid(desc.uid); if(!hit){abortPreparedActivationV11(desc);return false;}
-  const selectionData=serializeChainSelectionV2(data.targets||[]);
+  const selectedTargets=Array.isArray(data.targets)?data.targets:[];
+  const dynamicRange=(typeof targetCountRangeS03==='function')?targetCountRangeS03(desc.name):null;
+  let actualTargetCount=null;
+  if(dynamicRange){
+    actualTargetCount=Number(data.targetCount);
+    if(!(typeof targetCountAllowedS03==='function'&&targetCountAllowedS03(desc.name,actualTargetCount)) || actualTargetCount!==selectedTargets.length){
+      if(typeof trace==='function') trace(`${desc.name}：対象枚数の宣言と実選択が一致しません`,false);
+      abortPreparedActivationV11(desc); return false;
+    }
+  }
+  const selectionData=serializeChainSelectionV2(selectedTargets);
   const p3CostSnaps=(typeof takeCostSnapshotsV3==='function')?takeCostSnapshotsV3(gameState):[];
   act(Object.assign({type:'CHAIN_ADD',player:desc.player,cardId:hit.card.id,uid:desc.uid,name:desc.name,ss:desc.ss,
     from:desc.from,index:desc.index,costSnapshots:p3CostSnaps,prepared:true,targets:selectionData,
@@ -18605,7 +18652,7 @@ function commitPreparedActivationV11(desc,data){
     v44ActivationPending:!!desc.v44ActivationPending,effectClass:desc.effectClass||null,
     sourceNegatedAtActivation:!!desc.sourceNegatedAtActivation,
     spellCounterObserverUids:desc.spellCounterObserverUids||[],keep:!!desc.keep,
-    eventResumeV11:desc.eventSelectionV11&&desc.eventSelectionV11.resume||null},desc.cardActivationS03?{cardActivationS03:true}:{},desc.drawReplacementS03?{drawReplacementS03:true}:{}));   /* S03-U29 / S03-U33 */
+    eventResumeV11:desc.eventSelectionV11&&desc.eventSelectionV11.resume||null},dynamicRange?{targetCount:actualTargetCount}:{},desc.cardActivationS03?{cardActivationS03:true}:{},desc.drawReplacementS03?{drawReplacementS03:true}:{}));   /* S03-U29 / S03-U33 */
   if(typeof prepTxCommitS03==='function') prepTxCommitS03(hit.card);   /* S03-U471: CHAIN_ADD が復元点を閉じた */
   if(typeof applyTargetingNegatorsS03==='function') applyTargetingNegatorsS03();   /* S03-U28: 対象にされた時の自動無効（永続効果） */
   if(typeof applyTargetingProtectorsS03==='function') applyTargetingProtectorsS03();   /* S03-U66: 他の表側表示モンスターを守る永続効果 */ if(typeof applyTargetedSelfDestroyS03==='function') applyTargetedSelfDestroyS03();   /* S03-U137: 対象になった時に自壊（魂を削る死霊） */
@@ -22552,7 +22599,17 @@ defineScript("終末の騎士", {
   }
 });
 
-/* ---- E・HERO エアーマン（召喚時に選択：破壊 or サーチ） ---- */
+/* ---- E・HERO エアーマン（召喚時に効果を選択） ---- */
+/* S03-U481: 1103 の「選択して」は対象を取る選択ではない。発動時は効果だけを選び、
+   破壊する魔法・罠は解決時の現在の盤面から選ぶ。choice の継続は Save/Load 安全な登録ハンドラ。 */
+API.registerChoiceHandler('s03u481.airman-destroy', (answer, args)=>{
+  const picks=(typeof v49P1ChoiceCards==='function'?v49P1ChoiceCards(answer):[]);
+  const limit=Math.max(0,Number(args&&args.limit)||0);
+  picks.slice(0,limit).forEach(pick=>{
+    const h=pick&&(pick.uid!=null?findCardByUid(pick.uid):locateCardAnyV4(pick.card));
+    if(h&&h.zone!=='mz') API.destroy(h,'E・HERO エアーマン');
+  });
+});
 defineScript("E・HERO エアーマン", {
   type:"monster", priority:1, quickEffect:false,
   condition(ctx){
@@ -22560,19 +22617,10 @@ defineScript("E・HERO エアーマン", {
     return true;
   },
   selectTargets(ctx, done){
-    /* S03-U63: 破壊モードは対象を取る効果なので発動時に対象を宣言する（従来通り）。
-       サーチモードは対象を取らないので、モード選択だけ発動時に行い、
-       「どのカードを加えるか」は解決時（現在のデッキ）に選ぶ（S03-U58パターン）。 */
-    const heroOnField = API.fieldCards({zone:'mz', player:ctx.player})
-      .filter(x=>String(x.db.n||'').indexOf('HERO')>=0 && x.index!==ctx.index).length;
+    /* 発動時に固定するのはモードだけ。候補・枚数は応答後の解決時に読む。 */
     const deckHero = API.pileCards(ctx.player,'deck',
       x=>x.db.k==='m' && !x.db.ex && String(x.db.n||'').indexOf('HERO')>=0);
-    const pickDestroy = ()=>{
-      if(!heroOnField){ showToast("他の「HERO」がいないため破壊できません"); done([]); return; }
-      const st = API.fieldCards().filter(x=>x.zone!=='mz');
-      if(!st.length){ showToast("破壊できる魔法・罠がありません"); done([]); return; }
-      API.selectCard("エアーマン：破壊する魔法・罠", st, x=>done([{mode:'destroy', t:x}]));
-    };
+    const pickDestroy = ()=>done([{mode:'destroy'}]);
     const pickSearch = ()=>{
       if(!deckHero.length){ showToast("デッキに「HERO」がいません"); done([]); return; }
       done([{mode:'search'}]);
@@ -22581,7 +22629,7 @@ defineScript("E・HERO エアーマン", {
     if(deckToHandLockReasonV32(ctx.player)){ pickDestroy(); return; }
     API.confirm("E・HERO エアーマン",
       `効果を1つ選んでください。<br>
-       ・破壊：他の「HERO」の数(${heroOnField})まで魔法・罠を破壊<br>
+       ・破壊：他の「HERO」の数まで魔法・罠を破壊<br>
        ・サーチ：デッキから「HERO」を手札に(${deckHero.length}体)`,
       pickSearch,      // はい＝サーチ
       pickDestroy);    // いいえ＝破壊
@@ -22589,7 +22637,16 @@ defineScript("E・HERO エアーマン", {
   resolve(ctx){
     const sel = ctx.selectedTargets[0];
     if(!sel) return;
-    if(sel.mode==='destroy'){ API.destroy(sel.t, "E・HERO エアーマン"); return; }
+    if(sel.mode==='destroy'){
+      const limit=API.fieldCards({zone:'mz',player:ctx.player})
+        .filter(x=>String(x.db.n||'').indexOf('HERO')>=0&&x.card.uid!==ctx.card.uid).length;
+      const spells=API.fieldCards().filter(x=>x.zone!=='mz');
+      if(!limit||!spells.length) return;
+      API.requestChoice({player:ctx.player,kind:'card',title:'エアーマン：破壊する魔法・罠',
+        candidates:spells,min:1,max:Math.min(limit,spells.length),cancelable:false,
+        resume:{handler:'s03u481.airman-destroy',args:{limit}},meta:{scriptName:'E・HERO エアーマン'}});
+      return;
+    }
     const deckHero = API.pileCards(ctx.player,'deck',
       x=>x.db.k==='m' && !x.db.ex && String(x.db.n||'').indexOf('HERO')>=0);
     if(!deckHero.length) return;
@@ -22915,9 +22972,18 @@ defineScript("ゴブリンゾンビ", {
 });
 
 /* ---- 霊滅術師 カイクウ（戦闘ダメージ時に相手墓地を2体まで除外） ---- */
+API.registerChoiceHandler('s03u480.kycoo-count',(a,x)=>{
+  if(a.cancelled) return p11cAbort(x.activation);
+  const picked=a.cards&&a.cards[0],n=Number(picked&&picked.value);
+  if(!targetCountAllowedS03('霊滅術師 カイクウ',n)) return p11cAbort(x.activation);
+  const pool=API.pileCards(x.activation.player===0?1:0,'grave',q=>q.db.k==='m');
+  const ok=p11cOpen(x.activation,{title:`カイクウ：除外する相手墓地のモンスター（${n}体）`,candidates:pool,min:n,max:n,targeting:true,
+    effectInfo:targetEffectSourceS03(x.activation.player,{name:'霊滅術師 カイクウ',targetCount:n}),cancelable:false},'p11cards.commit-targets',{targetCount:n});
+  if(!ok) p11cAbort(x.activation);
+});
 defineScript("霊滅術師 カイクウ", {
   dsTiming:"after",              // ④ 戦闘ダメージを与えた時
-  type:"monster", priority:1, quickEffect:false,
+  type:"monster", priority:1, quickEffect:false, targets:true, targetCountRange:[1,2],
   condition(ctx){
     const g = API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m');
     if(!g.length){ ctx.reason = "相手の墓地にモンスターがいません"; return false; }
@@ -22927,16 +22993,10 @@ defineScript("霊滅術師 カイクウ", {
     }
     return true;
   },
-  selectTargets(ctx, done){
-    const chosen=[];
-    const step=()=>{
-      const left = API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m')
-        .filter(x=>chosen.every(c=>c.card!==x.card));
-      if(chosen.length>=2 || !left.length){ done(chosen); return; }
-      API.selectCard(`カイクウ：除外する相手墓地のモンスター（${chosen.length+1}/2・任意）`, left,
-        t=>{ chosen.push(t); step(); }, "やめると確定");
-    };
-    step();
+  activationV11(ctx,d){
+    const max=Math.min(2,API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m').length);
+    p11cOpen(d,{kind:'option',title:'カイクウ：対象にする枚数',candidates:Array.from({length:max},(_,i)=>({key:`n${i+1}`,label:`${i+1}体`,value:i+1})),
+      min:1,max:1,targeting:false,cancelable:false},'s03u480.kycoo-count',{});
   },
   resolve(ctx){ (ctx.selectedTargets||[]).forEach(t=>API.banish(t, "霊滅術師 カイクウ")); },
   afterResolve(){},
@@ -23504,23 +23564,29 @@ defineScript("マインドクラッシュ", {
 });
 
 /* ---- ダスト・シュート ---- */
+/* S03-U481: 相手の手札からの選択は対象を取らず、解決時に現在の手札を公開して行う。 */
+API.registerChoiceHandler('s03u481.dustshoot-return', (answer,args)=>{
+  const pick=(typeof v49P1ChoiceCards==='function'?v49P1ChoiceCards(answer)[0]:null);
+  const h=pick&&(pick.uid!=null?findCardByUid(pick.uid):locateCardAnyV4(pick.card));
+  if(!h||h.p!==args.opponent||h.zone!=='hand'||h.db.k!=='m') return;
+  act({type:'FX_RETURN_DECK',player:args.opponent,zone:'hand',index:h.index,toBottom:false,reason:'ダスト・シュート'});
+  API.shuffle(args.opponent);
+});
 defineScript("ダスト・シュート", {
   type:"trap", priority:2,
   condition(ctx){
     if(API.foe(ctx).hand.length<4){ ctx.reason = "相手の手札が4枚未満です"; return false; }
     return true;
   },
-  selectTargets(ctx, done){
-    const foe = gameState.players[ctx.opponent];
-    const mons = foe.hand.map((c,i)=>({p:ctx.opponent,zone:'hand',index:i,card:c,db:dbOf(c)}))
-      .filter(x=>x.db.k==='m');
-    if(!mons.length){ showToast("相手の手札にモンスターがいません"); done([]); return; }
-    API.selectCard("ダスト・シュート：デッキに戻すモンスター", mons, t=>done([t]), "相手の手札を確認");
-  },
+  selectTargets(ctx, done){ done([]); },
   resolve(ctx){
-    const t=ctx.selectedTargets[0]; if(!t) return;
-    act({type:"FX_RETURN_DECK", player:ctx.opponent, zone:'hand', index:t.index, toBottom:false, reason:"ダスト・シュート"});
-    API.shuffle(ctx.opponent);
+    const foe=gameState.players[ctx.opponent];
+    const mons=foe.hand.map((c,i)=>({p:ctx.opponent,zone:'hand',index:i,card:c,db:dbOf(c)})).filter(x=>x.db.k==='m');
+    API.log('ダスト・シュート：相手の現在の手札を公開（'+foe.hand.map(cardName).join('、')+'）');
+    if(!mons.length) return;
+    API.requestChoice({player:ctx.player,kind:'card',title:'ダスト・シュート：デッキに戻すモンスター',
+      candidates:mons,min:1,max:1,cancelable:false,
+      resume:{handler:'s03u481.dustshoot-return',args:{opponent:ctx.opponent}},meta:{scriptName:'ダスト・シュート'}});
   }
 });
 
@@ -24204,7 +24270,17 @@ defineScript("暗黒界の狩人 ブラウ", {
   passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
 });
 
-defineScript("暗黒界の武神 ゴルド", { targets:true, /* S03-U476: 対象を取る（WIKI-9F35337BF8BB 2007-01-13）。選択側は requestChoiceV49 の targeting:true で耐性済み。ここは解決時の発生源 srcS03.tg（対象を取らない効果では破壊されない）のための宣言 */
+API.registerChoiceHandler('s03u480.goldd-count',(a,x)=>{
+  if(a.cancelled) return p11cAbort(x.activation);
+  const picked=a.cards&&a.cards[0],n=Number(picked&&picked.value);
+  if(!targetCountAllowedS03('暗黒界の武神 ゴルド',n)) return p11cAbort(x.activation);
+  if(n===0) return p11cCommit(x.activation,[],null,0);
+  const p=x.activation.player,foes=API.fieldCards({player:p===0?1:0,filter:q=>q.card});
+  const ok=p11cOpen(x.activation,{title:`暗黒界の武神 ゴルド：破壊する相手のカード（${n}枚）`,candidates:foes,min:n,max:n,targeting:true,
+    effectInfo:targetEffectSourceS03(p,{name:'暗黒界の武神 ゴルド',targetCount:n}),cancelable:false},'p11cards.commit-targets',{targetCount:n});
+  if(!ok) p11cAbort(x.activation);
+});
+defineScript("暗黒界の武神 ゴルド", { targets:true, targetCountRange:[0,2], /* S03-U476/U480: 対象を取る（WIKI-9F35337BF8BB 2007-01-13）。発動時に選んだ実数を effectInfo とチェーンリンクへ載せる。 */
   type:"monster", priority:2, forced:true,   /* S03-U112 */
   activateFrom:["grave"],
   condition(ctx){
@@ -24212,16 +24288,14 @@ defineScript("暗黒界の武神 ゴルド", { targets:true, /* S03-U476: 対象
     if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
     return true;
   },
-  /* S03-U125: 「相手フィールド上に存在するカードを2枚まで選択して破壊する事ができる」は対象を取る。対象（0〜2枚）は
-     発動時に選ぶ（以前は解決時に選んでいた）。相手のカードの効果で捨てられた場合だけ。 */
-  selectTargets(ctx, done){
-    if(darkWorldDiscard(ctx)!=='opponent'){ done([]); return; }
+  /* S03-U125/U480: 「相手フィールド上に存在するカードを2枚まで選択して破壊する事ができる」は対象を取る。対象（0〜2枚）は
+     発動時に枚数を宣言してから、その実数を選ぶ。相手のカードの効果で捨てられた場合だけ。 */
+  activationV11(ctx,d){
+    if(darkWorldDiscard(ctx)!=='opponent') return p11cCommit(d,[],null,0);
     const foes = API.fieldCards({player:ctx.opponent, filter:x=>x.card});
-    if(!foes.length){ done([]); return; }
-    const ok = requestChoiceV49({kind:'card', title:"暗黒界の武神 ゴルド：破壊する相手のカード（2枚まで・選ばなくてもよい）",
-      candidates:foes, min:0, max:Math.min(2, foes.length), targeting:true, cancelable:false,
-      legacy:{ onPick:(first, all)=>done((all||[]).filter(Boolean)) }, meta:{scriptName:"暗黒界の武神 ゴルド"}});
-    if(!ok) done([]);
+    const max=Math.min(2,foes.length);
+    p11cOpen(d,{kind:'option',title:'暗黒界の武神 ゴルド：対象にする枚数',candidates:Array.from({length:max+1},(_,i)=>({key:`n${i}`,label:`${i}枚`,value:i})),
+      min:1,max:1,targeting:false,cancelable:false},'s03u480.goldd-count',{});
   },
   resolve(ctx){
     const me = API.pileCards(ctx.player,'grave',x=>x.card===ctx.card)[0];
@@ -32710,7 +32784,7 @@ function p11cCtx(p){return {player:p,opponent:p===0?1:0};}
 function p11cHit(uid){return uid==null?null:findCardByUid(uid);}
 function p11cCards(a){return (a&&a.cards||[]).filter(x=>x&&!x.stale);}
 function p11cOpen(d,s,h,args){return API.requestChoice(Object.assign({player:d.player,kind:'card',min:1,max:1,cancelable:true},s||{},{resume:{handler:h,args:Object.assign({activation:d},args||{})},meta:{scriptName:d.name,v4EffectKey:d.v4EffectKey||null}}));}
-function p11cCommit(d,t,m){return commitPreparedActivationV11(d,{targets:t||[],v4EffectKey:m||null});}
+function p11cCommit(d,t,m,targetCount){const data={targets:t||[],v4EffectKey:m||null};if(targetCount!=null)data.targetCount=Number(targetCount);return commitPreparedActivationV11(d,data);}
 function p11cAbort(d){abortPreparedActivationV11(d);}
 function p11cByUid(u){return (u||[]).map(p11cHit).filter(Boolean);}
 function p11cRecordMove(d,a,k,m,f){const q=p11cCards(a),c=p11cCtx(d.player);API.recordActivationCost(c,k,q,f||[],q.length);q.forEach(t=>{const h=p11cHit(t.uid);if(!h)return;if(m==='discard')API.discard(h.p,h.index,d.name+'（コスト）',{byEffect:false});else if(m==='hand-send')API.sendHandToGrave(h.p,h.index,d.name+'（コスト）');else API.sendToGrave(h,d.name+'（コスト）');});return q;}
@@ -32722,7 +32796,7 @@ function p11cNamed(x,g){return isCardInGroupV4(x,g);}
 function p11cSet(x,s){return isSetCardV4(x.db||x,s);}
 function p11cSelf(ctx){return !!(ctx.event&&(ctx.event.card===ctx.card||ctx.event.uid===ctx.card.uid));}
 
-API.registerChoiceHandler('p11cards.commit-targets',(a,x)=>{if(a.cancelled)return p11cAbort(x.activation);p11cCommit(x.activation,p11cCards(a),x.mode);});
+API.registerChoiceHandler('p11cards.commit-targets',(a,x)=>{if(a.cancelled)return p11cAbort(x.activation);p11cCommit(x.activation,p11cCards(a),x.mode,x.targetCount);});
 API.registerChoiceHandler('p11cards.cost-target',(a,x)=>{if(a.cancelled)return p11cAbort(x.activation);p11cRecordMove(x.activation,a,x.costKind,x.move,x.fields);const p=x.activation.player,q=x.pool==='foeFace'?API.fieldCards({player:1-p,zone:'mz',filter:t=>t.card.face==='up'}):x.pool==='ownFire'?API.fieldCards({player:p,zone:'mz',filter:t=>t.card.face==='up'&&t.db.at==='炎'}):x.pool==='gemGrave'?API.pileCards(p,'grave',t=>p11cSet(t,SETCODE.GEM_KNIGHT)):API.pileCards(p,'grave',t=>t.db.k==='m'&&(t.db.lv||0)>=7);if(!q.length)return p11cAbort(x.activation);p11cOpen(x.activation,{title:x.title,candidates:q,targeting:true},'p11cards.commit-targets',{});});
 API.registerChoiceHandler('p11cards.cost-commit',(a,x)=>{if(a.cancelled)return p11cAbort(x.activation);p11cRecordMove(x.activation,a,x.costKind,x.move,x.fields);p11cCommit(x.activation,[],x.mode);});
 API.registerChoiceHandler('p11cards.mode',(a,x)=>{if(a.cancelled)return p11cAbort(x.activation);const m=a.cards&&a.cards[0]&&a.cards[0].value;if(!m)return p11cAbort(x.activation);x.activation.v4EffectKey=String(m);p11cOpen(x.activation,{title:'竜の渓谷：捨てる手札',candidates:API.pileCards(x.activation.player,'hand')},'p11cards.cost-commit',{costKind:'discard',move:'discard',mode:String(m)});});
@@ -32738,11 +32812,10 @@ API.registerChoiceHandler('p11cards.opponent-spells',(a,x)=>{p11cCards(a).forEac
 defineScript('お家おとりつぶし',{type:'trap',priority:2,targets:true,destroysFieldV46:true,condition(ctx){return API.pileCards(ctx.player,'hand',x=>x.db.k==='s').length>0&&API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'}).length>0;},activationV11(ctx,d){p11cOpen(d,{title:'お家おとりつぶし：捨てる魔法',candidates:API.pileCards(ctx.player,'hand',x=>x.db.k==='s')},'p11cards.cost-target',{costKind:'discard',move:'discard',pool:'foeFace',title:'お家おとりつぶし：破壊する相手モンスター'});},resolve(ctx){const t=ctx.selectedTargets[0]&&resolveTarget(ctx.selectedTargets[0]);if(!t)return;const ref=t.db,uid=t.card.uid;API.destroy(t,'お家おとりつぶし');const moved=p11cHit(uid);if(!moved||moved.zone!=='grave'||!moved.card.graveInfo||!moved.card.graveInfo.byDestroy)return;API.pileCards(ctx.opponent,'hand',x=>sameCanonicalCardV4(x.db,ref)).slice().forEach(x=>{const h=p11cHit(x.card.uid);if(h)API.sendHandToGrave(ctx.opponent,h.index,'お家おとりつぶし');});}});
 defineScript('エクスプレスロイド',{type:'monster',priority:1,targets:true,condition(ctx){return API.pileCards(ctx.player,'grave',x=>p11cNamed(x,GROUP.ROID)&&!sameCanonicalCardV4(x.db,dbOf(ctx.card))).length>=2;},activationV11(ctx,d){p11cOpen(d,{title:'エクスプレスロイド：ロイド2体',candidates:API.pileCards(ctx.player,'grave',x=>p11cNamed(x,GROUP.ROID)&&!sameCanonicalCardV4(x.db,dbOf(ctx.card))),min:2,max:2,targeting:true},'p11cards.commit-targets',{});},resolve(ctx){p11cReturn(ctx.selectedTargets,'エクスプレスロイド');},passive:{onNormalSummon:p11cSelf,onSpecialSummon:p11cSelf,onFlip:p11cSelf}});
 defineScript('ガジェット・トレーラー',{type:'monster',priority:1,countLimit:1,timing:['mainPhase'],condition(ctx){return API.pileCards(ctx.player,'hand',x=>p11cNamed(x,GROUP.D_MORPHTRONIC)).length>0;},activationV11(ctx,d){const q=API.pileCards(ctx.player,'hand',x=>p11cNamed(x,GROUP.D_MORPHTRONIC));p11cOpen(d,{title:'ガジェット・トレーラー：墓地へ送るD',candidates:q,min:1,max:q.length},'p11cards.cost-commit',{costKind:'hand-send',move:'hand-send'});},resolve(ctx){const c=API.activationCosts(ctx,'hand-send')[0],h=p11cHit(ctx.chainLink.uid);if(h&&c)API.modAtk(h,c.amount*800,0,'leave','ガジェット・トレーラー');}});
-/* S03-U478: 「自分の墓地のガスタ2体を選択してデッキに戻す」＝固定 2 体を対象にする（WIKI-A7D8467EA203 2011-04-27「効果解決時に対象に選択した墓地のモンスター」。特殊召喚するカードは選択して対象にするのではない＝非対象のまま）。
+/* S03-U478/U479: 「自分の墓地のガスタ2体を選択してデッキに戻す」＝固定 2 体を対象にする（WIKI-A7D8467EA203 2011-04-27「効果解決時に対象に選択した墓地のモンスター」。特殊召喚するカードは選択して対象にするのではない＝非対象のまま）。
    スクリプトの targets:true / targetCount:2 はエンジンの宣言経路（linkTargetUidsS03 の srcS03.tg、メタルシルバー・アーマーの複数対象の例外 = engine/1ZZR）。
-   P1.1 の道だけの違い: prepareDuelActivation は activationV11 を呼ぶ前に endActivationPrepS03() で発動準備の控えを外す（engine/30:1514）ので、requestChoice の targeting:true は効果の発生源の名前を知らず（filterTargetable に渡るのはプレイヤーだけ）、
-   targetCount が見えずアーマーが単体扱いで制限してしまう。そこで候補は、このスクリプト自身が宣言した効果ソース（targetEffectSourceS03 の明示 effectInfo）で filterTargetable に通してから開く（同じ filterTargetable なので他の対象耐性は全て効く）。選択の targeting は立てない（立てるとエンジンが名前なしで再度絞り、例外が消える）。 */
-defineScript('ガスタのつむじ風',{type:'trap',priority:2,targets:true,targetCount:2,includesSpecialSummon:true,blocksIfNoSpecialSummon:true,condition(ctx){return API.me(ctx).mz.length===0&&API.pileCards(ctx.player,'grave',x=>p11cNamed(x,GROUP.GUSTO)).length>=2&&API.pileCards(ctx.player,'deck',x=>p11cNamed(x,GROUP.GUSTO)&&(x.db.def||0)<=1000).length>0;},activationV11(ctx,d){p11cOpen(d,{title:'ガスタのつむじ風：デッキへ戻すガスタ2体',candidates:filterTargetable(API.pileCards(ctx.player,'grave',x=>p11cNamed(x,GROUP.GUSTO)),ctx.player,targetEffectSourceS03(ctx.player,{name:'ガスタのつむじ風'})),min:2,max:2},'p11cards.commit-targets',{});},resolve(ctx){p11cDeck(ctx.selectedTargets,'ガスタのつむじ風');API.shuffle(ctx.player);const q=API.pileCards(ctx.player,'deck',x=>p11cNamed(x,GROUP.GUSTO)&&(x.db.def||0)<=1000);if(q.length)API.requestChoice({player:ctx.player,kind:'card',title:'ガスタのつむじ風：特殊召喚',candidates:q,min:1,max:1,resume:{handler:'p11cards.special',args:{player:ctx.player,pos:'def',reason:'ガスタのつむじ風'}}});}});
+   P1.1 の道だけの違いは S03-U479 で中央化した。prepareDuelActivation が activationV11 前に発動準備を外しても、p11cOpen の meta.scriptName から requestChoiceV49 がこのスクリプトの source / targetCount を復元する。候補数から対象数を推測しない。 */
+defineScript('ガスタのつむじ風',{type:'trap',priority:2,targets:true,targetCount:2,includesSpecialSummon:true,blocksIfNoSpecialSummon:true,condition(ctx){return API.me(ctx).mz.length===0&&API.pileCards(ctx.player,'grave',x=>p11cNamed(x,GROUP.GUSTO)).length>=2&&API.pileCards(ctx.player,'deck',x=>p11cNamed(x,GROUP.GUSTO)&&(x.db.def||0)<=1000).length>0;},activationV11(ctx,d){p11cOpen(d,{title:'ガスタのつむじ風：デッキへ戻すガスタ2体',candidates:API.pileCards(ctx.player,'grave',x=>p11cNamed(x,GROUP.GUSTO)),min:2,max:2,targeting:true},'p11cards.commit-targets',{});},resolve(ctx){p11cDeck(ctx.selectedTargets,'ガスタのつむじ風');API.shuffle(ctx.player);const q=API.pileCards(ctx.player,'deck',x=>p11cNamed(x,GROUP.GUSTO)&&(x.db.def||0)<=1000);if(q.length)API.requestChoice({player:ctx.player,kind:'card',title:'ガスタのつむじ風：特殊召喚',candidates:q,min:1,max:1,resume:{handler:'p11cards.special',args:{player:ctx.player,pos:'def',reason:'ガスタのつむじ風'}}});}});
 defineScript('ジェム・エンハンス',{type:'trap',priority:2,targets:true,includesSpecialSummon:true,blocksIfNoSpecialSummon:true,condition(ctx){return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'&&p11cSet(x,SETCODE.GEM_KNIGHT)}).length&&API.pileCards(ctx.player,'grave',x=>p11cSet(x,SETCODE.GEM_KNIGHT)).length&&hasMonsterZoneSpace(ctx.player);},activationV11(ctx,d){p11cOpen(d,{title:'ジェム・エンハンス：リリース',candidates:API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'&&p11cSet(x,SETCODE.GEM_KNIGHT)})},'p11cards.cost-target',{costKind:'tribute',move:'tribute',pool:'gemGrave',title:'ジェム・エンハンス：蘇生対象'});},resolve(ctx){const t=ctx.selectedTargets[0]&&resolveTarget(ctx.selectedTargets[0]);if(t)API.specialSummon(ctx.player,'grave',t.index,'atk','ジェム・エンハンス');}});
 defineScript('フレムベル・ベビー',{type:'monster',priority:1,timing:['mainPhase'],activateFrom:['hand'],targets:true,condition(ctx){return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'&&x.db.at==='炎'}).length>0;},activationV11(ctx,d){API.recordActivationCost(ctx,'hand-send',[{card:ctx.card}],[],1);const h=p11cHit(ctx.card.uid);if(h)API.sendHandToGrave(ctx.player,h.index,'フレムベル・ベビー（コスト）');p11cOpen(d,{title:'フレムベル・ベビー：強化対象',candidates:API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'&&x.db.at==='炎'}),targeting:true},'p11cards.commit-targets',{});},resolve(ctx){const t=ctx.selectedTargets[0]&&resolveTarget(ctx.selectedTargets[0]);if(t)API.modAtk(t,400,0,'leave','フレムベル・ベビー');}});
 defineScript('ミスター・ボンバー',{type:'monster',priority:1,timing:['standby'],targets:true,destroysFieldV46:true,condition(){return API.fieldCards({zone:'mz',filter:x=>x.card.face==='up'&&curATK(x.card)<=1000}).length>=3;},activationV11(ctx,d){API.recordActivationCost(ctx,'tribute',[{card:ctx.card}],[],1);const h=p11cHit(ctx.card.uid);if(h)API.sendToGrave(h,'ミスター・ボンバー（リリース）');p11cOpen(d,{title:'ミスター・ボンバー：破壊する2体',candidates:API.fieldCards({zone:'mz',filter:x=>x.card.face==='up'&&curATK(x.card)<=1000}),min:2,max:2,targeting:true},'p11cards.commit-targets',{});},resolve(ctx){ctx.selectedTargets.forEach(t=>API.destroy(t,'ミスター・ボンバー'));},passive:{onStandbyPhase:()=>true}});
@@ -36196,7 +36269,7 @@ API.registerChoiceHandler('s03u263.scroll-target',(a,x)=>{
   if(a.cancelled) return p11cAbort(x.activation);
   const pool=API.fieldCards({zone:'mz', filter:t=>t.card.face==='up'});
   if(!pool.length) return p11cAbort(x.activation);
-  p11cOpen(x.activation,{title:'幻惑の巻物：装備するモンスター',candidates:pool,min:1,max:1,cancelable:false},'p11cards.commit-targets',{});
+  p11cOpen(x.activation,{title:'幻惑の巻物：装備するモンスター',candidates:pool,min:1,max:1,targeting:true,cancelable:false},'p11cards.commit-targets',{});
 });
 
 /* =====================================================================
@@ -88002,7 +88075,7 @@ API.registerChoiceHandler('u375.gap-target', (a, x)=>{
   const attr = declaredValueV11(null, 'attribute', gameState);
   const pool = attr ? u375GapPool(attr) : [];
   if(pool.length<2) return p11cAbort(x.activation);
-  p11cOpen(x.activation, {title:'異次元への隙間：除外する墓地のモンスター（合計2体）', candidates:pool, min:2, max:2, cancelable:false}, 'p11cards.commit-targets', {});
+  p11cOpen(x.activation, {title:'異次元への隙間：除外する墓地のモンスター（合計2体）', candidates:pool, min:2, max:2, targeting:true, cancelable:false}, 'p11cards.commit-targets', {});
 });
 defineScript('異次元への隙間', {
   type:'trap', priority:2, targets:true,

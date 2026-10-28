@@ -1260,6 +1260,10 @@ function applyActionBodyV31(gs, a){
       if(a.declaration){
         gs.chain[gs.chain.length-1].declaration=JSON.parse(JSON.stringify(a.declaration));
       }
+      /* S03-U480: 発動時に決めた可変対象枚数。0 も実際に対象を選ばなかった宣言として保存する。 */
+      if(Number.isInteger(a.targetCount) && a.targetCount>=0){
+        gs.chain[gs.chain.length-1].targetCount=a.targetCount;
+      }
       if(Array.isArray(a.activationCost) && a.activationCost.length){
         gs.chain[gs.chain.length-1].activationCost=JSON.parse(JSON.stringify(a.activationCost));
       }

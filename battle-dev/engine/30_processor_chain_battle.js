@@ -1372,7 +1372,17 @@ function preparedActivationDescriptorV11(name,p,zone,index,opts,ctx,card,db,sc,s
 function commitPreparedActivationV11(desc,data){
   data=data||{}; if(!desc||desc.uid==null) return false;
   const hit=findCardByUid(desc.uid); if(!hit){abortPreparedActivationV11(desc);return false;}
-  const selectionData=serializeChainSelectionV2(data.targets||[]);
+  const selectedTargets=Array.isArray(data.targets)?data.targets:[];
+  const dynamicRange=(typeof targetCountRangeS03==='function')?targetCountRangeS03(desc.name):null;
+  let actualTargetCount=null;
+  if(dynamicRange){
+    actualTargetCount=Number(data.targetCount);
+    if(!(typeof targetCountAllowedS03==='function'&&targetCountAllowedS03(desc.name,actualTargetCount)) || actualTargetCount!==selectedTargets.length){
+      if(typeof trace==='function') trace(`${desc.name}：対象枚数の宣言と実選択が一致しません`,false);
+      abortPreparedActivationV11(desc); return false;
+    }
+  }
+  const selectionData=serializeChainSelectionV2(selectedTargets);
   const p3CostSnaps=(typeof takeCostSnapshotsV3==='function')?takeCostSnapshotsV3(gameState):[];
   act(Object.assign({type:'CHAIN_ADD',player:desc.player,cardId:hit.card.id,uid:desc.uid,name:desc.name,ss:desc.ss,
     from:desc.from,index:desc.index,costSnapshots:p3CostSnaps,prepared:true,targets:selectionData,
@@ -1381,7 +1391,7 @@ function commitPreparedActivationV11(desc,data){
     v44ActivationPending:!!desc.v44ActivationPending,effectClass:desc.effectClass||null,
     sourceNegatedAtActivation:!!desc.sourceNegatedAtActivation,
     spellCounterObserverUids:desc.spellCounterObserverUids||[],keep:!!desc.keep,
-    eventResumeV11:desc.eventSelectionV11&&desc.eventSelectionV11.resume||null},desc.cardActivationS03?{cardActivationS03:true}:{},desc.drawReplacementS03?{drawReplacementS03:true}:{}));   /* S03-U29 / S03-U33 */
+    eventResumeV11:desc.eventSelectionV11&&desc.eventSelectionV11.resume||null},dynamicRange?{targetCount:actualTargetCount}:{},desc.cardActivationS03?{cardActivationS03:true}:{},desc.drawReplacementS03?{drawReplacementS03:true}:{}));   /* S03-U29 / S03-U33 */
   if(typeof prepTxCommitS03==='function') prepTxCommitS03(hit.card);   /* S03-U471: CHAIN_ADD が復元点を閉じた */
   if(typeof applyTargetingNegatorsS03==='function') applyTargetingNegatorsS03();   /* S03-U28: 対象にされた時の自動無効（永続効果） */
   if(typeof applyTargetingProtectorsS03==='function') applyTargetingProtectorsS03();   /* S03-U66: 他の表側表示モンスターを守る永続効果 */ if(typeof applyTargetedSelfDestroyS03==='function') applyTargetedSelfDestroyS03();   /* S03-U137: 対象になった時に自壊（魂を削る死霊） */

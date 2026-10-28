@@ -190,7 +190,17 @@ defineScript("暗黒界の狩人 ブラウ", {
   passive:{ onSendToGrave(ctx){ return ctx.zone==='grave'; } }
 });
 
-defineScript("暗黒界の武神 ゴルド", { targets:true, /* S03-U476: 対象を取る（WIKI-9F35337BF8BB 2007-01-13）。選択側は requestChoiceV49 の targeting:true で耐性済み。ここは解決時の発生源 srcS03.tg（対象を取らない効果では破壊されない）のための宣言 */
+API.registerChoiceHandler('s03u480.goldd-count',(a,x)=>{
+  if(a.cancelled) return p11cAbort(x.activation);
+  const picked=a.cards&&a.cards[0],n=Number(picked&&picked.value);
+  if(!targetCountAllowedS03('暗黒界の武神 ゴルド',n)) return p11cAbort(x.activation);
+  if(n===0) return p11cCommit(x.activation,[],null,0);
+  const p=x.activation.player,foes=API.fieldCards({player:p===0?1:0,filter:q=>q.card});
+  const ok=p11cOpen(x.activation,{title:`暗黒界の武神 ゴルド：破壊する相手のカード（${n}枚）`,candidates:foes,min:n,max:n,targeting:true,
+    effectInfo:targetEffectSourceS03(p,{name:'暗黒界の武神 ゴルド',targetCount:n}),cancelable:false},'p11cards.commit-targets',{targetCount:n});
+  if(!ok) p11cAbort(x.activation);
+});
+defineScript("暗黒界の武神 ゴルド", { targets:true, targetCountRange:[0,2], /* S03-U476/U480: 対象を取る（WIKI-9F35337BF8BB 2007-01-13）。発動時に選んだ実数を effectInfo とチェーンリンクへ載せる。 */
   type:"monster", priority:2, forced:true,   /* S03-U112 */
   activateFrom:["grave"],
   condition(ctx){
@@ -198,16 +208,14 @@ defineScript("暗黒界の武神 ゴルド", { targets:true, /* S03-U476: 対象
     if(API.me(ctx).mz.length>=ZONE_LIMITS.mz){ ctx.reason="モンスターゾーンが一杯です"; return false; }
     return true;
   },
-  /* S03-U125: 「相手フィールド上に存在するカードを2枚まで選択して破壊する事ができる」は対象を取る。対象（0〜2枚）は
-     発動時に選ぶ（以前は解決時に選んでいた）。相手のカードの効果で捨てられた場合だけ。 */
-  selectTargets(ctx, done){
-    if(darkWorldDiscard(ctx)!=='opponent'){ done([]); return; }
+  /* S03-U125/U480: 「相手フィールド上に存在するカードを2枚まで選択して破壊する事ができる」は対象を取る。対象（0〜2枚）は
+     発動時に枚数を宣言してから、その実数を選ぶ。相手のカードの効果で捨てられた場合だけ。 */
+  activationV11(ctx,d){
+    if(darkWorldDiscard(ctx)!=='opponent') return p11cCommit(d,[],null,0);
     const foes = API.fieldCards({player:ctx.opponent, filter:x=>x.card});
-    if(!foes.length){ done([]); return; }
-    const ok = requestChoiceV49({kind:'card', title:"暗黒界の武神 ゴルド：破壊する相手のカード（2枚まで・選ばなくてもよい）",
-      candidates:foes, min:0, max:Math.min(2, foes.length), targeting:true, cancelable:false,
-      legacy:{ onPick:(first, all)=>done((all||[]).filter(Boolean)) }, meta:{scriptName:"暗黒界の武神 ゴルド"}});
-    if(!ok) done([]);
+    const max=Math.min(2,foes.length);
+    p11cOpen(d,{kind:'option',title:'暗黒界の武神 ゴルド：対象にする枚数',candidates:Array.from({length:max+1},(_,i)=>({key:`n${i}`,label:`${i}枚`,value:i})),
+      min:1,max:1,targeting:false,cancelable:false},'s03u480.goldd-count',{});
   },
   resolve(ctx){
     const me = API.pileCards(ctx.player,'grave',x=>x.card===ctx.card)[0];

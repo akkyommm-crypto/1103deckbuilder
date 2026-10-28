@@ -991,7 +991,17 @@ defineScript("終末の騎士", {
   }
 });
 
-/* ---- E・HERO エアーマン（召喚時に選択：破壊 or サーチ） ---- */
+/* ---- E・HERO エアーマン（召喚時に効果を選択） ---- */
+/* S03-U481: 1103 の「選択して」は対象を取る選択ではない。発動時は効果だけを選び、
+   破壊する魔法・罠は解決時の現在の盤面から選ぶ。choice の継続は Save/Load 安全な登録ハンドラ。 */
+API.registerChoiceHandler('s03u481.airman-destroy', (answer, args)=>{
+  const picks=(typeof v49P1ChoiceCards==='function'?v49P1ChoiceCards(answer):[]);
+  const limit=Math.max(0,Number(args&&args.limit)||0);
+  picks.slice(0,limit).forEach(pick=>{
+    const h=pick&&(pick.uid!=null?findCardByUid(pick.uid):locateCardAnyV4(pick.card));
+    if(h&&h.zone!=='mz') API.destroy(h,'E・HERO エアーマン');
+  });
+});
 defineScript("E・HERO エアーマン", {
   type:"monster", priority:1, quickEffect:false,
   condition(ctx){
@@ -999,19 +1009,10 @@ defineScript("E・HERO エアーマン", {
     return true;
   },
   selectTargets(ctx, done){
-    /* S03-U63: 破壊モードは対象を取る効果なので発動時に対象を宣言する（従来通り）。
-       サーチモードは対象を取らないので、モード選択だけ発動時に行い、
-       「どのカードを加えるか」は解決時（現在のデッキ）に選ぶ（S03-U58パターン）。 */
-    const heroOnField = API.fieldCards({zone:'mz', player:ctx.player})
-      .filter(x=>String(x.db.n||'').indexOf('HERO')>=0 && x.index!==ctx.index).length;
+    /* 発動時に固定するのはモードだけ。候補・枚数は応答後の解決時に読む。 */
     const deckHero = API.pileCards(ctx.player,'deck',
       x=>x.db.k==='m' && !x.db.ex && String(x.db.n||'').indexOf('HERO')>=0);
-    const pickDestroy = ()=>{
-      if(!heroOnField){ showToast("他の「HERO」がいないため破壊できません"); done([]); return; }
-      const st = API.fieldCards().filter(x=>x.zone!=='mz');
-      if(!st.length){ showToast("破壊できる魔法・罠がありません"); done([]); return; }
-      API.selectCard("エアーマン：破壊する魔法・罠", st, x=>done([{mode:'destroy', t:x}]));
-    };
+    const pickDestroy = ()=>done([{mode:'destroy'}]);
     const pickSearch = ()=>{
       if(!deckHero.length){ showToast("デッキに「HERO」がいません"); done([]); return; }
       done([{mode:'search'}]);
@@ -1020,7 +1021,7 @@ defineScript("E・HERO エアーマン", {
     if(deckToHandLockReasonV32(ctx.player)){ pickDestroy(); return; }
     API.confirm("E・HERO エアーマン",
       `効果を1つ選んでください。<br>
-       ・破壊：他の「HERO」の数(${heroOnField})まで魔法・罠を破壊<br>
+       ・破壊：他の「HERO」の数まで魔法・罠を破壊<br>
        ・サーチ：デッキから「HERO」を手札に(${deckHero.length}体)`,
       pickSearch,      // はい＝サーチ
       pickDestroy);    // いいえ＝破壊
@@ -1028,7 +1029,16 @@ defineScript("E・HERO エアーマン", {
   resolve(ctx){
     const sel = ctx.selectedTargets[0];
     if(!sel) return;
-    if(sel.mode==='destroy'){ API.destroy(sel.t, "E・HERO エアーマン"); return; }
+    if(sel.mode==='destroy'){
+      const limit=API.fieldCards({zone:'mz',player:ctx.player})
+        .filter(x=>String(x.db.n||'').indexOf('HERO')>=0&&x.card.uid!==ctx.card.uid).length;
+      const spells=API.fieldCards().filter(x=>x.zone!=='mz');
+      if(!limit||!spells.length) return;
+      API.requestChoice({player:ctx.player,kind:'card',title:'エアーマン：破壊する魔法・罠',
+        candidates:spells,min:1,max:Math.min(limit,spells.length),cancelable:false,
+        resume:{handler:'s03u481.airman-destroy',args:{limit}},meta:{scriptName:'E・HERO エアーマン'}});
+      return;
+    }
     const deckHero = API.pileCards(ctx.player,'deck',
       x=>x.db.k==='m' && !x.db.ex && String(x.db.n||'').indexOf('HERO')>=0);
     if(!deckHero.length) return;
@@ -1354,9 +1364,18 @@ defineScript("ゴブリンゾンビ", {
 });
 
 /* ---- 霊滅術師 カイクウ（戦闘ダメージ時に相手墓地を2体まで除外） ---- */
+API.registerChoiceHandler('s03u480.kycoo-count',(a,x)=>{
+  if(a.cancelled) return p11cAbort(x.activation);
+  const picked=a.cards&&a.cards[0],n=Number(picked&&picked.value);
+  if(!targetCountAllowedS03('霊滅術師 カイクウ',n)) return p11cAbort(x.activation);
+  const pool=API.pileCards(x.activation.player===0?1:0,'grave',q=>q.db.k==='m');
+  const ok=p11cOpen(x.activation,{title:`カイクウ：除外する相手墓地のモンスター（${n}体）`,candidates:pool,min:n,max:n,targeting:true,
+    effectInfo:targetEffectSourceS03(x.activation.player,{name:'霊滅術師 カイクウ',targetCount:n}),cancelable:false},'p11cards.commit-targets',{targetCount:n});
+  if(!ok) p11cAbort(x.activation);
+});
 defineScript("霊滅術師 カイクウ", {
   dsTiming:"after",              // ④ 戦闘ダメージを与えた時
-  type:"monster", priority:1, quickEffect:false,
+  type:"monster", priority:1, quickEffect:false, targets:true, targetCountRange:[1,2],
   condition(ctx){
     const g = API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m');
     if(!g.length){ ctx.reason = "相手の墓地にモンスターがいません"; return false; }
@@ -1366,16 +1385,10 @@ defineScript("霊滅術師 カイクウ", {
     }
     return true;
   },
-  selectTargets(ctx, done){
-    const chosen=[];
-    const step=()=>{
-      const left = API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m')
-        .filter(x=>chosen.every(c=>c.card!==x.card));
-      if(chosen.length>=2 || !left.length){ done(chosen); return; }
-      API.selectCard(`カイクウ：除外する相手墓地のモンスター（${chosen.length+1}/2・任意）`, left,
-        t=>{ chosen.push(t); step(); }, "やめると確定");
-    };
-    step();
+  activationV11(ctx,d){
+    const max=Math.min(2,API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m').length);
+    p11cOpen(d,{kind:'option',title:'カイクウ：対象にする枚数',candidates:Array.from({length:max},(_,i)=>({key:`n${i+1}`,label:`${i+1}体`,value:i+1})),
+      min:1,max:1,targeting:false,cancelable:false},'s03u480.kycoo-count',{});
   },
   resolve(ctx){ (ctx.selectedTargets||[]).forEach(t=>API.banish(t, "霊滅術師 カイクウ")); },
   afterResolve(){},
@@ -1943,23 +1956,29 @@ defineScript("マインドクラッシュ", {
 });
 
 /* ---- ダスト・シュート ---- */
+/* S03-U481: 相手の手札からの選択は対象を取らず、解決時に現在の手札を公開して行う。 */
+API.registerChoiceHandler('s03u481.dustshoot-return', (answer,args)=>{
+  const pick=(typeof v49P1ChoiceCards==='function'?v49P1ChoiceCards(answer)[0]:null);
+  const h=pick&&(pick.uid!=null?findCardByUid(pick.uid):locateCardAnyV4(pick.card));
+  if(!h||h.p!==args.opponent||h.zone!=='hand'||h.db.k!=='m') return;
+  act({type:'FX_RETURN_DECK',player:args.opponent,zone:'hand',index:h.index,toBottom:false,reason:'ダスト・シュート'});
+  API.shuffle(args.opponent);
+});
 defineScript("ダスト・シュート", {
   type:"trap", priority:2,
   condition(ctx){
     if(API.foe(ctx).hand.length<4){ ctx.reason = "相手の手札が4枚未満です"; return false; }
     return true;
   },
-  selectTargets(ctx, done){
-    const foe = gameState.players[ctx.opponent];
-    const mons = foe.hand.map((c,i)=>({p:ctx.opponent,zone:'hand',index:i,card:c,db:dbOf(c)}))
-      .filter(x=>x.db.k==='m');
-    if(!mons.length){ showToast("相手の手札にモンスターがいません"); done([]); return; }
-    API.selectCard("ダスト・シュート：デッキに戻すモンスター", mons, t=>done([t]), "相手の手札を確認");
-  },
+  selectTargets(ctx, done){ done([]); },
   resolve(ctx){
-    const t=ctx.selectedTargets[0]; if(!t) return;
-    act({type:"FX_RETURN_DECK", player:ctx.opponent, zone:'hand', index:t.index, toBottom:false, reason:"ダスト・シュート"});
-    API.shuffle(ctx.opponent);
+    const foe=gameState.players[ctx.opponent];
+    const mons=foe.hand.map((c,i)=>({p:ctx.opponent,zone:'hand',index:i,card:c,db:dbOf(c)})).filter(x=>x.db.k==='m');
+    API.log('ダスト・シュート：相手の現在の手札を公開（'+foe.hand.map(cardName).join('、')+'）');
+    if(!mons.length) return;
+    API.requestChoice({player:ctx.player,kind:'card',title:'ダスト・シュート：デッキに戻すモンスター',
+      candidates:mons,min:1,max:1,cancelable:false,
+      resume:{handler:'s03u481.dustshoot-return',args:{opponent:ctx.opponent}},meta:{scriptName:'ダスト・シュート'}});
   }
 });
 

@@ -15555,6 +15555,16 @@
       "unit": "S03-U469",
       "tests": [],
       "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "霊滅術師 カイクウ",
+      "from": "IMPLEMENTED",
+      "to": "TESTED",
+      "unit": "S03-U480",
+      "tests": [
+        "tools/test_s03_u480_variable_target_count.js"
+      ],
+      "evidence": "The adopted 1103 project interpretation is covered by a dedicated real-chain test: the player declares one or two targets at activation, then chooses exactly that many; one target is restricted by Metal Silver Armor, two receive the multi-target exception, unrelated immunity still applies, and the original scalar survives target loss, Save/Load, and Replay. Generic declaration and count/selection mismatch guards are negative-tested."
     }
   ],
   "restored_to_baseline": [

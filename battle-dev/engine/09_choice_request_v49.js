@@ -183,7 +183,19 @@ function requestChoiceV49(spec){
   let raw = spec.candidates || [];
   if(targeting && typeof filterTargetable==='function' && kind==='card'){
     const before = raw.length;
-    raw = filterTargetable(raw, (spec.targetingPlayer===0||spec.targetingPlayer===1) ? spec.targetingPlayer : spec.player);   /* S03-U130: 対象を取るプレイヤー */
+    /* S03-U479: P1.1 ends activation preparation before activationV11 opens its
+       registered choice, so targetEffectSourceS03() cannot recover the source
+       from ACTIVATION_PREP_S03.  p11cOpen records that source as meta.scriptName.
+       Keep an explicitly supplied effectInfo untouched; otherwise reconstruct
+       only the source identity from that metadata.  The player choosing the
+       answer may differ from the player whose effect targets, so use
+       targetingPlayer solely for the effect source / immunity decision. */
+    const targetingPlayer = (spec.targetingPlayer===0||spec.targetingPlayer===1) ? spec.targetingPlayer : spec.player;
+    const p11Source = !spec.effectInfo && spec.meta && spec.meta.scriptName
+      ? {name:spec.meta.scriptName,v4EffectKey:spec.meta.v4EffectKey||null} : null;
+    const effectInfo = spec.effectInfo || (p11Source && typeof targetEffectSourceS03==='function'
+      ? targetEffectSourceS03(targetingPlayer,p11Source) : null);
+    raw = filterTargetable(raw, targetingPlayer, effectInfo);   /* S03-U130: 対象を取るプレイヤー */
     if(raw.length < before && typeof trace==='function'){
       trace(`対象耐性により ${before-raw.length}枚を除外`);
     }
@@ -456,4 +468,3 @@ function assertChoiceSerializableV49(gs){
   if(pc==null) return {ok:true, why:''};
   return choiceJsonSafetyV49(pc, 'pendingChoice');
 }
-

@@ -166,7 +166,7 @@ API.registerChoiceHandler('s03u263.scroll-target',(a,x)=>{
   if(a.cancelled) return p11cAbort(x.activation);
   const pool=API.fieldCards({zone:'mz', filter:t=>t.card.face==='up'});
   if(!pool.length) return p11cAbort(x.activation);
-  p11cOpen(x.activation,{title:'幻惑の巻物：装備するモンスター',candidates:pool,min:1,max:1,cancelable:false},'p11cards.commit-targets',{});
+  p11cOpen(x.activation,{title:'幻惑の巻物：装備するモンスター',candidates:pool,min:1,max:1,targeting:true,cancelable:false},'p11cards.commit-targets',{});
 });
 
 /* =====================================================================

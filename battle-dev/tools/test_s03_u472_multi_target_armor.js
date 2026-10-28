@@ -86,8 +86,8 @@ globalThis.__SAVES={};
     ok('declaration: '+n+' declares targetCount '+c+' and surfaces it on the normalized effectInfo (targetsMultiple true)',CARD_SCRIPTS[n]&&CARD_SCRIPTS[n].targetCount===c&&info(n).targetCount===c&&info(n).targetsMultiple===true,JSON.stringify({sc:CARD_SCRIPTS[n]&&CARD_SCRIPTS[n].targetCount,info:info(n).targetCount}));}
   ok('declaration: 強制脱出装置 (1 monster, many candidates) declares nothing — null / not multiple',CARD_SCRIPTS['強制脱出装置'].targetCount===undefined&&info('強制脱出装置').targetCount===null&&info('強制脱出装置').targetsMultiple===false,'');
   ok('declaration: デュアルスパーク / 因果切断 (cost choice + 1 target) declare nothing — a cost is not an effect target',info('デュアルスパーク').targetCount===null&&info('因果切断').targetCount===null,'');
-  ok('declaration: an unknown / missing name gives null; an explicit effectInfo.targetCount is honoured; non-positive / non-integer values are ignored',
-    targetEffectSourceS03(1,{name:'存在しないカード'}).targetCount===null&&targetEffectSourceS03(1,{name:'強制脱出装置',targetCount:2}).targetCount===2&&targetEffectSourceS03(1,{name:'貪欲な壺',targetCount:0}).targetCount===5&&targetEffectSourceS03(1,{targetCount:1.5}).targetCount===null,'');
+  ok('declaration: explicit positive targetCount is honoured; zero is valid only for an optional variable range (ゴルド), not a fixed-count spell; non-integers are ignored',
+    targetEffectSourceS03(1,{name:'存在しないカード'}).targetCount===null&&targetEffectSourceS03(1,{name:'強制脱出装置',targetCount:2}).targetCount===2&&targetEffectSourceS03(1,{name:'暗黒界の武神 ゴルド',targetCount:0}).targetCount===0&&targetEffectSourceS03(1,{name:'貪欲な壺',targetCount:0}).targetCount===5&&targetEffectSourceS03(1,{targetCount:1.5}).targetCount===null,'');
   /* 宣言しているスクリプトは丁度この8枚（カード名と対象数の組。件数だけでなく名前と数の一致を固定する）。
      S03-U478: 5 → 8 はユーザーが承認した「対応範囲の拡張」であって、テストの緩和ではない。ユーザーの条件: 件数だけでなく、対象カード名と対象数の一致を検証するガードを維持する。
      追加の3枚（墓守の石版 2 / 無欲な壺 2 / ガスタのつむじ風 2。docs/S03_U478_REPORT.md）は U476 が「targetCount の宣言が要る」として保留した固定2枚対象の3枚。
@@ -97,6 +97,10 @@ globalThis.__SAVES={};
   const declKeys=Object.keys(decl).sort(),expKeys=Object.keys(EXPECT_DECL).sort();
   ok('declaration: exactly these eight scripts declare targetCount — the five of S03-U472 plus 墓守の石版 / 無欲な壺 / ガスタのつむじ風 (user-authorised scope expansion, S03-U478) — and each with its exact count; no other script does',
     declKeys.length===8&&JSON.stringify(declKeys)===JSON.stringify(expKeys)&&expKeys.every(n=>decl[n]===EXPECT_DECL[n]),JSON.stringify(decl));
+  const variable={};Object.keys(CARD_SCRIPTS).forEach(n=>{const r=CARD_SCRIPTS[n]&&CARD_SCRIPTS[n].targetCountRange;if(r!=null)variable[n]=r;});
+  const EXPECT_VARIABLE={'霊滅術師 カイクウ':[1,2],'暗黒界の武神 ゴルド':[0,2]};
+  ok('declaration (S03-U480): exactly カイクウ and ゴルド declare variable target-count ranges, with their exact lower/upper bounds; neither fakes targetCount:2',
+    JSON.stringify(Object.keys(variable).sort())===JSON.stringify(Object.keys(EXPECT_VARIABLE).sort())&&Object.keys(EXPECT_VARIABLE).every(n=>JSON.stringify(variable[n])===JSON.stringify(EXPECT_VARIABLE[n]))&&CARD_SCRIPTS['霊滅術師 カイクウ'].targetCount==null&&CARD_SCRIPTS['暗黒界の武神 ゴルド'].targetCount==null,JSON.stringify(variable));
   /* 唯一の消費者はアーマー: 対象耐性フックの本文が宣言を読むのはメタルシルバー・アーマーだけ */
   const readers=Object.keys(CARD_SCRIPTS).filter(n=>{const c=CARD_SCRIPTS[n]&&CARD_SCRIPTS[n].continuous;if(!c)return false;
     return [c.immuneToTarget,c.immuneToTargetOffField].some(f=>typeof f==='function'&&/targetCount|targetsMultiple|d2ArmorExemptMultiTarget/.test(String(f)));});

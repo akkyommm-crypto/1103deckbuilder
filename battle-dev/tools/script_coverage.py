@@ -561,6 +561,10 @@ CARD_TEST_FOCUS = {
     "test_s03_u477_dark_world_resume.js": {"暗黒界の龍神 グラファ", "暗黒界の武神 ゴルド", "暗黒界の狩人 ブラウ", "暗黒界の軍神 シルバ", "暗黒界の術師 スノウ"},
     # S03-U478: the three fixed 2-target cards (targets:true + targetCount:2). Each is driven activation -> target selection(s) -> chain -> resolution -> Replay audit, with and without Metal Silver Armor, plus a chain-link Save/Load. The fixtures (サイバー・ドラゴン, ライオウ, ホルスのしもべ, メタルシルバー・アーマー, 強制脱出装置, リビングデッドの呼び声, ワイト and the other Graveyard cards) must NOT gain TESTED.
     "test_s03_u478_two_target_cards.js": {"墓守の石版", "無欲な壺", "ガスタのつむじ風"},
+    # S03-U479: P1.1 target-source propagation. ガスタ is driven under Metal Silver Armor; 幻惑の巻物 and 異次元への隙間 are driven through their declaration -> target -> chain paths with Armor immunity, plus normal resolution and Replay.
+    "test_s03_u479_p11_target_source.js": {"ガスタのつむじ風", "幻惑の巻物", "異次元への隙間"},
+    "test_s03_u480_variable_target_count.js": {"霊滅術師 カイクウ", "暗黒界の武神 ゴルド"},
+    "test_s03_u481_resolution_non_target.js": {"E・HERO エアーマン", "ダスト・シュート"},
 }
 
 

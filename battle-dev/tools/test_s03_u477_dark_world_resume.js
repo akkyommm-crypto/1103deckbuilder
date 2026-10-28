@@ -27,6 +27,9 @@ function nlink(name){return LINKS_SEEN[name]?LINKS_SEEN[name].size:0;}
 function pick(){
   const q=pc();
   SEEN.push({title:q.title,min:q.min,max:q.max,targeting:q.targeting,selection:q.selection,kind:q.kind,uids:q.candidates.map(c=>c.uid)});
+  if(q.kind==='option'&&/ゴルド.*対象にする枚数/.test(q.title||'')){
+    const j=q.candidates.findIndex(c=>Number(c.value)===Math.min(2,PREFER.length));
+    __choicePickV49(j>=0?j:0);return;}
   if(q.kind==='card'&&(q.max>1||q.min===0)){
     const keys=q.candidates.filter(c=>PREFER.indexOf(c.uid)>=0).map(c=>c.key);
     q.candidates.forEach(c=>{ if(keys.length<q.min&&keys.indexOf(c.key)<0) keys.push(c.key); });
@@ -268,6 +271,7 @@ for(const key of ['GRAPHA_self','GRAPHA_opp','GOLD_opp']){
     resetA();CHOICE_LEGACY_CB_V49.clear();localStorage.setItem(DUEL_SAVE_KEY,sv.raw);TOASTS.length=0;SEEN=[];LINKS_SEEN={};
     const resumed=offerResumeDuel();
     if(at==='offer') ok(tag+' saved in the offer window (Save/Load): resumed with the offer window restored and the digest equal to the saved one',!!resumed&&!!EVT_V2_STATE&&!pc()&&v41StateDigest(gameState)===sv.digest,JSON.stringify({resumed,evt:!!EVT_V2_STATE}));
+    else if(key==='GOLD_opp') ok(tag+' saved while the target choice was open (Save/Load): the registered U480 exact-count choice is restored with its preparation transaction',!!resumed&&!!gameState.prepTxS03&&!!pc()&&pc().resume&&pc().resume.mode==='registry'&&assertChoiceSerializableV49(gameState).ok,JSON.stringify({resumed,tx:!!gameState.prepTxS03,resume:pc()&&pc().resume}));
     else ok(tag+' saved while the target choice was open (Save/Load): the interrupted activation was undone by the U471/S03-U35 path (the legacy choice cannot be restored), the player was told, and no stale preparation record or choice is left',!!resumed&&TOASTS.some(t=>/発動を取り消し/.test(t))&&!gameState.prepTxS03&&!pc()&&gameState.chain.length===0,JSON.stringify({resumed,toasts:TOASTS,tx:!!gameState.prepTxS03,pc:!!pc()}));
     PREFER=o.pref.slice();drive();
     ok(tag+' saved '+(at==='offer'?'in the offer window':'with the target choice open')+' (Save/Load): the trigger is not lost — it is offered again and resolves to the same result as the uninterrupted run',gameState.chain.length===0&&!pc()&&JSON.stringify(spec.track(x).map(c=>loc(c)+'/'+posOf(c)+'/'+faceOf(c)))===JSON.stringify(o.locs)&&hand(0)===o.hands[0]&&hand(1)===o.hands[1],JSON.stringify({vm2:spec.track(x).map(c=>loc(c)+'/'+posOf(c)+'/'+faceOf(c)),vm1:o.locs}));

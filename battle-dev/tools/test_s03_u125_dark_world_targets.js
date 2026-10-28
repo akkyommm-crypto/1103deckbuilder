@@ -35,8 +35,10 @@ const f1=mk('BF－黒槍のブラスト',1,'up'),f2=mk('ワイト',1,'up'),f3=mk
 baselineA();
 duelActivateFromZone(1,'sz',0);
 let st=run();
-const q=pc();
-ok('A: when ゴルド\'s trigger is activated, the target choice (0 to 2 of the opponent\'s cards) comes first',st==='choice'&&/ゴルド/.test(q.title||'')&&q.min===0&&q.max===2&&q.targeting===true&&!gameState.chain.some(l=>l.name==='暗黒界の武神 ゴルド'),JSON.stringify(q&&{t:q.title,min:q.min,max:q.max,tg:q.targeting}));
+let q=pc();
+ok('A: ゴルド first asks the non-targeting number to declare (0 to 2)',st==='choice'&&/対象にする枚数/.test(q.title||'')&&q.targeting===false&&q.candidates.map(c=>c.value).join()==='0,1,2'&&!gameState.chain.some(l=>l.name==='暗黒界の武神 ゴルド'),JSON.stringify(q&&{t:q.title,min:q.min,max:q.max,tg:q.targeting,v:q.candidates.map(c=>c.value)}));
+answerChoiceV49([q.candidates.find(c=>c.value===2).key]);q=pc();
+ok('A: after declaring 2, ゴルド opens an exact two-card targeting choice',q&&q.targeting===true&&q.min===2&&q.max===2,JSON.stringify(q&&{t:q.title,min:q.min,max:q.max,tg:q.targeting}));
 answerChoiceV49(keysFor([f1,f3]));
 ok('A: ゴルド is on the chain with its 2 targets',chainTargets('暗黒界の武神 ゴルド')===2,JSON.stringify(gameState.chain.map(l=>[l.name,(l.targets||[]).length])));
 st=run();
@@ -49,7 +51,7 @@ const g2=mk('暗黒界の武神 ゴルド',0);gameState.players[0].hand=[g2];gam
 const e1=mk('ワイト',1,'up');gameState.players[1].mz=[e1];
 baselineA();
 duelActivateFromZone(1,'sz',0);run();
-answerChoiceV49([]);run();
+q=pc();answerChoiceV49([q.candidates.find(c=>c.value===0).key]);run();
 ok('A: choosing no target → ゴルド is still Special Summoned, nothing destroyed',z(g2)==='mz'&&z(e1)==='mz',JSON.stringify({g:z(g2),e:z(e1)}));
 audit('A none');
 `);

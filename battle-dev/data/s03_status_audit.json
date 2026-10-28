@@ -11,17 +11,17 @@
   "current_counts": {
     "ENGINE_GAP": 346,
     "GENERIC_OK": 644,
-    "IMPLEMENTED": 3,
+    "IMPLEMENTED": 2,
     "NOT_STARTED": 405,
     "PARTIAL": 10,
-    "TESTED": 3588
+    "TESTED": 3589
   },
   "delta": {
     "ENGINE_GAP": -270,
-    "IMPLEMENTED": -195,
+    "IMPLEMENTED": -196,
     "NOT_STARTED": -902,
     "PARTIAL": -172,
-    "TESTED": 1539
+    "TESTED": 1540
   },
   "status_changes": [
     {
@@ -8927,6 +8927,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U454"
+    },
+    {
+      "name": "霊滅術師 カイクウ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U480"
     },
     {
       "name": "霊魂の護送船",
