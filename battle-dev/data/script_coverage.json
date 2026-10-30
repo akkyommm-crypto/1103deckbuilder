@@ -10205,6 +10205,7 @@
       "tests": [
         "tools\\test_auto_cycle40.js",
         "tools\\test_s03_u28_targeting_negation.js",
+        "tools\\test_s03_u483_event_identity_closure.js",
         "tools\\test_s03_vs7_targeting_negation_slice.js"
       ]
     },
@@ -10314,7 +10315,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -10337,7 +10339,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -10398,7 +10401,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle38.js"
+        "tools\\test_auto_cycle38.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -17221,6 +17225,7 @@
         "tools\\test_expansion_v350.js",
         "tools\\test_s03_u296_hope_no_material_chain.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
+        "tools\\test_s03_u483_event_identity_closure.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js"
       ]
@@ -62923,7 +62928,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -65551,7 +65557,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -73121,7 +73128,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -76221,7 +76229,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -81287,7 +81296,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle13.js",
-        "tools\\test_auto_cycle24.js"
+        "tools\\test_auto_cycle24.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -82586,7 +82596,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle13.js",
-        "tools\\test_auto_cycle33.js"
+        "tools\\test_auto_cycle33.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -86270,7 +86281,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -91263,7 +91275,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle40.js"
+        "tools\\test_auto_cycle40.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -92724,7 +92737,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -93293,7 +93307,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -94682,7 +94697,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -101842,7 +101858,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u483_event_identity_closure.js"
       ]
     },
     {
@@ -108616,6 +108633,7 @@
       "tests": [
         "tools\\test_auto_cycle13.js",
         "tools\\test_s03_u198_partial2.js",
+        "tools\\test_s03_u483_event_identity_closure.js",
         "tools\\test_v730_batch25.js"
       ]
     },

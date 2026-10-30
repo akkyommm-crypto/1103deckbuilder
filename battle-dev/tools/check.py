@@ -771,6 +771,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u479_p11_target_source.js')],che
 subprocess.run(['node',str(ROOT/'tools/test_s03_u480_variable_target_count.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u481_resolution_non_target.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u482_chain_event_refs.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u483_event_identity_closure.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
