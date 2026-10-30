@@ -17,7 +17,11 @@ function duel(seed,first,env){
 }
 const brief=r=>JSON.stringify({loser:r.loser,turn:r.turn,lp:r.lp,journal:r.journal,replay:r.replay});
 for(const c of [{seed:'0x52310002',first:0,env:{},label:'seed 0x52310002, first-candidate policy'},
-                {seed:'0x52310007',first:0,env:{R1_RESPOND:'1',R1_SAVELOAD:'1'},label:'seed 0x52310007, responder, save / resume at every stop'}]){
+                /* U482 makes Bottomless Trap Hole resolve correctly after Save/Load. This fixed seed therefore
+                   becomes a measured 26-turn / 927-action duel (about 183 s with UI), rather than the old
+                   incorrect 12-turn / 434-action path. Preserve the seed, every-stop Save/Load, UI comparison,
+                   assertions and the harness-wide 120 s default; only this bounded child VM gets 300 s. */
+                {seed:'0x52310007',first:0,env:{R1_RESPOND:'1',R1_SAVELOAD:'1',ASTRA_VM_TIMEOUT:'300000'},label:'seed 0x52310007, responder, save / resume at every stop'}]){
   let on=null,off=null,err=null;
   try{on=duel(c.seed,c.first,Object.assign({HARNESS_UI:'1'},c.env));off=duel(c.seed,c.first,c.env);}catch(e){err=String(e&&e.message||e).slice(0,400);}
   ok(c.label+': both runs reported a result',!!on&&!!off&&!err,err||'');

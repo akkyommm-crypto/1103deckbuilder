@@ -565,6 +565,7 @@ CARD_TEST_FOCUS = {
     "test_s03_u479_p11_target_source.js": {"ガスタのつむじ風", "幻惑の巻物", "異次元への隙間"},
     "test_s03_u480_variable_target_count.js": {"霊滅術師 カイクウ", "暗黒界の武神 ゴルド"},
     "test_s03_u481_resolution_non_target.js": {"E・HERO エアーマン", "ダスト・シュート"},
+    "test_s03_u482_chain_event_refs.js": {"ねずみ取り", "つまずき"},
 }
 
 

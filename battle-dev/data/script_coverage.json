@@ -8479,6 +8479,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u482_chain_event_refs.js",
         "tools\\test_v490_batch01.js"
       ]
     },
@@ -8607,6 +8608,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u482_chain_event_refs.js",
         "tools\\test_v530_batch05.js"
       ]
     },

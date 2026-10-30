@@ -31,7 +31,10 @@ module.exports=function(body){
  function stub(){return new Proxy({style:{},classList:{add(){},remove(){},toggle(){}},addEventListener(){},appendChild(){},remove(){},querySelector(){return stub()},querySelectorAll(){return[]}},{get:(t,p)=>p in t?t[p]:()=>{}})}
  const nodes=new Map(),document={getElementById(id){if(!nodes.has(id))nodes.set(id,stub());return nodes.get(id)},querySelector(){return stub()},querySelectorAll(){return[]},createElement(){return stub()},addEventListener(){},body:stub(),documentElement:stub()},store=new Map(),localStorage={getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
  const c={console,__DB__:JSON.parse(fs.readFileSync(path.join(ROOT,'data/carddata.json'),'utf8')),document,localStorage,sessionStorage:localStorage,history:{pushState(){}},location:{reload(){}},navigator:{userAgent:'node'},addEventListener(){},removeEventListener(){},requestAnimationFrame:f=>f(),setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,prompt:()=>null,alert(){},Blob,structuredClone:global.structuredClone};c.window=c;c.globalThis=c;
- try{vm.runInNewContext(js,c,{timeout:120000});}catch(e){console.error(e.stack||e);process.exitCode=2;}
+ /* Keep the suite default bounded at 120 s. A test may raise only its own child VM budget when a
+    fixed, measured long-duel fixture legitimately exceeds that ceiling. */
+ const vmTimeout=Math.max(1,Number(process.env.ASTRA_VM_TIMEOUT)||120000);
+ try{vm.runInNewContext(js,c,{timeout:vmTimeout});}catch(e){console.error(e.stack||e);process.exitCode=2;}
  const R=c.__R||[];for(const r of R)console.log((r.ok?'PASS ':'FAIL ')+r.name+(r.detail?' :: '+r.detail:''));
  if(!R.length||R.some(r=>!r.ok))process.exitCode=2;
  return c;

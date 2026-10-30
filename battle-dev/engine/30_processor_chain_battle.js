@@ -1738,7 +1738,11 @@ function afterChainCompleteV2(){
 
 function preparedChainContext(link){
   const src=findCardByUid(link.uid), card=src?src.card:null;
-  const extra={event:link.event||{},chainId:link.chainId,effectClass:link.effectClass,chainLink:link,v4EffectKey:link.v4EffectKey||null};
+  const storedEvent=link.event||{};
+  /* Prepared links intentionally store only JSON-safe event identity (uid/uids). Rehydrate a fresh
+     resolution view at the final engine boundary; never mutate the journaled/saved link snapshot. */
+  const resolutionEvent=restoreEventRefsV27(storedEvent);
+  const extra={event:resolutionEvent,chainId:link.chainId,effectClass:link.effectClass,chainLink:link,v4EffectKey:link.v4EffectKey||null};
   if(link.eventName==='onDamageStep' || (gameState.battle && link.eventName==='onFlip')){
     extra.battle=battleContextV28();
     extra.step=(link.event&&link.event.step)||((gameState.battle&&gameState.battle.step)||null);
