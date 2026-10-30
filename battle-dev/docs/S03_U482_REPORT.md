@@ -25,8 +25,8 @@ The driver retains its existing intermediate Replay cadence and final all-entry 
 
 ## Artifacts and final gate
 
-- Canonical build before the final gate: `dist/battle.html` SHA-256 `97a80b3f6f5542f3930a29d899426be352c635bec9f9fc0cbce49ba77461fa88`.
-- Acode build before the final gate: SHA-256 `7b24b6d7362ebf58692b591a7935d0ba18336f54bad48cfc08df79f33e99a3c3`.
-- The final serial `finish-work.ps1 -NoPush` gate is pending. Replace this line with the exact log, verdict, and local commit after it completes.
+- Canonical builder content hash: `97a80b3f6f5542f3930a29d899426be352c635bec9f9fc0cbce49ba77461fa88`.
+- Acode builder content hash: `7b24b6d7362ebf58692b591a7935d0ba18336f54bad48cfc08df79f33e99a3c3`.
+- Final serial `finish-work.ps1 -NoPush`: **23979 PASS / 0 line-leading FAIL / no Traceback or ReferenceError / GATE_EXIT=0**. Log: `C:\Users\81806\AppData\Local\Temp\1103_gate_20261030_173524.log`. Verified implementation commit: `df27bfdf29e5a0f654461b5e3a20d7cac6ea9b59`.
 
 No push, main integration, or site publication is part of this unit.

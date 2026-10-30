@@ -1,4 +1,4 @@
-# Codex handoff — verified U479–U481 plus U482 candidate
+# Codex handoff — verified U479–U482
 
 Updated: 2026-10-30 JST. Base: `7f4b2dc9b1f86dc7bf1d6d653da8410d1ee3eb90`. Verified local U479–U481 commit: `06065e44038157595e64d04d8a75ca92ee92bf91` on `codex/battle-u479-p11`; it is a descendant of the clean Claude tip and has not been pushed.
 
@@ -16,10 +16,10 @@ Prepared-chain resolution now hydrates both detached raw event-card clones and U
 
 The dedicated regression includes actual Normal Summon -> Bottomless activation -> production Save/Resume -> exact summoned UID banish -> Replay audit. The old boundary produces eight dedicated failures. Nearby U477/U481/U09/activation-event tests pass. U305 seed07 now follows the correct longer game (turn 26, journal 927); the existing Replay cadence and assertions remain, while only that measured child VM has a bounded 300-second budget. Standalone U305 passes UI-on/off identity and full Replay audit.
 
-The final serial `finish-work.ps1 -NoPush` gate and U482 commit are pending. See `docs/S03_U482_REPORT.md`; replace this paragraph with the exact local commit/log after completion. Push remains unauthorized.
+U482 implementation commit `df27bfdf29e5a0f654461b5e3a20d7cac6ea9b59` passed the final serial `finish-work.ps1 -NoPush` gate with **23979 PASS / 0 line-leading FAIL / no Traceback or ReferenceError / GATE_EXIT=0**. Log: `C:\Users\81806\AppData\Local\Temp\1103_gate_20261030_173524.log`. Root/dist/Acode artifacts are synchronized (builder content hashes `97a80b3f…` and `7b24b6d…`). Push remains unauthorized and was skipped.
 
 ## Model routing and scope
 
 Use Sol as implementation commander. Delegate only suitable bounded work to gpt-5.6-terra (medium), or mechanical work to Luna, with one writer at a time. Use Astra only when Sol cannot resolve a specific technical or ruling issue. The user prefers no routine intermediate PASS-count reports; report design decisions, failures/blockers, and final acceptance. These are Codex preferences and do not rewrite Claude's workflow/model rules. Token usage is unavailable (`null`).
 
-No main integration or site publication is included. Do not run a heavy gate concurrently in the Claude tree. Review the final local U482 commit after its handoff is updated, then push only with explicit authorization and require `verify-battle` for that exact SHA.
+No main integration or site publication is included. The Claude tree was not changed. Review the verified local U482 implementation commit, then push only with explicit authorization and require `verify-battle` for that exact SHA.
