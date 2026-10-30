@@ -772,6 +772,8 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u480_variable_target_count.js')]
 subprocess.run(['node',str(ROOT/'tools/test_s03_u481_resolution_non_target.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u482_chain_event_refs.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u483_event_identity_closure.js')],check=True)
+# S03-U484: a non-P1.1 summon / flip trigger saved on the chain keeps its post-summon response window (summonFast / flipFast) across Save / resume
+subprocess.run(['node',str(ROOT/'tools/test_s03_u484_summon_trigger_resume.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

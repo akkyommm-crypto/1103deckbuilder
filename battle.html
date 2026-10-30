@@ -921,11 +921,10 @@ textarea{
    have a data continuation that also survives a process reload. */
 function eventSelectionDescriptorV11(index){
  const st=EVT_V2_STATE;if(!st)return null;
- const unit=gameState.processorWaiting||gameState.processorCurrent;
- let resume=null;
- if(unit&&['EVENT','EVENT_BATCH'].includes(unit.type))resume={processor:true,
-   /* S03-U159: a batch that includes a summon success (Tribute Summon / Synchro materials + summon) carries its post-summon point */
-   postPoint:unit.type==='EVENT'?postSummonFastPointV321(unit.payload.eventName,restoreEventRefsV27(unit.payload.evt)):((unit.payload&&unit.payload.postPointS03)||null)};
+ /* S03-U484: the continuation is recorded where its closure is built (processEventV27 / processEventBatchV28 -> EVT_RESUME_DATA_V484 -> EVT_V2_STATE.resumeData),
+    so "this data == that closure" holds by construction. It used to be re-derived from the waiting processor unit's payload, which could disagree with the
+    closure that was actually captured. S03-U159 (a batch carrying a summon success) is covered by processEventBatchV28 recording its postPointS03. */
+ const resume=st.resumeData||null;
  return {eventName:st.eventName,evt:safeActivationEventV11(st.evt),rank:st.rank,index,chainStart:st.chainStart,resume,
    groups:st.groups.map(g=>g.map(c=>Object.assign({uid:c.card.uid,p:c.p,zone:c.zone,index:c.index,name:c.name,rank:c.rank,forced:c.forced,
      eventName:c.eventName,event:safeActivationEventV11(c.event||c.ctx&&c.ctx.event||st.evt)},
@@ -935,7 +934,8 @@ function eventSelectionDescriptorV11(index){
 function restoreEventSelectionV11(data){
  const old=EVT_V2_STATE;
  return {eventName:data.eventName,evt:restoreEventRefsV27(data.evt),rank:data.rank,chainStart:data.chainStart,
-   resume:data.resume,after:old&&old.after||null,
+   /* S03-U484: a restored window keeps the same continuation for the picks made after it (resumeData is what eventSelectionDescriptorV11 reads) */
+   resume:data.resume,resumeData:data.resume||null,after:old&&old.after||null,
    groups:data.groups.map(g=>g.map(c=>{
      const hit=findCardByUid(c.uid);if(!hit)return null;
      const event=restoreEventRefsV27(c.event),extra={event};
@@ -17266,6 +17266,11 @@ function whyBlocked(what){
    起動効果を優先権で割り込ませる旧ルールは使用しない。 */
 const RULING_1103_POST_20110319_IGNITION = true;
 let CHAIN_AFTER_V2 = null;
+/* S03-U484: EVT_AFTER（チェーン終了後の継続クロージャ）と同じ場所で作る、同じ継続の JSON 版。
+   プロセッサの EVENT / EVENT_BATCH だけが設定する。startEventChainV2 が EVT_V2_STATE.resumeData へ移し、
+   eventSelectionDescriptorV11 がそれを読む。クロージャを設定した場所が自分で記録するので、
+   「データの継続 = そのクロージャ」が構造的に保証される（プロセッサ unit の payload からの再導出をやめた）。 */
+let EVT_RESUME_DATA_V484 = null;
 let EVT_V2_STATE = null;
 let RESOLUTION_SUMMON_BATCH_V2 = null;
 
@@ -17605,6 +17610,7 @@ function processEventV27(pl){
     if(postPoint) enqueueProcessorV27(PROCESSOR_V27.POINT,postPoint,false);
     processorResumeV27();
   };
+  EVT_RESUME_DATA_V484={processor:true,postPoint:postPoint||null};   /* S03-U484: 上のクロージャと同じ継続 */
   const opened=emitEvent(eventName,evt);
   if(opened) return PROC_V27_WAIT;
   EVT_AFTER=null;
@@ -17648,6 +17654,7 @@ function processEventBatchV28(pl){
   const postS03=pl.postPointS03||null;
   if(!cands.length){ if(postS03) enqueueProcessorV27(PROCESSOR_V27.POINT,postS03,false); return PROC_V27_DONE; }
   EVT_AFTER=()=>{ if(postS03) enqueueProcessorV27(PROCESSOR_V27.POINT,postS03,false); processorResumeV27(); };
+  EVT_RESUME_DATA_V484={processor:true,postPoint:postS03||null};   /* S03-U484: 上のクロージャと同じ継続 */
   startEventChainV2('batch',{label:pl.label||'同時誘発'},cands);
   return PROC_V27_WAIT;
 }
@@ -18743,7 +18750,11 @@ function prepareDuelActivation(name,p,zone,index,opts){
          prepared:true,targets:selectionData,event:(opts&&opts.event)||null,eventName:(opts&&opts.eventName)||null,
          v4EffectKey:ctx.v4EffectKey||null, v44CountConsume, v44ActivationPending,
          effectClass:effectClassV2(sc,db), sourceNegatedAtActivation, spellCounterObserverUids,
-         keep:(db.k==='m'||['永続','フィールド','装備'].includes(db.sub))},cardActivationOnly?{cardActivationOnly:true}:{},cardActivationS03?{cardActivationS03:true}:{},drawReplacementS03?{drawReplacementS03:true}:{},ctx.costCtxS03?{costCtxS03:ctx.costCtxS03}:{},zoneOwnerS03!=null?{zoneOwnerS03}:{}));
+         keep:(db.k==='m'||['永続','フィールド','装備'].includes(db.sub))},
+         /* S03-U484: 非 P1.1 の誘発も、チェーン終了後の継続を CHAIN_ADD に載せる（P1.1 の commitPreparedActivationV11 と同じ形）。
+            これが無いと継続はクロージャ（EVT_V2_STATE.after）だけに残り、保存・再開で召喚成功後の応答窓が消えていた。 */
+         (opts&&opts.eventSelectionV11&&opts.eventSelectionV11.resume)?{eventResumeV11:opts.eventSelectionV11.resume}:{},
+         cardActivationOnly?{cardActivationOnly:true}:{},cardActivationS03?{cardActivationS03:true}:{},drawReplacementS03?{drawReplacementS03:true}:{},ctx.costCtxS03?{costCtxS03:ctx.costCtxS03}:{},zoneOwnerS03!=null?{zoneOwnerS03}:{}));
     if(typeof prepTxCommitS03==='function') prepTxCommitS03(card);   /* S03-U471: CHAIN_ADD で復元点は閉じた。ここから先の不発・無効でコストは返らない */
     if(typeof endActivationPrepS03==='function') endActivationPrepS03();   /* S03-U35: チェーンに乗った */
     if(typeof applyTargetingNegatorsS03==='function') applyTargetingNegatorsS03();   /* S03-U28: 対象にされた時の自動無効（永続効果） */
@@ -21289,8 +21300,8 @@ function startEventChainV2(eventName,evt,cands){
     const rank=(k==='s'||k==='t') ? (c.p===gameState.activePlayer?4:5) : segocRank({player:c.p,forced:forcedS03},gameState.activePlayer);
     /* S03-U290: a forced effect of a Spell / Trap (パラライズ・チェーン 「…度に…与える」) keeps rank 4 / 5 but cannot be skipped (forcedSTS03) */
     return Object.assign({player:c.p,forced:forcedS03&&rank<4,forcedSTS03:!!forcedS03&&rank>=4,rank},c); });
-  EVT_V2_STATE={eventName,evt:evt||{},groups:[0,1,2,3,4,5].map(r=>mapped.filter(x=>x.rank===r)),rank:0,chainStart:gameState.chain.length,after:EVT_AFTER};
-  EVT_AFTER=null; processEventGroupV2();
+  EVT_V2_STATE={eventName,evt:evt||{},groups:[0,1,2,3,4,5].map(r=>mapped.filter(x=>x.rank===r)),rank:0,chainStart:gameState.chain.length,after:EVT_AFTER,resumeData:EVT_RESUME_DATA_V484};
+  EVT_AFTER=null; EVT_RESUME_DATA_V484=null; processEventGroupV2();   /* S03-U484: 継続のデータ版も一緒に引き取る */
 }
 function processEventGroupV2(){
   const st=EVT_V2_STATE; if(!st) return;

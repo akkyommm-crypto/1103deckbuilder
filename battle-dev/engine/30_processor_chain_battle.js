@@ -8,6 +8,11 @@
    起動効果を優先権で割り込ませる旧ルールは使用しない。 */
 const RULING_1103_POST_20110319_IGNITION = true;
 let CHAIN_AFTER_V2 = null;
+/* S03-U484: EVT_AFTER（チェーン終了後の継続クロージャ）と同じ場所で作る、同じ継続の JSON 版。
+   プロセッサの EVENT / EVENT_BATCH だけが設定する。startEventChainV2 が EVT_V2_STATE.resumeData へ移し、
+   eventSelectionDescriptorV11 がそれを読む。クロージャを設定した場所が自分で記録するので、
+   「データの継続 = そのクロージャ」が構造的に保証される（プロセッサ unit の payload からの再導出をやめた）。 */
+let EVT_RESUME_DATA_V484 = null;
 let EVT_V2_STATE = null;
 let RESOLUTION_SUMMON_BATCH_V2 = null;
 
@@ -347,6 +352,7 @@ function processEventV27(pl){
     if(postPoint) enqueueProcessorV27(PROCESSOR_V27.POINT,postPoint,false);
     processorResumeV27();
   };
+  EVT_RESUME_DATA_V484={processor:true,postPoint:postPoint||null};   /* S03-U484: 上のクロージャと同じ継続 */
   const opened=emitEvent(eventName,evt);
   if(opened) return PROC_V27_WAIT;
   EVT_AFTER=null;
@@ -390,6 +396,7 @@ function processEventBatchV28(pl){
   const postS03=pl.postPointS03||null;
   if(!cands.length){ if(postS03) enqueueProcessorV27(PROCESSOR_V27.POINT,postS03,false); return PROC_V27_DONE; }
   EVT_AFTER=()=>{ if(postS03) enqueueProcessorV27(PROCESSOR_V27.POINT,postS03,false); processorResumeV27(); };
+  EVT_RESUME_DATA_V484={processor:true,postPoint:postS03||null};   /* S03-U484: 上のクロージャと同じ継続 */
   startEventChainV2('batch',{label:pl.label||'同時誘発'},cands);
   return PROC_V27_WAIT;
 }
@@ -1485,7 +1492,11 @@ function prepareDuelActivation(name,p,zone,index,opts){
          prepared:true,targets:selectionData,event:(opts&&opts.event)||null,eventName:(opts&&opts.eventName)||null,
          v4EffectKey:ctx.v4EffectKey||null, v44CountConsume, v44ActivationPending,
          effectClass:effectClassV2(sc,db), sourceNegatedAtActivation, spellCounterObserverUids,
-         keep:(db.k==='m'||['永続','フィールド','装備'].includes(db.sub))},cardActivationOnly?{cardActivationOnly:true}:{},cardActivationS03?{cardActivationS03:true}:{},drawReplacementS03?{drawReplacementS03:true}:{},ctx.costCtxS03?{costCtxS03:ctx.costCtxS03}:{},zoneOwnerS03!=null?{zoneOwnerS03}:{}));
+         keep:(db.k==='m'||['永続','フィールド','装備'].includes(db.sub))},
+         /* S03-U484: 非 P1.1 の誘発も、チェーン終了後の継続を CHAIN_ADD に載せる（P1.1 の commitPreparedActivationV11 と同じ形）。
+            これが無いと継続はクロージャ（EVT_V2_STATE.after）だけに残り、保存・再開で召喚成功後の応答窓が消えていた。 */
+         (opts&&opts.eventSelectionV11&&opts.eventSelectionV11.resume)?{eventResumeV11:opts.eventSelectionV11.resume}:{},
+         cardActivationOnly?{cardActivationOnly:true}:{},cardActivationS03?{cardActivationS03:true}:{},drawReplacementS03?{drawReplacementS03:true}:{},ctx.costCtxS03?{costCtxS03:ctx.costCtxS03}:{},zoneOwnerS03!=null?{zoneOwnerS03}:{}));
     if(typeof prepTxCommitS03==='function') prepTxCommitS03(card);   /* S03-U471: CHAIN_ADD で復元点は閉じた。ここから先の不発・無効でコストは返らない */
     if(typeof endActivationPrepS03==='function') endActivationPrepS03();   /* S03-U35: チェーンに乗った */
     if(typeof applyTargetingNegatorsS03==='function') applyTargetingNegatorsS03();   /* S03-U28: 対象にされた時の自動無効（永続効果） */

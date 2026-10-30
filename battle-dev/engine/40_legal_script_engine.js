@@ -2001,8 +2001,8 @@ function startEventChainV2(eventName,evt,cands){
     const rank=(k==='s'||k==='t') ? (c.p===gameState.activePlayer?4:5) : segocRank({player:c.p,forced:forcedS03},gameState.activePlayer);
     /* S03-U290: a forced effect of a Spell / Trap (パラライズ・チェーン 「…度に…与える」) keeps rank 4 / 5 but cannot be skipped (forcedSTS03) */
     return Object.assign({player:c.p,forced:forcedS03&&rank<4,forcedSTS03:!!forcedS03&&rank>=4,rank},c); });
-  EVT_V2_STATE={eventName,evt:evt||{},groups:[0,1,2,3,4,5].map(r=>mapped.filter(x=>x.rank===r)),rank:0,chainStart:gameState.chain.length,after:EVT_AFTER};
-  EVT_AFTER=null; processEventGroupV2();
+  EVT_V2_STATE={eventName,evt:evt||{},groups:[0,1,2,3,4,5].map(r=>mapped.filter(x=>x.rank===r)),rank:0,chainStart:gameState.chain.length,after:EVT_AFTER,resumeData:EVT_RESUME_DATA_V484};
+  EVT_AFTER=null; EVT_RESUME_DATA_V484=null; processEventGroupV2();   /* S03-U484: 継続のデータ版も一緒に引き取る */
 }
 function processEventGroupV2(){
   const st=EVT_V2_STATE; if(!st) return;

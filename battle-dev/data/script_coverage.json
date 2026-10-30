@@ -3956,6 +3956,7 @@
         "tools\\test_s03_u225_ns17.js",
         "tools\\test_s03_u227_ns19.js",
         "tools\\test_s03_u481_resolution_non_target.js",
+        "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js",
@@ -31579,6 +31580,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u476_selection_targets.js",
+        "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs7_targeting_negation_slice.js",
         "tools\\test_v410_replay_rng.js",
@@ -82534,6 +82536,7 @@
         "tools\\test_s03_u288_gap8.js",
         "tools\\test_s03_u470_condition_targetable.js",
         "tools\\test_s03_u471_prep_tx.js",
+        "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_u85_book_of_moon.js"
       ]
     },
@@ -85155,6 +85158,7 @@
         "tools\\test_s03_u283_ss_position2.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
+        "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
@@ -95950,6 +95954,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js"
       ]
     },
@@ -107049,6 +107054,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u222_ns14.js",
+        "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs7_targeting_negation_slice.js",
         "tools\\test_v460_native_cards.js"

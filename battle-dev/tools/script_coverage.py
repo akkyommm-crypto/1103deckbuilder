@@ -568,6 +568,7 @@ CARD_TEST_FOCUS = {
     "test_s03_u482_chain_event_refs.js": {"ねずみ取り", "つまずき"},
     # S03-U483: the 17 monsters whose resolve compares the event card by identity (spirits, アルカナフォース, 異次元への案内人, 暗黒のミミック LV1, ワーム・ルクイエ, 封魔の伝承者) are each driven Normal Summon / Flip Summon -> trigger -> chain -> resolution with a same-name copy on the field, uninterrupted and with a Save/Load at the chain; 夜叉 / 異次元への案内人 / 暗黒のミミック LV1 also with a Save/Load at the open trigger window. カラクリ大将軍 無零怒 is driven through the uid-less direct-emit path (a manual position change of a カラクリ) with a Save/Load. The fixtures (ゴブリン突撃部隊, ブラック・ホール, カラクリ兵 弐参六 …) must NOT gain TESTED.
     "test_s03_u483_event_identity_closure.js": {"カラクリ大将軍 無零怒", "夜叉", "月読命", "砂塵の悪霊", "鳳凰", "竜宮之姫", "磨破羅魏", "伊弉波", "金華猫", "氷結界の神精霊", "封魔の伝承者", "アルカナフォースI－THE MAGICIAN", "アルカナフォースVII－THE CHARIOT", "アルカナフォースXVIII－THE MOON", "アルカナフォース0－THE FOOL", "異次元への案内人", "暗黒のミミック LV1", "ワーム・ルクイエ"},
+    "test_s03_u484_summon_trigger_resume.js": {"E・HERO エアーマン", "魔導戦士 ブレイカー", "スノーマンイーター", "終末の騎士", "死者蘇生", "月の書"},
 }
 
 
