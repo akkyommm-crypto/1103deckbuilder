@@ -8,6 +8,9 @@
    ユーザー判断（優先順位③）: 古い窓をそのまま保存するのは不適切。保存なし側にも不要な窓が残っているので、正しいタイミングで閉じ、再開後も一致させる。
    実測の起点: R1 の seed 0x52311015（tg_gadget × tg_skill, R1_POLICY=random, R1_RESPOND=1）turn 7 で《血の代償》の「通常召喚扱い」の特殊召喚の後、
    開いたメインフェイズでの getLegalZoneActions 14 回がすべて 'summon' の窓を見ていた → 修正後 0 回。
+   なお《血の代償》自体は S03-U487 で正規の通常召喚（onNormalSummon + summonFast）に直したので、もう「POINT が作られない経路」ではない。
+   この試験は、同じ性質が残っている実在経路《降霊の儀式》（墓地から raw FX_SPECIAL_SUMMON で蘇生し、召喚成功のイベントを出さない）で固定する。
+   その「召喚成功のイベントが出ない」こと自体は別の欠陥で、本単位では直していない（docs/S03_U486_REPORT.md の 6）。
    修正: engine/30 の closeStaleSummonTimingS03 ─ プロセッサが実際に 1 つ以上処理し終えて、何も待っていない開いたメインフェイズに戻った時点で閉じる。
    加えて復旧経路（engine/1X・engine/1ZZP）がプロセッサのキューを捨てる時は、閉じ手（POINT）を失った召喚・反転の窓を引き継がない。 */
 const harness=require('./astra_harness');
@@ -18,7 +21,9 @@ function uid(c){return ensureCardUid(gameState,c);}
 function z(c){const h=findCardByUid(c.uid);return h?h.zone:null;}
 function tw(){return gameState.timingWindow?JSON.stringify(gameState.timingWindow):'null';}
 function twKind(){return gameState.timingWindow?gameState.timingWindow.kind:null;}
-let OPENED=[];
+let OPENED=[],ENQ=[];
+(function(){const f=enqueueProcessorV27;enqueueProcessorV27=function(t,pl,front){
+  if(t===PROCESSOR_V27.POINT&&pl&&pl.kind)ENQ.push(pl.kind);return f.apply(this,arguments);};})();
 function idle(){return !gameState.processorPaused&&!gameState.processorWaiting&&!(gameState.processorQueue||[]).length
   &&!(gameState.deferredEvents||[]).length&&!(gameState.chain||[]).length&&!gameState.pendingSummon&&!gameState.pendingChoice&&!gameState.battle
   &&!(typeof EVT_V2_STATE!=='undefined'&&EVT_V2_STATE);}
@@ -31,7 +36,7 @@ function step(){
   if(!gameState.processorPaused&&gameState.processorQueue.length){pumpProcessorV27();return 'pump';}
   return null;}
 function drive(){for(let i=0;i<600;i++){if(pc()){__choicePickV49(0);continue;}if(!step())return 'idle';}return 'loop';}
-function fresh(active){resetA();EVT_V2_STATE=null;EVT_AFTER=null;CHAIN_AFTER_V2=null;OPENED=[];
+function fresh(active){resetA();EVT_V2_STATE=null;EVT_AFTER=null;CHAIN_AFTER_V2=null;OPENED=[];ENQ=[];
   try{EVT_RESUME_DATA_V484=null;}catch(e){}
   gameState.activePlayer=active;gameState.firstPlayer=0;gameState.turn=5;gameState.phase='main1';
   gameState.rngInitialSeed=gameState.rngState=0x4860011;
@@ -44,24 +49,24 @@ function gadgetOffered(){
 }
 `;
 
-/* ===== A. 《血の代償》の「通常召喚扱い」の特殊召喚: 応答タイミングが終われば窓は閉じる ===== */
+/* ===== A. 召喚成功の POINT が作られない実在経路（《降霊の儀式》）: 応答タイミングが終われば窓は閉じる ===== */
 harness(COMMON+String.raw`
 fresh(0);
-const bo=mk('血の代償',0,'up');gameState.players[0].sz=[bo];
-const mon=mk('グリーン・ガジェット',0);gameState.players[0].hand=[mon];
-gameState.players[0].mz=[mk('ワイト',0,'up')];
+const rit=mk('降霊の儀式',0,'down');rit.setTurn=gameState.turn-1;gameState.players[0].sz=[rit];
+const mon=mk('墓守の偵察者',0);gameState.players[0].grave=[mon];
+gameState.players[0].hand=[mk('グリーン・ガジェット',0)];
 baselineA();
 ok('A 前提: 発動前は窓が開いていない',twKind()===null,tw());
 ok('A 前提: 発動前は「召喚に成功した時」のカードは発動できない',!gadgetOffered(),JSON.stringify(timingCheck(CARD_SCRIPTS['グリーン・ガジェット'])));
 duelActivateFromZone(0,'sz',0);
 drive();
-ok('A 前提: 《血の代償》で手札のモンスターが場に出た',z(mon)==='mz',JSON.stringify({mon:z(mon),toasts:TOASTS.slice(-2)}));
+ok('A 前提: 《降霊の儀式》で墓地のモンスターが場に出た',z(mon)==='mz',JSON.stringify({mon:z(mon),toasts:TOASTS.slice(-2)}));
 ok('A 前提: 応答タイミングはもう終わっている（プロセッサは空、チェーンも無い、開いたメインフェイズ）',
    idle()&&(gameState.phase==='main1'),JSON.stringify({phase:gameState.phase,q:(gameState.processorQueue||[]).length,defer:(gameState.deferredEvents||[]).length}));
 ok('A ★ 開いたメインフェイズでは召喚の窓が閉じている（修正前はこのフェイズの間ずっと開いていた）',twKind()===null,tw());
 ok('A ★ したがって「召喚に成功した時」のカードはメニューに出ない',!gadgetOffered(),JSON.stringify(timingCheck(CARD_SCRIPTS['グリーン・ガジェット'])));
-ok('A: この経路では summonFast の POINT が一度も作られていない（＝閉じ手が無かった経路であることの確認）',
-   OPENED.indexOf('summonFast')<0,JSON.stringify(OPENED));
+ok('A: この経路では summonFast の POINT が一度も作られていない（＝既存の閉じ手が働かない経路であることの確認。開いた窓ではなく作られた POINT で見る）',
+   ENQ.indexOf('summonFast')<0&&OPENED.indexOf('summonFast')<0,JSON.stringify({enq:ENQ,opened:OPENED}));
 {const pkg=v41ReplayPackage(gameState),a=v44ReplayAuditPackage(pkg);
  ok('A: Replay 監査が全 digest と最終状態を再現する（窓は digest に含まれないので影響しない）',
     pkg.actions.length>0&&a.ok&&a.finalDigest===v41StateDigest(gameState),JSON.stringify(a).slice(0,180));}
@@ -91,9 +96,9 @@ ok('B: エアーマンの効果は解決している（手札が増えた）',ga
 harness(COMMON+String.raw`
 closeStaleSummonTimingS03=function(){};   /* S03-U486 より前の状態（閉じ手が無い） */
 fresh(0);
-const bo=mk('血の代償',0,'up');gameState.players[0].sz=[bo];
-const mon=mk('グリーン・ガジェット',0);gameState.players[0].hand=[mon];
-gameState.players[0].mz=[mk('ワイト',0,'up')];
+const rit=mk('降霊の儀式',0,'down');rit.setTurn=gameState.turn-1;gameState.players[0].sz=[rit];
+const mon=mk('墓守の偵察者',0);gameState.players[0].grave=[mon];
+gameState.players[0].hand=[mk('グリーン・ガジェット',0)];
 baselineA();
 duelActivateFromZone(0,'sz',0);
 drive();

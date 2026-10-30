@@ -2045,13 +2045,37 @@ function s03BloodOfferTributeThenSummon(p, targetCard, method, db, chosen){
   const spent = chosen.reduce((s,x)=>s+(x.value||1),0);
   const remaining = need-spent;
   if(remaining<=0){
+    /* S03-U487: ここは「通常召喚扱いで」の召喚。当時裁定（wiki-rulings）:
+       「まず、500ライフを払い効果を発動します。…そして効果処理の段階で、手札からモンスターを『通常召喚扱いで』召喚します。
+         アドバンス召喚の場合は、その効果処理の時点でリリースします。」
+       「この効果による通常召喚に対し《奈落の落とし穴》を発動できますか？」→「チェーン1で行っているならば、発動可能です。」
+       「…《神の宣告》《キックバック》《神の角笛》などの召喚を無効にするカードを発動できますか？」→同じ（11/08/25）。
+       以前はここで raw FX_SPECIAL_SUMMON を直接発火していたため、onNormalSummon が一度も発火せず、
+       召喚誘発（《E・HERO エアーマン》《グリーン・ガジェット》等）と、相手の召喚成功時の応答（《奈落の落とし穴》等）が
+       丸ごと失われていた。さらに特殊召喚扱い（specialSummoned / ssHistory）になり、「召喚に成功したターン」の記録
+       （normalSummonSuccessS03）も付かず、アドバンス召喚の手順記録（tributeCount / normalSummonMethod）も残らなかった。
+       正規経路（engine/40 の runSummonWindowResumeS03）と同じ NORMAL_SUMMON（prepaid=true）＋ onNormalSummon にする。 */
+    /* P3: リリース前に素材のスナップショットを取る。場を離れた後では現在ATK等が取れない。identity は uid。
+       （engine/70 の pickTributes と同じ作法） */
+    const matsS487 = chosen.map(ent=>{
+      const c=ent.card; if(!c) return null;
+      ensureCardUid(gameState,c);
+      return (typeof snapshotCardV3==='function')
+        ? snapshotCardV3(c,['atk','def','level','attribute','race','owner','originalAtk'])
+        : null;
+    }).filter(Boolean);
     chosen.forEach(ent=>{
       const loc=locateCardAnyV4(ent.card);
       if(loc) API.sendToGrave(loc, "血の代償（アドバンス召喚のリリース）");
     });
     const hr=locateCardAnyV4(targetCard);
     if(!hr||hr.zone!=='hand') return;
-    act({type:"FX_SPECIAL_SUMMON", player:p, from:'hand', fromIndex:hr.index, pos:'atk', reason:"血の代償（通常召喚扱い）"});
+    act(Object.assign({type:'NORMAL_SUMMON', player:p, handIndex:hr.index, pos:'atk', prepaid:true,
+         tributes:chosen.length, tributeValue:spent, p3Materials:matsS487},
+       (method && method.id!=null) ? {summonMethod:method.id} : {}));
+    const summonedS487=lastSummonedCard(p);
+    /* 解決中なので積むだけにする（チェーン終了後の通常のドレインが処理する。ここで flush すると解決の中へ再入する） */
+    if(summonedS487) queueDeferredEventV2('onNormalSummon',{player:p,name:cardName(summonedS487),card:summonedS487});
     return;
   }
   const used=new Set(chosen.map(x=>x.card));

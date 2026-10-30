@@ -778,6 +778,8 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u484_summon_trigger_resume.js')]
 subprocess.run(['node',str(ROOT/'tools/test_s03_u485_grapha_peek_after_destroy.js')],check=True)
 # S03-U486: the summon / flip response-timing window is closed when its timing ends (it used to stay open for the rest of the phase)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u486_summon_timing_window_close.js')],check=True)
+# S03-U487: 《血の代償》's summon is a real Normal Summon (onNormalSummon, summon triggers, the opponent's summon-success responses)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u487_blood_offering_normal_summon.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

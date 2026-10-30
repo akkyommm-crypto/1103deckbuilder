@@ -2484,7 +2484,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2131
+          "line": 2155
         }
       ],
       "auto_table": false,
@@ -3958,6 +3958,7 @@
         "tools\\test_s03_u481_resolution_non_target.js",
         "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_u486_summon_timing_window_close.js",
+        "tools\\test_s03_u487_blood_offering_normal_summon.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js",
@@ -13837,7 +13838,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2398
+          "line": 2422
         }
       ],
       "auto_table": false,
@@ -21448,6 +21449,7 @@
         "tools\\test_s03_u04_lock_recovery.js",
         "tools\\test_s03_u248_trap_monsters.js",
         "tools\\test_s03_u486_summon_timing_window_close.js",
+        "tools\\test_s03_u487_blood_offering_normal_summon.js",
         "tools\\test_s03_u72_gadget_search_cycle.js",
         "tools\\test_v680_batch20.js"
       ]
@@ -25106,6 +25108,7 @@
         "tools\\test_s03_u39_attack_state_journal.js",
         "tools\\test_s03_u40_attack_declaration_window.js",
         "tools\\test_s03_u46_royal_oppression.js",
+        "tools\\test_s03_u487_blood_offering_normal_summon.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs5_battle_trigger_slice.js",
@@ -69892,7 +69895,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2309
+          "line": 2333
         }
       ],
       "auto_table": false,
@@ -71314,7 +71317,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2378
+          "line": 2402
         }
       ],
       "auto_table": false,
@@ -71720,7 +71723,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2358
+          "line": 2382
         }
       ],
       "auto_table": false,
@@ -72521,7 +72524,8 @@
         "tools\\test_expansion_v330.js",
         "tools\\test_s03_u194_spells_traps.js",
         "tools\\test_s03_u196_singles.js",
-        "tools\\test_s03_u257_linger.js"
+        "tools\\test_s03_u257_linger.js",
+        "tools\\test_s03_u486_summon_timing_window_close.js"
       ]
     },
     {
@@ -74755,6 +74759,7 @@
         "tools\\test_s03_u09_offer_legality.js",
         "tools\\test_s03_u159_tribute_summon_batch.js",
         "tools\\test_s03_u37_manual_prompt_interrupted_activation.js",
+        "tools\\test_s03_u487_blood_offering_normal_summon.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
         "tools\\test_s03_vs3_six_samurai_gate_slice.js",
@@ -80018,7 +80023,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2445
+          "line": 2469
         }
       ],
       "auto_table": false,
@@ -83585,7 +83590,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2070
+          "line": 2094
         }
       ],
       "auto_table": false,
@@ -83608,7 +83613,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2109
+          "line": 2133
         }
       ],
       "auto_table": false,
@@ -94450,7 +94455,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2329
+          "line": 2353
         }
       ],
       "auto_table": false,
@@ -98464,7 +98469,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u104_cost_of_the_blood.js",
-        "tools\\test_s03_u486_summon_timing_window_close.js"
+        "tools\\test_s03_u487_blood_offering_normal_summon.js"
       ]
     },
     {
@@ -100667,7 +100672,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2153
+          "line": 2177
         }
       ],
       "auto_table": false,
@@ -103644,7 +103649,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u194_spells_traps.js"
+        "tools\\test_s03_u194_spells_traps.js",
+        "tools\\test_s03_u486_summon_timing_window_close.js"
       ]
     },
     {

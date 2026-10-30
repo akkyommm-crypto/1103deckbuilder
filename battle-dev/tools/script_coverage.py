@@ -570,7 +570,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u483_event_identity_closure.js": {"カラクリ大将軍 無零怒", "夜叉", "月読命", "砂塵の悪霊", "鳳凰", "竜宮之姫", "磨破羅魏", "伊弉波", "金華猫", "氷結界の神精霊", "封魔の伝承者", "アルカナフォースI－THE MAGICIAN", "アルカナフォースVII－THE CHARIOT", "アルカナフォースXVIII－THE MOON", "アルカナフォース0－THE FOOL", "異次元への案内人", "暗黒のミミック LV1", "ワーム・ルクイエ"},
     "test_s03_u484_summon_trigger_resume.js": {"E・HERO エアーマン", "魔導戦士 ブレイカー", "スノーマンイーター", "終末の騎士", "死者蘇生", "月の書"},
     "test_s03_u485_grapha_peek_after_destroy.js": {"暗黒界の龍神 グラファ", "手札抹殺", "強制脱出装置", "真六武衆－シエン", "真六武衆－カゲキ"},
-    "test_s03_u486_summon_timing_window_close.js": {"血の代償", "グリーン・ガジェット", "E・HERO エアーマン", "月の書"},
+    "test_s03_u486_summon_timing_window_close.js": {"降霊の儀式", "墓守の偵察者", "グリーン・ガジェット", "E・HERO エアーマン", "月の書"},
+    "test_s03_u487_blood_offering_normal_summon.js": {"血の代償", "E・HERO エアーマン", "グリーン・ガジェット", "奈落の落とし穴", "サイバー・ドラゴン"},
 }
 
 
