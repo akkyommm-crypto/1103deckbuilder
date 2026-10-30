@@ -780,6 +780,8 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u485_grapha_peek_after_destroy.j
 subprocess.run(['node',str(ROOT/'tools/test_s03_u486_summon_timing_window_close.js')],check=True)
 # S03-U487: 《血の代償》's summon is a real Normal Summon (onNormalSummon, summon triggers, the opponent's summon-success responses)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u487_blood_offering_normal_summon.js')],check=True)
+# S03-U488: a raw summon Action also queues the summon-success event (降霊の儀式); audit pin over CARD_SCRIPTS
+subprocess.run(['node',str(ROOT/'tools/test_s03_u488_raw_summon_success_event.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

@@ -8,9 +8,9 @@
    ユーザー判断（優先順位③）: 古い窓をそのまま保存するのは不適切。保存なし側にも不要な窓が残っているので、正しいタイミングで閉じ、再開後も一致させる。
    実測の起点: R1 の seed 0x52311015（tg_gadget × tg_skill, R1_POLICY=random, R1_RESPOND=1）turn 7 で《血の代償》の「通常召喚扱い」の特殊召喚の後、
    開いたメインフェイズでの getLegalZoneActions 14 回がすべて 'summon' の窓を見ていた → 修正後 0 回。
-   なお《血の代償》自体は S03-U487 で正規の通常召喚（onNormalSummon + summonFast）に直したので、もう「POINT が作られない経路」ではない。
-   この試験は、同じ性質が残っている実在経路《降霊の儀式》（墓地から raw FX_SPECIAL_SUMMON で蘇生し、召喚成功のイベントを出さない）で固定する。
-   その「召喚成功のイベントが出ない」こと自体は別の欠陥で、本単位では直していない（docs/S03_U486_REPORT.md の 6）。
+   その後、原因側も直した: 《血の代償》は S03-U487 で正規の通常召喚へ、《降霊の儀式》は S03-U488 で召喚成功のイベントを出すようにした。
+   そのため現在は「POINT が作られない実在経路」が見つかっていない（同 seed で閉じ手を外しても保存なしの違反は 0 件）。
+   この閉じ手は、そうした経路が将来できた場合と、再開経路のための防御として残している。A は機構として検証し、B が実際の対局経路を担う。
    修正: engine/30 の closeStaleSummonTimingS03 ─ プロセッサが実際に 1 つ以上処理し終えて、何も待っていない開いたメインフェイズに戻った時点で閉じる。
    加えて復旧経路（engine/1X・engine/1ZZP）がプロセッサのキューを捨てる時は、閉じ手（POINT）を失った召喚・反転の窓を引き継がない。 */
 const harness=require('./astra_harness');
@@ -49,27 +49,60 @@ function gadgetOffered(){
 }
 `;
 
-/* ===== A. 召喚成功の POINT が作られない実在経路（《降霊の儀式》）: 応答タイミングが終われば窓は閉じる ===== */
+/* ===== A. 機構の検証: 閉じる処理そのものと、その条件（ガード） =====
+   当初は《血の代償》を、次に《降霊の儀式》を「召喚成功の POINT が作られない実在経路」として使っていたが、
+   どちらも原因側を直した（S03-U487 / S03-U488）ので、いま 1103 の全カードにその性質を持つ経路は見つかっていない
+   （R1 seed 0x52311015 で、閉じ手を外しても保存なしの違反は 0 件になった）。
+   そのためこの単位の閉じ手は「POINT が作られなかった場合の防御」として残っており、ここでは機構として検証する。
+   実際の対局経路での検証は B（応答タイミングの途中では閉じないこと）が担う。 */
 harness(COMMON+String.raw`
 fresh(0);
-const rit=mk('降霊の儀式',0,'down');rit.setTurn=gameState.turn-1;gameState.players[0].sz=[rit];
-const mon=mk('墓守の偵察者',0);gameState.players[0].grave=[mon];
 gameState.players[0].hand=[mk('グリーン・ガジェット',0)];
+gameState.players[0].mz=[mk('ワイト',0,'up')];
 baselineA();
-ok('A 前提: 発動前は窓が開いていない',twKind()===null,tw());
-ok('A 前提: 発動前は「召喚に成功した時」のカードは発動できない',!gadgetOffered(),JSON.stringify(timingCheck(CARD_SCRIPTS['グリーン・ガジェット'])));
-duelActivateFromZone(0,'sz',0);
-drive();
-ok('A 前提: 《降霊の儀式》で墓地のモンスターが場に出た',z(mon)==='mz',JSON.stringify({mon:z(mon),toasts:TOASTS.slice(-2)}));
-ok('A 前提: 応答タイミングはもう終わっている（プロセッサは空、チェーンも無い、開いたメインフェイズ）',
-   idle()&&(gameState.phase==='main1'),JSON.stringify({phase:gameState.phase,q:(gameState.processorQueue||[]).length,defer:(gameState.deferredEvents||[]).length}));
-ok('A ★ 開いたメインフェイズでは召喚の窓が閉じている（修正前はこのフェイズの間ずっと開いていた）',twKind()===null,tw());
-ok('A ★ したがって「召喚に成功した時」のカードはメニューに出ない',!gadgetOffered(),JSON.stringify(timingCheck(CARD_SCRIPTS['グリーン・ガジェット'])));
-ok('A: この経路では summonFast の POINT が一度も作られていない（＝既存の閉じ手が働かない経路であることの確認。開いた窓ではなく作られた POINT で見る）',
-   ENQ.indexOf('summonFast')<0&&OPENED.indexOf('summonFast')<0,JSON.stringify({enq:ENQ,opened:OPENED}));
-{const pkg=v41ReplayPackage(gameState),a=v44ReplayAuditPackage(pkg);
- ok('A: Replay 監査が全 digest と最終状態を再現する（窓は digest に含まれないので影響しない）',
-    pkg.actions.length>0&&a.ok&&a.finalDigest===v41StateDigest(gameState),JSON.stringify(a).slice(0,180));}
+ok('A 前提: 窓が開いていない状態では「召喚に成功した時」のカードは発動できない',
+   twKind()===null&&!gadgetOffered(),JSON.stringify({tw:tw(),gadget:gadgetOffered()}));
+/* POINT が作られなかった経路と同じ状態を作る（runtime/50 の updateTimingWindow が立てる窓だけがある） */
+function openStale(type){ updateTimingWindow(gameState,{type:type}); }
+openStale('NORMAL_SUMMON');
+ok('A 前提: 召喚の窓が開き、「召喚に成功した時」のカードが発動可能に見える',
+   twKind()==='summon'&&gadgetOffered(),JSON.stringify({tw:tw(),gadget:gadgetOffered()}));
+ok('A 前提: 何も待っていない開いたメインフェイズである',idle()&&gameState.phase==='main1',
+   JSON.stringify({phase:gameState.phase,idle:idle()}));
+closeStaleSummonTimingS03(true);
+ok('A ★ 応答タイミングが終わっていれば窓を閉じる',twKind()===null,tw());
+ok('A ★ その結果「召喚に成功した時」のカードはメニューに出ない',!gadgetOffered(),
+   JSON.stringify(timingCheck(CARD_SCRIPTS['グリーン・ガジェット'])));
+/* ---- ガード: これらの状態では閉じない ---- */
+openStale('NORMAL_SUMMON'); closeStaleSummonTimingS03(false);
+ok('A ガード: この pump で何も処理していない時は閉じない（召喚の Action とイベント登録の間の空振り）',
+   twKind()==='summon',tw());
+gameState.deferredEvents=[{eventName:'onNormalSummon',evt:{}}];
+closeStaleSummonTimingS03(true);
+ok('A ガード: 遅延イベントが残っている間は閉じない（応答タイミングの途中）',twKind()==='summon',tw());
+gameState.deferredEvents=[];
+gameState.processorQueue=[{type:PROCESSOR_V27.ADJUST,payload:{}}];
+closeStaleSummonTimingS03(true);
+ok('A ガード: プロセッサのキューが残っている間は閉じない',twKind()==='summon',tw());
+gameState.processorQueue=[];
+gameState.processorPaused=true;
+closeStaleSummonTimingS03(true);
+ok('A ガード: プロセッサが待っている間は閉じない',twKind()==='summon',tw());
+gameState.processorPaused=false;
+gameState.phase='battle';
+closeStaleSummonTimingS03(true);
+ok('A ガード: メインフェイズ以外では触らない（バトル側の処理に任せる）',twKind()==='summon',tw());
+gameState.phase='main1';
+/* ---- バトル系の窓は閉じない（閉じ手がバトル処理側にある） ---- */
+gameState.timingWindow={kind:'battleStep',turn:gameState.turn,action:'BATTLE_STEP'};
+closeStaleSummonTimingS03(true);
+ok('A ★ バトル系の窓は閉じない',twKind()==='battleStep',tw());
+/* ---- 反転の窓も同じ扱い ---- */
+gameState.timingWindow=null;
+openStale('FLIP');
+ok('A 前提: 反転の窓が開いた',twKind()==='flip',tw());
+closeStaleSummonTimingS03(true);
+ok('A ★ 反転の応答タイミングも終わっていれば閉じる',twKind()===null,tw());
 `);
 
 /* ===== B. 正の対照: 応答タイミングの「途中」では窓を閉じない（召喚誘発が死なないこと） ===== */
@@ -92,21 +125,24 @@ ok('B ★ そのタイミングが終わった後は窓が閉じている',twKin
 ok('B: エアーマンの効果は解決している（手札が増えた）',gameState.players[0].hand.length>=1,String(gameState.players[0].hand.length));
 `);
 
-/* ===== C. Negative control: 閉じる処理を外すと A が元の欠陥に戻る ===== */
+/* ===== C. Negative control: 閉じる処理が無いと、残った窓がそのまま使えてしまう ===== */
 harness(COMMON+String.raw`
+const CLOSER=closeStaleSummonTimingS03;
 closeStaleSummonTimingS03=function(){};   /* S03-U486 より前の状態（閉じ手が無い） */
 fresh(0);
-const rit=mk('降霊の儀式',0,'down');rit.setTurn=gameState.turn-1;gameState.players[0].sz=[rit];
-const mon=mk('墓守の偵察者',0);gameState.players[0].grave=[mon];
 gameState.players[0].hand=[mk('グリーン・ガジェット',0)];
+gameState.players[0].mz=[mk('ワイト',0,'up')];
 baselineA();
-duelActivateFromZone(0,'sz',0);
-drive();
-ok('C negative control 前提: 同じ盤面・同じ経路で召喚まで到達した',z(mon)==='mz'&&idle(),JSON.stringify({mon:z(mon),idle:idle()}));
-ok('C negative control: 閉じる処理が無いと、開いたメインフェイズでも召喚の窓が開いたまま残る（これが直した欠陥）',
-   twKind()==='summon',tw());
+updateTimingWindow(gameState,{type:'NORMAL_SUMMON'});
+closeStaleSummonTimingS03(true);
+ok('C negative control: 閉じ手が無いと、開いたメインフェイズでも召喚の窓が残る（これが直した欠陥）',
+   twKind()==='summon'&&idle(),JSON.stringify({tw:tw(),idle:idle()}));
 ok('C negative control: その結果「召喚に成功した時」のカードがメニューに出てしまう（発動すると断られる）',
    gadgetOffered(),JSON.stringify(timingCheck(CARD_SCRIPTS['グリーン・ガジェット'])));
+closeStaleSummonTimingS03=CLOSER;
+closeStaleSummonTimingS03(true);
+ok('C: 閉じ手を戻すと同じ状態がきちんと閉じる（この差が閉じ手の効果であることの確認）',
+   twKind()===null&&!gadgetOffered(),JSON.stringify({tw:tw(),gadget:gadgetOffered()}));
 `);
 
 /* ===== D. 復旧経路は、閉じ手（POINT）を失った召喚・反転の窓を引き継がない ===== */

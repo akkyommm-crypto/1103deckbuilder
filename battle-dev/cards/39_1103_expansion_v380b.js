@@ -358,7 +358,18 @@ defineScript('降霊の儀式',{
   auditNote:'ネクロバレーの影響を受けないためAPIの墓地ロックを迂回して正規に蘇生',type:'trap',priority:2,targets:true,blocksIfNoSpecialSummon:true,
   condition(ctx){if(!API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&String(x.db.n||'').indexOf('墓守の')===0).length){ctx.reason='墓地に墓守がいません';return false;}return API.me(ctx).mz.length<ZONE_LIMITS.mz;},
   selectTargets(ctx,done){API.selectCard('降霊の儀式：特殊召喚する墓守',API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&String(x.db.n||'').indexOf('墓守の')===0),t=>done([t]));},
-  resolve(ctx){const t=resolveTarget(ctx.selectedTargets[0]);if(t&&t.zone==='grave')act({type:'FX_SPECIAL_SUMMON',player:ctx.player,from:'grave',fromIndex:t.index,pos:'atk',reason:'降霊の儀式'});}
+  /* S03-U488: raw な FX_SPECIAL_SUMMON は reducer でも呼び出し側でも召喚成功のイベントを積まないため、
+     「特殊召喚に成功した時」の誘発と、相手の《奈落の落とし穴》等の応答が丸ごと起きていなかった（S03-U487 と同じクラスの欠陥）。
+     API.specialSummon と同じ queueSpecialSummonSuccessV2 を呼ぶ（解決中はバッチに入り、チェーン終了後に onSpecialSummon として発火する）。
+     上の auditNote の「墓地ロックの迂回」はそのまま維持する。 */
+  resolve(ctx){
+    const t=resolveTarget(ctx.selectedTargets[0]); if(!t || t.zone!=='grave') return;
+    const before=t.card; ensureCardUid(gameState,before);
+    act({type:'FX_SPECIAL_SUMMON',player:ctx.player,from:'grave',fromIndex:t.index,pos:'atk',reason:'降霊の儀式'});
+    const h=findCardByUid(before.uid);
+    if(h && h.zone==='mz' && h.p===ctx.player && typeof queueSpecialSummonSuccessV2==='function')
+      queueSpecialSummonSuccessV2(ctx.player, h.card, 'effect');
+  }
 });
 
 defineScript('トラップ・イーター',{

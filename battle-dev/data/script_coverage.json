@@ -39655,7 +39655,7 @@
         {
           "kind": "legacy",
           "source": "cards\\39_1103_expansion_v380b.js",
-          "line": 364
+          "line": 375
         }
       ],
       "auto_table": false,
@@ -72524,8 +72524,7 @@
         "tools\\test_expansion_v330.js",
         "tools\\test_s03_u194_spells_traps.js",
         "tools\\test_s03_u196_singles.js",
-        "tools\\test_s03_u257_linger.js",
-        "tools\\test_s03_u486_summon_timing_window_close.js"
+        "tools\\test_s03_u257_linger.js"
       ]
     },
     {
@@ -72548,7 +72547,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u05_search_flags.js"
+        "tools\\test_s03_u05_search_flags.js",
+        "tools\\test_s03_u488_raw_summon_success_event.js"
       ]
     },
     {
@@ -74760,6 +74760,7 @@
         "tools\\test_s03_u159_tribute_summon_batch.js",
         "tools\\test_s03_u37_manual_prompt_interrupted_activation.js",
         "tools\\test_s03_u487_blood_offering_normal_summon.js",
+        "tools\\test_s03_u488_raw_summon_success_event.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
         "tools\\test_s03_vs3_six_samurai_gate_slice.js",
@@ -103650,7 +103651,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u194_spells_traps.js",
-        "tools\\test_s03_u486_summon_timing_window_close.js"
+        "tools\\test_s03_u488_raw_summon_success_event.js"
       ]
     },
     {
