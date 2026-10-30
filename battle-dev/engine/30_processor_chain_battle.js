@@ -100,6 +100,7 @@ function processorResumeV27(){
   const u=gameState.processorWaiting||gameState.processorCurrent;
   processorTraceV27('resume',u);
   gameState.processorPaused=false; gameState.processorWaiting=null; gameState.processorCurrent=null;
+  closeStaleSummonTimingS03(true);   /* S03-U486: 待っていた処理が終わってキューも空なら、この時点で応答タイミングは終わっている */
   setTimeout(pumpProcessorV27,0);
 }
 function processorAbortV27(reason){
@@ -136,7 +137,35 @@ function pumpProcessorV27(){
     }
     if(guard>=100){ logIt(gameState,'<b>Processor v3.1</b>：安全停止（100処理）'); }
   } finally { PROCESSOR_PUMPING_V27=false; }
+  closeStaleSummonTimingS03(guard>0);   /* S03-U486 */
   render();
+}
+/* S03-U486: 召喚・反転で開いた応答タイミングの窓（runtime/50 の updateTimingWindow が立てる 'summon' / 'flip'）を、
+   その応答タイミングが終わった所で閉じる。
+   これまで閉じていたのは「召喚成功後のクイックエフェクト確認（summonFast / flipFast）を両者がパスした時」だけで
+   （queuePointContinuationV27 の clearTimingOnPass）、その POINT が一度も作られない経路では閉じる処理が無く、
+   そのフェイズの間 currentTimings() に 'summon' が残り続けていた。実測した例は《血の代償》の「通常召喚扱い」の
+   特殊召喚で、以後そのメインフェイズの間ずっと 「召喚に成功した時」 のカード（グリーン・ガジェット等）がメニューに
+   出て、発動すると 1103 のルールで断られる状態になる。S03-U42 が FX_SET_STATE について直したのと同じ型の欠陥。
+   この窓は Journal にも digest にも入っておらず offerResumeDuel が捨てるので、保存・再開した側だけ窓が無く、
+   同じ盤面でメニューが食い違っていた（S03-U483 の 4-a）。窓が残る方が誤りなので、保存するのではなく閉じる。
+   閉じるのは「プロセッサが実際に 1 つ以上処理し終えて、何も待っていない開いたメインフェイズに戻った」時点だけ。
+   drained=false（この pump で何も処理していない）では閉じない: 召喚の Action とそのイベント登録の間に挟まった
+   空振りの pump で、これから始まる応答タイミングを先に閉じてしまわないため。 */
+/* S03-U486: 召喚・反転の応答タイミングの窓を閉じる処理（summonFast / flipFast の POINT）はプロセッサのキューにある。
+   復旧経路がキューを捨てる時は、この窓も引き継がない（offerResumeDuel が runtime/50 でロード時に同じ理由で捨てているのと同じ扱い）。
+   閉じ手の無い窓が残ると、そのフェイズの間 currentTimings() に 'summon' が残り続ける。 */
+function summonTimingWindowS03(w){ return !!w && ['summon','flip','summonFast','flipFast'].indexOf(w.kind)>=0; }
+function closeStaleSummonTimingS03(drained){
+  if(!drained) return;
+  const w=gameState.timingWindow;
+  if(!w || (w.kind!=='summon' && w.kind!=='flip')) return;
+  if(gameState.phase!=='main1' && gameState.phase!=='main2') return;
+  if(gameState.processorPaused || gameState.processorWaiting || (gameState.processorQueue||[]).length) return;
+  if((gameState.chain||[]).length || gameState.pendingSummon || gameState.pendingChoice || gameState.battle) return;
+  if((gameState.deferredEvents||[]).length) return;
+  if(typeof EVT_V2_STATE!=='undefined' && EVT_V2_STATE) return;   /* 誘発の選択窓が開いている間は応答タイミングの途中 */
+  gameState.timingWindow=null;
 }
 function dispatchProcessorV27(u){
   switch(u.type){

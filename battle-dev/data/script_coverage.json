@@ -3957,6 +3957,7 @@
         "tools\\test_s03_u227_ns19.js",
         "tools\\test_s03_u481_resolution_non_target.js",
         "tools\\test_s03_u484_summon_trigger_resume.js",
+        "tools\\test_s03_u486_summon_timing_window_close.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js",
@@ -21446,6 +21447,7 @@
       "tests": [
         "tools\\test_s03_u04_lock_recovery.js",
         "tools\\test_s03_u248_trap_monsters.js",
+        "tools\\test_s03_u486_summon_timing_window_close.js",
         "tools\\test_s03_u72_gadget_search_cycle.js",
         "tools\\test_v680_batch20.js"
       ]
@@ -82540,6 +82542,7 @@
         "tools\\test_s03_u470_condition_targetable.js",
         "tools\\test_s03_u471_prep_tx.js",
         "tools\\test_s03_u484_summon_trigger_resume.js",
+        "tools\\test_s03_u486_summon_timing_window_close.js",
         "tools\\test_s03_u85_book_of_moon.js"
       ]
     },
@@ -98460,7 +98463,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u104_cost_of_the_blood.js"
+        "tools\\test_s03_u104_cost_of_the_blood.js",
+        "tools\\test_s03_u486_summon_timing_window_close.js"
       ]
     },
     {

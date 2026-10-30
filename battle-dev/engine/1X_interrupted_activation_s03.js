@@ -74,7 +74,8 @@ function recoverInterruptedActivationAfterLoadS03(savedPromptS03){
   ACTIVATION_PREP_S03 = null;
   /* S03-U296: state that no Action writes (the battle step, the timing window — set by the processor) is not in the Journal: the interrupted
      activation began in the same waiting window, so the saved values are still the right ones (the Velo battle trigger read gameState.battle) */
-  ['battle', 'timingWindow'].forEach(k => { if(live[k] && !gameState[k]) gameState[k] = JSON.parse(JSON.stringify(live[k])); });
+  ['battle', 'timingWindow'].forEach(k => { if(live[k] && !gameState[k] &&
+    !(k === 'timingWindow' && typeof summonTimingWindowS03 === 'function' && summonTimingWindowS03(live[k]))) gameState[k] = JSON.parse(JSON.stringify(live[k])); });   /* S03-U486: 閉じ手（POINT）を捨てた召喚・反転の窓は引き継がない */
   if(typeof showToast === 'function') showToast(`保存時に途中だった「${m.name}」の発動を取り消し、発動前の状態に戻しました`);
   return true;
 }
