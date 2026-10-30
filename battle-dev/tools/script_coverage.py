@@ -573,6 +573,7 @@ CARD_TEST_FOCUS = {
     "test_s03_u486_summon_timing_window_close.js": {"グリーン・ガジェット", "E・HERO エアーマン", "月の書"},
     "test_s03_u487_blood_offering_normal_summon.js": {"血の代償", "E・HERO エアーマン", "グリーン・ガジェット", "奈落の落とし穴", "サイバー・ドラゴン"},
     "test_s03_u488_raw_summon_success_event.js": {"降霊の儀式", "墓守の司令官", "奈落の落とし穴", "王家の眩る谷－ネクロバレー"},
+    "test_s03_u489_resume_summon_timing_window.js": {"グリーン・ガジェット", "魔導戦士 ブレイカー", "聖なるバリア －ミラーフォース－"},
 }
 
 

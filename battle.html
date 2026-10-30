@@ -97312,6 +97312,16 @@ function offerResumeDuel(){
   if(gameState.pendingAttack && !gameState.processorWaiting && !(gameState.processorQueue||[]).length && typeof commitAutomaticActionV44==='function'){
     commitAutomaticActionV44({type:'ATTACK_PENDING_CLEAR_S03', reason:'resume'});
   }
+  /* S03-U489: 上の 1 回目の破棄（「v3.2以前は召喚成功タイミングが…」）だけでは足りない。
+     そのあとの Journal 再生（v41RestoreJournalPackage / 中断の復旧）は Action を適用し直すので、
+     NORMAL_SUMMON 等で updateTimingWindow が召喚の窓を開き直す。再生中はプロセッサが動かないため、
+     窓を閉じる処理（summonFast の POINT、あるいは engine/30 の closeStaleSummonTimingS03）が一度も走らず、
+     再開した側だけ「召喚成功タイミング」が開いたままメインフェイズに戻っていた
+     （R1 seed 0x52311015 の turn 6 で、再開直後の getLegalZoneActions 6 回がこの窓を見ていた）。
+     ここで同じ閉じ手を使う。待ち状態を積み直した場合（restoreProcessorAfterLoadS296 が
+     《魔導戦士 ブレイカー》の誘発のために窓を戻す場合など）は、その関数のガード
+     （paused / processorWaiting / キュー / 遅延イベント / チェーン / 選択待ち）が閉じるのを防ぐ。 */
+  if(typeof closeStaleSummonTimingS03==='function') closeStaleSummonTimingS03(true);
   HISTORY.length = 0; REDO.length = 0;
   render();
   if(typeof refreshChoiceSheetV49==='function') refreshChoiceSheetV49();

@@ -21450,6 +21450,7 @@
         "tools\\test_s03_u248_trap_monsters.js",
         "tools\\test_s03_u486_summon_timing_window_close.js",
         "tools\\test_s03_u487_blood_offering_normal_summon.js",
+        "tools\\test_s03_u489_resume_summon_timing_window.js",
         "tools\\test_s03_u72_gadget_search_cycle.js",
         "tools\\test_v680_batch20.js"
       ]
@@ -96816,7 +96817,8 @@
         "tools\\test_s03_u281_gap6.js",
         "tools\\test_s03_u292_gap9.js",
         "tools\\test_s03_u296_point_window_resume.js",
-        "tools\\test_s03_u40_attack_declaration_window.js"
+        "tools\\test_s03_u40_attack_declaration_window.js",
+        "tools\\test_s03_u489_resume_summon_timing_window.js"
       ]
     },
     {
@@ -107071,6 +107073,7 @@
       "tests": [
         "tools\\test_s03_u222_ns14.js",
         "tools\\test_s03_u484_summon_trigger_resume.js",
+        "tools\\test_s03_u489_resume_summon_timing_window.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs7_targeting_negation_slice.js",
         "tools\\test_v460_native_cards.js"
