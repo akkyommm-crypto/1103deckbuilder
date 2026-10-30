@@ -5620,7 +5620,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1322
+          "line": 1337
         }
       ],
       "auto_table": false,
@@ -6329,7 +6329,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1410
+          "line": 1425
         }
       ],
       "auto_table": false,
@@ -6481,7 +6481,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1382
+          "line": 1397
         }
       ],
       "auto_table": false,
@@ -17169,7 +17169,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 759
+          "line": 774
         }
       ],
       "auto_table": false,
@@ -17270,7 +17270,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 856
+          "line": 871
         }
       ],
       "auto_table": false,
@@ -17297,7 +17297,7 @@
         {
           "kind": "unified",
           "source": "cards\\20_control_counter.js",
-          "line": 652
+          "line": 667
         }
       ],
       "auto_table": false,
@@ -17320,7 +17320,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 793
+          "line": 808
         }
       ],
       "auto_table": false,
@@ -17392,7 +17392,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 716
+          "line": 731
         }
       ],
       "auto_table": false,
@@ -17510,7 +17510,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 900
+          "line": 915
         }
       ],
       "auto_table": false,
@@ -26214,7 +26214,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1137
+          "line": 1152
         }
       ],
       "auto_table": false,
@@ -30231,7 +30231,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 947
+          "line": 962
         }
       ],
       "auto_table": false,
@@ -39719,7 +39719,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1255
+          "line": 1270
         }
       ],
       "auto_table": false,
@@ -42119,7 +42119,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1430
+          "line": 1445
         }
       ],
       "auto_table": false,
@@ -55586,7 +55586,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 625
+          "line": 640
         }
       ],
       "auto_table": false,
@@ -66717,7 +66717,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1016
+          "line": 1031
         }
       ],
       "auto_table": false,
@@ -76163,7 +76163,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1273
+          "line": 1288
         }
       ],
       "auto_table": false,
@@ -77693,6 +77693,7 @@
         "tools\\test_s03_u42_flip_timing_window.js",
         "tools\\test_s03_u43_dragunity_aklys.js",
         "tools\\test_s03_u470_condition_targetable.js",
+        "tools\\test_s03_u485_grapha_peek_after_destroy.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
         "tools\\test_s03_vs3_six_samurai_gate_slice.js",
@@ -79875,7 +79876,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1120
+          "line": 1135
         }
       ],
       "auto_table": false,
@@ -79884,7 +79885,8 @@
         "tools\\test_s03_u112_gateway_dark_world.js",
         "tools\\test_s03_u285_gap7.js",
         "tools\\test_s03_u287_hand_limit_triggers.js",
-        "tools\\test_s03_u290_event_summary.js"
+        "tools\\test_s03_u290_event_summary.js",
+        "tools\\test_s03_u485_grapha_peek_after_destroy.js"
       ]
     },
     {
@@ -82010,7 +82012,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 584
+          "line": 599
         }
       ],
       "auto_table": false,
@@ -82104,6 +82106,7 @@
         "tools\\test_s03_u125_dark_world_targets.js",
         "tools\\test_s03_u476_selection_targets.js",
         "tools\\test_s03_u477_dark_world_resume.js",
+        "tools\\test_s03_u485_grapha_peek_after_destroy.js",
         "tools\\test_s03_u54_dark_world_discard_event.js"
       ]
     },
@@ -92175,7 +92178,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1238
+          "line": 1253
         }
       ],
       "auto_table": false,
@@ -92274,6 +92277,7 @@
         "tools\\test_s03_u14_summon_counters.js",
         "tools\\test_s03_u173_destroy_substitute.js",
         "tools\\test_s03_u19_monster_activation_response.js",
+        "tools\\test_s03_u485_grapha_peek_after_destroy.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
         "tools\\test_s03_vs3_six_samurai_gate_slice.js",
         "tools\\test_s03_vs4_activation_negation_slice.js",
@@ -92339,7 +92343,8 @@
       "tests": [
         "tools\\test_expansion_v350.js",
         "tools\\test_s03_u14_summon_counters.js",
-        "tools\\test_s03_u173_destroy_substitute.js"
+        "tools\\test_s03_u173_destroy_substitute.js",
+        "tools\\test_s03_u485_grapha_peek_after_destroy.js"
       ]
     },
     {
@@ -92713,7 +92718,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1169
+          "line": 1184
         }
       ],
       "auto_table": false,
@@ -94000,7 +94005,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 970
+          "line": 985
         }
       ],
       "auto_table": false,
@@ -95247,7 +95252,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1059
+          "line": 1074
         }
       ],
       "auto_table": false,
@@ -96872,7 +96877,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1044
+          "line": 1059
         }
       ],
       "auto_table": false,
@@ -103028,7 +103033,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1093
+          "line": 1108
         }
       ],
       "auto_table": false,
@@ -107360,7 +107365,7 @@
         {
           "kind": "legacy",
           "source": "cards\\20_control_counter.js",
-          "line": 1205
+          "line": 1220
         }
       ],
       "auto_table": false,

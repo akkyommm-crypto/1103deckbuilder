@@ -523,8 +523,17 @@ defineScript("暗黒界の龍神 グラファ", { targets:true, /* S03-U476: 破
   resolve(ctx){
     if(darkWorldDiscard(ctx)){
       const t = (ctx.selectedTargets||[])[0], r = t && resolveTarget(t);
-      if(r && r.p===ctx.opponent) API.destroy(r, "暗黒界の龍神 グラファ");
-      if(darkWorldDiscard(ctx)==='opponent') graphaPeekHandS03(ctx.player, ctx.opponent);
+      /* S03-U485: 相手の効果で捨てられた場合の手札確認は「破壊してから確認する」別のタイミングで、破壊できなかった場合は行わない
+         （WIKI-9A95D36090C4、2011-06-18「対象に選択したカードが存在しなくなり破壊できなかった場合…いいえ、行いません。」。
+          同日の回答で破壊と確認が別タイミングであることも確定している）。対象がいない場合・対象が場を離れた場合・破壊耐性で
+          破壊されなかった場合はいずれも「破壊できなかった場合」に当たる。身代わりの任意効果（S03-U173）があると成否は
+          その選択の後に確定するので、判定は S03-U294 の continuation で行う。 */
+      if(r && r.p===ctx.opponent){
+        const mark = API.destroyMarkS03(), uid = ensureCardUid(gameState, r.card);
+        API.destroy(r, "暗黒界の龍神 グラファ");
+        if(darkWorldDiscard(ctx)==='opponent')
+          API.afterDestroyS03('s03u485.grapha-peek', {player:ctx.player, opponent:ctx.opponent, mark, uids:[uid]});
+      }
       return;
     }
     const me = API.pileCards(ctx.player,'grave',x=>x.card===ctx.card)[0];
@@ -538,6 +547,12 @@ API.registerChoiceHandler('s03u62.grapha-destroy', (answer) => {
   const picks = v49P1ChoiceCards(answer);
   const h = picks[0] && locateCardAnyV4(picks[0].card);
   if(h) API.destroy(h, "暗黒界の龍神 グラファ");
+});
+/* S03-U485: 破壊できた場合にだけ手札確認へ進む（WIKI-9A95D36090C4、2011-06-18）。
+   破壊の成否は身代わりの選択の後に確定するので、S03-U294 の continuation で判定する。 */
+registerDestroyAfterS03('s03u485.grapha-peek', a=>{
+  if(!API.destroyedSinceS03(a.mark, a.uids).length) return;   /* 破壊できなかった → 手札確認は行わない */
+  graphaPeekHandS03(a.player, a.opponent);
 });
 /* S03-U125: 相手の手札をランダムに1枚確認する。乱数は Action の中で引く（GRAPHA_PEEK_S03、Replay で同じカード）。
    モンスターなら自分フィールドに特殊召喚できる（任意：はい／いいえ）。 */

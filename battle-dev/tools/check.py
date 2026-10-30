@@ -774,6 +774,8 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u482_chain_event_refs.js')],chec
 subprocess.run(['node',str(ROOT/'tools/test_s03_u483_event_identity_closure.js')],check=True)
 # S03-U484: a non-P1.1 summon / flip trigger saved on the chain keeps its post-summon response window (summonFast / flipFast) across Save / resume
 subprocess.run(['node',str(ROOT/'tools/test_s03_u484_summon_trigger_resume.js')],check=True)
+# S03-U485: Grapha's hand reveal does not run when the destruction could not happen (WIKI-9A95D36090C4, 2011-06-18)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u485_grapha_peek_after_destroy.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
