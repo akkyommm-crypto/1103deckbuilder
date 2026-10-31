@@ -66839,7 +66839,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u189_monarchs.js",
-        "tools\\test_s03_u294_destroy_after.js"
+        "tools\\test_s03_u294_destroy_after.js",
+        "tools\\test_s03_u491_missed_timing_mechanism.js"
       ]
     },
     {
@@ -103276,7 +103277,8 @@
       ],
       "auto_table": true,
       "tests": [
-        "tools\\test_s03_u198_partial2.js"
+        "tools\\test_s03_u198_partial2.js",
+        "tools\\test_s03_u491_missed_timing_mechanism.js"
       ]
     },
     {

@@ -1985,7 +1985,9 @@ function collectHandlers(eventName, evt){
     /* S03-U199: 「フィールド上に表側表示で存在するこのカードがデッキに戻った場合」 (ナーガ) — only cards whose script declares activateFrom 'deck' */
     if(eventName==='onLeaveField') scan('deck', (P.deck||[]).map(c=>{ const sc = c && CARD_SCRIPTS[dbOf(c).n]; return (sc && Array.isArray(sc.activateFrom) && sc.activateFrom.indexOf('deck')>=0) ? c : null; }));   /* null keeps the Deck indices */
   });
-  return out;
+  /* S03-U491: 「タイミングを逃す」の判定はここ 1 箇所だけで行う（engine/1ZZX）。
+     宣言の無いカード・強制誘発・刻みの無いイベントはそのまま通るので、宣言 0 件の間は挙動が変わらない。 */
+  return (typeof filterMissedTimingS03==='function') ? filterMissedTimingS03(out, evt||{}) : out;
 }
 
 /* DUELモード用 SEGOC。強制/任意、ターン/非ターンの4群を順に処理し、

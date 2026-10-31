@@ -213,6 +213,8 @@ function applyAction(gs,a){
   /* S03-U214: the GY-replacement sources in force when the outermost Action starts (cards leaving together are all covered) */
   const rdOuterS03 = APPLY_ACTION_DEPTH_V31===1 && typeof captureGraveRedirectS03==='function';
   if(rdOuterS03) captureGraveRedirectS03(gs, a);
+  /* S03-U491: 「タイミングを逃す」の処理ステップ番号。最上位の適用 1 回を 1 ステップとする（engine/1ZZX） */
+  if(APPLY_ACTION_DEPTH_V31===1 && typeof bumpProcStepS03==='function') bumpProcStepS03(gs, a);
   try{return applyActionBodyV31(gs,a);}finally{APPLY_ACTION_DEPTH_V31--; if(rdOuterS03) releaseGraveRedirectS03(); if(battleCtxS03&&typeof restoreBattleContextS03==='function')restoreBattleContextS03(gs,battleCtxS03);}
 }
 function cardEffectNegatedInActionStateS03(gs,card){

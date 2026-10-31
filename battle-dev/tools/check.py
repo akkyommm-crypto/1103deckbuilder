@@ -787,6 +787,9 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u489_resume_summon_timing_window
 # S03-U490: a crashing harness block IS caught by the exit code (check=True here); the blind spot is a block that
 # stops calling ok() without throwing. Pins astra_harness {expect:N} and tools/gate_verify.py.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u490_harness_exit_and_gate_aggregation.js')],check=True)
+# S03-U491: the shared "missed the timing" machinery (engine/1ZZX) — step counter, per-card declaration (0 shipped),
+# the single decision point in collectHandlers, plus the save / resume / Replay regression.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u491_missed_timing_mechanism.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
