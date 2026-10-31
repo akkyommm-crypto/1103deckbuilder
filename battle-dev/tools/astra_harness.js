@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),path=require('path');
-module.exports=function(body){
+module.exports=function(body,opts){
  const ROOT=path.resolve(__dirname,'..');
  const html=fs.readFileSync(path.join(ROOT,'dist/battle.html'),'utf8');
  let js=html.slice(html.indexOf('<script>')+8,html.lastIndexOf('</script>')).replace(/\bboot\(\);\s*\/\* System v3\.1:/,'/* boot skipped */\n/* System v3.1:');
@@ -36,6 +36,12 @@ module.exports=function(body){
  const vmTimeout=Math.max(1,Number(process.env.ASTRA_VM_TIMEOUT)||120000);
  try{vm.runInNewContext(js,c,{timeout:vmTimeout});}catch(e){console.error(e.stack||e);process.exitCode=2;}
  const R=c.__R||[];for(const r of R)console.log((r.ok?'PASS ':'FAIL ')+r.name+(r.detail?' :: '+r.detail:''));
+ /* S03-U490: ブロックが例外で落ちた場合は上の catch と空の R で exitCode=2 になるので、終了コードで検知できる
+    （check.py は全テストを check=True で起動するのでゲートが落ちる）。拾えないのは「例外を出さずに ok() の
+    呼び出し数だけ減る」場合（条件分岐で素通りする等）で、PASS が減るだけで終了コードは 0 のままになる。
+    判定数を宣言した呼び出しだけ、それを FAIL にする（opt-in。成功時は PASS 行を増やさない）。 */
+ const expectS490=(opts&&typeof opts==='object'&&typeof opts.expect==='number')?opts.expect:null;
+ if(expectS490!==null&&R.length!==expectS490){console.log('FAIL astra_harness expected assertions :: expect='+expectS490+' got='+R.length);process.exitCode=2;}
  if(!R.length||R.some(r=>!r.ok))process.exitCode=2;
  return c;
 };

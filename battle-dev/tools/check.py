@@ -784,6 +784,9 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u487_blood_offering_normal_summo
 subprocess.run(['node',str(ROOT/'tools/test_s03_u488_raw_summon_success_event.js')],check=True)
 # S03-U489: resuming a save no longer leaves the summon-success timing window open (the journal replay reopened it)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u489_resume_summon_timing_window.js')],check=True)
+# S03-U490: a crashing harness block IS caught by the exit code (check=True here); the blind spot is a block that
+# stops calling ok() without throwing. Pins astra_harness {expect:N} and tools/gate_verify.py.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u490_harness_exit_and_gate_aggregation.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

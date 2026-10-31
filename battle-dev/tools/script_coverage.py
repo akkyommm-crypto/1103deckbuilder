@@ -132,6 +132,7 @@ def scan_card_sources():
 # 説明のためにカード名が登場するだけで TESTED へ誤昇格させてはいけない。
 # （tools/check.py での実行対象からは除外しない。判定の証拠から外すだけ。）
 NON_CARD_TEST_FILES = {
+    "test_s03_u490_harness_exit_and_gate_aggregation.js",   # S03-U490: harness exit code / gate aggregation (no card)
     "test_s03_u172_deck_select_start.js",   # S03-U172: deck selection / start flow (card names are deck contents only)
     "test_p4_setcode_authority.js",   # P4 SetcodeAuthority / named predicate metadata
     "test_p3_provenance.js",

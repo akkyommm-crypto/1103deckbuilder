@@ -86,6 +86,11 @@ drive();
 ok('C: ネクロバレーがあっても蘇生できる（API の墓地ロックを迂回する既存の設計判断を維持している）',
    z(S.gk)==='mz',JSON.stringify({gk:z(S.gk),toasts:TOASTS.slice(-2)}));
 ok('C: その場合も召喚成功のイベントは出る',EVS.indexOf('onSpecialSummon')>=0,JSON.stringify(EVS));
+/* S03-U490: 墓地ロックの迂回が正しいことを当時裁定で確認した（WIKI-4B70999040AF、2011-05-03 取得。
+   「発動は制限されない」というテキストだが、効果も無効にならない）。根拠をカード側に残したことを固定する。 */
+ok('C: その設計判断の根拠（当時裁定の ID）がカードの auditNote に残っている',
+   /WIKI-4B70999040AF/.test(String(CARD_SCRIPTS['降霊の儀式'].auditNote||'')),
+   String(CARD_SCRIPTS['降霊の儀式'].auditNote||''));
 `);
 
 /* ===== D. Negative control: イベントを出す呼び出しを外すと、元の欠陥に戻る ===== */
