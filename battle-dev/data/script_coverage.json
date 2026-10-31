@@ -2484,7 +2484,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2155
+          "line": 2162
         }
       ],
       "auto_table": false,
@@ -3959,6 +3959,7 @@
         "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_u486_summon_timing_window_close.js",
         "tools\\test_s03_u487_blood_offering_normal_summon.js",
+        "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js",
@@ -13838,7 +13839,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2422
+          "line": 2429
         }
       ],
       "auto_table": false,
@@ -21451,6 +21452,7 @@
         "tools\\test_s03_u486_summon_timing_window_close.js",
         "tools\\test_s03_u487_blood_offering_normal_summon.js",
         "tools\\test_s03_u489_resume_summon_timing_window.js",
+        "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u72_gadget_search_cycle.js",
         "tools\\test_v680_batch20.js"
       ]
@@ -69897,7 +69899,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2333
+          "line": 2340
         }
       ],
       "auto_table": false,
@@ -71319,7 +71321,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2402
+          "line": 2409
         }
       ],
       "auto_table": false,
@@ -71725,7 +71727,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2382
+          "line": 2389
         }
       ],
       "auto_table": false,
@@ -74763,6 +74765,7 @@
         "tools\\test_s03_u37_manual_prompt_interrupted_activation.js",
         "tools\\test_s03_u487_blood_offering_normal_summon.js",
         "tools\\test_s03_u488_raw_summon_success_event.js",
+        "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
         "tools\\test_s03_vs3_six_samurai_gate_slice.js",
@@ -79661,7 +79664,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u188_staples.js"
+        "tools\\test_s03_u188_staples.js",
+        "tools\\test_s03_u492_missed_timing_summon_success.js"
       ]
     },
     {
@@ -80026,7 +80030,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2469
+          "line": 2476
         }
       ],
       "auto_table": false,
@@ -83593,7 +83597,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2094
+          "line": 2101
         }
       ],
       "auto_table": false,
@@ -83616,7 +83620,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2133
+          "line": 2140
         }
       ],
       "auto_table": false,
@@ -88310,6 +88314,7 @@
         "tools\\test_s03_u215_ns7.js",
         "tools\\test_s03_u216_ns8.js",
         "tools\\test_s03_u298_flip_trigger_left_field.js",
+        "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u84_torrential_tribute.js"
       ]
     },
@@ -90313,6 +90318,7 @@
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
         "tools\\test_s03_u48_vayu_resolution.js",
+        "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u61_trap_field_reactivation_guard.js",
         "tools\\test_v630_batch15.js"
@@ -90623,7 +90629,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u193_monsters.js"
+        "tools\\test_s03_u193_monsters.js",
+        "tools\\test_s03_u492_missed_timing_summon_success.js"
       ]
     },
     {
@@ -94458,7 +94465,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2353
+          "line": 2360
         }
       ],
       "auto_table": false,
@@ -98473,7 +98480,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u104_cost_of_the_blood.js",
-        "tools\\test_s03_u487_blood_offering_normal_summon.js"
+        "tools\\test_s03_u487_blood_offering_normal_summon.js",
+        "tools\\test_s03_u492_missed_timing_summon_success.js"
       ]
     },
     {
@@ -100676,7 +100684,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2177
+          "line": 2184
         }
       ],
       "auto_table": false,

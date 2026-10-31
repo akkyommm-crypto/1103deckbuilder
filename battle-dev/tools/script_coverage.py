@@ -576,6 +576,9 @@ CARD_TEST_FOCUS = {
     "test_s03_u488_raw_summon_success_event.js": {"降霊の儀式", "墓守の司令官", "奈落の落とし穴", "王家の眩る谷－ネクロバレー"},
     "test_s03_u489_resume_summon_timing_window.js": {"グリーン・ガジェット", "魔導戦士 ブレイカー", "聖なるバリア －ミラーフォース－"},
     "test_s03_u491_missed_timing_mechanism.js": {"光帝クライス", "闇・道化師のペーテン"},
+    "test_s03_u492_missed_timing_summon_success.js": {"血の代償", "奈落の落とし穴", "E・HERO エアーマン",
+                                                     "成金ゴブリン", "王宮の弾圧", "王虎ワンフー", "激流葬",
+                                                     "グリーン・ガジェット"},
 }
 
 

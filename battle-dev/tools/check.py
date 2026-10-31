@@ -790,6 +790,9 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u490_harness_exit_and_gate_aggre
 # S03-U491: the shared "missed the timing" machinery (engine/1ZZX) — step counter, per-card declaration (0 shipped),
 # the single decision point in collectHandlers, plus the save / resume / Replay regression.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u491_missed_timing_mechanism.js')],check=True)
+# S03-U492: the first class — an activation conditioned on a summon success misses the timing when another
+# processing followed. The step counter is now an allow-list that also ignores failed / no-op Actions.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u492_missed_timing_summon_success.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

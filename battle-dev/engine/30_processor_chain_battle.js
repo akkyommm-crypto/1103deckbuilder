@@ -1837,9 +1837,13 @@ function queueDeferredEventV2(eventName,evt){
   if(Array.isArray(safe.cards)){
     safe.uids=safe.cards.map(c=>ensureCardUid(gameState,c)).filter(x=>x!=null); delete safe.cards;
   }
-  /* S03-U491: 条件が満たされた処理ステップを刻む（engine/1ZZX）。deferredEvents は digest に入るので
-     Journal 再生・保存・再開でも同じ値が再現される。直接発火（emitEvent）には刻みが無く、その場合は判定しない。 */
-  if(typeof gameState!=='undefined'&&gameState) safe.stepS03=(gameState.procStepS03|0);
+  /* S03-U491 / S03-U492: 条件が満たされた処理の番号を刻む（engine/1ZZX）。deferredEvents は digest に入るので
+     Journal 再生・保存・再開でも同じ値が再現される。直接発火（emitEvent）には刻みが無く、その場合は判定しない。
+     積んだこと自体が「その処理は本当に何かを行った」の印にもなる。 */
+  if(typeof gameState!=='undefined'&&gameState){
+    safe.stepS03=(typeof missedTimingStampS03==='function')?missedTimingStampS03(gameState):(gameState.procStepS03|0);
+    if(typeof noteMissedTimingQueueS03==='function') noteMissedTimingQueueS03();
+  }
   const item={eventName,evt:safe};
   if(typeof APPLY_ACTION_DEPTH_V31!=='undefined'&&APPLY_ACTION_DEPTH_V31>0){gameState.deferredEvents.push(item);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gameState,item);}
   else commitAutomaticActionV44({type:'EVENT_QUEUE_V31',item});

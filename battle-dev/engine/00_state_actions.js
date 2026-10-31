@@ -213,9 +213,13 @@ function applyAction(gs,a){
   /* S03-U214: the GY-replacement sources in force when the outermost Action starts (cards leaving together are all covered) */
   const rdOuterS03 = APPLY_ACTION_DEPTH_V31===1 && typeof captureGraveRedirectS03==='function';
   if(rdOuterS03) captureGraveRedirectS03(gs, a);
-  /* S03-U491: 「タイミングを逃す」の処理ステップ番号。最上位の適用 1 回を 1 ステップとする（engine/1ZZX） */
-  if(APPLY_ACTION_DEPTH_V31===1 && typeof bumpProcStepS03==='function') bumpProcStepS03(gs, a);
-  try{return applyActionBodyV31(gs,a);}finally{APPLY_ACTION_DEPTH_V31--; if(rdOuterS03) releaseGraveRedirectS03(); if(battleCtxS03&&typeof restoreBattleContextS03==='function')restoreBattleContextS03(gs,battleCtxS03);}
+  /* S03-U491 / S03-U492: 「タイミングを逃す」の処理番号（engine/1ZZX）。最上位の「処理」Action が、
+     例外にならず、かつ実際に何かを行った時だけ 1 進める。S03-U491 は適用の前に無条件で進めていたため、
+     帳簿の Action や空振りでも番号がずれ、当時裁定では発動できる場合まで「逃した」と判定していた。 */
+  const mtS492 = (APPLY_ACTION_DEPTH_V31===1 && typeof missedTimingBeginS03==='function') ? missedTimingBeginS03(gs, a) : null;
+  let mtAppliedS492 = false;
+  try{const rS492=applyActionBodyV31(gs,a); mtAppliedS492=true; return rS492;}
+  finally{if(mtS492&&typeof missedTimingEndS03==='function')missedTimingEndS03(gs,mtS492,mtAppliedS492); APPLY_ACTION_DEPTH_V31--; if(rdOuterS03) releaseGraveRedirectS03(); if(battleCtxS03&&typeof restoreBattleContextS03==='function')restoreBattleContextS03(gs,battleCtxS03);}
 }
 function cardEffectNegatedInActionStateS03(gs,card){
   if(!card) return false;
@@ -3783,7 +3787,9 @@ function dropXyzMaterials(P, card, gsRef){
 }
 
 /* -------------------- ログ / 名前 -------------------- */
-function logIt(gs, msg){ gs.log.unshift({t:Date.now(), msg}); if(gs.log.length>60) gs.log.pop(); }
+/* S03-U492: ログが書かれたことを「この Action は本当に何かを行った」の印に使う（engine/1ZZX）。
+   gs.log は 60 件で打ち切られるので長さでは数えられない。回数の差分だけを見るので状態には入れない。 */
+function logIt(gs, msg){ if(typeof noteMissedTimingLogS03==='function') noteMissedTimingLogS03(); gs.log.unshift({t:Date.now(), msg}); if(gs.log.length>60) gs.log.pop(); }
 /* System v28: LP 変動の中央イベント。payload は純 JSON。
    LP が実際に変わった時だけ出す（置換で変動0になった場合は出さない）。
    金額は半分・倍・肩代わりを通した後の最終値。 */

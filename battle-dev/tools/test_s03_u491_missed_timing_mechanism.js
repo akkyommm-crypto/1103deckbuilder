@@ -69,31 +69,34 @@ function collectOf(ev,name){return COLLECT.filter(c=>c.ev===ev&&c.names.indexOf(
 function petenCollect(){return COLLECT.filter(c=>c.ev==='onSendToGrave'&&c.stamp!=null&&c.stamp!==c.now);}
 `;
 
-/* ===== A. 処理ステップ番号 ===== */
+/* ===== A. 処理番号 =====
+   S03-U492 で (A) を拒否リストから**許可リスト**に作り直した（漏れが「誤って逃す」側に落ちていた）。
+   ここはその新しい機構を固定する。詳細は tools/test_s03_u492_missed_timing_summon_success.js。 */
 harness(COMMON + String.raw`
 fresh();
 const m=mk('ワイト',0);gameState.players[0].hand=[m];baselineA();
 const s0=gameState.procStepS03|0;
 act({type:'NORMAL_SUMMON',player:0,handIndex:0,pos:'atk'});
-ok('A ★ 盤面を変える act() 1 回でステップが 1 だけ進む（入れ子の Action では進まない）',
+ok('A ★ 処理の act() 1 回で番号が 1 だけ進む（入れ子の Action では進まない）',
    (gameState.procStepS03|0)===s0+1,JSON.stringify({before:s0,after:gameState.procStepS03|0}));
 const s1=gameState.procStepS03|0;
 act({type:'EVENT_QUEUE_V31',item:{eventName:'onDummyS491',evt:{}}});
-ok('A ★ 帳簿の Action（EVENT_QUEUE_V31）はステップを進めない',
+ok('A ★ 帳簿の Action（EVENT_QUEUE_V31）は番号を進めない',
    (gameState.procStepS03|0)===s1,JSON.stringify({before:s1,after:gameState.procStepS03|0}));
 act({type:'SET_PRIORITY',player:0});
-ok('A: 優先権の設定もステップを進めない',(gameState.procStepS03|0)===s1,String(gameState.procStepS03|0));
+ok('A: 優先権の設定も番号を進めない',(gameState.procStepS03|0)===s1,String(gameState.procStepS03|0));
 act({type:'DRAW',player:0,n:1});
-ok('A: 次の盤面変化でまた 1 だけ進む',(gameState.procStepS03|0)===s1+1,String(gameState.procStepS03|0));
-ok('A: 除外表には遅延イベント・チェーン・選択・準備・掃除の Action が入っている',
+ok('A: 次の処理でまた 1 だけ進む',(gameState.procStepS03|0)===s1+1,String(gameState.procStepS03|0));
+ok('A ★ 許可表には盤面を変える Action が入っている',
+   ['NORMAL_SUMMON','FX_SPECIAL_SUMMON','DRAW','FX_TO_GRAVE','FX_BANISH','LP','ATTACK','MOVE']
+   .every(t=>missedTimingIsProcessingS03({type:t})),'');
+ok('A ★ 帳簿・提示・進行・掃除の Action は許可表に無い（表に無いものは進めない＝逃さない）',
    ['EVENT_QUEUE_V31','EVENT_DEQUEUE_V31','CHAIN_ADD','CHAIN_RESOLVE_TOP','CHOICE_OPEN_V49',
-    'PREP_TX_BEGIN_S03','SUMMON_WINDOW_OPEN_V42','MOD_CLEAR','SET_PRIORITY','SET_PHASE']
-   .every(t=>MISSED_TIMING_BOOKKEEPING_S03.has(t)),'');
-ok('A: 盤面を変える Action は除外表に入っていない',
-   ['NORMAL_SUMMON','FX_SPECIAL_SUMMON','DRAW','FX_TO_GRAVE','FX_BANISH','LP','ATTACK','SHUFFLE']
-   .every(t=>!MISSED_TIMING_BOOKKEEPING_S03.has(t)),'');
-ok('A: applyAction は最上位の適用でだけステップを進める（engine/00 の配線）',
-   /APPLY_ACTION_DEPTH_V31===1 && typeof bumpProcStepS03==='function'/.test(String(applyAction)),'');
+    'PREP_TX_BEGIN_S03','SUMMON_WINDOW_OPEN_V42','MOD_CLEAR','SET_PRIORITY','SET_PHASE',
+    'SPECIAL_WIN_DEFER_S03','NORMAL_SUMMON_ATTEMPT','SHUFFLE']
+   .every(t=>!missedTimingIsProcessingS03({type:t})),'');
+ok('A: applyAction は最上位の適用でだけ番号を進める（engine/00 の配線）',
+   /APPLY_ACTION_DEPTH_V31===1 && typeof missedTimingBeginS03==='function'/.test(String(applyAction)),'');
 `, {expect:7});
 
 /* ===== B. 判定（宣言・強制・同一ステップ・刻みなし） ===== */
@@ -102,8 +105,9 @@ fresh();
 const pe=mk('闇・道化師のペーテン',1);gameState.players[1].grave=[pe];baselineA();
 gameState.procStepS03=10;
 const cand={name:'闇・道化師のペーテン',p:1,zone:'grave',index:0,card:pe,eventName:'onSendToGrave',event:{}};
-ok('B ★ 宣言の無いカードは、処理が進んでいても落とさない（本単位の出荷時の挙動）',
-   missedTimingModeS03('闇・道化師のペーテン')==='never'
+ok('B ★ 宣言も種別も無い発動は、処理が進んでいても落とさない（召喚成功以外のイベント）',
+   missedTimingModeS03('闇・道化師のペーテン')===null
+   && missedTimingClassS03(cand,{stepS03:4})===null
    && missedTimingDropS03(cand,{stepS03:4})===false,'');
 declarePeten();
 ok('B ★ 宣言したカードの任意誘発は、後に別の処理があると落とす（R2）',
@@ -156,7 +160,7 @@ const d2=v41StateDigest(gameState);
 ok('C ★ 刻みが違えば digest も違う（保存・再開・Replay で判定が食い違わない）',
    d1!==d2,JSON.stringify({d1,d2}));
 ok('C: 刻みは EVENT_QUEUE_V31 の payload にも入るので Journal 再生で再現される',
-   /safe\.stepS03=\(gameState\.procStepS03\|0\)/.test(String(queueDeferredEventV2)),'');
+   /safe\.stepS03=\(typeof missedTimingStampS03==='function'\)/.test(String(queueDeferredEventV2)),'');
 `, {expect:4});
 
 /* ===== D. 実対局の経路（宣言なし＝現状維持 / 宣言あり＝逃す）と保存 ===== */
