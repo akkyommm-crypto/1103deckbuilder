@@ -12,6 +12,12 @@ function d2FaceUpMz(ctx){
   const me = locateCardAnyV4(ctx.card);
   return !!(me && me.zone === 'mz' && me.card.face === 'up');
 }
+/* S03-U459: 「相手は～対象にできない」は対象を選ぶ効果のプレイヤーを判定する。
+   filterTargetable() が CODEX-C03 の effectInfo を第3引数で渡す。 */
+function d2OpponentTargets(self, effectInfo){
+  const me = locateCardAnyV4(self), by = effectInfo && effectInfo.player;
+  return !!me && (by===0 || by===1) && by!==me.p;
+}
 /* 相手が魔法カードを発動したか */
 function d2FoeSpell(ctx){
   const e = ctx.event;
@@ -118,17 +124,35 @@ defineScript('ホルスのしもべ', {
   continuous:{
     scope:'allMonsters', from:['mz'],
     apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       const me = locateCardAnyV4(self);
       if(!me || me.zone !== 'mz' || me.card.face !== 'up') return false;
       /* 名前は「全てのレベルを含む」ので3枚を明示列挙する（部分一致はしない） */
-      return D2_HORUS.indexOf(dbOf(card).n) >= 0;
+      return D2_HORUS.indexOf(dbOf(card).n) >= 0 && d2OpponentTargets(self, effectInfo);
     }
   }
 });
 
 /* 5. メタルシルバー・アーマー — 装備モンスターが自分フィールドに存在する限り、
-      相手は装備モンスター以外のモンスターを効果の対象にできない（装備魔法） */
+      相手は装備モンスター以外のお互いのフィールド・墓地のモンスター及び除外されているモンスターを効果の対象にできない（装備魔法）。
+      S03-U468: フィールドだけでなく墓地・除外のモンスターも守る（1103の裁定：相手は墓地のモンスター1体を対象にする効果を発動できない 2009-06-18, WIKI-6B27D6D86996）。
+      墓地・除外は continuous.immuneToTargetOffField（engine/1ZZR）。 */
+/* S03-U472: 裁定の一般的な回答文に基づく Codex の採用解釈 — 「複数のカードを対象にする効果の場合、発動を制限することはできません。よって発動することができます。」
+   （2009-06-18, WIKI-32A7C5F81B06, メタルシルバー・アーマー。回答は対象のカードの場所を限っていないので、墓地を対象にする複数対象にも同じ文を当てる）。採用した解釈: アーマーの対象制限は、複数のカードを対象にする効果には掛からない
+   （その効果は装備モンスター以外のモンスターも対象に選べる）。複数かどうかは効果の宣言 `targetCount`（engine/1ZZR の effectInfo）だけで決める。
+   現在の選択の min / max や、コストで選ぶカードの数は見ない。この例外はアーマーだけ（他の対象耐性は変えない）。 */
+function d2ArmorExemptMultiTarget(effectInfo){
+  return !!effectInfo && Number(effectInfo.targetCount) >= 2;
+}
+function d2ArmorHostUid(self){
+  const me = locateCardAnyV4(self);
+  if(!me || me.zone !== 'sz' || me.card.face !== 'up') return null;
+  const hostUid = me.card.equipTo && me.card.equipTo.uid;
+  if(hostUid == null) return null;
+  const host = findCardByUid(hostUid);
+  if(!host || host.zone !== 'mz' || host.p !== me.p) return null;
+  return hostUid;
+}
 defineScript('メタルシルバー・アーマー', {
   type:'spell', priority:1,
   equipSpec:{ canEquip(h){ return !!(h && h.db && h.db.k === 'm'); } },
@@ -138,15 +162,15 @@ defineScript('メタルシルバー・アーマー', {
   continuous:{
     scope:'allMonsters', from:['sz'],
     apply(){ return null; },
-    immuneToTarget(card, self){
-      const me = locateCardAnyV4(self);
-      if(!me || me.zone !== 'sz' || me.card.face !== 'up') return false;
-      const hostUid = me.card.equipTo && me.card.equipTo.uid;
+    immuneToTarget(card, self, effectInfo){
+      const hostUid = d2ArmorHostUid(self);
       if(hostUid == null) return false;
-      const host = findCardByUid(hostUid);
-      if(!host || host.zone !== 'mz' || host.p !== me.p) return false;
-      /* 装備モンスター以外を守る */
-      return card.uid !== hostUid;
+      /* 装備モンスター以外を守る（S03-U472: 複数のカードを対象にする効果には掛からない） */
+      return card.uid !== hostUid && d2OpponentTargets(self, effectInfo) && !d2ArmorExemptMultiTarget(effectInfo);
+    },
+    immuneToTargetOffField(card, self, effectInfo){
+      if(d2ArmorHostUid(self) == null) return false;
+      return !!card && dbOf(card).k === 'm' && d2OpponentTargets(self, effectInfo) && !d2ArmorExemptMultiTarget(effectInfo);
     }
   }
 });

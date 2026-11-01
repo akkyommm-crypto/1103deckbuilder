@@ -27,6 +27,8 @@ function beginLinkResolutionS03(link, sc){
     uid: link.uid!=null ? link.uid : null,
     /* S03-U131: 発動したゾーン（「墓地で発動する効果」の判定。ネクロバレー） */
     from: link.from || null,
+    /* S03-U480: the exact count chosen at activation stays authoritative even if targets later disappear. */
+    targetCount:Number.isInteger(link.targetCount)?link.targetCount:null,
     chainLinkOne: !!(typeof gameState!=='undefined' && gameState && Array.isArray(gameState.chain) && gameState.chain.length===0),
     /* S03-U168: the uids this link targets (only for a targeting script, targets:true — the same rule as the target immunity check).
        Carried into the affecting actions' source stamp (engine/1ZG a.srcS03.tg) for 「対象を取らない効果では破壊されない」. */

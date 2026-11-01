@@ -15434,6 +15434,184 @@
         "tools/test_codex_c14_skill_successor.js"
       ],
       "evidence": "2011 card text: the Set Normal Trap targets one own face-up monster for +400 ATK until the End Phase; its GY Trap effect is available only during its owner's turn and not on the turn sent to the GY, banishes itself as activation cost, and targets one own face-up monster for +800 ATK until the End Phase. Real DUEL tests cover opponent-turn field activation, expiry, later-turn GY activation and cost, same-turn/opponent-turn negatives, target filtering, and Replay audit."
+    },
+    {
+      "name": "ヴァイロン・エプシロン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U457",
+      "tests": [
+        "tools/test_s03_u457_target_consumers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Equipped cards cannot be targeted by any card effect (new continuous scope equippedCards; activation-prep and resolution-time pinned); the Graveyard cost is not a target; opposing monster destroyed; once per turn; refused with no equip card / no legal target. Rulings: wiki 2010-05-07 (cost), 2010-08-04 (opponent equip spells can be sent), 2010-04-30 (multi-target cannot select the equips). Test: tools/test_s03_u457_target_consumers.js (Replay audit)."
+    },
+    {
+      "name": "ターボ・ウォリアー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U457",
+      "tests": [
+        "tools/test_s03_u457_target_consumers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Immune to the effects of Level 6 or lower Effect Monsters only (it had been immune to every effect through the text fallback of targetImmune); attack declaration against a Level 6+ Synchro Monster halves its ATK until the end of the Damage Step. Rulings: wiki 2008-07-20, 2008-11-26, 2010-05-04. Test: tools/test_s03_u457_target_consumers.js (Replay audit)."
+    },
+    {
+      "name": "救世の儀式",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U457",
+      "tests": [
+        "tools/test_s03_u457_target_consumers.js"
+      ],
+      "evidence": "Exact script. Text (carddata). Ritual Summon of 救世の美神ノースウェムコ (Level sum 7 or more, hand and field) through the shared ritual pipeline; Graveyard ignition: banish as cost, target a face-up Ritual Monster of mine, which cannot be targeted by card effects this turn (lingering source). Rulings: wiki 2009-07-19 (chain 1 of my Main Phase only), 2009-08-01 (cost; targets). Test: tools/test_s03_u457_target_consumers.js (Replay audit)."
+    },
+    {
+      "name": "オベリスクの巨神兵",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U457",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: needs a 3-Tribute requirement, an un-negatable summon and an all-kinds summon-success activation lock; see data/script_status_overrides.json for the measured file:line evidence."
+    },
+    {
+      "name": "草薙剣",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U460",
+      "tests": [
+        "tools/test_s03_u460_kusanagi.js"
+      ],
+      "evidence": "Exact script from 2011-era card text in carddata. Spirit-only real Equip activation; piercing battle damage; the Equip records its host uid and returns itself from the Graveyard when that host returns from the controller's field to the hand; destruction-to-Grave is a negative control. Replay audited."
+    },
+    {
+      "name": "破邪の大剣－バオウ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U461",
+      "tests": [
+        "tools/test_s03_u461_baou.js"
+      ],
+      "evidence": "Exact script from 2011-era card text in carddata. Real Equip activation sends one other hand card to the Graveyard as cost, grants +500 ATK, and extends the existing battle-destroyed effect-negation primitive to a live Equip source. Missing-cost, no-Equip, and removed-Equip controls plus Replay are covered."
+    },
+    {
+      "name": "インヴェルズの門番",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U462",
+      "tests": [
+        "tools/test_s03_u462_invellz_gatekeeper.js"
+      ],
+      "evidence": "2011 card text and ruling: a live face-up Gatekeeper that witnesses a face-up Invellz Advance Summon grants one shared additional Normal Summon or Set for that turn. The serializable source-local turn stamp, shared consumption key, face-down reset, source self-Tribute, non-Advance/non-Invellz/face-down negatives, and Replay are covered."
+    },
+    {
+      "name": "超合魔獣ラプテノス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U463",
+      "tests": [
+        "tools/test_s03_u463_raptenos.js"
+      ],
+      "evidence": "Exact 2011 card text: while a live face-up Raptinus remains in a Monster Zone, every face-up Gemini monster on either field is treated as Gemini Summoned. The rule is derived dynamically from continuousSources rather than writing dualUp. Own/opponent effects, real Pyron activation, Gemini Summon legality, negated/face-down controls and Replay are covered."
+    },
+    {
+      "name": "進化の繭",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U464",
+      "tests": [
+        "tools/test_s03_u464_cocoon.js"
+      ],
+      "evidence": "Exact pre-2011 effect: activate the monster from the hand by equipping it to a face-up Petit Moth. The real DUEL hand-effect path, target persistence through the chain, monster-as-Equip move, printed 0/2000 stat replacement, removal rollback, full Spell/Trap Zone and invalid-host negative controls, and Replay digest are covered."
+    },
+    {
+      "name": "スーペルヴィス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U465",
+      "tests": [
+        "tools/test_s03_u465_supervise.js"
+      ],
+      "evidence": "Exact 2011 card text: real Equip activation targets a face-up Gemini monster on either field; a live scoped continuous source treats only that host as Gemini Summoned without writing dualUp. Negation/removal revoke the grant immediately. A face-up field-to-Grave transition triggers the optional targeted revival of a Normal monster with summon-position choice. Invalid host, live negation, Cyclone destruction and Replay controls are covered."
+    },
+    {
+      "name": "スペシャル・デュアル・サモン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U466",
+      "tests": [
+        "tools/test_s03_u466_special_dual_summon.js"
+      ],
+      "evidence": "Exact 2011 card text: the real Quick-Play path targets an own face-up Gemini monster, grants dualUp without consuming a Normal Summon, and creates a serializable same-turn End Phase return. The return mark is zone-local, so a target that leaves and is Special Summoned again is not incorrectly returned. No-host negative and Replay are covered."
+    },
+    {
+      "name": "二重の落とし穴",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U467",
+      "tests": [
+        "tools/test_s03_u467_double_trap_hole.js"
+      ],
+      "evidence": "Exact 2011 card text: when an own Gemini monster treated as Gemini Summoned is destroyed by battle, the real event/chain path offers the Set Trap and destroys every opponent monster. Battle cleanup snapshots live Gemini state before continuous sources leave; non-active Gemini, effect destruction, mass destruction and Replay controls are covered."
+    },
+    {
+      "name": "強化支援メカ・ヘビーウェポン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U469",
+      "tests": [
+        "tools/test_s03_u469_heavy_weapon.js"
+      ],
+      "evidence": "carddata 「①:」 text; every behaviour element is attested by a 1103 ruling for this very card: substitute for battle AND effect destruction (2008-09-05 WIKI-0D89609E8794, 2010-11-08 WIKI-BFA4797D19E1, 2011-08-27 WIKI-D032A4FED8D2); ignition equip that targets a Machine (2008-07-15 WIKI-86A8AFF69A68, 2010-11-08 WIKI-003014546AD2); release is a face-up Attack Position Special Summon (2009-01-20 WIKI-8294B5F99F4B / WIKI-3694902B2D8A); simultaneous destruction keeps the host (2010-12-11 WIKI-A171EBB2ACB6, 2011-05-25 WIKI-3ACC61A3F03B). Real DUEL path: the host is a target chosen on activation (a response that removes it fizzles the equip and still spends the use), +500/+500, once per turn, release, battle / effect / real サンダー・ブレイク / リミッター解除 / 最終戦争 substitutes, Replay audits and a two-VM Save/Load. Not modelled (same for every Union, recorded in the report): a Union as an Equip Spell is not negated by マジック・キャンセラー / サイバー・フェニックス."
+    },
+    {
+      "name": "W－ウィング・カタパルト",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "Y－ドラゴン・ヘッド",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "Z－メタル・キャタピラー",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "アーマード・サイバーン",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "マシンナーズ・ピースキーパー",
+      "from": "NOT_STARTED",
+      "to": "ENGINE_GAP",
+      "unit": "S03-U469",
+      "tests": [],
+      "evidence": "Skipped, not half-implemented: the substitute-destruction scope of this card is not attested in the 1103 rulings archive; see data/script_status_overrides.json for the measured ruling ids and file:line evidence."
+    },
+    {
+      "name": "霊滅術師 カイクウ",
+      "from": "IMPLEMENTED",
+      "to": "TESTED",
+      "unit": "S03-U480",
+      "tests": [
+        "tools/test_s03_u480_variable_target_count.js"
+      ],
+      "evidence": "The adopted 1103 project interpretation is covered by a dedicated real-chain test: the player declares one or two targets at activation, then chooses exactly that many; one target is restricted by Metal Silver Armor, two receive the multi-target exception, unrelated immunity still applies, and the original scalar survives target loss, Save/Load, and Replay. Generic declaration and count/selection mismatch guards are negative-tested."
     }
   ],
   "restored_to_baseline": [

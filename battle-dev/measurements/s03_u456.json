@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U456",
+  "category": "engine+card",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "integrate Codex CODEX-C03 source-aware targeting-immunity primitive (engine/1ZZR_target_source_s03.js + 4 engine hunks from ce361fa); fix 氷結界の御庭番 / ヴァイロン・セグメント / 闇の侯爵ベリアル losing targeting immunity at resolution time (u378SrcOf consuming effectInfo); new test_s03_u456_target_source.js",
+  "outcome": "gate 21972 PASS / 0 FAIL",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-20T00:00:00+09:00",
+  "finished_at": "2026-10-20T00:00:00+09:00",
+  "gate_owner": "sonnet-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: per-unit tokens not available in this session",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Single Sonnet subagent session executing an Opus-measured recipe. Negative control: 6 FAIL / 22 PASS without the card-side fix; 28 PASS with it. Gate 21972 = 21944 + 28."
+}

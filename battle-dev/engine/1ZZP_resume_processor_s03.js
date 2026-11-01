@@ -61,7 +61,8 @@ function recoverInterruptedResolutionAfterLoadS296(saved){
   gameState.processorQueue = []; gameState.processorCurrent = null; gameState.processorWaiting = null; gameState.processorPaused = false;
   gameState.pendingAttack = saved.pendingAttack || gameState.pendingAttack || null;
   if(live.chainWindow) gameState.chainWindow = JSON.parse(JSON.stringify(live.chainWindow));
-  ['battle', 'timingWindow'].forEach(k => { if(live[k] && !gameState[k]) gameState[k] = JSON.parse(JSON.stringify(live[k])); });   /* not in the Journal (see engine/1X) */
+  ['battle', 'timingWindow'].forEach(k => { if(live[k] && !gameState[k] &&
+    !(k === 'timingWindow' && typeof summonTimingWindowS03 === 'function' && summonTimingWindowS03(live[k]))) gameState[k] = JSON.parse(JSON.stringify(live[k])); });   /* S03-U486: 閉じ手（POINT）を捨てた召喚・反転の窓は引き継がない */   /* not in the Journal (see engine/1X) */
   /* the queue under the resolving link: after the follow-up items the unit queued itself (chain left: ADJUST + SOLVE_CHAIN; else ADJUST + CHAIN_END + DRAIN_EVENTS) */
   const q = saved.queue || [], types = q.map(u => u.type);
   const pat = (live.chain || []).length

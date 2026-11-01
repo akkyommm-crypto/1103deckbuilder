@@ -156,10 +156,15 @@ try {
     Invoke-Git commit -m $Message
     $commit = (& git -C $repoRoot rev-parse HEAD).Trim()
 
-    $passCount = @(Select-String -LiteralPath $gateLog -Pattern '\bPASS\b').Count
-    $failCount = @(Select-String -LiteralPath $gateLog -Pattern '\bFAIL\b').Count
+    # S03-U491: these were counted with a case-insensitive match that hits anywhere in a line, so the English
+    # words inside Japanese assertion labels were reported as failures. The gate discipline uses the
+    # line-anchored, case-sensitive form, so count that; the loose count is kept as a separate figure.
+    $passCount = @(Select-String -LiteralPath $gateLog -Pattern '^PASS\b' -CaseSensitive).Count
+    $failCount = @(Select-String -LiteralPath $gateLog -Pattern '^FAIL\b' -CaseSensitive).Count
+    $failAnywhere = @(Select-String -LiteralPath $gateLog -Pattern '\bFAIL\b' -CaseSensitive).Count
     $gateKind = if ($AsyncGate) { 'quick' } elseif ($ParallelGate) { 'parallel-full' } else { 'full' }
-    Write-Output "Committed $commit on $branch (gate: $gateKind; PASS lines: $passCount; FAIL lines: $failCount; GATE_EXIT=0)."
+    $failNote = if ($failAnywhere -gt $failCount) { " (plus $($failAnywhere - $failCount) in-line mentions, not failures)" } else { '' }
+    Write-Output "Committed $commit on $branch (gate: $gateKind; PASS lines: $passCount; FAIL lines: $failCount$failNote; GATE_EXIT=0)."
 
     if ($NoPush) {
         Write-Output 'Push skipped by -NoPush; the commit remains local.'

@@ -112,7 +112,12 @@ baselineA();
 duelActivateFromZone(1,'sz',0);
 const deck0=gameState.players[0].deck.length;
 st=settle();
-let guard=0;while(st==='choice'&&guard++<6){const t=(pendingChoiceV49(gameState)||{}).title||'';if(/ゴルド/.test(t)){pick('BF－黒槍のブラスト');__choiceCommitV49();/* S03-U125: ゴルド's targets (0–2) are chosen on activation as a multi-select — confirm like the UI's 確定 */}else __choicePickV49(0);st=settle();}
+let guard=0;while(st==='choice'&&guard++<6){const t=(pendingChoiceV49(gameState)||{}).title||'';
+  if(/ゴルド/.test(t)&&/対象にする枚数/.test(t)) pick('1枚');
+  else if(/ゴルド/.test(t)) pick('BF－黒槍のブラスト');
+  else __choicePickV49(0);
+  st=settle();
+}
 ok('D2: ブラウ discarded by the opponent draws 2 (and 手札抹殺 itself replaces the 2 discarded cards)',
   deck0-gameState.players[0].deck.length===4,JSON.stringify({deckBefore:deck0,deckAfter:gameState.players[0].deck.length,hand:names(0,'hand')}));
 ok('D2: ゴルド is Special Summoned and, discarded by the opponent, may destroy — it destroyed the chosen card',

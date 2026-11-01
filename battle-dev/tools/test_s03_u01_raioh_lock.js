@@ -4,7 +4,7 @@
 const harness=require('./astra_harness');
 const COMMON=String.raw`
 function fresh(){resetA();EVT_V2_STATE=null;EVT_AFTER=null;CHAIN_AFTER_V2=null;RESOLUTION_SUMMON_BATCH_V2=null;}
-function pick(c){const pc=pendingChoiceV49(gameState);if(!pc)throw Error('choice missing');const i=pc.candidates.findIndex(x=>x.uid===c.uid);if(i<0)throw Error('candidate missing '+cardName(c));__choicePickV49(i);}
+function pick(c){const pc=pendingChoiceV49(gameState);if(!pc)throw Error('choice missing');const hit=pc.candidates.find(x=>x.uid===c.uid);if(!hit)throw Error('candidate missing '+cardName(c));answerChoiceV49([hit.key]);}
 function pass(){for(let i=0;i<100;i++){
  if(EVT_V2_STATE||pendingChoiceV49(gameState))return;
  if(gameState.chainWindow&&gameState.chain.length){chainPassV2();continue;}
@@ -106,7 +106,9 @@ gameState.players[0].hand=[air];gameState.players[0].mz=[mk('E・HERO クレイ�
 doNormalSummon(0,'atk');pass();
 ok('エアーマン summon trigger is offered under lock',!!EVT_V2_STATE);
 eventPickV2(0);let pc=pendingChoiceV49(gameState);
-ok('under lock エアーマン goes straight to destroy selection',!!pc&&pc.kind==='card'&&pc.candidates.some(x=>x.uid===setc.uid)&&!pc.candidates.some(x=>x.uid===ocean.uid),JSON.stringify(pc&&{kind:pc.kind,n:pc.candidates.length}));
+ok('under lock エアーマン fixes destroy mode without an activation-time card choice',!pc,JSON.stringify(pc));
+pass();pc=pendingChoiceV49(gameState);
+ok('under lock エアーマン opens the non-targeting destruction choice only at resolution',!!pc&&pc.kind==='card'&&pc.candidates.some(x=>x.uid===setc.uid)&&!pc.candidates.some(x=>x.uid===ocean.uid)&&pc.targeting===false,JSON.stringify(pc&&{kind:pc.kind,n:pc.candidates.length,targeting:pc.targeting}));
 pick(setc);pass();
 ok('エアーマン destroy mode resolves and no HERO is added',zoneOf(setc.uid)==='grave'&&zoneOf(ocean.uid)==='deck'&&!gameState.systemFault);
 replay('エアーマン destroy under lock');

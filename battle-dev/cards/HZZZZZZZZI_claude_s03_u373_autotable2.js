@@ -11,7 +11,7 @@
    - 極星宝ドラウプニル / 機皇城: the search (極星宝 cards are Traps except ドラウプニル itself: nameHas, any card kind) is the shared Deck trigger (engine/1ZT: deckTriggerHappenedS03 'fieldToGrave', faceUp) plus a destruction filter on graveInfo:
      ドラウプニル only a destruction BY A CARD EFFECT (graveInfo.byDestroy, not battle, not the equip rule that sends an Equip Spell to the GY with its host);
      機皇城 any destruction of the face-up Field Spell.
-   - 機皇城 ①: continuous.immuneToTarget on my 「機皇帝」 monsters, only while the targeting effect belongs to a Synchro Monster on the field (ACTIVATION_PREP_S03 names the effect's source card).
+   - 機皇城 ①: continuous.immuneToTarget on my 「機皇帝」 monsters, only while the targeting effect belongs to a Synchro Monster (the source comes from effectInfo, S03-U457; before it was the prep-only ACTIVATION_PREP_S03 lookup and a Synchro Monster on the field).
    - スクラップ・シャーク: a forced trigger on onActivateSuccess (any activation of a Spell, Trap or monster effect); it destroys itself, and that destruction by its own Scrap-named effect is the same
      graveInfo.srcUidS03 test as スクラップ・コング (S03-U208): the optional Deck-to-Graveyard mill of one 「スクラップ」 monster follows.
    - 見習い魔術師: ① the Spell Counter capable cards on the field are read with counterCapableCardsV22 (engine/1L); ② the shared Deck trigger (pos faceDownDef). */
@@ -101,17 +101,17 @@ const U373_APPRENTICE = {when:'battleToGrave', action:'summon', optional:true, p
 /* ---- 機皇城 ---- */
 const U373_CASTLE = {when:'fieldToGrave', faceUp:true, action:'search', from:['deck'], optional:true, max:1, filter:{nameHas:'機皇帝'}};
 function u373CastleDestroyed(ctx){ const g = ctx.card && ctx.card.graveInfo; return !!g && !!g.byDestroy && Number(g.turn)===Number(gameState.turn); }
-function u373SynchroSource(){
-  const prep = (typeof ACTIVATION_PREP_S03!=='undefined' && ACTIVATION_PREP_S03 && ACTIVATION_PREP_S03.uid!=null) ? ACTIVATION_PREP_S03 : null;
-  if(!prep) return false;
-  const h = findCardByUid(prep.uid);
-  return !!h && h.zone==='mz' && (dbOf(h.card).st||[]).indexOf('シンクロ')>=0;
+/* S03-U457: 対象を選んでいる効果の出所は filterTargetable が渡す effectInfo を最優先で使う（解決時の選択でも出所が残る）。
+   「Sモンスターの効果」は出所がシンクロモンスターかどうかだけで決まる（効果の発動場所は問わない）。 */
+function u373SynchroSource(effectInfo){
+  const src = u378SrcOf(effectInfo);
+  return !!src && targetEffectMatchesS03(src, {synchro:true});
 }
 defineUnifiedCardV4('機皇城', [{
   key:'activate', type:EFFECT_TYPE.ACTIVATE, range:LOCATION.FIELD, speed:1, events:['activate'], operation(){}, afterResolve(){}
 }, u373SearchEffect('機皇城', U373_CASTLE, u373CastleDestroyed)], u373SearchMeta(U373_CASTLE, u373CastleDestroyed, {type:'spell', priority:1,
   continuous:{ scope:'ownMonsters', from:['field'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(!self || self.face!=='up' || !card || card.face!=='up' || String(dbOf(card).n||'').indexOf('機皇帝')!==0 || dbOf(card).k!=='m') return false;
-      return u373SynchroSource();
+      return u373SynchroSource(effectInfo);
     } } }));

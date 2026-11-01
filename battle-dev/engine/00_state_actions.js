@@ -213,7 +213,13 @@ function applyAction(gs,a){
   /* S03-U214: the GY-replacement sources in force when the outermost Action starts (cards leaving together are all covered) */
   const rdOuterS03 = APPLY_ACTION_DEPTH_V31===1 && typeof captureGraveRedirectS03==='function';
   if(rdOuterS03) captureGraveRedirectS03(gs, a);
-  try{return applyActionBodyV31(gs,a);}finally{APPLY_ACTION_DEPTH_V31--; if(rdOuterS03) releaseGraveRedirectS03(); if(battleCtxS03&&typeof restoreBattleContextS03==='function')restoreBattleContextS03(gs,battleCtxS03);}
+  /* S03-U491 / S03-U492: 「タイミングを逃す」の処理番号（engine/1ZZX）。最上位の「処理」Action が、
+     例外にならず、かつ実際に何かを行った時だけ 1 進める。S03-U491 は適用の前に無条件で進めていたため、
+     帳簿の Action や空振りでも番号がずれ、当時裁定では発動できる場合まで「逃した」と判定していた。 */
+  const mtS492 = (APPLY_ACTION_DEPTH_V31===1 && typeof missedTimingBeginS03==='function') ? missedTimingBeginS03(gs, a) : null;
+  let mtAppliedS492 = false;
+  try{const rS492=applyActionBodyV31(gs,a); mtAppliedS492=true; return rS492;}
+  finally{if(mtS492&&typeof missedTimingEndS03==='function')missedTimingEndS03(gs,mtS492,mtAppliedS492); APPLY_ACTION_DEPTH_V31--; if(rdOuterS03) releaseGraveRedirectS03(); if(battleCtxS03&&typeof restoreBattleContextS03==='function')restoreBattleContextS03(gs,battleCtxS03);}
 }
 function cardEffectNegatedInActionStateS03(gs,card){
   if(!card) return false;
@@ -252,6 +258,10 @@ function applyActionBodyV31(gs, a){
       if(gs.deferredEvents&&gs.deferredEvents.length)gs.deferredEvents.shift();break;
     /* S03-U156: take the queued events of one kind for the given cards out of the queue, so that the caller dispatches them in
        its own simultaneous batch (battle cleanup: the onLeaveField of the battle-destroyed monsters). */
+    /* S03-U471: 発動準備トランザクション（engine/1ZZV）。復元点を gs.prepTxS03 に1つだけ持つ。 */
+    case 'PREP_TX_BEGIN_S03': prepTxBeginReduceS03(gs, a); break;
+    case 'PREP_TX_ABORT_S03': prepTxAbortReduceS03(gs, a); break;
+    case 'PREP_TX_COMMIT_S03': prepTxCommitReduceS03(gs, a); break;
     case 'DESTROY_SUB_S03':   /* S03-U173 (engine/1ZV) */
       if(typeof destroySubReduceS03==='function') destroySubReduceS03(gs, a);
       break;
@@ -1147,6 +1157,9 @@ function applyActionBodyV31(gs, a){
           if(!c || !c.battleDestroyed) continue;
           /* S03-U183: an equip destroyed instead (engine/1ZZB) */
           if(typeof equipSubstituteDestroyS03==='function' && equipSubstituteDestroyS03(gs, c, 'battle')){ delete c.battleDestroyed; continue; }
+          /* S03-U467: snapshot the live Gemini-Summoned treatment before
+             battle cleanup removes Equip/field continuous sources. */
+          const sentGeminiActiveS03 = typeof geminiActiveS03==='function' && geminiActiveS03(c);
           dropXyzMaterials(PP, c, gs); dropEquips(PP, c, gs);
           PP.mz.splice(i,1);
           delete c.battleDestroyed;
@@ -1193,6 +1206,7 @@ function applyActionBodyV31(gs, a){
             pushZone(ownerB.grave, c);
             const putB = graveLastIsS03(ownerB.grave, c);
             if(putB) putB.graveInfo = {turn:gs.turn, from:'mz', byDestroy:true, lv:sentLv, face:sentFace, pos:sentPos, byPlayer:pi===0?1:0, battle:true, attrS03:sentAttrS03, ctrlS03:pi};   /* S03-U185: battle; S03-U293: attribute and controller on the field */
+            if(putB && sentGeminiActiveS03) putB.graveInfo.geminiActiveS03 = true;   /* S03-U467: 二重の落とし穴 */
             if(Number(sentLv)>=8 && gs.players[pi]) gs.players[pi].lv8ToGraveTurnS03 = gs.turn;   /* S03-U206: デーモンとの駆け引き */
             if(putB && reversedB) putB.graveInfo.reversedS03 = true;
             /* S03-U25: 「戦闘で破壊したモンスターの効果は無効化される」を宣言したモンスターが破壊した場合だけ、そのカードを記録する。 */
@@ -1215,6 +1229,8 @@ function applyActionBodyV31(gs, a){
         const src=findCardByUidInState(gs,a.uid);
         if(src&&src.card){ src.card.activationPending=true; delete src.card.activationNegated; }
       }
+      /* S03-U471: チェーンリンクができた時点が発動準備トランザクションの境界。以後の不発・無効ではコストを返さない。 */
+      if(gs.prepTxS03 && (gs.prepTxS03.uid===(a.uid!=null?a.uid:null) || gs.prepTxS03.uid==null)) delete gs.prepTxS03;
       gs.chainSeq = (gs.chainSeq||0) + 1;
       gs.chain.push({
         chainId:gs.chainSeq,
@@ -1250,6 +1266,10 @@ function applyActionBodyV31(gs, a){
          P3 costSnapshotsとは別の意味を維持する。 */
       if(a.declaration){
         gs.chain[gs.chain.length-1].declaration=JSON.parse(JSON.stringify(a.declaration));
+      }
+      /* S03-U480: 発動時に決めた可変対象枚数。0 も実際に対象を選ばなかった宣言として保存する。 */
+      if(Number.isInteger(a.targetCount) && a.targetCount>=0){
+        gs.chain[gs.chain.length-1].targetCount=a.targetCount;
       }
       if(Array.isArray(a.activationCost) && a.activationCost.length){
         gs.chain[gs.chain.length-1].activationCost=JSON.parse(JSON.stringify(a.activationCost));
@@ -1933,6 +1953,8 @@ function applyActionBodyV31(gs, a){
       if(a.face==='down' && card.dualUp) delete card.dualUp;
       /* S03-U211: characteristic mods that last only while face-up (魔轟神ミーズトージ) end when the monster is turned face-down. */
       if(a.face==='down' && Array.isArray(card.charV17)){ card.charV17 = card.charV17.filter(m=>!m.faceUpOnlyS03); if(!card.charV17.length) delete card.charV17; }
+      /* S03-U462: a conditional extra-Normal grant belongs to that face-up instance. */
+      if(a.face==='down' && card.extraNormalS03Turn!=null) delete card.extraNormalS03Turn;
       /* 手動で状態を付け外しする。スクリプトが無いカードの効果を
          プレイヤーが自分で再現できるようにするための逃げ道。 */
       if(a.flag){
@@ -2185,6 +2207,7 @@ function applyActionBodyV31(gs, a){
          素材側にも usedAsMaterial を残し、素材自身が誘発するカードが辿れるようにする。 */
       applySummonProvenanceP3(gs, card, a, 'normal');
       P.mz.push(card);
+      if(typeof recordConditionalExtraNormalSummonS03==='function') recordConditionalExtraNormalSummonS03(a.player,card);   /* S03-U462 */
       if(a.summonMethod && typeof applyNormalSummonMethod==='function')
         applyNormalSummonMethod(card, dbOf(card), a.player, a.summonMethod, 'summon');
       if(!a.prepaid) consumeNormalRightS03(P);   /* S03-U274 */
@@ -2200,7 +2223,11 @@ function applyActionBodyV31(gs, a){
     case "SET_MONSTER": {
       /* S03-U266: 「このターン相手プレイヤーはフィールド上にカードをセットする事ができない」 (サーチライトメン) — a turn stamp on the banned player */
       if(P.temporaryFlags && Number(P.temporaryFlags.noSetS03)===Number(gs.turn)){ logIt(gs, `このターンはカードをセットできません`); break; }
-      if(!normalRightFreeS03(P)){ logIt(gs, `このターンは既に通常召喚しています`); break; }   /* S03-U274 */
+      if(a.extraNormalKey){
+        const ek=String(a.extraNormalKey), uk=ek.indexOf('src:')===0 ? ek.slice(4)+'XnUsedS03' : ek;
+        if(ek.indexOf('src:')===0 ? !!P.temporaryFlags[uk] : Number(P.temporaryFlags[uk]||0)<=0){ logIt(gs, `追加の通常召喚権がありません`); break; }
+        if(ek.indexOf('src:')===0) P.temporaryFlags[uk]=true; else P.temporaryFlags[uk]=Number(P.temporaryFlags[uk]||0)-1;
+      }else if(!normalRightFreeS03(P)){ logIt(gs, `このターンは既に通常召喚しています`); break; }   /* S03-U274 / S03-U462 */
       if(P.mz.length >= ZONE_LIMITS.mz){ logIt(gs, `モンスターゾーンが一杯です`); break; }
       const card = removeFrom(P, "hand", a.handIndex);
       if(!card) break;
@@ -2216,7 +2243,7 @@ function applyActionBodyV31(gs, a){
       P.mz.push(card);
       if(a.summonMethod && typeof applyNormalSummonMethod==='function')
         applyNormalSummonMethod(card, dbOf(card), a.player, a.summonMethod, 'set');
-      consumeNormalRightS03(P);   /* S03-U274 */
+      if(!a.extraNormalKey) consumeNormalRightS03(P);   /* S03-U274 / S03-U462 */
       /* S03-U194: 聖なる輝き 「モンスターをセットする場合は表側守備表示にしなければならない」 — decided by the caller (mustSetFaceUp) and stamped
          on the Action; still a set, not a summon */
       if(a.faceUpSetS03){ card.face='up'; card.pos='def'; logIt(gs, `セット：モンスターを表側守備表示で置いた（聖なる輝き）`); break; }
@@ -2917,7 +2944,7 @@ const ZONE_LOCAL_KEYS = [
   'stLinkTargetS03','stLinkByS03',   // S03-U188: a continuous Trap's selected monster (デモンズ・チェーン): the trap holds the target uid, the target the trap uid
   'negLinkS03','negLinkTargetS03',   // S03-U177: a monster's 「表側表示で存在する限り、選択したモンスターの効果は無効化される」 link (engine/1ZY)
   's03SummonedByUid',   // S03-U148: 「この効果で特殊召喚した」 monster → the summoner's uid (地獄の門番イル・ブラッド / 魔族召喚師)
-  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn',
+  'spearProof','spearProofS03','wallValue','tributeCount','tributeValue','setTurn','chainedTo','rabbitEndDestroyTurn','v340EndDestroyTurn','extraNormalS03Turn','u466ReturnTurn',
   'banishWhenLeavesField','v350BureidoDrawTurn','v350ExtraNormalFrogTurn','v350OnlyAttackerUid',
   'v370FrogExtraTurn','v370TragoControlTurn','v370TragoLevelTurn','v370TragoLevelResetTurn','v380SummonMaterials','v380DirectOnlyTurn','v380DoubleEdgeTurn','v380LylaLockThroughTurn',
   // System v2.3: 通常召喚手順・発動待ち状態は場を離れたら失われる
@@ -3419,6 +3446,11 @@ function continuousReaches(scope, srcP, tgtLoc, src, target){
     case 'equippedMonster':
       return !!(src && src.equipTo && target && target.uid != null
                 && src.equipTo.uid === target.uid && tgtLoc.zone === 'mz');
+    /* S03-U457: 逆方向。モンスター(src)に装備されている装備カード(魔法＆罠ゾーン)だけに届く
+       （「このカードに装備された装備カードは、カードの効果の対象にならない」ヴァイロン・エプシロン）。 */
+    case 'equippedCards':
+      return !!(src && src.uid != null && target && target.equipTo
+                && target.equipTo.uid === src.uid && tgtLoc.zone === 'sz');
     case 'ownMonsters': return tgtLoc.p === srcP && tgtLoc.zone === 'mz';
     case 'oppMonsters': return tgtLoc.p !== srcP && tgtLoc.zone === 'mz';
     case 'allMonsters': return tgtLoc.zone === 'mz';
@@ -3611,7 +3643,13 @@ function filterTargetable(cands, byPlayer, effectInfo){
   return cands.filter(x=>{
     if(!x || !x.card) return true;
     // 対象耐性は場のカードにのみ意味がある
-    if(x.zone !== 'mz' && x.zone !== 'sz' && x.zone !== 'field') return true;
+    if(x.zone !== 'mz' && x.zone !== 'sz' && x.zone !== 'field'){
+      /* S03-U468: 墓地・除外ゾーンのカードは、他のカードの continuous.immuneToTargetOffField だけが守る
+         （メタルシルバー・アーマー：「お互いのフィールド・墓地のモンスター及び除外されているモンスター」）。
+         場のカード向けの判定（face・テキスト推定・戦闘破壊確定）は掛けない。 */
+      if((x.zone==='grave' || x.zone==='banish') && typeof targetImmuneOffFieldS03==='function') return !targetImmuneOffFieldS03(x, srcInfo);
+      return true;
+    }
     if(battleDestroyConfirmed(x.card)) return false;   // 戦闘破壊確定は対象に取れない
     /* S03-U130: 「このターン相手の効果の対象にならない」（ダーク・フュージョン）— 対象を取るプレイヤーが分かる時だけ判定する */
     if(typeof oppTargetImmuneNowS03==='function' && oppTargetImmuneNowS03(x.card, x.p, byPlayer)) return false;
@@ -3754,6 +3792,8 @@ function dropXyzMaterials(P, card, gsRef){
 }
 
 /* -------------------- ログ / 名前 -------------------- */
+/* S03-U492: ログが書かれたことを「この Action は本当に何かを行った」の印に使う（engine/1ZZX）。
+   gs.log は 60 件で打ち切られるので長さでは数えられない。回数の差分だけを見るので状態には入れない。 */
 function logIt(gs, msg){ gs.log.unshift({t:Date.now(), msg}); if(gs.log.length>60) gs.log.pop(); }
 /* System v28: LP 変動の中央イベント。payload は純 JSON。
    LP が実際に変わった時だけ出す（置換で変動0になった場合は出さない）。

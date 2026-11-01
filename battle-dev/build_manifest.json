@@ -285,6 +285,15 @@
 
  },
  {
+  "path": "engine/1ZZV_prep_tx_s03.js"
+ },
+ {
+  "path": "engine/1ZZW_cost_selection_phase_s03.js"
+ },
+ {
+  "path": "engine/1ZZX_missed_timing_s03.js"
+ },
+ {
   "path": "ui/10_render_input.js",
   "start_line": 2683,
   "end_line": 3288,
@@ -1800,6 +1809,36 @@
  {
   "path": "cards/HZZZZZZZZZZZK_claude_s03_u454_scope_unity.js"
 
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZL_claude_s03_u457_target_consumers.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZM_codex_s03_u460_kusanagi.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZN_codex_s03_u461_baou.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZO_codex_s03_u462_invellz_gatekeeper.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZP_codex_s03_u463_raptenos.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZQ_codex_s03_u464_cocoon.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZR_codex_s03_u465_supervise.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZS_codex_s03_u466_special_dual_summon.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZT_codex_s03_u467_double_trap_hole.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZU_claude_s03_u469_heavy_weapon.js"
  },
  {
   "path": "cards/40_auto_interpreter.js",

@@ -759,7 +759,70 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u451_mixed_gap.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u452_grave_banish.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u453_gorgon_light.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u454_scope_unity.js')],check=True)
-
+subprocess.run(['node',str(ROOT/'tools/test_s03_u456_target_source.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u457_target_consumers.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u459_opponent_targeting.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u460_kusanagi.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u461_baou.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u462_invellz_gatekeeper.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u463_raptenos.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u464_cocoon.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u465_supervise.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u466_special_dual_summon.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u467_double_trap_hole.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u468_target_scope.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u469_heavy_weapon.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u470_condition_targetable.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u471_prep_tx.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u472_multi_target_armor.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u473_dimensional_prison_targeting.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u474_cost_selection_phase.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u475_v70_select_exactly.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u476_selection_targets.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u477_dark_world_resume.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u478_two_target_cards.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u479_p11_target_source.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u480_variable_target_count.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u481_resolution_non_target.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u482_chain_event_refs.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u483_event_identity_closure.js')],check=True)
+# S03-U484: a non-P1.1 summon / flip trigger saved on the chain keeps its post-summon response window (summonFast / flipFast) across Save / resume
+subprocess.run(['node',str(ROOT/'tools/test_s03_u484_summon_trigger_resume.js')],check=True)
+# S03-U485: Grapha's hand reveal does not run when the destruction could not happen (WIKI-9A95D36090C4, 2011-06-18)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u485_grapha_peek_after_destroy.js')],check=True)
+# S03-U486: the summon / flip response-timing window is closed when its timing ends (it used to stay open for the rest of the phase)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u486_summon_timing_window_close.js')],check=True)
+# S03-U487: 《血の代償》's summon is a real Normal Summon (onNormalSummon, summon triggers, the opponent's summon-success responses)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u487_blood_offering_normal_summon.js')],check=True)
+# S03-U488: a raw summon Action also queues the summon-success event (降霊の儀式); audit pin over CARD_SCRIPTS
+subprocess.run(['node',str(ROOT/'tools/test_s03_u488_raw_summon_success_event.js')],check=True)
+# S03-U489: resuming a save no longer leaves the summon-success timing window open (the journal replay reopened it)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u489_resume_summon_timing_window.js')],check=True)
+# S03-U490: a crashing harness block IS caught by the exit code (check=True here); the blind spot is a block that
+# stops calling ok() without throwing. Pins astra_harness {expect:N} and tools/gate_verify.py.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u490_harness_exit_and_gate_aggregation.js')],check=True)
+# S03-U491: the shared "missed the timing" machinery (engine/1ZZX) — step counter, per-card declaration (0 shipped),
+# the single decision point in collectHandlers, plus the save / resume / Replay regression.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u491_missed_timing_mechanism.js')],check=True)
+# S03-U492: the first class — an activation conditioned on a summon success misses the timing when another
+# processing followed. The step counter is now an allow-list that also ignores failed / no-op Actions.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u492_missed_timing_summon_success.js')],check=True)
+# S03-U493: the precision of that class - a following processing that only changes position / ATK / level /
+# counters now counts (the log line is no longer a signal), and all 518 summon-success candidates are audited
+# so that the wording (toki / baai), forced triggers and the summon-negation cards are separated.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u493_missed_timing_state_and_audit.js')],check=True)
+# S03-U494: the era mixing in that wording classification. The clauses are now read per effect and per event
+# (R9, WIKI-BC4886A97EED), the flipSummonReverse class is off because the era rulings say a flip effect does
+# not miss the timing (R8, WIKI-B2BFD8FD6AFC), and the 6 cards an era ruling calls mandatory are declared (R1).
+subprocess.run(['node',str(ROOT/'tools/test_s03_u494_missed_timing_era_mixing.js')],check=True)
+# S03-U495: the era sources were being looked up by the `cards` field only, which is the name of the wiki
+# PAGE a ruling sits on - so the rulings that name 《E・HERO エアーマン》 and 《落とし穴》 were invisible. The
+# provenance split is recounted, R10 (no chain block = no activation) is confirmed and 《運命のドラ》 declared.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u495_missed_timing_evidence.js')],check=True)
+# S03-U496: the published scope. Only the (card, event, effect) triples whose optionality, activation
+# condition and exceptions could be confirmed from the era sources are dropped; everything else keeps
+# the pre-U491 behaviour. 290 -> 65 pairs, and the scope is managed per effect, not per card name.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u496_missed_timing_published_scope.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

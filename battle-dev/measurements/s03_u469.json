@@ -1,0 +1,21 @@
+{
+  "example": false,
+  "unit": "S03-U469",
+  "category": "card-implementation",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "U314 Union leftovers: only 強化支援メカ・ヘビーウェポン implemented (declareUnionS03 opt-in targeted:true); W/Y/Z/アーマード・サイバーン/ピースキーパー SKIP -> ENGINE_GAP and ギアフレーム kept PARTIAL, all RULING_UNRESOLVED (substitute scope not attested for the card itself)",
+  "outcome": "heavy_weapon 51 PASS; negative control 28 FAIL (base build) / 7 FAIL (targeted:false) / 6 FAIL (substitute:battle); full serial gate 22329 PASS / 0 FAIL = measured base 22278 + 51",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-24T00:00:00+09:00",
+  "finished_at": "2026-10-24T00:00:00+09:00",
+  "gate_owner": "sonnet",
+  "usage": {
+    "source": "not recorded",
+    "by_model": []
+  },
+  "notes": "Single writer on claude/work, base ca15a07e. Baseline gate measured on a clean git-archive copy (22278 PASS / 0 FAIL / GATE_EXIT=0). Usage not measurable from inside the subagent."
+}

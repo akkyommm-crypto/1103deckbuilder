@@ -18,6 +18,19 @@
 const BATTLE_DESTROYED_NEGATOR_S03 = {};
 function declareBattleDestroyedNegatorS03(name, spec){ BATTLE_DESTROYED_NEGATOR_S03[name] = Object.assign({effectOnly:true}, spec||{}); }
 function battleDestroyedNegatorSpecS03(name){ return BATTLE_DESTROYED_NEGATOR_S03[name] || null; }
+/* S03-U461: the same continuous clause may be supplied by an Equip Spell.
+   Resolve it from the live equip relation so removing/negating the Equip before resolution also removes the negation. */
+function battleDestroyedNegatorSpecForCardS03(card, gs){
+  if(!card) return null;
+  const own = battleDestroyedNegatorSpecS03(dbOf(card).n); if(own) return own;
+  const equips = (typeof equipsOnV15==='function') ? equipsOnV15(card, gs) : [];
+  for(const h of equips){
+    if(!h || !h.card || h.card.face!=='up') continue;
+    if(typeof effectNegated==='function' && effectNegated(h.card)) continue;
+    const spec = battleDestroyedNegatorSpecS03(dbOf(h.card).n); if(spec) return spec;
+  }
+  return null;
+}
 
 /* reducer（BATTLE_CLEANUP）用：victim を戦闘で破壊した宣言済みモンスターの uid。無ければ null。 */
 function battleNegatorUidForVictimS03(gs, victim){
@@ -28,7 +41,7 @@ function battleNegatorUidForVictimS03(gs, victim){
   if(destroyerUid == null || destroyerDestroyed) return null;
   const h = (typeof findCardByUidInState === 'function') ? findCardByUidInState(gs, destroyerUid) : null;
   if(!h || !h.card || h.zone !== 'mz') return null;
-  return battleDestroyedNegatorSpecS03(dbOf(h.card).n) ? destroyerUid : null;
+  return battleDestroyedNegatorSpecForCardS03(h.card, gs) ? destroyerUid : null;
 }
 
 /* 解決用：このリンクの効果が、戦闘で破壊したモンスターの永続効果で無効か。 */
@@ -49,7 +62,7 @@ function battleDestroyedLinkNegatedS03(link, srcCard){
   }
   const d = findCardByUid(negUid);
   if(!d || d.zone !== 'mz' || !d.card || d.card.face !== 'up') return false;
-  const spec = battleDestroyedNegatorSpecS03(dbOf(d.card).n); if(!spec) return false;
+  const spec = battleDestroyedNegatorSpecForCardS03(d.card, gameState); if(!spec) return false;
   if(typeof effectNegated === 'function' && effectNegated(d.card)) return false;
   if(spec.effectOnly && !((dbOf(srcCard).st || []).includes('効果'))) return false;
   if(typeof spec.condition === 'function'){ try{ if(!spec.condition(d.card, srcCard)) return false; }catch(e){ return false; } }

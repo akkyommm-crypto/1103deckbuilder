@@ -3,8 +3,8 @@
    (cards/00_generic_core.js) as a real Trap requiring the opponent to have 4+ cards in hand (matching real
    text confirmed via Yugipedia: "If your opponent has 4 or more cards in their hand: Look at your
    opponent's hand and choose 1 monster from it to shuffle into the Deck."), letting the controller choose 1
-   real monster from the opponent's real hand and shuffle it into the Deck. This unit only adds the missing
-   dedicated real-DUEL-path test, promoting it to TESTED. No code change to the card itself. */
+   real monster from the opponent's real hand and shuffle it into the Deck. S03-U481 pins that this is a
+   non-targeting, resolution-time choice. */
 const harness=require('./astra_harness');
 const COMMON=String.raw`
 const TOASTS=[];showToast=m=>TOASTS.push(String(m));
@@ -34,6 +34,8 @@ gameState.players[1].hand=[mk('ワイト',1),mk('もけもけ',1),mk('サイク�
 gameState.players[1].deck=[mk('バット',1)];
 baselineA();
 duelActivateFromZone(0,'sz',0);
+ok('A: activation opens no card-target choice (the opponent hand is not inspected yet)',!pendingChoiceV49(gameState),JSON.stringify(pendingChoiceV49(gameState)));
+drive();
 if(pendingChoiceV49(gameState)){
   const pc=pendingChoiceV49(gameState);
   ok('A: only the real opponent hand MONSTERS are offered as candidates (Spells excluded)',
@@ -73,6 +75,7 @@ gameState.players[0].sz=[ds];
 gameState.players[1].hand=[mk('サイクロン',1),mk('死者蘇生',1),mk('強欲な壺',1),mk('死者蘇生',1)];
 baselineA();
 duelActivateFromZone(0,'sz',0);
+drive();
 ok('C: with a real 4-card opponent hand containing no monster, no choice is offered (correctly no-op)',
   !pendingChoiceV49(gameState),JSON.stringify(pendingChoiceV49(gameState)));
 drive();

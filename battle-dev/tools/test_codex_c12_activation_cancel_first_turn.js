@@ -29,12 +29,20 @@ harness(COMMON+String.raw`
 fresh(5,0);
 const cyc=mk('サイクロン',0),target=mk('マジック・ジャマー',1,'down');target.setTurn=3;
 gameState.players[0].hand=[cyc];gameState.players[1].sz=[target];baselineA();
+const beforeCancelDigest=v41StateDigest(gameState);
 duelActivateFromHand(0);renderChoiceSheetV49();
 ok('A: サイクロン target choice is marked as activation preparation',!!pc()&&!!(pc().meta&&pc().meta.activationPrepS03));
 ok('A: activation-time choice labels cancellation clearly',/発動を取り消す/.test(String(sheet.innerHTML||'')),String(sheet.innerHTML||'').slice(-240));
 __choiceCancelV49();
 ok('A: cancelling returns サイクロン to the hand and leaves the target untouched',z(cyc)==='hand/up'&&z(target)==='sz/down'&&gameState.players[0].sz.length===0&&gameState.chain.length===0&&!pc(),JSON.stringify({cyc:z(cyc),target:z(target),chain:gameState.chain.length,pending:!!pc(),toasts:TOASTS}));
-ok('A: cancelled activation leaves no committed Replay actions',v41ReplayPackage(gameState).actions.length===0,JSON.stringify(v41ReplayPackage(gameState).actions));
+/* U496 integration: U471 replaced deletion of the Journal tail with an explicit,
+   replayable preparation transaction. Preserve the original no-gameplay-change
+   guarantee, and require the exact begin/move/choice/cancel/abort sequence. */
+const cancelledActions=v41ReplayPackage(gameState).actions.map(e=>e.action);
+ok('A: cancelled activation restores the pre-activation digest with one journaled abort',
+  v41StateDigest(gameState)===beforeCancelDigest && !gameState.prepTxS03
+  && JSON.stringify(cancelledActions.map(a=>a.type))===JSON.stringify(['PREP_TX_BEGIN_S03','MOVE','CHOICE_OPEN_V49','CHOICE_CANCEL_V49','PREP_TX_ABORT_S03'])
+  && cancelledActions[4].reason==='cancel',JSON.stringify(cancelledActions));
 audit('A',true);
 duelActivateFromHand(0);pick(target);drive();
 ok('A: the same サイクロン can be activated normally after cancellation',(z(target)||'').startsWith('grave')&&(z(cyc)||'').startsWith('grave'),JSON.stringify({cyc:z(cyc),target:z(target)}));

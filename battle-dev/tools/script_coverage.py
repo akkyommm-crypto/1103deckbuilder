@@ -132,6 +132,7 @@ def scan_card_sources():
 # 説明のためにカード名が登場するだけで TESTED へ誤昇格させてはいけない。
 # （tools/check.py での実行対象からは除外しない。判定の証拠から外すだけ。）
 NON_CARD_TEST_FILES = {
+    "test_s03_u490_harness_exit_and_gate_aggregation.js",   # S03-U490: harness exit code / gate aggregation (no card)
     "test_s03_u172_deck_select_start.js",   # S03-U172: deck selection / start flow (card names are deck contents only)
     "test_p4_setcode_authority.js",   # P4 SetcodeAuthority / named predicate metadata
     "test_p3_provenance.js",
@@ -547,6 +548,68 @@ CARD_TEST_FOCUS = {
     "test_s03_u452_grave_banish.js": {"システム・ダウン", "トロイボム", "墓掘りグール", "奇跡の発掘"},
     "test_s03_u453_gorgon_light.js": {"ゴーゴンの眼", "裁きの光", "連鎖除外"},
     "test_s03_u454_scope_unity.js": {"同姓同名同盟条約", "古代の遠眼鏡", "コザッキーの研究成果", "成功確率0%", "電磁シールド", "友情 YU－JYO"},
+    "test_s03_u456_target_source.js": {"氷結界の御庭番", "ヴァイロン・セグメント", "闇の侯爵ベリアル"},
+    "test_s03_u457_target_consumers.js": {"ヴァイロン・エプシロン", "ターボ・ウォリアー", "救世の儀式", "ジュラック・タイタン", "機皇城", "地天の騎士ガイアドレイク", "安全地帯", "エレキリギリス"},
+    "test_s03_u459_opponent_targeting.js": {"ホルスのしもべ", "メタルシルバー・アーマー"},
+    "test_s03_u460_kusanagi.js": {"草薙剣"},
+    "test_s03_u461_baou.js": {"破邪の大剣－バオウ"},
+    "test_s03_u465_supervise.js": {"スーペルヴィス"},
+    "test_s03_u466_special_dual_summon.js": {"スペシャル・デュアル・サモン"},
+    "test_s03_u467_double_trap_hole.js": {"二重の落とし穴"},
+    "test_s03_u468_target_scope.js": {"ホルスのしもべ", "メタルシルバー・アーマー"},
+    "test_s03_u469_heavy_weapon.js": {"強化支援メカ・ヘビーウェポン"},
+    "test_s03_u470_condition_targetable.js": {"リビングデッドの呼び声", "リミット・リバース", "幻獣の角", "強制脱出装置", "月の書", "禁じられた聖槍", "精神操作", "ヒーロー・ブラスト", "六武衆の荒行", "デュアルスパーク"},
+    # S03-U471: only the two cards whose full flow is asserted end to end count as exercised. The multi-target cards (貪欲な壺 etc., RULING_UNRESOLVED) and the 15 survey cards appear as fixtures and must NOT gain TESTED.
+    "test_s03_u471_prep_tx.js": {"リビングデッドの呼び声", "月の書"},
+    # S03-U472: the five multi-target cards, each driven through activation -> target selection -> chain -> resolution -> Replay audit (+ a chain-link Save/Load) under the Metal Silver Armor ruling.
+    "test_s03_u472_multi_target_armor.js": {"貪欲な壺", "諸刃の活人剣術", "毒蛇の供物", "TGX3－DX2", "ゴッドバードアタック"},
+    # S03-U473: 次元幽閉 (targets:true), driven through attack declaration -> activation -> target selection -> chain -> resolution -> Replay audit, with target immunity (ホルスのしもべ / オベリスクの巨神兵) and a 2-VM Save/Load.
+    "test_s03_u473_dimensional_prison_targeting.js": {"次元幽閉"},
+    # S03-U474: cost selection is not a target selection. Each card below is driven end to end (activation -> cost choice -> effect target choice / commit -> resolution -> Replay audit) with a target-immune cost candidate.
+    # D・クリーナン / アサルト・スピリッツ appear only as classification fixtures (cancelled at the target choice) and must NOT gain TESTED.
+    "test_s03_u474_cost_selection_phase.js": {"デュアルスパーク", "ゴッドバードアタック", "サシカエル", "泣き神の石像", "ジェム・エンハンス", "ダーク・アームド・ドラゴン", "ワーム・キング"},
+    # S03-U475: v70SelectExactly (18 target-hook cards: the selection rides the chain; 4 cost-hook cards: resolved in place). Each card is driven activation -> selection -> chain -> resolution -> the chosen cards (by uid) move -> Replay audit; the target-hook cards also a 2-VM Save/Load.
+    "test_s03_u475_v70_select_exactly.js": {"グラディアル・リターン", "サルベージ", "スネーク・レイン", "バッテリーリサイクル", "急速充電器", "悪夢再び", "闇の量産工場", "希望の光", "暗黒よりの軍勢", "狡猾な落とし穴", "転生の予言", "隠された魔導書", "メタボ・シャーク", "原初の種", "ガトムズの緊急指令", "サイコ・チャージ", "儀水鏡の瞑想術", "ガスタの交信", "魔法再生", "魔法石の採掘", "ブラック・ブースト", "ガスタの静寂 カーム"},
+    # S03-U476: the 8 single-target cards that selected a card without declaring targets:true (the audit pin lists the 39 classified, unfixed candidates). Each is driven trigger/activation -> target choice -> chain -> resolution -> the chosen card (uid) -> Replay audit (+ chain-link Save/Load), with a target-immune candidate (オベリスクの巨神兵 / メタルシルバー・アーマー). The fixture cards (ハネワタ, サイクロン, ライオウ ...) must NOT gain TESTED.
+    "test_s03_u476_selection_targets.js": {"スノーマンイーター", "マスター・ヒュペリオン", "万力魔神バイサー・デス", "D・ステープラン", "カラクリ参謀 弐四八", "カラクリ忍者 九壱九", "暗黒界の龍神 グラファ", "暗黒界の武神 ゴルド"},
+    # S03-U477: the Dark World discard triggers (darkWorldDiscard) recognise the discarded card by uid after a Save/Load. Each of the 5 cards is driven by the controller's own effect (暗黒界の門) and by the opponent's effect (手札抹殺), with and without a save (saveDuel -> new VM -> offerResumeDuel), plus a same-name copy, a cost discard (鳳翼の爆風) and uid-less cards. The fixtures (ワイト, ゴブリン突撃部隊, ギガンテス, 手札抹殺, 鳳翼の爆風 ...) must NOT gain TESTED.
+    "test_s03_u477_dark_world_resume.js": {"暗黒界の龍神 グラファ", "暗黒界の武神 ゴルド", "暗黒界の狩人 ブラウ", "暗黒界の軍神 シルバ", "暗黒界の術師 スノウ"},
+    # S03-U478: the three fixed 2-target cards (targets:true + targetCount:2). Each is driven activation -> target selection(s) -> chain -> resolution -> Replay audit, with and without Metal Silver Armor, plus a chain-link Save/Load. The fixtures (サイバー・ドラゴン, ライオウ, ホルスのしもべ, メタルシルバー・アーマー, 強制脱出装置, リビングデッドの呼び声, ワイト and the other Graveyard cards) must NOT gain TESTED.
+    "test_s03_u478_two_target_cards.js": {"墓守の石版", "無欲な壺", "ガスタのつむじ風"},
+    # S03-U479: P1.1 target-source propagation. ガスタ is driven under Metal Silver Armor; 幻惑の巻物 and 異次元への隙間 are driven through their declaration -> target -> chain paths with Armor immunity, plus normal resolution and Replay.
+    "test_s03_u479_p11_target_source.js": {"ガスタのつむじ風", "幻惑の巻物", "異次元への隙間"},
+    "test_s03_u480_variable_target_count.js": {"霊滅術師 カイクウ", "暗黒界の武神 ゴルド"},
+    "test_s03_u481_resolution_non_target.js": {"E・HERO エアーマン", "ダスト・シュート"},
+    "test_s03_u482_chain_event_refs.js": {"ねずみ取り", "つまずき"},
+    # S03-U483: the 17 monsters whose resolve compares the event card by identity (spirits, アルカナフォース, 異次元への案内人, 暗黒のミミック LV1, ワーム・ルクイエ, 封魔の伝承者) are each driven Normal Summon / Flip Summon -> trigger -> chain -> resolution with a same-name copy on the field, uninterrupted and with a Save/Load at the chain; 夜叉 / 異次元への案内人 / 暗黒のミミック LV1 also with a Save/Load at the open trigger window. カラクリ大将軍 無零怒 is driven through the uid-less direct-emit path (a manual position change of a カラクリ) with a Save/Load. The fixtures (ゴブリン突撃部隊, ブラック・ホール, カラクリ兵 弐参六 …) must NOT gain TESTED.
+    "test_s03_u483_event_identity_closure.js": {"カラクリ大将軍 無零怒", "夜叉", "月読命", "砂塵の悪霊", "鳳凰", "竜宮之姫", "磨破羅魏", "伊弉波", "金華猫", "氷結界の神精霊", "封魔の伝承者", "アルカナフォースI－THE MAGICIAN", "アルカナフォースVII－THE CHARIOT", "アルカナフォースXVIII－THE MOON", "アルカナフォース0－THE FOOL", "異次元への案内人", "暗黒のミミック LV1", "ワーム・ルクイエ"},
+    "test_s03_u484_summon_trigger_resume.js": {"E・HERO エアーマン", "魔導戦士 ブレイカー", "スノーマンイーター", "終末の騎士", "死者蘇生", "月の書"},
+    "test_s03_u485_grapha_peek_after_destroy.js": {"暗黒界の龍神 グラファ", "手札抹殺", "強制脱出装置", "真六武衆－シエン", "真六武衆－カゲキ"},
+    "test_s03_u486_summon_timing_window_close.js": {"グリーン・ガジェット", "E・HERO エアーマン", "月の書"},
+    "test_s03_u487_blood_offering_normal_summon.js": {"血の代償", "E・HERO エアーマン", "グリーン・ガジェット", "奈落の落とし穴", "サイバー・ドラゴン"},
+    "test_s03_u488_raw_summon_success_event.js": {"降霊の儀式", "墓守の司令官", "奈落の落とし穴", "王家の眩る谷－ネクロバレー"},
+    "test_s03_u489_resume_summon_timing_window.js": {"グリーン・ガジェット", "魔導戦士 ブレイカー", "聖なるバリア －ミラーフォース－"},
+    "test_s03_u491_missed_timing_mechanism.js": {"光帝クライス", "闇・道化師のペーテン"},
+    "test_s03_u492_missed_timing_summon_success.js": {"血の代償", "奈落の落とし穴", "E・HERO エアーマン",
+                                                     "成金ゴブリン", "王宮の弾圧", "王虎ワンフー", "激流葬",
+                                                     "グリーン・ガジェット"},
+    "test_s03_u493_missed_timing_state_and_audit.js": {"ゴブリンドバーグ", "E・HERO エアーマン", "奈落の落とし穴",
+                                                       "血の代償", "成金ゴブリン", "魔導戦士 ブレイカー",
+                                                       "トラゴエディア", "突進", "侵食細胞「A」",
+                                                       "生命力吸収魔術", "王虎ワンフー", "聖なる輝き"},
+    "test_s03_u494_missed_timing_era_mixing.js": {"ゴブリンドバーグ", "バーニング・スカルヘッド", "血の代償",
+                                                  "成金ゴブリン", "電池メン－単四型", "魔導戦士 ブレイカー",
+                                                  "渋い忍者", "カゲトカゲ", "ワーム・ヤガン", "ワーム・ミリディス",
+                                                  "ドラグニティ－アキュリス", "フォーチュンレディ・ウインディー",
+                                                  "ドラグニティ－ピルム", "フォーチュンレディ・ライティー",
+                                                  "聖なるバリア －ミラーフォース－"},
+    "test_s03_u495_missed_timing_evidence.js": {"命の綱", "E・HERO エアーマン", "E・HERO オーシャン",
+                                                "青眼の白龍", "ゴブリンドバーグ", "運命のドラ", "血の代償",
+                                                "成金ゴブリン", "剣闘獣ガイザレス", "夜霧のスナイパー"},
+    "test_s03_u496_missed_timing_published_scope.js": {"血の代償", "成金ゴブリン", "E・HERO エアーマン",
+                                                       "E・HERO オーシャン", "奈落の落とし穴", "電池メン－単四型",
+                                                       "魔導戦士 ブレイカー", "王虎ワンフー",
+                                                       "アルカナフォースIII－THE EMPRESS"},
 }
 
 

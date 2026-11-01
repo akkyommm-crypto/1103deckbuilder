@@ -24,11 +24,32 @@ function isGeminiS03(card){
   const st = dbOf(card).st || [];
   return st.indexOf('デュアル') >= 0;
 }
-/* the Gemini card currently has its effects: Gemini-Summoned (dualUp) and face-up in a Monster Zone */
+/* S03-U463: a live field-wide source (超合魔獣ラプテノス) may treat every
+   Gemini as Gemini Summoned. continuousSources() already excludes face-down,
+   disabled and otherwise ineffective sources, so no target flag is written. */
+function geminiFieldGrantS03(){
+  if(typeof continuousSources!=='function') return false;
+  return continuousSources().some(src=>!!(src && src.sc && src.sc.continuous && src.sc.continuous.geminiAllDualS03));
+}
+/* S03-U465: a live Equip source (Supervise) may treat only its equipped
+   monster as Gemini Summoned. Use the existing continuous-source and scope
+   rules so negation, removal and an invalid host stop the grant immediately. */
+function geminiEquipGrantS03(card){
+  if(!card || typeof continuousSources!=='function' || typeof continuousReaches!=='function' || typeof locateCardAnyV4!=='function') return false;
+  const loc=locateCardAnyV4(card);
+  if(!loc || loc.zone!=='mz') return false;
+  return continuousSources().some(src=>{
+    const cont=src&&src.sc&&src.sc.continuous;
+    return !!(cont && cont.treatEquippedAsGeminiSummonedS03===true
+      && continuousReaches(cont.scope||'equippedMonster',src.p,loc,src.card,card));
+  });
+}
+/* the Gemini card currently has its effects: Gemini-Summoned (dualUp), or
+   covered by a live field-wide / Equip grant, and face-up in a Monster Zone */
 function geminiActiveS03(card){
-  if(!isGeminiS03(card) || !card.dualUp || card.face!=='up') return false;
+  if(!isGeminiS03(card) || card.face!=='up') return false;
   const h = typeof locateCardAnyV4==='function' ? locateCardAnyV4(card) : null;
-  return !!(h && h.zone==='mz');
+  return !!(h && h.zone==='mz' && (card.dualUp || geminiFieldGrantS03() || geminiEquipGrantS03(card)));
 }
 /* why this face-up Gemini monster cannot be Gemini Summoned now ('' = it can) */
 function geminiSummonBlockedS03(card, p){
@@ -38,7 +59,7 @@ function geminiSummonBlockedS03(card, p){
   if(!(gameState.phase==='main1'||gameState.phase==='main2')) return 'メインフェイズのみ';
   const h = findCardByUid(ensureCardUid(gameState, card));
   if(!h || h.p!==p || h.zone!=='mz' || card.face!=='up') return '自分フィールドの表側表示のデュアルモンスターのみ';
-  if(card.dualUp) return '既にもう1度召喚された状態です';
+  if(geminiActiveS03(card)) return '既にもう1度召喚された状態です';
   const R = typeof rules==='function' ? rules() : {normalSummon:true};
   if(!R.normalSummon) return '今は通常召喚できません';
   if(!normalRightFreeS03(gameState.players[p])) return 'このターンは既に通常召喚しています';   /* S03-U274: 二重召喚 */

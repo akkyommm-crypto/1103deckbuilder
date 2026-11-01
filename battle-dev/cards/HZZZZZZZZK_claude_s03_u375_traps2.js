@@ -26,7 +26,7 @@ API.registerChoiceHandler('u375.gap-target', (a, x)=>{
   const attr = declaredValueV11(null, 'attribute', gameState);
   const pool = attr ? u375GapPool(attr) : [];
   if(pool.length<2) return p11cAbort(x.activation);
-  p11cOpen(x.activation, {title:'異次元への隙間：除外する墓地のモンスター（合計2体）', candidates:pool, min:2, max:2, cancelable:false}, 'p11cards.commit-targets', {});
+  p11cOpen(x.activation, {title:'異次元への隙間：除外する墓地のモンスター（合計2体）', candidates:pool, min:2, max:2, targeting:true, cancelable:false}, 'p11cards.commit-targets', {});
 });
 defineScript('異次元への隙間', {
   type:'trap', priority:2, targets:true,

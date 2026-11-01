@@ -320,6 +320,10 @@ defineScript("ヒーロー・ブラスト", {
     if(!heroNormalInGrave(ctx.player).length){
       ctx.reason = "墓地に「E・HERO」通常モンスターがいません"; return false;
     }
+    /* S03-U470: 墓地のモンスターが全て対象耐性（メタルシルバー・アーマー）で候補から外れる時は、発動の前に断る */
+    if(!API.targetableCardsS03(heroNormalInGrave(ctx.player), ctx.player).length){
+      ctx.reason = "墓地に効果の対象にできる「E・HERO」通常モンスターがいません"; return false;
+    }
     return true;
   },
   selectTargets(ctx, done){
@@ -379,11 +383,15 @@ defineScript("デュアルスパーク", {
     if(!duelSparkFodder(ctx.player).some(f=>duelSparkTargetsS03U111(ctx, f.card).length)){
       ctx.reason = "リリースするモンスター以外に対象にできるカードがありません"; return false;
     }
+    /* S03-U470: 残る候補が全て対象耐性で外れる場合も発動できない（通すとリリースのコストだけ払って不発になる） */
+    if(!duelSparkFodder(ctx.player).some(f=>API.targetableCardsS03(duelSparkTargetsS03U111(ctx, f.card), ctx.player).length)){
+      ctx.reason = "リリースするモンスター以外に効果の対象にできるカードがありません"; return false;
+    }
     return true;
   },
   cost(ctx, done){
     API.selectCard("デュアルスパーク：リリースするデュアルモンスター",
-      duelSparkFodder(ctx.player).filter(f=>duelSparkTargetsS03U111(ctx, f.card).length), r=>{
+      duelSparkFodder(ctx.player).filter(f=>API.targetableCardsS03(duelSparkTargetsS03U111(ctx, f.card), ctx.player).length), r=>{
         API.sendToGrave(r, "デュアルスパーク（リリース）");
         done(true);
       });
