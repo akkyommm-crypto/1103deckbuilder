@@ -793,6 +793,10 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u491_missed_timing_mechanism.js'
 # S03-U492: the first class — an activation conditioned on a summon success misses the timing when another
 # processing followed. The step counter is now an allow-list that also ignores failed / no-op Actions.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u492_missed_timing_summon_success.js')],check=True)
+# S03-U493: the precision of that class - a following processing that only changes position / ATK / level /
+# counters now counts (the log line is no longer a signal), and all 518 summon-success candidates are audited
+# so that the wording (toki / baai), forced triggers and the summon-negation cards are separated.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u493_missed_timing_state_and_audit.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

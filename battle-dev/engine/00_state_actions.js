@@ -3789,7 +3789,7 @@ function dropXyzMaterials(P, card, gsRef){
 /* -------------------- ログ / 名前 -------------------- */
 /* S03-U492: ログが書かれたことを「この Action は本当に何かを行った」の印に使う（engine/1ZZX）。
    gs.log は 60 件で打ち切られるので長さでは数えられない。回数の差分だけを見るので状態には入れない。 */
-function logIt(gs, msg){ if(typeof noteMissedTimingLogS03==='function') noteMissedTimingLogS03(); gs.log.unshift({t:Date.now(), msg}); if(gs.log.length>60) gs.log.pop(); }
+function logIt(gs, msg){ gs.log.unshift({t:Date.now(), msg}); if(gs.log.length>60) gs.log.pop(); }
 /* System v28: LP 変動の中央イベント。payload は純 JSON。
    LP が実際に変わった時だけ出す（置換で変動0になった場合は出さない）。
    金額は半分・倍・肩代わりを通した後の最終値。 */

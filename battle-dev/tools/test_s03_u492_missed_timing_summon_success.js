@@ -119,21 +119,11 @@ const ALLOW_S492 = (rdS492('engine/1ZZX_missed_timing_s03.js')
   .match(/const MISSED_TIMING_PROCESSING_S03 = new Map\(\[[\s\S]*?\n\]\);/) || [''])[0]
   .match(/\['([A-Z][A-Z0-9_]*)',/g) || [];
 const ALLOW_SET_S492 = new Set(ALLOW_S492.map(x => x.slice(2, -2)));
-const REFUSE_RE_S492 = /(できません|ありません|一杯です|埋まっています|空です|足りません)/;
-const AUDIT_S492 = (() => {
-  const out = new Set();
-  fsA.readdirSync(pathA.join(ROOT_S492, 'engine')).filter(f => f.endsWith('.js')).sort().forEach(f => {
-    let cur = null;
-    rdS492('engine/' + f).split('\n').forEach(ln => {
-      const m = ln.match(/case\s*["']([A-Z][A-Z0-9_]*)["']/);
-      if (m) cur = m[1];
-      if (cur && ALLOW_SET_S492.has(cur) && ln.indexOf('logIt(') >= 0 && REFUSE_RE_S492.test(ln)) out.add(cur);
-    });
-  });
-  return [...out].sort();
-})();
+/* S03-U493: 断りのログの一覧（拒否リスト）はもう持たない。ログを印にしなくなったので、
+   「断りをログに書いて何もせず終わる Action は数えない」は盤面の署名だけで成立する。
+   その監査は tools/test_s03_u493_missed_timing_state_and_audit.js の A が許可リスト全件で行う。 */
 
-harness('const AUDIT=' + JSON.stringify(AUDIT_S492) + ';' + COMMON + String.raw`
+harness(COMMON + String.raw`
 fresh();
 const m=mk('ワイト',0);gameState.players[0].hand=[m];baselineA();
 const a0=s();
@@ -165,9 +155,6 @@ const a3=s(), logs=[];
 ok('A ★ 断りをログに書いて何もせず終わる Action は、ログが増えても番号を進めない',
    s()===a3 && logs.some(x=>/通常召喚/.test(x)) && gameState.players[0].hand.length===1,
    JSON.stringify({before:a3,after:s(),logs,hand:gameState.players[0].hand.length}));
-ok('A ★ 断りをログに書く許可リストの Action の一覧が、engine のソースの監査と一致する',
-   JSON.stringify([...MISSED_TIMING_REFUSAL_LOG_S03].sort())===JSON.stringify(AUDIT),
-   JSON.stringify({decl:[...MISSED_TIMING_REFUSAL_LOG_S03].sort(),audit:AUDIT}));
 /* 例外で終わった適用 */
 const a4=s();
 const fx=missedTimingBeginS03(gameState,{type:'DRAW'});
@@ -184,27 +171,33 @@ missedTimingEndS03(gameState,fy,true);
 ok('A ★ 処理の最中に積まれた遅延イベントの刻みは、その処理が数えられた後の番号と一致する',
    stamp===a5+1 && gameState.deferredEvents[0].evt.stepS03===a5+1 && s()===a5+1,
    JSON.stringify({stamp,queued:gameState.deferredEvents[0].evt.stepS03,step:s(),before:a5}));
-ok('A: 許可リストは FX_SET_STATE のうち裏にする／反転召喚だけを数える（発動の表返しは数えない）',
-   missedTimingIsProcessingS03({type:'FX_SET_STATE',face:'up'})===false
+ok('A: 許可リストは FX_SET_STATE のうち「発動の表返し」だけを除き、他は数える（S03-U493 で訂正）',
+   missedTimingIsProcessingS03({type:'FX_SET_STATE',face:'up',reason:'発動'})===false
    && missedTimingIsProcessingS03({type:'FX_SET_STATE',face:'down'})===true
-   && missedTimingIsProcessingS03({type:'FX_SET_STATE',flipSummon:true})===true,'');
+   && missedTimingIsProcessingS03({type:'FX_SET_STATE',flipSummon:true})===true
+   && missedTimingIsProcessingS03({type:'FX_SET_STATE',pos:'def'})===true
+   && missedTimingIsProcessingS03({type:'FX_SET_STATE',lvDelta:1})===true,'');
 ok('A: applyAction は最上位の適用でだけ数え、適用できたかどうかを渡している（engine/00 の配線）',
    /typeof missedTimingBeginS03==='function'/.test(String(applyAction))
    && /missedTimingEndS03\(gs,mtS492,mtAppliedS492\)/.test(String(applyAction)),'');
-`, {expect:10});
+`, {expect:9});
 
 /* ===== B. 判定の対象（種別）と、触らない場所 ===== */
 harness(COMMON + String.raw`
 fresh();
 const air=mk('E・HERO エアーマン',0);gameState.players[0].mz=[air];baselineA();
 const cand=en=>({name:'E・HERO エアーマン',p:0,zone:'mz',index:0,card:air,eventName:en,event:{}});
+const snow=en=>({name:'スノーマンイーター',p:0,zone:'mz',index:0,card:air,eventName:en,event:{}});
+const worm=en=>({name:'ニードルワーム',p:0,zone:'mz',index:0,card:air,eventName:en,event:{}});
 gameState.procStepS03=10;
 ok('B ★ 召喚成功のイベントで拾った候補は種別 summonSuccess に入る',
    missedTimingClassS03(cand('onNormalSummon'),{})==='summonSuccess'
    && missedTimingClassS03(cand('onSpecialSummon'),{})==='summonSuccess','');
-ok('B ★ 反転は召喚ではない — onFlip は反転召喚（evt.flipSummon）のときだけ種別に入る',
-   missedTimingClassS03(cand('onFlip'),{flipSummon:true})==='summonSuccess'
-   && missedTimingClassS03(cand('onFlip'),{})===null,'');
+ok('B ★ onFlip は反転召喚（evt.flipSummon）かつ文言が「時」と読めるものだけが種別に入る（S03-U493 で訂正）',
+   missedTimingClassS03(snow('onFlip'),{flipSummon:true})==='flipSummonReverse'
+   && missedTimingClassS03(snow('onFlip'),{})===null
+   && missedTimingClassS03(worm('onFlip'),{flipSummon:true})===null
+   && missedTimingClassS03(worm('onFlip'),{})===null,'');
 ok('B ★ 召喚成功以外のイベント（墓地送り・破壊・ドロー）は本単位の種別に入らない',
    ['onSendToGrave','onDestroy','onDraw','onLeaveField','onActivateSuccess']
    .every(en=>missedTimingClassS03(cand(en),{})===null),'');
