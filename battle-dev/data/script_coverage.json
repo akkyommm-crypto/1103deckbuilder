@@ -11103,6 +11103,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u47_special_summon_effect_decl.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_v470_native_cards.js"
       ]
     },
@@ -15275,6 +15276,7 @@
         "tools\\test_owner_return.js",
         "tools\\test_s03_u163_ex_material_check.js",
         "tools\\test_s03_u46_royal_oppression.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_v420_ex_removed.js"
       ]
     },
@@ -19223,6 +19225,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u277_kickback.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_v530_batch05.js"
       ]
     },
@@ -25153,6 +25156,7 @@
         "tools\\test_s03_u40_attack_declaration_window.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u487_blood_offering_normal_summon.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs5_battle_trigger_slice.js",
@@ -29352,6 +29356,7 @@
         "tools\\test_s03_u225_ns17.js",
         "tools\\test_s03_u231_ns23.js",
         "tools\\test_s03_u285_gap7.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_v380.js",
         "tools\\test_v420_ex_removed.js"
       ]
@@ -62030,6 +62035,7 @@
         "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_s03_u464_cocoon.js",
         "tools\\test_s03_u46_royal_oppression.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_s03_u49_battle_fader_once_per_chain.js",
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
@@ -79781,7 +79787,8 @@
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
-        "tools\\test_s03_u496_missed_timing_published_scope.js"
+        "tools\\test_s03_u496_missed_timing_published_scope.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js"
       ]
     },
     {
@@ -81044,6 +81051,7 @@
         "tools\\test_auto_cycle21.js",
         "tools\\test_s03_u15_summon_window_resume.js",
         "tools\\test_s03_u16_cost_selection_first.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_s03_vs3_six_samurai_gate_slice.js",
         "tools\\test_s03_vs4_activation_negation_slice.js",
         "tools\\test_s03_vs5_battle_trigger_slice.js",
@@ -85304,6 +85312,7 @@
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
         "tools\\test_s03_u484_summon_trigger_resume.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
@@ -93542,6 +93551,7 @@
       "tests": [
         "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u215_ns7.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
     },
@@ -98650,7 +98660,8 @@
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
-        "tools\\test_s03_u496_missed_timing_published_scope.js"
+        "tools\\test_s03_u496_missed_timing_published_scope.js",
+        "tools\\test_s03_u497_summon_negation_window_order.js"
       ]
     },
     {

@@ -345,7 +345,15 @@ function missedTimingTextKindS03(name){
    getChainResponsesV2）には触らない。一般のクイックエフェクトはチェーン終了後に今までどおり発動できる。
    召喚そのものの無効（《神の宣告》《昇天の角笛》《キックバック》《神の警告》《重力崩壊》《エレキャンセル》
    《ライト・バニッシュ》＝ sc.summonNegate / SUMMON_WINDOW_*、WIKI-2CF23AA42E79、回答日 2011-08-25）は
-   召喚成功より前の別タイミングなので、この種別には入らない（下で明示的に外す）。 */
+   召喚成功より前の別タイミングなので、この種別には入らない（下で明示的に外す）。
+   S03-U497 でその窓の処理順を実測した（設計書 1-c / (D) / 5-e。**挙動は変えていない**）:
+     ・窓を開くのは 5 か所・4 種別（normal / flip / procedure / synchro・xyz）だけで、すべて UI 操作が起点。
+       実測した 4 種別はすべて chain 0・procStepS03 0・解決中のリンク無しで開く。
+       → **既存の SUMMON_WINDOW_* へこの処理番号の比較を入れても一度も成立しない（死んだコードになる）。**
+     ・食い違いは逆向きで、解決中に行われる召喚には窓が 1 つも開かない。チェーン1 の《血の代償》は
+       当時できる《神の宣告》等の発動を潰しており、チェーン2 は窓が無いために結果だけ一致している。
+     ・チェーン1 とチェーン2 を分ける道具はこの処理番号だった（召喚時→チェーン終了時が 2→2 と 2→5）。
+       CHAIN_RESOLVE_TOP は解決前にリンクを外すので、gameState.chain.length では分けられない。 */
 const MISSED_TIMING_EVENT_CLASS_S03 = {onNormalSummon:'N', onSpecialSummon:'S'};
 const MISSED_TIMING_CLASSES_S03 = { summonSuccess: true, flipSummonReverse: false };
 function missedTimingSummonNegatorS03(name){

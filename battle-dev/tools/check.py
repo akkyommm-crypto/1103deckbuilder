@@ -823,6 +823,11 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u495_missed_timing_evidence.js')
 # condition and exceptions could be confirmed from the era sources are dropped; everything else keeps
 # the pre-U491 behaviour. 290 -> 65 pairs, and the scope is managed per effect, not per card name.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u496_missed_timing_published_scope.js')],check=True)
+# S03-U497: the summon-negation window itself. The order around it is measured, not assumed: every
+# existing SUMMON_WINDOW_* opens at chain 0 / procStepS03 0, so a step comparison there would be dead
+# code; the real gap is that a summon performed during chain resolution opens no window at all.
+# Design only (1-c / (D) / 5-e) - this unit does not change behaviour.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u497_summon_negation_window_order.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
