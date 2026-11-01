@@ -53,7 +53,7 @@ const POINT_ORIG_S493=pointResponsesV27;
 const CHAINRESP_ORIG_S493=getChainResponsesV2;
 const NEGATORS_ORIG_S493=summonNegatorsV2;
 const CARDSIG_ORIG_S493=missedTimingCardSigS03;
-const TEXTKIND_ORIG_S493=missedTimingTextKindS03;
+const CLAUSEKIND_ORIG_S493=missedTimingClauseKindS03;
 (function(){
   const f=collectHandlers;collectHandlers=function(n,e){const r=f.apply(this,arguments);
     COLLECT.push({ev:n,stamp:(e&&e.stepS03!=null)?e.stepS03:null,now:s(),names:r.map(x=>x.name)});return r;};
@@ -299,7 +299,7 @@ ok('C6 ★ シャッフル・デッキの並べ替え・攻撃宣言・登録は
 harness(COMMON + String.raw`
 resetA();
 const EVS=['onNormalSummon','onSpecialSummon','onFlip'];
-const B={forced:[],summonNegate:[],drop:[],baai:[],none:[]};
+const B={forced:[],summonNegate:[],decl:[],drop:[],baai:[],none:[]};
 Object.keys(CARD_SCRIPTS).forEach(nm=>{
   const sc=CARD_SCRIPTS[nm]; if(!sc||!sc.passive) return;
   const evs=EVS.filter(e=>typeof sc.passive[e]==='function');
@@ -308,18 +308,19 @@ Object.keys(CARD_SCRIPTS).forEach(nm=>{
     ||!!(sc.v4Unified&&typeof nativeEffectsV4==='function'&&(nativeEffectsV4(nm)||[]).some(e=>e&&e.forced===true));
   if(forced){B.forced.push(nm);return;}
   if(sc.summonNegate){B.summonNegate.push(nm);return;}
+  if(missedTimingModeS03(nm)==='never'){B.decl.push(nm);return;}
   const cls=evs.map(e=>missedTimingClassS03({name:nm,eventName:e},{flipSummon:true})).filter(Boolean);
   if(cls.length){B.drop.push(nm);return;}
   const k=missedTimingTextKindS03(nm);
-  if(k.summon==='baai'||k.flip==='baai'){B.baai.push(nm);return;}
+  if(k.n==='baai'||k.s==='baai'||k.f==='baai'||k.r==='baai'){B.baai.push(nm);return;}
   B.none.push(nm);
 });
 const total=Object.keys(B).reduce((a,k)=>a+B[k].length,0);
-ok('D1 ★ 召喚成功のイベントで拾われ得る候補は 518 件で、内訳は 強制 255 / 逃す 218 / 場合 15 / 召喚無効 6 / 文言なし 24',
-   total===518 && B.forced.length===255 && B.drop.length===218 && B.baai.length===15
-   && B.summonNegate.length===6 && B.none.length===24,
+ok('D1 ★ 候補は 518 件。内訳は 強制 255 / 宣言 6 / 逃す 208 / 場合 15 / 召喚無効 6 / 文言なし 28（S03-U494 で更新）',
+   total===518 && B.forced.length===255 && B.decl.length===6 && B.drop.length===208
+   && B.baai.length===15 && B.summonNegate.length===6 && B.none.length===28,
    JSON.stringify(Object.keys(B).reduce((a,k)=>(a[k]=B[k].length,a),{})));
-ok('D2 ★ 「場合」と読める 15 件は落とさない（R7）— 一覧を固定する',
+ok('D2 ★ 「場合」と読める 15 件は落とさない（R7）— 一覧を固定する（S03-U494 で当時の根拠と照合）',
    JSON.stringify(B.baai.slice().sort())===JSON.stringify(['D－HERO ディスクガイ','E・HERO ガイア','ダッカー',
      'デスグレムリン','デスハムスター','ハネハネ','ハンニバル・ネクロマンサー','光神機－轟龍','名工 虎鉄',
      '夜霧のスナイパー','茫漠の死者','赤い忍者','電磁ミノ虫','青い忍者','魔導戦士 ブレイカー'].sort()),
@@ -337,8 +338,8 @@ ok('D4 ★ 文言が読み取れない 24 件（旧「リバース:」表記の�
    && B.none.indexOf('ニードルワーム')>=0 && B.none.indexOf('ペンギン・ソルジャー')>=0
    && B.none.indexOf('ねずみ取り')>=0,
    JSON.stringify({noneDropped:noneDropped.slice(0,8),sample:B.none.slice(0,4)}));
-ok('D5 ★ 落とす 218 件はすべて「時」と読める発動で、罠・魔法と「反転召喚に成功した時」の 4 枚を含む',
-   B.drop.every(nm=>{const k=missedTimingTextKindS03(nm);return k.summon==='toki'||k.flip==='toki';})
+ok('D5 ★ 落とす 208 件はすべて「時」と読める召喚句を持ち、罠・魔法と「反転召喚に成功した時」の 4 枚を含む',
+   B.drop.every(nm=>{const k=missedTimingTextKindS03(nm);return k.n==='toki'||k.s==='toki'||k.f==='toki';})
    && ['奈落の落とし穴','落とし穴','激流葬','E・HERO エアーマン','ゴブリンドバーグ','連鎖除外','深黒の落とし穴',
        'スカラベの大群','メデューサ・ワーム','ガーディアン・スタチュー','イナゴの軍勢']
       .every(nm=>B.drop.indexOf(nm)>=0),
@@ -347,9 +348,10 @@ ok('D6 ★ 強制 255 件は配線に当てはまっても落とさない（R1�
    B.forced.filter(nm=>!!CARD_SCRIPTS[nm].forced)
      .every(nm=>missedTimingDropS03({name:nm,eventName:'onNormalSummon'},{stepS03:1})===false),'');
 const ALL=Object.keys(B).reduce((a,k)=>a.concat(B[k]),[]);
-ok('D7 ★ 当時裁定の「例外的に逃さない」3 枚は墓地送りの誘発で、召喚成功の候補には入っていない（R5 の宣言が 0 件である根拠）',
+ok('D7 ★ R5 の例外 3 枚は墓地送りの誘発で候補に入らない（R5 の宣言は今も 0 件）。宣言表は R1 の 6 件だけ',
    ['ダーク・スプロケッター','ファラオの化身','アーケイン・ファイロ'].every(nm=>ALL.indexOf(nm)<0)
-   && Object.keys(MISSED_TIMING_DECL_S03).length===0,
+   && Object.keys(MISSED_TIMING_DECL_S03).length===6
+   && Object.keys(MISSED_TIMING_DECL_S03).every(k=>MISSED_TIMING_DECL_S03[k].mode==='never'),
    JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)));
 ok('D8 ★ 種別は配線と文言の両方を要求する（どちらか一方では落とさない）',
    missedTimingClassS03({name:'奈落の落とし穴',eventName:'onNormalSummon'},{})==='summonSuccess'
@@ -381,7 +383,7 @@ drive();
 ok('E2 ★ 同じ盤面で「時」の《E・HERO エアーマン》なら、自身の召喚誘発も相手の応答も逃す',
    JSON.stringify(dropNames())===JSON.stringify(BOTH_S493) && zu(U.ocean)==='deck',
    JSON.stringify({drops:dropNames(),ocean:zu(U.ocean)}));
-missedTimingTextKindS03=function(){return {summon:'toki',flip:'toki'};};
+missedTimingClauseKindS03=function(){return 'toki';};
 U=bloodBoard({chain1:'成金ゴブリン', summon:'魔導戦士 ブレイカー'});
 stackTwo('sz',1);
 drive();
@@ -389,7 +391,7 @@ ok('E3 ★ negative control: 文言の判定を外すと、「場合」の《魔
    JSON.stringify(dropNames())===JSON.stringify(['奈落の落とし穴','魔導戦士 ブレイカー'].sort())
    && !(((cu(U.mon)||{}).counters||{})['魔力']),
    JSON.stringify({drops:dropNames(),counters:(cu(U.mon)||{}).counters}));
-missedTimingTextKindS03=TEXTKIND_ORIG_S493;
+missedTimingClauseKindS03=CLAUSEKIND_ORIG_S493;
 MISSED_TIMING_CLASSES_S03.summonSuccess=false;
 U=bloodBoard({chain1:'成金ゴブリン', summon:'E・HERO エアーマン'});
 stackTwo('sz',1);
@@ -463,10 +465,11 @@ const DESIGN_S493 = rdS493('docs/S03_MISSED_TIMING_DESIGN.md');
 const ENGINE_S493 = rdS493('engine/1ZZX_missed_timing_s03.js');
 harness('const DOC=' + JSON.stringify(DESIGN_S493) + ';const ENG=' + JSON.stringify(ENGINE_S493) + ';'
       + COMMON + String.raw`
-ok('G1 ★ 効果で表側にされたリバース効果は未対応 — 反転召喚（evt.flipSummon）のときだけ判定する',
-   missedTimingClassS03({name:'スノーマンイーター',eventName:'onFlip'},{flipSummon:true})==='flipSummonReverse'
+ok('G1 ★ 「リバースした時」のリバース効果は種別から外れた（R8、S03-U494）— 反転召喚でも効果で表側でも落とさない',
+   MISSED_TIMING_CLASSES_S03.flipSummonReverse===false
+   && missedTimingClassS03({name:'スノーマンイーター',eventName:'onFlip'},{flipSummon:true})===null
    && missedTimingClassS03({name:'スノーマンイーター',eventName:'onFlip'},{})===null
-   && /効果で表側にされた場合は未対応/.test(ENG) && /効果で表側/.test(DOC),'');
+   && /WIKI-B2BFD8FD6AFC/.test(ENG) && /WIKI-B2BFD8FD6AFC/.test(DOC),'');
 fresh();
 gameState.players[0].hand=[mk('ワイト',0)];
 gameState.players[0].sz=[mk('聖なる輝き',0,'up')];

@@ -188,14 +188,17 @@ fresh();
 const air=mk('E・HERO エアーマン',0);gameState.players[0].mz=[air];baselineA();
 const cand=en=>({name:'E・HERO エアーマン',p:0,zone:'mz',index:0,card:air,eventName:en,event:{}});
 const snow=en=>({name:'スノーマンイーター',p:0,zone:'mz',index:0,card:air,eventName:en,event:{}});
+const scar=en=>({name:'スカラベの大群',p:0,zone:'mz',index:0,card:air,eventName:en,event:{}});
 const worm=en=>({name:'ニードルワーム',p:0,zone:'mz',index:0,card:air,eventName:en,event:{}});
 gameState.procStepS03=10;
 ok('B ★ 召喚成功のイベントで拾った候補は種別 summonSuccess に入る',
    missedTimingClassS03(cand('onNormalSummon'),{})==='summonSuccess'
    && missedTimingClassS03(cand('onSpecialSummon'),{})==='summonSuccess','');
-ok('B ★ onFlip は反転召喚（evt.flipSummon）かつ文言が「時」と読めるものだけが種別に入る（S03-U493 で訂正）',
-   missedTimingClassS03(snow('onFlip'),{flipSummon:true})==='flipSummonReverse'
-   && missedTimingClassS03(snow('onFlip'),{})===null
+ok('B ★ onFlip で種別に入るのは「反転召喚に成功した時」だけ — 「リバースした時」は S03-U494 で外した（R8）',
+   missedTimingClassS03(scar('onFlip'),{flipSummon:true})==='summonSuccess'
+   && missedTimingClassS03(scar('onFlip'),{})===null
+   && MISSED_TIMING_CLASSES_S03.flipSummonReverse===false
+   && missedTimingClassS03(snow('onFlip'),{flipSummon:true})===null
    && missedTimingClassS03(worm('onFlip'),{flipSummon:true})===null
    && missedTimingClassS03(worm('onFlip'),{})===null,'');
 ok('B ★ 召喚成功以外のイベント（墓地送り・破壊・ドロー）は本単位の種別に入らない',
@@ -223,8 +226,12 @@ ok('B ★ 判定は collectHandlers の 1 箇所だけ — 優先権・応答機
    && !/issedTiming/.test(String(CHAINRESP_ORIG_S492))
    && !/issedTiming/.test(String(NEGATORS_ORIG_S492))
    && !/issedTiming/.test(String(BEGINWIN_ORIG_S492)),'');
-ok('B ★ 《血の代償》自身は宣言していない（逃すのは応答する側のカード）',
-   missedTimingModeS03('血の代償')===null && Object.keys(MISSED_TIMING_DECL_S03).length===0,
+ok('B ★ 《血の代償》自身は宣言していない（逃すのは応答する側のカード）。宣言表は S03-U494 の R1 の 6 件だけ',
+   missedTimingModeS03('血の代償')===null
+   && JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03).sort())===JSON.stringify(
+      ['サイコ・エンペラー','スノーマンイーター','バーニング・スカルヘッド','リチュア・チェイン','炎帝近衛兵','素早いビッグハムスター'].sort())
+   && Object.keys(MISSED_TIMING_DECL_S03).every(k=>MISSED_TIMING_DECL_S03[k].mode==='never'
+        && /^(WIKI|R1103)-/.test(MISSED_TIMING_DECL_S03[k].ruling||'')),
    JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)));
 `, {expect:9});
 

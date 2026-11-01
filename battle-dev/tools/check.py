@@ -797,6 +797,10 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u492_missed_timing_summon_succes
 # counters now counts (the log line is no longer a signal), and all 518 summon-success candidates are audited
 # so that the wording (toki / baai), forced triggers and the summon-negation cards are separated.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u493_missed_timing_state_and_audit.js')],check=True)
+# S03-U494: the era mixing in that wording classification. The clauses are now read per effect and per event
+# (R9, WIKI-BC4886A97EED), the flipSummonReverse class is off because the era rulings say a flip effect does
+# not miss the timing (R8, WIKI-B2BFD8FD6AFC), and the 6 cards an era ruling calls mandatory are declared (R1).
+subprocess.run(['node',str(ROOT/'tools/test_s03_u494_missed_timing_era_mixing.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

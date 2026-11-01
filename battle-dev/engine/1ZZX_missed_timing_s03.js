@@ -1,4 +1,4 @@
-/* S03-U491 / S03-U492 / S03-U493: 「タイミングを逃す」の共通機構。
+/* S03-U491 / S03-U492 / S03-U493 / S03-U494: 「タイミングを逃す」の共通機構。
    設計と当時裁定の根拠は docs/S03_MISSED_TIMING_DESIGN.md（裁定の抽出は docs/S03_MISSED_TIMING_RULINGS.md、123 件）。
 
    当時裁定から読み取れる規則:
@@ -10,6 +10,11 @@
      R6 当時「調整中」のものがある                        — 《カオスポッド》11/08/03（RULING_UNRESOLVED）
      R7 「〜した**場合**」の任意効果は逃さない。「〜した**時**」だけが逃す。テキストの文言で分かれる
         — 《ゴブリンドバーグ》WIKI-9FC5B41EDCF4（11/04/17）とその裏返し WIKI-0B439F71B94A（11/04/18）
+     R8 「リバースした時」のリバース効果は逃さない。進行中の処理が終わってから発動する
+        — 《カオス・インフィニティ》WIKI-B2BFD8FD6AFC（11/03/03）、《ニードル・ボール》WIKI-624AAB0A922F（08/03/06）、
+          《裏ガエル》WIKI-8CD28D6D58FD（10/04/13）。S03-U494 で確認し、flipSummonReverse 種別を無効にした
+     R9 「召喚」は「表側攻撃表示または表側守備表示での通常召喚」だけを指す。反転召喚・特殊召喚は含まない
+        — 《魔導戦士 ブレイカー》WIKI-BC4886A97EED（取得 2011-08-30）。S03-U494 で文言をイベントごとに読む根拠
 
    機構は 3 つ:
      (A) gameState.procStepS03 — 「行われた処理」の通し番号。
@@ -34,7 +39,17 @@
          逆に、旧「リバース:」表記ではなく「反転召喚に成功した時」と書かれた 4 枚
          （《スカラベの大群》《メデューサ・ワーム》《ガーディアン・スタチュー》《イナゴの軍勢》）は
          onFlip でしか拾われないため、文言を見るだけでは逃し損ねる。反転召喚も召喚として扱う。
-         → 種別に当時テキストの「時」／「場合」の判定を足し、肯定的に「時」と読めるものだけを落とす。 */
+         → 種別に当時テキストの「時」／「場合」の判定を足し、肯定的に「時」と読めるものだけを落とす。
+
+   S03-U494 は文言分類の**時代混在**を確認し、根拠の取れた食い違いだけを直した。
+     (1) 文言を 1 枚単位ではなく**効果ごと・イベントごと**に読む（R9）。
+         S03-U493 の正規表現は「特殊召喚に成功した時」の中の「召喚に成功した時」に当たり、
+         「S召喚」（当時は「シンクロ召喚」）も「召喚」と読んでいた。
+     (2) flipSummonReverse 種別を**無効にした**（R8）。S03-U493 はこの種別を当時の根拠なしに有効にしていた。
+     (3) スクリプトが任意として登録しているが当時裁定が「強制」と明言している 6 枚を (B-1) で宣言した（R1）。
+   確認できなかったものは設計書 3(B-4) と 5-a に**未確定**として残してある。
+   「場合」と読めるカードの文言が当時は「時」だった例も見つかっているが（《茫漠の死者》WIKI-A9967954DFF2 11/03/19、
+   《E・HERO ガイア》WIKI-3798ED89CB2C 08/09/23）、いずれも強制誘発なので R1 で逃さず、結果は変わらない。 */
 
 /* =========================================================================
    (A) 処理番号
@@ -181,70 +196,143 @@ function missedTimingStampS03(gs){
    (B) 判定の対象
    ========================================================================= */
 
-/* (B-1) カードごとの宣言。'miss' = タイミングを逃す、'never' = 逃さない（R5 の例外カード）。
+/* (B-1) カードごとの宣言。'miss' = タイミングを逃す、'never' = 逃さない。
    宣言の無いカードは下の種別だけで決まる。各件に当時裁定の ID を必ず添える。
-   当時裁定 123 件と候補 518 件を照合した範囲では、召喚成功を条件とする発動の個別例外（R5）は見つかっていない。
+   **R1（強制誘発は逃さない）の宣言（S03-U494）**: スクリプトは任意として登録しているが、
+   当時裁定が「強制」「必ず発動」「その場合でも発動しチェーンブロックが作られる」と明言しているカード。
+   強制／任意はスクリプト側の値（engine/1ZB の triggerCandidateForcedS03）で決まるので、
+   ここでは missedTimingDropS03 の判定だけを戻す（SEGOC の順位や強制群の扱いは変えない）。
+   裁定の本文は docs/S03_MISSED_TIMING_RULINGS.md の「S03-U494 で追加参照した当時裁定」節。
+   R5（任意でも例外的に逃さないカード）の宣言は**いまも 0 件**。
    《ダーク・スプロケッター》08/04/19・《ファラオの化身》09/05/15・《アーケイン・ファイロ》08/11/21 の
    3 件はいずれも墓地送りを条件とする誘発で、召喚成功の候補には入っていない（S03-U493 で全件照合）。 */
 const MISSED_TIMING_DECL_S03 = {
-  /* 例: 'カード名': {mode:'never', ruling:'WIKI-...'} */
+  /* 10/08/05「はい、このカードが召喚に成功した時に強制的に発動します」 */
+  'リチュア・チェイン':       {mode:'never', ruling:'WIKI-07D76F683452', reason:'R1 強制'},
+  /* 10/10/09「その場合でも発動しチェーンブロック自体は作られます」／「必ず…選択して発動する必要があります」 */
+  '炎帝近衛兵':               {mode:'never', ruling:'WIKI-8639442A7B6A', reason:'R1 強制'},
+  /* 09/04/09「チェーン２以上のタイミングで手札から特殊召喚されたとき…」→「強制効果のため、発動します」 */
+  'バーニング・スカルヘッド':  {mode:'never', ruling:'WIKI-A47B4CA77987', reason:'R1 強制（本機構と同じ場面）'},
+  /* 10/09/18「その場合でも効果は発動しチェーンブロックが作られます」 */
+  'サイコ・エンペラー':       {mode:'never', ruling:'WIKI-55066C00ED04', reason:'R1 強制'},
+  /* 「リバースした場合に必ず発動する誘発効果」（独立検証層、回答日なし） */
+  'スノーマンイーター':       {mode:'never', ruling:'R1103-SNOWMAN-002', reason:'R1 強制'},
+  /* 11/03/03「タイミングを逃さず効果を発動できますか？」→「はい、…効果処理終了後にリバース効果が発動し」 */
+  '素早いビッグハムスター':    {mode:'never', ruling:'WIKI-B2BFD8FD6AFC', reason:'リバース効果は逃さない'},
 };
 function missedTimingModeS03(name){
   const d = MISSED_TIMING_DECL_S03[name];
   return (d && d.mode) || null;
 }
 
-/* (B-2) 当時テキストの「時」と「場合」。R7 の判定。
-   「〜に成功した時」「〜された時」「〜した時」＝ 時（逃す）、「〜した場合」＝ 場合（逃さない）。
-   1 枚のテキストに両方あれば（効果が複数ある等）曖昧なので**逃さない**側に寄せる。
-   文言が読み取れないものも逃さない。これは S03-U491 以前の挙動と同じなので、読み落としは安全な側に落ちる。
+/* (B-2) 当時テキストの「時」と「場合」を、**効果ごと・イベントごと**に読む（S03-U494 で作り直した）。
+   S03-U493 は 1 枚のテキスト全体を 1 つの「召喚句」と 1 つの「リバース句」にまとめていた。これは 2 つ誤る。
+     - **召喚・特殊召喚・反転召喚を区別しない。** 正規表現の選択肢が「召喚」から並んでいるため
+       「特殊召喚に成功した時」の中の「召喚に成功した時」に当たり、特殊召喚の句しか持たないカードを
+       通常召喚・反転召喚のイベントでも落としていた（実測: 《アルカナフォースEX－THE LIGHT RULER》）。
+       当時裁定 `WIKI-BC4886A97EED`（《魔導戦士 ブレイカー》、取得 2011-08-30）は
+       「「召喚」とは、「表側攻撃表示または表側守備表示での通常召喚」を指します」と明示し、
+       反転召喚・特殊召喚では魔力カウンターの誘発は発動しないと答えている。
+     - **1 枚のテキストで一括判定していた。** 関係の無い効果の「場合」で判定が変わる。
+   そこで句の直前に並ぶ召喚語を**長い語から**読み取り（「S召喚」の略記と「生け贄召喚」「アドバンス召喚」も含む）、
+   語ごとに N（通常召喚）／ S（特殊召喚）／ F（反転召喚）／ R（リバース）へ割り当て、
+   判定するイベントに対応する種類の句だけを見る。同じ種類に「時」と「場合」が混在すれば曖昧なので
+   **逃さない**。読み取れないものも逃さない（＝ S03-U491 以前の挙動）。
 
-   テキストからの判定を使う理由と限界:
-     - S03-U492 は「配線だけで決める（テキストは使わない）」としていたが、S03-U493 で候補 518 件を
-       全件監査したところ、配線だけでは「場合」15 件・文言の無いもの 3 件・リバース効果 28 件を
-       誤って落としていた。「時」「場合」の区別は当時裁定そのものの判定軸なので、文言を見ないと分けられない。
-     - data/carddata.json のテキストは現行表記のものが混ざっている（①: 表記）。
-       2011-11 以降のテキスト改訂は「時」→「場合」の方向が多いため、食い違いは
-       「当時は時 → 現行は場合 → 逃さない（安全な側）」に落ちやすい。
-       逆向き（当時は場合 → 現行は時）は誤って逃させるので、見つかれば上の宣言表で上書きする。
-     - 監査の内訳はテストで件数ごと固定してあるので、テキストが変われば必ずゲートに出る。 */
-const MISSED_TIMING_SUMMON_CLAUSE_S03 =
-  /(?:召喚|反転召喚|特殊召喚|融合召喚|儀式召喚|シンクロ召喚|エクシーズ召喚)(?:・(?:召喚|反転召喚|特殊召喚|融合召喚|儀式召喚|シンクロ召喚|エクシーズ召喚))*(?:に成功した|された|した)(時|場合)/g;
-const MISSED_TIMING_FLIP_CLAUSE_S03 = /リバースした(時|場合)/g;
+   テキスト層が時代混在であることは実測できる（S03-U494、候補 518 件のテキスト）:
+     - 「S召喚」17 箇所 — 2011 当時は「シンクロ召喚」と書かれていた略記。
+       S03-U493 の正規表現はこれを「召喚」と読み、シンクロ召喚の句を通常召喚のイベントに結び付けていた
+     - 「生け贄召喚」6 箇所と「アドバンス召喚」32 箇所が同じ層に共存（用語の変更は 2010-03）
+   食い違いの向きと、どこまでが当時裁定で裏付けられているかは設計書 3(B-2) と 3(B-4) に書いてある。 */
+const MISSED_TIMING_SUMMON_WORDS_S03 = [
+  ['エクシーズ召喚','S'], ['シンクロ召喚','S'], ['アドバンス召喚','N'], ['生け贄召喚','N'],
+  ['反転召喚','F'], ['特殊召喚','S'], ['融合召喚','S'], ['儀式召喚','S'], ['通常召喚','N'],
+  ['S召喚','S'], ['Ｓ召喚','S'], ['X召喚','S'], ['Ｘ召喚','S'], ['召喚','N'], ['リバース','R'],
+].sort((a,b)=>b[0].length-a[0].length);
+const MISSED_TIMING_TERM_S03 = /(?:に成功した|された|した)(時|場合)/g;
 const MISSED_TIMING_TEXT_CACHE_S03 = new Map();
-function missedTimingClauseKindS03(text, re){
-  let toki = 0, baai = 0, m;
-  re.lastIndex = 0;
-  while((m = re.exec(text))){ if(m[1] === '時') toki++; else baai++; }
-  if(baai) return 'baai';
-  return toki ? 'toki' : null;
+/* 句の直前の「<召喚語>（・<召喚語>）*」を後ろから読む。長い語を先に当てるので
+   「特殊召喚」が「召喚」として読まれることはない。 */
+function missedTimingWordsBeforeS03(text, pos){
+  const out = [];
+  let i = pos;
+  for(;;){
+    let hit = null;
+    for(let k = 0; k < MISSED_TIMING_SUMMON_WORDS_S03.length; k++){
+      const w = MISSED_TIMING_SUMMON_WORDS_S03[k][0];
+      if(i - w.length >= 0 && text.substr(i - w.length, w.length) === w){ hit = MISSED_TIMING_SUMMON_WORDS_S03[k]; break; }
+    }
+    if(!hit) break;
+    out.push(hit[1]);
+    i -= hit[0].length;
+    if(i - 1 >= 0 && text.charAt(i - 1) === '・'){ i -= 1; continue; }
+    break;
+  }
+  return out;
 }
-function missedTimingTextKindS03(name){
+function missedTimingClausesS03(text){
+  const out = [];
+  let m;
+  MISSED_TIMING_TERM_S03.lastIndex = 0;
+  while((m = MISSED_TIMING_TERM_S03.exec(text))){
+    const cls = missedTimingWordsBeforeS03(text, m.index);
+    if(cls.length) out.push({cls, kind:m[1]});
+  }
+  return out;
+}
+function missedTimingTextClausesS03(name){
   if(MISSED_TIMING_TEXT_CACHE_S03.has(name)) return MISSED_TIMING_TEXT_CACHE_S03.get(name);
   let text = '';
   try{
     const i = (typeof findCardIndex === 'function') ? findCardIndex(name) : -1;
     if(i >= 0 && typeof CARD_DB !== 'undefined' && CARD_DB[i]) text = String(CARD_DB[i].e || '');
   }catch(e){ text = ''; }
-  const v = {summon: missedTimingClauseKindS03(text, MISSED_TIMING_SUMMON_CLAUSE_S03),
-             flip:   missedTimingClauseKindS03(text, MISSED_TIMING_FLIP_CLAUSE_S03)};
+  const v = missedTimingClausesS03(text);
   MISSED_TIMING_TEXT_CACHE_S03.set(name, v);
   return v;
 }
+/* cls: 'N' 通常召喚 / 'S' 特殊召喚 / 'F' 反転召喚 / 'R' リバース。'toki' / 'baai' / null を返す。 */
+function missedTimingClauseKindS03(name, cls){
+  let toki = 0, baai = 0;
+  missedTimingTextClausesS03(name).forEach(c=>{
+    if(c.cls.indexOf(cls) < 0) return;
+    if(c.kind === '時') toki++; else baai++;
+  });
+  if(baai) return 'baai';
+  return toki ? 'toki' : null;
+}
+/* 監査・テスト用のまとめ。 */
+function missedTimingTextKindS03(name){
+  return {n:missedTimingClauseKindS03(name,'N'), s:missedTimingClauseKindS03(name,'S'),
+          f:missedTimingClauseKindS03(name,'F'), r:missedTimingClauseKindS03(name,'R')};
+}
 
-/* (B-3) 種別。エンジンがその候補をどの経路で拾ったか（配線）と、上の文言の両方を満たすものだけ。
-   summonSuccess:      「召喚・特殊召喚に成功した時」が発動条件になっている発動。
+/* (B-3) 種別。エンジンがその候補をどの経路で拾ったか（配線）と、(B-2) の**そのイベントに対応する句**の
+   両方を満たすものだけ。
+   summonSuccess:      「召喚／特殊召喚／反転召喚に成功した時」が発動条件になっている発動。
      - 召喚されたモンスター自身の召喚誘発（《E・HERO エアーマン》等）
      - 相手の召喚に反応する罠（《落とし穴》《奈落の落とし穴》《激流葬》等、engine/40 の onOtherSummon）
-   flipSummonReverse:  反転召喚で条件が満たされた「リバースした時」の発動。
-     リバース効果の条件は「リバースした時」で、反転召喚に限らない。ここで見るのは
-     反転召喚（evt.flipSummon）で満たされた場合だけで、効果で表側にされた場合は未対応。
+     - 反転召喚も召喚なので、「反転召喚に成功した時」と書かれた誘発は onFlip で拾われてもここに入る
+   flipSummonReverse:  **S03-U494 で無効にした。** 「リバースした時」のリバース効果は、当時裁定では
+     進行中の処理が終わってから発動し、タイミングを逃さない。
+       `WIKI-B2BFD8FD6AFC`（回答日 2011-03-03、《カオス・インフィニティ》）
+         「この効果により《素早いビッグハムスター》をリバースした場合、タイミングを逃さず効果を発動できますか？」
+         →「はい、このカードの効果処理終了後にリバース効果が発動し…」
+         （同じ回答日の `WIKI-7C5A73CB9786` は、同じカードで**攻撃表示にした**場合は逃すと答えている。
+           つまりリバース効果だけが別扱いである）
+       `WIKI-624AAB0A922F`（回答日 2008-03-06、《ニードル・ボール》）
+         「チェーン２以降で発動されたカードの効果によってこのカードがリバースした場合…」
+         →「一連の効果処理後、このカードのリバース効果が発動します。」
+       `WIKI-8CD28D6D58FD`（回答日 2010-04-13、《裏ガエル》）
+         破壊の処理の後にリバース効果が発動する
+     S03-U493 はこの種別を有効にしていたが、当時の根拠を確認していなかった。
    ここで落とすのは**この発動だけ**で、通常の優先権・応答機会（召喚成功後の POINT 窓 summonFast /
    getChainResponsesV2）には触らない。一般のクイックエフェクトはチェーン終了後に今までどおり発動できる。
    召喚そのものの無効（《神の宣告》《昇天の角笛》《キックバック》《神の警告》《重力崩壊》《エレキャンセル》
    《ライト・バニッシュ》＝ sc.summonNegate / SUMMON_WINDOW_*、WIKI-2CF23AA42E79、回答日 2011-08-25）は
    召喚成功より前の別タイミングなので、この種別には入らない（下で明示的に外す）。 */
-const MISSED_TIMING_CLASSES_S03 = { summonSuccess: true, flipSummonReverse: true };
+const MISSED_TIMING_EVENT_CLASS_S03 = {onNormalSummon:'N', onSpecialSummon:'S'};
+const MISSED_TIMING_CLASSES_S03 = { summonSuccess: true, flipSummonReverse: false };
 function missedTimingSummonNegatorS03(name){
   const sc = (typeof CARD_SCRIPTS !== 'undefined') ? CARD_SCRIPTS[name] : null;
   return !!(sc && sc.summonNegate);
@@ -252,15 +340,12 @@ function missedTimingSummonNegatorS03(name){
 function missedTimingClassS03(cand, evt){
   const ev = cand && cand.eventName;
   if(!ev) return null;
-  const kind = missedTimingTextKindS03(cand.name);
-  if(MISSED_TIMING_CLASSES_S03.summonSuccess && (ev === 'onNormalSummon' || ev === 'onSpecialSummon'))
-    return kind.summon === 'toki' ? 'summonSuccess' : null;
+  const cls = MISSED_TIMING_EVENT_CLASS_S03[ev];
+  if(cls) return (MISSED_TIMING_CLASSES_S03.summonSuccess
+                  && missedTimingClauseKindS03(cand.name, cls) === 'toki') ? 'summonSuccess' : null;
   if(ev === 'onFlip' && evt && evt.flipSummon){
-    /* 反転召喛も召喛なので、「反転召喛に成功した時」と書かれた誘発（《スカラベの大群》等）は
-       onFlip で拾われても summonSuccess として扱う。「リバースした時」だけのリバース効果は別種別。 */
-    if(MISSED_TIMING_CLASSES_S03.summonSuccess && kind.summon === 'toki') return 'summonSuccess';
-    if(MISSED_TIMING_CLASSES_S03.flipSummonReverse && kind.flip === 'toki') return 'flipSummonReverse';
-    return null;
+    if(MISSED_TIMING_CLASSES_S03.summonSuccess && missedTimingClauseKindS03(cand.name, 'F') === 'toki') return 'summonSuccess';
+    if(MISSED_TIMING_CLASSES_S03.flipSummonReverse && missedTimingClauseKindS03(cand.name, 'R') === 'toki') return 'flipSummonReverse';
   }
   return null;
 }
