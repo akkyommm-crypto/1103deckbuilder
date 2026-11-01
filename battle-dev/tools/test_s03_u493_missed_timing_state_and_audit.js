@@ -387,10 +387,17 @@ missedTimingClauseKindS03=function(){return 'toki';};
 U=bloodBoard({chain1:'成金ゴブリン', summon:'魔導戦士 ブレイカー'});
 stackTwo('sz',1);
 drive();
-ok('E3 ★ negative control: 文言の判定を外すと、「場合」の《魔導戦士 ブレイカー》まで落ちてカウンターが置かれない',
-   JSON.stringify(dropNames())===JSON.stringify(['奈落の落とし穴','魔導戦士 ブレイカー'].sort())
+const e3a=dropNames();
+MISSED_TIMING_CONFIRMED_S03['魔導戦士 ブレイカー']={ev:['onNormalSummon'],basis:'TEST',rulings:[]};
+U=bloodBoard({chain1:'成金ゴブリン', summon:'魔導戦士 ブレイカー'});
+stackTwo('sz',1);
+drive();
+ok('E3 ★ negative control: 文言の判定を外しても (B-5) の許可リストが止め、許可リストにも入れて初めて落ちる',
+   JSON.stringify(e3a)===JSON.stringify(['奈落の落とし穴'])
+   && JSON.stringify(dropNames())===JSON.stringify(['奈落の落とし穴','魔導戦士 ブレイカー'].sort())
    && !(((cu(U.mon)||{}).counters||{})['魔力']),
-   JSON.stringify({drops:dropNames(),counters:(cu(U.mon)||{}).counters}));
+   JSON.stringify({first:e3a,second:dropNames(),counters:(cu(U.mon)||{}).counters}));
+delete MISSED_TIMING_CONFIRMED_S03['魔導戦士 ブレイカー'];
 missedTimingClauseKindS03=CLAUSEKIND_ORIG_S493;
 MISSED_TIMING_CLASSES_S03.summonSuccess=false;
 U=bloodBoard({chain1:'成金ゴブリン', summon:'E・HERO エアーマン'});

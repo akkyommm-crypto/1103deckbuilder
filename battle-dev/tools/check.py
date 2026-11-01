@@ -805,6 +805,10 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u494_missed_timing_era_mixing.js
 # PAGE a ruling sits on - so the rulings that name 《E・HERO エアーマン》 and 《落とし穴》 were invisible. The
 # provenance split is recounted, R10 (no chain block = no activation) is confirmed and 《運命のドラ》 declared.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u495_missed_timing_evidence.js')],check=True)
+# S03-U496: the published scope. Only the (card, event, effect) triples whose optionality, activation
+# condition and exceptions could be confirmed from the era sources are dropped; everything else keeps
+# the pre-U491 behaviour. 290 -> 65 pairs, and the scope is managed per effect, not per card name.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u496_missed_timing_published_scope.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

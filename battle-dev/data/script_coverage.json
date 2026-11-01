@@ -3962,6 +3962,7 @@
         "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
+        "tools\\test_s03_u496_missed_timing_published_scope.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js",
@@ -4088,6 +4089,7 @@
         "tools\\test_s03_u02_effect_count.js",
         "tools\\test_s03_u229_ns21.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
+        "tools\\test_s03_u496_missed_timing_published_scope.js",
         "tools\\test_v450_native_cards.js"
       ]
     },
@@ -10275,7 +10277,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle13.js",
-        "tools\\test_s03_u322_arcana.js"
+        "tools\\test_s03_u322_arcana.js",
+        "tools\\test_s03_u496_missed_timing_published_scope.js"
       ]
     },
     {
@@ -74786,6 +74789,7 @@
         "tools\\test_s03_u488_raw_summon_success_event.js",
         "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
+        "tools\\test_s03_u496_missed_timing_published_scope.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
         "tools\\test_s03_vs3_six_samurai_gate_slice.js",
@@ -79688,7 +79692,8 @@
         "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
-        "tools\\test_s03_u495_missed_timing_evidence.js"
+        "tools\\test_s03_u495_missed_timing_evidence.js",
+        "tools\\test_s03_u496_missed_timing_published_scope.js"
       ]
     },
     {
@@ -90655,7 +90660,8 @@
       "tests": [
         "tools\\test_s03_u193_monsters.js",
         "tools\\test_s03_u492_missed_timing_summon_success.js",
-        "tools\\test_s03_u493_missed_timing_state_and_audit.js"
+        "tools\\test_s03_u493_missed_timing_state_and_audit.js",
+        "tools\\test_s03_u496_missed_timing_published_scope.js"
       ]
     },
     {
@@ -98513,7 +98519,8 @@
         "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
-        "tools\\test_s03_u495_missed_timing_evidence.js"
+        "tools\\test_s03_u495_missed_timing_evidence.js",
+        "tools\\test_s03_u496_missed_timing_published_scope.js"
       ]
     },
     {
@@ -104564,6 +104571,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
+        "tools\\test_s03_u496_missed_timing_published_scope.js",
         "tools\\test_v810_batch32.js"
       ]
     },
@@ -107121,6 +107129,7 @@
         "tools\\test_s03_u489_resume_summon_timing_window.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
+        "tools\\test_s03_u496_missed_timing_published_scope.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs7_targeting_negation_slice.js",
         "tools\\test_v460_native_cards.js"

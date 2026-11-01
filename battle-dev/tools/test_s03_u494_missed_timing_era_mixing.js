@@ -232,10 +232,17 @@ missedTimingClauseKindS03=function(){return 'toki';};
 U=bloodBoard({chain1:'成金ゴブリン', summon:'魔導戦士 ブレイカー'});
 stackTwo('sz',1);
 drive();
-ok('B5 ★ negative control: 文言の判定を外すと「場合」の《魔導戦士 ブレイカー》まで落ちてカウンターが置かれない',
-   JSON.stringify(dropNames())===JSON.stringify(['魔導戦士 ブレイカー'])
+const b5a=dropNames();
+MISSED_TIMING_CONFIRMED_S03['魔導戦士 ブレイカー']={ev:['onNormalSummon'],basis:'TEST',rulings:[]};
+U=bloodBoard({chain1:'成金ゴブリン', summon:'魔導戦士 ブレイカー'});
+stackTwo('sz',1);
+drive();
+ok('B5 ★ negative control: 文言の判定を外しても (B-5) が止め、許可リストにも入れて初めて落ちる',
+   b5a.length===0
+   && JSON.stringify(dropNames())===JSON.stringify(['魔導戦士 ブレイカー'])
    && !(((cu(U.mon)||{}).counters||{})['魔力']),
-   JSON.stringify({drops:dropNames(),counters:(cu(U.mon)||{}).counters}));
+   JSON.stringify({first:b5a,second:dropNames(),counters:(cu(U.mon)||{}).counters}));
+delete MISSED_TIMING_CONFIRMED_S03['魔導戦士 ブレイカー'];
 missedTimingClauseKindS03=CLAUSEKIND_ORIG_S494;
 `, {expect:5});
 
@@ -260,13 +267,17 @@ ok('C2 ★ R8 の根拠 3 件が engine・設計書・裁定の抽出に書か�
 MISSED_TIMING_CLASSES_S03.flipSummonReverse=true;
 const backCls=R8_CARDS_S494.filter(nm=>missedTimingClassS03(cand(nm),{flipSummon:true})==='flipSummonReverse');
 const backDrop=R8_CARDS_S494.filter(nm=>missedTimingDropS03(cand(nm),{stepS03:3,flipSummon:true})===true);
+MISSED_TIMING_CONFIRMED_S03['渋い忍者']={ev:['onFlip'],basis:'TEST',rulings:[]};
+const backDrop2=R8_CARDS_S494.filter(nm=>missedTimingDropS03(cand(nm),{stepS03:3,flipSummon:true})===true);
+delete MISSED_TIMING_CONFIRMED_S03['渋い忍者'];
 MISSED_TIMING_CLASSES_S03.flipSummonReverse=false;
-ok('C3 ★ negative control: 種別を戻すと 7 枚とも flipSummonReverse に入り、宣言の無い 6 枚は刻みがずれると落ちる（S03-U493 の挙動）',
+ok('C3 ★ negative control: 種別を戻すと 7 枚とも flipSummonReverse に入るが (B-5) が止め、許可リストに入れた 1 枚だけが落ちる',
    JSON.stringify(backCls.slice().sort())===JSON.stringify(R8_CARDS_S494)
-   && JSON.stringify(backDrop.slice().sort())===JSON.stringify(R8_CARDS_S494.filter(nm=>nm!=='スノーマンイーター'))
+   && backDrop.length===0
+   && JSON.stringify(backDrop2)===JSON.stringify(['渋い忍者'])
    && missedTimingModeS03('スノーマンイーター')==='never'
    && R8_CARDS_S494.every(nm=>missedTimingDropS03(cand(nm),{stepS03:3,flipSummon:true})===false),
-   JSON.stringify({backCls,backDrop}));
+   JSON.stringify({backCls,backDrop,backDrop2}));
 /* 実経路の反転召喚。刻みが動かないので、種別を戻しても実際には落ちない。 */
 fresh();
 const nin=mk('渋い忍者',0,'down','def');nin.setTurn=gameState.turn-1;
@@ -312,10 +323,17 @@ delete MISSED_TIMING_DECL_S03['バーニング・スカルヘッド'];
 U=gobBoard('バーニング・スカルヘッド');
 doNormalSummon(0,'atk');
 drive();
-ok('D3 ★ negative control: 宣言を外すと同じ盤面で落ち、ダメージが入らない',
-   JSON.stringify(dropNames())===JSON.stringify(['バーニング・スカルヘッド'])
+const d3a={drops:dropNames(), lp:gameState.players[1].lp};
+MISSED_TIMING_CONFIRMED_S03['バーニング・スカルヘッド']={ev:['onSpecialSummon'],basis:'TEST',rulings:[]};
+U=gobBoard('バーニング・スカルヘッド');
+doNormalSummon(0,'atk');
+drive();
+ok('D3 ★ negative control: 宣言を外しても (B-5) が止め、許可リストにも入れて初めて落ちてダメージが入らなくなる',
+   d3a.drops.length===0 && d3a.lp===7000
+   && JSON.stringify(dropNames())===JSON.stringify(['バーニング・スカルヘッド'])
    && gameState.players[1].lp===8000 && zu(U.sec)==='mz',
-   JSON.stringify({drops:dropNames(),lp:gameState.players[1].lp}));
+   JSON.stringify({first:d3a,second:{drops:dropNames(),lp:gameState.players[1].lp}}));
+delete MISSED_TIMING_CONFIRMED_S03['バーニング・スカルヘッド'];
 MISSED_TIMING_DECL_S03['バーニング・スカルヘッド']={mode:'never',ruling:'WIKI-A47B4CA77987',reason:'R1 強制（本機構と同じ場面）'};
 ok('D4 ★ 宣言表は 7 件すべて never で、裁定 ID が付いている',
    JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03).sort())===JSON.stringify(DECL_S494)
@@ -443,11 +461,13 @@ let U=bloodBoard({chain1:'成金ゴブリン', summon:'電池メン－単四型'
 const links=stackTwo('sz',1);
 drive();
 ok('G1 前提: チェーン2の通常召喚の後にチェーン1の処理があり、刻みがずれている',
-   links===2 && summonCollect().length===1 && summonCollect()[0].stamp<summonCollect()[0].now,
+   links===2 && summonCollect().length>=1 && summonCollect()[0].stamp<summonCollect()[0].now,
    JSON.stringify({links,collect:summonCollect().map(c=>[c.stamp,c.now])}));
-ok('G2 ★ 「召喚・リバースした時」の召喚句を読むようになったので、通常召喚では逃す（S03-U493 は句ごと読み落としていた）',
-   JSON.stringify(dropNames())===JSON.stringify(['電池メン－単四型'])
-   && gameState.players[0].mz.length===1 && gameState.players[0].hand.length===2,
+ok('G2 ★ 「召喚・リバースした時」の召喚句は読めているが、S03-U496 で公開範囲から外れたので落とさない',
+   missedTimingClassS03({name:'電池メン－単四型',eventName:'onNormalSummon',ctx:null,event:{}},{})==='summonSuccess'
+   && !MISSED_TIMING_CONFIRMED_S03['電池メン－単四型']
+   && dropNames().length===0
+   && gameState.players[0].mz.length===2 && gameState.players[0].hand.length===1,
    JSON.stringify({drops:dropNames(),mz:gameState.players[0].mz.length,hand:gameState.players[0].hand.length}));
 audit('G2');
 resetA();
@@ -455,22 +475,23 @@ gameState.procStepS03=9;
 ok('G3 ★ 同じカードの反転召喚側（リバース句）は R8 で落とさない',
    missedTimingClassS03({name:'電池メン－単四型',eventName:'onNormalSummon',ctx:null,event:{}},{})==='summonSuccess'
    && missedTimingClassS03({name:'電池メン－単四型',eventName:'onFlip',ctx:null,event:{flipSummon:true}},{flipSummon:true})===null,'');
-ok('G4 ★ この 1 枚は当時裁定の裏付けが無く、設計書 5-b に「機械分類だけ」と明記されている',
-   DOC.indexOf('逃さない → 逃す')>=0 && DOC.indexOf('召喚句そのものを読み落としていた')>=0
-   && DOC.indexOf('この 1 枚については当時裁定に文言の引用も逃す／逃さないの答えも無く')>=0,'');
+ok('G4 ★ この 1 枚は当時裁定の裏付けが無く、S03-U496 で公開範囲外（未対応）として設計書に書かれている',
+   DOC.indexOf('召喚句そのものを読み落としていた')>=0
+   && DOC.indexOf('この 1 枚については当時裁定に文言の引用も逃す／逃さないの答えも無く')>=0
+   && DOC.indexOf('S03-U496 で公開範囲から外した')>=0,'');
 `, {expect:5});
 
 /* ===== H-1. 保存（ここで作った保存データを次の harness ＝ 新しい VM に渡す） ===== */
 const ctxH = harness(COMMON + String.raw`
-const U=bloodBoard({chain1:'成金ゴブリン', summon:'電池メン－単四型', hand:['電池メン－単四型']});
+const U=bloodBoard({chain1:'成金ゴブリン', summon:'E・HERO エアーマン'});
 const links=stackTwo('sz',1);
 globalThis.__SAVED_S494=savedRaw();
 globalThis.__AT_SAVE_S494=JSON.stringify({links, step:s(), drops:dropNames(), mz:gameState.players[0].mz.length});
 drive();
 globalThis.__WANT_S494=JSON.stringify({drops:dropNames(), step:s(), mz:gameState.players[0].mz.length,
   hand:gameState.players[0].hand.length, digest:v41StateDigest(gameState)});
-ok('H1 前提: チェーン2本を積んだ窓で保存でき、保存なしの解決では《電池メン－単四型》だけが逃す',
-   links===2 && JSON.stringify(dropNames())===JSON.stringify(['電池メン－単四型'])
+ok('H1 前提: チェーン2本を積んだ窓で保存でき、保存なしの解決では公開範囲の《E・HERO エアーマン》が逃す',
+   links===2 && JSON.stringify(dropNames())===JSON.stringify(['E・HERO エアーマン'])
    && (globalThis.__SAVED_S494||'').length>0,
    globalThis.__WANT_S494);
 ok('H1 ★ 署名と回数は差分だけを見るので保存データにも digest にも出ない',
@@ -508,7 +529,7 @@ ok('I2 ★ 5-b に S03-U494 で変わった判定が組数で書かれている�
    && DOC.indexOf('**12 組 / 11 枚**')>=0 && DOC.indexOf('**1 組**')>=0
    && DOC.indexOf('カード単位の「強制 255」は 1 枚まるごとの静的な読み方')>=0,'');
 ok('I3 ★ 5-a に未確定（強制と読めるカード・「場合」12 枚・機械分類の多数）が残っていて、完成とは書かれていない',
-   DOC.indexOf('5-a. 未対応（S03-U495 時点')>=0
+   DOC.indexOf('5-a. 未対応（S03-U496 時点')>=0
    && DOC.indexOf('全体は完成していない')>=0
    && DOC.indexOf('| 1-b |')>=0 && DOC.indexOf('| 1-c |')>=0
    && DOC.indexOf('当時の文言が確認できていない')>=0,'');

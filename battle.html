@@ -15443,7 +15443,7 @@ function runCostPhaseS03(run, onDone){
     return withSelectionPhaseS03(null, ()=>onDone.apply(null, args));
   }));
 }
-/* S03-U491 / S03-U492 / S03-U493 / S03-U494 / S03-U495: 「タイミングを逃す」の共通機構。
+/* S03-U491 / S03-U492 / S03-U493 / S03-U494 / S03-U495 / S03-U496: 「タイミングを逃す」の共通機構。
    設計と当時裁定の根拠は docs/S03_MISSED_TIMING_DESIGN.md（裁定の抽出は docs/S03_MISSED_TIMING_RULINGS.md、123 件）。
 
    当時裁定から読み取れる規則:
@@ -15465,9 +15465,15 @@ function runCostPhaseS03(run, onDone){
           《ドラグニティアームズ－レヴァテイン》WIKI-6C6CE6145A4A／《－ミスティル》WIKI-5E8A1950B9D5（10/06/19、召喚ルール効果）。
           S03-U495 で確認
 
-   機構は 3 つ:
+   S03-U496 で**公開できる範囲**を確定した。(B-2)(B-3) の「文言＋配線」で決まる候補のうち、
+   当時の根拠で**任意性・発動条件・例外**を確認できた効果だけを落とす許可リスト (B-5) を足した。
+   確認できていないものは落とさない ＝ S03-U491 以前の挙動を維持する（**未対応**。
+   「逃さないという裁定が確定した」のではない）。実測で落とす組は 290 → 65 になった。
+
+   機構は 4 つ:
      (A) gameState.procStepS03 — 「行われた処理」の通し番号。
      (B) 判定の対象 — 宣言（カードごと）と、配線と文言の両方で決まる種別。
+     (B-5) 公開範囲の許可リスト — 当時の根拠で確認できた（カード, イベント, 効果）だけを落とす。
      (C) filterMissedTimingS03 — 判定は collectHandlers（engine/40）の 1 箇所だけで行う。
 
    S03-U492 で (A) を拒否リストから許可リストに反転した（列挙の漏れが「誤って逃す」側に落ちていた）。
@@ -15804,6 +15810,117 @@ function missedTimingClassS03(cand, evt){
   return null;
 }
 
+/* =========================================================================
+   (B-5) 公開範囲の許可リスト（S03-U496）
+   -------------------------------------------------------------------------
+   ここまでの (B-2)(B-3) は「現行テキストの文言 ＋ 配線」で落とす候補を決めていた。
+   S03-U494 / U495 の照合で、その 290 組のうち**当時の根拠で裏付けられているのは一部だけ**だと
+   分かった（設計書 3(B-4)）。S03-U496 で、**当時の根拠から該当効果の
+     ・任意性（発動しない選択ができる／テキストが「できる」）
+     ・発動条件（「〜に成功した時」であること）
+     ・例外が無いこと（強制でない・召喚無効でない・調整中でない・R5/R10 の宣言が無い）
+   の 3 つを確認できた効果だけ**を落とすようにした。ここに無いものは落とさない ＝
+   S03-U491 以前の挙動を維持する（**未対応**であって「逃さないという裁定が確定した」のではない）。
+
+   根拠の取り方は 2 通り（設計書 3(B-5)）。
+     basis:'A' … そのカード自身の誘発について、当時裁定が「タイミングを逃す」と答えている。
+                 各件、他のカードの話ではないことを読んで確認した（設計書 3(B-5) の表）。
+     basis:'B' … 当時裁定がそのカードのページで「〜に成功した時」の句を引用していて（発動条件の裏付け）、
+                 当時テキストのその文が「できる」と書いている（任意性）。あとは一般則 R2 が結論を出す。
+   `rulings` は docs/S03_MISSED_TIMING_RULINGS.md で引ける ID。
+
+   **効果単位で管理する（条件3）。** 1 つのイベントに複数の効果が配線されているカードでは、
+   イベント別の文言だけでは効果別の判定にならない。実測では該当は 1 枚
+   （《アルカナフォースIII－THE EMPRESS》の onNormalSummon に coin / heads-summon / tails-discard の
+   3 効果）で、この表には入れていない。表に `keys` が無いまま複数効果のイベントに当たった場合は
+   **落とさない**（下の missedTimingConfirmedS03）。 */
+const MISSED_TIMING_CONFIRMED_S03 = {
+  'E・HERO エアーマン': {ev:['onNormalSummon','onSpecialSummon'], basis:'A', rulings:['WIKI-9FC5B41EDCF4']},
+  'インフェルニティ・デーモン': {ev:['onSpecialSummon'], basis:'A', rulings:['R1103-ZEROMAX-001']},
+  'ブラック・ローズ・ドラゴン': {ev:['onSpecialSummon'], basis:'A', rulings:['R1103-BLACKROSE-001']},
+  '奈落の落とし穴': {ev:['onNormalSummon','onSpecialSummon'], basis:'A', rulings:['R1103-ZEROMAX-001','WIKI-755A88381599','WIKI-97539AE7CAEB']},
+  '宝玉獣 ルビー・カーバンクル': {ev:['onSpecialSummon'], basis:'A', rulings:['WIKI-5BD9F5131D7A']},
+  '氷結界の龍 トリシューラ': {ev:['onSpecialSummon'], basis:'A', rulings:['R1103-TRISHULA-006']},
+  '激流葬': {ev:['onNormalSummon','onSpecialSummon','onFlip'], basis:'A', rulings:['WIKI-755A88381599','WIKI-27787161C101','WIKI-C96B7B51137A','WIKI-16EDA76D080F']},
+  '真六武衆－カゲキ': {ev:['onNormalSummon'], basis:'A', rulings:['R1103-KAGEKI-002']},
+  '神秘の代行者 アース': {ev:['onNormalSummon'], basis:'A', rulings:['R1103-EARTH-003']},
+  '落とし穴': {ev:['onNormalSummon','onFlip'], basis:'A', rulings:['WIKI-2B88D7C8D921']},
+  'A・ジェネクス・クラッシャー': {ev:['onNormalSummon'], basis:'B', rulings:['WIKI-1E460C04E744','WIKI-82BC8592D762','WIKI-061FA82001DA']},
+  'BF－孤高のシルバー・ウィンド': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-8D02D567BDEB']},
+  'D・ゲイザー': {ev:['onNormalSummon','onSpecialSummon','onFlip'], basis:'B', rulings:['WIKI-89B19EADA7EE']},
+  'TG ワーウルフ': {ev:['onSpecialSummon'], basis:'B', rulings:['R1103-WIKI-5FD0B0F1A7EC']},
+  'インヴェルズを呼ぶ者': {ev:['onNormalSummon'], basis:'B', rulings:['WIKI-417C721F9B8F']},
+  'エクシーズエフェクト': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-8E12516F1457']},
+  'クローン複製': {ev:['onNormalSummon','onFlip'], basis:'B', rulings:['WIKI-07639B656426']},
+  'シャーク・サッカー': {ev:['onNormalSummon','onSpecialSummon'], basis:'B', rulings:['WIKI-F65B5B1BE56F']},
+  'ジェネクス・ブラスト': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-CAC710BB74BA']},
+  'スクラップ・リサイクラー': {ev:['onNormalSummon','onSpecialSummon'], basis:'B', rulings:['WIKI-56D271302649','WIKI-6BBA86A8C47A']},
+  'スモール・ピース・ゴーレム': {ev:['onNormalSummon','onSpecialSummon','onFlip'], basis:'B', rulings:['WIKI-79A766CB34DA']},
+  'タイガードラゴン': {ev:['onNormalSummon'], basis:'B', rulings:['WIKI-2DD4383939C4']},
+  'ダーク・ヴァージャー': {ev:['onNormalSummon'], basis:'B', rulings:['WIKI-3CB8D1670125']},
+  'デイブレーカー': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-35B5BBB59999']},
+  'デュアル・スコーピオン': {ev:['onNormalSummon','onSpecialSummon'], basis:'B', rulings:['WIKI-691198079BD1']},
+  'ドラグニティアームズ－ミスティル': {ev:['onNormalSummon','onSpecialSummon'], basis:'B', rulings:['WIKI-801BC64C418F']},
+  'ドラグニティアームズ－レヴァテイン': {ev:['onNormalSummon','onSpecialSummon'], basis:'B', rulings:['WIKI-DCFE72A5C864']},
+  'ナイトエンド・ソーサラー': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-BF2E5D26EE20']},
+  'ハウリング・ウォリアー': {ev:['onNormalSummon','onSpecialSummon'], basis:'B', rulings:['WIKI-84732F017528']},
+  'ボーンクラッシャー': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-1D67894EBEFE']},
+  'マシンナーズ・ギアフレーム': {ev:['onNormalSummon'], basis:'B', rulings:['WIKI-60C6623A51E4']},
+  'ミッド・ピース・ゴーレム': {ev:['onNormalSummon','onSpecialSummon','onFlip'], basis:'B', rulings:['WIKI-8B4DE3F47681']},
+  'モノケロース': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-28E4311D4D99','WIKI-E157C606DF0C']},
+  'レアル・ジェネクス・コーディネイター': {ev:['onNormalSummon','onSpecialSummon'], basis:'B', rulings:['WIKI-CA09F4A979CB']},
+  '剣闘獣ガイザレス': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-BF90C54E0677']},
+  '呪言の鏡': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-C34C86036BEB']},
+  '地獄の暴走召喚': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-9DB8B5C3F65C','WIKI-9ED30FF89FA1']},
+  '堕天使スペルビア': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-DF8ADFE063E3']},
+  '氷帝メビウス': {ev:['onNormalSummon'], basis:'B', rulings:['WIKI-ADB1B7204F9D']},
+  '混沌球体': {ev:['onNormalSummon'], basis:'B', rulings:['WIKI-CD5D0C7084F2']},
+  '超古代恐獣': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-AC20CE005CCC','WIKI-197BDBD53F8A']},
+  '連鎖除外': {ev:['onNormalSummon','onSpecialSummon','onFlip'], basis:'B', rulings:['WIKI-1DFDB9272A1C']},
+  '黒い旋風': {ev:['onNormalSummon'], basis:'B', rulings:['WIKI-F4FF83E89B73','WIKI-2FB70307151E']},
+  '黒光りするG': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-842E00439518']},
+};
+/* その候補がどの v4 効果か。collectHandlers の条件判定で ctx.v4EffectKey が決まっているのでそれを使う。
+   決められない場合は null を返し、複数効果のイベントでは落とさない側に倒す。 */
+function missedTimingEffectKeyS03(cand){
+  const ctx = cand && cand.ctx;
+  if(ctx && ctx.v4EffectKey) return ctx.v4EffectKey;
+  if(!cand || typeof nativeEffectsV4 !== 'function' || typeof v4SelectEffectForContext !== 'function') return null;
+  try{
+    const probe = Object.assign({}, ctx || {},
+      {eventName:cand.eventName, event:cand.event || (ctx && ctx.event), v4EffectKey:null});
+    const e = v4SelectEffectForContext(cand.name, probe);
+    return (e && e.key) || null;
+  }catch(err){ return null; }
+}
+function missedTimingEffectCountS03(name, ev){
+  if(typeof nativeEffectsV4 !== 'function') return 0;
+  const sc = (typeof CARD_SCRIPTS !== 'undefined') ? CARD_SCRIPTS[name] : null;
+  if(!sc || !sc.v4Unified) return 0;
+  let n = 0;
+  try{
+    (nativeEffectsV4(name) || []).forEach(e=>{
+      if(e && Array.isArray(e.events) && e.events.indexOf(ev) >= 0) n++;
+    });
+  }catch(err){ return 0; }
+  return n;
+}
+function missedTimingConfirmedS03(cand, evt){
+  const d = cand ? MISSED_TIMING_CONFIRMED_S03[cand.name] : null;
+  if(!d) return false;
+  const ev = cand.eventName;
+  if(!ev || d.ev.indexOf(ev) < 0) return false;
+  /* 効果単位。イベントに複数の効果があるなら、表が効果を名指ししていて、
+     かつその候補の効果がそれに一致したときだけ落とす。 */
+  if(missedTimingEffectCountS03(cand.name, ev) > 1){
+    const keys = d.keys && d.keys[ev];
+    if(!keys || !keys.length) return false;
+    const key = missedTimingEffectKeyS03(cand);
+    if(!key || keys.indexOf(key) < 0) return false;
+  }
+  return true;
+}
+
 /* 診断用。digest にも保存にも入れない（collectHandlers は盤面を変えてはいけないため gameState には書かない）。 */
 let MISSED_TIMING_DROPS_S03 = [];
 function resetMissedTimingDropsS03(){ MISSED_TIMING_DROPS_S03 = []; }
@@ -15824,8 +15941,12 @@ function missedTimingDropS03(cand, evt){
   if(typeof triggerCandidateForcedS03 === 'function' && triggerCandidateForcedS03(cand)) return false;
   /* 召喚無効は召喚成功より前の別タイミング（本機構の対象外） */
   if(missedTimingSummonNegatorS03(cand.name)) return false;
-  /* R2 / R7: 宣言されたカード、または配線と文言の両方を満たす発動だけを落とす */
+  /* 宣言で明示的に逃すとしたカードは種別も許可リストも問わない（いまは 0 件） */
   if(mode === 'miss') return true;
+  /* S03-U496: 当時の根拠で確認できた（カード, イベント, 効果）だけを落とす。
+     許可リストに無いものは落とさない ＝ S03-U491 以前の挙動（未対応） */
+  if(!missedTimingConfirmedS03(cand, evt)) return false;
+  /* R2 / R7: 配線と文言の両方を満たす発動だけを落とす */
   return !!missedTimingClassS03(cand, evt);
 }
 function filterMissedTimingS03(cands, evt){

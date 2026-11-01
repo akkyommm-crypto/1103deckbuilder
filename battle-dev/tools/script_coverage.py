@@ -592,6 +592,10 @@ CARD_TEST_FOCUS = {
     "test_s03_u495_missed_timing_evidence.js": {"命の綱", "E・HERO エアーマン", "E・HERO オーシャン",
                                                 "青眼の白龍", "ゴブリンドバーグ", "運命のドラ", "血の代償",
                                                 "成金ゴブリン", "剣闘獣ガイザレス", "夜霧のスナイパー"},
+    "test_s03_u496_missed_timing_published_scope.js": {"血の代償", "成金ゴブリン", "E・HERO エアーマン",
+                                                       "E・HERO オーシャン", "奈落の落とし穴", "電池メン－単四型",
+                                                       "魔導戦士 ブレイカー", "王虎ワンフー",
+                                                       "アルカナフォースIII－THE EMPRESS"},
 }
 
 

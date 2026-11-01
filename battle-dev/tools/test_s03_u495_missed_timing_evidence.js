@@ -214,10 +214,13 @@ ok('C1 ★ 《運命のドラ》は R10 の宣言で落とさない。文言と�
 const keep=MISSED_TIMING_DECL_S03['運命のドラ'];
 delete MISSED_TIMING_DECL_S03['運命のドラ'];
 const without=missedTimingDropS03(cand,{stepS03:3});
+MISSED_TIMING_CONFIRMED_S03['運命のドラ']={ev:['onNormalSummon'],basis:'TEST',rulings:[]};
+const withBoth=missedTimingDropS03(cand,{stepS03:3});
+delete MISSED_TIMING_CONFIRMED_S03['運命のドラ'];
 MISSED_TIMING_DECL_S03['運命のドラ']=keep;
-ok('C2 ★ negative control: 宣言を外すと、刻みがずれた候補として落ちる（S03-U494 までの挙動）',
-   without===true && missedTimingDropS03(cand,{stepS03:3})===false,
-   JSON.stringify({without}));
+ok('C2 ★ negative control: 宣言を外しても (B-5) が止め、許可リストにも入れて初めて落ちる（二重の歯止め）',
+   without===false && withBoth===true && missedTimingDropS03(cand,{stepS03:3})===false,
+   JSON.stringify({without,withBoth}));
 /* 実経路。通常罠なので解決後は墓地へ行き、魔法・罠ゾーンからの誘発効果は発火しない。 */
 const U=doraBoard();
 const links=stackTwo(1);
@@ -372,8 +375,8 @@ ok('G2 ★ 判定は collectHandlers の 1 箇所のまま — 召喚無効の�
    && !/issedTiming/.test(String(POINT_ORIG_S495))
    && !/issedTiming/.test(String(CHAINRESP_ORIG_S495)),'');
 ok('G3 ★ 段階表に S03-U495 の完了分と、未対応が S03-U496 以降として分けて書かれている',
-   DOC.indexOf('**S03-U495（完了）**')>=0 && DOC.indexOf('S03-U496 以降（**未対応**）')>=0
-   && DOC.indexOf('5-a. 未対応（S03-U495 時点')>=0,'');
+   DOC.indexOf('**S03-U495（完了）**')>=0 && DOC.indexOf('S03-U497 以降（**未対応**）')>=0
+   && DOC.indexOf('5-a. 未対応（S03-U496 時点')>=0,'');
 ok('G4 ★ §6 に S03-U495 で採らなかった案（部分一致・共名の機械算入・ドラのモデル化）が書かれている',
    DOC.indexOf('採らない案（S03-U495 で足した分）')>=0
    && DOC.indexOf('裁定 DB をカード名の部分一致で引く')>=0
