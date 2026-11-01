@@ -388,15 +388,31 @@ defineScript("トロイホース", {type:"monster",tributeValue:{value:2,target:
    捨てさせたのが相手なら追加効果が付く（card.discardInfo で判定）。
    ========================================================================= */
 
+/* S03-U477: このイベント（onDiscard）で捨てられたのは ctx.card か。
+   従来は event.card をオブジェクト同一性（ev.card !== ctx.card）で比べていた。チェーンに載ったリンクの event は生のカードを持つが、
+   保存 → 読込で複製になる。同一性では複製を認識できず null（誘発しない扱い）になり、再開後の解決は「捨てられた時の効果」ではなく別の枝に落ちた
+   （グラファは破壊の代わりに墓地から蘇生、ゴルド／シルバ／スノウ／ブラウは「相手のカードの効果で捨てられた場合、さらに…」が消える）。
+   識別は uid で行う（デュエル中の「その 1 枚」。同名の別個体と区別でき、保存・読込・Undo を越えて保たれる）。
+   - 両側に uid がある時だけ uid を比べる。undefined === undefined を一致にしない（uid の無いカード同士を同じカードと見なさない）。
+   - どちらかに uid が無い時は「全く同じオブジェクト」の時だけ一致（複製や別のオブジェクトは一致しない）。実際の道では uid は必ず付く:
+     イベント作成時に queueDeferredEventV2（engine/30）と safeActivationEventV11 が ensureCardUid を呼び、チェーンに載るカードも発動準備で uid を得る。
+     uid が無いのは直接構成した場合だけで、そこでは同一性の比較に退く（推測で一致にしない）。
+   - カードを名指ししないイベント（card も uid も無い）は比べない（従来どおり）。 */
+function darkWorldEventIsSelf(ctx){
+  const c = ctx.card, ev = ctx.event || {};
+  if(!ev.card && ev.uid == null) return true;
+  const evUid = ev.uid != null ? ev.uid : ((ev.card && ev.card.uid != null) ? ev.card.uid : null);
+  if(evUid != null && c && c.uid != null) return evUid === c.uid;
+  return !!ev.card && ev.card === c;
+}
+
 /* 暗黒界の誘発条件。自分の効果で捨てられたなら 'self'、相手なら 'opponent'、
    誘発しないなら null を返す。 */
 function darkWorldDiscard(ctx){
   if(!ctx || ctx.eventName !== 'onDiscard') return null;
   const info = ctx.card && ctx.card.discardInfo;
   if(!info || !info.byEffect) return null;
-  const ev = ctx.event || {};
-  if(ev.card && ev.card !== ctx.card) return null;
-  if(ev.uid != null && ctx.card && ctx.card.uid != null && ev.uid !== ctx.card.uid) return null;
+  if(!darkWorldEventIsSelf(ctx)) return null;   /* S03-U477: 捨てられたカードの識別は uid（下の darkWorldEventIsSelf） */
   if(info.byPlayer !== ctx.player) return 'opponent';
   /* S03-U112: discardInfo.byPlayer は P3 の設計どおり「手札の持ち主」基準のまま（明示指定が無ければ捨てた本人）。
      誰の効果かは P3 provenance（act() 時に焼き込まれる actingPlayer）で判定する。これが無いと相手の《手札抹殺》等で
@@ -432,7 +448,8 @@ defineScript("暗黒界の尖兵 ベージ", {
 API.registerChoiceHandler('s03u62.snow-revive', (answer, args) => {
   const picks = v49P1ChoiceCards(answer);
   const h = picks[0] && locateCardAnyV4(picks[0].card);
-  if(h && h.zone==='grave') API.specialSummon(args.player,'grave',h.index,'def',"暗黒界の術師 スノウ");
+  /* S03-U477: 相手の墓地から特殊召喚する。fromPlayer（h.p）を渡さないと自分の墓地の同じ位置のカードを特殊召喚してしまっていた（Save/Load とは無関係の既存不具合） */
+  if(h && h.zone==='grave') API.specialSummon(args.player,'grave',h.index,'def',"暗黒界の術師 スノウ",h.p);
 });
 defineScript("暗黒界の術師 スノウ", {
   type:"monster", priority:1, forced:true,   /* S03-U112: サーチは強制（相手の効果の場合の追加蘇生だけ任意） */
@@ -471,7 +488,7 @@ function darkWorldInDeck(p){
 /* ---- 暗黒界の龍神 グラファ ----
    ① 自分フィールドの他の「暗黒界」1体を手札に戻して墓地から特殊召喚する。
    ② 効果で手札から捨てられた場合、相手フィールドのカード1枚を選択して破壊する。 */
-defineScript("暗黒界の龍神 グラファ", {
+defineScript("暗黒界の龍神 グラファ", { targets:true, /* S03-U476: 破壊は対象を取る（WIKI-7722BBA38465 2011-06-18）。選択側は targeting:true で耐性済み。ここは srcS03.tg のための宣言。手札に戻すコスト（墓地から蘇生する側）は cost 段階 */
   type:"monster", priority:1, forced:true,   /* S03-U112: 捨てられた時の破壊は強制（forced は誘発にだけ効き、墓地からの起動効果には影響しない） */
   activateFrom:["grave"],
   condition(ctx){
@@ -506,8 +523,17 @@ defineScript("暗黒界の龍神 グラファ", {
   resolve(ctx){
     if(darkWorldDiscard(ctx)){
       const t = (ctx.selectedTargets||[])[0], r = t && resolveTarget(t);
-      if(r && r.p===ctx.opponent) API.destroy(r, "暗黒界の龍神 グラファ");
-      if(darkWorldDiscard(ctx)==='opponent') graphaPeekHandS03(ctx.player, ctx.opponent);
+      /* S03-U485: 相手の効果で捨てられた場合の手札確認は「破壊してから確認する」別のタイミングで、破壊できなかった場合は行わない
+         （WIKI-9A95D36090C4、2011-06-18「対象に選択したカードが存在しなくなり破壊できなかった場合…いいえ、行いません。」。
+          同日の回答で破壊と確認が別タイミングであることも確定している）。対象がいない場合・対象が場を離れた場合・破壊耐性で
+          破壊されなかった場合はいずれも「破壊できなかった場合」に当たる。身代わりの任意効果（S03-U173）があると成否は
+          その選択の後に確定するので、判定は S03-U294 の continuation で行う。 */
+      if(r && r.p===ctx.opponent){
+        const mark = API.destroyMarkS03(), uid = ensureCardUid(gameState, r.card);
+        API.destroy(r, "暗黒界の龍神 グラファ");
+        if(darkWorldDiscard(ctx)==='opponent')
+          API.afterDestroyS03('s03u485.grapha-peek', {player:ctx.player, opponent:ctx.opponent, mark, uids:[uid]});
+      }
       return;
     }
     const me = API.pileCards(ctx.player,'grave',x=>x.card===ctx.card)[0];
@@ -521,6 +547,12 @@ API.registerChoiceHandler('s03u62.grapha-destroy', (answer) => {
   const picks = v49P1ChoiceCards(answer);
   const h = picks[0] && locateCardAnyV4(picks[0].card);
   if(h) API.destroy(h, "暗黒界の龍神 グラファ");
+});
+/* S03-U485: 破壊できた場合にだけ手札確認へ進む（WIKI-9A95D36090C4、2011-06-18）。
+   破壊の成否は身代わりの選択の後に確定するので、S03-U294 の continuation で判定する。 */
+registerDestroyAfterS03('s03u485.grapha-peek', a=>{
+  if(!API.destroyedSinceS03(a.mark, a.uids).length) return;   /* 破壊できなかった → 手札確認は行わない */
+  graphaPeekHandS03(a.player, a.opponent);
 });
 /* S03-U125: 相手の手札をランダムに1枚確認する。乱数は Action の中で引く（GRAPHA_PEEK_S03、Replay で同じカード）。
    モンスターなら自分フィールドに特殊召喚できる（任意：はい／いいえ）。 */
@@ -696,7 +728,7 @@ function togglePosition(t, reason){
    ・攻撃対象に選択された時、表示形式を変更する
    ・戦闘で相手モンスターを破壊した時、墓地のレベル4以下の「カラクリ」を
      表側守備表示で特殊召喚する。 */
-defineScript("カラクリ忍者 九壱九", {
+defineScript("カラクリ忍者 九壱九", { targets:true, /* S03-U476: 「墓地のレベル4以下の「カラクリ」1体を選択して表側守備表示で特殊召喚」は対象を取る（カード文の「選択して」。裁定アーカイブに個別の回答なし） */
   type:"monster", priority:1, forced:true,
   condition(ctx){
     if(!karakuriInGrave(ctx.player).length){
@@ -739,7 +771,7 @@ function karakuriInGrave(p){
 
 /* ---- カラクリ参謀 弐四八 ----
    召喚・特殊召喚に成功した時、フィールドのモンスター1体の表示形式を変更する。 */
-defineScript("カラクリ参謀 弐四八", {
+defineScript("カラクリ参謀 弐四八", { targets:true, /* S03-U476: 表示形式を変更する効果は対象を取る（WIKI-EFE3E370ADDF 2011-06-11「対象をとります」。カード文に「選択」の語は無いが裁定が対象を取ると答えている） */
   type:"monster", priority:1, forced:true,
   condition(ctx){
     if(!API.fieldCards({zone:'mz', filter:x=>x.card}).length){
@@ -963,6 +995,10 @@ defineScript("禁じられた聖槍", {
     if(!API.fieldCards({zone:'mz', filter:x=>x.card && x.card.face==='up'}).length){
       ctx.reason = "表側表示のモンスターがいません"; return false;
     }
+    /* S03-U470: 対象耐性で候補が0になる時は発動の前に断る */
+    if(!API.targetableCardsS03(API.fieldCards({zone:'mz', filter:x=>x.card && x.card.face==='up'}), ctx.player).length){
+      ctx.reason = "効果の対象にできる表側表示のモンスターがいません"; return false;
+    }
     return true;
   },
   selectTargets(ctx, done){
@@ -1047,6 +1083,10 @@ defineScript("精神操作", {
   condition(ctx){
     if(!API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card}).length){
       ctx.reason = "相手フィールドにモンスターがいません"; return false;
+    }
+    /* S03-U470: 対象耐性で候補が0になる時は発動の前に断る */
+    if(!API.targetableCardsS03(API.fieldCards({zone:'mz', player:ctx.opponent, filter:x=>x.card}), ctx.player).length){
+      ctx.reason = "効果の対象にできる相手モンスターがいません"; return false;
     }
     return true;
   },

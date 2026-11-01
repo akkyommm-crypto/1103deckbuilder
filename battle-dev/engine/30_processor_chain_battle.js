@@ -8,6 +8,11 @@
    起動効果を優先権で割り込ませる旧ルールは使用しない。 */
 const RULING_1103_POST_20110319_IGNITION = true;
 let CHAIN_AFTER_V2 = null;
+/* S03-U484: EVT_AFTER（チェーン終了後の継続クロージャ）と同じ場所で作る、同じ継続の JSON 版。
+   プロセッサの EVENT / EVENT_BATCH だけが設定する。startEventChainV2 が EVT_V2_STATE.resumeData へ移し、
+   eventSelectionDescriptorV11 がそれを読む。クロージャを設定した場所が自分で記録するので、
+   「データの継続 = そのクロージャ」が構造的に保証される（プロセッサ unit の payload からの再導出をやめた）。 */
+let EVT_RESUME_DATA_V484 = null;
 let EVT_V2_STATE = null;
 let RESOLUTION_SUMMON_BATCH_V2 = null;
 
@@ -95,6 +100,7 @@ function processorResumeV27(){
   const u=gameState.processorWaiting||gameState.processorCurrent;
   processorTraceV27('resume',u);
   gameState.processorPaused=false; gameState.processorWaiting=null; gameState.processorCurrent=null;
+  closeStaleSummonTimingS03(true);   /* S03-U486: 待っていた処理が終わってキューも空なら、この時点で応答タイミングは終わっている */
   setTimeout(pumpProcessorV27,0);
 }
 function processorAbortV27(reason){
@@ -131,7 +137,35 @@ function pumpProcessorV27(){
     }
     if(guard>=100){ logIt(gameState,'<b>Processor v3.1</b>：安全停止（100処理）'); }
   } finally { PROCESSOR_PUMPING_V27=false; }
+  closeStaleSummonTimingS03(guard>0);   /* S03-U486 */
   render();
+}
+/* S03-U486: 召喚・反転で開いた応答タイミングの窓（runtime/50 の updateTimingWindow が立てる 'summon' / 'flip'）を、
+   その応答タイミングが終わった所で閉じる。
+   これまで閉じていたのは「召喚成功後のクイックエフェクト確認（summonFast / flipFast）を両者がパスした時」だけで
+   （queuePointContinuationV27 の clearTimingOnPass）、その POINT が一度も作られない経路では閉じる処理が無く、
+   そのフェイズの間 currentTimings() に 'summon' が残り続けていた。実測した例は《血の代償》の「通常召喚扱い」の
+   特殊召喚で、以後そのメインフェイズの間ずっと 「召喚に成功した時」 のカード（グリーン・ガジェット等）がメニューに
+   出て、発動すると 1103 のルールで断られる状態になる。S03-U42 が FX_SET_STATE について直したのと同じ型の欠陥。
+   この窓は Journal にも digest にも入っておらず offerResumeDuel が捨てるので、保存・再開した側だけ窓が無く、
+   同じ盤面でメニューが食い違っていた（S03-U483 の 4-a）。窓が残る方が誤りなので、保存するのではなく閉じる。
+   閉じるのは「プロセッサが実際に 1 つ以上処理し終えて、何も待っていない開いたメインフェイズに戻った」時点だけ。
+   drained=false（この pump で何も処理していない）では閉じない: 召喚の Action とそのイベント登録の間に挟まった
+   空振りの pump で、これから始まる応答タイミングを先に閉じてしまわないため。 */
+/* S03-U486: 召喚・反転の応答タイミングの窓を閉じる処理（summonFast / flipFast の POINT）はプロセッサのキューにある。
+   復旧経路がキューを捨てる時は、この窓も引き継がない（offerResumeDuel が runtime/50 でロード時に同じ理由で捨てているのと同じ扱い）。
+   閉じ手の無い窓が残ると、そのフェイズの間 currentTimings() に 'summon' が残り続ける。 */
+function summonTimingWindowS03(w){ return !!w && ['summon','flip','summonFast','flipFast'].indexOf(w.kind)>=0; }
+function closeStaleSummonTimingS03(drained){
+  if(!drained) return;
+  const w=gameState.timingWindow;
+  if(!w || (w.kind!=='summon' && w.kind!=='flip')) return;
+  if(gameState.phase!=='main1' && gameState.phase!=='main2') return;
+  if(gameState.processorPaused || gameState.processorWaiting || (gameState.processorQueue||[]).length) return;
+  if((gameState.chain||[]).length || gameState.pendingSummon || gameState.pendingChoice || gameState.battle) return;
+  if((gameState.deferredEvents||[]).length) return;
+  if(typeof EVT_V2_STATE!=='undefined' && EVT_V2_STATE) return;   /* 誘発の選択窓が開いている間は応答タイミングの途中 */
+  gameState.timingWindow=null;
 }
 function dispatchProcessorV27(u){
   switch(u.type){
@@ -384,6 +418,7 @@ function processEventV27(pl){
     if(postPoint) enqueueProcessorV27(PROCESSOR_V27.POINT,postPoint,false);
     processorResumeV27();
   };
+  EVT_RESUME_DATA_V484={processor:true,postPoint:postPoint||null};   /* S03-U484: 上のクロージャと同じ継続 */
   const opened=emitEvent(eventName,evt);
   if(opened) return PROC_V27_WAIT;
   EVT_AFTER=null;
@@ -427,6 +462,7 @@ function processEventBatchV28(pl){
   const postS03=pl.postPointS03||null;
   if(!cands.length){ if(postS03) enqueueProcessorV27(PROCESSOR_V27.POINT,postS03,false); return PROC_V27_DONE; }
   EVT_AFTER=()=>{ if(postS03) enqueueProcessorV27(PROCESSOR_V27.POINT,postS03,false); processorResumeV27(); };
+  EVT_RESUME_DATA_V484={processor:true,postPoint:postS03||null};   /* S03-U484: 上のクロージャと同じ継続 */
   startEventChainV2('batch',{label:pl.label||'同時誘発'},cands);
   return PROC_V27_WAIT;
 }
@@ -1411,7 +1447,17 @@ function preparedActivationDescriptorV11(name,p,zone,index,opts,ctx,card,db,sc,s
 function commitPreparedActivationV11(desc,data){
   data=data||{}; if(!desc||desc.uid==null) return false;
   const hit=findCardByUid(desc.uid); if(!hit){abortPreparedActivationV11(desc);return false;}
-  const selectionData=serializeChainSelectionV2(data.targets||[]);
+  const selectedTargets=Array.isArray(data.targets)?data.targets:[];
+  const dynamicRange=(typeof targetCountRangeS03==='function')?targetCountRangeS03(desc.name):null;
+  let actualTargetCount=null;
+  if(dynamicRange){
+    actualTargetCount=Number(data.targetCount);
+    if(!(typeof targetCountAllowedS03==='function'&&targetCountAllowedS03(desc.name,actualTargetCount)) || actualTargetCount!==selectedTargets.length){
+      if(typeof trace==='function') trace(`${desc.name}：対象枚数の宣言と実選択が一致しません`,false);
+      abortPreparedActivationV11(desc); return false;
+    }
+  }
+  const selectionData=serializeChainSelectionV2(selectedTargets);
   const p3CostSnaps=(typeof takeCostSnapshotsV3==='function')?takeCostSnapshotsV3(gameState):[];
   act(Object.assign({type:'CHAIN_ADD',player:desc.player,cardId:hit.card.id,uid:desc.uid,name:desc.name,ss:desc.ss,
     from:desc.from,index:desc.index,costSnapshots:p3CostSnaps,prepared:true,targets:selectionData,
@@ -1420,7 +1466,8 @@ function commitPreparedActivationV11(desc,data){
     v44ActivationPending:!!desc.v44ActivationPending,effectClass:desc.effectClass||null,
     sourceNegatedAtActivation:!!desc.sourceNegatedAtActivation,
     spellCounterObserverUids:desc.spellCounterObserverUids||[],keep:!!desc.keep,
-    eventResumeV11:desc.eventSelectionV11&&desc.eventSelectionV11.resume||null},desc.cardActivationS03?{cardActivationS03:true}:{},desc.drawReplacementS03?{drawReplacementS03:true}:{}));   /* S03-U29 / S03-U33 */
+    eventResumeV11:desc.eventSelectionV11&&desc.eventSelectionV11.resume||null},dynamicRange?{targetCount:actualTargetCount}:{},desc.cardActivationS03?{cardActivationS03:true}:{},desc.drawReplacementS03?{drawReplacementS03:true}:{}));   /* S03-U29 / S03-U33 */
+  if(typeof prepTxCommitS03==='function') prepTxCommitS03(hit.card);   /* S03-U471: CHAIN_ADD が復元点を閉じた */
   if(typeof applyTargetingNegatorsS03==='function') applyTargetingNegatorsS03();   /* S03-U28: 対象にされた時の自動無効（永続効果） */
   if(typeof applyTargetingProtectorsS03==='function') applyTargetingProtectorsS03();   /* S03-U66: 他の表側表示モンスターを守る永続効果 */ if(typeof applyTargetedSelfDestroyS03==='function') applyTargetedSelfDestroyS03();   /* S03-U137: 対象になった時に自壊（魂を削る死霊） */
   if(desc.noPriority){
@@ -1455,7 +1502,16 @@ function prepareDuelActivation(name,p,zone,index,opts){
   if(!L) L=strictScriptLegalityV2(name,p,zone,index,opts);
   /* S03-U40 (C-S03-31): 攻撃宣言時の窓では攻撃宣言イベントで判定し直し、通ればそのイベントで発動する */
   if(!L.ok && typeof attackDeclareResponseOptsS03==='function'){ const ao=attackDeclareResponseOptsS03(name,opts); if(ao){ const L2=strictScriptLegalityV2(name,p,zone,index,ao); if(L2.ok){ L=L2; opts=ao; } } }
-  if(!L.ok){ showToast(L.reason); if(typeof endActivationPrepS03==='function') endActivationPrepS03(); return false; }
+  if(!L.ok){
+    showToast(L.reason);
+    /* S03-U471: 置いた後の合法性判定が通らない発動。永続魔法・フィールド魔法を手札から置くだけ（チェーン無し: U415 デッキロック等の既存の設計）は戻さず、復元点だけ閉じる。
+       それ以外（通常/速攻/装備魔法が手札の自分自身を数えて事前判定を通り、置いた後に条件を満たさなくなった形）は、置く前に戻す。 */
+    if(card && typeof prepTxLiveForS03==='function' && prepTxLiveForS03(card.uid)){
+      const dbRefused=dbOf(card);
+      if(dbRefused.k==='s' && (dbRefused.sub==='永続'||dbRefused.sub==='フィールド')) prepTxCloseS03(card.uid); else prepTxAbortS03('refused');
+    }
+    if(typeof endActivationPrepS03==='function') endActivationPrepS03(); return false;
+  }
   if(L.v4EffectKey && !(opts&&opts.v4EffectKey)) opts=Object.assign({},opts||{},{v4EffectKey:L.v4EffectKey});
   ensureCardUid(gameState,card);
   /* S03-U35 (C-S03-28): 最初の Action（表にする・コスト）の前の Journal 位置を控える。 */
@@ -1475,13 +1531,18 @@ function prepareDuelActivation(name,p,zone,index,opts){
      link below does not refuse them (TG ワーウルフ's SS2 link refused TG ラッシュ・ライノ's End Phase trigger for ever). Spell / Trap cards keep the check. */
   const segocPeerS296 = !!(opts&&opts.eventSelectionV11) && db.k==='m';
   if(gameState.chain.length && ss < chainTopSpeed() && !segocPeerS296){
-    showToast(`スペルスピードが足りません（SS${ss} / チェーン上 SS${chainTopSpeed()}）`); return false;
+    showToast(`スペルスピードが足りません（SS${ss} / チェーン上 SS${chainTopSpeed()}）`);
+    if(typeof prepTxAbortS03==='function' && prepTxLiveForS03(card.uid)) prepTxAbortS03('refused');   /* S03-U471 */
+    return false;
   }
+  /* S03-U471: 最初の状態変化（表にする）の前に発動準備トランザクションを開く（手札からの発動は呼び出し元が MOVE の前に開いている）。 */
+  const txTokS471 = (!cardActivationOnly && typeof prepTxOpenS03==='function' && prepTxNeededS03(name)) ? prepTxOpenS03(p,card,name) : null;
   if(card.face==='down' && (zone==='sz'||zone==='field'))
     act({type:'FX_SET_STATE',player:(zoneOwnerS03!=null?zoneOwnerS03:p),zone,index,face:'up',reason:'発動'});
 
   const ctx=makeContext(p,card,zone,index,(opts&&opts.eventName)||'activate',opts||{});
   const finishPrepare=()=>{
+    if(txTokS471 && !(gameState.prepTxS03 && gameState.prepTxS03.uid===card.uid)) return;   /* S03-U471: 中止済み（記録が無い）の準備には、遅れて来た継続でもチェーンリンクを作らない。Undo で記録が戻れば続けられる */
     // System v3.5.0: 《魔法都市エンディミオン》型の「魔法カードが発動する度」を正確に扱うため、
     // 魔法の発動時点ですでに表側・適用中だった監視カードだけをUIDで固定する。
     const spellCounterObserverUids = db.k==='s' ? v350SpellCounterObserverUids() : [];
@@ -1499,7 +1560,12 @@ function prepareDuelActivation(name,p,zone,index,opts){
          prepared:true,targets:selectionData,event:(opts&&opts.event)||null,eventName:(opts&&opts.eventName)||null,
          v4EffectKey:ctx.v4EffectKey||null, v44CountConsume, v44ActivationPending,
          effectClass:effectClassV2(sc,db), sourceNegatedAtActivation, spellCounterObserverUids,
-         keep:(db.k==='m'||['永続','フィールド','装備'].includes(db.sub))},cardActivationOnly?{cardActivationOnly:true}:{},cardActivationS03?{cardActivationS03:true}:{},drawReplacementS03?{drawReplacementS03:true}:{},ctx.costCtxS03?{costCtxS03:ctx.costCtxS03}:{},zoneOwnerS03!=null?{zoneOwnerS03}:{}));
+         keep:(db.k==='m'||['永続','フィールド','装備'].includes(db.sub))},
+         /* S03-U484: 非 P1.1 の誘発も、チェーン終了後の継続を CHAIN_ADD に載せる（P1.1 の commitPreparedActivationV11 と同じ形）。
+            これが無いと継続はクロージャ（EVT_V2_STATE.after）だけに残り、保存・再開で召喚成功後の応答窓が消えていた。 */
+         (opts&&opts.eventSelectionV11&&opts.eventSelectionV11.resume)?{eventResumeV11:opts.eventSelectionV11.resume}:{},
+         cardActivationOnly?{cardActivationOnly:true}:{},cardActivationS03?{cardActivationS03:true}:{},drawReplacementS03?{drawReplacementS03:true}:{},ctx.costCtxS03?{costCtxS03:ctx.costCtxS03}:{},zoneOwnerS03!=null?{zoneOwnerS03}:{}));
+    if(typeof prepTxCommitS03==='function') prepTxCommitS03(card);   /* S03-U471: CHAIN_ADD で復元点は閉じた。ここから先の不発・無効でコストは返らない */
     if(typeof endActivationPrepS03==='function') endActivationPrepS03();   /* S03-U35: チェーンに乗った */
     if(typeof applyTargetingNegatorsS03==='function') applyTargetingNegatorsS03();   /* S03-U28: 対象にされた時の自動無効（永続効果） */
     if(typeof applyTargetingProtectorsS03==='function') applyTargetingProtectorsS03();   /* S03-U66: 他の表側表示モンスターを守る永続効果 */ if(typeof applyTargetedSelfDestroyS03==='function') applyTargetedSelfDestroyS03();   /* S03-U137: 対象になった時に自壊（魂を削る死霊） */
@@ -1537,11 +1603,24 @@ function prepareDuelActivation(name,p,zone,index,opts){
     if(typeof endActivationPrepS03==='function') endActivationPrepS03();   /* S03-U35: P1.1 は registry 選択で復元できる */
     const safe=choiceJsonSafetyV49(desc,'activationV11');
     if(!safe.ok){abortPreparedActivationV11(desc);throw new Error(`P1.1 activation descriptor is not JSON-safe: ${safe.why}`);}
+    /* S03-U471: 発動時の宣言/対象選択（activationV11）が候補不足で断られた（明示の合図）なら、発動準備を中止して発動前に戻す */
+    const sigV11S471=choiceInsufficientSeqS03();
     try{sc.activationV11(ctx,desc);}catch(e){abortPreparedActivationV11(desc);throw e;}
+    if(txTokS471 && choiceInsufficientSeqS03()>sigV11S471 && !gameState.pendingChoice && !(typeof PROMPT_OPEN_S03!=='undefined'&&PROMPT_OPEN_S03) && prepTxLiveForS03(desc.uid)) abortPreparedActivationV11(desc);
     return true;
   }
+  /* S03-U471: 準備の失敗（コスト不可・候補不足）— 発動準備トランザクションで発動前に戻す。トランザクションが無い時だけ従来の opts.onAbort。 */
+  const failPrepare=(reason)=>{
+    if(txTokS471 && typeof prepTxAbortS03==='function' && prepTxAbortS03(reason,card.uid)) return;
+    if(opts&&typeof opts.onAbort==='function') opts.onAbort();
+  };
   const chooseTargets=()=>{
-    if(sc.selectTargets) sc.selectTargets(ctx,targets=>{ ctx.selectedTargets=targets||[]; finishPrepare(); });
+    if(sc.selectTargets){
+      /* 明示の合図: 対象選択の前に印を取り、候補不足で断られた（requestChoiceV49 が合図を進めた）時だけ中止する。 */
+      const sigS471=choiceInsufficientSeqS03();
+      sc.selectTargets(ctx,targets=>{ ctx.selectedTargets=targets||[]; finishPrepare(); });
+      prepTxCheckInsufficientS03(sigS471,card.uid);
+    }
     else finishPrepare();
   };
   /* S03-U10: カードの発動だけならコスト・対象は使わない。 */
@@ -1549,19 +1628,28 @@ function prepareDuelActivation(name,p,zone,index,opts){
   /* S03-U16 COST_SELECTION_FIRST: 宣言されたスクリプトは selectTargets がコストにするカードを選ぶ。
      先に選び、コストを払い、コストで動いたカードを対象から外し、コスト中に ctx へ書かれた値を CHAIN_ADD へ載せる。 */
   if(typeof costSelectionFirstS03==='function' && costSelectionFirstS03(name,sc)){
-    sc.selectTargets(ctx,targets=>{
+    const sigCsfS471=choiceInsufficientSeqS03();
+    /* S03-U474: ここの selectTargets は「コストにするカード」を選ぶので、選択の段階は 'cost'（対象耐性を掛けない）。cost を払い終えた後は外す。
+       selectTargets の中に本当の対象選択（装備するモンスター等）がある場合は、スクリプト側で API.selectCard(…, {selection:'effect'}) と明示する。 */
+    withSelectionPhaseS03('cost',()=>sc.selectTargets(ctx,targets=>{
       ctx.selectedTargets=targets||[];
       const beforeS03=costSelectionBeforeS03(ctx);
-      sc.cost(ctx,ok=>{
-        if(ok===false){ showToast('コストを払えません'); if(opts&&typeof opts.onAbort==='function') opts.onAbort(); return; }
+      runCostPhaseS03(done=>sc.cost(ctx,done),ok=>{
+        if(ok===false){ showToast('コストを払えません'); failPrepare('cost-fail'); return; }
         costSelectionAfterS03(ctx,beforeS03);
         finishPrepare();
       });
-    });
+    }));
+    prepTxCheckInsufficientS03(sigCsfS471,card.uid);   /* S03-U471 */
     if(typeof settleActivationPrepS03==='function') settleActivationPrepS03();   /* S03-U35 */
     return true;
   }
-  if(sc.cost) sc.cost(ctx,ok=>{ if(ok===false){ showToast('コストを払えません'); if(opts&&typeof opts.onAbort==='function') opts.onAbort(); return; } chooseTargets(); });
+  if(sc.cost){
+    const sigCostS471=choiceInsufficientSeqS03();
+    /* S03-U474: コストを払う間は選択の段階が 'cost'（コストの選択に対象耐性を掛けない）。払い終えた継続（done）では外れるので、chooseTargets の対象選択は従来どおり。 */
+    runCostPhaseS03(done=>sc.cost(ctx,done),ok=>{ if(ok===false){ showToast('コストを払えません'); failPrepare('cost-fail'); return; } chooseTargets(); });
+    prepTxCheckInsufficientS03(sigCostS471,card.uid);   /* S03-U471: コスト自体の選択が候補不足で断られた場合（捨てる手札が無い等） */
+  }
   else chooseTargets();
   if(typeof settleActivationPrepS03==='function') settleActivationPrepS03();   /* S03-U35: 選択待ちが無ければ控えを消す */
   return true;
@@ -1580,6 +1668,7 @@ function duelActivateFromHand(i){
     if(!pre.ok){ showToast(pre.reason); return; }
     ensureCardUid(gameState,c); const uid=c.uid;
     if(typeof beginActivationPrepS03==='function') beginActivationPrepS03(p,c,nm);   /* S03-U35: MOVE の前の位置 */
+    if(typeof prepTxOpenS03==='function' && prepTxNeededS03(nm) && !cardActivationOnlyV32(nm,sc,db,'hand',c,{cardActivation:true})) prepTxOpenS03(p,c,nm);   /* S03-U471: 最初の状態変化（手札から置く）の前に復元点を作る */
     closeSheet(); act({type:'MOVE',player:p,from:'hand',fromIndex:i,to,face:'up'});
     const idx=to==='field'?0:gameState.players[p].sz.length-1;
     prepareDuelActivation(nm,p,to,idx,{cardActivation:true,onAbort:()=>{
@@ -1624,6 +1713,7 @@ function duelActivateResponseV2(p,zone,index,owner){
     if(!pre.ok){ showToast(pre.reason); return; }
     ensureCardUid(gameState,c); const uid=c.uid;
     if(typeof beginActivationPrepS03==='function') beginActivationPrepS03(p,c,nm);   /* S03-U35: MOVE の前の位置 */
+    if(typeof prepTxOpenS03==='function' && prepTxNeededS03(nm)) prepTxOpenS03(p,c,nm);   /* S03-U471 */
     closeSheet(); act({type:'MOVE',player:p,from:'hand',fromIndex:index,to:'sz',face:'up'});
     prepareDuelActivation(nm,p,'sz',gameState.players[p].sz.length-1,{onAbort:()=>{ const h=findCardByUid(uid); if(h&&h.zone==='sz') act({type:'MOVE',player:h.p,from:'sz',fromIndex:h.index,to:'hand',face:'up'}); }}); return;
   }
@@ -1732,7 +1822,11 @@ function afterChainCompleteV2(){
 
 function preparedChainContext(link){
   const src=findCardByUid(link.uid), card=src?src.card:null;
-  const extra={event:link.event||{},chainId:link.chainId,effectClass:link.effectClass,chainLink:link,v4EffectKey:link.v4EffectKey||null};
+  const storedEvent=link.event||{};
+  /* Prepared links intentionally store only JSON-safe event identity (uid/uids). Rehydrate a fresh
+     resolution view at the final engine boundary; never mutate the journaled/saved link snapshot. */
+  const resolutionEvent=restoreEventRefsV27(storedEvent);
+  const extra={event:resolutionEvent,chainId:link.chainId,effectClass:link.effectClass,chainLink:link,v4EffectKey:link.v4EffectKey||null};
   if(link.eventName==='onDamageStep' || (gameState.battle && link.eventName==='onFlip')){
     extra.battle=battleContextV28();
     extra.step=(link.event&&link.event.step)||((gameState.battle&&gameState.battle.step)||null);
@@ -1786,6 +1880,13 @@ function queueDeferredEventV2(eventName,evt){
   if(safe.card){ safe.uid=ensureCardUid(gameState,safe.card); delete safe.card; }
   if(Array.isArray(safe.cards)){
     safe.uids=safe.cards.map(c=>ensureCardUid(gameState,c)).filter(x=>x!=null); delete safe.cards;
+  }
+  /* S03-U491 / S03-U492: 条件が満たされた処理の番号を刻む（engine/1ZZX）。deferredEvents は digest に入るので
+     Journal 再生・保存・再開でも同じ値が再現される。直接発火（emitEvent）には刻みが無く、その場合は判定しない。
+     積んだこと自体が「その処理は本当に何かを行った」の印にもなる。 */
+  if(typeof gameState!=='undefined'&&gameState){
+    safe.stepS03=(typeof missedTimingStampS03==='function')?missedTimingStampS03(gameState):(gameState.procStepS03|0);
+    if(typeof noteMissedTimingQueueS03==='function') noteMissedTimingQueueS03();
   }
   const item={eventName,evt:safe};
   if(typeof APPLY_ACTION_DEPTH_V31!=='undefined'&&APPLY_ACTION_DEPTH_V31>0){gameState.deferredEvents.push(item);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gameState,item);}

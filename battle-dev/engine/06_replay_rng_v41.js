@@ -148,6 +148,8 @@ function v41StateDigestText(gs){
      may end the duel, so it must be part of an in-progress replay digest. */
   if(g.specialWinDeferredS03) parts.push('SWD1');
   if(g.eventChainResumeV11) parts.push('ECR'+JSON.stringify(g.eventChainResumeV11));
+  /* S03-U471: 発動準備の復元点は開いている間だけ追記する（空なら既存 digest は不変）。復元点を取った時点の digest で固定する。 */
+  if(g.prepTxS03) parts.push('PTX'+g.prepTxS03.uid+':'+g.prepTxS03.d);
   /* P3: provenance は非空のときだけ追記する。
      provenance を持たない既存局面の digest はバイト単位で不変になる。 */
   const p3chain=(g.chain||[]).filter(x=>x&&x.costSnapshots&&x.costSnapshots.length)
@@ -195,6 +197,8 @@ function v41RecordCommittedAction(a,rngBefore){
 }
 function v41SyncJournalToState(gs){
   const g=v41EnsureReplayState(gs||gameState); if(!g) return 0;
+  /* S03-U471: Undo / Redo / 読込では、開いていた発動準備の実行時対応表は無効（記録は gameState 側にある） */
+  if(typeof prepTxRebuildLiveS03==='function') prepTxRebuildLiveS03(g);
   const seq=Math.max(0,Number(g.__v41Seq)||0);
   V41_LAST_SYNC_WARNING='';
   if(seq===0){

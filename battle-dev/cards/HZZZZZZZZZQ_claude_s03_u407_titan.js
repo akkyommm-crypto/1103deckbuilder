@@ -5,7 +5,7 @@
    破壊竜ガンドラ  このカードは特殊召喚できない。①:LPを半分払って発動できる。このカード以外のフィールドのカードを全て破壊し除外する。このカードの攻撃力は、この効果で破壊したカードの数×300アップする。②:このカードを召喚・反転召喚したターンのエンドフェイズに発動する。このカードを墓地へ送る。
 
    Notes
-   - タイタン: cannotSpecialSummon + continuous.immuneToTarget with the effect source from ACTIVATION_PREP_S03 (u378Source, S03-U378/U381): a Trap or an Effect Monster cannot target it; the ignition banishes a 「ジュラック」 (ATK 1700 or less) of the Graveyard (cost) for +1000 ATK until the End Phase (v4RegisterStatModifier).
+   - タイタン: cannotSpecialSummon + continuous.immuneToTarget with the effect source from filterTargetable's effectInfo (u378SrcOf, S03-U457; it was the prep-only u378Source() and lost the immunity at resolution): a Trap or an Effect Monster cannot target it; the ignition banishes a 「ジュラック」 (ATK 1700 or less) of the Graveyard (cost) for +1000 ATK until the End Phase (v4RegisterStatModifier).
    - ユニコーン: once-per-turn ignition lowering the chosen monster by 500 x my monster count until the End Phase; a card stamp (u407Turn) + continuous cannotAttack on my other monsters.
    - ガンドラ: LP halved as the cost; every other card of the field (monsters, Spell & Trap Zones, Field Zones) is destroyed and the destroyed ones are banished from the Graveyard; ATK + 300 each (modifier until it leaves the field); a forced End Phase trigger sends it to the Graveyard in the turn it was Summoned / Flip Summoned (summonedTurn / flipSummonedTurnS03). */
 
@@ -30,10 +30,11 @@ defineUnifiedCardV4('ジュラック・タイタン', [{
   afterResolve(){}
 }], {type:'monster', priority:1, cannotSpecialSummon:true, countLimit:{n:1, effects:['boost']}, timing:['free'],
   continuous:{ scope:'self', from:['mz'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(card!==self || self.face!=='up') return false;
-      const src = u378Source();
-      return !!src && (src.db.k==='t' || (src.db.k==='m' && (src.db.st||[]).indexOf('効果')>=0));
+      /* S03-U457: 出所は filterTargetable が渡す effectInfo を最優先（発動準備・解決時・直接 runScript の3経路）。 */
+      const src = u378SrcOf(effectInfo);
+      return !!src && (targetEffectMatchesS03(src, {cardTypes:['t']}) || targetEffectMatchesS03(src, {cardTypes:['m'], effectMonster:true}));
     } } });
 
 /* ---- サンダー・ユニコーン ---- */

@@ -45,12 +45,16 @@ function unionDamageS03(ctx){
 const UNION_PASSIVE_KILL = ctx=>!!unionKillS03(ctx);
 const UNION_PASSIVE_DAMAGE = ctx=>unionDamageS03(ctx);
 
-/* spec: {host(x), atk, def, substitute:'battle'|'any', effects:[…], continuous:{…}, passive:{…}, script:{…}}; x = a field handle of the candidate host */
+/* spec: {host(x), atk, def, substitute:'battle'|'any', targeted:false, effects:[…], continuous:{…}, passive:{…}, script:{…}}; x = a field handle of the candidate host
+   S03-U469: targeted:true — the 「①:」 wording 「自分フィールドの…1体を対象とし、このカードを装備カード扱いとしてそのモンスターに装備する」: the host is a TARGET chosen on activation (a chain link that records it);
+   if the target is gone or no longer a valid host on resolution the equip does not happen. 「1ターンに1度…発動できる」 is spent by the ACTIVATION (the use flag is stamped in the cost),
+   so a response that removes the host does not give a second use. The default (false) keeps the host choice on resolution of the classic wording (S03-U313). */
 function declareUnionS03(name, spec){
-  const S = Object.assign({atk:0, def:0, substitute:'battle', effects:[], continuous:{}, passive:{}, script:{}}, spec||{});
+  const S = Object.assign({atk:0, def:0, substitute:'battle', targeted:false, effects:[], continuous:{}, passive:{}, script:{}}, spec||{});
   const pool = ctx=>API.fieldCards({player:ctx.player, zone:'mz', filter:x=>x.card!==ctx.card && x.card.face==='up' && x.db.k==='m' && !unionCarriedS03(x.card, ctx.card) && S.host(x)});
   const mainPhase = ()=>gameState.phase==='main1' || gameState.phase==='main2';
-  const effects = [{
+  const stampCost = (ctx, done)=>{ const h = locateCardAnyV4(ctx.card); if(h) API.setCardFlag(h, 'unionTurnS03', gameState.turn, name, {silent:true}); done(true); };
+  const effects = [Object.assign({
     key:'union-equip', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, speed:1, events:['activate'],
     condition(ctx){
       if(ctx.zone!=='mz' || ctx.card.face!=='up'){ ctx.reason = 'モンスターゾーンに表側表示で存在する必要があります'; return false; }
@@ -66,15 +70,20 @@ function declareUnionS03(name, spec){
       const go = t=>{
         const h = t && resolveTarget(t), me = locateCardAnyV4(ctx.card);
         if(!h || h.zone!=='mz' || h.card.face!=='up' || !me || me.zone!=='mz' || unionCarriedS03(h.card, ctx.card)) return;
+        if(S.targeted && (h.p!==ctx.player || !S.host(Object.assign({db:dbOf(h.card)}, h)))) return;   /* the target must still be an own, valid host on resolution */
         API.setCardFlag(me, 'unionTurnS03', gameState.turn, name, {silent:true});
         API.equipMonster(ctx.player, me, h, name);
       };
+      if(S.targeted){ go(ctx.selectedTargets && ctx.selectedTargets[0]); return; }
       const c = pool(ctx);
       if(c.length===1){ go(c[0]); return; }
       API.selectCard(`${name}：装備するモンスター`, c, go);
     },
     afterResolve(){}
-  }, {
+  }, S.targeted ? {
+    targetRange:LOCATION.MZONE, targetSide:'self', cost:stampCost,
+    target(ctx, done){ API.selectCard(`${name}：装備するモンスター`, pool(ctx), t=>done([t])); }
+  } : {}), Object.assign({
     key:'union-release', type:EFFECT_TYPE.IGNITION, range:LOCATION.SZONE, speed:1, events:['activate'],
     condition(ctx){
       const h = locateCardAnyV4(ctx.card);
@@ -93,7 +102,7 @@ function declareUnionS03(name, spec){
       if(now && now.zone==='sz') API.specialSummon(ctx.player, 'sz', now.index, 'atk', name);
     },
     afterResolve(){}
-  }].concat(S.effects);
+  }, S.targeted ? {cost:stampCost} : {})].concat(S.effects);
   const cont = Object.assign({
     scope:'allMonsters', from:['sz'],
     apply(card, self){
@@ -107,7 +116,7 @@ function declareUnionS03(name, spec){
     timing:['free'],
     equipSubstituteS03: S.substitute==='any' ? true : 'battle',
     continuous:cont, passive:S.passive
-  }, S.script));
+  }, S.targeted ? {targets:true} : {}, S.script));
 }
 const unionOwnRace = ra => (x=>x.db.ra===ra);
 const unionNamed = nm => (x=>x.db.n===nm);

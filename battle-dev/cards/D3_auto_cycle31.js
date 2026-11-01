@@ -364,8 +364,9 @@ defineScript('アサルト・スピリッツ', {
         e0WeakInHand(ctx.player), t => done([t]));
       return;
     }
+    /* S03-U474: COST_SELECTION_FIRST の selectTargets は既定ではコストの選択だが、ここは本当の対象（装備するモンスター）なので効果の選択と明示する */
     API.selectCard('アサルト・スピリッツ：装備するモンスター',
-      e0MyFaceUp(ctx.player), t => done([t]));
+      e0MyFaceUp(ctx.player), t => done([t]), undefined, {selection:'effect'});
   },
   cost(ctx, done){
     if(!ctx.card.equipTo){ done(true); return; }
@@ -492,8 +493,9 @@ defineScript('D・クリーナン', {
   selectTargets(ctx, done){
     const me = locateCardAnyV4(ctx.card);
     if(me && me.card.pos === 'def'){
+      /* S03-U474: COST_SELECTION_FIRST の selectTargets の中の本当の対象（装備する相手モンスター）— 効果の選択と明示する */
       API.selectCard('D・クリーナン：装備する相手モンスター',
-        e0FoeAtkMonsters(ctx), t => done([t]));
+        e0FoeAtkMonsters(ctx), t => done([t]), undefined, {selection:'effect'});
       return;
     }
     API.selectCard('D・クリーナン（コスト）：墓地へ送る装備カード',

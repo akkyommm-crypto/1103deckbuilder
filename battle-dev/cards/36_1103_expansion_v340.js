@@ -108,7 +108,10 @@ defineScript("六武衆の荒行", {
   condition(ctx){
     const own=API.fieldCards({zone:'mz',player:ctx.player,filter:x=>x.card.face==='up'&&v340IsSix(x.card)});
     const ok=own.some(t=>v340SixDeck(ctx.player,x=>x.db.n!==t.db.n&&(x.db.atk||0)===curATK(t.card)).length);
-    if(!ok){ctx.reason='同じ攻撃力でカード名が異なる「六武衆」をデッキから出せる対象がいません';return false;}return true;
+    if(!ok){ctx.reason='同じ攻撃力でカード名が異なる「六武衆」をデッキから出せる対象がいません';return false;}
+    /* S03-U470: 対象にする自分の「六武衆」が全て対象耐性（メタルシルバー・アーマー）で外れる時は、発動の前に断る */
+    const okT=API.targetableCardsS03(own.filter(t=>v340SixDeck(ctx.player,x=>x.db.n!==t.db.n&&(x.db.atk||0)===curATK(t.card)).length),ctx.player).length;
+    if(!okT){ctx.reason='効果の対象にできる「六武衆」がいません';return false;}return true;
   },
   selectTargets(ctx,done){
     const own=API.fieldCards({zone:'mz',player:ctx.player,filter:x=>x.card.face==='up'&&v340IsSix(x.card)})

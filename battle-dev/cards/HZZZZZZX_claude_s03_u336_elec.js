@@ -88,9 +88,10 @@ defineScript('エレキリギリス', {
   resolve(){}, afterResolve(){},
   continuous:{ scope:'ownMonsters', from:['mz'], apply(){ return null; },
     cannotBeAttackTarget(target, self){ return u336Grass(target, self); },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(!u336Grass(card, self)) return false;
-      const me = locateCardAnyV4(self), tp = u336TargetingPlayer();
+      /* S03-U457: filterTargetable が渡す effectInfo.player を最優先（直接 runScript でも効く）。無ければ従来の文脈から読む。 */
+      const me = locateCardAnyV4(self), tp = (effectInfo && effectInfo.player!=null) ? effectInfo.player : u336TargetingPlayer();
       return !(tp!=null && me && tp===me.p);   /* 「相手は」: my own effects may still target */
     } }
 });

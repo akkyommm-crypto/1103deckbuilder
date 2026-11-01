@@ -1,5 +1,7 @@
 /* Autobuild batch 22 — reusable Equip Spells, exact pile selection, counters and deterministic RNG. */
-function v70SelectExactly(title,pool,n,done){const chosen=[];const next=()=>API.selectCard(title+' '+(chosen.length+1)+'/'+n,pool.filter(x=>!chosen.includes(x.card)),t=>{chosen.push(t.card);if(chosen.length<n)return next();done(chosen.map(card=>({card})));});next();}
+/* S03-U475: 選択結果は選択の候補（p / zone / index / card）をそのまま返す。以前は {card} だけを返しており、target フックで使うとチェーンに載る時に
+   serializeChainSelectionV2 がカードの複製として保存し、解決時の resolveTarget が元のカードを見つけられず何も動かさなかった（S03-U472 が TGX3－DX2 で発見）。 */
+function v70SelectExactly(title,pool,n,done){const chosen=[];const next=()=>API.selectCard(title+' '+(chosen.length+1)+'/'+n,pool.filter(x=>!chosen.some(y=>y.card===x.card)),t=>{chosen.push(t);if(chosen.length<n)return next();done(chosen);});next();}
 function v70Equip(name,filter,atk,def){defineUnifiedCardV4(name,[{key:'equip',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.MZONE,targetSide:'both',speed:1,events:['activate'],condition(){return API.fieldCards({zone:'mz',filter:x=>x.card.face==='up'&&filter(x)}).length>0;},target(ctx,done){API.selectCard(name+'：装備するモンスター',API.fieldCards({zone:'mz',filter:x=>x.card.face==='up'&&filter(x)}),t=>done([t]));},operation(ctx){const s=locateCardAnyV4(ctx.card),t=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(s&&t)API.equipSpell(s,t,name);},afterResolve(){}}],{type:'spell',priority:1,targets:true,continuous:{scope:'allMonsters',from:['sz'],apply(card,self){const h=locateCardAnyV4(card);return h&&self.equipTo&&self.equipTo.uid===card.uid&&filter(h)?{atk:atk||0,def:def||0}:null;}}});}
 v70Equip('エルフの光',x=>x.db.at==='光',400,-200);
 v70Equip('サラマンドラ',x=>x.db.at==='炎',700,0);

@@ -355,10 +355,24 @@ defineScript('スクラップ・サーチャー',{
 
 /* S03-U194: 「「墓守の」という名のついたモンスターカード」 — monsters named 墓守の… (before: any card containing 墓守) */
 defineScript('降霊の儀式',{
-  auditNote:'ネクロバレーの影響を受けないためAPIの墓地ロックを迂回して正規に蘇生',type:'trap',priority:2,targets:true,blocksIfNoSpecialSummon:true,
+  /* S03-U490: 上の迂回を当時裁定で裏づけた。WIKI-4B70999040AF（2011-05-03 取得）
+     「『発動は制限されない』というテキストですが、《王家の眠る谷－ネクロバレー》によって効果は無効になりますか？」
+     →「いいえ。効果も無効にはなりません。」 テキストは発動しか書いていないが、効果も無効にならない。 */
+  auditNote:'ネクロバレーの影響を受けないためAPIの墓地ロックを迂回して正規に蘇生（当時裁定 WIKI-4B70999040AF）',type:'trap',priority:2,targets:true,blocksIfNoSpecialSummon:true,
   condition(ctx){if(!API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&String(x.db.n||'').indexOf('墓守の')===0).length){ctx.reason='墓地に墓守がいません';return false;}return API.me(ctx).mz.length<ZONE_LIMITS.mz;},
   selectTargets(ctx,done){API.selectCard('降霊の儀式：特殊召喚する墓守',API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&String(x.db.n||'').indexOf('墓守の')===0),t=>done([t]));},
-  resolve(ctx){const t=resolveTarget(ctx.selectedTargets[0]);if(t&&t.zone==='grave')act({type:'FX_SPECIAL_SUMMON',player:ctx.player,from:'grave',fromIndex:t.index,pos:'atk',reason:'降霊の儀式'});}
+  /* S03-U488: raw な FX_SPECIAL_SUMMON は reducer でも呼び出し側でも召喚成功のイベントを積まないため、
+     「特殊召喚に成功した時」の誘発と、相手の《奈落の落とし穴》等の応答が丸ごと起きていなかった（S03-U487 と同じクラスの欠陥）。
+     API.specialSummon と同じ queueSpecialSummonSuccessV2 を呼ぶ（解決中はバッチに入り、チェーン終了後に onSpecialSummon として発火する）。
+     上の auditNote の「墓地ロックの迂回」はそのまま維持する。 */
+  resolve(ctx){
+    const t=resolveTarget(ctx.selectedTargets[0]); if(!t || t.zone!=='grave') return;
+    const before=t.card; ensureCardUid(gameState,before);
+    act({type:'FX_SPECIAL_SUMMON',player:ctx.player,from:'grave',fromIndex:t.index,pos:'atk',reason:'降霊の儀式'});
+    const h=findCardByUid(before.uid);
+    if(h && h.zone==='mz' && h.p===ctx.player && typeof queueSpecialSummonSuccessV2==='function')
+      queueSpecialSummonSuccessV2(ctx.player, h.card, 'effect');
+  }
 });
 
 defineScript('トラップ・イーター',{

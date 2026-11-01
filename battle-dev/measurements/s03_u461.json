@@ -1,0 +1,21 @@
+{
+  "example": false,
+  "unit": "S03-U461",
+  "category": "card-automation-engine-extension",
+  "mode": "codex-handoff",
+  "workflow_profile": "v3-batch3",
+  "scope": "破邪の大剣－バオウ: activation hand-send cost, Equip +500 ATK, live Equip source for battle-destroyed monster effect negation, controls and Replay",
+  "outcome": "focused tests 73 PASS / 0 FAIL; batch checkpoint ready for one full gate",
+  "gate_exit": null,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-21T00:00:00+09:00",
+  "finished_at": "2026-10-21T00:00:00+09:00",
+  "gate_owner": "codex",
+  "usage": {
+    "source": "not recorded",
+    "by_model": []
+  },
+  "notes": "Negative control on U460 build: 7 FAIL. After implementation: U461 13, U25 13, U430 22, U412 14, U460 11 PASS. Coverage: TESTED 3581 / ENGINE_GAP 345 / NOT_STARTED 413."
+}

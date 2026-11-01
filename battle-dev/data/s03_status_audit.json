@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 344,
+    "ENGINE_GAP": 346,
     "GENERIC_OK": 644,
-    "IMPLEMENTED": 3,
-    "NOT_STARTED": 415,
+    "IMPLEMENTED": 2,
+    "NOT_STARTED": 401,
     "PARTIAL": 10,
-    "TESTED": 3580
+    "TESTED": 3593
   },
   "delta": {
-    "ENGINE_GAP": -272,
-    "IMPLEMENTED": -195,
-    "NOT_STARTED": -892,
+    "ENGINE_GAP": -270,
+    "IMPLEMENTED": -196,
+    "NOT_STARTED": -906,
     "PARTIAL": -172,
-    "TESTED": 1531
+    "TESTED": 1544
   },
   "status_changes": [
     {
@@ -715,6 +715,12 @@
       "unit": "S03-U136"
     },
     {
+      "name": "W－ウィング・カタパルト",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
+    },
+    {
       "name": "XX－セイバー ガルセム",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -763,10 +769,22 @@
       "unit": "S03-U176"
     },
     {
+      "name": "Y－ドラゴン・ヘッド",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
+    },
+    {
       "name": "ZERO－MAX",
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U358"
+    },
+    {
+      "name": "Z－メタル・キャタピラー",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
     },
     {
       "name": "いたずら好きな双子悪魔",
@@ -925,6 +943,12 @@
       "unit": "S03-U202"
     },
     {
+      "name": "アーマード・サイバーン",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
+    },
+    {
       "name": "アーマー・ブレイカー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -1061,6 +1085,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U259"
+    },
+    {
+      "name": "インヴェルズの門番",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U462"
     },
     {
       "name": "インヴェルズの魔細胞",
@@ -1385,6 +1415,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U167"
+    },
+    {
+      "name": "オベリスクの巨神兵",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U457"
     },
     {
       "name": "オーバーリミット",
@@ -2599,6 +2635,12 @@
       "unit": "S03-U410"
     },
     {
+      "name": "スペシャル・デュアル・サモン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U466"
+    },
+    {
       "name": "スポーア",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -2645,6 +2687,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U405"
+    },
+    {
+      "name": "スーペルヴィス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U465"
     },
     {
       "name": "ゼロ・ガードナー",
@@ -2729,6 +2777,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U427"
+    },
+    {
+      "name": "ターボ・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U457"
     },
     {
       "name": "ターレット・ウォリアー",
@@ -4159,6 +4213,12 @@
       "unit": "S03-U202"
     },
     {
+      "name": "マシンナーズ・ピースキーパー",
+      "before": "NOT_STARTED",
+      "after": "ENGINE_GAP",
+      "unit": "S03-U469"
+    },
+    {
       "name": "マシンナーズ・フォートレス",
       "before": "TESTED",
       "after": "PARTIAL",
@@ -4897,6 +4957,12 @@
       "unit": "S03-U136"
     },
     {
+      "name": "ヴァイロン・エプシロン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U457"
+    },
+    {
       "name": "ヴァイロン・コンポーネント",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -5135,6 +5201,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U357"
+    },
+    {
+      "name": "二重の落とし穴",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U467"
     },
     {
       "name": "二重召喚",
@@ -6439,6 +6511,12 @@
       "unit": "S03-U186"
     },
     {
+      "name": "強化支援メカ・ヘビーウェポン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U469"
+    },
+    {
       "name": "強引な安全協定",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6659,6 +6737,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U215"
+    },
+    {
+      "name": "救世の儀式",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U457"
     },
     {
       "name": "救世竜 セイヴァー・ドラゴン",
@@ -7807,6 +7891,12 @@
       "unit": "S03-U387"
     },
     {
+      "name": "破邪の大剣－バオウ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U461"
+    },
+    {
       "name": "硫酸のたまった落とし穴",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -8221,6 +8311,12 @@
       "unit": "S03-U221"
     },
     {
+      "name": "草薙剣",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U460"
+    },
+    {
       "name": "荒ぶるアウス",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -8437,6 +8533,12 @@
       "unit": "S03-U374"
     },
     {
+      "name": "超合魔獣ラプテノス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U463"
+    },
+    {
       "name": "超融合",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -8555,6 +8657,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U256"
+    },
+    {
+      "name": "進化の繭",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U464"
     },
     {
       "name": "道連れ",
@@ -8843,6 +8951,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U454"
+    },
+    {
+      "name": "霊滅術師 カイクウ",
+      "before": "IMPLEMENTED",
+      "after": "TESTED",
+      "unit": "S03-U480"
     },
     {
       "name": "霊魂の護送船",

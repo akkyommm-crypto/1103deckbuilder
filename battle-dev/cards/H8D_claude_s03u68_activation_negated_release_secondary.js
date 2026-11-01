@@ -57,6 +57,9 @@ declareActivationNegatedReleaseS03('オーバー・レンチ', {count:true});
 /* ---- 無欲な壺 ---- */
 defineScript('無欲な壺', {
   type:'spell', priority:1,
+  /* S03-U478: 「自分または相手の墓地に存在するカードを合計2枚選択し、持ち主のデッキに戻す」＝固定 2 枚を対象にする（WIKI-E963579D7337 2009-11-26「対象を取る効果ですので、発動時になります」）。
+     targets:true で対象耐性とチェーンリンクの対象（srcS03.tg）が効き、targetCount:2 で メタルシルバー・アーマー の複数対象の例外（engine/1ZZR、S03-U472）が掛かる。 */
+  targets:true, targetCount:2,
   condition(ctx){
     if(API.pileCards(0,'grave').length + API.pileCards(1,'grave').length < 2){
       ctx.reason = '自分・相手の墓地に存在するカードが合計2枚未満です'; return false;

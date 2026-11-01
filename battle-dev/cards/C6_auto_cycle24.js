@@ -120,6 +120,9 @@ defineScript('幻獣の角', {
     }
     if(!d3HornTargets(ctx.player).length){
       ctx.reason = '装備できる獣族・獣戦士族モンスターがいません'; return false; }
+    /* S03-U470: 対象耐性で候補が0になる時は発動の前に断る（装備先は効果の対象） */
+    if(!API.targetableCardsS03(d3HornTargets(ctx.player), ctx.player).length){
+      ctx.reason = '効果の対象にできる獣族・獣戦士族モンスターがいません'; return false; }
     return true;
   },
   selectTargets(ctx, done){

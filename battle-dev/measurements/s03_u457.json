@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U457",
+  "category": "card+engine",
+  "mode": "mixed",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "scope": "remaining CODEX-C03 targeting-immunity consumers: ヴァイロン・エプシロン (+ engine: continuous.scope equippedCards), ターボ・ウォリアー, 救世の儀式; resolution-time source fix for ジュラック・タイタン / 機皇城 / 地天の騎士ガイアドレイク / 安全地帯 / エレキリギリス; オベリスクの巨神兵 recorded as ENGINE_GAP; new test_s03_u457_target_consumers.js",
+  "outcome": "gate 22083 PASS / 0 FAIL (21972 + 111)",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": 0,
+  "later_defects": null,
+  "started_at": "2026-10-20T00:00:00+09:00",
+  "finished_at": "2026-10-20T00:00:00+09:00",
+  "gate_owner": "sonnet-main",
+  "opus_review_minutes": null,
+  "usage": {
+    "source": "none: per-unit tokens not available in this session",
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "effort": null,
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  },
+  "notes": "Single Sonnet subagent session (rate-limit interruption in the middle). Negative controls: card file removed 35 FAIL; the five prep-only migrations reverted 9 FAIL; engine scope reverted 5 FAIL."
+}

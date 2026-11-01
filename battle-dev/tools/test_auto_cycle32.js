@@ -258,34 +258,50 @@ let chCtx=ctxEv(0,ch,'onBattleDamage',
   {player:1,amount:1000,attackerUid:ch.uid},'mz');
 ok('黒蠍－逃げ足のチック positive: 戦闘ダメージを与えた時に誘発する',
    sc('黒蠍－逃げ足のチック').passive.onBattleDamage(chCtx)===true);
-API.confirm=(t,m,yes)=>{ if(yes) yes(); };
 sc('黒蠍－逃げ足のチック').resolve(chCtx);
+/* S03-U62 で resolve() の API.confirm は requestChoice（はい／いいえ）へ移行している。
+   S03-U490: 旧コードはこの yesno の候補を resolveTarget に渡しており（yesno の候補は p/zone/index が null）、
+   TypeError でこのブロックが落ちて、ここから後ろの判定が一度も実行されていなかった。 */
+ok('黒蠍－逃げ足のチック positive: まずフィールドのカードを手札に戻すか尋ねる',
+   !!pending()&&pending().player===0&&pending().kind==='yesno');
+API.answerChoice([pending().candidates.find(c=>c.value===true).key]);
 ok('黒蠍－逃げ足のチック positive: 手札に戻すカードの選択要求が出る',
-   !!pending()&&pending().player===0);
+   !!pending()&&pending().player===0&&pending().kind==='card');
 /* 候補には自分のカードも並ぶ。相手のモンスターを uid で選ぶ。 */
-let chPick=pending().candidates.find(c=>{
-  const r=resolveTarget(c); return r&&r.card&&r.card.uid===chFoe.uid; })
-  ||pending().candidates[0];
+let chPick=pending().candidates.find(c=>c.uid===chFoe.uid)||pending().candidates[0];
 API.answerChoice([chPick.key]);
 ok('黒蠍－逃げ足のチック card-specific: 選んだカードが持ち主の手札に戻る',
    gameState.players[1].mz.length===0&&gameState.players[1].hand.length===1,
    'foeHand='+gameState.players[1].hand.length);
-API.confirm=(t,m,yes,no)=>{ if(no) no(); };
 reset0();
 let ch2=mk('黒蠍－逃げ足のチック',0);
 gameState.players[0].mz=[ch2];ensureCardUid(gameState,ch2);
 gameState.players[1].mz=[];gameState.players[0].sz=[];gameState.players[1].sz=[];
 for(let i=0;i<5;i++) gameState.players[1].deck.push(mk(PLAIN,1));
 let ch2Deck=gameState.players[1].deck.length;
+let ch2Top=gameState.players[1].deck[0];
 let ch2Ctx=ctxEv(0,ch2,'onBattleDamage',
   {player:1,amount:1000,attackerUid:ch2.uid},'mz');
 sc('黒蠍－逃げ足のチック').resolve(ch2Ctx);
-ok('黒蠍－逃げ足のチック positive: フィールドにカードが無ければデッキトップをめくる',
-   !!pending()&&pending().player===0);
+/* S03-U490: 黒蠍自身がフィールドに残っているので「手札に戻す」側は常に選べる（この分岐に入る
+   「フィールドにカードが無い」盤面は実戦では作れない）。めくる側へ進むには「いいえ」を答える。 */
+ok('黒蠍－逃げ足のチック positive: 「いいえ」を選ぶと相手のデッキトップをめくる',
+   !!pending()&&pending().player===0&&pending().kind==='yesno');
+API.answerChoice([pending().candidates.find(c=>c.value===false).key]);
+ok('黒蠍－逃げ足のチック positive: めくったカードを上か下に戻すか尋ねる',
+   !!pending()&&pending().player===0&&pending().kind==='yesno');
+API.answerChoice([pending().candidates.find(c=>c.value===true).key]);   /* 一番上に戻す */
+ok('黒蠍－逃げ足のチック positive: 戻す対象はめくったその1枚だけ',
+   !!pending()&&pending().kind==='card'&&pending().candidates.length===1
+   &&pending().candidates[0].uid===ch2Top.uid,
+   JSON.stringify(pending()&&pending().candidates.map(c=>c.uid)));
 API.answerChoice([pending().candidates[0].key]);
 ok('黒蠍－逃げ足のチック card-specific: めくったカードがデッキに戻り枚数は変わらない',
-   gameState.players[1].deck.length===ch2Deck,
+   gameState.players[1].deck.length===ch2Deck&&!pending(),
    'deck='+ch2Deck+'→'+gameState.players[1].deck.length);
+ok('黒蠍－逃げ足のチック card-specific: 「一番上」を選んだのでデッキトップに戻っている',
+   gameState.players[1].deck[0]&&gameState.players[1].deck[0].uid===ch2Top.uid,
+   'top='+JSON.stringify(gameState.players[1].deck[0]&&gameState.players[1].deck[0].uid));
 ok('黒蠍－逃げ足のチック 隠匿情報: めくったカードは公開（reveal）されていない',
    revealListV20(gameState).length===0,
    'reveals='+revealListV20(gameState).length);
@@ -339,5 +355,5 @@ globalThis.__R=R;`;
 function stub(){return new Proxy({style:{},classList:{add(){},remove(){},toggle(){}},addEventListener(){},appendChild(){},remove(){},querySelector(){return stub()},querySelectorAll(){return[]}},{get:(t,p)=>p in t?t[p]:()=>{}})}
 const nodes=new Map(),document={getElementById(id){if(!nodes.has(id))nodes.set(id,stub());return nodes.get(id)},querySelector(){return stub()},querySelectorAll(){return[]},createElement(){return stub()},addEventListener(){},body:stub(),documentElement:stub()},store=new Map(),localStorage={getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
 const c={console,__DB__:JSON.parse(fs.readFileSync(path.join(ROOT,'data','carddata.json'),'utf8')),document,localStorage,sessionStorage:localStorage,history:{pushState(){}},location:{reload(){}},navigator:{userAgent:'node'},addEventListener(){},removeEventListener(){},requestAnimationFrame:f=>f(),setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,prompt:()=>null,alert(){},Blob,structuredClone:global.structuredClone};c.window=c;c.globalThis=c;
-try{vm.runInNewContext(js,c,{timeout:60000});}catch(e){console.error(e.stack||e);}
+try{vm.runInNewContext(js,c,{timeout:60000});}catch(e){console.error(e.stack||e);process.exitCode=2;/* S03-U490: 途中で落ちた場合、それまでの判定だけが残るため下の !RR.length では拾わない */}
 const RR=c.__R||[];console.log(RR.map(x=>(x.ok?'PASS ':'FAIL ')+x.name+(x.detail?' — '+x.detail:'')).join(String.fromCharCode(10)));if(RR.some(x=>!x.ok)||!RR.length)process.exit(2);

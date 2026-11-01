@@ -262,11 +262,18 @@ function doSetMonster(i){
 function doSetMonsterLegal(i){
   chooseNormalSummonMethod(i,'set',(m,payment)=>finishSetMonster(i,payment,m.id));
 }
-function finishSetMonster(i,payment,methodId){
+function doExtraSetMonsterV370(i,extraNormalKey){
+  chooseNormalSummonMethod(i,'set',(m,payment)=>finishSetMonster(i,payment,m.id,extraNormalKey));
+}
+function finishSetMonster(i,payment,methodId,extraNormalKey){
   payment=payment||{bodies:0,value:0};
   const p=gameState.activePlayer, P=gameState.players[p];
+  if(extraNormalKey){
+    const f=P.temporaryFlags||{};
+    if(String(extraNormalKey).indexOf('src:')===0 ? !!f[String(extraNormalKey).slice(4)+'XnUsedS03'] : Number(f[extraNormalKey]||0)<=0){ showToast('追加通常召喚権がありません'); return; }
+  }
   closeSheet();
-  act(Object.assign({type:"SET_MONSTER",player:p,handIndex:i,tributes:payment.bodies||0,tributeValue:payment.value||0,summonMethod:methodId},
+  act(Object.assign({type:"SET_MONSTER",player:p,handIndex:i,tributes:payment.bodies||0,tributeValue:payment.value||0,summonMethod:methodId,extraNormalKey:extraNormalKey||null},
     (typeof mustSetFaceUp==='function' && mustSetFaceUp()) ? {faceUpSetS03:true} : {}));   /* S03-U194: 聖なる輝き */
 }
 function doSetST(i, toField){

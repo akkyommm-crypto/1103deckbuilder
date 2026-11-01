@@ -120,13 +120,16 @@ ok('ロード・オブ・ドラゴン negative: このカードがいなけれ�
 reset0();
 let hs=mk('ホルスのしもべ',0),horus=mk('ホルスの黒炎竜 LV6',0),other=mk(BIG,0);
 gameState.players[0].mz=[hs,horus,other];
-ok('ホルスのしもべ positive: 「ホルスの黒炎竜」は効果の対象にできない',
-   targetImmune(horus)===true);
+let foeTarget={player:1,db:dbOf(mk('月の書',1))},ownTarget={player:0,db:dbOf(mk('月の書',0))};
+ok('ホルスのしもべ positive: 相手は「ホルスの黒炎竜」を効果の対象にできない',
+   targetImmune(horus,foeTarget)===true);
+ok('ホルスのしもべ negative: 自分は「ホルスの黒炎竜」を効果の対象にできる',
+   targetImmune(horus,ownTarget)===false);
 ok('ホルスのしもべ ruling: 他のドラゴン族は対象にできる',
-   targetImmune(other)===false);
+   targetImmune(other,foeTarget)===false);
 ok('ホルスのしもべ ruling: 名前は3枚を明示列挙している（部分一致していない）',
-   sc('ホルスのしもべ').continuous.immuneToTarget(mk('ホルスの黒炎竜 LV4',0),hs)===true
-   &&sc('ホルスのしもべ').continuous.immuneToTarget(mk('ホルスの黒炎竜 LV8',0),hs)===true);
+   sc('ホルスのしもべ').continuous.immuneToTarget(mk('ホルスの黒炎竜 LV4',0),hs,foeTarget)===true
+   &&sc('ホルスのしもべ').continuous.immuneToTarget(mk('ホルスの黒炎竜 LV8',0),hs,foeTarget)===true);
 
 /* ============ メタルシルバー・アーマー ============ */
 reset0();
@@ -138,9 +141,11 @@ ok('メタルシルバー・アーマー ruling: モンスターにのみ装備�
    sc('メタルシルバー・アーマー').equipSpec.canEquip({db:dbOf(host)})===true
    &&sc('メタルシルバー・アーマー').equipSpec.canEquip({db:dbOf(mk('落とし穴',0))})===false);
 ok('メタルシルバー・アーマー positive: 装備モンスター以外は効果の対象にできない',
-   targetImmune(otherMon)===true&&targetImmune(foeMon)===true);
+   targetImmune(otherMon,foeTarget)===true&&targetImmune(foeMon,foeTarget)===true);
+ok('メタルシルバー・アーマー negative: 自分は装備モンスター以外も効果の対象にできる',
+   targetImmune(otherMon,ownTarget)===false&&targetImmune(foeMon,ownTarget)===false);
 ok('メタルシルバー・アーマー ruling: 装備モンスター自身は対象にできる',
-   targetImmune(host)===false);
+   targetImmune(host,foeTarget)===false);
 
 /* ============ マジック・ストライカー ============ */
 reset0();
@@ -348,5 +353,5 @@ globalThis.__R=R;`;
 function stub(){return new Proxy({style:{},classList:{add(){},remove(){},toggle(){}},addEventListener(){},appendChild(){},remove(){},querySelector(){return stub()},querySelectorAll(){return[]}},{get:(t,p)=>p in t?t[p]:()=>{}})}
 const nodes=new Map(),document={getElementById(id){if(!nodes.has(id))nodes.set(id,stub());return nodes.get(id)},querySelector(){return stub()},querySelectorAll(){return[]},createElement(){return stub()},addEventListener(){},body:stub(),documentElement:stub()},store=new Map(),localStorage={getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
 const c={console,__DB__:JSON.parse(fs.readFileSync(path.join(ROOT,'data','carddata.json'),'utf8')),document,localStorage,sessionStorage:localStorage,history:{pushState(){}},location:{reload(){}},navigator:{userAgent:'node'},addEventListener(){},removeEventListener(){},requestAnimationFrame:f=>f(),setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,prompt:()=>null,alert(){},Blob,structuredClone:global.structuredClone};c.window=c;c.globalThis=c;
-try{vm.runInNewContext(js,c,{timeout:60000});}catch(e){console.error(e.stack||e);}
+try{vm.runInNewContext(js,c,{timeout:60000});}catch(e){console.error(e.stack||e);process.exitCode=2;/* S03-U490: 途中で落ちた場合、それまでの判定だけが残るため下の !RR.length では拾わない */}
 const RR=c.__R||[];console.log(RR.map(x=>(x.ok?'PASS ':'FAIL ')+x.name+(x.detail?' — '+x.detail:'')).join(String.fromCharCode(10)));if(RR.some(x=>!x.ok)||!RR.length)process.exit(2);

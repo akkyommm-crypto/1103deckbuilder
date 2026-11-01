@@ -8,7 +8,7 @@
    - Destruction immunity of Spell / Trap Cards = continuous.protectV21 with scope 'allCards' and an effect / battle function over the protected card (engine/1K applyDestructionProtectionV21 already guards FX_TO_GRAVE and FX_WIPE_ZONE for mz / sz / field cards).
    - フィールドバリア: protectV21 for every Field Spell (either field); activationLockS03 refuses the card activation of a Field Spell (hand or Set); a second face-up copy of mine (a later slot) is destroyed by selfDestroyWhenS03 (the "1枚しか表側表示で存在できない" rule; the one in the LATER Spell & Trap slot goes).
    - 宮廷のしきたり: protectV21 effect + battle for every face-up Continuous Trap but 「宮廷のしきたり」; the same one-copy rule.
-   - 安全地帯: the ACTIVATE chooses a face-up Attack Position monster of either field; the host uid is the card flag u423Host; continuous (scope allMonsters) = immuneToTarget against the OPPONENT's effects (u378Source), protectV21 (battle and the opponent's effects) and cannotDirectAttack, and the two linkOnLeave destroy links. */
+   - 安全地帯: the ACTIVATE chooses a face-up Attack Position monster of either field; the host uid is the card flag u423Host; continuous (scope allMonsters) = immuneToTarget against the OPPONENT's effects (u378SrcOf(effectInfo), S03-U457), protectV21 (battle and the opponent's effects) and cannotDirectAttack, and the two linkOnLeave destroy links. */
 
 function u423Dup(name){
   return (card, p)=>{
@@ -58,9 +58,10 @@ defineUnifiedCardV4('安全地帯', [{
 }], {
   type:'trap', priority:2, targets:true,
   continuous:{ scope:'allMonsters', from:['sz'], apply(){ return null; },
-    immuneToTarget(card, self){
+    immuneToTarget(card, self, effectInfo){
       if(!u423Shield(card, self)) return false;
-      const s = u378Source(), h = locateCardAnyV4(card);
+      /* S03-U457: 解決時の対象選択でも出所（effectInfo）が残るよう u378SrcOf を使う（旧: 発動準備中のみの u378Source()） */
+      const s = u378SrcOf(effectInfo), h = locateCardAnyV4(card);
       return !!s && !!h && s.player!==h.p;
     },
     protectV21:{ key:'u423.safe', battle:(t, src)=>u423Shield(t, src), effect:(t, src)=>u423Shield(t, src), opponentOnly:true, label:'安全地帯' },

@@ -1,0 +1,39 @@
+{
+  "example": false,
+  "unit": "S03-U479",
+  "category": "engine",
+  "mode": "mixed",
+  "scope": "P1.1 requestChoiceV49 source propagation; remove the ガスタのつむじ風 workaround; add targeting:true for 幻惑の巻物 and 異次元への隙間.",
+  "outcome": "success",
+  "gate_exit": 0,
+  "elapsed_minutes": null,
+  "rework_cycles": null,
+  "later_defects": null,
+  "usage": {
+    "source": null,
+    "includes_all_agents": null,
+    "by_model": [
+      {
+        "model": "gpt-5.6-terra",
+        "effort": "medium",
+        "input": null,
+        "output": null,
+        "cache_read": null,
+        "cache_creation": null
+      }
+    ]
+  },
+  "notes": "Dedicated and nearby tests plus source-propagation mutation controls completed. The committed measurement is gated by finish-work's successful serial full gate; token measurements unavailable.",
+  "workflow_profile": "delegation-expanded-v3-batch3",
+  "started_at": null,
+  "finished_at": null,
+  "gate_owner": "sol",
+  "opus_review_minutes": null,
+  "quota": {
+    "window_id": null,
+    "used_percent_start": null,
+    "used_percent_end": null,
+    "reset_during_unit": null,
+    "other_activity": null
+  }
+}

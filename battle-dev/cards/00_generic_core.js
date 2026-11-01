@@ -29,7 +29,8 @@ defineScript("死者蘇生", {
   targets:true,                 // 対象を取る効果
   type:"spell", priority:1,
   condition(ctx){
-    const mons = [0,1].flatMap(p=>API.pileCards(p,'grave',x=>x.db.k==='m' && canEffectSpecialSummonS03(x.card,'grave','死者蘇生')));   /* S03-U144 */
+    /* S03-U468: 墓地のモンスターを効果の対象にできなくする継続効果（メタルシルバー・アーマー）を考慮する：対象に取れるモンスターが1体もいなければ発動できない */
+    const mons = API.targetableCardsS03([0,1].flatMap(p=>API.pileCards(p,'grave',x=>x.db.k==='m' && canEffectSpecialSummonS03(x.card,'grave','死者蘇生'))), ctx.player);   /* S03-U144 */
     if(!mons.length){
       ctx.reason = [0,1].some(p=>API.pileCards(p,'grave',x=>x.db.k==='m').length) ? "墓地に特殊召喚できるモンスターがいません" : "墓地にモンスターがいません";
       return false;
@@ -116,6 +117,8 @@ defineScript("強制脱出装置", {
   type:"trap", priority:2,
   condition(ctx){
     if(!API.fieldCards({zone:'mz'}).length){ ctx.reason = "フィールドにモンスターがいません"; return false; }
+    /* S03-U470: 場のモンスターが全て対象耐性で候補から外れる時は、発動の前に断る（通すと表になったまま不発で残る） */
+    if(!API.targetableCardsS03(API.fieldCards({zone:'mz'}), ctx.player).length){ ctx.reason = "効果の対象にできるモンスターがいません"; return false; }
     return true;
   },
   selectTargets(ctx, done){
@@ -131,6 +134,8 @@ defineScript("月の書", {
   condition(ctx){
     const t = API.fieldCards({zone:'mz', filter:x=>x.card.face==='up'});
     if(!t.length){ ctx.reason = "表側表示のモンスターがいません"; return false; }
+    /* S03-U470: 対象耐性で候補が0になる時は発動の前に断る */
+    if(!API.targetableCardsS03(t, ctx.player).length){ ctx.reason = "効果の対象にできる表側表示のモンスターがいません"; return false; }
     return true;
   },
   selectTargets(ctx, done){
@@ -172,6 +177,7 @@ defineScript("ライトニング・ボルテックス", {
 /* ---- 貪欲な壺（墓地のモンスター5体をデッキに戻して2ドロー） ---- */
 defineScript("貪欲な壺", {
   targets:true,                 // 対象を取る効果
+  targetCount:5,                // S03-U472: 自分の墓地のモンスター5体を対象にする（複数対象。engine/1ZZR の宣言）
   type:"spell", priority:1, quickEffect:false,
   condition(ctx){
     const mons = API.pileCards(ctx.player,'grave',x=>x.db.k==='m');
@@ -230,6 +236,11 @@ defineUnifiedCardV4('リビングデッドの呼び声',[{
     if(!hasMonsterZoneSpace(ctx.player)){ ctx.reason='モンスターゾーンが一杯です'; return false; }
     if(!API.pileCards(ctx.player,'grave',x=>x.db.k==='m').length){
       ctx.reason='自分の墓地にモンスターがいません'; return false;
+    }
+    /* S03-U470: 墓地のモンスターが全て対象耐性（メタルシルバー・アーマー）で候補から外れる時は、発動の前に断る
+       （通すと罠が表になったまま、チェーンも選択も無く残る）。 */
+    if(!API.targetableCardsS03(API.pileCards(ctx.player,'grave',x=>x.db.k==='m'), ctx.player).length){
+      ctx.reason='自分の墓地に効果の対象にできるモンスターがいません'; return false;
     }
     return true;
   },
@@ -302,9 +313,25 @@ defineScript("聖なるバリア －ミラーフォース－", {
   passive:{ onAttackDeclare(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; } }
 });
 
-/* ---- 次元幽閉 ---- */
+/* ---- 次元幽閉 ----
+   S03-U473: 「攻撃モンスター1体を選択して」発動する対象を取る罠（1103 の文言）。以前は targets:true が無く、API.selectCard が targeting=false を導き、
+   filterTargetable（対象耐性）が一度も掛からなかった。targets:true を宣言し、対象にできる攻撃モンスターが無ければ condition で断る（U470 と同じ形）。
+   候補は「今攻撃宣言したモンスター」（pendingAttack.attackerUid）。以前の「attacked なモンスター全て」は、同じターンに先に攻撃した別のモンスターも
+   選べてしまった（対象が攻撃モンスターでなくなる）ため、現在の攻撃モンスターだけに絞る。 */
+function s03DimensionalCandidates(ctx){
+  const all = API.fieldCards({zone:'mz', player:ctx.opponent,
+    filter:x=>x.card.face==='up' && x.card.pos==='atk'});
+  const pa = gameState.pendingAttack;
+  if(pa && pa.attackerUid!=null){
+    const cur = all.filter(x=>x.card.uid===pa.attackerUid);
+    if(cur.length) return cur;
+  }
+  // 攻撃宣言したモンスターを優先して見せる（現在の攻撃モンスターが特定できない時の従来の挙動）
+  const atkd = all.filter(x=>x.card.attacked);
+  return atkd.length?atkd:all;
+}
 defineScript("次元幽閉", {
-  type:"trap", priority:2,
+  type:"trap", priority:2, targets:true,
   condition(ctx){
     const t = API.fieldCards({zone:'mz', player:ctx.opponent,
       filter:x=>x.card.face==='up' && x.card.pos==='atk'});
@@ -312,15 +339,14 @@ defineScript("次元幽閉", {
     if(gameState.phase!=='battle'){ ctx.reason = "相手モンスターの攻撃宣言時に発動します"; return false; }
     /* S03-U40 (C-S03-31): 相手の攻撃宣言（攻撃中）でなければ発動できない。以前は攻撃する側が自分のカードを発動できた */
     { const pa = gameState.pendingAttack; if(!pa || pa.player!==ctx.opponent){ ctx.reason = "相手モンスターの攻撃宣言時に発動します"; return false; } }
+    /* S03-U473: 攻撃モンスターが対象耐性（ホルスのしもべ・オベリスクの巨神兵など）で選べない時は発動しない */
+    if(!API.targetableCardsS03(s03DimensionalCandidates(ctx), ctx.player).length){ ctx.reason = "効果の対象にできる攻撃モンスターがいません"; return false; }
     return true;
   },
   selectTargets(ctx, done){
-    // 攻撃済みのモンスターを優先して見せる（攻撃宣言したモンスターが対象）
-    const all = API.fieldCards({zone:'mz', player:ctx.opponent,
-      filter:x=>x.card.face==='up' && x.card.pos==='atk'});
-    const atkd = all.filter(x=>x.card.attacked);
-    API.selectCard("次元幽閉：除外する攻撃モンスター", atkd.length?atkd:all, x=>done([x]),
-      atkd.length?"攻撃宣言したモンスター":"攻撃表示のモンスター");
+    const cands = s03DimensionalCandidates(ctx);
+    API.selectCard("次元幽閉：除外する攻撃モンスター", cands, x=>done([x]),
+      "攻撃宣言したモンスター");
   },
   resolve(ctx){ ctx.selectedTargets.forEach(t=>API.banish(t, "次元幽閉")); },
   passive:{ onAttackDeclare(ctx){ return ctx.card.face==='down' && ctx.zone==='sz'; } }
@@ -548,7 +574,7 @@ defineScript("異次元からの帰還", {
    forced, 「フィールド上から墓地へ送られた時」 only, no 1ターンに1度 / no activation ban (both are later errata). ---- */
 
 /* ---- スノーマンイーター（リバースで破壊） ---- */
-defineScript("スノーマンイーター", {
+defineScript("スノーマンイーター", { targets:true, /* S03-U476: 「フィールド上に表側表示で存在するモンスター1体を選択して破壊する」は対象を取る（WIKI-1C858F044CF1 2008-12-21「対象をとります」）。未宣言だったため対象耐性が掛からなかった */
   type:"monster", priority:1,
   condition(ctx){
     if(!API.fieldCards({zone:'mz'}).filter(x=>x.card.face==='up').length){
@@ -965,7 +991,17 @@ defineScript("終末の騎士", {
   }
 });
 
-/* ---- E・HERO エアーマン（召喚時に選択：破壊 or サーチ） ---- */
+/* ---- E・HERO エアーマン（召喚時に効果を選択） ---- */
+/* S03-U481: 1103 の「選択して」は対象を取る選択ではない。発動時は効果だけを選び、
+   破壊する魔法・罠は解決時の現在の盤面から選ぶ。choice の継続は Save/Load 安全な登録ハンドラ。 */
+API.registerChoiceHandler('s03u481.airman-destroy', (answer, args)=>{
+  const picks=(typeof v49P1ChoiceCards==='function'?v49P1ChoiceCards(answer):[]);
+  const limit=Math.max(0,Number(args&&args.limit)||0);
+  picks.slice(0,limit).forEach(pick=>{
+    const h=pick&&(pick.uid!=null?findCardByUid(pick.uid):locateCardAnyV4(pick.card));
+    if(h&&h.zone!=='mz') API.destroy(h,'E・HERO エアーマン');
+  });
+});
 defineScript("E・HERO エアーマン", {
   type:"monster", priority:1, quickEffect:false,
   condition(ctx){
@@ -973,19 +1009,10 @@ defineScript("E・HERO エアーマン", {
     return true;
   },
   selectTargets(ctx, done){
-    /* S03-U63: 破壊モードは対象を取る効果なので発動時に対象を宣言する（従来通り）。
-       サーチモードは対象を取らないので、モード選択だけ発動時に行い、
-       「どのカードを加えるか」は解決時（現在のデッキ）に選ぶ（S03-U58パターン）。 */
-    const heroOnField = API.fieldCards({zone:'mz', player:ctx.player})
-      .filter(x=>String(x.db.n||'').indexOf('HERO')>=0 && x.index!==ctx.index).length;
+    /* 発動時に固定するのはモードだけ。候補・枚数は応答後の解決時に読む。 */
     const deckHero = API.pileCards(ctx.player,'deck',
       x=>x.db.k==='m' && !x.db.ex && String(x.db.n||'').indexOf('HERO')>=0);
-    const pickDestroy = ()=>{
-      if(!heroOnField){ showToast("他の「HERO」がいないため破壊できません"); done([]); return; }
-      const st = API.fieldCards().filter(x=>x.zone!=='mz');
-      if(!st.length){ showToast("破壊できる魔法・罠がありません"); done([]); return; }
-      API.selectCard("エアーマン：破壊する魔法・罠", st, x=>done([{mode:'destroy', t:x}]));
-    };
+    const pickDestroy = ()=>done([{mode:'destroy'}]);
     const pickSearch = ()=>{
       if(!deckHero.length){ showToast("デッキに「HERO」がいません"); done([]); return; }
       done([{mode:'search'}]);
@@ -994,7 +1021,7 @@ defineScript("E・HERO エアーマン", {
     if(deckToHandLockReasonV32(ctx.player)){ pickDestroy(); return; }
     API.confirm("E・HERO エアーマン",
       `効果を1つ選んでください。<br>
-       ・破壊：他の「HERO」の数(${heroOnField})まで魔法・罠を破壊<br>
+       ・破壊：他の「HERO」の数まで魔法・罠を破壊<br>
        ・サーチ：デッキから「HERO」を手札に(${deckHero.length}体)`,
       pickSearch,      // はい＝サーチ
       pickDestroy);    // いいえ＝破壊
@@ -1002,7 +1029,16 @@ defineScript("E・HERO エアーマン", {
   resolve(ctx){
     const sel = ctx.selectedTargets[0];
     if(!sel) return;
-    if(sel.mode==='destroy'){ API.destroy(sel.t, "E・HERO エアーマン"); return; }
+    if(sel.mode==='destroy'){
+      const limit=API.fieldCards({zone:'mz',player:ctx.player})
+        .filter(x=>String(x.db.n||'').indexOf('HERO')>=0&&x.card.uid!==ctx.card.uid).length;
+      const spells=API.fieldCards().filter(x=>x.zone!=='mz');
+      if(!limit||!spells.length) return;
+      API.requestChoice({player:ctx.player,kind:'card',title:'エアーマン：破壊する魔法・罠',
+        candidates:spells,min:1,max:Math.min(limit,spells.length),cancelable:false,
+        resume:{handler:'s03u481.airman-destroy',args:{limit}},meta:{scriptName:'E・HERO エアーマン'}});
+      return;
+    }
     const deckHero = API.pileCards(ctx.player,'deck',
       x=>x.db.k==='m' && !x.db.ex && String(x.db.n||'').indexOf('HERO')>=0);
     if(!deckHero.length) return;
@@ -1328,9 +1364,18 @@ defineScript("ゴブリンゾンビ", {
 });
 
 /* ---- 霊滅術師 カイクウ（戦闘ダメージ時に相手墓地を2体まで除外） ---- */
+API.registerChoiceHandler('s03u480.kycoo-count',(a,x)=>{
+  if(a.cancelled) return p11cAbort(x.activation);
+  const picked=a.cards&&a.cards[0],n=Number(picked&&picked.value);
+  if(!targetCountAllowedS03('霊滅術師 カイクウ',n)) return p11cAbort(x.activation);
+  const pool=API.pileCards(x.activation.player===0?1:0,'grave',q=>q.db.k==='m');
+  const ok=p11cOpen(x.activation,{title:`カイクウ：除外する相手墓地のモンスター（${n}体）`,candidates:pool,min:n,max:n,targeting:true,
+    effectInfo:targetEffectSourceS03(x.activation.player,{name:'霊滅術師 カイクウ',targetCount:n}),cancelable:false},'p11cards.commit-targets',{targetCount:n});
+  if(!ok) p11cAbort(x.activation);
+});
 defineScript("霊滅術師 カイクウ", {
   dsTiming:"after",              // ④ 戦闘ダメージを与えた時
-  type:"monster", priority:1, quickEffect:false,
+  type:"monster", priority:1, quickEffect:false, targets:true, targetCountRange:[1,2],
   condition(ctx){
     const g = API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m');
     if(!g.length){ ctx.reason = "相手の墓地にモンスターがいません"; return false; }
@@ -1340,16 +1385,10 @@ defineScript("霊滅術師 カイクウ", {
     }
     return true;
   },
-  selectTargets(ctx, done){
-    const chosen=[];
-    const step=()=>{
-      const left = API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m')
-        .filter(x=>chosen.every(c=>c.card!==x.card));
-      if(chosen.length>=2 || !left.length){ done(chosen); return; }
-      API.selectCard(`カイクウ：除外する相手墓地のモンスター（${chosen.length+1}/2・任意）`, left,
-        t=>{ chosen.push(t); step(); }, "やめると確定");
-    };
-    step();
+  activationV11(ctx,d){
+    const max=Math.min(2,API.pileCards(ctx.opponent,'grave',x=>x.db.k==='m').length);
+    p11cOpen(d,{kind:'option',title:'カイクウ：対象にする枚数',candidates:Array.from({length:max},(_,i)=>({key:`n${i+1}`,label:`${i+1}体`,value:i+1})),
+      min:1,max:1,targeting:false,cancelable:false},'s03u480.kycoo-count',{});
   },
   resolve(ctx){ (ctx.selectedTargets||[]).forEach(t=>API.banish(t, "霊滅術師 カイクウ")); },
   afterResolve(){},
@@ -1616,6 +1655,7 @@ function godBirdTargetsS03U111(ctx, releasedCard){
 }
 defineScript("ゴッドバードアタック", {
   targets:true,                 // 対象を取る効果
+  targetCount:2,                // S03-U472: 対象はフィールドのカード2枚。鳥獣族1体のリリースはコストで、対象には数えない
   type:"trap", priority:2,
   condition(ctx){
     const birds = godBirdBirdsS03U111(ctx);
@@ -1916,23 +1956,29 @@ defineScript("マインドクラッシュ", {
 });
 
 /* ---- ダスト・シュート ---- */
+/* S03-U481: 相手の手札からの選択は対象を取らず、解決時に現在の手札を公開して行う。 */
+API.registerChoiceHandler('s03u481.dustshoot-return', (answer,args)=>{
+  const pick=(typeof v49P1ChoiceCards==='function'?v49P1ChoiceCards(answer)[0]:null);
+  const h=pick&&(pick.uid!=null?findCardByUid(pick.uid):locateCardAnyV4(pick.card));
+  if(!h||h.p!==args.opponent||h.zone!=='hand'||h.db.k!=='m') return;
+  act({type:'FX_RETURN_DECK',player:args.opponent,zone:'hand',index:h.index,toBottom:false,reason:'ダスト・シュート'});
+  API.shuffle(args.opponent);
+});
 defineScript("ダスト・シュート", {
   type:"trap", priority:2,
   condition(ctx){
     if(API.foe(ctx).hand.length<4){ ctx.reason = "相手の手札が4枚未満です"; return false; }
     return true;
   },
-  selectTargets(ctx, done){
-    const foe = gameState.players[ctx.opponent];
-    const mons = foe.hand.map((c,i)=>({p:ctx.opponent,zone:'hand',index:i,card:c,db:dbOf(c)}))
-      .filter(x=>x.db.k==='m');
-    if(!mons.length){ showToast("相手の手札にモンスターがいません"); done([]); return; }
-    API.selectCard("ダスト・シュート：デッキに戻すモンスター", mons, t=>done([t]), "相手の手札を確認");
-  },
+  selectTargets(ctx, done){ done([]); },
   resolve(ctx){
-    const t=ctx.selectedTargets[0]; if(!t) return;
-    act({type:"FX_RETURN_DECK", player:ctx.opponent, zone:'hand', index:t.index, toBottom:false, reason:"ダスト・シュート"});
-    API.shuffle(ctx.opponent);
+    const foe=gameState.players[ctx.opponent];
+    const mons=foe.hand.map((c,i)=>({p:ctx.opponent,zone:'hand',index:i,card:c,db:dbOf(c)})).filter(x=>x.db.k==='m');
+    API.log('ダスト・シュート：相手の現在の手札を公開（'+foe.hand.map(cardName).join('、')+'）');
+    if(!mons.length) return;
+    API.requestChoice({player:ctx.player,kind:'card',title:'ダスト・シュート：デッキに戻すモンスター',
+      candidates:mons,min:1,max:1,cancelable:false,
+      resume:{handler:'s03u481.dustshoot-return',args:{opponent:ctx.opponent}},meta:{scriptName:'ダスト・シュート'}});
   }
 });
 
@@ -1999,13 +2045,44 @@ function s03BloodOfferTributeThenSummon(p, targetCard, method, db, chosen){
   const spent = chosen.reduce((s,x)=>s+(x.value||1),0);
   const remaining = need-spent;
   if(remaining<=0){
+    /* S03-U487: ここは「通常召喚扱いで」の召喚。当時裁定（wiki-rulings）:
+       「まず、500ライフを払い効果を発動します。…そして効果処理の段階で、手札からモンスターを『通常召喚扱いで』召喚します。
+         アドバンス召喚の場合は、その効果処理の時点でリリースします。」
+       S03-U492 で下の 2 件の引用を訂正した（カード名を誤っており、片方の回答日を両方に付けていた）。
+       この 2 件は別のタイミングの裁定である（docs/S03_MISSED_TIMING_DESIGN.md の 1-a）:
+         WIKI-2B88D7C8D921（**回答日なし**／取得 2011-08-26。**召喚成功後の応答**）
+           「この効果による通常召喚に対し《落とし穴》を発動できますか？」
+           →「チェーン１で行われているならば、発動可能です。 チェーン２以上で行われ、召喚の後に別の処理がある場合は
+              タイミングを逃す事になり発動できません。」
+         WIKI-2CF23AA42E79（**回答日 2011-08-25**。**召喚そのものの無効**）
+           「…《神の宣告》や《キックバック》・《昇天の角笛》などの召喚を無効にするカードを発動できますか？」→ 同じ答え。
+       前者は S03-U492 で共通機構に入れた（engine/1ZZX の種別 summonSuccess）。後者（召喚無効の窓）は未対応。
+       以前はここで raw FX_SPECIAL_SUMMON を直接発火していたため、onNormalSummon が一度も発火せず、
+       召喚誘発（《E・HERO エアーマン》《グリーン・ガジェット》等）と、相手の召喚成功時の応答（《奈落の落とし穴》等）が
+       丸ごと失われていた。さらに特殊召喚扱い（specialSummoned / ssHistory）になり、「召喚に成功したターン」の記録
+       （normalSummonSuccessS03）も付かず、アドバンス召喚の手順記録（tributeCount / normalSummonMethod）も残らなかった。
+       正規経路（engine/40 の runSummonWindowResumeS03）と同じ NORMAL_SUMMON（prepaid=true）＋ onNormalSummon にする。 */
+    /* P3: リリース前に素材のスナップショットを取る。場を離れた後では現在ATK等が取れない。identity は uid。
+       （engine/70 の pickTributes と同じ作法） */
+    const matsS487 = chosen.map(ent=>{
+      const c=ent.card; if(!c) return null;
+      ensureCardUid(gameState,c);
+      return (typeof snapshotCardV3==='function')
+        ? snapshotCardV3(c,['atk','def','level','attribute','race','owner','originalAtk'])
+        : null;
+    }).filter(Boolean);
     chosen.forEach(ent=>{
       const loc=locateCardAnyV4(ent.card);
       if(loc) API.sendToGrave(loc, "血の代償（アドバンス召喚のリリース）");
     });
     const hr=locateCardAnyV4(targetCard);
     if(!hr||hr.zone!=='hand') return;
-    act({type:"FX_SPECIAL_SUMMON", player:p, from:'hand', fromIndex:hr.index, pos:'atk', reason:"血の代償（通常召喚扱い）"});
+    act(Object.assign({type:'NORMAL_SUMMON', player:p, handIndex:hr.index, pos:'atk', prepaid:true,
+         tributes:chosen.length, tributeValue:spent, p3Materials:matsS487},
+       (method && method.id!=null) ? {summonMethod:method.id} : {}));
+    const summonedS487=lastSummonedCard(p);
+    /* 解決中なので積むだけにする（チェーン終了後の通常のドレインが処理する。ここで flush すると解決の中へ再入する） */
+    if(summonedS487) queueDeferredEventV2('onNormalSummon',{player:p,name:cardName(summonedS487),card:summonedS487});
     return;
   }
   const used=new Set(chosen.map(x=>x.card));
