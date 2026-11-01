@@ -316,8 +316,8 @@ Object.keys(CARD_SCRIPTS).forEach(nm=>{
   B.none.push(nm);
 });
 const total=Object.keys(B).reduce((a,k)=>a+B[k].length,0);
-ok('D1 ★ 候補は 518 件。内訳は 強制 255 / 宣言 6 / 逃す 208 / 場合 15 / 召喚無効 6 / 文言なし 28（S03-U494 で更新）',
-   total===518 && B.forced.length===255 && B.decl.length===6 && B.drop.length===208
+ok('D1 ★ 候補は 518 件。内訳は 強制 255 / 宣言 7 / 逃す 207 / 場合 15 / 召喚無効 6 / 文言なし 28（S03-U495 で更新）',
+   total===518 && B.forced.length===255 && B.decl.length===7 && B.drop.length===207
    && B.baai.length===15 && B.summonNegate.length===6 && B.none.length===28,
    JSON.stringify(Object.keys(B).reduce((a,k)=>(a[k]=B[k].length,a),{})));
 ok('D2 ★ 「場合」と読める 15 件は落とさない（R7）— 一覧を固定する（S03-U494 で当時の根拠と照合）',
@@ -338,7 +338,7 @@ ok('D4 ★ 文言が読み取れない 24 件（旧「リバース:」表記の�
    && B.none.indexOf('ニードルワーム')>=0 && B.none.indexOf('ペンギン・ソルジャー')>=0
    && B.none.indexOf('ねずみ取り')>=0,
    JSON.stringify({noneDropped:noneDropped.slice(0,8),sample:B.none.slice(0,4)}));
-ok('D5 ★ 落とす 208 件はすべて「時」と読める召喚句を持ち、罠・魔法と「反転召喚に成功した時」の 4 枚を含む',
+ok('D5 ★ 落とす 207 件はすべて「時」と読める召喚句を持ち、罠・魔法と「反転召喚に成功した時」の 4 枚を含む',
    B.drop.every(nm=>{const k=missedTimingTextKindS03(nm);return k.n==='toki'||k.s==='toki'||k.f==='toki';})
    && ['奈落の落とし穴','落とし穴','激流葬','E・HERO エアーマン','ゴブリンドバーグ','連鎖除外','深黒の落とし穴',
        'スカラベの大群','メデューサ・ワーム','ガーディアン・スタチュー','イナゴの軍勢']
@@ -348,9 +348,9 @@ ok('D6 ★ 強制 255 件は配線に当てはまっても落とさない（R1�
    B.forced.filter(nm=>!!CARD_SCRIPTS[nm].forced)
      .every(nm=>missedTimingDropS03({name:nm,eventName:'onNormalSummon'},{stepS03:1})===false),'');
 const ALL=Object.keys(B).reduce((a,k)=>a.concat(B[k]),[]);
-ok('D7 ★ R5 の例外 3 枚は墓地送りの誘発で候補に入らない（R5 の宣言は今も 0 件）。宣言表は R1 の 6 件だけ',
+ok('D7 ★ R5 の例外 3 枚は墓地送りの誘発で候補に入らない（R5 の宣言は今も 0 件）。宣言表は R1 の 6 件と R10 の 1 件',
    ['ダーク・スプロケッター','ファラオの化身','アーケイン・ファイロ'].every(nm=>ALL.indexOf(nm)<0)
-   && Object.keys(MISSED_TIMING_DECL_S03).length===6
+   && Object.keys(MISSED_TIMING_DECL_S03).length===7
    && Object.keys(MISSED_TIMING_DECL_S03).every(k=>MISSED_TIMING_DECL_S03[k].mode==='never'),
    JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)));
 ok('D8 ★ 種別は配線と文言の両方を要求する（どちらか一方では落とさない）',

@@ -150,7 +150,7 @@ const R8_CARDS_S494=['スノーマンイーター','ペンギン・ナイトメ�
   '電池メン－単四型','魔轟神獣ペガラサス'].sort();
 const FLIP_SUMMON_SUCCESS_S494=['スカラベの大群','メデューサ・ワーム','ガーディアン・スタチュー','イナゴの軍勢'];
 const DECL_S494=['サイコ・エンペラー','スノーマンイーター','バーニング・スカルヘッド','リチュア・チェイン',
-  '炎帝近衛兵','素早いビッグハムスター'].sort();
+  '炎帝近衛兵','素早いビッグハムスター','運命のドラ'].sort();
 `;
 
 /* ===== A. テキスト層の時代混在と、召喚語の読み取り（条件1・条件4） ===== */
@@ -317,7 +317,7 @@ ok('D3 ★ negative control: 宣言を外すと同じ盤面で落ち、ダメー
    && gameState.players[1].lp===8000 && zu(U.sec)==='mz',
    JSON.stringify({drops:dropNames(),lp:gameState.players[1].lp}));
 MISSED_TIMING_DECL_S03['バーニング・スカルヘッド']={mode:'never',ruling:'WIKI-A47B4CA77987',reason:'R1 強制（本機構と同じ場面）'};
-ok('D4 ★ 宣言表は 6 件すべて never で、裁定 ID が付いている',
+ok('D4 ★ 宣言表は 7 件すべて never で、裁定 ID が付いている',
    JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03).sort())===JSON.stringify(DECL_S494)
    && Object.keys(MISSED_TIMING_DECL_S03).every(k=>MISSED_TIMING_DECL_S03[k].mode==='never'
         && /^(WIKI|R1103)-/.test(MISSED_TIMING_DECL_S03[k].ruling||''))
@@ -326,7 +326,7 @@ ok('D4 ★ 宣言表は 6 件すべて never で、裁定 ID が付いている'
    JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)));
 resetA();
 gameState.procStepS03=9;
-ok('D5 ★ 宣言した 6 枚は、刻みがずれた候補でもイベントを問わず落とさない',
+ok('D5 ★ 宣言した 7 枚は、刻みがずれた候補でもイベントを問わず落とさない',
    DECL_S494.every(nm=>EVS_S494.every(ev=>
      missedTimingDropS03({name:nm,eventName:ev,ctx:null,event:{flipSummon:true}},{stepS03:3,flipSummon:true})===false)),'');
 ok('D6 ★ R5（任意でも例外的に逃さない）の宣言は今も 0 件 — 例外 3 枚は召喚成功の候補に入っていない',
@@ -389,8 +389,8 @@ ok('E3 ★ 《ラヴァル・グレイター》《ラヴァル・ステライド
      return effs.some(e=>e&&e.forced===true&&(e.events||[]).indexOf('onSpecialSummon')>=0)
        && missedTimingModeS03(nm)===null;})
    && RUL.indexOf('WIKI-D42D50F4CFCD')>=0 && RUL.indexOf('WIKI-2DCE27070FC3')>=0,'');
-ok('E4 ★ 強制と読めるのに落としている 31 枚（43 組）が、設計書に未確定として名前付きで残っている',
-   DOC.indexOf('強制と読めるのに落としているカード 31 枚（43 組）が未確定')>=0
+ok('E4 ★ 強制と読めるのに落としているカードが、設計書に未確定として名前付きで残っている（S03-U495 で 30 枚）',
+   DOC.indexOf('強制と読めるのに落としているカード 30 枚（42 組）が未確定')>=0
    && ['カラクリ商人 壱七七','ものマネ幻想師','スカラベの大群','コアキメイル・ルークロード','赤鬼']
       .every(nm=>DOC.indexOf(nm)>=0)
    && DOC.indexOf('正しい発動を潰している可能性がある側の未確定')>=0,'');
@@ -406,12 +406,12 @@ resetA();
 const A=auditBucketsS494();
 const total=Object.keys(A.B).reduce((a,k)=>a+A.B[k].length,0);
 const pt=Object.keys(A.P).reduce((a,k)=>a+A.P[k],0);
-ok('F1 ★ カード単位 518 件 = 強制 255 / 宣言 6 / 逃す 208 / 場合 15 / 召喚無効 6 / 文言なし 28',
-   total===518 && A.B.forced.length===255 && A.B.decl.length===6 && A.B.drop.length===208
+ok('F1 ★ カード単位 518 件 = 強制 255 / 宣言 7 / 逃す 207 / 場合 15 / 召喚無効 6 / 文言なし 28（S03-U495 で更新）',
+   total===518 && A.B.forced.length===255 && A.B.decl.length===7 && A.B.drop.length===207
    && A.B.baai.length===15 && A.B.summonNegate.length===6 && A.B.none.length===28,
    JSON.stringify(Object.keys(A.B).reduce((a,k)=>(a[k]=A.B[k].length,a),{})));
-ok('F2 ★ イベントごとの組単位 675 組 = 強制 316 / 宣言 7 / 逃す 291 / 場合 18 / 召喚無効 12 / 文言なし 31',
-   pt===675 && A.P.forced===316 && A.P.decl===7 && A.P.drop===291
+ok('F2 ★ イベントごとの組単位 675 組 = 強制 316 / 宣言 8 / 逃す 290 / 場合 18 / 召喚無効 12 / 文言なし 31（S03-U495 で更新）',
+   pt===675 && A.P.forced===316 && A.P.decl===8 && A.P.drop===290
    && A.P.baai===18 && A.P.negate===12 && A.P.none===31,
    JSON.stringify(A.P));
 ok('F3 ★ 「場合」15 件と「文言なし」28 件の一覧を固定する',
@@ -425,10 +425,10 @@ ok('F3 ★ 「場合」15 件と「文言なし」28 件の一覧を固定する
      '幻惑のラフレシア','暗黒のミミック LV1','派手ハネ','渋い忍者','白い忍者','聖なる守り手','裏ガエル','魂を呼ぶ者',
      '魔轟神獣ペガラサス'].sort()),
    JSON.stringify({baai:A.B.baai.length,none:A.B.none.length}));
-ok('F4 ★ 設計書 (B-4) に、当時裁定の裏付けと現代テキストの機械分類の区別（16 / 36 / 156）が書かれている',
+ok('F4 ★ 設計書 (B-4) に、当時裁定の裏付けと現代テキストの機械分類の区別が引き方付きで書かれている（S03-U495 で数え直し）',
    DOC.indexOf('(B-4) 分類の裏付けの区別')>=0
-   && DOC.indexOf('**16 枚**')>=0 && DOC.indexOf('**36 枚**')>=0 && DOC.indexOf('**156 枚**')>=0
-   && DOC.indexOf('208 枚のうち 156 枚（75%）は機械分類だけ')>=0
+   && DOC.indexOf('**16 枚**')>=0 && DOC.indexOf('**59 枚**')>=0 && DOC.indexOf('**125 枚**')>=0
+   && DOC.indexOf('207 枚のうち 125 枚（60%）は機械分類だけ')>=0
    && DOC.indexOf('どちらも安全ではない')>=0,'');
 ok('F5 ★ 「場合」15 件は落とさず、「文言なし」28 件も落とさない（刻みがずれても）',
    A.B.baai.concat(A.B.none).every(nm=>EVS_S494.every(ev=>{
@@ -507,8 +507,8 @@ ok('I2 ★ 5-b に S03-U494 で変わった判定が組数で書かれている�
    DOC.indexOf('5-b. S03-U494 で変わった判定')>=0
    && DOC.indexOf('**12 組 / 11 枚**')>=0 && DOC.indexOf('**1 組**')>=0
    && DOC.indexOf('カード単位の「強制 255」は 1 枚まるごとの静的な読み方')>=0,'');
-ok('I3 ★ 5-a に未確定が 3 件（強制と読める 31 枚・「場合」12 枚・機械分類 162 枚）残っていて、完成とは書かれていない',
-   DOC.indexOf('5-a. 未対応（S03-U494 時点')>=0
+ok('I3 ★ 5-a に未確定（強制と読めるカード・「場合」12 枚・機械分類の多数）が残っていて、完成とは書かれていない',
+   DOC.indexOf('5-a. 未対応（S03-U495 時点')>=0
    && DOC.indexOf('全体は完成していない')>=0
    && DOC.indexOf('| 1-b |')>=0 && DOC.indexOf('| 1-c |')>=0
    && DOC.indexOf('当時の文言が確認できていない')>=0,'');

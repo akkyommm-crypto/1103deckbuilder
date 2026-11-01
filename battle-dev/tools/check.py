@@ -801,6 +801,10 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u493_missed_timing_state_and_aud
 # (R9, WIKI-BC4886A97EED), the flipSummonReverse class is off because the era rulings say a flip effect does
 # not miss the timing (R8, WIKI-B2BFD8FD6AFC), and the 6 cards an era ruling calls mandatory are declared (R1).
 subprocess.run(['node',str(ROOT/'tools/test_s03_u494_missed_timing_era_mixing.js')],check=True)
+# S03-U495: the era sources were being looked up by the `cards` field only, which is the name of the wiki
+# PAGE a ruling sits on - so the rulings that name 《E・HERO エアーマン》 and 《落とし穴》 were invisible. The
+# provenance split is recounted, R10 (no chain block = no activation) is confirmed and 《運命のドラ》 declared.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u495_missed_timing_evidence.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

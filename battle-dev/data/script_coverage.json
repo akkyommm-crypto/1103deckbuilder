@@ -3961,6 +3961,7 @@
         "tools\\test_s03_u487_blood_offering_normal_summon.js",
         "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
+        "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js",
@@ -4086,6 +4087,7 @@
         "tools\\test_s03_u01_raioh_lock.js",
         "tools\\test_s03_u02_effect_count.js",
         "tools\\test_s03_u229_ns21.js",
+        "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_v450_native_cards.js"
       ]
     },
@@ -23582,6 +23584,7 @@
         "tools\\test_class_a_recruit_bulk.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
+        "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_v640_batch16.js"
       ]
@@ -68741,7 +68744,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u181_gladiators2.js"
+        "tools\\test_s03_u181_gladiators2.js",
+        "tools\\test_s03_u495_missed_timing_evidence.js"
       ]
     },
     {
@@ -71144,7 +71148,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle11.js"
+        "tools\\test_auto_cycle11.js",
+        "tools\\test_s03_u495_missed_timing_evidence.js"
       ]
     },
     {
@@ -73201,6 +73206,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_p11_activation_cards.js",
+        "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_v830_batch34.js"
       ]
     },
@@ -79681,7 +79687,8 @@
         "tools\\test_s03_u188_staples.js",
         "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
-        "tools\\test_s03_u494_missed_timing_era_mixing.js"
+        "tools\\test_s03_u494_missed_timing_era_mixing.js",
+        "tools\\test_s03_u495_missed_timing_evidence.js"
       ]
     },
     {
@@ -98505,7 +98512,8 @@
         "tools\\test_s03_u487_blood_offering_normal_summon.js",
         "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
-        "tools\\test_s03_u494_missed_timing_era_mixing.js"
+        "tools\\test_s03_u494_missed_timing_era_mixing.js",
+        "tools\\test_s03_u495_missed_timing_evidence.js"
       ]
     },
     {
@@ -101114,6 +101122,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_scheduler_cards.js",
         "tools\\test_v740_batch26.js"
       ]
@@ -105250,6 +105259,7 @@
         "tools\\test_s03_u299_tg_werewolf_hand_trigger.js",
         "tools\\test_s03_u30_ui_activation_paths.js",
         "tools\\test_s03_u31_manual_card_activation.js",
+        "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u59_future_fusion.js",
         "tools\\test_s03_u60_field_reactivation_guard.js",
         "tools\\test_s03_u66_dark_general_freed_protection.js",
