@@ -159,9 +159,11 @@ ok('B2 ★ 取り消しは FX_TO_GRAVE byDestroy（UI 起点の geminiSummonResu
    STEPS.some(x=>x.t==='FX_TO_GRAVE' && x.byDestroy===true && x.reason==='もう1度召喚を無効')
    && !actTypes().includes('MOVE'),
    JSON.stringify(STEPS.filter(x=>x.t==='FX_TO_GRAVE'||x.t==='MOVE')));
-ok('B3 ★ 破壊なので onDestroy と onSendToGrave が積まれ、墓地の graveInfo にも byDestroy が残る',
+ok('B3 ★ 破壊なので onDestroy・onSendToGrave・onLeaveField が積まれ、墓地の graveInfo にも byDestroy が残る'
+   +'（この枝のモンスターは召喚の前から場に居るので、離脱は本当の離脱である。S03-U502 で手札の枝と分けた）',
    QLOG.some(x=>x.name==='onDestroy'&&x.uid===ids.dual)
    && QLOG.some(x=>x.name==='onSendToGrave')
+   && QLOG.some(x=>x.name==='onLeaveField'&&x.uid===ids.dual)
    && ((graveCard(1,ids.dual)||{}).graveInfo||{}).byDestroy===true,
    JSON.stringify({q:QLOG.map(x=>x.name),g:(graveCard(1,ids.dual)||{}).graveInfo}));
 ok('B4 積んであった召喚成功のイベントは落ちている',
@@ -183,8 +185,11 @@ ok('B6 ★ 手札からの召喚の取り消しは MOVE で、onDestroy も onSe
    && !QLOG.some(x=>x.name==='onDestroy') && !QLOG.some(x=>x.name==='onSendToGrave')
    && !((graveCard(1,ids.mon)||{}).graveInfo),
    JSON.stringify({types:actTypes().filter(t=>t==='MOVE'||t==='FX_TO_GRAVE'),q:QLOG.map(x=>x.name)}));
-ok('B7 ★ ただし onLeaveField はどちらの枝でも積まれる（v9DetectLeaveField は盤面の差分で検出する。5-a #1-i）',
-   QLOG.some(x=>x.name==='onLeaveField'&&x.uid===ids.mon),
+/* B7 は S03-U502 で書き直した。S03-U500 の時点では手札の枝でも onLeaveField が積まれていた（5-a #1-i）。
+   S03-U502 でそこだけ「フィールドに出なかった」扱いにしたので、枝で分かれるようになった:
+   手札からの召喚は離脱を積まず、デュアル再召喚（召喚の前から場に居る）は積む。 */
+ok('B7 ★ 手札からの召喚では onLeaveField も積まれない（S03-U502）。デュアル再召喚の枝だけが積む',
+   !QLOG.some(x=>x.name==='onLeaveField'&&x.uid===ids.mon),
    JSON.stringify(QLOG));
 audit('B6');
 `, {expect:4});

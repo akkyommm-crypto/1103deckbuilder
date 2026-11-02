@@ -243,8 +243,11 @@ ok('D4 ★ 取り除きは MOVE で、onDestroy も onSendToGrave も積まれ�
    && !QLOG_S498.some(e=>e.name==='onDestroy') && !QLOG_S498.some(e=>e.name==='onSendToGrave')
    && !((gameState.players[0].grave.find(c=>c&&c.uid===ids.mon)||{}).graveInfo),
    JSON.stringify({types:actTypes().filter(t=>t==='MOVE'||t==='FX_TO_GRAVE'),queued:QLOG_S498.map(e=>e.name)}));
-ok('D4b ★ ただし onLeaveField はそのモンスターの分が積まれる（v9DetectLeaveField は盤面の差分で検出する。5-a #1-i）',
-   QLOG_S498.some(e=>e.name==='onLeaveField' && e.uid===ids.mon),
+/* D4b は S03-U502 で書き直した。S03-U498 の時点では onLeaveField が積まれてしまっていた（5-a #1-i）。
+   S03-U502 で取り除きの Action に申告（summonNegatedS03）を付け、v9DetectLeaveField が場からの離脱に
+   数えないようにした。当時裁定では「モンスターはフィールドに出なかった」扱いである。 */
+ok('D4b ★ onLeaveField もそのモンスターの分は積まれない（S03-U502 で「フィールドに出なかった」扱いにした）',
+   !QLOG_S498.some(e=>e.name==='onLeaveField' && e.uid===ids.mon),
    JSON.stringify(QLOG_S498));
 ok('D5 《神の宣告》は墓地へ行き、p1 はライフを半分払った',
    zu(ids['神の宣告'])==='grave' && gameState.players[1].lp===4000,

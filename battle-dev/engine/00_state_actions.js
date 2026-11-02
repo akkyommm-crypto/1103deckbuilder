@@ -2777,7 +2777,7 @@ function applyActionBodyV31(gs, a){
   /* System v9: フィールド離脱の検出とイベント発火。
      deferredEvents は digest に含まれるため、act() ではなく
      applyAction 側で積んで Replay と一致させる。 */
-  if(typeof v9DetectLeaveField==='function') v9DetectLeaveField(gs);
+  if(typeof v9DetectLeaveField==='function') v9DetectLeaveField(gs, a);   /* S03-U502: a.summonNegatedS03 */
   /* System v10: 表示形式変更の検出とイベント発火。v9 と同じ理由でここに置く。 */
   if(typeof v10DetectPositionChange==='function') v10DetectPositionChange(gs,a);
   /* S03-U127: 手札・デッキ・EXへ戻ったカードの「正規の方法で特殊召喚された」記録を消す */

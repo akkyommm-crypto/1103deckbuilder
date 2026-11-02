@@ -140,7 +140,14 @@ function applyTokenDestroyDamageS03(gs){
 /* System v26: 裏側になったカードの uid。LAST_DEPARTED_V9 と同じ作法で
    gameState には積まない（再生時は Journal 側が持つ）。 */
 let LAST_FACEDOWN_V26 = [];
-function v9DetectLeaveField(gs){
+/* S03-U502: 召喚を無効にされて取り除かれたモンスターは「フィールドに出なかった」扱いなので、
+   場からの離脱に数えない（設計書 (E) / 5-a #1-i。当時裁定 WIKI-9E991E9B14E9 回答日 2010-04-21
+   「フィールド上で破壊された扱いではない」・WIKI-643A78AB3480 回答日 2008-03-19
+   「『フィールド上のモンスターを破壊する』扱いではありません」・WIKI-933C52FB1EC1 回答日なし
+   「モンスターはフィールドに出なかった」）。
+   申告できるのは取り除きの Action 自身（a.summonNegatedS03 に uid）だけで、他の Action では何も変わらない。
+   ここは applyAction の中なので、Journal 再生でも同じ Action から同じ判断になる。 */
+function v9DetectLeaveField(gs, a){
   gs = gs || gameState;
   if(!gs || !gs.players) return 0;
   const gone = departedFromFieldV9(gs);
@@ -152,6 +159,7 @@ function v9DetectLeaveField(gs){
   if(typeof queueDeferredEventV2 === 'function'
      && typeof PLAY_MODE !== 'undefined' && PLAY_MODE === PLAY_MODES.DUEL){
     gone.forEach(x => {
+      if(a && a.summonNegatedS03 != null && Number(a.summonNegatedS03) === Number(x.uid)) return;   /* S03-U502 */
       const to = whereNowV9(x.uid);
       const evt = makeLeaveFieldEventV9(
         Object.assign({}, x, {toZone:to, byDestroy:(to === 'grave')}));

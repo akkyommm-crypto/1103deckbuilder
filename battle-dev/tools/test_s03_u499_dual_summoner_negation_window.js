@@ -51,7 +51,8 @@ let STEPS=[], OPENS=[], QUEUED=[], EVLOG=[];
       if(d===0)STEPS.push({t:(a&&a.type)||'?',before:b,after:s(),chain:(gameState.chain||[]).length});}};
   const qd=queueDeferredEventV2;queueDeferredEventV2=function(name,evt){
     QUEUED.push({name,step:s(),chain:(gameState.chain||[]).length,
-      mark:!!(evt&&evt.summonNegWindowS03)});
+      mark:!!(evt&&evt.summonNegWindowS03),
+      uid:(evt&&evt.uid)!=null?evt.uid:((evt&&evt.card&&evt.card.uid)!=null?evt.card.uid:null)});
     return qd.apply(this,arguments);};
   const ee=emitEvent;emitEvent=function(name,evt){EVLOG.push(name);return ee.apply(this,arguments);};
 })();
@@ -146,10 +147,14 @@ const r=negateInWindow('神の宣告');
 ok('B3 ★ 召喚は無効になり、モンスターは墓地へ（《デュアル・サモナー》自身は場に残る）',
    r==='done' && zu(ids.mon)==='grave' && zu(ids.src)==='mz',
    JSON.stringify({r,mon:zu(ids.mon),src:zu(ids.src)}));
-ok('B4 ★ 召喚成功のイベントは落ち、破壊でも「フィールドから離れた時」でもない',
-   !EVLOG.includes('onNormalSummon') && !EVLOG.includes('onDestroy') && !EVLOG.includes('onLeaveField')
+/* S03-U502 で uid ごとに見るように直した。イベント名だけで見ると、《神の宣告》が場を離れた分の
+   onLeaveField と区別できない（S03-U500 の教訓と同じで、判定は**そのカードの分**に絞る）。 */
+ok('B4 ★ 召喚成功のイベントは落ち、そのモンスターには破壊も「フィールドから離れた時」も積まれない',
+   !QUEUED.some(x=>x.name==='onNormalSummon'&&x.uid===ids.mon&&x.mark!==true)
+   && !QUEUED.some(x=>x.name==='onDestroy'&&x.uid===ids.mon)
+   && !QUEUED.some(x=>x.name==='onLeaveField'&&x.uid===ids.mon)
    && actTypes().includes('MOVE'),
-   JSON.stringify({ev:EVLOG,types:actTypes()}));
+   JSON.stringify({mon:ids.mon,q:QUEUED,types:actTypes()}));
 ok('B5 p0 はライフを半分払った', gameState.players[0].lp===4000, String(gameState.players[0].lp));
 audit('B');
 `, {expect:6});

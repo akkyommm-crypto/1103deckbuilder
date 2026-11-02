@@ -115,7 +115,10 @@ function summonNegWindowResumeS03(ps, result){
          そのモンスターは召喚の前から場に居るので、「場に届いていない」扱いの MOVE ではなく
          破壊で場を離れる（《神の宣告》《昇天の角笛》の「無効にし破壊する」にあたる）。 */
       else if(ps.resumeS03.geminiS03) act({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, reason:'もう1度召喚を無効', byDestroy:true});
-      else act({type:'MOVE', player:hit.p, from:hit.zone, fromIndex:hit.index, to:'grave'});
+      /* S03-U502: この取り除きは「フィールドに出なかった」扱いなので、場からの離脱にも数えさせない
+         （engine/18 の v9DetectLeaveField が a.summonNegatedS03 を見る）。デュアル再召喚の枝は
+         召喚の前から場に居るので申告しない（あちらの離脱は本当の離脱である）。 */
+      else act({type:'MOVE', player:hit.p, from:hit.zone, fromIndex:hit.index, to:'grave', summonNegatedS03:uid});
     }
   }
   summonNegWindowProcessorResumeS03();

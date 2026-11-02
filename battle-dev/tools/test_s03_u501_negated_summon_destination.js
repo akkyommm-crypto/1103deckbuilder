@@ -167,11 +167,14 @@ baselineA();
 duelActivateFromZone(0,'sz',0);
 ok('A4-0 前提: 窓が開く', driveToResolvedWindow()==='window', 'x');
 const r=negateInWindow('神の宣告');
-ok('A4 ★ 解決中の通常召喚の取り消しも MOVE で、破壊・墓地送りは積まれないが'
-   +'**場からの離脱だけは積まれる**（5-a #1-i。盤面の差分で検出されるため）',
+/* A4 は S03-U502 で書き直した。S03-U501 の実測では場からの離脱だけが積まれていた（5-a #1-i）。
+   S03-U502 でそれを「フィールドに出なかった」扱いにしたので、いまは UI 起点の通常召喚と同じく
+   そのモンスターのイベントが 1 つも積まれない。#1-j（破壊・墓地送りが出ないこと）はまだ未対応。 */
+ok('A4 ★ 解決中の通常召喚の取り消しも MOVE で、そのモンスターのイベントは 1 つも積まれない'
+   +'（S03-U502 で離脱を数えないようにした。UI 起点の通常召喚と同じ形になった）',
    r==='done' && zu(mon.uid)==='grave' && actTypes().includes('MOVE')
-   && ownEvents(mon.uid).indexOf('onDestroy')<0 && ownEvents(mon.uid).indexOf('onSendToGrave')<0
-   && ownEvents(mon.uid).indexOf('onLeaveField')>=0,
+   && ownEvents(mon.uid).join('/')==='onNormalSummon'
+   && (gameState.deferredEvents||[]).every(x=>x.eventName!=='onNormalSummon'),
    JSON.stringify({r,own:ownEvents(mon.uid)}));
 audit('A4');
 `, {expect:3});

@@ -845,6 +845,10 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u500_gemini_resummon_negation_wi
 # the DB from the summon-negation side: it is destroyed and sent to the GY, but NOT destroyed on the field.
 # Design only - this unit does not change behaviour (design doc (E), 5-a #1-j).
 subprocess.run(['node',str(ROOT/'tools/test_s03_u501_negated_summon_destination.js')],check=True)
+# S03-U502: a negated summon's monster is treated as never having been on the field. The removal Action
+# itself declares it (MOVE with summonNegatedS03:<uid>) and v9DetectLeaveField (engine/18) leaves that one
+# card out of the departure it detects from the board diff. Actions without the declaration are unchanged.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u502_negated_summon_not_on_field.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

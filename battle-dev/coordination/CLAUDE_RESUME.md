@@ -10,6 +10,31 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U502 (Opus, claude/work; **behaviour change**, 3 small engine edits + 1 new test): **5-a #1-i is fixed** -
+  a monster removed because its summon was negated is now treated as never having been on the field, so no
+  `onLeaveField` is queued for it. Evidence (from U501's search): `WIKI-9E991E9B14E9` (**2010-04-21**)
+  「フィールド上で破壊された扱いではない」, `WIKI-643A78AB3480` (**2008-03-19**)
+  「『フィールド上のモンスターを破壊する』扱いではありません」, `WIKI-933C52FB1EC1` (undated)
+  「モンスターはフィールドに出なかった」. **How**: the removal Action itself declares it - `MOVE` with
+  `summonNegatedS03:<uid>` - and `v9DetectLeaveField` (`engine/18`, which detects departures from a **board
+  snapshot diff**) leaves that one card out. The declaration had to ride on the Action, not a module variable,
+  because that detector runs **inside applyAction**, so a Journal replay re-derives these events rather than
+  reading them back; `engine/00` now passes the Action to it. Actions without the declaration are unchanged, and
+  three negative controls pin that (a plain `MOVE` still queues the departure; a declared one does not; a
+  declaration whose uid does not match still queues it). The declaration is attached at **one place only** - the
+  cancel of a summon that came from the hand - so the flip and Gemini re-summon branches (whose monster was on the
+  field before the summon) keep their real departure, and that split is pinned too. Affected set: **57 scripts**
+  with an `onLeaveField` passive could previously respond to this phantom departure. **Still 未対応: #1-j**, the
+  other half - a negated summon queues no `onDestroy` / `onSendToGrave`, while `WIKI-EFB088FAC57A`
+  (**2010-05-17**) says 「破壊され墓地へ送られた時」 effects do fire; 176 Normal-Summonable monsters are in that
+  set, and fixing it needs the third removal form described in design doc (E). Four assertions that pinned the
+  defect were rewritten, not weakened: U498's D4b, U499's B4 (now per-uid, because the trap's own departure shares
+  the event name), U500's B3/B7 (now the branch split) and U501's A4. Files: `engine/18_leave_field_v9.js`,
+  `engine/00_state_actions.js`, `engine/1ZZY_summon_negation_window_s03.js`, design doc (5-a #1-i rewritten as
+  fixed, (E) updated, the stage row), `docs/S03_U502_REPORT.md`, `tools/check.py`, `tools/script_coverage.py`,
+  `tools/test_s03_u502_negated_summon_not_on_field.js` (**26 PASS**).
+  Related: u494 51 / u496 35 / u497 32 / u498 74 / u499 34 / u500 35 / u501 26 / u502 26 and the 27
+  blood-offer / summon-negation / gemini / leave-field / GY tests (844) = **1157 PASS / 0 FAIL**.
 - S03-U501 (Opus, claude/work; docs + 1 new test only, **no behaviour change**): **where a negated summon's
   monster goes was measured against the era rulings, and it does not match.** U498-U500 decided the cancel form
   from `WIKI-2CF23AA42E79` alone, which is about the window, not about the destination. Searching the DB from the
