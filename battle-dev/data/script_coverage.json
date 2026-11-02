@@ -3970,6 +3970,7 @@
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u496_missed_timing_published_scope.js",
         "tools\\test_s03_u498_summon_negation_window.js",
+        "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js",
@@ -4098,6 +4099,7 @@
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u496_missed_timing_published_scope.js",
         "tools\\test_s03_u498_summon_negation_window.js",
+        "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_v450_native_cards.js"
       ]
     },
@@ -20553,6 +20555,7 @@
         "tools\\test_s03_u276_gap4.js",
         "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u502_negated_summon_not_on_field.js",
+        "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_token_cards.js",
         "tools\\test_v500_batch02.js"
       ]
@@ -23626,6 +23629,7 @@
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
+        "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_v640_batch16.js"
       ]
@@ -38859,7 +38863,8 @@
         "tools\\test_s03_u205_partial8.js",
         "tools\\test_s03_u296_choice_release_replay.js",
         "tools\\test_s03_u462_invellz_gatekeeper.js",
-        "tools\\test_s03_u498_summon_negation_window.js"
+        "tools\\test_s03_u498_summon_negation_window.js",
+        "tools\\test_s03_u503_face_up_defence_normal_summon.js"
       ]
     },
     {
@@ -62060,6 +62065,7 @@
         "tools\\test_s03_u500_gemini_resummon_negation_window.js",
         "tools\\test_s03_u501_negated_summon_destination.js",
         "tools\\test_s03_u502_negated_summon_not_on_field.js",
+        "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
@@ -93583,6 +93589,7 @@
         "tools\\test_s03_u500_gemini_resummon_negation_window.js",
         "tools\\test_s03_u501_negated_summon_destination.js",
         "tools\\test_s03_u502_negated_summon_not_on_field.js",
+        "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
     },
@@ -97107,7 +97114,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u194_spells_traps.js",
-        "tools\\test_s03_u493_missed_timing_state_and_audit.js"
+        "tools\\test_s03_u493_missed_timing_state_and_audit.js",
+        "tools\\test_s03_u503_face_up_defence_normal_summon.js"
       ]
     },
     {

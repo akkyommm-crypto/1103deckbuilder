@@ -627,6 +627,9 @@ CARD_TEST_FOCUS = {
                                                     "デュアル・ソルジャー", "ワイト"},
     "test_s03_u502_negated_summon_not_on_field.js": {"血の代償", "神の宣告", "ワイト", "クリボー",
                                                      "デュアル・サモナー", "デュアル・ソルジャー"},
+    "test_s03_u503_face_up_defence_normal_summon.js": {"聖なる輝き", "ゴブリンドバーグ",
+                                                       "E・HERO エアーマン", "E・HERO オーシャン",
+                                                       "神の宣告", "デーモンの召喚", "クリボー", "ワイト"},
 }
 
 

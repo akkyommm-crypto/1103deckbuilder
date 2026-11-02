@@ -230,12 +230,22 @@ function pickTributes(p, need, chosen, onDone, db, method, mode){
     }, '2体分にできるモンスターは、選択後に1体分/2体分を選べます');
 }
 
-function finishNormalSummon(i, pos, payment, methodId, extraNormalKey){
+/* S03-U503: 表側守備表示での通常召喚。《聖なる輝き》がある状態の「セット」がこれになる:
+     WIKI-0B439F71B94A（**回答日 2011-04-18**、掲載ページ《ゴブリンドバーグ》）
+       「《聖なる輝き》が存在するときに表側守備表示で通常召喚して効果を使用した場合、守備表示になる
+         処理は行われません。また、この場合《E・HERO エアーマン》の効果を発動することができます。」
+   **pos 引数は使わない。**（実測: engine/60 の FREE モードの盤面には「通常召喚（守備）」ボタンがあり
+   doNormalSummon(i,'def') を呼ぶ。pos を使うとその公開済みの挙動まで変わってしまう。
+   当時のルールでは通常召喚の表示形式は表側攻撃表示だけで、表側守備表示になるのは《聖なる輝き》が
+   ある状態の「セット」だけである。）
+   振り替えは doSetMonster / finishSetMonster が mustSetFaceUp() を見て optsS503 を渡したときだけ。 */
+function finishNormalSummon(i, pos, payment, methodId, extraNormalKey, optsS503){
   payment=payment||{bodies:0,value:0};
+  const posS503=(optsS503 && optsS503.faceUpDefS503===true)?'def':'atk';   /* S03-U503 */
   const p=gameState.activePlayer, P=gameState.players[p], card=P.hand[i]; if(!card) return;
   const nm=cardName(card);
   if(PLAY_MODE!==PLAY_MODES.DUEL){
-    closeSheet(); act({type:"NORMAL_SUMMON",player:p,handIndex:i,pos:'atk',tributes:payment.bodies,tributeValue:payment.value,summonMethod:methodId,p3Materials:payment.p3Materials||[]});
+    closeSheet(); act({type:"NORMAL_SUMMON",player:p,handIndex:i,pos:posS503,tributes:payment.bodies,tributeValue:payment.value,summonMethod:methodId,p3Materials:payment.p3Materials||[]});
     const summoned=lastSummonedCard(p);
     EVT_AFTER=()=>{ offerSummonTrigger(p,nm); offerReactAfter(p===0?1:0); };
     if(!emitEvent("onNormalSummon",{player:p,name:nm,card:summoned})){ EVT_AFTER=null; askChain(`${nm} の召喚`,()=>{offerSummonTrigger(p,nm);offerReactAfter(p===0?1:0);}); }
@@ -250,13 +260,19 @@ function finishNormalSummon(i, pos, payment, methodId, extraNormalKey){
   act({type:'NORMAL_SUMMON_ATTEMPT',player:p,name:nm,extraNormalKey:extraNormalKey||null});
   /* S03-U15: 続きは pendingSummon.resumeS03 から runSummonWindowResumeS03 が実行する（保存・Undo を跨げる）。 */
   PENDING_SUMMON_COMMIT=PENDING_SUMMON_CANCEL=null;
-  const resumeS03=Object.assign({uid:card.uid,tributes:payment.bodies,tributeValue:payment.value,p3Materials:payment.p3Materials||[]},methodId!=null?{summonMethod:methodId}:{});
-  beginSummonWindowV2({player:p,name:nm,kind:'normal',label:extraNormalKey?'追加通常召喚':'通常召喚',uid:card.uid,commit:'__pendingSummonCommit',cancel:'__pendingSummonCancel',resumeS03});
+  const resumeS03=Object.assign({uid:card.uid,tributes:payment.bodies,tributeValue:payment.value,p3Materials:payment.p3Materials||[]},
+    posS503==='def'?{pos:'def'}:{}, methodId!=null?{summonMethod:methodId}:{});   /* S03-U503 */
+  const labelS503=(extraNormalKey?'追加通常召喚':'通常召喚')+(posS503==='def'?'（表側守備表示）':'');
+  beginSummonWindowV2({player:p,name:nm,kind:'normal',label:labelS503,uid:card.uid,commit:'__pendingSummonCommit',cancel:'__pendingSummonCancel',resumeS03});
 }
 function doSetMonster(i){
   const p = gameState.activePlayer;
+  /* S03-U503: 《聖なる輝き》がある場合は表側守備表示の通常召喚へ振り替える（WIKI-0B439F71B94A 11/04/18） */
+  if(typeof mustSetFaceUp==='function' && mustSetFaceUp()){
+    showToast('聖なる輝き：表側守備表示で通常召喚します');
+    finishNormalSummon(i,'atk',null,null,null,{faceUpDefS503:true}); return; }
   closeSheet();
-  act(Object.assign({type:"SET_MONSTER", player:p, handIndex:i}, (typeof mustSetFaceUp==='function' && mustSetFaceUp()) ? {faceUpSetS03:true} : {}));   /* S03-U194 */
+  act({type:"SET_MONSTER", player:p, handIndex:i});
 }
 /* DUELモード用：特殊な通常召喚手順をセットにも共通適用する。 */
 function doSetMonsterLegal(i){
@@ -272,9 +288,13 @@ function finishSetMonster(i,payment,methodId,extraNormalKey){
     const f=P.temporaryFlags||{};
     if(String(extraNormalKey).indexOf('src:')===0 ? !!f[String(extraNormalKey).slice(4)+'XnUsedS03'] : Number(f[extraNormalKey]||0)<=0){ showToast('追加通常召喚権がありません'); return; }
   }
+  /* S03-U503: 《聖なる輝き》がある場合は表側守備表示の通常召喚へ振り替える（WIKI-0B439F71B94A 11/04/18）。
+     リリースの支払いはここまでで済んでいる。 */
+  if(typeof mustSetFaceUp==='function' && mustSetFaceUp()){
+    showToast('聖なる輝き：表側守備表示で通常召喚します');
+    finishNormalSummon(i,'atk',payment,methodId,extraNormalKey,{faceUpDefS503:true}); return; }
   closeSheet();
-  act(Object.assign({type:"SET_MONSTER",player:p,handIndex:i,tributes:payment.bodies||0,tributeValue:payment.value||0,summonMethod:methodId,extraNormalKey:extraNormalKey||null},
-    (typeof mustSetFaceUp==='function' && mustSetFaceUp()) ? {faceUpSetS03:true} : {}));   /* S03-U194: 聖なる輝き */
+  act({type:"SET_MONSTER",player:p,handIndex:i,tributes:payment.bodies||0,tributeValue:payment.value||0,summonMethod:methodId,extraNormalKey:extraNormalKey||null});
 }
 function doSetST(i, toField){
   const p = gameState.activePlayer;

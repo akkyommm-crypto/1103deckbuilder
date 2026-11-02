@@ -10,6 +10,40 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U503 (Opus, claude/work; **behaviour change**, 3 engine edits + 1 new test): **the face-up Defence
+  Position Normal Summon exists now** - 5-a item 3, which had a **dated** ruling and no implementation.
+  `WIKI-0B439F71B94A` (**answer date 2011-04-18**, page 《ゴブリンドバーグ》): with 《聖なる輝き》 on the field a
+  "set" is a **Normal Summon in face-up Defence Position**, the 「守備表示になる」 step of ゴブリンドバーグ does
+  **not** happen, and 《E・HERO エアーマン》 therefore does **not** miss the timing. That is the mirror of
+  `WIKI-9FC5B41EDCF4` (**2011-04-17**) which S03-U493 used for the face-up Attack case (where it DOES miss).
+  Before this unit the forced placement was a plain `SET_MONSTER` with `faceUpSetS03` (S03-U194): the board ended
+  face-up/def but there was **no onNormalSummon, no summon-negation window and no summonedTurn**, so the dated
+  ruling could not be reproduced on a real path. Now: `NORMAL_SUMMON` honours a position declaration
+  (`a.pos==='def'`; without it nothing changes, so existing Journals replay identically),
+  `runSummonWindowResumeS03` passes `resumeS03.pos`, and the two set entry points in `engine/70`
+  (`doSetMonster`, `finishSetMonster`) route to a new `finishFaceUpDefSummonS03` **only while
+  `mustSetFaceUp()` is true**. 《ゴブリンドバーグ》 itself needed no change - its defence step was already
+  guarded by `pos!=='def'`. Measured both sides: with 《聖なる輝き》 the steps are NORMAL_SUMMON 0->1 /
+  FX_SPECIAL_SUMMON 1->2 / FX_SEARCH 2->3 and nothing is dropped; without it, FX_SET_STATE 2->3 appears and
+  エアーマン is dropped, exactly as S03-U493 fixed it. The summon is now negatable by 《神の宣告》 (a set was
+  not), and the Normal Summon right is not refunded (WIKI-2C8BE04F46E9, 2007-03-26). Negative controls: a set
+  without 《聖なる輝き》 is still a face-down `SET_MONSTER` with no events and no window, and a `NORMAL_SUMMON`
+  without the declaration is still face-up Attack. U194's block D was strengthened, not weakened (it now also
+  checks `summonedTurn` and the summon right, and its comment states the ruling). Files:
+  `engine/00_state_actions.js`, `engine/40_legal_script_engine.js`, `engine/70_summon_procedures.js`,
+  design doc (item 3 rewritten as fixed + the stage row), `docs/S03_U503_REPORT.md`, `tools/check.py`,
+  `tools/script_coverage.py`, `tools/test_s03_u503_face_up_defence_normal_summon.js` (**35 PASS**).
+  **The first full gate caught a real mistake.** The first implementation added a separate function whose
+  FREE-mode branch called `emitEvent` directly, and `tools/test_s03_u483_event_identity_closure.js` audits
+  those call sites per file (engine/70: 4 found vs 3 pinned) - the gate failed on it. It also turned out that
+  `engine/60` (the FREE-mode board) already has a 「通常召喚（守備）」 button calling `doNormalSummon(i,
+  'def')`, so using `finishNormalSummon`'s long-ignored `pos` argument - the obvious simplification - would
+  have changed that published behaviour too. Final shape: no new function and no new emitEvent site; the two
+  set entry points pass a dedicated `{faceUpDefS503:true}` option, `pos` stays unused, and U493's G2 (which
+  pins exactly that `pos` is ignored) passes unchanged with only its wording corrected.
+  Still 未対応 in this area: `WIKI-1120DC4371F9` (2010-07-05) 「裏側守備表示にする処理は行いません」 is a
+  different path and was not touched. Related: u194 27 / u493 56 / u494 51 / u496 35 / u498 74 / u501 26 /
+  u502 26 / u503 35 and the 16 set-monster tests (758) = **1088 PASS / 0 FAIL**.
 - S03-U502 (Opus, claude/work; **behaviour change**, 3 small engine edits + 1 new test): **5-a #1-i is fixed** -
   a monster removed because its summon was negated is now treated as never having been on the field, so no
   `onLeaveField` is queued for it. Evidence (from U501's search): `WIKI-9E991E9B14E9` (**2010-04-21**)

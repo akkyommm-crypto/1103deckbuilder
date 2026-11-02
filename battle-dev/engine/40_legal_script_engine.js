@@ -327,7 +327,8 @@ function runSummonWindowResumeS03(ps,result){
     if(ps.kind==='normal'){
       if(!hit||hit.zone!=='hand') return false;
       const p=ps.player;
-      act({type:'NORMAL_SUMMON',player:p,handIndex:hit.index,pos:'atk',tributes:r.tributes,tributeValue:r.tributeValue,prepaid:true,summonMethod:r.summonMethod,p3Materials:r.p3Materials||[]});
+      /* S03-U503: 表側守備表示の通常召喚（《聖なる輝き》）。申告が無ければ攻撃表示。 */
+      act({type:'NORMAL_SUMMON',player:p,handIndex:hit.index,pos:(r.pos==='def')?'def':'atk',tributes:r.tributes,tributeValue:r.tributeValue,prepaid:true,summonMethod:r.summonMethod,p3Materials:r.p3Materials||[]});
       const summoned=lastSummonedCard(p);
       if(summoned) queueDeferredEventV2('onNormalSummon',{player:p,name:ps.name,card:summoned});
       flushDeferredEventsV2(); return true;

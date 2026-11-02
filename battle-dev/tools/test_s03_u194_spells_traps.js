@@ -61,12 +61,16 @@ duelActivateFromZone(0,'sz',0);drive();
 ok('C: 1000 paid; ワイト (300) cannot attack, ブラッド・ヴォルス (1900) can',gameState.players[0].lp===7000&&cannotAttackNow(C(low))===true&&!cannotAttackNow(C(hi2)),JSON.stringify([gameState.players[0].lp,C(lw).wallValue]));
 audit('C');
 
-/* ===== D: 聖なる輝き — a monster "set" is placed face-up in Defense Position ===== */
+/* ===== D: 聖なる輝き — a monster "set" is placed face-up in Defense Position =====
+   S03-U503: the era ruling WIKI-0B439F71B94A (answer date 2011-04-18) calls this a Normal Summon in face-up
+   Defense Position, not a set, so this now goes through the Normal Summon path (the summon-negation window and
+   onNormalSummon included). The end state asserted here is unchanged; summonedTurn is added to show it was
+   summoned. */
 fresh();
 let hs=mk('聖なる輝き',0,'up'),sm=mk('ブラッド・ヴォルス',0);gameState.players[0].sz=[hs];gameState.players[0].hand=[sm];baselineA();
 const setA=getLegalHandActions(0,0).find(a=>a.id==='setMonster');
 if(setA)(new Function(setA.run))();drive();
-ok('D: the set monster is face-up Defense',!!setA&&z(sm)==='mz'&&C(sm).face==='up'&&C(sm).pos==='def',JSON.stringify({set:!!setA,z:z(sm),f:z(sm)==='mz'?C(sm).face:null}));
+ok('D: the set monster is face-up Defense (S03-U503: a Normal Summon in face-up Defense Position)',!!setA&&z(sm)==='mz'&&C(sm).face==='up'&&C(sm).pos==='def'&&C(sm).summonedTurn===gameState.turn&&gameState.players[0].normalSummonUsed===true,JSON.stringify({set:!!setA,z:z(sm),f:z(sm)==='mz'?C(sm).face:null,st:z(sm)==='mz'?C(sm).summonedTurn:null}));
 audit('D');
 
 /* ===== E: R－ライトジャスティス — as many Spell / Trap cards as 「E・HERO」 cards (the Field Zone too); fewer → all ===== */

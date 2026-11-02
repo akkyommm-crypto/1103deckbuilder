@@ -2213,7 +2213,13 @@ function applyActionBodyV31(gs, a){
       if(P.mz.length >= ZONE_LIMITS.mz){ logIt(gs, `モンスターゾーンが一杯です`); break; }
       const card = removeFrom(P, "hand", a.handIndex);
       if(!card) break;
-      card.face='up'; card.pos='atk'; card.attacked=false;
+      /* S03-U503: 表側守備表示での通常召喚。《聖なる輝き》がある状態の「セット」はこれになる。
+         当時裁定 WIKI-0B439F71B94A（**回答日 2011-04-18**）:
+           「《聖なる輝き》が存在するときに表側守備表示で通常召喚して効果を使用した場合、
+             守備表示になる処理は行われません。また、この場合《E・HERO エアーマン》の効果を
+             発動することができます。(11/04/18)」
+         申告（a.pos==='def'）が無ければ今までどおり攻撃表示なので、既存の Journal はそのまま再生される。 */
+      card.face='up'; card.pos=(a.pos==='def')?'def':'atk'; card.attacked=false;
       if(P.temporaryFlags) P.temporaryFlags.normalSummonSuccessS03 = true;   /* S03-U266: 「自分がモンスターの召喚に成功したターン」 (Normal / Tribute Summon only) */
       card.summonedTurn = gs.turn; if(P.temporaryFlags) P.temporaryFlags.summonedThisTurnS03 = true;   /* S03-U129: このターン召喚した記録（スケープ・ゴート等） */
       card.tributeCount = a.tributes || 0;          // 実際にリリースしたカード枚数
@@ -2231,7 +2237,7 @@ function applyActionBodyV31(gs, a){
          effect — granted with the summon (once per turn), read by extraNormalSummonKeyV370. */
       { const gk=(CARD_SCRIPTS[cardName(card)]||{}).grantExtraNormalOnSummonS03;
         if(gk && P.temporaryFlags && !P.temporaryFlags[gk+'GrantedS03']){ P.temporaryFlags[gk]=1; P.temporaryFlags[gk+'GrantedS03']=true; } }
-      logIt(gs, `<b>通常召喚成功</b>：${cardName(card)}（攻撃表示）`);
+      logIt(gs, `<b>通常召喚成功</b>：${cardName(card)}（${card.pos==='def'?'表側守備表示':'攻撃表示'}）`);   /* S03-U503 */
       break;
     }
 

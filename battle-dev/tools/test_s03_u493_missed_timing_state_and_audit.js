@@ -482,7 +482,11 @@ gameState.players[0].hand=[mk('ワイト',0)];
 gameState.players[0].sz=[mk('聖なる輝き',0,'up')];
 baselineA();
 doNormalSummon(0,'def');
-ok('G2 ★ 《聖なる輝き》でも表側守備表示の通常召喚はできない（未実装）ので、WIKI-0B439F71B94A の裏返しは再現できない',
+/* S03-U503 で文言を事実に合わせた（assertion はそのまま）:
+   通常召喚の表示形式は選べない（doNormalSummon の pos は使われない）。
+   表側守備表示になるのは《聖なる輝き》がある状態の「セット」だけで、そちらは S03-U503 で入れた
+   （WIKI-0B439F71B94A の場面は tools/test_s03_u503_* が固定している）。 */
+ok('G2 ★ 通常召喚で表示形式は選べない（pos は使われず常に攻撃表示）。表側守備表示は S03-U503 の「セット」経路だけ',
    (gameState.players[0].mz[0]||{}).pos==='atk' && /WIKI-0B439F71B94A/.test(DOC) && /聖なる輝き/.test(DOC),
    JSON.stringify({pos:(gameState.players[0].mz[0]||{}).pos}));
 ok('G3 ★ 設計書に、許可リストと署名の取りこぼしが「逃さない」側に落ちることが書かれている',

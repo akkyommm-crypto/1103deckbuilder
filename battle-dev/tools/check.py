@@ -849,6 +849,11 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u501_negated_summon_destination.
 # itself declares it (MOVE with summonNegatedS03:<uid>) and v9DetectLeaveField (engine/18) leaves that one
 # card out of the departure it detects from the board diff. Actions without the declaration are unchanged.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u502_negated_summon_not_on_field.js')],check=True)
+# S03-U503: the face-up Defence Position Normal Summon (5-a item 3). With 《聖なる輝き》 on the field a
+# "set" is, per WIKI-0B439F71B94A (answer date 2011-04-18), a Normal Summon in face-up Defence Position;
+# NORMAL_SUMMON now takes a position declaration and the two set entry points route to it. Without the
+# declaration, and without 《聖なる輝き》, nothing changes.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u503_face_up_defence_normal_summon.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
