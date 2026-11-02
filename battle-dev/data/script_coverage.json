@@ -9798,7 +9798,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u221_ns13.js",
-        "tools\\test_s03_u227_ns19.js"
+        "tools\\test_s03_u227_ns19.js",
+        "tools\\test_s03_u501_negated_summon_destination.js"
       ]
     },
     {
@@ -25162,6 +25163,7 @@
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u487_blood_offering_normal_summon.js",
         "tools\\test_s03_u497_summon_negation_window_order.js",
+        "tools\\test_s03_u501_negated_summon_destination.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs5_battle_trigger_slice.js",
@@ -38583,7 +38585,8 @@
         "tools\\test_auto_cycle15.js",
         "tools\\test_s03_u164_dual_summoner.js",
         "tools\\test_s03_u499_dual_summoner_negation_window.js",
-        "tools\\test_s03_u500_gemini_resummon_negation_window.js"
+        "tools\\test_s03_u500_gemini_resummon_negation_window.js",
+        "tools\\test_s03_u501_negated_summon_destination.js"
       ]
     },
     {
@@ -38632,7 +38635,8 @@
       "tests": [
         "tools\\test_s03_u165_protections3.js",
         "tools\\test_s03_u499_dual_summoner_negation_window.js",
-        "tools\\test_s03_u500_gemini_resummon_negation_window.js"
+        "tools\\test_s03_u500_gemini_resummon_negation_window.js",
+        "tools\\test_s03_u501_negated_summon_destination.js"
       ]
     },
     {
@@ -56011,6 +56015,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u02_effect_count.js",
+        "tools\\test_s03_u501_negated_summon_destination.js",
         "tools\\test_v660_batch18.js"
       ]
     },
@@ -62050,6 +62055,7 @@
         "tools\\test_s03_u499_dual_summoner_negation_window.js",
         "tools\\test_s03_u49_battle_fader_once_per_chain.js",
         "tools\\test_s03_u500_gemini_resummon_negation_window.js",
+        "tools\\test_s03_u501_negated_summon_destination.js",
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
@@ -93571,6 +93577,7 @@
         "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u499_dual_summoner_negation_window.js",
         "tools\\test_s03_u500_gemini_resummon_negation_window.js",
+        "tools\\test_s03_u501_negated_summon_destination.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
     },
@@ -98682,7 +98689,8 @@
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u496_missed_timing_published_scope.js",
         "tools\\test_s03_u497_summon_negation_window_order.js",
-        "tools\\test_s03_u498_summon_negation_window.js"
+        "tools\\test_s03_u498_summon_negation_window.js",
+        "tools\\test_s03_u501_negated_summon_destination.js"
       ]
     },
     {

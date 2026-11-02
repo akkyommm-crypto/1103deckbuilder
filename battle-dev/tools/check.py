@@ -841,6 +841,10 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u499_dual_summoner_negation_wind
 # (FX_TO_GRAVE byDestroy, the same form the UI-initiated window uses) instead of the MOVE used for a
 # summon from the hand, because that monster is on the field before the summon.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u500_gemini_resummon_negation_window.js')],check=True)
+# S03-U501: where a negated summon's monster goes. Measured against four dated rulings found by searching
+# the DB from the summon-negation side: it is destroyed and sent to the GY, but NOT destroyed on the field.
+# Design only - this unit does not change behaviour (design doc (E), 5-a #1-j).
+subprocess.run(['node',str(ROOT/'tools/test_s03_u501_negated_summon_destination.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

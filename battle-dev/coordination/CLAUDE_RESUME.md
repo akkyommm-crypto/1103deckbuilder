@@ -10,6 +10,32 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U501 (Opus, claude/work; docs + 1 new test only, **no behaviour change**): **where a negated summon's
+  monster goes was measured against the era rulings, and it does not match.** U498-U500 decided the cancel form
+  from `WIKI-2CF23AA42E79` alone, which is about the window, not about the destination. Searching the DB from the
+  summon-negation side found **four dated rulings**: `WIKI-EFB088FAC57A` (**2010-05-17**, 《アマゾネスの里》) - an
+  effect keyed on 「召喚を無効にし破壊され墓地へ送られた時」 CAN be activated; `WIKI-643A78AB3480`
+  (**2008-03-19**) - negating a summon is NOT 「フィールド上のモンスターを破壊する」; `WIKI-9E991E9B14E9`
+  (**2010-04-21**) - NOT 「フィールド上で破壊された」 either (so a Sin cannot revive off it);
+  `WIKI-2C8BE04F46E9` / `WIKI-2ABC596B02C7` (**2007-03-26**) - the Normal Summon right is NOT refunded. Era form:
+  **destroyed and sent to the GY, but not destroyed on the field.** Measured all five cancel paths: UI normal from
+  hand = `MOVE`, **no event at all** for that monster, no graveInfo; UI procedure from hand = the same; UI flip =
+  `FX_TO_GRAVE byDestroy` with onDestroy/onSendToGrave/onRemove/onLeaveField and graveInfo.byDestroy; U498's
+  resolution-time normal = `MOVE` with **onLeaveField only**; U500's resolution-time Gemini = like the flip one.
+  **Two discrepancies, both recorded as 未対応**: (#1-j) a summon from the hand produces no destroy/GY event, so
+  the 2010-05-17 ruling is violated - the affected set is **176 Normal-Summonable monsters** with a passive on
+  their own destruction or GY trip (counted over all scripts: onDestroy 111, onSendToGrave 180); **this is in the
+  published UI paths**, not only in the new ones. (#1-i) the resolution-time normal queues an `onLeaveField` the
+  monster should not have, since it 「フィールドに出なかった」. **Two things that DO match** were pinned as tests:
+  the Normal Summon right stays consumed (2007-03-26) and a negated Flip Summon produces no reverse effect
+  (`WIKI-43E80F61C77D`, undated; measured with 《メデューサ・ワーム》). The fix needs a **third removal form** the
+  engine does not have - destroyed+GY without a field departure, not counting as a field destruction - and an
+  exclusion in `v9DetectLeaveField` (`engine/18`), which detects departures from a board snapshot diff; both are
+  published rule paths, so design only here (design doc (E)). Files:
+  `docs/S03_MISSED_TIMING_RULINGS.md` (S03-U501 section, 7 rulings quoted, dated and undated layers separated),
+  design doc ((E) + 5-a #1-j + the stage row), `docs/S03_U501_REPORT.md`, `tools/check.py`,
+  `tools/script_coverage.py`, `tools/test_s03_u501_negated_summon_destination.js` (**26 PASS**).
+  Related: u494 51 / u495 33 / u496 35 / u497 32 / u498 74 / u499 34 / u500 35 / u501 26 = **320 PASS / 0 FAIL**.
 - S03-U500 (Opus, claude/work; **behaviour change** + **a correction to what U498 wrote**): the summon-negation
   window gets its **third marked call site** - the Gemini re-summon (「もう1度召喚」, `GEMINI_SUMMON_S03`)
   《デュアル・サモナー》 performs by effect - and the cancel is now **split by branch**. U499 had already measured
