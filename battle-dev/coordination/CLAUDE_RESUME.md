@@ -10,6 +10,44 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U509 (Opus, claude/work; **behaviour change**, engine/40 + one card + 1 new test): **a negated summon's
+  monster is now 「破壊され墓地へ送られた」** - the hand-origin half of 5-a #1-j, which S03-U501 measured as a
+  mismatch. Re-querying the rulings from the summon-negation side added **5 dated rulings**:
+  `WIKI-0A19E6117879` (**2010-06-05**, 《人造人間－サイコ・リターナー》) 「召喚などを《神の宣告》などで無効に
+  され墓地へ送られた場合でも効果は発動できますか？」→「はい、できます」; `WIKI-D70393946D93` (**2010-09-16**,
+  《聖騎士ジャンヌ》) 「**フィールド上以外で**破壊され墓地へ送られた場合…」→「はい、発動できます」;
+  `WIKI-6745DCCBE047` (10/07/18) and `WIKI-EFE5568A43B4` (10/05/18) for the Synchro side (out of scope);
+  plus `WIKI-EFB088FAC57A` (10/05/17) from U501.
+  **The 「3 つ目の取り除き方」 design (E) called for already existed**: `FX_TO_GRAVE` with zone 'hand' +
+  `byDestroy` (CODEX-C09 handles hand/Deck destruction) gives, measured, `graveInfo {from:'hand',
+  byDestroy:true}`, queues **only** `onDestroy` and `onSendToGrave` (no `onRemove`, no `onLeaveField`), and
+  skips `applyDestructionProtectionV21` (which only looks at mz/sz/field). That satisfies both sides of the era
+  rulings in one Action, so `runSummonWindowResumeS03` (engine/40) now uses it **when the card is still in the
+  hand**; the 手札に戻す branch (U277 キックバック) and the flip-summon branch stay ahead of it (order pinned).
+  One card fixed too: 《人造人間－サイコ・リターナー》, the subject of its own ruling, was gated by the shared
+  helper `e8FromFieldToGrave` (`graveInfo.from` in {mz,sz}) although its text says only 「墓地へ送られた時」;
+  it now has its own gate. **The shared helper itself was not touched** - 《クリッター》 says 「フィールドから
+  墓地へ送られた場合」 and `R1103-WARNING-002` (undated) agrees it does not trigger.
+  Measured: 《ダンディライオン》's two 綿毛トークン now appear (they did not before); 《人造人間－サイコ・
+  リターナー》 ② summons 《人造人間－サイコ・ショッカー》 from the GY; 《クリッター》 does not search; the flip
+  cancel is unchanged (from 'mz', `onRemove` + `onLeaveField`); the resolution-time cancel is unchanged (still
+  `MOVE`, no tokens); the Normal Summon right is still consumed (`WIKI-2C8BE04F46E9` 07/03/26); Replay audited
+  in 7 scenes.
+  Files: `engine/40_legal_script_engine.js`, `cards/E1_auto_cycle39.js`,
+  `docs/S03_MISSED_TIMING_RULINGS.md` (S03-U509 section), design doc ((E) 「S03-U509 で入れた形」, 5-a #1-j,
+  the stage row), `docs/S03_U509_REPORT.md`, `tools/check.py`, `tools/script_coverage.py`,
+  `tools/test_s03_u509_negated_summon_destroyed.js` (**24 PASS**),
+  `tools/test_s03_u501_negated_summon_destination.js` (**26 PASS**).
+  Three existing assertions rewritten, not weakened: U501's A1/A2 pinned 「取り消しは MOVE で、そのモンスターの
+  イベントは 1 つも積まれない」 and now pin the new form at the same granularity (zone 'hand', `graveInfo.from`,
+  and that `onRemove`/`onLeaveField` are **not** queued); B1 recorded the mismatch itself and now records that
+  the hand-origin half is satisfied while the resolution-time path remains.
+  **Still 未対応**: the resolution-time cancel (`engine/1ZZY`; the card is already on the field, so it needs a
+  different form) - 5-a #1-j; `byPlayer` stays `null` because `SUMMON_WINDOW_NEGATE_V42` does not record who
+  negated, so 「**相手によって**破壊され墓地へ送られた時」 effects still do not fire (**no ruling checked**);
+  the Synchro-summon negation window; and 《アマゾネスの里》 - the page of `WIKI-EFB088FAC57A` - is wired as a
+  **battle-destruction-only** trigger (`passive.onDamageStep`) although its text says 「戦闘・**効果**で破壊され」,
+  so that card cannot show its own ruling scene (separate unit).
 - S03-U508 (Opus, claude/work; **behaviour change in the card only**, cards/10_themes_a.js + 1 new test):
   **《歯車街》② is now the trigger effect its text describes.** The text is 「このカードが破壊され墓地へ
   送られた**時**に発動できる」 - an **optional trigger** - but the script had `activateFrom:["grave"]` and only a

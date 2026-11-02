@@ -99,15 +99,24 @@ gameState.players[1].sz=[setTrap('神の宣告',1)];
 baselineA();
 finishNormalSummon(0,'atk',{bodies:0,value:0},null,null);
 const r1=negateInWindow('神の宣告');
-ok('A1 ★ UI 起点の通常召喚の取り消しは MOVE で、そのモンスターのイベントは 1 つも積まれない',
+/* A1・B1 は S03-U509 で書き直した。S03-U501 の時点では取り消しが素の MOVE で、そのモンスターの
+   イベントが 1 つも積まれず、graveInfo も付かなかった（それが B1 の食い違いだった）。
+   S03-U509 で**手札からの効果破壊**（FX_TO_GRAVE の zone 'hand' + byDestroy）に替えたので、
+   いまは onDestroy と onSendToGrave が積まれ、graveInfo は {from:'hand', byDestroy:true} になる。
+   「フィールド上で破壊された」扱いにしない側（from が 'mz' ではない・onRemove と onLeaveField は
+   積まれない）も一緒に固定する。数え方は変えていない。 */
+ok('A1 ★ UI 起点の通常召喚の取り消しは手札からの効果破壊（FX_TO_GRAVE byDestroy）で、'
+   +'onDestroy と onSendToGrave だけが積まれ、フィールドでの破壊扱いにはならない（S03-U509）',
    r1==='done' && zu(mon.uid)==='grave'
-   && actTypes().includes('MOVE') && !actTypes().includes('FX_TO_GRAVE')
-   && ownEvents(mon.uid).length===0
-   && !((graveCard(0,mon.uid)||{}).graveInfo),
-   JSON.stringify({r:r1,own:ownEvents(mon.uid),q:QLOG.map(x=>x.name),types:actTypes()}));
-ok('B1 ★ 当時裁定との食い違い: WIKI-EFB088FAC57A（回答日 2010-05-17）は「召喚を無効にし破壊され墓地へ'
-   +'送られた時」の効果が発動できると答えているが、いまは onDestroy も onSendToGrave も積まれない',
-   ownEvents(mon.uid).indexOf('onDestroy')<0 && ownEvents(mon.uid).indexOf('onSendToGrave')<0,
+   && actTypes().includes('FX_TO_GRAVE')
+   && ownEvents(mon.uid).indexOf('onDestroy')>=0 && ownEvents(mon.uid).indexOf('onSendToGrave')>=0
+   && ownEvents(mon.uid).indexOf('onRemove')<0 && ownEvents(mon.uid).indexOf('onLeaveField')<0
+   && ((graveCard(0,mon.uid)||{}).graveInfo||{}).from==='hand'
+   && ((graveCard(0,mon.uid)||{}).graveInfo||{}).byDestroy===true,
+   JSON.stringify({r:r1,own:ownEvents(mon.uid),q:QLOG.map(x=>x.name),gi:(graveCard(0,mon.uid)||{}).graveInfo}));
+ok('B1 ★ WIKI-EFB088FAC57A（回答日 2010-05-17）の「召喚を無効にし破壊され墓地へ送られた時」は'
+   +'S03-U509 で手札から出した召喚について満たした。解決中の召喚（engine/1ZZY）は 5-a #1-j のまま未対応',
+   ownEvents(mon.uid).indexOf('onDestroy')>=0 && ownEvents(mon.uid).indexOf('onSendToGrave')>=0,
    JSON.stringify(ownEvents(mon.uid)));
 audit('A1');
 `, {expect:3});
@@ -122,10 +131,13 @@ gameState.players[1].sz=[setTrap('神の宣告',1)];
 baselineA();
 finishSummonProcedure('サイバー・ドラゴン',0,'hand',0,'atk');
 const r=negateInWindow('神の宣告');
-ok('A2 ★ 特殊召喚手順の取り消しも MOVE で、そのモンスターのイベントは 1 つも積まれない',
-   r==='done' && zu(cd.uid)==='grave' && actTypes().includes('MOVE')
-   && ownEvents(cd.uid).length===0 && !((graveCard(0,cd.uid)||{}).graveInfo),
-   JSON.stringify({r,own:ownEvents(cd.uid),types:actTypes()}));
+/* A2 は S03-U509 で書き直した（A1 と同じ理由。手札からの特殊召喚手順も同じ経路を通る）。 */
+ok('A2 ★ 手札からの特殊召喚手順の取り消しも手札からの効果破壊になる（S03-U509）',
+   r==='done' && zu(cd.uid)==='grave' && actTypes().includes('FX_TO_GRAVE')
+   && ownEvents(cd.uid).indexOf('onDestroy')>=0 && ownEvents(cd.uid).indexOf('onSendToGrave')>=0
+   && ownEvents(cd.uid).indexOf('onLeaveField')<0
+   && ((graveCard(0,cd.uid)||{}).graveInfo||{}).from==='hand',
+   JSON.stringify({r,own:ownEvents(cd.uid),gi:(graveCard(0,cd.uid)||{}).graveInfo}));
 audit('A2');
 `, {expect:2});
 

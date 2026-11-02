@@ -876,6 +876,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u506_destroyed_class.js')],check
 # 'miss' now outranks R1 for that one card. R1 itself is unchanged.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u507_vanity_emptiness_miss.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u508_geartown_destroyed_trigger.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u509_negated_summon_destroyed.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

@@ -20646,6 +20646,20 @@ function runSummonWindowResumeS03(ps,result){
     if(hit.zone==='mz'){ act({type:'FX_BOUNCE',player:hit.p,zone:hit.zone,index:hit.index,reason:'召喚を無効にし手札に戻す'}); return true; }
   }
   if(ps.kind==='flip'){ act({type:'FX_TO_GRAVE',player:hit.p,zone:hit.zone,index:hit.index,reason:'反転召喚を無効',byDestroy:true}); return true; }
+  /* S03-U509: 「召喚を無効にされ、破壊され墓地へ送られた」。当時裁定 `WIKI-EFB088FAC57A`
+     （**回答日 2010-05-17**、掲載ページ《アマゾネスの里》）:「《神の宣告》でアマゾネスの召喚を無効にし
+     破壊され墓地へ送られた時も、効果を発動できますか？」→「はい、その場合でも発動できます。(10/05/17)」
+     手札から出した召喚（通常召喚・手札からの特殊召喚手順）では、カードはまだ手札にあるので
+     **手札からの効果破壊**として墓地へ送る。実測（S03-U509）: FX_TO_GRAVE の zone 'hand' は
+     graveInfo を {from:'hand', byDestroy:true} にし、onDestroy と onSendToGrave だけを積み、
+     onRemove も onLeaveField も積まない。つまり「フィールド上で破壊された」扱いにはならない
+     （`WIKI-643A78AB3480` 08/03/19・`WIKI-9E991E9B14E9` 10/04/21）。
+     手札以外（墓地・除外・デッキからの特殊召喚手順）と、解決中の召喚（カードが場に居る。engine/1ZZY）は
+     5-a #1-j に未対応として残す。 */
+  if(hit.zone==='hand'){
+    act({type:'FX_TO_GRAVE',player:hit.p,zone:'hand',index:hit.index,reason:'召喚を無効',byDestroy:true});
+    return true;
+  }
   if(hit.zone!=='grave') act({type:'MOVE',player:hit.p,from:hit.zone,fromIndex:hit.index,to:'grave'});
   return true;
 }
@@ -63519,6 +63533,22 @@ defineScript('時の機械－タイム・マシーン', {
       このカードが墓地へ送られた時、自分の墓地の「人造人間－サイコ・ショッカー」1体を
       対象として発動でき、そのモンスターを特殊召喚する。
       この効果で特殊召喚したモンスターは自分エンドフェイズに破壊される */
+/* S03-U509: 《人造人間－サイコ・リターナー》②のテキストは「このカードが**墓地へ送られた時**」で、
+   フィールドからとは書いていない。当時裁定 `WIKI-0A19E6117879`（**回答日 2010-06-05**、
+   掲載ページ《人造人間－サイコ・リターナー》）:「このカードの召喚などを《神の宣告》などで無効にされ
+   墓地へ送られた場合でも効果は発動できますか？」→「はい、できます。(10/06/05)」
+   同じ向きの裁定: `WIKI-D70393946D93`（**2010-09-16**、《聖騎士ジャンヌ》）「《神の警告》で召喚を
+   無効にされるなど、フィールド上以外で破壊され墓地へ送られた場合、効果は発動できますか？」
+   →「はい、発動できます。(10/09/16)」
+   それまでは共有ヘルパ e8FromFieldToGrave（graveInfo.from が 'mz' か 'sz'）で縛っていたため、
+   召喚を無効にされて手札から墓地へ送られた場合に発動できなかった（S03-U509 で実測）。
+   **共有ヘルパ自体は変えていない**（「フィールド上から」と書いてあるカードはそのままでよい。
+   例: 《クリッター》は R1103-WARNING-002（回答日なし）でも発動しないとされている）。 */
+function e8PsychoReturnerToGraveS03(ctx){
+  if(ctx.zone !== 'grave') return false;
+  const g = ctx.card.graveInfo;
+  return !!(g && Number(g.turn) === Number(gameState.turn));
+}
 function e8ShockerGrave(p){
   return API.pileCards(p, 'grave', x => x.db.n === '人造人間－サイコ・ショッカー');
 }
@@ -63526,7 +63556,7 @@ defineScript('人造人間－サイコ・リターナー', {
   type:'monster', priority:1, canDirectAttack:true, targets:true,
   activateFrom:['grave'], timing:['free'],
   condition(ctx){
-    if(!e8FromFieldToGrave(ctx)){
+    if(!e8PsychoReturnerToGraveS03(ctx)){   /* S03-U509 */
       ctx.reason = '墓地へ送られた時に発動します'; return false; }
     if(!e8ShockerGrave(ctx.player).length){
       ctx.reason = '墓地に「人造人間－サイコ・ショッカー」がいません'; return false; }
@@ -63554,10 +63584,10 @@ defineScript('人造人間－サイコ・リターナー', {
   afterResolve(){},
   passive:{
     onSendToGrave(ctx){
-      return e8FromFieldToGrave(ctx) && e8ShockerGrave(ctx.player).length > 0
+      return e8PsychoReturnerToGraveS03(ctx) && e8ShockerGrave(ctx.player).length > 0   /* S03-U509 */
           && e8MzOpen(ctx.player); },
     onDestroy(ctx){
-      return e8FromFieldToGrave(ctx) && e8ShockerGrave(ctx.player).length > 0
+      return e8PsychoReturnerToGraveS03(ctx) && e8ShockerGrave(ctx.player).length > 0   /* S03-U509 */
           && e8MzOpen(ctx.player); }
   }
 });

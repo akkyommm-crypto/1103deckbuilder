@@ -350,6 +350,20 @@ function runSummonWindowResumeS03(ps,result){
     if(hit.zone==='mz'){ act({type:'FX_BOUNCE',player:hit.p,zone:hit.zone,index:hit.index,reason:'召喚を無効にし手札に戻す'}); return true; }
   }
   if(ps.kind==='flip'){ act({type:'FX_TO_GRAVE',player:hit.p,zone:hit.zone,index:hit.index,reason:'反転召喚を無効',byDestroy:true}); return true; }
+  /* S03-U509: 「召喚を無効にされ、破壊され墓地へ送られた」。当時裁定 `WIKI-EFB088FAC57A`
+     （**回答日 2010-05-17**、掲載ページ《アマゾネスの里》）:「《神の宣告》でアマゾネスの召喚を無効にし
+     破壊され墓地へ送られた時も、効果を発動できますか？」→「はい、その場合でも発動できます。(10/05/17)」
+     手札から出した召喚（通常召喚・手札からの特殊召喚手順）では、カードはまだ手札にあるので
+     **手札からの効果破壊**として墓地へ送る。実測（S03-U509）: FX_TO_GRAVE の zone 'hand' は
+     graveInfo を {from:'hand', byDestroy:true} にし、onDestroy と onSendToGrave だけを積み、
+     onRemove も onLeaveField も積まない。つまり「フィールド上で破壊された」扱いにはならない
+     （`WIKI-643A78AB3480` 08/03/19・`WIKI-9E991E9B14E9` 10/04/21）。
+     手札以外（墓地・除外・デッキからの特殊召喚手順）と、解決中の召喚（カードが場に居る。engine/1ZZY）は
+     5-a #1-j に未対応として残す。 */
+  if(hit.zone==='hand'){
+    act({type:'FX_TO_GRAVE',player:hit.p,zone:'hand',index:hit.index,reason:'召喚を無効',byDestroy:true});
+    return true;
+  }
   if(hit.zone!=='grave') act({type:'MOVE',player:hit.p,from:hit.zone,fromIndex:hit.index,to:'grave'});
   return true;
 }

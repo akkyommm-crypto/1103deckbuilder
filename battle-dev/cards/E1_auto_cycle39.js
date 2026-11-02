@@ -368,6 +368,22 @@ defineScript('時の機械－タイム・マシーン', {
       このカードが墓地へ送られた時、自分の墓地の「人造人間－サイコ・ショッカー」1体を
       対象として発動でき、そのモンスターを特殊召喚する。
       この効果で特殊召喚したモンスターは自分エンドフェイズに破壊される */
+/* S03-U509: 《人造人間－サイコ・リターナー》②のテキストは「このカードが**墓地へ送られた時**」で、
+   フィールドからとは書いていない。当時裁定 `WIKI-0A19E6117879`（**回答日 2010-06-05**、
+   掲載ページ《人造人間－サイコ・リターナー》）:「このカードの召喚などを《神の宣告》などで無効にされ
+   墓地へ送られた場合でも効果は発動できますか？」→「はい、できます。(10/06/05)」
+   同じ向きの裁定: `WIKI-D70393946D93`（**2010-09-16**、《聖騎士ジャンヌ》）「《神の警告》で召喚を
+   無効にされるなど、フィールド上以外で破壊され墓地へ送られた場合、効果は発動できますか？」
+   →「はい、発動できます。(10/09/16)」
+   それまでは共有ヘルパ e8FromFieldToGrave（graveInfo.from が 'mz' か 'sz'）で縛っていたため、
+   召喚を無効にされて手札から墓地へ送られた場合に発動できなかった（S03-U509 で実測）。
+   **共有ヘルパ自体は変えていない**（「フィールド上から」と書いてあるカードはそのままでよい。
+   例: 《クリッター》は R1103-WARNING-002（回答日なし）でも発動しないとされている）。 */
+function e8PsychoReturnerToGraveS03(ctx){
+  if(ctx.zone !== 'grave') return false;
+  const g = ctx.card.graveInfo;
+  return !!(g && Number(g.turn) === Number(gameState.turn));
+}
 function e8ShockerGrave(p){
   return API.pileCards(p, 'grave', x => x.db.n === '人造人間－サイコ・ショッカー');
 }
@@ -375,7 +391,7 @@ defineScript('人造人間－サイコ・リターナー', {
   type:'monster', priority:1, canDirectAttack:true, targets:true,
   activateFrom:['grave'], timing:['free'],
   condition(ctx){
-    if(!e8FromFieldToGrave(ctx)){
+    if(!e8PsychoReturnerToGraveS03(ctx)){   /* S03-U509 */
       ctx.reason = '墓地へ送られた時に発動します'; return false; }
     if(!e8ShockerGrave(ctx.player).length){
       ctx.reason = '墓地に「人造人間－サイコ・ショッカー」がいません'; return false; }
@@ -403,10 +419,10 @@ defineScript('人造人間－サイコ・リターナー', {
   afterResolve(){},
   passive:{
     onSendToGrave(ctx){
-      return e8FromFieldToGrave(ctx) && e8ShockerGrave(ctx.player).length > 0
+      return e8PsychoReturnerToGraveS03(ctx) && e8ShockerGrave(ctx.player).length > 0   /* S03-U509 */
           && e8MzOpen(ctx.player); },
     onDestroy(ctx){
-      return e8FromFieldToGrave(ctx) && e8ShockerGrave(ctx.player).length > 0
+      return e8PsychoReturnerToGraveS03(ctx) && e8ShockerGrave(ctx.player).length > 0   /* S03-U509 */
           && e8MzOpen(ctx.player); }
   }
 });
