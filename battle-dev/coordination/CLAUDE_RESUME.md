@@ -10,6 +10,35 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U505 (Opus, claude/work; docs + 1 new test only, **no behaviour change**): **the destruction / GY-condition
+  triggers (5-a item 4) are now audited and designed.** The machinery of U491-U496 covers `summonSuccess` only, so
+  **nothing in this family is dropped today** - verified over all 316 candidate cards x 5 events
+  (`onDestroy` 111 / `onSendToGrave` 180 / `onLeaveField` 57 / `onFieldToGraveBatchS03` 8 / `onRemove` 10,
+  duplicates removed). **The measured blocker**: the (B-2) pattern `(?:に成功した|された|した)(時|場合)` does not
+  match 「墓地へ送られた時」 **at all** (「送られた」 is neither 「された」 nor 「した」), so the 180
+  `onSendToGrave` cards cannot even be classified; 「破壊された時」 does match the terminator but 「破壊」 is not
+  in the summon-word table, so the clause is discarded. A throwaway extractor (not in the engine) counts the work:
+  **時 31 / 場合 24** for 破壊, **時 112 / 場合 62 / 混在 1** for 墓地へ送, plus GF 5/9, X 6/3, B 1/2, T 0/5 -
+  **155 (card, class) pairs read as 「時」**. Era evidence was pulled by searching 破壊 + タイミングを逃
+  (**52 hits**) and is layered: the general rule `WIKI-378544C74049` (**2008-05-30**, 《砂塵の大竜巻》)
+  「破壊が条件の任意効果はタイミングを逃す」 and `WIKI-D993FCB0777F` (**2010-03-21**); the 時/場合 split stated
+  outright in `WIKI-17DDC86F4023` (**2009-05-14**, 《古代の機械究極巨人》); R4 simultaneity in
+  `WIKI-D9392162D28D` (**2009-01-29**, 《光帝クライス》); **12 cards dated as missing** (《歯車街》 10/08/11,
+  《スネーク・ホイッスル》 09/08/07, 《ユベル》 08/11/21, 《ボタニティ・ガール》 08/08/14, 《ブランチ》 09/11/10,
+  《ブラック・ブルドラゴ》 09/12/05, 《森の番人グリーン・バブーン》 09/02/18, 《機皇城》 10/08/20,
+  《ヴァイロン・エレメント》 11/04/14 - which even cites 「～時」の任意効果 -, 《鋼核合成獣研究所》 10/02/07,
+  《虚無空間》 11/07/16, 《セブン・ソード・ウォリアー》 10/08/04); **12 cards dated as not missing**
+  (《古代の機械究極巨人》《月影龍クイラ》《ダーク・フラット・トップ》《ライトニング・トライコーン》
+  《極星宝ドラウプニル》《死の花－ネクロ・フルール》《聖騎士ジャンヌ》《Sin トゥルース・ドラゴン》《Z－ONE》
+  《ヴァイロン・マテリアル》《エレキトンボ》《幽獄の時計塔》); and **one 調整中** (《黒衣の大賢者》
+  `WIKI-F4CAC7074CA5` **2011-06-16**, R6). Design in (F): extend the pattern and the word table, add the classes
+  `destroyed` (D/B) and `sentToGrave` (G/GF) **disabled by default**, drop only what a (B-5) entry confirms, put
+  the 12 'miss' cards in (B-5) and the 12 'never' cards in (B-1), leave `onLeaveField` **out** of the classes (it
+  is the board-diff rule step U501/U502 dealt with, a different axis), and **do the 破壊 side first - the 112
+  墓地へ送 cards are their own unit**. Files: `docs/S03_MISSED_TIMING_RULINGS.md` (S03-U505 section),
+  design doc ((F) + item 4 rewritten + the stage row), `docs/S03_U505_REPORT.md`, `tools/check.py`,
+  `tools/test_s03_u505_destroy_trigger_audit.js` (**24 PASS**).
+  Related: u494 51 / u495 33 / u496 35 / u504 18 / u505 24 = 161 PASS / 0 FAIL.
 - S03-U504 (Opus, claude/work; docs + 1 new test only, **no behaviour change**): the four (B-4) **"B wording"**
   cards of 5-a item 10 were read. Three of them - 《ジャンク・シンクロン》, 《デブリ・ドラゴン》,
   《デスカイザー・ドラゴン／バスター》 - are named in other cards' rulings only in connection with **negating a

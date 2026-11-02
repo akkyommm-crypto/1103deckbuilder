@@ -1,0 +1,232 @@
+/* S03-U505: 破壊・墓地送りが条件の誘発（設計書 5-a の項目 4）の候補を全件監査し、設計を確定する単位。
+   **挙動は変えていない。**変えたのは文書とこのテストだけである。
+
+   土台の当時裁定 `WIKI-378544C74049`（**回答日 2008-05-30**、《砂塵の大竜巻》）:
+     Q「《砂塵の大竜巻》でセットする効果を使用した場合は、破壊の後に別の処理が入る扱いですか？」
+     A「はい、そうです。つまり、**破壊が条件の任意効果はタイミングを逃すことになります。**(08/05/30)」
+
+   S03-U491〜U496 の機構は召喚成功（`summonSuccess`）だけを対象にしている。破壊・墓地送りの誘発は
+   (B-3) の種別に無いので、いまは**1 件も落としていない**。この単位では
+     ・候補の全件（配線）
+     ・当時テキストの句の読み方（**いまの正規表現では墓地送りの句が 1 つも読めない**という実測）
+     ・当時裁定（回答日つきの per-card 確認が「逃す」側 12 枚・「逃さない」側 12 枚・調整中 1 枚）
+   を数え、次の単位が入れる形を決めた。
+
+   固定するもの:
+     A 配線の全件（イベントごと／重複を除いた総数）
+     B いまは 1 件も落とさない（種別に無い）
+     C いまの句抽出は破壊の句を読めるが**墓地送りの句は 1 つも読めない**（次の単位で直す対象）
+     D 試作の句抽出で数えた内訳（次の単位の作業量）
+     E 当時裁定の記録（ID が文書にあること）
+     F 文書 */
+const harness = require('./astra_harness');
+const fsA = require('fs'), pathA = require('path');
+const ROOT_S505 = pathA.resolve(__dirname, '..');
+const rdS505 = p => fsA.readFileSync(pathA.join(ROOT_S505, p), 'utf8');
+const SRC_S505 = {
+  'docs/S03_MISSED_TIMING_DESIGN.md': rdS505('docs/S03_MISSED_TIMING_DESIGN.md'),
+  'docs/S03_MISSED_TIMING_RULINGS.md': rdS505('docs/S03_MISSED_TIMING_RULINGS.md'),
+  'engine/1ZZX_missed_timing_s03.js': rdS505('engine/1ZZX_missed_timing_s03.js'),
+  'tools/check.py': rdS505('tools/check.py')
+};
+/* 「逃す」と答えている当時裁定（回答日つき）。カード名は裁定が名指ししている対象。 */
+const MISS_S505 = [
+  ['歯車街', 'WIKI-1B4D52FCA757', '2010-08-11'],
+  ['スネーク・ホイッスル', 'WIKI-9E5470176D20', '2009-08-07'],
+  ['ユベル', 'WIKI-D0B6DDC9860F', '2008-11-21'],
+  ['ボタニティ・ガール', 'WIKI-AA84FEB76F8A', '2008-08-14'],
+  ['ブランチ', 'WIKI-8D38DC2D2D9F', '2009-11-10'],
+  ['ブラック・ブルドラゴ', 'WIKI-EC02DEA5ED42', '2009-12-05'],
+  ['森の番人グリーン・バブーン', 'WIKI-5BFCDCB36A18', '2009-02-18'],
+  ['機皇城', 'WIKI-673C14301F42', '2010-08-20'],
+  ['ヴァイロン・エレメント', 'WIKI-0E2C346E86CC', '2011-04-14'],
+  ['鋼核合成獣研究所', 'WIKI-FE6C86B302EE', '2010-02-07'],
+  ['虚無空間', 'WIKI-07B43F63245D', '2011-07-16'],
+  ['セブン・ソード・ウォリアー', 'WIKI-EB4FE5D75FF1', '2010-08-04']
+];
+/* 「逃さない」と答えている当時裁定（回答日つき） */
+const NEVER_S505 = [
+  ['古代の機械究極巨人', 'WIKI-17DDC86F4023', '2009-05-14'],
+  ['月影龍クイラ', 'WIKI-E8DB5B04F928', '2009-11-14'],
+  ['ダーク・フラット・トップ', 'WIKI-601C8DEC7013', '2010-11-20'],
+  ['ライトニング・トライコーン', 'WIKI-793B09C0443B', '2010-04-17'],
+  ['極星宝ドラウプニル', 'WIKI-66C68A06A9A0', '2010-11-18'],
+  ['死の花－ネクロ・フルール', 'WIKI-F71D6A911EDF', '2011-02-23'],
+  ['聖騎士ジャンヌ', 'WIKI-995DBF985C71', '2010-09-18'],
+  ['Sin トゥルース・ドラゴン', 'WIKI-2D99CB9405E7', '2010-04-23'],
+  ['Z－ONE', 'WIKI-A25E392FB7EB', '2011-05-04'],
+  ['ヴァイロン・マテリアル', 'WIKI-AB96A8BC877A', '2010-04-30'],
+  ['エレキトンボ', 'WIKI-6890B8FD07E9', '2010-10-13'],
+  ['幽獄の時計塔', 'WIKI-13E6A14CA0CC', '2009-01-08']
+];
+const UNRESOLVED_S505 = [['黒衣の大賢者', 'WIKI-F4CAC7074CA5', '2011-06-16']];
+
+const COMMON = String.raw`
+const EVS=['onDestroy','onSendToGrave','onLeaveField','onFieldToGraveBatchS03','onRemove'];
+function byEvent(){
+  const o={}; EVS.forEach(e=>o[e]=[]);
+  Object.keys(CARD_SCRIPTS).forEach(n=>{
+    const sc=CARD_SCRIPTS[n]; if(!sc||!sc.passive) return;
+    EVS.forEach(e=>{ if(typeof sc.passive[e]==='function') o[e].push(n); });
+  });
+  return o;}
+function allCands(){
+  const o=byEvent(), out=[];
+  EVS.forEach(e=>o[e].forEach(n=>{ if(out.indexOf(n)<0) out.push(n); }));
+  return out;}
+/* 試作の句抽出（**engine には入れない**。監査用。TERM が「られた」を食うので G の語は「墓地へ送」まで） */
+const DWORDS_S505=[['戦闘で破壊','B'],['破壊','D'],['フィールドから墓地へ送','GF'],['墓地へ送','G'],['除外','X'],['リリース','T']];
+const TERM_S505=/(?:に成功した|された|られた|した)(時|場合)/g;
+function wordsBeforeS505(text,pos){
+  const out=[]; let i=pos;
+  for(;;){
+    let hit=null;
+    for(let k=0;k<DWORDS_S505.length;k++){
+      const w=DWORDS_S505[k][0];
+      if(i-w.length>=0 && text.substr(i-w.length,w.length)===w){ hit=DWORDS_S505[k]; break; }
+    }
+    if(!hit) break;
+    out.push(hit[1]); i-=hit[0].length;
+    if(i-1>=0 && text.charAt(i-1)==='・'){ i-=1; continue; }
+    break;
+  }
+  return out;}
+function dClausesS505(name){
+  const i=findCardIndex(name); if(i==null||i<0) return [];
+  const text=String((CARD_DB[i]||{}).e||'');
+  const out=[]; let m; TERM_S505.lastIndex=0;
+  while((m=TERM_S505.exec(text))){
+    const cls=wordsBeforeS505(text,m.index);
+    if(cls.length) out.push({cls,kind:m[1]});
+  }
+  return out;}
+function kindOfS505(name,cl){
+  let toki=0,baai=0;
+  dClausesS505(name).forEach(c=>{ if(c.cls.indexOf(cl)<0) return; if(c.kind==='時') toki++; else baai++; });
+  if(toki&&baai) return 'mixed';
+  if(baai) return 'baai';
+  return toki?'toki':null;}
+`;
+
+/* ===== A. 配線の全件 ===== */
+harness(COMMON + String.raw`
+const o=byEvent(), all=allCands();
+ok('A1 ★ イベントごとの件数（onDestroy 111 / onSendToGrave 180 / onLeaveField 57 / onFieldToGraveBatchS03 8 / onRemove 10）',
+   o.onDestroy.length===111 && o.onSendToGrave.length===180 && o.onLeaveField.length===57
+   && o.onFieldToGraveBatchS03.length===8 && o.onRemove.length===10,
+   JSON.stringify(EVS.map(e=>e+':'+o[e].length)));
+ok('A2 ★ 重複を除いた候補カードは 316 枚', all.length===316, JSON.stringify({n:all.length}));
+`, {expect:2});
+
+/* ===== B. いまは 1 件も落とさない ===== */
+harness(COMMON + String.raw`
+/* missedTimingClassS03 は cand.name と cand.eventName（と evt.flipSummon）だけを読む純粋な関数なので、
+   ここは作り物の候補で測ってよい（ctx を見る関数ではない。S03-U494 の教訓が当たるのは
+   triggerCandidateForcedS03 のような ctx 依存の関数である）。 */
+const all=allCands();
+const cls=[];
+all.forEach(n=>EVS.forEach(e=>{
+  const v=missedTimingClassS03({name:n,eventName:e},{stepS03:0});
+  if(v) cls.push(n+':'+e+':'+v);
+}));
+ok('B1 ★ 破壊・墓地送りのイベントでは (B-3) の種別が 1 つも付かない（＝いまは落とさない）',
+   cls.length===0, JSON.stringify(cls.slice(0,10)));
+ok('B2 ★ 種別の表に破壊・墓地送りのイベントが無い',
+   MISSED_TIMING_EVENT_CLASS_S03.onDestroy===undefined
+   && MISSED_TIMING_EVENT_CLASS_S03.onSendToGrave===undefined
+   && Object.keys(MISSED_TIMING_EVENT_CLASS_S03).join('/')==='onNormalSummon/onSpecialSummon',
+   JSON.stringify(MISSED_TIMING_EVENT_CLASS_S03));
+ok('B3 ★ 有効な種別は summonSuccess だけ（flipSummonReverse は S03-U494 で無効）',
+   MISSED_TIMING_CLASSES_S03.summonSuccess===true
+   && MISSED_TIMING_CLASSES_S03.flipSummonReverse===false
+   && Object.keys(MISSED_TIMING_CLASSES_S03).length===2,
+   JSON.stringify(MISSED_TIMING_CLASSES_S03));
+`, {expect:3});
+
+/* ===== C. いまの句抽出の限界（実測） ===== */
+harness(COMMON + String.raw`
+/* いまの正規表現は (?:に成功した|された|した)(時|場合) で、召喚語だけを前に読む。
+   「破壊された時」は「された時」に当たるが前が「破壊」なので落ち、
+   「墓地へ送られた時」は**正規表現そのものが当たらない**（「送られた」は「された」でも「した」でもない）。 */
+const all=allCands();
+const nowAny=all.filter(n=>missedTimingTextClausesS03(n).length>0);
+ok('C1 ★ いまの句抽出で句が読めるのは 316 枚中 19 枚だけ（召喚語の句を併せ持つカード）',
+   nowAny.length===19, JSON.stringify({n:nowAny.length}));
+ok('C2 ★ いまの正規表現は「墓地へ送られた時」に当たらない（次の単位で足す対象）',
+   /\(\?:に成功した\|された\|した\)\(時\|場合\)/.test(
+     String(MISSED_TIMING_TERM_S03).replace(/^\//,'').replace(/\/g$/,'')) === false
+   || String(MISSED_TIMING_TERM_S03).indexOf('られた')<0,
+   String(MISSED_TIMING_TERM_S03));
+ok('C3 ★ 実測: テキストに「墓地へ送られた時」を持つ候補は多いのに、いまの機構には G の種別が無く'
+   +'、どのカードも分類できない（句が読めないのでそもそも落ちない）',
+   (function(){
+     const hasG=all.filter(n=>{const i=findCardIndex(n);
+       return i>=0 && String((CARD_DB[i]||{}).e||'').indexOf('墓地へ送られた時')>=0;});
+     globalThis.__HASG=hasG.length;
+     return hasG.length>50
+       && hasG.every(n=>missedTimingClauseKindS03(n,'G')===null)
+       && hasG.every(n=>missedTimingTextClausesS03(n).every(c=>c.cls.indexOf('G')<0));
+   })(),
+   JSON.stringify({hasG:globalThis.__HASG}));
+`, {expect:3});
+
+/* ===== D. 試作の句抽出で数えた内訳 ===== */
+harness(COMMON + String.raw`
+const all=allCands();
+function tally(cl){
+  const k={toki:0,baai:0,mixed:0,none:0};
+  all.forEach(n=>{ const v=kindOfS505(n,cl); k[v||'none']++; });
+  return k;}
+const D=tally('D'), G=tally('G'), GF=tally('GF'), X=tally('X'), T=tally('T'), B=tally('B');
+ok('D1 ★ 破壊（D）の内訳: 時 31 / 場合 24 / 混在 0',
+   D.toki===31 && D.baai===24 && D.mixed===0, JSON.stringify(D));
+ok('D2 ★ 墓地へ送られた（G）の内訳: 時 112 / 場合 62 / 混在 1',
+   G.toki===112 && G.baai===62 && G.mixed===1, JSON.stringify(G));
+ok('D3 ★ その他の内訳（フィールドから墓地へ送 / 除外 / リリース / 戦闘で破壊）',
+   GF.toki===5 && GF.baai===9 && X.toki===6 && X.baai===3 && T.toki===0 && T.baai===5
+   && B.toki===1 && B.baai===2,
+   JSON.stringify({GF,X,T,B}));
+ok('D4 ★ 次の単位の作業量: 「時」と読める組は 155（D 31 + G 112 + GF 5 + X 6 + B 1）。'
+   +'(B-5) の約束により、当時の根拠を確認できた組だけを落とす',
+   (D.toki+G.toki+GF.toki+X.toki+B.toki)===155,
+   JSON.stringify({sum:D.toki+G.toki+GF.toki+X.toki+B.toki}));
+`, {expect:4});
+
+/* ===== E. 当時裁定の記録 ===== */
+harness('const MISS=' + JSON.stringify(MISS_S505) + ';const NEVER=' + JSON.stringify(NEVER_S505) + ';'
+      + 'const UNRES=' + JSON.stringify(UNRESOLVED_S505) + ';'
+      + 'const RUL=' + JSON.stringify(SRC_S505['docs/S03_MISSED_TIMING_RULINGS.md']) + ';' + COMMON + String.raw`
+ok('E1 ★ 「逃す」側の当時裁定 12 件（回答日つき）がすべて裁定記録にある',
+   MISS.every(r=>RUL.indexOf(r[1])>=0 && RUL.indexOf(r[2])>=0),
+   JSON.stringify(MISS.filter(r=>RUL.indexOf(r[1])<0).map(r=>r[1])));
+ok('E2 ★ 「逃さない」側の当時裁定 12 件（回答日つき）がすべて裁定記録にある',
+   NEVER.every(r=>RUL.indexOf(r[1])>=0 && RUL.indexOf(r[2])>=0),
+   JSON.stringify(NEVER.filter(r=>RUL.indexOf(r[1])<0).map(r=>r[1])));
+ok('E3 ★ 調整中（R6）の 1 件も記録されている',
+   UNRES.every(r=>RUL.indexOf(r[1])>=0) && RUL.indexOf('調整中')>=0,
+   JSON.stringify(UNRES));
+ok('E4 ★ 土台の裁定（WIKI-378544C74049、回答日 2008-05-30）が記録されている',
+   RUL.indexOf('WIKI-378544C74049')>=0 && RUL.indexOf('2008-05-30')>=0, 'x');
+ok('E5 ★ 「逃す」側に挙げたカードのうち実装されているものを数える（未実装は次の単位の対象外）',
+   true, JSON.stringify(MISS.map(r=>r[0]+':'+!!CARD_SCRIPTS[r[0]])));
+ok('E6 ★ 「逃さない」側に挙げたカードの実装状況',
+   true, JSON.stringify(NEVER.map(r=>r[0]+':'+!!CARD_SCRIPTS[r[0]])));
+`, {expect:6});
+
+/* ===== F. 文書 ===== */
+harness('const SRC=' + JSON.stringify(SRC_S505) + ';' + COMMON + String.raw`
+const DOC=SRC['docs/S03_MISSED_TIMING_DESIGN.md'];
+ok('F1 ★ 設計書に (F) 節があり、候補の数と句の内訳が書かれている',
+   DOC.indexOf('### (F) 破壊・墓地送りが条件の誘発')>=0
+   && DOC.indexOf('316')>=0 && DOC.indexOf('155')>=0, 'x');
+ok('F2 ★ 設計書に、いまの正規表現が「墓地へ送られた時」に当たらないことが書かれている',
+   DOC.indexOf('「墓地へ送られた時」に当たらない')>=0, 'x');
+ok('F3 ★ 設計書の項目 4 が「監査した」に書き直されている',
+   DOC.indexOf('| 4 | **監査した（S03-U505）。まだ入れていない。**')>=0, 'x');
+ok('F4 ★ 段階表に S03-U505 が完了として入っている',
+   DOC.indexOf('**S03-U505（完了）**')>=0, 'x');
+ok('F5 ★ 本単位は挙動を変えていない（engine に S03-U505 の変更が無い）',
+   SRC['engine/1ZZX_missed_timing_s03.js'].indexOf('S03-U505')<0, 'x');
+ok('F6 専用テストが tools/check.py に登録されている',
+   /test_s03_u505_destroy_trigger_audit\.js/.test(SRC['tools/check.py']), 'x');
+`, {expect:6});

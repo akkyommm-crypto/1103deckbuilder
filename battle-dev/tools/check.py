@@ -860,6 +860,11 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u503_face_up_defence_normal_summ
 # (answer date 2011-06-27) says it can be activated in an R4 situation, and the engine already matches.
 # Design/evidence only - this unit does not change behaviour.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u504_b_wording_reading.js')],check=True)
+# S03-U505: the audit of destruction / GY-condition triggers (5-a item 4). 316 candidate cards, nothing
+# dropped today, and the measured blocker: the (B-2) pattern does not match 「墓地へ送られた時」 at all.
+# Era evidence is layered into 12 cards that miss, 12 that do not, and one 調整中, all with answer dates.
+# Audit and design only - this unit does not change behaviour (design doc (F)).
+subprocess.run(['node',str(ROOT/'tools/test_s03_u505_destroy_trigger_audit.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
