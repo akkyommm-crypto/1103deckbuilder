@@ -110,12 +110,17 @@ function kindOfS505(name,cl){
 
 /* ===== A. 配線の全件 ===== */
 harness(COMMON + String.raw`
+/* S03-U508 で《歯車街》②を「破壊され墓地へ送られた時」の誘発に直し、passive.onSendToGrave を
+   足したので、配線の全件が 1 枚増えた（onSendToGrave 180 → 181、重複を除いた候補 316 → 317）。
+   数を数える形は変えていない。 */
 const o=byEvent(), all=allCands();
-ok('A1 ★ イベントごとの件数（onDestroy 111 / onSendToGrave 180 / onLeaveField 57 / onFieldToGraveBatchS03 8 / onRemove 10）',
-   o.onDestroy.length===111 && o.onSendToGrave.length===180 && o.onLeaveField.length===57
+ok('A1 ★ イベントごとの件数（onDestroy 111 / onSendToGrave 181 / onLeaveField 57 / onFieldToGraveBatchS03 8 / onRemove 10）'
+   +'。onSendToGrave は S03-U508 で《歯車街》が加わって 180 → 181',
+   o.onDestroy.length===111 && o.onSendToGrave.length===181 && o.onLeaveField.length===57
    && o.onFieldToGraveBatchS03.length===8 && o.onRemove.length===10,
    JSON.stringify(EVS.map(e=>e+':'+o[e].length)));
-ok('A2 ★ 重複を除いた候補カードは 316 枚', all.length===316, JSON.stringify({n:all.length}));
+ok('A2 ★ 重複を除いた候補カードは 317 枚（S03-U508 で《歯車街》が加わって 316 → 317）',
+   all.length===317, JSON.stringify({n:all.length}));
 `, {expect:2});
 
 /* ===== B. いまは 1 件も落とさない ===== */
@@ -162,8 +167,9 @@ const nowAny=all.filter(n=>missedTimingTextClausesS03(n).length>0);
 /* C1 は S03-U506 で書き直した。あの時点では召喚語の句しか読めず 19 枚だった。
    S03-U506 で破壊・墓地送りの語と「られた」を足したので 255 枚で句が読める。
    読めることと落とすことは別で、落ちるのは (B-5) に入った組だけである。 */
-ok('C1 ★ 句が読めるのは 316 枚中 255 枚になった（S03-U506 で語と「られた」を足した）',
-   nowAny.length===255, JSON.stringify({n:nowAny.length}));
+ok('C1 ★ 句が読めるのは 317 枚中 256 枚になった（S03-U506 で語と「られた」を足した。'
+   +'S03-U508 で《歯車街》が配線に加わって 255 → 256）',
+   nowAny.length===256, JSON.stringify({n:nowAny.length}));
 ok('C2 ★ いまの正規表現は「墓地へ送られた時」に当たらない（次の単位で足す対象）',
    /\(\?:に成功した\|された\|した\)\(時\|場合\)/.test(
      String(MISSED_TIMING_TERM_S03).replace(/^\//,'').replace(/\/g$/,'')) === false
@@ -200,15 +206,16 @@ function tally(cl){
 const D=tally('D'), G=tally('G'), GF=tally('GF'), X=tally('X'), T=tally('T'), B=tally('B');
 ok('D1 ★ 破壊（D）の内訳: 時 31 / 場合 24 / 混在 0',
    D.toki===31 && D.baai===24 && D.mixed===0, JSON.stringify(D));
-ok('D2 ★ 墓地へ送られた（G）の内訳: 時 112 / 場合 62 / 混在 1',
-   G.toki===112 && G.baai===62 && G.mixed===1, JSON.stringify(G));
+/* S03-U508 で《歯車街》が配線に加わり、その句は「破壊され墓地へ送られた**時**」なので 時 が 1 増えた。 */
+ok('D2 ★ 墓地へ送られた（G）の内訳: 時 113 / 場合 62 / 混在 1（時は S03-U508 の《歯車街》で 112 → 113）',
+   G.toki===113 && G.baai===62 && G.mixed===1, JSON.stringify(G));
 ok('D3 ★ その他の内訳（フィールドから墓地へ送 / 除外 / リリース / 戦闘で破壊）',
    GF.toki===5 && GF.baai===9 && X.toki===6 && X.baai===3 && T.toki===0 && T.baai===5
    && B.toki===1 && B.baai===2,
    JSON.stringify({GF,X,T,B}));
-ok('D4 ★ 次の単位の作業量: 「時」と読める組は 155（D 31 + G 112 + GF 5 + X 6 + B 1）。'
-   +'(B-5) の約束により、当時の根拠を確認できた組だけを落とす',
-   (D.toki+G.toki+GF.toki+X.toki+B.toki)===155,
+ok('D4 ★ 次の単位の作業量: 「時」と読める組は 156（D 31 + G 113 + GF 5 + X 6 + B 1）。'
+   +'(B-5) の約束により、当時の根拠を確認できた組だけを落とす。G は S03-U508 の《歯車街》で 112 → 113',
+   (D.toki+G.toki+GF.toki+X.toki+B.toki)===156,
    JSON.stringify({sum:D.toki+G.toki+GF.toki+X.toki+B.toki}));
 `, {expect:4});
 
@@ -243,9 +250,13 @@ ok('F2 ★ 設計書に、いまの正規表現が「墓地へ送られた時」
    DOC.indexOf('「墓地へ送られた時」に当たらない')>=0, 'x');
 /* F3 は S03-U506 で書き直した。項目 4 は「S03-U505 で監査 → S03-U506 で破壊の側だけ実装」になった。
    本単位（S03-U505）の成果は監査と設計で、行が S03-U505 の監査に触れていることを見る。 */
-ok('F3 ★ 設計書の項目 4 に、S03-U505 の監査と S03-U506 の実装（破壊の側だけ）が書かれている',
-   DOC.indexOf('| 4 | **破壊の側は S03-U506 で入れた（1 件）。墓地送りはまだ入れていない。**')>=0
-   && DOC.indexOf('S03-U505 で候補 316 枚を')>=0, 'x');
+/* F3 は S03-U508 で書き直した。項目 4 の見出しが「墓地送りはまだ入れていない」から
+   「S03-U508 で測って『いまの刻み方では入れられない』と確定した」に変わった。
+   S03-U505 の成果（候補 316 枚の監査）に触れている行であることは引き続き見る。 */
+ok('F3 ★ 設計書の項目 4 に、S03-U505 の監査・S03-U506 の実装（破壊の側だけ）・S03-U508 の実測が書かれている',
+   DOC.indexOf('| 4 | **破壊の側は S03-U506 で入れた（1 件）。墓地送りは S03-U508 で測って')>=0
+   && DOC.indexOf('S03-U505 で候補 316 枚を')>=0
+   && DOC.indexOf('同時として扱う処理が刻みを進める')>=0, 'x');
 ok('F4 ★ 段階表に S03-U505 が完了として入っている',
    DOC.indexOf('**S03-U505（完了）**')>=0, 'x');
 /* F5 は S03-U506 で書き直した。S03-U505 自身は挙動を変えておらず、engine に入ったのは S03-U506 である。

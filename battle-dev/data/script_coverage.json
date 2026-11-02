@@ -3907,7 +3907,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u119_gemini.js",
-        "tools\\test_s03_u228_ns20.js"
+        "tools\\test_s03_u228_ns20.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
       ]
     },
     {
@@ -4023,7 +4024,7 @@
         {
           "kind": "legacy",
           "source": "cards\\10_themes_a.js",
-          "line": 1487
+          "line": 1516
         }
       ],
       "auto_table": false,
@@ -6159,7 +6160,7 @@
         {
           "kind": "legacy",
           "source": "cards\\10_themes_a.js",
-          "line": 1434
+          "line": 1463
         },
         {
           "kind": "sin",
@@ -19299,7 +19300,7 @@
         {
           "kind": "legacy",
           "source": "cards\\10_themes_a.js",
-          "line": 1474
+          "line": 1503
         }
       ],
       "auto_table": false,
@@ -21369,6 +21370,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u294_destroy_after.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_v500_batch02.js"
       ]
     },
@@ -24204,6 +24206,7 @@
         "tools\\test_s03_u44_trigger_forced_per_effect.js",
         "tools\\test_s03_u464_cocoon.js",
         "tools\\test_s03_u46_royal_oppression.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -25146,7 +25149,7 @@
         {
           "kind": "legacy",
           "source": "cards\\10_themes_a.js",
-          "line": 1384
+          "line": 1413
         }
       ],
       "auto_table": false,
@@ -31625,7 +31628,8 @@
       "tests": [
         "tools\\test_s03_u203_loss_traps.js",
         "tools\\test_s03_u505_destroy_trigger_audit.js",
-        "tools\\test_s03_u506_destroyed_class.js"
+        "tools\\test_s03_u506_destroyed_class.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
       ]
     },
     {
@@ -38582,6 +38586,7 @@
       "tests": [
         "tools\\test_s03_u470_condition_targetable.js",
         "tools\\test_s03_u474_cost_selection_phase.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_s03_u98_dual_spark.js"
       ]
     },
@@ -57276,7 +57281,8 @@
         "tools\\test_s03_u202_partial6.js",
         "tools\\test_s03_u205_partial8.js",
         "tools\\test_s03_u233_ns25.js",
-        "tools\\test_s03_u250_ns32.js"
+        "tools\\test_s03_u250_ns32.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
       ]
     },
     {
@@ -62095,6 +62101,7 @@
         "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_s03_u504_b_wording_reading.js",
         "tools\\test_s03_u507_vanity_emptiness_miss.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
@@ -67002,7 +67009,8 @@
       "tests": [
         "tools\\test_s03_u189_monarchs.js",
         "tools\\test_s03_u294_destroy_after.js",
-        "tools\\test_s03_u491_missed_timing_mechanism.js"
+        "tools\\test_s03_u491_missed_timing_mechanism.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
       ]
     },
     {
@@ -70219,6 +70227,7 @@
         "tools\\test_s03_u144_attack_lock.js",
         "tools\\test_s03_u261_ns36.js",
         "tools\\test_s03_u281_gap6.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_v600_batch12.js"
       ]
     },
@@ -70319,7 +70328,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u144_attack_lock.js",
-        "tools\\test_s03_u281_gap6.js"
+        "tools\\test_s03_u281_gap6.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
       ]
     },
     {
@@ -70337,7 +70347,7 @@
         {
           "kind": "legacy",
           "source": "cards\\10_themes_a.js",
-          "line": 1452
+          "line": 1481
         },
         {
           "kind": "unified",
@@ -71897,7 +71907,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u192_staples2.js",
-        "tools\\test_s03_u506_destroyed_class.js"
+        "tools\\test_s03_u506_destroyed_class.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
       ]
     },
     {
@@ -73590,7 +73601,8 @@
       "tests": [
         "tools\\test_s03_u188_staples.js",
         "tools\\test_s03_u192_staples2.js",
-        "tools\\test_s03_u233_ns25.js"
+        "tools\\test_s03_u233_ns25.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
       ]
     },
     {
@@ -84843,7 +84855,7 @@
         {
           "kind": "legacy",
           "source": "cards\\10_themes_a.js",
-          "line": 1313
+          "line": 1334
         }
       ],
       "auto_table": false,
@@ -89825,6 +89837,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_v800_batch31.js"
       ]
     },
@@ -90846,7 +90859,7 @@
         {
           "kind": "legacy",
           "source": "cards\\10_themes_a.js",
-          "line": 1406
+          "line": 1435
         }
       ],
       "auto_table": false,
@@ -97082,7 +97095,8 @@
         "tools\\test_s03_u296_point_window_resume.js",
         "tools\\test_s03_u40_attack_declaration_window.js",
         "tools\\test_s03_u489_resume_summon_timing_window.js",
-        "tools\\test_s03_u494_missed_timing_era_mixing.js"
+        "tools\\test_s03_u494_missed_timing_era_mixing.js",
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
       ]
     },
     {
@@ -100111,7 +100125,7 @@
         {
           "kind": "legacy",
           "source": "cards\\10_themes_a.js",
-          "line": 1501
+          "line": 1530
         }
       ],
       "auto_table": false,
@@ -107225,7 +107239,7 @@
         {
           "kind": "legacy",
           "source": "cards\\10_themes_a.js",
-          "line": 1356
+          "line": 1385
         }
       ],
       "auto_table": false,

@@ -10,6 +10,48 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U508 (Opus, claude/work; **behaviour change in the card only**, cards/10_themes_a.js + 1 new test):
+  **《歯車街》② is now the trigger effect its text describes.** The text is 「このカードが破壊され墓地へ
+  送られた**時**に発動できる」 - an **optional trigger** - but the script had `activateFrom:["grave"]` and only a
+  `ctx.zone==='grave'` check, so measured, `strictScriptLegalityV2('歯車街',0,'grave',0,{})` returned `ok:true`
+  **with no destruction at all**, and destroying it on the field collected **no** candidate. It now follows the
+  same habit as the other GY triggers (《ダンディライオン》, 《TG ジェット・ファルコン》): `passive.onSendToGrave`
+  plus a condition that reads `ctx.eventName`, `eventIsSelfS03` and `graveInfo.byDestroy`. The **origin zone is
+  deliberately not checked** - `WIKI-CA554A0F5EEB` (**answer date 2008-04-21**, page 《歯車街》)
+  「手札やデッキからの破壊でも発動可能です」. That it is a chain-block trigger at that timing is backed by
+  `WIKI-5818C64C44A1` (**2009-01-09**) 「はい、無効にできます」.
+  **The (B-3)/(B-5) side was measured and deliberately NOT added** - this is the main finding. Opening the
+  墓地送り (G) class so R4 applies to `onSendToGrave` fixes one dated scene and breaks two:
+  《グリフォンの羽根帚》 `WIKI-1B4D52FCA757` (**10/08/11**, misses) stamp 2 vs 3 -> dropped, correct; but
+  《光帝クライス》 `WIKI-D9392162D28D` (**09/01/28**, does **not** miss - 「効果処理の終了したタイミングでは
+  破壊とドローを同じタイミングとして扱います」) is stamp 3 vs 6, and 《デュアルスパーク》
+  `WIKI-590A1789DD22` (**09/09/12**, 「破壊とドローは同時です」) is stamp 3 vs 4 - both would be **wrongly
+  dropped** (verified by actually enabling the class and seeing 《歯車街》 appear in `MISSED_TIMING_DROPS_S03`
+  for 《大嵐》 and 《デュアルスパーク》, then reverting). The root cause is (A)'s granularity: processings the
+  era rulings call 「同時」 (several destructions in one resolution; a destruction's own draw) each advance the
+  step. **Fixing that is the next unit** (batch simultaneous processing into one step); until then the 羽根帚
+  scene can still be activated (5-a item 4 records it).
+  Measured and now pinned: 《サイクロン》 2 vs 2 -> activates; 《燃えさかる大地》 `WIKI-6045932924C7`
+  (**09/03/02**) 2 vs 2 -> activates; 《光帝クライス》 and 《デュアルスパーク》 -> activate; a GY trip that is
+  **not** a destruction (discarded as 《ライトニング・ボルテックス》's cost) does not trigger; ① (the tribute
+  reduction) untouched (level 8 still needs 1 tribute).
+  Files: `cards/10_themes_a.js`, `engine/1ZZX_missed_timing_s03.js` (**comment only** - the measured reason the
+  G class stays shut), `docs/S03_MISSED_TIMING_RULINGS.md` (S03-U508 section: 11 dated rulings + the undated
+  `R1103-GEAR-*` layer), design doc ((F) 「S03-U508 で測ったこと」, 5-a item 4, the stage row),
+  `docs/S03_U508_REPORT.md`, `tools/check.py`, `tools/script_coverage.py`,
+  `tools/test_s03_u508_geartown_destroyed_trigger.js` (**18 PASS**),
+  `tools/test_s03_u501_negated_summon_destination.js` (**26 PASS**).
+  One existing assertion rewritten, not weakened: U501's C1 pinned the number of scripts whose `passive`
+  watches their own destruction / GY trip (onDestroy 111 / onSendToGrave 180); 《歯車街》 adds one, so it is
+  now **181** with the reason written into the test. Its C2 (176 normal-summonable monsters) is unchanged
+  because 《歯車街》 is a Field Spell.
+  **Still 未対応**: the 羽根帚 scene (above); **field spell replacement is unimplemented**, so the three undated
+  `R1103-GEAR-001/002/003` scenes cannot be measured at all (activating a second Field Spell stops with
+  「フィールドゾーンが埋まっています」) - that is 《歯車街》's main real trigger route; no ruling found for
+  《大嵐》's simultaneous destruction; and `carddata.json` gives 《古代の機械巨人》/《古代の機械獣》 the modern
+  「このカードは特殊召喚できない。」 line, so 歯車街 cannot summon them (**not checked** against the 2011 text,
+  nothing changed - the test uses 《古代の機械兵士》). Missed-timing support is unchanged at
+  **(B-5) 45 cards / 66 pairs plus 8 declarations** - not all cards and not all timing rules.
 - S03-U507 (Opus, claude/work; **behaviour change**, engine/1ZZX only + 1 new test): **《虚無空間》 is the first
   exception to R1.** S03-U505/U506 had flagged it as needing its own decision. `WIKI-07B43F63245D` (**answer date
   2011-07-16**): with 《虚無空間》 out, Tribute Summoning 《オベリスクの巨神兵》 sends monsters to the GY and

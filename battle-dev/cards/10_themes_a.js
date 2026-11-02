@@ -1310,12 +1310,37 @@ defineScript("禁じられた聖杯", {
 /* ---- 歯車街 ----
    ② 破壊され墓地へ送られた時、手札・デッキ・墓地から
       「アンティーク・ギア」モンスター1体を選んで特殊召喚する。 */
+/* S03-U508: ②は「このカードが破壊され墓地へ送られた**時**に発動できる」＝**誘発効果**である。
+   それまでは activateFrom:["grave"] と「墓地にあること」だけが条件で、破壊と関係なく
+   いつでも墓地から発動できてしまっていた（実測）。当時裁定はこの効果がタイミングを逃すと答えている:
+     `WIKI-1B4D52FCA757`（**回答日 2010-08-11**、《グリフォンの羽根帚》）
+       「このカードの効果で《歯車街》を破壊した場合、《歯車街》のタイミングを逃しますか？」
+       →「破壊後に回復の処理が挟まるので、タイミングを逃します。(10/08/11)」
+     逆に、破壊で処理が終わる効果なら逃さない:
+     `WIKI-25B0FF09EA0C`（**2009-02-22**、《トライデント・ドラギオン》）・
+     `WIKI-6045932924C7`（**2009-03-02**、《燃えさかる大地》）・
+     `WIKI-D9392162D28D`（**2009-01-28** の行、《光帝クライス》）。
+   ほかの墓地誘発（《ダンディライオン》《暗黒界の狩人 ブラウ》等）と同じ作法で、
+   **そのイベントの中でだけ**発動できるようにする。 */
+function gearTownDestroyedS03(ctx){
+  const h = findCardByUid(ctx.card && ctx.card.uid);
+  if(!h || h.zone !== 'grave') return false;
+  const g = h.card.graveInfo;
+  /* 送られた元の場所は見ない。当時裁定 `WIKI-CA554A0F5EEB`（**回答日 2008-04-21**、掲載ページ《歯車街》）:
+     「このカードが《闇のデッキ破壊ウイルス》の効果で破壊され墓地へ送られた場合、効果を使えますか？」
+     →「手札やデッキからの破壊でも発動可能です。(08/04/21)」 */
+  return !!(g && g.byDestroy);
+}
 defineScript("歯車街", {
   auditNote:"②の特殊召喚のみ実装。リリース軽減は tributesNeeded 側で処理",
   type:"spell", priority:1,
   activateFrom:["grave"],
   condition(ctx){
     if(ctx.zone !== 'grave'){ ctx.reason = "破壊され墓地へ送られた時に発動します"; return false; }
+    /* S03-U508: 誘発なので、このカード自身が破壊され墓地へ送られたイベントの中でだけ発動できる。 */
+    if(ctx.eventName !== 'onSendToGrave' || !eventIsSelfS03(ctx) || !gearTownDestroyedS03(ctx)){
+      ctx.reason = "破壊され墓地へ送られた時に発動します"; return false;
+    }
     if(!gearTownTargets(ctx.player).length){
       ctx.reason = "「アンティーク・ギア」モンスターがいません"; return false;
     }
@@ -1330,7 +1355,11 @@ defineScript("歯車街", {
     if(!t) return;
     API.specialSummon(ctx.player, t.zone, t.index, 'atk', "歯車街");
   },
-  afterResolve(){}
+  afterResolve(){},
+  /* S03-U508: 「破壊され墓地へ送られた時」の誘発として拾う。 */
+  passive:{ onSendToGrave(ctx){
+    return ctx.zone === 'grave' && eventIsSelfS03(ctx) && gearTownDestroyedS03(ctx)
+      && gearTownTargets(ctx.player).length > 0; } }
 });
 /* 「アンティーク・ギア」＝カード名に「古代の機械」を含むモンスター */
 function gearTownTargets(p){

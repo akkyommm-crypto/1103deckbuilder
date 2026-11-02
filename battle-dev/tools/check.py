@@ -875,6 +875,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u506_destroyed_class.js')],check
 # 《虚無空間》 misses the timing even though the trigger is mandatory, so a (B-1) declaration with mode
 # 'miss' now outranks R1 for that one card. R1 itself is unchanged.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u507_vanity_emptiness_miss.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u508_geartown_destroyed_trigger.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

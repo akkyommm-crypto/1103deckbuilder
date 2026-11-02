@@ -214,8 +214,12 @@ const normalSummonable=all.filter(n=>{
   const db=CARD_DB[id]; if(!db||db.k!=='m') return false;
   return !(db.sub==='融合'||db.sub==='シンクロ'||db.sub==='エクシーズ');
 });
-ok('C1 ★ 自分の破壊／墓地送りを見る passive の件数（onDestroy 111 / onSendToGrave 180）',
-   byEv['onDestroy'].length===111 && byEv['onSendToGrave'].length===180,
+/* S03-U508 で onSendToGrave が 180 → 181 になった。《歯車街》②を
+   「破壊され墓地へ送られた時」の誘発に直して passive.onSendToGrave を足したため。
+   《歯車街》はフィールド魔法なので、下の C2（通常召喚できるモンスター 176 枚）は変わっていない。 */
+ok('C1 ★ 自分の破壊／墓地送りを見る passive の件数（onDestroy 111 / onSendToGrave 181）'
+   +'。onSendToGrave は S03-U508 で《歯車街》が加わって 180 → 181',
+   byEv['onDestroy'].length===111 && byEv['onSendToGrave'].length===181,
    JSON.stringify(EVS.map(e=>e+':'+byEv[e].length)));
 ok('C2 ★ そのうち通常召喚できるモンスターは 176 枚。'
    +'いまは召喚を無効にされてもこの 176 枚のイベントが 1 つも出ない（手札から出した場合）',

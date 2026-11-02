@@ -408,6 +408,16 @@ const MISSED_TIMING_EVENT_CLASS_S03 = {onNormalSummon:'N', onSpecialSummon:'S'};
    「墓地へ送られた時」と書かれたカード（例：《森の番人グリーン・バブーン》）は、配線が onDestroy でも
    句が G なのでここでは落とさない。墓地送りの種別は別単位（S03-U505 の (F) 5 の約束）。
    `onLeaveField` は入れない。S03-U501 / U502 で見たとおり盤面の差分から検出されるルール処理で、別の軸である。 */
+/* S03-U508: 墓地送り（G）の側は**開けていない**。開けると `onSendToGrave` で拾った候補に R4
+   （刻みと現在値の比較）が当たるが、実経路を測ると回答日つきの裁定 2 件が壊れる:
+     `WIKI-D9392162D28D`（**2009-01-28** の行、《光帝クライス》）「効果処理の終了したタイミングでは
+       破壊とドローを同じタイミングとして扱います」→ 破壊された《歯車街》は逃さない。
+       実測では破壊の刻み 3 に対して解決の終わりは 6（破壊 2 回とドロー 2 回が別の刻みになる）。
+     `WIKI-590A1789DD22`（**2009-09-12**、《デュアルスパーク》）「破壊とドローは同時です」
+       → 同じく逃さない。実測では刻み 3 に対して 4。
+   直すには、当時裁定が「同時」と言う処理（1 回の解決の中の複数の破壊・破壊に伴うドロー）を
+   1 つの刻みにまとめる必要があり、(A) の刻み方そのものの変更になる。**別単位**。
+   《歯車街》のカード側（「破壊され墓地へ送られた時」の誘発）は S03-U508 で直してある。 */
 const MISSED_TIMING_DESTROY_CLASS_S03 = {onDestroy:'D'};
 const MISSED_TIMING_CLASSES_S03 = { summonSuccess: true, flipSummonReverse: false, destroyed: true };
 function missedTimingSummonNegatorS03(name){
