@@ -7890,6 +7890,7 @@
         "tools\\test_s03_u214_grave_redirect.js",
         "tools\\test_s03_u215_ns7.js",
         "tools\\test_s03_u230_ns22.js",
+        "tools\\test_s03_u507_vanity_emptiness_miss.js",
         "tools\\test_s03_u58_resolution_deck_choice.js"
       ]
     },
@@ -38881,7 +38882,8 @@
         "tools\\test_s03_u296_choice_release_replay.js",
         "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_s03_u498_summon_negation_window.js",
-        "tools\\test_s03_u503_face_up_defence_normal_summon.js"
+        "tools\\test_s03_u503_face_up_defence_normal_summon.js",
+        "tools\\test_s03_u507_vanity_emptiness_miss.js"
       ]
     },
     {
@@ -62092,6 +62094,7 @@
         "tools\\test_s03_u502_negated_summon_not_on_field.js",
         "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_s03_u504_b_wording_reading.js",
+        "tools\\test_s03_u507_vanity_emptiness_miss.js",
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
@@ -98200,6 +98203,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u505_destroy_trigger_audit.js",
+        "tools\\test_s03_u507_vanity_emptiness_miss.js",
         "tools\\test_v460_native_cards.js"
       ]
     },

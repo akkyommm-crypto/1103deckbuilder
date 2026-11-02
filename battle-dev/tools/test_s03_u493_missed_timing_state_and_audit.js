@@ -350,8 +350,11 @@ ok('D6 ★ 強制 255 件は配線に当てはまっても落とさない（R1�
 const ALL=Object.keys(B).reduce((a,k)=>a.concat(B[k]),[]);
 ok('D7 ★ R5 の例外 3 枚は墓地送りの誘発で候補に入らない（R5 の宣言は今も 0 件）。宣言表は R1 の 6 件と R10 の 1 件',
    ['ダーク・スプロケッター','ファラオの化身','アーケイン・ファイロ'].every(nm=>ALL.indexOf(nm)<0)
-   && Object.keys(MISSED_TIMING_DECL_S03).length===7
-   && Object.keys(MISSED_TIMING_DECL_S03).every(k=>MISSED_TIMING_DECL_S03[k].mode==='never'),
+   /* S03-U507: 宣言表は 8 件になった（R1 の 6 件 + R10 の 1 件 + **S03-U507 の miss 1 件**）。 */
+   && Object.keys(MISSED_TIMING_DECL_S03).length===8
+   && Object.keys(MISSED_TIMING_DECL_S03).filter(k=>MISSED_TIMING_DECL_S03[k].mode==='never').length===7
+   && Object.keys(MISSED_TIMING_DECL_S03).filter(k=>MISSED_TIMING_DECL_S03[k].mode==='miss')
+        .join('/')==='虚無空間',
    JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)));
 ok('D8 ★ 種別は配線と文言の両方を要求する（どちらか一方では落とさない）',
    missedTimingClassS03({name:'奈落の落とし穴',eventName:'onNormalSummon'},{})==='summonSuccess'

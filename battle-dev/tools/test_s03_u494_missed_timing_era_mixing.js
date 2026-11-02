@@ -335,10 +335,12 @@ ok('D3 ★ negative control: 宣言を外しても (B-5) が止め、許可リ�
    JSON.stringify({first:d3a,second:{drops:dropNames(),lp:gameState.players[1].lp}}));
 delete MISSED_TIMING_CONFIRMED_S03['バーニング・スカルヘッド'];
 MISSED_TIMING_DECL_S03['バーニング・スカルヘッド']={mode:'never',ruling:'WIKI-A47B4CA77987',reason:'R1 強制（本機構と同じ場面）'};
-ok('D4 ★ 宣言表は 7 件すべて never で、裁定 ID が付いている',
-   JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03).sort())===JSON.stringify(DECL_S494)
-   && Object.keys(MISSED_TIMING_DECL_S03).every(k=>MISSED_TIMING_DECL_S03[k].mode==='never'
-        && /^(WIKI|R1103)-/.test(MISSED_TIMING_DECL_S03[k].ruling||''))
+/* S03-U507 で宣言表に miss の 1 件（《虚無空間》）が入ったので、この単位が入れた 7 件を
+   「never の全件」として数える形に直した。裁定 ID が付いていることは全件で変えていない。 */
+ok('D4 ★ この単位の宣言 7 件はすべて never で、裁定 ID が付いている（S03-U507 の miss 1 件は別）',
+   JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)
+     .filter(k=>MISSED_TIMING_DECL_S03[k].mode==='never').sort())===JSON.stringify(DECL_S494)
+   && Object.keys(MISSED_TIMING_DECL_S03).every(k=>/^(WIKI|R1103)-/.test(MISSED_TIMING_DECL_S03[k].ruling||''))
    && DECL_S494.every(nm=>RUL.indexOf(MISSED_TIMING_DECL_S03[nm].ruling)>=0)
    && DECL_S494.every(nm=>DOC.indexOf(MISSED_TIMING_DECL_S03[nm].ruling)>=0),
    JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)));

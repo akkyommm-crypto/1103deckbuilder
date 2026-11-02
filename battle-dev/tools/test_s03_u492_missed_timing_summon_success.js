@@ -228,10 +228,14 @@ ok('B ★ 判定は collectHandlers の 1 箇所だけ — 優先権・応答機
    && !/issedTiming/.test(String(BEGINWIN_ORIG_S492)),'');
 ok('B ★ 《血の代償》自身は宣言していない（逃すのは応答する側のカード）。宣言表は R1 の 6 件と R10 の 1 件',
    missedTimingModeS03('血の代償')===null
-   && JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03).sort())===JSON.stringify(
+   /* S03-U507: miss の 1 件（《虚無空間》）が入ったので、never の全件で比べる。 */
+   && JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)
+       .filter(k=>MISSED_TIMING_DECL_S03[k].mode==='never').sort())===JSON.stringify(
       ['サイコ・エンペラー','スノーマンイーター','バーニング・スカルヘッド','リチュア・チェイン','炎帝近衛兵','素早いビッグハムスター','運命のドラ'].sort())
-   && Object.keys(MISSED_TIMING_DECL_S03).every(k=>MISSED_TIMING_DECL_S03[k].mode==='never'
-        && /^(WIKI|R1103)-/.test(MISSED_TIMING_DECL_S03[k].ruling||'')),
+   && Object.keys(MISSED_TIMING_DECL_S03)
+        .every(k=>/^(WIKI|R1103)-/.test(MISSED_TIMING_DECL_S03[k].ruling||''))
+   && Object.keys(MISSED_TIMING_DECL_S03)
+        .filter(k=>MISSED_TIMING_DECL_S03[k].mode==='miss').join('/')==='虚無空間',
    JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)));
 `, {expect:9});
 

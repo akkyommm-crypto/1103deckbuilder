@@ -871,6 +871,10 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u505_destroy_trigger_audit.js')]
 # answer date 2009-08-07). It also drops FX_SELF_TO_GRAVE from the (A) allow list: a resolved Spell/Trap
 # going to the GY is a rule step, not processing, and counting it made destroy-only effects miss.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u506_destroyed_class.js')],check=True)
+# S03-U507: the first exception to R1. WIKI-07B43F63245D (answer date 2011-07-16) says the self-destruct of
+# 《虚無空間》 misses the timing even though the trigger is mandatory, so a (B-1) declaration with mode
+# 'miss' now outranks R1 for that one card. R1 itself is unchanged.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u507_vanity_emptiness_miss.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

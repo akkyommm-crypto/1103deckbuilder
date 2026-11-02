@@ -120,12 +120,17 @@ MISSED_TIMING_DECL_S03['闇・道化師のペーテン']={mode:'never',ruling:'t
 ok('B ★ never と宣言した例外カードは落とさない（R5）',
    missedTimingDropS03(cand,{stepS03:4})===false,'');
 delete MISSED_TIMING_DECL_S03['闇・道化師のペーテン'];
-/* R1: 強制誘発は落とさない。強制かどうかは既存の triggerCandidateForcedS03（S03-U44）で決める */
-declarePeten();
+/* R1: 強制誘発は落とさない。強制かどうかは既存の triggerCandidateForcedS03（S03-U44）で決める。
+   **S03-U507 で順序が変わった**: カードごとに回答日のある裁定を確認して入れた宣言（mode 'miss'）は
+   R1 より強い（《虚無空間》 WIKI-07B43F63245D 回答日 2011-07-16）。宣言の無い強制誘発は今までどおり落ちない。 */
 const f=triggerCandidateForcedS03;
 triggerCandidateForcedS03=function(){return true;};
-ok('B ★ 強制誘発は宣言があっても落とさない（R1）',
+delete MISSED_TIMING_DECL_S03['闇・道化師のペーテン'];
+ok('B ★ 宣言の無い強制誘発は落とさない（R1）',
    missedTimingDropS03(cand,{stepS03:4})===false,'');
+declarePeten();
+ok('B ★ mode miss の宣言は R1 より強い（S03-U507。強制でも落とす）',
+   missedTimingDropS03(cand,{stepS03:4})===true,'');
 triggerCandidateForcedS03=f;
 ok('B 前提: 強制判定は既存の共通処理を使っている（自前で持っていない）',
    /triggerCandidateForcedS03/.test(String(missedTimingDropS03)),'');
@@ -135,7 +140,7 @@ const kept=filterMissedTimingS03([cand,{name:'ワイト',p:0,eventName:'onSendTo
 ok('B: 落とすのは該当候補だけで、ほかの候補は残る',
    kept.length===1 && kept[0].name==='ワイト' && MISSED_TIMING_DROPS_S03.length===1,
    JSON.stringify({kept:kept.map(x=>x.name),drops:MISSED_TIMING_DROPS_S03.length}));
-`, {expect:9});
+`, {expect:10});   /* S03-U507 で B ブロックに 1 件足した（宣言と R1 の順序） */
 
 /* ===== C. 刻み（queueDeferredEventV2）と digest ===== */
 harness(COMMON + String.raw`

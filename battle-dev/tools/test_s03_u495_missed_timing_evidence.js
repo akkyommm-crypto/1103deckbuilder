@@ -152,8 +152,10 @@ ok('A4 ★ R10（チェーンブロックを作らない効果は発動ではな
 ok('A5 ★ R4 に WIKI-97F65A6DBC45 の根拠が足されている',
    DOC.indexOf('WIKI-97F65A6DBC45')>=0 && RUL.indexOf('WIKI-97F65A6DBC45')>=0
    && RUL.indexOf('《Ｅ・ＨＥＲＯ エアーマン》等はタイミングを逃しません')>=0,'');
-ok('A6 ★ 宣言表は 7 件すべて never で、裁定 ID が engine・設計書・裁定の抽出に揃っている',
-   JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03).sort())===JSON.stringify(DECL_S495)
+/* S03-U507 で miss の 1 件（《虚無空間》）が入ったので、never の全件で比べる形に直した。 */
+ok('A6 ★ never の宣言は 7 件で、裁定 ID が engine・設計書・裁定の抽出に揃っている（miss の 1 件は S03-U507）',
+   JSON.stringify(Object.keys(MISSED_TIMING_DECL_S03)
+     .filter(k=>MISSED_TIMING_DECL_S03[k].mode==='never').sort())===JSON.stringify(DECL_S495)
    && DECL_S495.every(nm=>MISSED_TIMING_DECL_S03[nm].mode==='never')
    && DECL_S495.every(nm=>{const id=MISSED_TIMING_DECL_S03[nm].ruling;
         return /^(WIKI|R1103)-/.test(id) && RUL.indexOf(id)>=0 && DOC.indexOf(id)>=0;}),

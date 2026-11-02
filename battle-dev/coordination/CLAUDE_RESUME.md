@@ -10,6 +10,31 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U507 (Opus, claude/work; **behaviour change**, engine/1ZZX only + 1 new test): **《虚無空間》 is the first
+  exception to R1.** S03-U505/U506 had flagged it as needing its own decision. `WIKI-07B43F63245D` (**answer date
+  2011-07-16**): with 《虚無空間》 out, Tribute Summoning 《オベリスクの巨神兵》 sends monsters to the GY and
+  「《虚無空間》の自壊効果の発動するタイミングを逃していますので破壊されません」 - i.e. a **mandatory** trigger
+  misses, which collides with R1. R1 also rests on dated rulings (《D・バリア》 `WIKI-7885E14CC5BA` 09/09/27,
+  《幽獄の時計塔》 `WIKI-13E6A14CA0CC` 09/01/08), so R1 was **not** touched; instead the card gets a (B-1)
+  declaration with **mode 'miss' - the first one** (that mode had 0 entries) - and `missedTimingDropS03` now reads
+  an explicit declaration **before** R1: a per-card declaration backed by a dated ruling outranks the general
+  rule. R4 still comes first, so the trigger still fires when the GY trip is the last processing.
+  **It is also an era-text-mixing case** (the U494 axis): `carddata.json` carries the modern errata
+  (「デッキまたはフィールドから自分の墓地へカードが送られた**場合に発動する**」) while the 2011 text read
+  「…墓地にカードが送られた**時**」, and measured, that word order yields **no (B-2) clause at all**, which is
+  why a declaration is the only route. Measured: Tribute Summon (`FX_TO_GRAVE` 0->1, `NORMAL_SUMMON` 1->2, stamp 1
+  vs 2) leaves 《虚無空間》 on the field; 《おろかな埋葬》 (`MOVE` 0->1, `FX_MILL` 1->2, stamp 2 vs 2) still makes
+  it self-destruct. Before this unit the first case destroyed it. Assertions rewritten, not weakened: U491's B
+  pinned 「宣言があっても R1 が勝つ」 - it now pins both directions (no declaration -> R1 protects; mode 'miss' ->
+  the declaration wins), with one assertion added and `expect` raised 9 -> 10; U492/U493/U494/U495 each counted the
+  declaration table as 7 entries all 'never', and now count the 'never' set (7) separately from the one 'miss'.
+  Files: `engine/1ZZX_missed_timing_s03.js`, `docs/S03_MISSED_TIMING_RULINGS.md` (S03-U507 section with the quote,
+  the R1 conflict and the era-text note), design doc (the R1 row's exception, 5-a item 11, the stage row),
+  `docs/S03_U507_REPORT.md`, `tools/check.py`, `tools/script_coverage.py`,
+  `tools/test_s03_u507_vanity_emptiness_miss.js` (**19 PASS**).
+  **Still 未対応**: whether any other card has a dated ruling of the same shape (「強制だが逃す」) has **not**
+  been searched - 5-a item 11 says so. Missed-timing support is 45 cards / 66 pairs of (B-5) plus 8 declarations.
+  Related: the 17 missed-timing tests = **633 PASS / 0 FAIL**; the 8 tests that use 《虚無空間》 = 341 PASS.
 - S03-U506 (Opus, claude/work; **behaviour change**, engine/1ZZX only + 1 new test): **the destruction class is
   in** - the 破壊 side of 5-a item 4, per the design S03-U505 settled in (F). (B-2) gains 「られた」 in the
   pattern and the words 破壊=D / 戦闘で破壊=B / 墓地へ送=G / フィールドから墓地へ送=GF / 除外=X / リリース=T;
