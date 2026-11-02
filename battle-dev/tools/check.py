@@ -832,6 +832,10 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u497_summon_negation_window_orde
 # the summon-negation window before its summon-success event, but only when the (A) step counter is
 # unchanged (WIKI-2CF23AA42E79, answer date 2011-08-25) and only for the marked call site (blood offer).
 subprocess.run(['node',str(ROOT/'tools/test_s03_u498_summon_negation_window.js')],check=True)
+# S03-U499: the window's second marked call site, 《デュアル・サモナー》's Normal Summon from the hand.
+# Measured first: that effect queues onNormalSummon at procStepS03 2 with an empty chain and the drain sees
+# the same number, exactly as the blood offering does. Its Gemini re-summon branch stays unmarked (5-a #1-h).
+subprocess.run(['node',str(ROOT/'tools/test_s03_u499_dual_summoner_negation_window.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

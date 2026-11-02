@@ -10,6 +10,29 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U499 (Opus, claude/work; **behaviour change**, 1 card mark + 1 new test + docs; no engine change): the
+  summon-negation window of S03-U498 gets its **second marked call site** - 《デュアル・サモナー》's Normal Summon
+  from the hand (`cards/HZK_claude_s03_u164_dual_summoner.js`). U498 had left it as 5-a #1-g because its summon
+  runs inside a resolution-time choice resume at the opponent's End Phase and **the order had not been measured**.
+  Measured first, then marked: `onNormalSummon` is queued at `procStepS03` **2** with chain **0**, `NORMAL_SUMMON`
+  goes 1 -> 2, the drain still sees **2**, and `CHOICE_OPEN_V49` / `CHOICE_ANSWER_V49` do **not** advance the step -
+  i.e. identical to 《血の代償》 at chain 1, so `WIKI-2CF23AA42E79` (answer date 2011-08-25, phrased generally as
+  「この効果による通常召喚」) applies the same way. The card's own rulings in the DB
+  (`WIKI-A16DF4FA6D7D` 07/12/22 tributes, `WIKI-C73F488783A0` 08/06/24 setting) say nothing about summon negation,
+  so this rests on the dated general ruling plus the era text. **Its Gemini re-summon branch
+  (`GEMINI_SUMMON_S03`) stays unmarked as the new 5-a #1-h**: the order is the same, but the cancel is a different
+  one - `geminiSummonResumeS03` (`engine/1ZI`) **applies** the Gemini Summon on commit and **destroys** the monster
+  on cancel, so case (b) (which has already applied the summon) would double-apply it. The UI-initiated Gemini
+  window is untouched. Only undated evidence exists for it (`WIKI-5B32D377CFE9`, 「再度召喚は通常召喚扱い」).
+  Files: the card (one mark + its header comment rewritten, since 「a summon made during a resolution has no
+  summon-negation window」 was no longer true), design doc (5-a #1-g rewritten, #1-h added, the stage row, and
+  (D)'s 「印を付けた呼び出し元」 row now says 2 with the promise to **measure a call site's order before marking
+  it**), `docs/S03_U499_REPORT.md`, `tools/check.py`, `tools/script_coverage.py`,
+  `tools/test_s03_u499_dual_summoner_negation_window.js` (**34 PASS**: A the measured order, B the window and the
+  negation, C/D two negative controls, E a Tribute Summon, F Save/Load into a different VM + Replay,
+  G **an audit of all 495 files in cards/** showing exactly two marked call sites). U498's K1/K11 were rewritten
+  (not weakened) for the second call site. Related: u494 51 / u495 33 / u496 35 / u497 32 / u498 73 and the 25
+  blood-offer / summon-negation / gemini tests (772) = **996 PASS / 0 FAIL**.
 - S03-U498 (Opus, claude/work; **behaviour change**, engine + 1 card mark + 1 new test): **the summon-negation
   window of a resolution-time Normal Summon is now implemented** - the design S03-U497 settled in
   `docs/S03_MISSED_TIMING_DESIGN.md` (D), case (b). The only evidence is `WIKI-2CF23AA42E79` (**answer date

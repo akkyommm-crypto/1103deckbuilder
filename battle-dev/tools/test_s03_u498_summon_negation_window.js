@@ -396,11 +396,15 @@ ok('J2 召喚無効のカードはいまも missedTimingSummonNegatorS03 で真'
 harness('const DOC=' + JSON.stringify(DESIGN_S498) + ';const RUL=' + JSON.stringify(RULINGS_S498) + ';'
       + 'const SRC=' + JSON.stringify(SRC_S498) + ';' + COMMON + String.raw`
 const ENG=SRC['engine/1ZZY_summon_negation_window_s03.js'];
-ok('K1 ★ 印を付けているカードスクリプトは《血の代償》の 1 箇所だけ（全件監査）',
-   Object.keys(SRC).filter(k=>/^cards\//.test(k) && /summonNegWindowS03:true/.test(SRC[k])).join('/')
-     ==='cards/00_generic_core.js'
-   && (SRC['cards/00_generic_core.js'].match(/summonNegWindowS03:true/g)||[]).length===1,
-   JSON.stringify(Object.keys(SRC).filter(k=>/summonNegWindowS03:true/.test(SRC[k]))));
+/* K1 は S03-U499 で書き替えた（印を付けた呼び出し元が 1 件から 2 件になった）。
+   全件監査であることは変えない: このテストが読む cards/ の中で印を持つのはこの 2 つだけで、
+   全体の全件監査（cards/ 全ファイル）は tools/test_s03_u499_* の K が持っている。 */
+ok('K1 ★ 印を付けているのは《血の代償》と《デュアル・サモナー》の手札の枝だけ（それぞれ積む箇所 1 つ）',
+   Object.keys(SRC).filter(k=>/^cards\//.test(k) && SRC[k].indexOf('summonNegWindowS03:true}')>=0).sort().join(' ')
+     ==='cards/00_generic_core.js cards/HZK_claude_s03_u164_dual_summoner.js'
+   && (SRC['cards/00_generic_core.js'].split('summonNegWindowS03:true}').length-1)===1
+   && (SRC['cards/HZK_claude_s03_u164_dual_summoner.js'].split('summonNegWindowS03:true}').length-1)===1,
+   JSON.stringify(Object.keys(SRC).filter(k=>SRC[k].indexOf('summonNegWindowS03:true}')>=0)));
 ok('K2 窓を開く呼び出しは engine/30 の遅延イベントの排出 1 箇所だけ',
    (SRC['engine/30_processor_chain_battle.js'].match(/summonNegWindowOpenS03\(/g)||[]).length===1,
    'x');
@@ -427,9 +431,13 @@ ok('K9 ★ 設計書 (D) に S03-U498 で実装したことと、残した近似
    /S03-U498/.test(DOC) && /\(D\)/.test(DOC), 'x');
 ok('K10 ★ 裁定記録に WIKI-2CF23AA42E79 の本文と回答日が残っている',
    /WIKI-2CF23AA42E79/.test(RUL) && /2011-08-25/.test(RUL), 'x');
-ok('K11 ★ デュアル・サモナーには印を付けていない（その召喚は解決中の選択の再開の中で行われるので別に実測する）',
-   !/summonNegWindowS03/.test(SRC['cards/HZK_claude_s03_u164_dual_summoner.js'])
-   && /registerChoiceHandlerV49\('s03u164\.dual-summoner/.test(SRC['cards/HZK_claude_s03_u164_dual_summoner.js']),
+/* K11 も S03-U499 で書き替えた。S03-U498 の時点では「処理順を実測していない」ため印を付けていなかった。
+   S03-U499 で実測し、手札からの枝だけに印を付けた（デュアル再召喚の枝は取り消しの形が違うので未対応）。 */
+ok('K11 ★ デュアル・サモナーは手札からの枝にだけ印が付いている（デュアル再召喚の枝には無い）',
+   SRC['cards/HZK_claude_s03_u164_dual_summoner.js']
+     .indexOf("card:summoned, byEffectS03:'デュアル・サモナー', summonNegWindowS03:true}")>=0
+   && SRC['cards/HZK_claude_s03_u164_dual_summoner.js']
+     .indexOf("card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー'}")>=0,
    'x');
 `, {expect:11});
 /* ===== L. 召喚側が p1 の場合と Undo ===== */

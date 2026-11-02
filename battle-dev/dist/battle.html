@@ -68438,8 +68438,13 @@ defineScript('マイン・モール', {
    - Offered at the opponent's End Phase (the onEndPhase event: the controller of this face-up card, not the turn player, may activate
      it once; engine note: represented as an optional effect of that event — the End Phase gives the non-turn player one chance).
      Cost: 500 LP.
-   - Resolution: a Normal Summon by the effect (NORMAL_SUMMON prepaid — the player's own Normal Summon is not used; a summon made
-     during a resolution has no summon-negation window). The Gemini monster is chosen at resolution (journaled choice):
+   - Resolution: a Normal Summon by the effect (NORMAL_SUMMON prepaid — the player's own Normal Summon is not used).
+     S03-U499: the summon from the hand now opens the summon-negation window (engine/1ZZY; the queued onNormalSummon carries
+     summonNegWindowS03:true). Measured: this effect queues it at procStepS03 2 with an empty chain and the drain sees the same
+     number, exactly as the blood offering does, so WIKI-2CF23AA42E79 (answer date 2011-08-25) applies in the same way.
+     The Gemini re-summon branch below is NOT marked — see the design doc 5-a: the cancel of an already-applied Gemini Summon
+     is a different one (geminiSummonResumeS03 destroys the monster, and its commit applies the summon that case (b) has
+     already applied). The Gemini monster is chosen at resolution (journaled choice):
        · from the hand — face-up Attack Position; Lv5-6 needs 1 Tribute, Lv7+ 2 (tributesNeeded), chosen at resolution;
        · a face-up Gemini monster on its controller's field that is not yet an Effect Monster — the Gemini Summon (GEMINI_SUMMON_S03).
      Then the onNormalSummon event, as for any Normal Summon.
@@ -68527,7 +68532,9 @@ function dualSummonerNormalSummonS03(p, uid, tributeUids){
   act({type:'NORMAL_SUMMON', player:p, handIndex:h.index, pos:'atk', tributes:tributeUids.length, tributeValue:tributeUids.length, prepaid:true,
     p3Materials:tribs.filter(Boolean)});
   const summoned = lastSummonedCard(p);
-  if(summoned) queueDeferredEventV2('onNormalSummon', {player:p, name:cardName(summoned), card:summoned, byEffectS03:'デュアル・サモナー'});
+  /* S03-U499: この通常召喚に対する召喚無効の窓を開ける印（engine/1ZZY。根拠は WIKI-2CF23AA42E79、回答日 2011-08-25）。
+     開くかどうかは engine 側が (A) の処理番号で判定する。 */
+  if(summoned) queueDeferredEventV2('onNormalSummon', {player:p, name:cardName(summoned), card:summoned, byEffectS03:'デュアル・サモナー', summonNegWindowS03:true});
 }
 /* S03-U165: more monsters whose battle protection is conditional (read as unconditional from the text until S03-U158),
    with their full 2011 texts. */
