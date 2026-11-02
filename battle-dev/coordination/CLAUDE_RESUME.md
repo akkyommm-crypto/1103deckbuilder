@@ -10,6 +10,29 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U504 (Opus, claude/work; docs + 1 new test only, **no behaviour change**): the four (B-4) **"B wording"**
+  cards of 5-a item 10 were read. Three of them - 《ジャンク・シンクロン》, 《デブリ・ドラゴン》,
+  《デスカイザー・ドラゴン／バスター》 - are named in other cards' rulings only in connection with **negating a
+  revived monster's effects**, Synchro-material restrictions, or what happens to an effect **after** it has been
+  activated (`WIKI-521DF8D20F59`, 2011-01-12: flipped face-down by 《月の書》 mid-chain, the summon still
+  happens). None of that is the missed-timing axis, so they stay in (B-4) (machine classification only).
+  The fourth, 《レッド・ガジェット》, **is** on the axis: `WIKI-E14C67136AC3` (page 《A・ジェネクス・アクセル》)
+  carries an appended line dated **2011-06-27** - 「なお、《レッド・ガジェット》を特殊召喚した場合効果を発動
+  することができます」 - i.e. a Special Summon followed by an ATK doubling **in the same resolution** does not
+  make its trigger miss. Same shape as 《命の綱》 `WIKI-97F65A6DBC45` (R4, S03-U495). **Measured on the real
+  path: the engine already matches.** Steps are `FX_DISCARD` 0->1 / `FX_SPECIAL_SUMMON` 1->2 / `MOD_ADD` 2->3 /
+  `FX_SEARCH` 3->4, and at `collectHandlers` the event's stamp and the current counter are **both 3**. The reason
+  is structural and now recorded: a resolution-time Special Summon's success event is queued by
+  `flushResolutionSummonBatchV2` (`engine/30`) at the **end** of the link's resolution, so its stamp is the last
+  number of that resolution and later processing inside the same resolution cannot break the equality. A negative
+  control pins that the axis still works (via 《ゴブリンドバーグ》 the stamp and the counter differ) and that
+  《レッド・ガジェット》 is still not dropped, because it is not in the (B-5) allow list - the S03-U496 promise.
+  All four cards remain outside (B-5), so nothing is dropped for them. Files:
+  `docs/S03_MISSED_TIMING_RULINGS.md` (S03-U504 section, 12 rulings in four tables with their answer dates),
+  design doc (item 10 rewritten as read + the stage row), `docs/S03_U504_REPORT.md`, `tools/check.py`,
+  `tools/script_coverage.py`, `tools/test_s03_u504_b_wording_reading.js` (**18 PASS**).
+  (B-4) still holds **125 cards / 60%** on machine classification alone - that is not a ruling that they do not
+  miss, only the old behaviour kept. Related: u494 51 / u495 33 / u496 35 / u503 35 / u504 18 = 172 PASS / 0 FAIL.
 - S03-U503 (Opus, claude/work; **behaviour change**, 3 engine edits + 1 new test): **the face-up Defence
   Position Normal Summon exists now** - 5-a item 3, which had a **dated** ruling and no implementation.
   `WIKI-0B439F71B94A` (**answer date 2011-04-18**, page 《ゴブリンドバーグ》): with 《聖なる輝き》 on the field a

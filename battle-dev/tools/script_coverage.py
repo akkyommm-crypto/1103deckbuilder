@@ -630,6 +630,8 @@ CARD_TEST_FOCUS = {
     "test_s03_u503_face_up_defence_normal_summon.js": {"聖なる輝き", "ゴブリンドバーグ",
                                                        "E・HERO エアーマン", "E・HERO オーシャン",
                                                        "神の宣告", "デーモンの召喚", "クリボー", "ワイト"},
+    "test_s03_u504_b_wording_reading.js": {"A・ジェネクス・アクセル", "レッド・ガジェット",
+                                           "イエロー・ガジェット", "ゴブリンドバーグ", "ワイト"},
 }
 
 

@@ -1132,7 +1132,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u333_genex.js"
+        "tools\\test_s03_u333_genex.js",
+        "tools\\test_s03_u504_b_wording_reading.js"
       ]
     },
     {
@@ -11315,6 +11316,7 @@
       "auto_table": true,
       "tests": [
         "tools\\test_s03_u248_trap_monsters.js",
+        "tools\\test_s03_u504_b_wording_reading.js",
         "tools\\test_s03_u72_gadget_search_cycle.js"
       ]
     },
@@ -23630,6 +23632,7 @@
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u503_face_up_defence_normal_summon.js",
+        "tools\\test_s03_u504_b_wording_reading.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_v640_batch16.js"
       ]
@@ -60671,6 +60674,7 @@
       "tests": [
         "tools\\test_s03_u04_lock_recovery.js",
         "tools\\test_s03_u248_trap_monsters.js",
+        "tools\\test_s03_u504_b_wording_reading.js",
         "tools\\test_s03_u72_gadget_search_cycle.js"
       ]
     },
@@ -62066,6 +62070,7 @@
         "tools\\test_s03_u501_negated_summon_destination.js",
         "tools\\test_s03_u502_negated_summon_not_on_field.js",
         "tools\\test_s03_u503_face_up_defence_normal_summon.js",
+        "tools\\test_s03_u504_b_wording_reading.js",
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",

@@ -854,6 +854,12 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u502_negated_summon_not_on_field
 # NORMAL_SUMMON now takes a position declaration and the two set entry points route to it. Without the
 # declaration, and without 《聖なる輝き》, nothing changes.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u503_face_up_defence_normal_summon.js')],check=True)
+# S03-U504: reading the four (B-4) "B wording" cards (5-a item 10). Three of them are only named in
+# rulings about negating a revived monster's effects or about Synchro-material restrictions, which are not
+# the missed-timing axis. 《レッド・ガジェット》 is on the axis: WIKI-E14C67136AC3's appended line
+# (answer date 2011-06-27) says it can be activated in an R4 situation, and the engine already matches.
+# Design/evidence only - this unit does not change behaviour.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u504_b_wording_reading.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
