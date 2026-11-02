@@ -10,6 +10,35 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U500 (Opus, claude/work; **behaviour change** + **a correction to what U498 wrote**): the summon-negation
+  window gets its **third marked call site** - the Gemini re-summon (「もう1度召喚」, `GEMINI_SUMMON_S03`)
+  《デュアル・サモナー》 performs by effect - and the cancel is now **split by branch**. U499 had already measured
+  that this branch's order is identical to the hand branch (`onNormalSummon` queued at `procStepS03` 2, chain 0,
+  drain sees 2); what was left was the cancel: a summon from the hand is removed with `MOVE` (that monster never
+  reached the field), while a Gemini re-summon is removed with `FX_TO_GRAVE byDestroy` - the same form the
+  UI-initiated window already uses in `geminiSummonResumeS03` (`engine/1ZI`) - because that monster is on the
+  field **before** the summon. Measured difference: the destroy side queues `onDestroy` + `onSendToGrave` and
+  leaves `graveInfo.byDestroy`; the `MOVE` side queues neither and leaves no `graveInfo`. The UI-initiated window
+  is untouched (it still opens **before** the summon, with no `resolvedSummonS03`), and that is pinned as a
+  negative control. Evidence: `WIKI-2CF23AA42E79` (**2011-08-25**) 「この効果による通常召喚」; that a re-summon is
+  a Normal Summon at all rests on `WIKI-5B32D377CFE9` (**undated**); **no ruling in the DB covers negating a
+  re-summon**, so this unit aligns the effect branch with the engine's own published treatment of the UI one.
+  **Correction (this is the important part):** S03-U498 wrote in the design doc, its report and its test that a
+  negated summon's monster 「破壊された時でもフィールドから離れた時でもない」. The second half was **wrong**.
+  `onLeaveField` **is** queued, because leaving the field is detected by `v9DetectLeaveField` (`engine/18`) from a
+  **board snapshot diff**, so no choice of Action avoids it - and that event's `byDestroy` is derived from the
+  destination being the GY, so it is true. Only `onDestroy` is genuinely absent. U498's D4 had checked `emitEvent`,
+  which is **not called at all when no card on the board can respond**, so an absence of responders was read as an
+  absence of events; the assertion now reads the **queued** events (`queueDeferredEventV2`) and is split into D4
+  (not a destruction) and D4b (the leave event is queued). Recorded as 5-a **#1-i** and as the third approximation
+  of case (b); `v9DetectLeaveField` is a published rule step and was not touched. Files:
+  `engine/1ZZY` (branch-split cancel + a typo in its own comment), `cards/HZK_claude_s03_u164_dual_summoner.js`
+  (second mark), design doc ((D) destroy row corrected, third approximation, 5-a #1-h rewritten, **#1-i added**,
+  the stage row, (D)'s call-site row now says 3), `docs/S03_U498_REPORT.md` (the same correction),
+  `docs/S03_U500_REPORT.md`, `tools/check.py`, `tools/script_coverage.py`,
+  `tools/test_s03_u500_gemini_resummon_negation_window.js` (**35 PASS**), with U498 (74) and U499 (34) updated for
+  the third call site. Related: u494 51 / u495 33 / u496 35 / u497 32 / u498 74 / u499 34 / u500 35 and the 26
+  blood-offer / summon-negation / gemini / leave-field tests (780) = **1074 PASS / 0 FAIL**.
 - S03-U499 (Opus, claude/work; **behaviour change**, 1 card mark + 1 new test + docs; no engine change): the
   summon-negation window of S03-U498 gets its **second marked call site** - 《デュアル・サモナー》's Normal Summon
   from the hand (`cards/HZK_claude_s03_u164_dual_summoner.js`). U498 had left it as 5-a #1-g because its summon

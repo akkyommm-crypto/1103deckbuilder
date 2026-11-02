@@ -620,6 +620,8 @@ CARD_TEST_FOCUS = {
                                                 "神の警告"},
     "test_s03_u499_dual_summoner_negation_window.js": {"デュアル・サモナー", "デュアル・ソルジャー",
                                                         "ギガプラント", "神の宣告", "ワイト"},
+    "test_s03_u500_gemini_resummon_negation_window.js": {"デュアル・サモナー", "デュアル・ソルジャー",
+                                                         "神の宣告", "ワイト"},
 }
 
 

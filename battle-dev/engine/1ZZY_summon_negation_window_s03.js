@@ -25,6 +25,9 @@
         排出時点の番号が同じなら窓を開き、違えば開かない（＝従来挙動。タイミングを逃す）。
         R4 と同じ比較で、missedTimingDropS03（engine/1ZZX）が召喚成功の応答に使っているものと同じ。
      4. 無効になったときは、積んである召喚成功のイベントを落とし、モンスターを場から取り除く。
+        S03-U500: 取り除き方は枝で分ける。手札からの召喚は MOVE（場に届いていない）、
+        デュアル再召喚は FX_TO_GRAVE byDestroy（召喚の前から場に居るので破壊。UI 起点の
+        geminiSummonResumeS03 と同じ形）。
         **近似**である（召喚から窓までの間だけ永続効果が適用される）。設計 (D) に記録してある。
         取り除きは MOVE（既存の kind 'normal' の取り消しと同じ作法）で、破壊でも「フィールドから墓地へ」でもない:
         召喚は成立していないので「破壊された時」「フィールドから離れた時」は発動しない。
@@ -60,16 +63,21 @@ function summonNegWindowOpenS03(q, n){
   if(!it) return false;
   const hit = findCardByUid(it.evt.uid);
   if(!hit || hit.zone !== 'mz') return false;                       /* 召喚したモンスターがもう場に無い */
+  /* S03-U500: デュアル再召喚（「もう1度召喚」、GEMINI_SUMMON_S03）を効果で行った分を区別する。
+     取り消しの形が違う（そのモンスターは召喚の前から場に居るので、手札からの召喚と同じ
+     「場に届いていない」扱いにはできない）ので、印の付いたイベントの geminiS03 を再開データへ写し取る。 */
+  const geminiS500 = !!it.evt.geminiS03;
   const pending = {player:it.evt.player, name:it.evt.name || cardName(hit.card), kind:'normal',
-    label:'通常召喚', uid:it.evt.uid, resolvedSummonS03:true,
+    label:geminiS500 ? 'もう1度召喚（デュアル）' : '通常召喚',
+    uid:it.evt.uid, resolvedSummonS03:true,
     commit:'__pendingSummonCommit', cancel:'__pendingSummonCancel',
-    resumeS03:{uid:it.evt.uid, resolvedS03:true}};
+    resumeS03:Object.assign({uid:it.evt.uid, resolvedS03:true}, geminiS500 ? {geminiS03:true} : {})};
   /* 候補の有無を先に見る。召喚無効のカードがどちらの場にも無ければ、Action を 1 つも残さずに帰る
      （公開済みの経路の圧倒的な多数はここで終わる ＝ Journal も digest も変わらない）。 */
   if(!summonNegWindowAnyCandidateS03()) return false;
   /* ここからは既存の beginSummonWindowV2 と同じ順にする。候補の列挙は pendingSummon が
      立っていることが前提である（実測：《神の宣告》の condition は pendingSummon が無いと
-     「召喚、または魔法・置カードの発動に対して発動します」で弾く）。
+     「召喚、または魔法・罠カードの発動に対して発動します」で弾く）。
      発動できるものが 1 つもなければその場で閉じ、排出をそのまま続ける（従来挙動）。 */
   commitAutomaticActionV44({type:'EVENT_SUMMON_NEG_WINDOW_S03', op:'offered', uid:pending.uid});
   commitAutomaticActionV44({type:'SUMMON_WINDOW_OPEN_V42', pending});
@@ -103,6 +111,10 @@ function summonNegWindowResumeS03(ps, result){
     if(hit && hit.zone === 'mz'){
       /* S03-U277: 「召喚を無効にし、そのモンスターを持ち主の手札に戻す」（キックバック） */
       if(ps.negateToHandS03) act({type:'FX_BOUNCE', player:hit.p, zone:hit.zone, index:hit.index, reason:'召喚を無効にし手札に戻す'});
+      /* S03-U500: デュアル再召喚は UI 起点の窓（geminiSummonResumeS03、engine/1ZI）と同じ形で取り消す。
+         そのモンスターは召喚の前から場に居るので、「場に届いていない」扱いの MOVE ではなく
+         破壊で場を離れる（《神の宣告》《昇天の角笛》の「無効にし破壊する」にあたる）。 */
+      else if(ps.resumeS03.geminiS03) act({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, reason:'もう1度召喚を無効', byDestroy:true});
       else act({type:'MOVE', player:hit.p, from:hit.zone, fromIndex:hit.index, to:'grave'});
     }
   }

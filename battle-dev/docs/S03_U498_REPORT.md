@@ -46,7 +46,7 @@ S03-U497 は窓を開く場所を `processChainEndV30` と書いていた。実�
 | 判定 | (A) の処理番号。刻んだ番号（召喚した時点）と排出時点の番号が同じなら開く。`missedTimingDropS03` の **R4** と同じ比較 |
 | 前検査 | 召喚無効（`sc.summonNegate`）のカードがどちらの場にも無ければ、Action を 1 つも残さずに帰る |
 | 無効のとき | 積んである `onNormalSummon` を落とし、モンスターを `MOVE` で墓地へ送る。《キックバック》（S03-U277）は `FX_BOUNCE` で手札へ |
-| 「破壊された時」 | **発動しない**。召喚は成立していないので破壊でも「フィールドから離れた時」でもない |
+| 「破壊された時」 | **発動しない**（`onDestroy` も `onSendToGrave` も積まれない）。**訂正（S03-U500 の実測）**: 「フィールドから離れた時」は**積まれる**。場からの離脱は `v9DetectLeaveField`（`engine/18`）が盤面の差分から検出するルール処理で、`MOVE` でも避けられない（設計書 5-a #1-i）|
 | 保存・Undo | `pendingSummon.resumeS03.resolvedS03`。窓が開いたままの保存は `restoreProcessorAfterLoadS296` に足した `DRAIN_EVENTS` の待ちで戻り、窓は既存の `reopenSummonWindowAfterLoadS03` が開き直す |
 
 変更したファイル: `engine/1ZZY_summon_negation_window_s03.js`（新規）、`engine/30`（排出の先頭に 1 箇所）、

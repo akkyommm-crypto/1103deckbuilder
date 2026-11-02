@@ -47,7 +47,7 @@ const TOASTS=[];showToast=m=>TOASTS.push(String(m));
 function pc(){return pendingChoiceV49(gameState);}
 function s(){return gameState.procStepS03|0;}
 function zu(uid){const h=findCardByUid(uid);return h?h.zone:null;}
-let STEPS=[], OPENS=[], EVLOG_S498=[];
+let STEPS=[], OPENS=[], EVLOG_S498=[], QLOG_S498=[];
 (function(){
   const so=summonNegWindowOpenS03;summonNegWindowOpenS03=function(q,n){
     const before=(q||[]).map(x=>x.eventName), r=so.apply(this,arguments);
@@ -57,20 +57,24 @@ let STEPS=[], OPENS=[], EVLOG_S498=[];
     try{return h.apply(this,arguments);}finally{
       if(d===0)STEPS.push({t:(a&&a.type)||'?',before:b,after:s()});}};
   const ee=emitEvent;emitEvent=function(name,evt){EVLOG_S498.push({name,uid:evt&&evt.uid});return ee.apply(this,arguments);};
+  /* S03-U500: emitEvent は応答できるカードが無ければ呼ばれないので、「何が起きたか」は**積まれた**方で見る。 */
+  const qd=queueDeferredEventV2;queueDeferredEventV2=function(name,evt){
+    QLOG_S498.push({name,uid:(evt&&evt.uid)!=null?evt.uid:((evt&&evt.card&&evt.card.uid)!=null?evt.card.uid:null)});
+    return qd.apply(this,arguments);};
 })();
 function resetVolatile(){EVT_V2_STATE=null;EVT_AFTER=null;CHAIN_AFTER_V2=null;RESOLUTION_SUMMON_BATCH_V2=null;
   try{EVT_RESUME_DATA_V484=null;}catch(e){}
   try{CHOICE_LEGACY_CB_V49=new Map();}catch(e){}try{ACTIVATION_PREP_S03=null;}catch(e){}try{RESOLVING_LINK_S03=null;}catch(e){}
   try{PENDING_SUMMON_COMMIT=null;PENDING_SUMMON_CANCEL=null;}catch(e){}try{EVT_CANDS=[];}catch(e){}
   try{PROCESSOR_PUMPING_V27=false;}catch(e){}try{APPLY_ACTION_DEPTH_V31=0;}catch(e){}}
-function fresh(){resetA();resetVolatile();STEPS=[];OPENS=[];EVLOG_S498=[];TOASTS.length=0;resetMissedTimingDropsS03();
+function fresh(){resetA();resetVolatile();STEPS=[];OPENS=[];EVLOG_S498=[];QLOG_S498=[];TOASTS.length=0;resetMissedTimingDropsS03();
   gameState.activePlayer=0;gameState.firstPlayer=0;gameState.turn=5;gameState.phase='main1';
   gameState.rngInitialSeed=gameState.rngState=0x4961011;
   for(let p=0;p<2;p++)gameState.players[p].deck=Array.from({length:14},()=>mk('ワイト',p));}
 function setTrap(nm,p){const c=mk(nm,p,'down');c.setTurn=gameState.turn-1;return c;}
 function actTypes(){return STEPS.map(x=>x.t);}
 function savedRaw(){localStorage.removeItem(DUEL_SAVE_KEY);saveDuel();return localStorage.getItem(DUEL_SAVE_KEY);}
-function loadInto(raw){resetA();resetVolatile();STEPS=[];OPENS=[];EVLOG_S498=[];resetMissedTimingDropsS03();
+function loadInto(raw){resetA();resetVolatile();STEPS=[];OPENS=[];EVLOG_S498=[];QLOG_S498=[];resetMissedTimingDropsS03();
   localStorage.setItem(DUEL_SAVE_KEY,raw);return offerResumeDuel();}
 function audit(label){const pkg=v41ReplayPackage(gameState),a=v44ReplayAuditPackage(pkg);
   ok(label+': Replay 監査が全 digest と最終状態を再現する',
@@ -228,11 +232,20 @@ ok('D3 ★ 積んであった召喚成功のイベントは落ち、召喚誘発
    !EVLOG_S498.some(e=>e.name==='onNormalSummon')
    && (gameState.deferredEvents||[]).every(x=>x.eventName!=='onNormalSummon'),
    JSON.stringify(EVLOG_S498.map(e=>e.name)));
-/* 設計 (D) の「破壊された時」の答え: 召喚は成立していないので破壊でも場からの離脱でもない */
-ok('D4 ★ 取り除きは MOVE で、破壊（byDestroy）でも「フィールドから離れた時」でもない',
-   actTypes().includes('MOVE') && !EVLOG_S498.some(e=>e.name==='onDestroy')
-   && !EVLOG_S498.some(e=>e.name==='onLeaveField'),
-   JSON.stringify({types:actTypes().filter(t=>t==='MOVE'||t==='FX_TO_GRAVE'),events:EVLOG_S498.map(e=>e.name)}));
+/* 設計 (D) の「破壊された時」の答え。S03-U500 で実測し直して書き直した:
+   「破壊された時」は発動しない（onDestroy も onSendToGrave も積まれず graveInfo も残らない）が、
+   **「フィールドから離れた時」は積まれる**。場からの離脱は v9DetectLeaveField（engine/18）が盤面の差分から
+   検出するルール処理なので、MOVE で取り除いても避けられない（5-a #1-i）。
+   S03-U498 はここを「どちらも発動しない」と書いていたが、それは emitEvent が応答者のいない場面では
+   呼ばれないことを見ていただけだった。判定は**積まれた**イベントで行う。 */
+ok('D4 ★ 取り除きは MOVE で、onDestroy も onSendToGrave も積まれず graveInfo も残らない（＝「破壊された時」は発動しない）',
+   actTypes().includes('MOVE') && !actTypes().includes('FX_TO_GRAVE')
+   && !QLOG_S498.some(e=>e.name==='onDestroy') && !QLOG_S498.some(e=>e.name==='onSendToGrave')
+   && !((gameState.players[0].grave.find(c=>c&&c.uid===ids.mon)||{}).graveInfo),
+   JSON.stringify({types:actTypes().filter(t=>t==='MOVE'||t==='FX_TO_GRAVE'),queued:QLOG_S498.map(e=>e.name)}));
+ok('D4b ★ ただし onLeaveField はそのモンスターの分が積まれる（v9DetectLeaveField は盤面の差分で検出する。5-a #1-i）',
+   QLOG_S498.some(e=>e.name==='onLeaveField' && e.uid===ids.mon),
+   JSON.stringify(QLOG_S498));
 ok('D5 《神の宣告》は墓地へ行き、p1 はライフを半分払った',
    zu(ids['神の宣告'])==='grave' && gameState.players[1].lp===4000,
    JSON.stringify({neg:zu(ids['神の宣告']),lp:gameState.players[1].lp}));
@@ -242,7 +255,7 @@ ok('D6 窓は閉じ、遅延イベントの排出も終わっている',
    JSON.stringify({ps:gameState.pendingSummon,q:(gameState.deferredEvents||[]).length}));
 ok('D7 無効になったことが伝わる', TOASTS.some(t=>/無効になりました/.test(t)), JSON.stringify(TOASTS));
 audit('D');
-`, {expect:9});
+`, {expect:10});
 
 /* ===== E. 《キックバック》─ 手札に戻す ===== */
 harness(COMMON + String.raw`
@@ -396,14 +409,13 @@ ok('J2 召喚無効のカードはいまも missedTimingSummonNegatorS03 で真'
 harness('const DOC=' + JSON.stringify(DESIGN_S498) + ';const RUL=' + JSON.stringify(RULINGS_S498) + ';'
       + 'const SRC=' + JSON.stringify(SRC_S498) + ';' + COMMON + String.raw`
 const ENG=SRC['engine/1ZZY_summon_negation_window_s03.js'];
-/* K1 は S03-U499 で書き替えた（印を付けた呼び出し元が 1 件から 2 件になった）。
-   全件監査であることは変えない: このテストが読む cards/ の中で印を持つのはこの 2 つだけで、
-   全体の全件監査（cards/ 全ファイル）は tools/test_s03_u499_* の K が持っている。 */
-ok('K1 ★ 印を付けているのは《血の代償》と《デュアル・サモナー》の手札の枝だけ（それぞれ積む箇所 1 つ）',
+/* K1 は S03-U499・S03-U500 で書き替えた（印を付けた呼び出し元が 1 → 2 → 3 箇所になった）。
+   全件監査であることは変えない: 全体の全件監査（cards/ 全ファイル）は tools/test_s03_u499_* の G1 が持つ。 */
+ok('K1 ★ 印を付けているのは《血の代償》1 箇所と《デュアル・サモナー》2 箇所（手札の枝とデュアル再召喚の枝）',
    Object.keys(SRC).filter(k=>/^cards\//.test(k) && SRC[k].indexOf('summonNegWindowS03:true}')>=0).sort().join(' ')
      ==='cards/00_generic_core.js cards/HZK_claude_s03_u164_dual_summoner.js'
    && (SRC['cards/00_generic_core.js'].split('summonNegWindowS03:true}').length-1)===1
-   && (SRC['cards/HZK_claude_s03_u164_dual_summoner.js'].split('summonNegWindowS03:true}').length-1)===1,
+   && (SRC['cards/HZK_claude_s03_u164_dual_summoner.js'].split('summonNegWindowS03:true}').length-1)===2,
    JSON.stringify(Object.keys(SRC).filter(k=>SRC[k].indexOf('summonNegWindowS03:true}')>=0)));
 ok('K2 窓を開く呼び出しは engine/30 の遅延イベントの排出 1 箇所だけ',
    (SRC['engine/30_processor_chain_battle.js'].match(/summonNegWindowOpenS03\(/g)||[]).length===1,
@@ -431,13 +443,13 @@ ok('K9 ★ 設計書 (D) に S03-U498 で実装したことと、残した近似
    /S03-U498/.test(DOC) && /\(D\)/.test(DOC), 'x');
 ok('K10 ★ 裁定記録に WIKI-2CF23AA42E79 の本文と回答日が残っている',
    /WIKI-2CF23AA42E79/.test(RUL) && /2011-08-25/.test(RUL), 'x');
-/* K11 も S03-U499 で書き替えた。S03-U498 の時点では「処理順を実測していない」ため印を付けていなかった。
-   S03-U499 で実測し、手札からの枝だけに印を付けた（デュアル再召喚の枝は取り消しの形が違うので未対応）。 */
-ok('K11 ★ デュアル・サモナーは手札からの枝にだけ印が付いている（デュアル再召喚の枝には無い）',
+/* K11 も S03-U499・S03-U500 で書き替えた。S03-U498 では「印を付けていない」、S03-U499 では「手札の枝だけ」、
+   S03-U500 でデュアル再召喚の枝にも付いた（取り消しの形だけが違うので、そこを分けて固定する）。 */
+ok('K11 ★ デュアル・サモナーは両方の枝に印が付いていて、デュアル再召喚の枝だけ geminiS03 を併せ持つ',
    SRC['cards/HZK_claude_s03_u164_dual_summoner.js']
      .indexOf("card:summoned, byEffectS03:'デュアル・サモナー', summonNegWindowS03:true}")>=0
    && SRC['cards/HZK_claude_s03_u164_dual_summoner.js']
-     .indexOf("card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー'}")>=0,
+     .indexOf("card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー', summonNegWindowS03:true}")>=0,
    'x');
 `, {expect:11});
 /* ===== L. 召喚側が p1 の場合と Undo ===== */

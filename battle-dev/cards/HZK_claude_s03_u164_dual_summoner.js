@@ -8,9 +8,10 @@
      S03-U499: the summon from the hand now opens the summon-negation window (engine/1ZZY; the queued onNormalSummon carries
      summonNegWindowS03:true). Measured: this effect queues it at procStepS03 2 with an empty chain and the drain sees the same
      number, exactly as the blood offering does, so WIKI-2CF23AA42E79 (answer date 2011-08-25) applies in the same way.
-     The Gemini re-summon branch below is NOT marked — see the design doc 5-a: the cancel of an already-applied Gemini Summon
-     is a different one (geminiSummonResumeS03 destroys the monster, and its commit applies the summon that case (b) has
-     already applied). The Gemini monster is chosen at resolution (journaled choice):
+     S03-U500: the Gemini re-summon branch is marked too. Its order was already measured as the same in S03-U499; what was
+     left was the cancel, which differs because that monster is on the field before the summon: it is removed by
+     FX_TO_GRAVE byDestroy (the same form the UI-initiated window uses in geminiSummonResumeS03, engine/1ZI), not by the
+     MOVE used for a summon from the hand. The Gemini monster is chosen at resolution (journaled choice):
        · from the hand — face-up Attack Position; Lv5-6 needs 1 Tribute, Lv7+ 2 (tributesNeeded), chosen at resolution;
        · a face-up Gemini monster on its controller's field that is not yet an Effect Monster — the Gemini Summon (GEMINI_SUMMON_S03).
      Then the onNormalSummon event, as for any Normal Summon.
@@ -68,7 +69,10 @@ registerChoiceHandlerV49('s03u164.dual-summoner', (answer, args)=>{
     if(h.card.face!=='up' || h.card.dualUp) return;
     act({type:'GEMINI_SUMMON_S03', player:p, zone:'mz', index:h.index, uid:h.card.uid});
     const now = findCardByUid(pick.uid);
-    if(now) queueDeferredEventV2('onNormalSummon', {player:p, name:cardName(now.card), card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー'});
+    /* S03-U500: このデュアル再召喚にも召喚無効の窓を開ける（engine/1ZZY）。
+       S03-U499 で処理順は手札の枝と同じだと実測済みで、残っていたのは取り消しの形だけ。
+       無効のときは UI 起点の窓（geminiSummonResumeS03、engine/1ZI）と同じく破壊で取り消す。 */
+    if(now) queueDeferredEventV2('onNormalSummon', {player:p, name:cardName(now.card), card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー', summonNegWindowS03:true});
     return;
   }
   if(h.zone!=='hand') return;

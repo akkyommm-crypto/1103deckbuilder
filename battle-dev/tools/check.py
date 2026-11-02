@@ -836,6 +836,11 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u498_summon_negation_window.js')
 # Measured first: that effect queues onNormalSummon at procStepS03 2 with an empty chain and the drain sees
 # the same number, exactly as the blood offering does. Its Gemini re-summon branch stays unmarked (5-a #1-h).
 subprocess.run(['node',str(ROOT/'tools/test_s03_u499_dual_summoner_negation_window.js')],check=True)
+# S03-U500: the window's third marked call site, the Gemini re-summon 《デュアル・サモナー》 performs by effect.
+# Its order was already measured in U499; what this unit adds is the cancel, which destroys the monster
+# (FX_TO_GRAVE byDestroy, the same form the UI-initiated window uses) instead of the MOVE used for a
+# summon from the hand, because that monster is on the field before the summon.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u500_gemini_resummon_negation_window.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

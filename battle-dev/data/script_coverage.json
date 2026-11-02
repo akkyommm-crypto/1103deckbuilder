@@ -38575,14 +38575,15 @@
         {
           "kind": "legacy",
           "source": "cards\\HZK_claude_s03_u164_dual_summoner.js",
-          "line": 36
+          "line": 37
         }
       ],
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle15.js",
         "tools\\test_s03_u164_dual_summoner.js",
-        "tools\\test_s03_u499_dual_summoner_negation_window.js"
+        "tools\\test_s03_u499_dual_summoner_negation_window.js",
+        "tools\\test_s03_u500_gemini_resummon_negation_window.js"
       ]
     },
     {
@@ -38630,7 +38631,8 @@
       "auto_table": true,
       "tests": [
         "tools\\test_s03_u165_protections3.js",
-        "tools\\test_s03_u499_dual_summoner_negation_window.js"
+        "tools\\test_s03_u499_dual_summoner_negation_window.js",
+        "tools\\test_s03_u500_gemini_resummon_negation_window.js"
       ]
     },
     {
@@ -62047,6 +62049,7 @@
         "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u499_dual_summoner_negation_window.js",
         "tools\\test_s03_u49_battle_fader_once_per_chain.js",
+        "tools\\test_s03_u500_gemini_resummon_negation_window.js",
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
@@ -93567,6 +93570,7 @@
         "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u499_dual_summoner_negation_window.js",
+        "tools\\test_s03_u500_gemini_resummon_negation_window.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
     },

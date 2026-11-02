@@ -16155,6 +16155,9 @@ function filterMissedTimingS03(cands, evt){
         排出時点の番号が同じなら窓を開き、違えば開かない（＝従来挙動。タイミングを逃す）。
         R4 と同じ比較で、missedTimingDropS03（engine/1ZZX）が召喚成功の応答に使っているものと同じ。
      4. 無効になったときは、積んである召喚成功のイベントを落とし、モンスターを場から取り除く。
+        S03-U500: 取り除き方は枝で分ける。手札からの召喚は MOVE（場に届いていない）、
+        デュアル再召喚は FX_TO_GRAVE byDestroy（召喚の前から場に居るので破壊。UI 起点の
+        geminiSummonResumeS03 と同じ形）。
         **近似**である（召喚から窓までの間だけ永続効果が適用される）。設計 (D) に記録してある。
         取り除きは MOVE（既存の kind 'normal' の取り消しと同じ作法）で、破壊でも「フィールドから墓地へ」でもない:
         召喚は成立していないので「破壊された時」「フィールドから離れた時」は発動しない。
@@ -16190,16 +16193,21 @@ function summonNegWindowOpenS03(q, n){
   if(!it) return false;
   const hit = findCardByUid(it.evt.uid);
   if(!hit || hit.zone !== 'mz') return false;                       /* 召喚したモンスターがもう場に無い */
+  /* S03-U500: デュアル再召喚（「もう1度召喚」、GEMINI_SUMMON_S03）を効果で行った分を区別する。
+     取り消しの形が違う（そのモンスターは召喚の前から場に居るので、手札からの召喚と同じ
+     「場に届いていない」扱いにはできない）ので、印の付いたイベントの geminiS03 を再開データへ写し取る。 */
+  const geminiS500 = !!it.evt.geminiS03;
   const pending = {player:it.evt.player, name:it.evt.name || cardName(hit.card), kind:'normal',
-    label:'通常召喚', uid:it.evt.uid, resolvedSummonS03:true,
+    label:geminiS500 ? 'もう1度召喚（デュアル）' : '通常召喚',
+    uid:it.evt.uid, resolvedSummonS03:true,
     commit:'__pendingSummonCommit', cancel:'__pendingSummonCancel',
-    resumeS03:{uid:it.evt.uid, resolvedS03:true}};
+    resumeS03:Object.assign({uid:it.evt.uid, resolvedS03:true}, geminiS500 ? {geminiS03:true} : {})};
   /* 候補の有無を先に見る。召喚無効のカードがどちらの場にも無ければ、Action を 1 つも残さずに帰る
      （公開済みの経路の圧倒的な多数はここで終わる ＝ Journal も digest も変わらない）。 */
   if(!summonNegWindowAnyCandidateS03()) return false;
   /* ここからは既存の beginSummonWindowV2 と同じ順にする。候補の列挙は pendingSummon が
      立っていることが前提である（実測：《神の宣告》の condition は pendingSummon が無いと
-     「召喚、または魔法・置カードの発動に対して発動します」で弾く）。
+     「召喚、または魔法・罠カードの発動に対して発動します」で弾く）。
      発動できるものが 1 つもなければその場で閉じ、排出をそのまま続ける（従来挙動）。 */
   commitAutomaticActionV44({type:'EVENT_SUMMON_NEG_WINDOW_S03', op:'offered', uid:pending.uid});
   commitAutomaticActionV44({type:'SUMMON_WINDOW_OPEN_V42', pending});
@@ -16233,6 +16241,10 @@ function summonNegWindowResumeS03(ps, result){
     if(hit && hit.zone === 'mz'){
       /* S03-U277: 「召喚を無効にし、そのモンスターを持ち主の手札に戻す」（キックバック） */
       if(ps.negateToHandS03) act({type:'FX_BOUNCE', player:hit.p, zone:hit.zone, index:hit.index, reason:'召喚を無効にし手札に戻す'});
+      /* S03-U500: デュアル再召喚は UI 起点の窓（geminiSummonResumeS03、engine/1ZI）と同じ形で取り消す。
+         そのモンスターは召喚の前から場に居るので、「場に届いていない」扱いの MOVE ではなく
+         破壊で場を離れる（《神の宣告》《昇天の角笛》の「無効にし破壊する」にあたる）。 */
+      else if(ps.resumeS03.geminiS03) act({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, reason:'もう1度召喚を無効', byDestroy:true});
       else act({type:'MOVE', player:hit.p, from:hit.zone, fromIndex:hit.index, to:'grave'});
     }
   }
@@ -68445,9 +68457,10 @@ defineScript('マイン・モール', {
      S03-U499: the summon from the hand now opens the summon-negation window (engine/1ZZY; the queued onNormalSummon carries
      summonNegWindowS03:true). Measured: this effect queues it at procStepS03 2 with an empty chain and the drain sees the same
      number, exactly as the blood offering does, so WIKI-2CF23AA42E79 (answer date 2011-08-25) applies in the same way.
-     The Gemini re-summon branch below is NOT marked — see the design doc 5-a: the cancel of an already-applied Gemini Summon
-     is a different one (geminiSummonResumeS03 destroys the monster, and its commit applies the summon that case (b) has
-     already applied). The Gemini monster is chosen at resolution (journaled choice):
+     S03-U500: the Gemini re-summon branch is marked too. Its order was already measured as the same in S03-U499; what was
+     left was the cancel, which differs because that monster is on the field before the summon: it is removed by
+     FX_TO_GRAVE byDestroy (the same form the UI-initiated window uses in geminiSummonResumeS03, engine/1ZI), not by the
+     MOVE used for a summon from the hand. The Gemini monster is chosen at resolution (journaled choice):
        · from the hand — face-up Attack Position; Lv5-6 needs 1 Tribute, Lv7+ 2 (tributesNeeded), chosen at resolution;
        · a face-up Gemini monster on its controller's field that is not yet an Effect Monster — the Gemini Summon (GEMINI_SUMMON_S03).
      Then the onNormalSummon event, as for any Normal Summon.
@@ -68505,7 +68518,10 @@ registerChoiceHandlerV49('s03u164.dual-summoner', (answer, args)=>{
     if(h.card.face!=='up' || h.card.dualUp) return;
     act({type:'GEMINI_SUMMON_S03', player:p, zone:'mz', index:h.index, uid:h.card.uid});
     const now = findCardByUid(pick.uid);
-    if(now) queueDeferredEventV2('onNormalSummon', {player:p, name:cardName(now.card), card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー'});
+    /* S03-U500: このデュアル再召喚にも召喚無効の窓を開ける（engine/1ZZY）。
+       S03-U499 で処理順は手札の枝と同じだと実測済みで、残っていたのは取り消しの形だけ。
+       無効のときは UI 起点の窓（geminiSummonResumeS03、engine/1ZI）と同じく破壊で取り消す。 */
+    if(now) queueDeferredEventV2('onNormalSummon', {player:p, name:cardName(now.card), card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー', summonNegWindowS03:true});
     return;
   }
   if(h.zone!=='hand') return;

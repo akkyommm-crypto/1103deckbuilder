@@ -188,10 +188,13 @@ duelActivateFromZone(1,'mz',0);
 const to=drive();
 ok('D1 前提: デュアル召喚（GEMINI_SUMMON_S03）が行われた',
    actTypes().includes('GEMINI_SUMMON_S03'), JSON.stringify({to,types:actTypes()}));
-ok('D2 ★ negative control: この枝の onNormalSummon には印が無く、窓は開かない（5-a #1-h として未対応）',
-   QUEUED.filter(x=>x.name==='onNormalSummon').every(x=>x.mark===false)
-   && !OPENS.some(x=>x.opened===true)
-   && !actTypes().includes('SUMMON_WINDOW_OPEN_V42'),
+/* D2 は S03-U500 で書き替えた。S03-U499 の時点ではこの枝に印が無く「窓が開かない」ことの negative control
+   だったが、S03-U500 で印を付けた。ここで固定するのは**実測した処理順が手札の枝と同じ**ことで、
+   窓の挙動そのものは tools/test_s03_u500_* が持つ。 */
+ok('D2 ★ デュアル再召喚の枝も onNormalSummon を procStepS03 2 で積み、手札の枝と同じ順である'
+   +'（S03-U500 でこの枝にも印を付けた）',
+   QUEUED.filter(x=>x.name==='onNormalSummon').every(x=>x.step===2 && x.chain===0)
+   && QUEUED.some(x=>x.name==='onNormalSummon'&&x.mark===true),
    JSON.stringify({queued:QUEUED,opens:OPENS}));
 ok('D3 ★ 理由（実測）: この枝の処理順自体は手札の枝と同じなので、印を付けなかったのは順ではなく'
    +'取り消しの形が違うため。geminiSummonResumeS03 は commit で GEMINI_SUMMON_S03 を**適用し**、'
@@ -255,21 +258,22 @@ ok('G1 ★ cards/ の全ファイル（' + files.length + ' 件）を見て、�
    marked.join(' ')==='00_generic_core.js HZK_claude_s03_u164_dual_summoner.js'
    && files.length>100,
    JSON.stringify({files:files.length,marked}));
-ok('G2 ★ その 2 件はそれぞれ 1 箇所だけに印を付けている',
-   marked.every(f=>(CARDS[f].split('summonNegWindowS03:true}').length-1)===1),
+ok('G2 ★ 《血の代償》は 1 箇所、《デュアル・サモナー》は 2 箇所（手札の枝とデュアル再召喚の枝）',
+   (CARDS['00_generic_core.js'].split('summonNegWindowS03:true}').length-1)===1
+   && (CARDS['HZK_claude_s03_u164_dual_summoner.js'].split('summonNegWindowS03:true}').length-1)===2,
    JSON.stringify(marked.map(f=>f+':'+(CARDS[f].split('summonNegWindowS03:true}').length-1))));
-ok('G3 ★ 《デュアル・サモナー》の手札の枝にだけ印があり、デュアル再召喚の枝には無い',
+ok('G3 ★ 手札の枝とデュアル再召喚の枝の両方に印があり、再召喚の枝は geminiS03 を併せ持つ（S03-U500）',
    SRC['cards/HZK_claude_s03_u164_dual_summoner.js']
      .indexOf("card:summoned, byEffectS03:'デュアル・サモナー', summonNegWindowS03:true}")>=0
    && SRC['cards/HZK_claude_s03_u164_dual_summoner.js']
-     .indexOf("card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー'}")>=0,
+     .indexOf("card:now.card, geminiS03:true, byEffectS03:'デュアル・サモナー', summonNegWindowS03:true}")>=0,
    'x');
 ok('G4 カードのコメントに当時裁定の ID と回答日、実測した処理順が書かれている',
    /WIKI-2CF23AA42E79/.test(SRC['cards/HZK_claude_s03_u164_dual_summoner.js'])
    && /2011-08-25/.test(SRC['cards/HZK_claude_s03_u164_dual_summoner.js'])
    && /procStepS03 2/.test(SRC['cards/HZK_claude_s03_u164_dual_summoner.js']),
    'x');
-ok('G5 ★ 設計書 5-a #1-g が「S03-U499 で実装した」に書き直され、デュアル再召喚が #1-h として残っている',
+ok('G5 ★ 設計書 5-a #1-g が「S03-U499 で実装した」に書き直され、#1-h の行がある（S03-U500 でその枝も実装）',
    DOC.indexOf('S03-U499')>=0 && DOC.indexOf('| 1-h |')>=0,
    'x');
 ok('G6 専用テストが tools/check.py に登録されている',
