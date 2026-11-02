@@ -224,12 +224,14 @@ const sum2=summonAct(), end2=CHAINEND[0]||null;
 ok('D1 チェーン2 でも窓は開かない（結果としては当時裁定の「逃す」と一致するが、規則としてではなく窓が無いだけ）',
    WINS.length===0 && openedWindow()===false && !!sum2 && sum2.t==='NORMAL_SUMMON',
    JSON.stringify({wins:WINS,sum:sum2}));
-ok('D2 ★ チェーン2 では召喚の後に処理番号が進む（2 → 5）＝ 当時裁定の「召喚の後に別の処理がある場合」',
-   !!sum2 && !!end2 && sum2.after===2 && end2.step===5 && end2.step-sum2.after>0,
+/* S03-U506 で (A) の許可リストから FX_SELF_TO_GRAVE（発動した魔法・罠の後片付け）を外したので、
+   この経路の刻みは 1 つ減って 2 → 4 になった。質的な事実（チェーン2 では召喚の後に番号が進む）は同じ。 */
+ok('D2 ★ チェーン2 では召喚の後に処理番号が進む（2 → 4）＝ 当時裁定の「召喚の後に別の処理がある場合」',
+   !!sum2 && !!end2 && sum2.after===2 && end2.step===4 && end2.step-sum2.after>0,
    JSON.stringify({sum:sum2,end:end2}));
 const d2=end2.step-sum2.after;
-ok('D3 ★ チェーン1 と チェーン2 を分ける道具は (A) の処理番号だけ（差 0 と 差 3）',
-   d1===0 && d2===3, JSON.stringify({d1,d2}));
+ok('D3 ★ チェーン1 と チェーン2 を分ける道具は (A) の処理番号だけ（差 0 と 差 2。S03-U506 で 3 → 2）',
+   d1===0 && d2===2, JSON.stringify({d1,d2}));
 /* 残りのリンク数でもこの 2 例は分かれる（0 と 1）。ただし当時裁定の条件は「召喚の後に別の処理がある」で、
    同じ 1 回の解決の中で召喚の後にまだ処理が続く場合も含む。リンク数はそれを見られないので、
    判定に使う道具は処理番号の側にする。 */

@@ -98,10 +98,14 @@ function stackTwo(){
   return (gameState.chain||[]).length;
 }
 /* 許可リストの中身を数える */
-function confirmedCountS496(){
-  const names=Object.keys(MISSED_TIMING_CONFIRMED_S03);
+/* S03-U506: 許可リストは召喚成功の家族だけではなくなった（破壊が条件の誘発が 1 件入った）。
+   この単位が公開した範囲は**召喚成功の家族**なので、そこを数える形に分けた。 */
+function confirmedCountS496(only){
+  const all=Object.keys(MISSED_TIMING_CONFIRMED_S03);
+  const names=only ? all.filter(nm=>MISSED_TIMING_CONFIRMED_S03[nm].ev.some(e=>EVS_S496.indexOf(e)>=0)) : all;
   let pairs=0, a=0, b=0;
-  names.forEach(nm=>{const d=MISSED_TIMING_CONFIRMED_S03[nm];pairs+=d.ev.length;
+  names.forEach(nm=>{const d=MISSED_TIMING_CONFIRMED_S03[nm];
+    pairs+=(only?d.ev.filter(e=>EVS_S496.indexOf(e)>=0).length:d.ev.length);
     if(d.basis==='A')a++;else if(d.basis==='B')b++;});
   return {cards:names.length, pairs, a, b, names:names.sort()};
 }
@@ -138,18 +142,25 @@ const BOTH_S496=['E・HERO エアーマン','奈落の落とし穴'].sort();
 harness('const DOC=' + JSON.stringify(DESIGN_S496) + ';const ENG=' + JSON.stringify(ENGINE_S496) + ';'
       + 'const RUL=' + JSON.stringify(RULINGS_S496) + ';' + COMMON + String.raw`
 resetA();
-const C=confirmedCountS496();
-ok('A1 ★ 許可リストは 44 枚 / 65 組で、根拠は A 10 枚 / B 34 枚',
-   C.cards===44 && C.pairs===65 && C.a===10 && C.b===34,
-   JSON.stringify({cards:C.cards,pairs:C.pairs,a:C.a,b:C.b}));
+const C=confirmedCountS496(true), CALL=confirmedCountS496(false);
+/* A1 は S03-U506 で書き分けた。この単位が公開した**召喚成功の家族**は 44 枚 / 65 組のまま。
+   表全体は S03-U506 が破壊の家族を 1 件足したので 45 枚 / 66 組になっている。 */
+ok('A1 ★ 召喚成功の家族の許可リストは 44 枚 / 65 組のままで、根拠は A 10 枚 / B 34 枚。'
+   +'表全体は S03-U506 の破壊の家族 1 件を含めて 45 枚 / 66 組',
+   C.cards===44 && C.pairs===65 && C.a===10 && C.b===34
+   && CALL.cards===45 && CALL.pairs===66 && CALL.a===11 && CALL.b===34,
+   JSON.stringify({summon:{cards:C.cards,pairs:C.pairs,a:C.a,b:C.b},
+     all:{cards:CALL.cards,pairs:CALL.pairs,a:CALL.a,b:CALL.b}}));
+/* A2 は S03-U506 で ev の許す範囲を広げた（破壊の家族の onDestroy を足した）。
+   裁定 ID が付いていること・抽出で引けることは変えていない。 */
 ok('A2 ★ 各件に裁定 ID が付いていて、すべて裁定の抽出で引ける',
-   C.names.every(nm=>{const d=MISSED_TIMING_CONFIRMED_S03[nm];
+   CALL.names.every(nm=>{const d=MISSED_TIMING_CONFIRMED_S03[nm];
      return Array.isArray(d.ev) && d.ev.length>0
-       && d.ev.every(e=>EVS_S496.indexOf(e)>=0)
+       && d.ev.every(e=>EVS_S496.concat(['onDestroy']).indexOf(e)>=0)
        && (d.basis==='A'||d.basis==='B')
        && Array.isArray(d.rulings) && d.rulings.length>0
        && d.rulings.every(r=>/^(WIKI|R1103)-/.test(r) && RUL.indexOf(r)>=0);}),
-   JSON.stringify(C.names.filter(nm=>!MISSED_TIMING_CONFIRMED_S03[nm].rulings.every(r=>RUL.indexOf(r)>=0))));
+   JSON.stringify(CALL.names.filter(nm=>!MISSED_TIMING_CONFIRMED_S03[nm].rulings.every(r=>RUL.indexOf(r)>=0))));
 ok('A3 ★ A の 10 枚は設計書の読解表に「採る」として、採らなかった 6 枚は理由付きで書かれている',
    ['E・HERO エアーマン','インフェルニティ・デーモン','奈落の落とし穴','激流葬','落とし穴',
     '真六武衆－カゲキ','宝玉獣 ルビー・カーバンクル','ブラック・ローズ・ドラゴン',
@@ -165,7 +176,8 @@ ok('A4 ★ 許可リストに無いものは落とさない（従来挙動の維
    && DOC.indexOf('5-a. 未対応（S03-U496 時点')>=0
    && ENG.indexOf('S03-U491 以前の挙動を維持する')>=0,'');
 const cen=dropCensusS496();
-ok('A5 ★ 候補 675 組のうち落とすのは 65 組だけで、許可リストの組数と一致する',
+/* A5 は S03-U506 で比較の相手を「召喚成功の家族の許可リスト」に限った（census はこの 3 イベントしか見ない）。 */
+ok('A5 ★ 候補 675 組のうち落とすのは 65 組だけで、召喚成功の家族の許可リストの組数と一致する',
    cen.drop===65 && (cen.drop+cen.keep+cen.forced+cen.negate+cen.decl)===675
    && JSON.stringify(cen.dropPairs.map(x=>x.split('@')[0]).filter((v,i,a)=>a.indexOf(v)===i).sort())
       ===JSON.stringify(C.names),

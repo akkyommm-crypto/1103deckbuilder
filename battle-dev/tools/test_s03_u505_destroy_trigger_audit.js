@@ -129,17 +129,26 @@ all.forEach(n=>EVS.forEach(e=>{
   const v=missedTimingClassS03({name:n,eventName:e},{stepS03:0});
   if(v) cls.push(n+':'+e+':'+v);
 }));
-ok('B1 ★ 破壊・墓地送りのイベントでは (B-3) の種別が 1 つも付かない（＝いまは落とさない）',
-   cls.length===0, JSON.stringify(cls.slice(0,10)));
+/* B1 は S03-U506 で書き直した。あの時点では種別が無く 1 件も付かなかった。S03-U506 で破壊の種別を
+   入れたので、**onDestroy で拾われて句が「破壊された時」のカードだけ**に種別が付く。
+   落ちるのはさらに (B-5) の許可リストに入った組だけである（いまは《スネーク・ホイッスル》1 件）。 */
+ok('B1 ★ 種別が付くのは onDestroy かつ句が「破壊された時」の候補だけで、'
+   +'墓地送り・場からの離脱・除外のイベントには 1 つも付かない',
+   cls.length>0
+   && cls.every(x=>x.split(':')[1]==='onDestroy' && x.split(':')[2]==='destroyed')
+   && cls.every(x=>missedTimingClauseKindS03(x.split(':')[0],'D')==='toki'),
+   JSON.stringify({n:cls.length,sample:cls.slice(0,6)}));
 ok('B2 ★ 種別の表に破壊・墓地送りのイベントが無い',
    MISSED_TIMING_EVENT_CLASS_S03.onDestroy===undefined
    && MISSED_TIMING_EVENT_CLASS_S03.onSendToGrave===undefined
    && Object.keys(MISSED_TIMING_EVENT_CLASS_S03).join('/')==='onNormalSummon/onSpecialSummon',
    JSON.stringify(MISSED_TIMING_EVENT_CLASS_S03));
-ok('B3 ★ 有効な種別は summonSuccess だけ（flipSummonReverse は S03-U494 で無効）',
+/* B3 も S03-U506 で書き直した（種別が 2 つ → 3 つになった）。 */
+ok('B3 ★ 有効な種別は summonSuccess と destroyed（S03-U506）で、flipSummonReverse は S03-U494 で無効のまま',
    MISSED_TIMING_CLASSES_S03.summonSuccess===true
+   && MISSED_TIMING_CLASSES_S03.destroyed===true
    && MISSED_TIMING_CLASSES_S03.flipSummonReverse===false
-   && Object.keys(MISSED_TIMING_CLASSES_S03).length===2,
+   && Object.keys(MISSED_TIMING_CLASSES_S03).length===3,
    JSON.stringify(MISSED_TIMING_CLASSES_S03));
 `, {expect:3});
 
@@ -150,24 +159,35 @@ harness(COMMON + String.raw`
    「墓地へ送られた時」は**正規表現そのものが当たらない**（「送られた」は「された」でも「した」でもない）。 */
 const all=allCands();
 const nowAny=all.filter(n=>missedTimingTextClausesS03(n).length>0);
-ok('C1 ★ いまの句抽出で句が読めるのは 316 枚中 19 枚だけ（召喚語の句を併せ持つカード）',
-   nowAny.length===19, JSON.stringify({n:nowAny.length}));
+/* C1 は S03-U506 で書き直した。あの時点では召喚語の句しか読めず 19 枚だった。
+   S03-U506 で破壊・墓地送りの語と「られた」を足したので 255 枚で句が読める。
+   読めることと落とすことは別で、落ちるのは (B-5) に入った組だけである。 */
+ok('C1 ★ 句が読めるのは 316 枚中 255 枚になった（S03-U506 で語と「られた」を足した）',
+   nowAny.length===255, JSON.stringify({n:nowAny.length}));
 ok('C2 ★ いまの正規表現は「墓地へ送られた時」に当たらない（次の単位で足す対象）',
    /\(\?:に成功した\|された\|した\)\(時\|場合\)/.test(
      String(MISSED_TIMING_TERM_S03).replace(/^\//,'').replace(/\/g$/,'')) === false
    || String(MISSED_TIMING_TERM_S03).indexOf('られた')<0,
    String(MISSED_TIMING_TERM_S03));
-ok('C3 ★ 実測: テキストに「墓地へ送られた時」を持つ候補は多いのに、いまの機構には G の種別が無く'
-   +'、どのカードも分類できない（句が読めないのでそもそも落ちない）',
+/* C3 は S03-U506 で書き直した。S03-U505 の時点では G の句が 1 つも読めなかった。
+   S03-U506 で語と「られた」を足したので**句は読める**ようになったが、**G を見るイベントがまだ無い**
+   （種別の表は onDestroy→D だけ）。だから墓地送りの家族はいまも 1 件も落ちない。 */
+ok('C3 ★ 墓地送りの句は読めるようになったが、G を見るイベントがまだ無いので 1 件も落ちない',
    (function(){
      const hasG=all.filter(n=>{const i=findCardIndex(n);
        return i>=0 && String((CARD_DB[i]||{}).e||'').indexOf('墓地へ送られた時')>=0;});
      globalThis.__HASG=hasG.length;
+     const mapped=Object.keys(MISSED_TIMING_DESTROY_CLASS_S03)
+       .map(e=>MISSED_TIMING_DESTROY_CLASS_S03[e]);
      return hasG.length>50
-       && hasG.every(n=>missedTimingClauseKindS03(n,'G')===null)
-       && hasG.every(n=>missedTimingTextClausesS03(n).every(c=>c.cls.indexOf('G')<0));
+       && hasG.some(n=>missedTimingClauseKindS03(n,'G')==='toki')
+       && mapped.indexOf('G')<0 && mapped.indexOf('GF')<0
+       && hasG.every(n=>EVS.every(e=>
+            missedTimingClassS03({name:n,eventName:e},{stepS03:0})==='destroyed'
+              ? missedTimingClauseKindS03(n,'D')==='toki' : true));
    })(),
-   JSON.stringify({hasG:globalThis.__HASG}));
+   JSON.stringify({hasG:globalThis.__HASG,
+     mapped:MISSED_TIMING_DESTROY_CLASS_S03}));
 `, {expect:3});
 
 /* ===== D. 試作の句抽出で数えた内訳 ===== */
@@ -221,12 +241,20 @@ ok('F1 ★ 設計書に (F) 節があり、候補の数と句の内訳が書か�
    && DOC.indexOf('316')>=0 && DOC.indexOf('155')>=0, 'x');
 ok('F2 ★ 設計書に、いまの正規表現が「墓地へ送られた時」に当たらないことが書かれている',
    DOC.indexOf('「墓地へ送られた時」に当たらない')>=0, 'x');
-ok('F3 ★ 設計書の項目 4 が「監査した」に書き直されている',
-   DOC.indexOf('| 4 | **監査した（S03-U505）。まだ入れていない。**')>=0, 'x');
+/* F3 は S03-U506 で書き直した。項目 4 は「S03-U505 で監査 → S03-U506 で破壊の側だけ実装」になった。
+   本単位（S03-U505）の成果は監査と設計で、行が S03-U505 の監査に触れていることを見る。 */
+ok('F3 ★ 設計書の項目 4 に、S03-U505 の監査と S03-U506 の実装（破壊の側だけ）が書かれている',
+   DOC.indexOf('| 4 | **破壊の側は S03-U506 で入れた（1 件）。墓地送りはまだ入れていない。**')>=0
+   && DOC.indexOf('S03-U505 で候補 316 枚を')>=0, 'x');
 ok('F4 ★ 段階表に S03-U505 が完了として入っている',
    DOC.indexOf('**S03-U505（完了）**')>=0, 'x');
-ok('F5 ★ 本単位は挙動を変えていない（engine に S03-U505 の変更が無い）',
-   SRC['engine/1ZZX_missed_timing_s03.js'].indexOf('S03-U505')<0, 'x');
+/* F5 は S03-U506 で書き直した。S03-U505 自身は挙動を変えておらず、engine に入ったのは S03-U506 である。
+   いまは engine が S03-U505 の実測を引用しているので「S03-U505 の文字が無い」では測れない。
+   代わりに、種別の実装が S03-U506 のものであることを見る。 */
+ok('F5 ★ 破壊の種別は S03-U506 で入った（S03-U505 は監査と設計だけだった）',
+   SRC['engine/1ZZX_missed_timing_s03.js'].indexOf('S03-U506')>=0
+   && /const MISSED_TIMING_DESTROY_CLASS_S03 = \{onDestroy:'D'\};/
+        .test(SRC['engine/1ZZX_missed_timing_s03.js']), 'x');
 ok('F6 専用テストが tools/check.py に登録されている',
    /test_s03_u505_destroy_trigger_audit\.js/.test(SRC['tools/check.py']), 'x');
 `, {expect:6});

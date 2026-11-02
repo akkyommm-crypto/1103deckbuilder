@@ -15527,7 +15527,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle30.js",
-        "tools\\test_s03_u316_alien.js"
+        "tools\\test_s03_u316_alien.js",
+        "tools\\test_s03_u506_destroyed_class.js"
       ]
     },
     {
@@ -15550,7 +15551,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u265_ns37.js"
+        "tools\\test_s03_u265_ns37.js",
+        "tools\\test_s03_u506_destroyed_class.js"
       ]
     },
     {
@@ -31621,7 +31623,8 @@
       "auto_table": true,
       "tests": [
         "tools\\test_s03_u203_loss_traps.js",
-        "tools\\test_s03_u505_destroy_trigger_audit.js"
+        "tools\\test_s03_u505_destroy_trigger_audit.js",
+        "tools\\test_s03_u506_destroyed_class.js"
       ]
     },
     {
@@ -33587,6 +33590,7 @@
       "tests": [
         "tools\\test_s03_u28_targeting_negation.js",
         "tools\\test_s03_u32_targeting_negation_2.js",
+        "tools\\test_s03_u506_destroyed_class.js",
         "tools\\test_s03_u66_dark_general_freed_protection.js",
         "tools\\test_s03_u67_dezaado_counter.js",
         "tools\\test_s03_vs7_targeting_negation_slice.js",
@@ -71889,7 +71893,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u192_staples2.js"
+        "tools\\test_s03_u192_staples2.js",
+        "tools\\test_s03_u506_destroyed_class.js"
       ]
     },
     {

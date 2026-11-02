@@ -210,8 +210,10 @@ ok('C1 ★ negative control: チェーン2 では窓が開かない（召喚の�
    to==='idle' && !OPENS.some(x=>x.opened===true)
    && !actTypes().includes('SUMMON_WINDOW_OPEN_V42'),
    JSON.stringify({to,opens:OPENS.map(x=>[x.opened,x.step])}));
-ok('C2 ★ 窓を開けなかった理由は処理番号の差（刻み 2 に対して排出時は 5）',
-   OPENS.length>0 && OPENS.every(x=>x.step===5),
+/* S03-U506 で (A) から FX_SELF_TO_GRAVE を外したので、排出時の番号は 5 → 4 になった。
+   刻み 2 と違うことが窓を開けない理由であり、そこは変わらない。 */
+ok('C2 ★ 窓を開けなかった理由は処理番号の差（刻み 2 に対して排出時は 4）',
+   OPENS.length>0 && OPENS.every(x=>x.step===4),
    JSON.stringify(OPENS.map(x=>x.step)));
 ok('C3 召喚は成立し、p1 の《神の宣告》は伏せたまま残る（S03-U497 と同じ結果）',
    zu(ids.mon)==='mz' && zu(ids['神の宣告'])==='sz',

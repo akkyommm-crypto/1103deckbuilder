@@ -76,6 +76,17 @@
        … 登録と計上
      - MOD_CLEAR / COUNTER_CLEAR / LINK_CLEAR_V9 / PROT_CLEAR_V21 … 掃除（STAT_MOD_V14 等の clear も同じ）
      - ATTACK_DECLARE_V48 … 攻撃宣言は処理ではない（ダメージ計算の ATTACK は数える）
+     - **FX_SELF_TO_GRAVE は数えない（S03-U506 で外した）** … 発動した魔法・罠が解決後に墓地へ送られる
+       ルール上の行為で、効果の処理ではない。発行しているのは engine/20 afterEffect・engine/30
+       afterPreparedResolve・engine/40 afterResolve・engine/70・engine/1U（発動を無効にされた分）の
+       5 か所で、**すべてそのカード自身の後片付け**である（S03-U506 で全件確認）。
+       当時裁定もこれを処理に数えていない: `WIKI-1B4D52FCA757`（**回答日 2010-08-11**）は
+       《グリフォンの羽根帚》（通常魔法）で《歯車街》を破壊した場合に逃す理由を
+       「破壊後に**回復の処理**が挟まるので」と説明しており、魔法が墓地へ行くこと自体は挙げていない。
+       `WIKI-25B0FF09EA0C`（**回答日 2009-02-22**）も「効果はカードが破壊されたというタイミングで
+       終了するため…発動する事ができます」と答えている。
+       召喚成功の種別では影響が無かった（解決中の特殊召喚成功は flushResolutionSummonBatchV2 が
+       リンクの解決の最後に刻むため）。破壊の種別を入れた S03-U506 で初めて実経路に出た。
      - SHUFFLE / DECK_ORDER_V20 / FACEDOWN_SHUFFLE_V20 … ルール上の行為。
        《連鎖除外》WIKI-3178D0C2D874（10/07/03）「シャッフルは効果処理に含まれません」
      - SS_POS_S03 … 特殊召喚の表示形式の選択（召喚そのものの一部） */
@@ -84,7 +95,7 @@ const MISSED_TIMING_PROCESSING_S03 = new Map([
   ['NORMAL_SUMMON', true], ['FX_SPECIAL_SUMMON', true], ['FX_EX_SUMMON', true], ['EX_SUMMON_COMMIT_V42', true],
   ['FX_RITUAL_SUMMON', true], ['GEMINI_SUMMON_S03', true], ['TOKEN_CREATE', true], ['SET_MONSTER', true], ['SET_ST', true],
   /* カードの移動・除去 */
-  ['MOVE', true], ['FX_TO_GRAVE', true], ['FX_SELF_TO_GRAVE', true], ['FX_BANISH', true], ['FX_DESTROY_BANISH', true],
+  ['MOVE', true], ['FX_TO_GRAVE', true], ['FX_BANISH', true], ['FX_DESTROY_BANISH', true],
   ['FX_BOUNCE', true], ['FX_RETURN_DECK', true], ['FX_DISCARD', true], ['FX_HAND_SEND_GRAVE', true],
   ['FX_HAND_TO_TOP', true], ['FX_MILL', true], ['FX_MILL_TOP', true], ['FX_SEARCH', true], ['FX_DECK_TO_HAND', true],
   ['FX_WIPE_ZONE', true], ['DESTROY_SUB_S03', true], ['HAND_DESTROY_RANDOM_S03', true], ['FX_PLACE_SPELL_S03', true],
@@ -259,12 +270,22 @@ function missedTimingModeS03(name){
        S03-U493 の正規表現はこれを「召喚」と読み、シンクロ召喚の句を通常召喚のイベントに結び付けていた
      - 「生け贄召喚」6 箇所と「アドバンス召喚」32 箇所が同じ層に共存（用語の変更は 2010-03）
    食い違いの向きと、どこまでが当時裁定で裏付けられているかは設計書 3(B-2) と 3(B-4) に書いてある。 */
+/* S03-U506: 破壊・墓地送りの語を足した（設計書 (F)）。
+   語ごとに D（破壊）／B（戦闘で破壊）／G（墓地へ送られた）／GF（フィールドから墓地へ送られた）／
+   X（除外）／T（リリース）へ割り当てる。**召喚語の割り当ては 1 文字も変えていない**ので、
+   N/S/F/R の読み取りは S03-U494 以降と同じである（tools/test_s03_u506_* の negative control で
+   全 4996 枚の件数が同じことを固定している）。 */
 const MISSED_TIMING_SUMMON_WORDS_S03 = [
   ['エクシーズ召喚','S'], ['シンクロ召喚','S'], ['アドバンス召喚','N'], ['生け贄召喚','N'],
   ['反転召喚','F'], ['特殊召喚','S'], ['融合召喚','S'], ['儀式召喚','S'], ['通常召喚','N'],
   ['S召喚','S'], ['Ｓ召喚','S'], ['X召喚','S'], ['Ｘ召喚','S'], ['召喚','N'], ['リバース','R'],
+  /* S03-U506 */
+  ['戦闘で破壊','B'], ['破壊','D'], ['フィールドから墓地へ送','GF'], ['墓地へ送','G'],
+  ['除外','X'], ['リリース','T'],
 ].sort((a,b)=>b[0].length-a[0].length);
-const MISSED_TIMING_TERM_S03 = /(?:に成功した|された|した)(時|場合)/g;
+/* S03-U506: 「られた」を足した。これが無いと「墓地へ送られた時」に 1 件も当たらない（S03-U505 で実測）。
+   「召喚された時」等は今までどおり「された」の方で当たるので、召喚句の読み取りは変わらない。 */
+const MISSED_TIMING_TERM_S03 = /(?:に成功した|された|られた|した)(時|場合)/g;
 const MISSED_TIMING_TEXT_CACHE_S03 = new Map();
 /* 句の直前の「<召喚語>（・<召喚語>）*」を後ろから読む。長い語を先に当てるので
    「特殊召喚」が「召喚」として読まれることはない。 */
@@ -363,7 +384,18 @@ function missedTimingTextKindS03(name){
      ・窓を開く・閉じる Action（SUMMON_WINDOW_* と EVENT_SUMMON_NEG_WINDOW_S03）は
        下の許可リストに入っていないので、窓を通しても召喚成功の応答は逃さない。 */
 const MISSED_TIMING_EVENT_CLASS_S03 = {onNormalSummon:'N', onSpecialSummon:'S'};
-const MISSED_TIMING_CLASSES_S03 = { summonSuccess: true, flipSummonReverse: false };
+/* S03-U506: 破壊が条件の誘発（設計書 (F)、5-a 項目 4）。
+   土台の当時裁定 `WIKI-378544C74049`（**回答日 2008-05-30**、《砂塵の大竜巻》）:
+     「破壊が条件の任意効果はタイミングを逃すことになります。」
+   「時」と「場合」で分かれることも当時裁定が明言している
+     `WIKI-17DDC86F4023`（**回答日 2009-05-14**、《古代の機械究極巨人》）:
+     「『破壊された時』ではなく『破壊された場合』なので、タイミングを逃さず発動します。」
+   **配線とテキストを合わせる（R9 と同じ作法）。** onDestroy で拾われた候補は「破壊された時」の句だけを見る。
+   「墓地へ送られた時」と書かれたカード（例：《森の番人グリーン・バブーン》）は、配線が onDestroy でも
+   句が G なのでここでは落とさない。墓地送りの種別は別単位（S03-U505 の (F) 5 の約束）。
+   `onLeaveField` は入れない。S03-U501 / U502 で見たとおり盤面の差分から検出されるルール処理で、別の軸である。 */
+const MISSED_TIMING_DESTROY_CLASS_S03 = {onDestroy:'D'};
+const MISSED_TIMING_CLASSES_S03 = { summonSuccess: true, flipSummonReverse: false, destroyed: true };
 function missedTimingSummonNegatorS03(name){
   const sc = (typeof CARD_SCRIPTS !== 'undefined') ? CARD_SCRIPTS[name] : null;
   return !!(sc && sc.summonNegate);
@@ -374,6 +406,10 @@ function missedTimingClassS03(cand, evt){
   const cls = MISSED_TIMING_EVENT_CLASS_S03[ev];
   if(cls) return (MISSED_TIMING_CLASSES_S03.summonSuccess
                   && missedTimingClauseKindS03(cand.name, cls) === 'toki') ? 'summonSuccess' : null;
+  /* S03-U506: 破壊が条件の誘発。落とすのは (B-5) の許可リストに入った組だけ（下の missedTimingDropS03）。 */
+  const dcls = MISSED_TIMING_DESTROY_CLASS_S03[ev];
+  if(dcls) return (MISSED_TIMING_CLASSES_S03.destroyed
+                   && missedTimingClauseKindS03(cand.name, dcls) === 'toki') ? 'destroyed' : null;
   if(ev === 'onFlip' && evt && evt.flipSummon){
     if(MISSED_TIMING_CLASSES_S03.summonSuccess && missedTimingClauseKindS03(cand.name, 'F') === 'toki') return 'summonSuccess';
     if(MISSED_TIMING_CLASSES_S03.flipSummonReverse && missedTimingClauseKindS03(cand.name, 'R') === 'toki') return 'flipSummonReverse';
@@ -416,6 +452,11 @@ const MISSED_TIMING_CONFIRMED_S03 = {
   '真六武衆－カゲキ': {ev:['onNormalSummon'], basis:'A', rulings:['R1103-KAGEKI-002']},
   '神秘の代行者 アース': {ev:['onNormalSummon'], basis:'A', rulings:['R1103-EARTH-003']},
   '落とし穴': {ev:['onNormalSummon','onFlip'], basis:'A', rulings:['WIKI-2B88D7C8D921']},
+  /* S03-U506: 破壊が条件の誘発の 1 件目（設計書 (F)）。当時裁定 `WIKI-9E5470176D20`（**回答日 2009-08-07**、
+     掲載ページ《おとり人形》）:「チェーン１で《おとり人形》（対象：《スネーク・ホイッスル》）、チェーン２に
+     《毒蛇の供物》とした場合、《スネーク・ホイッスル》は発動しますか？」→「タイミングを逃すので発動できず、
+     破壊されます。(09/08/07)」 テキストは「…破壊された時…特殊召喚する事ができる」で任意（basis 'A'）。 */
+  'スネーク・ホイッスル': {ev:['onDestroy'], basis:'A', rulings:['WIKI-9E5470176D20']},
   'A・ジェネクス・クラッシャー': {ev:['onNormalSummon'], basis:'B', rulings:['WIKI-1E460C04E744','WIKI-82BC8592D762','WIKI-061FA82001DA']},
   'BF－孤高のシルバー・ウィンド': {ev:['onSpecialSummon'], basis:'B', rulings:['WIKI-8D02D567BDEB']},
   'D・ゲイザー': {ev:['onNormalSummon','onSpecialSummon','onFlip'], basis:'B', rulings:['WIKI-89B19EADA7EE']},

@@ -865,6 +865,12 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u504_b_wording_reading.js')],che
 # Era evidence is layered into 12 cards that miss, 12 that do not, and one 調整中, all with answer dates.
 # Audit and design only - this unit does not change behaviour (design doc (F)).
 subprocess.run(['node',str(ROOT/'tools/test_s03_u505_destroy_trigger_audit.js')],check=True)
+# S03-U506: the destruction class itself (5-a item 4, the 破壊 side). (B-2) gains 「られた」 and the
+# destruction / GY words with the summon-word assignments untouched (pinned over all 4996 cards), (B-3)
+# gains destroyed (onDestroy -> D), and (B-5) gains one entry, 《スネーク・ホイッスル》 (WIKI-9E5470176D20,
+# answer date 2009-08-07). It also drops FX_SELF_TO_GRAVE from the (A) allow list: a resolved Spell/Trap
+# going to the GY is a rule step, not processing, and counting it made destroy-only effects miss.
+subprocess.run(['node',str(ROOT/'tools/test_s03_u506_destroyed_class.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

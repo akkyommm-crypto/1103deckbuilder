@@ -10,6 +10,41 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U506 (Opus, claude/work; **behaviour change**, engine/1ZZX only + 1 new test): **the destruction class is
+  in** - the 破壊 side of 5-a item 4, per the design S03-U505 settled in (F). (B-2) gains 「られた」 in the
+  pattern and the words 破壊=D / 戦闘で破壊=B / 墓地へ送=G / フィールドから墓地へ送=GF / 除外=X / リリース=T;
+  (B-3) gains `MISSED_TIMING_DESTROY_CLASS_S03 = {onDestroy:'D'}` and `destroyed:true`; (B-5) gains **one entry**,
+  《スネーク・ホイッスル》 (`WIKI-9E5470176D20`, **answer date 2009-08-07**, basis A). Wiring and text must agree
+  (the R9 habit): a candidate collected on `onDestroy` is read against the 「破壊された時」 clause only, so
+  《森の番人グリーン・バブーン》 (wired to onDestroy but worded 「墓地へ送られた時」) gets no class, and
+  `onLeaveField` is deliberately **not** in the class table (U501/U502 showed it is the board-diff rule step).
+  **negative control over all 4996 cards**: the summon clauses are byte-identical to the S03-U505 baseline
+  (N 239/49, S 213/53, F 75/8, R 20/35; 692 word occurrences) - the summon-word assignments were not touched.
+  **A real (A) defect surfaced only once the class was enabled**: 《スネーク・ホイッスル》 was dropped even for
+  《地砕き》, which does nothing but destroy. The cause was `FX_SELF_TO_GRAVE` sitting in the (A) processing allow
+  list - a resolved Spell/Trap going to the GY is a **rule step, not processing**. All five call sites
+  (`engine/20` afterEffect, `engine/30` afterPreparedResolve, `engine/40` afterResolve, `engine/70`, `engine/1U`)
+  are that card's own disposal, and the era rulings do not count it either: `WIKI-1B4D52FCA757` (**2010-08-11**)
+  explains 《歯車街》 missing by 「破壊後に**回復の処理**が挟まるので」, never by the Spell reaching the GY, and
+  `WIKI-25B0FF09EA0C` (**2009-02-22**) says the effect 「カードが破壊されたというタイミングで終了するため」 the
+  trigger can be activated. So it was **removed from the allow list**. It never mattered for the summon family
+  because resolution-time summon-success events are stamped at the end of the link by
+  `flushResolutionSummonBatchV2` (measured in S03-U504). Measured end state: 《地砕き》 (MOVE 0->1,
+  FX_TO_GRAVE 1->2) lets the trap fire; 《ソウルテイカー》 (… LP 2->3) makes it miss - exactly the shape of the
+  two dated rulings. Side effect: one path's step count dropped by one (《血の代償》 chain 2 is now 2->4, not
+  2->5), so U497's D2/D3 and U498's C2 had their **numbers** updated while the qualitative claim stands.
+  U505's B1/B3/C1/C3/F3/F5 and U496's A1/A2/A5 were rewritten for the new state, not weakened: U496 now checks the
+  **summon family** separately and still pins it at 44 cards / 65 pairs, with the whole table at 45 / 66.
+  **Still 未対応**: the 墓地へ送 family (clauses readable now, but no event maps to G, so 112 'toki' cards drop
+  nothing), 除外 / リリース / 戦闘で破壊, and 11 of the 12 dated 'miss' cards - 5 unimplemented, 2 wired to
+  `onLeaveField`, 2 with no wiring, 1 worded G, and 《虚無空間》, whose trigger is **forced**, so the dated ruling
+  that it misses collides with R1 and needs its own decision. 《黒衣の大賢者》 stays R6 (調整中). Files:
+  `engine/1ZZX_missed_timing_s03.js`, design doc ((F) + item 4 + the stage row), `docs/S03_U506_REPORT.md`,
+  `tools/check.py`, `tools/script_coverage.py`, `tools/test_s03_u506_destroyed_class.js` (**28 PASS**).
+  Missed-timing support is now **45 cards / 66 pairs** of (B-5) - still not all cards or all timing rules.
+  Related: u491 40 / u492 66 / u493 56 / u494 51 / u495 33 / u496 35 / u497 32 / u498 74 / u499 34 / u500 35 /
+  u501 26 / u502 26 / u503 35 / u504 18 / u505 24 / u506 28 and the 14 destruction / trap tests (525) =
+  **1138 PASS / 0 FAIL**.
 - S03-U505 (Opus, claude/work; docs + 1 new test only, **no behaviour change**): **the destruction / GY-condition
   triggers (5-a item 4) are now audited and designed.** The machinery of U491-U496 covers `summonSuccess` only, so
   **nothing in this family is dropped today** - verified over all 316 candidate cards x 5 events
