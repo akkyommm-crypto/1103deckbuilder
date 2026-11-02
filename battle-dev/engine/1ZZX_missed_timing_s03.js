@@ -353,7 +353,15 @@ function missedTimingTextKindS03(name){
      ・食い違いは逆向きで、解決中に行われる召喚には窓が 1 つも開かない。チェーン1 の《血の代償》は
        当時できる《神の宣告》等の発動を潰しており、チェーン2 は窓が無いために結果だけ一致している。
      ・チェーン1 とチェーン2 を分ける道具はこの処理番号だった（召喚時→チェーン終了時が 2→2 と 2→5）。
-       CHAIN_RESOLVE_TOP は解決前にリンクを外すので、gameState.chain.length では分けられない。 */
+       CHAIN_RESOLVE_TOP は解決前にリンクを外すので、gameState.chain.length では分けられない。
+   S03-U498 でその窓を入れた（engine/1ZZY。設計書 (D) の「S03-U498 で入れた形」・5-f）:
+     ・入れた場所は processChainEndV30 ではなく遅延イベントの排出（processDrainEventsV27）の先頭。
+       召喚成功のイベントを出す直前 ＝ 当時裁定の言う「激流葬・奈落より前」の位置である。
+     ・対象は**印の付いた onNormalSummon だけ**（許可リスト。いまは《血の代償》1 件）。
+     ・「召喚の後に別の処理があるか」の判定に使うのはこの処理番号で、
+       比較は missedTimingDropS03 の R4 と同じ（イベントの stepS03 と現在の procStepS03）。
+     ・窓を開く・閉じる Action（SUMMON_WINDOW_* と EVENT_SUMMON_NEG_WINDOW_S03）は
+       下の許可リストに入っていないので、窓を通しても召喚成功の応答は逃さない。 */
 const MISSED_TIMING_EVENT_CLASS_S03 = {onNormalSummon:'N', onSpecialSummon:'S'};
 const MISSED_TIMING_CLASSES_S03 = { summonSuccess: true, flipSummonReverse: false };
 function missedTimingSummonNegatorS03(name){

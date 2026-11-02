@@ -318,6 +318,10 @@ function runSummonWindowResumeS03(ps,result){
   if(!r){ logIt(gameState,'召喚の続きを復元できないため、召喚無効タイミングを閉じました（続きのデータが無い保存）'); return false; }
   const hit=findCardByUid(r.uid);
   /* S03-U119: デュアルの「もう1度召喚」（kind 'normal' + geminiS03）。カードはモンスターゾーンに居る。 */
+  /* S03-U498: 解決中に行われた通常召喚の召喚無効の窓（engine/1ZZY）。
+     この窓だけは召喚がすでに適用されているので、通した時は何も戻さず、
+     無効の時にだけ盤面から取り除いて保留列の召喚成功を落とす（設計 (D) の案 (b)）。 */
+  if(r.resolvedS03===true && typeof summonNegWindowResumeS03==='function') return summonNegWindowResumeS03(ps,result);
   if(ps.geminiS03 && typeof geminiSummonResumeS03==='function') return geminiSummonResumeS03(ps, result);
   if(result==='commit'){
     if(ps.kind==='normal'){

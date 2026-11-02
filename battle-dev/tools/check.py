@@ -828,6 +828,10 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u496_missed_timing_published_sco
 # code; the real gap is that a summon performed during chain resolution opens no window at all.
 # Design only (1-c / (D) / 5-e) - this unit does not change behaviour.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u497_summon_negation_window_order.js')],check=True)
+# S03-U498: the window itself (engine/1ZZY). A Normal Summon performed during a chain resolution now opens
+# the summon-negation window before its summon-success event, but only when the (A) step counter is
+# unchanged (WIKI-2CF23AA42E79, answer date 2011-08-25) and only for the marked call site (blood offer).
+subprocess.run(['node',str(ROOT/'tools/test_s03_u498_summon_negation_window.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

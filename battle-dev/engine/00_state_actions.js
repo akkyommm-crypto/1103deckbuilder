@@ -380,6 +380,22 @@ function applyActionBodyV31(gs, a){
       gs.pendingSummon=null;
       break;
     }
+    /* S03-U498: 解決中に行われた通常召喚の召喚無効の窓（engine/1ZZY）。
+       遅延イベントの印の出入れだけなので、(A) の「処理」には数えない（EVENT_* と同じ扱い。engine/1ZZX）。
+         op 'offered' = 窓を提示した（再開した排出で二度開かないための印）
+         op 'drop'    = 召喚が無効になったので召喚成功のイベントを落とす */
+    case "EVENT_SUMMON_NEG_WINDOW_S03": {
+      const qS498 = gs.deferredEvents || [];
+      let iS498 = -1;
+      for(let k = 0; k < qS498.length; k++){
+        const it = qS498[k];
+        if(it && it.eventName === 'onNormalSummon' && it.evt && it.evt.uid === a.uid && it.evt.summonNegWindowS03){ iS498 = k; break; }
+      }
+      if(iS498 < 0) break;
+      if(a.op === 'drop') qS498.splice(iS498, 1);
+      else qS498[iS498].evt.summonNegWindowS03 = 'offered';
+      break;
+    }
 
     case "COIN_TOSS": {
       const fp = (typeof duelRandomInt==='function') ? duelRandomInt(2,gs) : Math.floor(Math.random()*2);

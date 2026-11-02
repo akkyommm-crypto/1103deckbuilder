@@ -2082,7 +2082,11 @@ function s03BloodOfferTributeThenSummon(p, targetCard, method, db, chosen){
        (method && method.id!=null) ? {summonMethod:method.id} : {}));
     const summonedS487=lastSummonedCard(p);
     /* 解決中なので積むだけにする（チェーン終了後の通常のドレインが処理する。ここで flush すると解決の中へ再入する） */
-    if(summonedS487) queueDeferredEventV2('onNormalSummon',{player:p,name:cardName(summonedS487),card:summonedS487});
+    /* S03-U498: この召喚に対する「召喚そのものの無効」の窓を開ける対象として印を付ける（engine/1ZZY）。
+       根拠は上の WIKI-2CF23AA42E79（回答日 2011-08-25）で、このカードそのものについて答えている。
+       窓を開くかどうかは engine 側が (A) の処理番号で判定する（チェーン2 以上で召喚の後に
+       別の処理があれば開かない）。 */
+    if(summonedS487) queueDeferredEventV2('onNormalSummon',{player:p,name:cardName(summonedS487),card:summonedS487,summonNegWindowS03:true});
     return;
   }
   const used=new Set(chosen.map(x=>x.card));

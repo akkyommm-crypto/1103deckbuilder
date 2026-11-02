@@ -197,9 +197,14 @@ harness(COMMON + String.raw`
 const id1=bloodRun({chain2:false});
 drive();
 const sum1=summonAct(), end1=CHAINEND[0]||null;
-ok('C1 ★ 《血の代償》チェーン1 の解決中の通常召喚には SUMMON_WINDOW_* が 1 つも開かない'
-   +'（当時裁定 WIKI-2CF23AA42E79 は《神の宣告》等を発動できると答えている ＝ 食い違い。5-a #1）',
-   WINS.length===0 && openedWindow()===false && !!sum1 && sum1.t==='NORMAL_SUMMON',
+/* C1 は S03-U498 で書き替えた。S03-U497 の実測は「ここに窓が 1 つも開かない」で、
+   それが当時裁定 WIKI-2CF23AA42E79（回答日 2011-08-25）との食い違いだった。S03-U498 がその窓を入れたので、
+   いまは SUMMON_WINDOW_OPEN_V42 が出る。ただし通るのは既存の beginSummonWindowV2（5 か所・すべて UI 起点）
+   ではなく、遅延イベントの排出側に足した経路（engine/1ZZY）なので WINS は 0 のままである。
+   実測そのもの（C2・C3・D2・D3・D4 の処理番号、B5 の negative control）はそのまま残す。 */
+ok('C1 ★ 《血の代償》チェーン1 の解決中の通常召喚は、既存の beginSummonWindowV2 を一度も通らない。'
+   +'S03-U498 で排出側に窓を足したので SUMMON_WINDOW_OPEN_V42 は出る（WIKI-2CF23AA42E79、5-a #1）',
+   WINS.length===0 && openedWindow()===true && !!sum1 && sum1.t==='NORMAL_SUMMON',
    JSON.stringify({wins:WINS,sum:sum1}));
 ok('C2 ★ チェーン1 では召喚した瞬間の処理番号とチェーン終了時の処理番号が同じ（＝召喚の後に別の処理が無い）',
    !!sum1 && !!end1 && sum1.after===2 && end1.step===2 && end1.step-sum1.after===0,
@@ -207,7 +212,7 @@ ok('C2 ★ チェーン1 では召喚した瞬間の処理番号とチェーン�
 ok('C3 チェーン終了時点の保留列の最後が onNormalSummon で、召喚成功の誘発はまだ出ていない',
    !!end1 && end1.deferred.length>0 && end1.deferred[end1.deferred.length-1]==='onNormalSummon',
    JSON.stringify(end1));
-ok('C4 窓が無いので召喚は成立し、p1 の《神の宣告》は伏せたまま残る（本単位で挙動は変えていない）',
+ok('C4 窓で何も発動しなければ召喚は成立し、p1 の《神の宣告》は伏せたまま残る',
    zu(id1.mon)==='mz' && zu(id1.negator)==='sz',
    JSON.stringify({mon:zu(id1.mon),negator:zu(id1.negator)}));
 const d1=end1.step-sum1.after, chainAtSummon1=sum1.chain;
@@ -309,9 +314,11 @@ ok('G2 ★ 設計書 (D) に、刻む場所・開く場所と、実装しなか�
    && DOC.indexOf('processChainEndV30')>=0
    && DOC.indexOf('案 (a)')>=0 && DOC.indexOf('案 (b)')>=0
    && DOC.indexOf('processDrainEventsV27')>=0,'');
-ok('G3 ★ 5-a #1 が「未実装でチェーン1 の発動を潰している」に書き直され、#1-d・#1-e・#1-f が足されている',
-   DOC.indexOf('**召喚そのものの無効が未実装。**')>=0
-   && DOC.indexOf('当時できる《神の宣告》《キックバック》《昇天の角笛》の発動を潰している')>=0
+/* G3 は S03-U498 で書き替えた。S03-U497 は「未実装でチェーン1 の発動を潰している」を記録し、
+   S03-U498 がその窓を入れた。潰していたという実測そのもの（名指しの 3 枚）は 5-a #1 に残っている。 */
+ok('G3 ★ 5-a #1 が S03-U498 で入れた範囲と残った未対応に書き直され、#1-d・#1-e・#1-f がある',
+   DOC.indexOf('**召喚そのものの無効は、S03-U498 で')>=0
+   && DOC.indexOf('当時できる《神の宣告》《キックバック》《昇天の角笛》の発動を潰していた')>=0
    && DOC.indexOf('| 1-d |')>=0 && DOC.indexOf('| 1-e |')>=0 && DOC.indexOf('| 1-f |')>=0,'');
 ok('G4 ★ 裁定記録に 4 件の本文と層（回答日あり / 回答日なし）の区別がある',
    RUL.indexOf('S03-U497 で参照した当時裁定（召喚そのものの無効の窓）')>=0

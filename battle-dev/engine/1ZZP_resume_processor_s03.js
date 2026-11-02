@@ -121,6 +121,14 @@ function restoreProcessorAfterLoadS296(saved, evtMeta){
     else pumpProcessorV27();   /* the choice is gone: the turn goes on */
     return true;
   }
+  /* S03-U498: the summon-negation window of a resolution-time Normal Summon (engine/1ZZY) waits on DRAIN_EVENTS.
+     The window itself is reopened from gameState.pendingSummon by reopenSummonWindowAfterLoadS03 (engine/30);
+     the continuation of the drain is already in the saved queue, so the unit just keeps waiting. */
+  if(t === PROCESSOR_V27.DRAIN_EVENTS && gameState.pendingSummon){
+    gameState.processorQueue = saved.queue || [];
+    gameState.processorWaiting = w; gameState.processorCurrent = null; gameState.processorPaused = true;
+    return true;
+  }
   if(t === PROCESSOR_V27.POINT){
     if(saved.pendingAttack) gameState.pendingAttack = saved.pendingAttack;
     if((gameState.chain || []).length || gameState.chainWindow || gameState.pendingChoice){

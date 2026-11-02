@@ -10,6 +10,47 @@
 ## 現在 (current)
 
 <!-- CURRENT:BEGIN -->
+- S03-U498 (Opus, claude/work; **behaviour change**, engine + 1 card mark + 1 new test): **the summon-negation
+  window of a resolution-time Normal Summon is now implemented** - the design S03-U497 settled in
+  `docs/S03_MISSED_TIMING_DESIGN.md` (D), case (b). The only evidence is `WIKI-2CF23AA42E79` (**answer date
+  2011-08-25**, page 《血の代償》): at chain 1 the negation CAN be activated, at chain 2+ with further processing
+  after the summon it misses. Until U497 no window opened at all on a resolution-time summon, so chain 1 killed an
+  activation that was legal then. **One thing changed against U497's written design**: the window is opened not in
+  `processChainEndV30` but at the **head of the deferred-event drain** (`processDrainEventsV27`). Measured reason:
+  returning `PROC_V27_WAIT` from `processChainEndV30` skips the rest of that function - `eventChainResumeV11` and
+  `CHAIN_AFTER_V2`, both published paths - and re-running `CHAIN_END` after the window would pass
+  `endLinkResolutionS03` twice. The drain head is also exactly 「召喚成功時の激流葬・奈落より前」 and it solves
+  U497's obstacle 2 (the drain had no `pendingSummon` condition) by construction. Shape: **allow list** - only an
+  `onNormalSummon` whose queuing call site marked it `summonNegWindowS03:true` is a candidate (today **《血の代償》
+  only**, `cards/00_generic_core.js`); the gate is the (A) step counter compared exactly as `missedTimingDropS03`
+  R4 does (the event's `stepS03` vs the current `procStepS03`); a cheap pre-check returns **without a single
+  Action** when no `sc.summonNegate` card is on either field, so the published path's digest and Journal are
+  unchanged unless a usable negator is actually present. Candidate enumeration must happen **after**
+  `SUMMON_WINDOW_OPEN_V42` (measured: 《神の宣告》's `condition` rejects with 「召喚、または魔法・罠カードの発動に
+  対して発動します」 when `pendingSummon` is null), so the open/close order mirrors `beginSummonWindowV2`. On
+  negation the queued `onNormalSummon` is dropped (`EVENT_SUMMON_NEG_WINDOW_S03` op `drop`) and the monster is sent
+  to the GY with `MOVE` - **not** `byDestroy`, so 「破壊された時」 and the field-leave events do not fire (the
+  summon never succeeded); 《キックバック》 (S03-U277 `negateToHandS03`) bounces it to the hand instead. Save/Undo
+  ride `pendingSummon.resumeS03.resolvedS03`, with a `DRAIN_EVENTS` case added to `restoreProcessorAfterLoadS296`
+  (`engine/1ZZP`) and the sheet reopened by the existing `reopenSummonWindowAfterLoadS03`. Files:
+  `engine/1ZZY_summon_negation_window_s03.js` (new), `engine/30` (1 call at the drain head), `engine/40`
+  (1 line in `runSummonWindowResumeS03`), `engine/00` (1 Action), `engine/1ZZP`, `engine/1ZZX` (comment),
+  `cards/00_generic_core.js` (the mark), `build_manifest.json`, `tools/check.py`, `tools/script_coverage.py`,
+  design doc ((D) 「S03-U498 で入れた形」 / 5-f / 5-a #1 rewrite / #1-g / §6 five rejected designs),
+  `docs/S03_MISSED_TIMING_RULINGS.md` (S03-U498 section: one row per decision with its evidence layer),
+  `docs/S03_U498_REPORT.md`, `tools/test_s03_u498_summon_negation_window.js` (**73 PASS**).
+  **Still 未対応**: resolution-time Special Summons (5-a #1-d - `sc.summonNegate.kinds` has no effect-SS kind, so
+  adding one would touch every published card script, and `R1103-ROACH-003` is **undated**), 《デュアル・サモナー》
+  (#1-g - its summon runs inside a resolution-time choice resume at the opponent's End Phase; **order not
+  measured**), the turn player not being able to activate their own negation (#1-e) and the missing
+  one-chain-block-per-summon limit (#1-f), plus case (b)'s two approximations (continuous effects apply between the
+  summon and the window; the negation's `MOVE` advances the step counter). **Two tests of S03-U497 were rewritten,
+  not weakened**: its C1 recorded 「no window opens here」 and its G3 the doc string 「召喚そのものの無効が未実装」 -
+  both were the discrepancy this unit fixed, so they now assert the new facts (C1 still checks that
+  `beginSummonWindowV2` is NOT the path, which keeps the 5-call-site record intact, and B5's negative control is
+  untouched). Missed-timing support itself is unchanged and still limited to the **44 confirmed cards / 65 event
+  pairs** of (B-5). Related: u491 40 / u492 66 / u493 56 / u494 51 / u495 33 / u496 35 / u497 32 / u486 25 and the
+  22 blood-offer / summon-negation tests (696) = **1107 PASS / 0 FAIL** (31 files).
 - PUBLISHED 2026-11-01 (Codex handoff `handoffs/U496_PUBLICATION_HANDOFF_20261101.md`): PR #10 was merged as a
   normal merge commit (no squash/rebase, no force push, no direct push to main). New main
   `7cb7b93b50dfb773454e1457158069bce9257f6e` (parents `550cb40a` + `053477ae`). The already-green

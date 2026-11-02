@@ -2489,7 +2489,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2162
+          "line": 2166
         }
       ],
       "auto_table": false,
@@ -3969,6 +3969,7 @@
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u496_missed_timing_published_scope.js",
+        "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_u64_resolution_deck_choice_remaining14.js",
@@ -4096,6 +4097,7 @@
         "tools\\test_s03_u229_ns21.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u496_missed_timing_published_scope.js",
+        "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_v450_native_cards.js"
       ]
     },
@@ -13858,7 +13860,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2435
+          "line": 2439
         }
       ],
       "auto_table": false,
@@ -19226,6 +19228,7 @@
       "tests": [
         "tools\\test_s03_u277_kickback.js",
         "tools\\test_s03_u497_summon_negation_window_order.js",
+        "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_v530_batch05.js"
       ]
     },
@@ -20546,6 +20549,7 @@
         "tools\\test_s03_u153_manual_notes.js",
         "tools\\test_s03_u256_lv3.js",
         "tools\\test_s03_u276_gap4.js",
+        "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_token_cards.js",
         "tools\\test_v500_batch02.js"
       ]
@@ -38842,7 +38846,8 @@
         "tools\\test_s03_u188_staples.js",
         "tools\\test_s03_u205_partial8.js",
         "tools\\test_s03_u296_choice_release_replay.js",
-        "tools\\test_s03_u462_invellz_gatekeeper.js"
+        "tools\\test_s03_u462_invellz_gatekeeper.js",
+        "tools\\test_s03_u498_summon_negation_window.js"
       ]
     },
     {
@@ -62036,6 +62041,7 @@
         "tools\\test_s03_u464_cocoon.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u497_summon_negation_window_order.js",
+        "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u49_battle_fader_once_per_chain.js",
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
@@ -70000,7 +70006,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2346
+          "line": 2350
         }
       ],
       "auto_table": false,
@@ -71423,7 +71429,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2415
+          "line": 2419
         }
       ],
       "auto_table": false,
@@ -71829,7 +71835,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2395
+          "line": 2399
         }
       ],
       "auto_table": false,
@@ -74874,6 +74880,7 @@
         "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u493_missed_timing_state_and_audit.js",
         "tools\\test_s03_u496_missed_timing_published_scope.js",
+        "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
         "tools\\test_s03_vs3_six_samurai_gate_slice.js",
@@ -79788,7 +79795,8 @@
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u496_missed_timing_published_scope.js",
-        "tools\\test_s03_u497_summon_negation_window_order.js"
+        "tools\\test_s03_u497_summon_negation_window_order.js",
+        "tools\\test_s03_u498_summon_negation_window.js"
       ]
     },
     {
@@ -80153,7 +80161,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2482
+          "line": 2486
         }
       ],
       "auto_table": false,
@@ -83730,7 +83738,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2101
+          "line": 2105
         }
       ],
       "auto_table": false,
@@ -83753,7 +83761,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2140
+          "line": 2144
         }
       ],
       "auto_table": false,
@@ -85313,6 +85321,7 @@
         "tools\\test_s03_u47_special_summon_effect_decl.js",
         "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_u497_summon_negation_window_order.js",
+        "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
@@ -93552,6 +93561,7 @@
         "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u215_ns7.js",
         "tools\\test_s03_u497_summon_negation_window_order.js",
+        "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
     },
@@ -93675,6 +93685,7 @@
         "tools\\test_codex_c13_rabbit_laggia_recipe.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
+        "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u53_instant_fusion.js"
       ]
@@ -94635,7 +94646,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2366
+          "line": 2370
         }
       ],
       "auto_table": false,
@@ -98661,7 +98672,8 @@
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u496_missed_timing_published_scope.js",
-        "tools\\test_s03_u497_summon_negation_window_order.js"
+        "tools\\test_s03_u497_summon_negation_window_order.js",
+        "tools\\test_s03_u498_summon_negation_window.js"
       ]
     },
     {
@@ -100865,7 +100877,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2190
+          "line": 2194
         }
       ],
       "auto_table": false,

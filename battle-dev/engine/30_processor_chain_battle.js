@@ -1231,6 +1231,14 @@ function processDrainEventsV27(){
   if(typeof eventSummaryPendingS03==='function' && eventSummaryPendingS03(gameState)) commitAutomaticActionV44({type:'EVENT_SUMMARY_S03'});
   const q=gameState.deferredEvents||[]; if(!q.length) return PROC_V27_DONE;
   const runS03=leaveBatchRunS03(q);
+  /* S03-U498: 解決中に行われた通常召喚に対する「召喚そのものの無効」の窓は、その召喚成功のイベントを出す
+     **前**にここで開く（engine/1ZZY、当時裁定 WIKI-2CF23AA42E79、回答日 2011-08-25）。
+     印の付いた召喚で、召喚の後に別の処理が無く、かつ発動できる召喚無効が相手の場にある場合だけ。
+     続きの排出を先に積んでから PROC_V27_WAIT で止める（窓を開けただけでは onNormalSummon が先に排出される）。 */
+  if(typeof summonNegWindowOpenS03==='function' && summonNegWindowOpenS03(q,runS03||1)){
+    enqueueProcessorListFrontV27([{type:PROCESSOR_V27.DRAIN_EVENTS,payload:{}}]);
+    return PROC_V27_WAIT;
+  }
   if(runS03){
     const items=q.slice(0,runS03).map(it=>({eventName:it.eventName,evt:JSON.parse(JSON.stringify(it.evt||{}))}));
     const sumS03=items.find(it=>SUMMON_BATCH_EVENTS_S03.indexOf(it.eventName)>=0);
