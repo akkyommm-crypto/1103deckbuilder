@@ -278,9 +278,12 @@ audit('F3');
 /* ===== G. 文書・登録 ===== */
 harness('const SRC=' + JSON.stringify(SRC_S500) + ';' + COMMON + String.raw`
 const DOC=SRC['docs/S03_MISSED_TIMING_DESIGN.md'], ENG=SRC['engine/1ZZY_summon_negation_window_s03.js'];
+/* G1 は S03-U511 で書き直した。取り消しの破壊 4 経路に byPlayer を渡すため、両方の枝が
+   Object.assign で包まれた。そこで正規表現から act( の直後の波括弧を外した。見ているもの
+   （枝が分かれていること・未到達の申告が手札からの召喚の枝にだけ付くこと）は同じである。 */
 ok('G1 ★ engine は枝ごとに取り消しを分け、手札からの召喚だけに未到達の申告を付ける（U510）',
-   /ps\.resumeS03\.geminiS03\) act\(\{type:'FX_TO_GRAVE'/.test(ENG)
-   && /else act\(\{type:'FX_TO_GRAVE'[^\n]+summonNegatedS03:uid/.test(ENG)
+   /ps\.resumeS03\.geminiS03\) act\(/.test(ENG)
+   && /else act\([^\n]+'FX_TO_GRAVE'[^\n]+summonNegatedS03:uid/.test(ENG)
    && !/geminiS03\) act\([^\n]+summonNegatedS03/.test(ENG),
    'x');
 ok('G2 ★ その形が UI 起点の geminiSummonResumeS03 と同じ理由（破壊で取り消す）だと engine に書いてある',

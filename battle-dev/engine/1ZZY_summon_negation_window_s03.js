@@ -108,17 +108,19 @@ function summonNegWindowResumeS03(ps, result){
   if(result !== 'commit'){
     act({type:'EVENT_SUMMON_NEG_WINDOW_S03', op:'drop', uid});
     const hit = findCardByUid(uid);
+    const byS511 = (ps.negatedByS511===0 || ps.negatedByS511===1) ? ps.negatedByS511 : null;   /* S03-U511 */
     if(hit && hit.zone === 'mz'){
       /* S03-U277: 「召喚を無効にし、そのモンスターを持ち主の手札に戻す」（キックバック） */
       if(ps.negateToHandS03) act({type:'FX_BOUNCE', player:hit.p, zone:hit.zone, index:hit.index, reason:'召喚を無効にし手札に戻す'});
       /* S03-U500: デュアル再召喚は UI 起点の窓（geminiSummonResumeS03、engine/1ZI）と同じ形で取り消す。
          そのモンスターは召喚の前から場に居るので、「場に届いていない」扱いの MOVE ではなく
          破壊で場を離れる（《神の宣告》《昇天の角笛》の「無効にし破壊する」にあたる）。 */
-      else if(ps.resumeS03.geminiS03) act({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, reason:'もう1度召喚を無効', byDestroy:true});
+      /* S03-U511: 破壊したのは無効にした側（`WIKI-D70393946D93` 10/09/16）。 */
+      else if(ps.resumeS03.geminiS03) act(Object.assign({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, reason:'もう1度召喚を無効', byDestroy:true}, byS511==null?{}:{byPlayer:byS511}));
       /* S03-U502: この取り除きは「フィールドに出なかった」扱いなので、場からの離脱にも数えさせない
          （engine/18 の v9DetectLeaveField が a.summonNegatedS03 を見る）。デュアル再召喚の枝は
          召喚の前から場に居るので申告しない（あちらの離脱は本当の離脱である）。 */
-      else act({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, byDestroy:true, reason:'召喚を無効', summonNegatedS03:uid});
+      else act(Object.assign({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, byDestroy:true, reason:'召喚を無効', summonNegatedS03:uid}, byS511==null?{}:{byPlayer:byS511}));   /* S03-U511 */
     }
   }
   summonNegWindowProcessorResumeS03();

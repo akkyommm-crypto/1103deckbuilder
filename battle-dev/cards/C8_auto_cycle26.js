@@ -17,13 +17,27 @@ function d5SelfKilled(ctx){
   return null;
 }
 /* 相手によって破壊され墓地へ送られたか */
+/* この判定を使うのは《聖騎士ジャンヌ》だけ（②「このカードが**相手によって**破壊され墓地へ送られた場合」）。
+   S03-U511: フィールド上以外で破壊された場合も当たるようにした。当時裁定 `WIKI-D70393946D93`
+   （**回答日 2010-09-16**、掲載ページ《聖騎士ジャンヌ》）:「《神の警告》で召喚を無効にされるなど、
+   **フィールド上以外で破壊され墓地へ送られた**場合、効果は発動できますか？」
+   →「はい、発動できます。(10/09/16)」
+   同じ向きの二次資料（**回答日なし**）: `R1103-SCRAPDRAGON-004`「召喚を無効にされて破壊され墓地へ
+   送られた場合でも、相手によって破壊された場合の誘発効果を発動できる」。
+   場での破壊の判定（`c1DestroyRecord` は from が 'mz' の記録しか見ない）は**1 文字も変えていない**。 */
 function d5KilledByFoe(ctx){
   if(ctx.zone !== 'grave') return false;
   const g = ctx.card.graveInfo;
-  if(!(g && g.byDestroy && g.from === 'mz' && g.turn === gameState.turn)) return false;
-  const rec = c1DestroyRecord(ctx.card);
-  if(!rec) return false;
-  return rec.battle || rec.byPlayer === (ctx.player === 0 ? 1 : 0);
+  if(!(g && g.byDestroy && g.turn === gameState.turn)) return false;
+  const foe = (ctx.player === 0) ? 1 : 0;
+  if(g.from === 'mz'){
+    const rec = c1DestroyRecord(ctx.card);
+    if(!rec) return false;
+    return rec.battle || rec.byPlayer === foe;
+  }
+  /* S03-U511: フィールド上以外（召喚を無効にされて手札から破壊された等）。破壊したプレイヤーは
+     graveInfo に控えてある（engine/00 の FX_TO_GRAVE）。 */
+  return g.byPlayer === foe;
 }
 /* 破壊され墓地へ送られたか（誰が破壊したかは問わない） */
 function d5Destroyed(ctx){

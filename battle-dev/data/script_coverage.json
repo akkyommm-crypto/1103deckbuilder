@@ -10013,7 +10013,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 454
+          "line": 468
         }
       ],
       "auto_table": false,
@@ -11182,7 +11182,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 322
+          "line": 336
         }
       ],
       "auto_table": false,
@@ -16240,7 +16240,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 402
+          "line": 416
         }
       ],
       "auto_table": false,
@@ -20472,6 +20472,7 @@
         "tools\\test_s03_u34_pot_resolution.js",
         "tools\\test_s03_u509_negated_summon_destroyed.js",
         "tools\\test_s03_u510_resolved_summon_destroyed.js",
+        "tools\\test_s03_u511_negated_summon_destroyer.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u63_resolution_deck_choice_expansion.js",
         "tools\\test_s03_vs5_battle_trigger_slice.js",
@@ -24569,7 +24570,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 633
+          "line": 647
         }
       ],
       "auto_table": false,
@@ -27446,7 +27447,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 571
+          "line": 585
         }
       ],
       "auto_table": false,
@@ -40631,7 +40632,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 289
+          "line": 303
         }
       ],
       "auto_table": false,
@@ -47584,7 +47585,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 517
+          "line": 531
         }
       ],
       "auto_table": false,
@@ -49234,7 +49235,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 54
+          "line": 68
         }
       ],
       "auto_table": false,
@@ -58561,7 +58562,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 216
+          "line": 230
         }
       ],
       "auto_table": false,
@@ -62115,6 +62116,7 @@
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_s03_u509_negated_summon_destroyed.js",
         "tools\\test_s03_u50_gorz.js",
+        "tools\\test_s03_u511_negated_summon_destroyer.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
@@ -65442,6 +65444,7 @@
         "tools\\test_s03_u118_trap_negation.js",
         "tools\\test_s03_u509_negated_summon_destroyed.js",
         "tools\\test_s03_u510_resolved_summon_destroyed.js",
+        "tools\\test_s03_u511_negated_summon_destroyer.js",
         "tools\\test_v660_batch18.js"
       ]
     },
@@ -65467,7 +65470,8 @@
       "tests": [
         "tools\\test_auto_cycle39.js",
         "tools\\test_s03_u509_negated_summon_destroyed.js",
-        "tools\\test_s03_u510_resolved_summon_destroyed.js"
+        "tools\\test_s03_u510_resolved_summon_destroyed.js",
+        "tools\\test_s03_u511_negated_summon_destroyer.js"
       ]
     },
     {
@@ -71924,7 +71928,8 @@
       "tests": [
         "tools\\test_s03_u192_staples2.js",
         "tools\\test_s03_u506_destroyed_class.js",
-        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js",
+        "tools\\test_s03_u511_negated_summon_destroyer.js"
       ]
     },
     {
@@ -84630,7 +84635,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 161
+          "line": 175
         }
       ],
       "auto_table": false,
@@ -92316,7 +92321,7 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 678
+          "line": 692
         }
       ],
       "auto_table": false,
@@ -93666,6 +93671,7 @@
         "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_s03_u509_negated_summon_destroyed.js",
         "tools\\test_s03_u510_resolved_summon_destroyed.js",
+        "tools\\test_s03_u511_negated_summon_destroyer.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
     },
@@ -97364,13 +97370,14 @@
         {
           "kind": "legacy",
           "source": "cards\\C8_auto_cycle26.js",
-          "line": 107
+          "line": 121
         }
       ],
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle26.js",
-        "tools\\test_s03_u505_destroy_trigger_audit.js"
+        "tools\\test_s03_u505_destroy_trigger_audit.js",
+        "tools\\test_s03_u511_negated_summon_destroyer.js"
       ]
     },
     {
@@ -98786,7 +98793,8 @@
         "tools\\test_s03_u501_negated_summon_destination.js",
         "tools\\test_s03_u502_negated_summon_not_on_field.js",
         "tools\\test_s03_u509_negated_summon_destroyed.js",
-        "tools\\test_s03_u510_resolved_summon_destroyed.js"
+        "tools\\test_s03_u510_resolved_summon_destroyed.js",
+        "tools\\test_s03_u511_negated_summon_destroyer.js"
       ]
     },
     {

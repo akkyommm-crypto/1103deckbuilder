@@ -355,6 +355,9 @@ function applyActionBodyV31(gs, a){
     }
     case "SUMMON_WINDOW_NEGATE_V42": {
       if(gs.pendingSummon){ gs.pendingSummon.negated=true; gs.pendingSummon.negateReason=a.reason||'召喚無効';
+        /* S03-U511: 無効にしたプレイヤー。取り消しの破壊の byPlayer に使う（`WIKI-D70393946D93` 10/09/16）。
+           Action に載っているので Journal 再生でも同じ値になる。 */
+        if(a.byPlayerS511===0 || a.byPlayerS511===1) gs.pendingSummon.negatedByS511=a.byPlayerS511;
         /* S03-U277: 「召喚を無効にし、そのモンスターを持ち主の手札に戻す」 (キックバック) — the cancelled monster goes to its owner's hand, not the GY */
         if(a.toHandS03===true) gs.pendingSummon.negateToHandS03=true; }
       break;

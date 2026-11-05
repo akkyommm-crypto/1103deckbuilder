@@ -349,7 +349,12 @@ function runSummonWindowResumeS03(ps,result){
     if(hit.zone==='hand'){ logIt(gameState, `${ps.name||cardName(hit.card)}：召喚を無効にされ、手札に戻った`); return true; }
     if(hit.zone==='mz'){ act({type:'FX_BOUNCE',player:hit.p,zone:hit.zone,index:hit.index,reason:'召喚を無効にし手札に戻す'}); return true; }
   }
-  if(ps.kind==='flip'){ act({type:'FX_TO_GRAVE',player:hit.p,zone:hit.zone,index:hit.index,reason:'反転召喚を無効',byDestroy:true}); return true; }
+  /* S03-U511: 破壊したのは無効にした側。当時裁定 `WIKI-D70393946D93`（**回答日 2010-09-16**、
+     掲載ページ《聖騎士ジャンヌ》）は「《神の警告》で召喚を無効にされるなど、フィールド上以外で
+     破壊され墓地へ送られた場合」でも「相手によって破壊され墓地へ送られた場合」の効果を発動できると
+     答えている。申告が無い場合（保存が古い等）は今までどおり byPlayer は付かない。 */
+  const byS511=(ps.negatedByS511===0||ps.negatedByS511===1)?ps.negatedByS511:null;
+  if(ps.kind==='flip'){ act(Object.assign({type:'FX_TO_GRAVE',player:hit.p,zone:hit.zone,index:hit.index,reason:'反転召喚を無効',byDestroy:true},byS511==null?{}:{byPlayer:byS511})); return true; }
   /* S03-U509: 「召喚を無効にされ、破壊され墓地へ送られた」。当時裁定 `WIKI-EFB088FAC57A`
      （**回答日 2010-05-17**、掲載ページ《アマゾネスの里》）:「《神の宣告》でアマゾネスの召喚を無効にし
      破壊され墓地へ送られた時も、効果を発動できますか？」→「はい、その場合でも発動できます。(10/05/17)」
@@ -361,7 +366,7 @@ function runSummonWindowResumeS03(ps,result){
      手札以外（墓地・除外・デッキからの特殊召喚手順）と、解決中の召喚（カードが場に居る。engine/1ZZY）は
      5-a #1-j に未対応として残す。 */
   if(hit.zone==='hand'){
-    act({type:'FX_TO_GRAVE',player:hit.p,zone:'hand',index:hit.index,reason:'召喚を無効',byDestroy:true});
+    act(Object.assign({type:'FX_TO_GRAVE',player:hit.p,zone:'hand',index:hit.index,reason:'召喚を無効',byDestroy:true},byS511==null?{}:{byPlayer:byS511}));   /* S03-U511 */
     return true;
   }
   if(hit.zone!=='grave') act({type:'MOVE',player:hit.p,from:hit.zone,fromIndex:hit.index,to:'grave'});

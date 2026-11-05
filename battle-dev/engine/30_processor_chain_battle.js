@@ -1963,7 +1963,20 @@ function activateSummonNegatorV2(p,zone,index,owner){
   const pending=gameState.pendingSummon, c=zoneCard(gameState.players[zp],zone,index); if(!pending||!c) return;
   closeSheet(); prepareDuelActivation(dbOf(c).n,p,zone,index,Object.assign({ignoreTiming:true,summonWindow:true},zp!==p?{zoneOwnerS03:zp}:{}));
 }
-function summonNegatePendingV2(reason, opts){ if(gameState.pendingSummon) act(Object.assign({type:'SUMMON_WINDOW_NEGATE_V42',reason:reason||'召喚無効'}, (opts&&opts.toHand===true)?{toHandS03:true}:{})); }   /* S03-U277: opts.toHand */
+/* S03-U511: 誰が召喚を無効にしたかを Action に載せる。実測（S03-U511）で、この時点では
+   chain はすでに空で `destroyerPlayerV30` が null を返すが、解決中のリンク（RESOLVING_LINK_S03）と
+   効果コンテキスト（P3_EFFECT_CONTEXT）はどちらも無効にした側を指している。
+   当時裁定 `WIKI-D70393946D93`（**回答日 2010-09-16**、掲載ページ《聖騎士ジャンヌ》）は
+   「《神の警告》で召喚を無効にされるなど、フィールド上以外で破壊され墓地へ送られた場合」でも
+   「**相手によって**破壊され墓地へ送られた場合」の効果を発動できると答えている。 */
+function summonNegatorPlayerS511(){
+  if(typeof RESOLVING_LINK_S03!=='undefined' && RESOLVING_LINK_S03
+     && (RESOLVING_LINK_S03.player===0 || RESOLVING_LINK_S03.player===1)) return RESOLVING_LINK_S03.player;
+  if(typeof P3_EFFECT_CONTEXT!=='undefined' && P3_EFFECT_CONTEXT
+     && (P3_EFFECT_CONTEXT.player===0 || P3_EFFECT_CONTEXT.player===1)) return P3_EFFECT_CONTEXT.player;
+  return null;
+}
+function summonNegatePendingV2(reason, opts){ if(gameState.pendingSummon){ const byS511=summonNegatorPlayerS511(); act(Object.assign({type:'SUMMON_WINDOW_NEGATE_V42',reason:reason||'召喚無効'}, (byS511===0||byS511===1)?{byPlayerS511:byS511}:{}, (opts&&opts.toHand===true)?{toHandS03:true}:{})); } }   /* S03-U277: opts.toHand / S03-U511: byPlayerS511 */
 function finishSummonNegationChainV2(){ const ps=gameState.pendingSummon; if(!ps) return; if(ps.negated) cancelPendingSummonV2(); else commitPendingSummonV2(); }
 function commitPendingSummonV2(){ const ps=gameState.pendingSummon; if(!ps) return; closeSheet(); act({type:'SUMMON_WINDOW_CLOSE_V42',result:'commit'}); if(typeof ps.commit==='string'&&typeof window[ps.commit]==='function') window[ps.commit](ps); }
 function cancelPendingSummonV2(){ const ps=gameState.pendingSummon; if(!ps) return; closeSheet(); act({type:'SUMMON_WINDOW_CLOSE_V42',result:'cancel'}); if(typeof ps.cancel==='string'&&typeof window[ps.cancel]==='function') window[ps.cancel](ps); showToast(`${ps.name} の${ps.label||'召喚'}は無効になりました`); }

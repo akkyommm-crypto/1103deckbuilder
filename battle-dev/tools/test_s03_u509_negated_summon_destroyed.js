@@ -253,9 +253,9 @@ harness('const ENG=' + JSON.stringify(SRC_S509['engine/40_legal_script_engine.js
 fresh();
 /* 手札に戻す枝（S03-U277 キックバック）と反転召喚の枝は、新しい枝より**前**に残っている。 */
 const iHand=ENG.indexOf('if(ps.negateToHandS03){');
-const iFlip=ENG.indexOf("if(ps.kind==='flip'){ act({type:'FX_TO_GRAVE'");
+const iFlip=ENG.indexOf("if(ps.kind==='flip'){ act(");   /* S03-U511: Object.assign で包まれたので枝そのものを探す */
 /* 「手札に戻す」枝の中にも if(hit.zone==='hand'){ があるので、新しい枝は Action そのもので探す。 */
-const iNew=ENG.indexOf("act({type:'FX_TO_GRAVE',player:hit.p,zone:'hand',index:hit.index,reason:'召喚を無効'");
+const iNew=ENG.indexOf("zone:'hand',index:hit.index,reason:'召喚を無効',byDestroy:true");   /* S03-U511 */
 ok('C3 ★ 判定の順序: 手札に戻す枝（S03-U277）と反転召喚の枝が新しい枝より前にある',
    iHand>=0 && iFlip>iHand && iNew>iFlip,
    JSON.stringify({iHand,iFlip,iNew}));

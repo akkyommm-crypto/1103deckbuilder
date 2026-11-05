@@ -1311,6 +1311,9 @@ function applyActionBodyV31(gs, a){
     }
     case "SUMMON_WINDOW_NEGATE_V42": {
       if(gs.pendingSummon){ gs.pendingSummon.negated=true; gs.pendingSummon.negateReason=a.reason||'召喚無効';
+        /* S03-U511: 無効にしたプレイヤー。取り消しの破壊の byPlayer に使う（`WIKI-D70393946D93` 10/09/16）。
+           Action に載っているので Journal 再生でも同じ値になる。 */
+        if(a.byPlayerS511===0 || a.byPlayerS511===1) gs.pendingSummon.negatedByS511=a.byPlayerS511;
         /* S03-U277: 「召喚を無効にし、そのモンスターを持ち主の手札に戻す」 (キックバック) — the cancelled monster goes to its owner's hand, not the GY */
         if(a.toHandS03===true) gs.pendingSummon.negateToHandS03=true; }
       break;
@@ -16331,17 +16334,19 @@ function summonNegWindowResumeS03(ps, result){
   if(result !== 'commit'){
     act({type:'EVENT_SUMMON_NEG_WINDOW_S03', op:'drop', uid});
     const hit = findCardByUid(uid);
+    const byS511 = (ps.negatedByS511===0 || ps.negatedByS511===1) ? ps.negatedByS511 : null;   /* S03-U511 */
     if(hit && hit.zone === 'mz'){
       /* S03-U277: 「召喚を無効にし、そのモンスターを持ち主の手札に戻す」（キックバック） */
       if(ps.negateToHandS03) act({type:'FX_BOUNCE', player:hit.p, zone:hit.zone, index:hit.index, reason:'召喚を無効にし手札に戻す'});
       /* S03-U500: デュアル再召喚は UI 起点の窓（geminiSummonResumeS03、engine/1ZI）と同じ形で取り消す。
          そのモンスターは召喚の前から場に居るので、「場に届いていない」扱いの MOVE ではなく
          破壊で場を離れる（《神の宣告》《昇天の角笛》の「無効にし破壊する」にあたる）。 */
-      else if(ps.resumeS03.geminiS03) act({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, reason:'もう1度召喚を無効', byDestroy:true});
+      /* S03-U511: 破壊したのは無効にした側（`WIKI-D70393946D93` 10/09/16）。 */
+      else if(ps.resumeS03.geminiS03) act(Object.assign({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, reason:'もう1度召喚を無効', byDestroy:true}, byS511==null?{}:{byPlayer:byS511}));
       /* S03-U502: この取り除きは「フィールドに出なかった」扱いなので、場からの離脱にも数えさせない
          （engine/18 の v9DetectLeaveField が a.summonNegatedS03 を見る）。デュアル再召喚の枝は
          召喚の前から場に居るので申告しない（あちらの離脱は本当の離脱である）。 */
-      else act({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, byDestroy:true, reason:'召喚を無効', summonNegatedS03:uid});
+      else act(Object.assign({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, byDestroy:true, reason:'召喚を無効', summonNegatedS03:uid}, byS511==null?{}:{byPlayer:byS511}));   /* S03-U511 */
     }
   }
   summonNegWindowProcessorResumeS03();
@@ -20141,7 +20146,20 @@ function activateSummonNegatorV2(p,zone,index,owner){
   const pending=gameState.pendingSummon, c=zoneCard(gameState.players[zp],zone,index); if(!pending||!c) return;
   closeSheet(); prepareDuelActivation(dbOf(c).n,p,zone,index,Object.assign({ignoreTiming:true,summonWindow:true},zp!==p?{zoneOwnerS03:zp}:{}));
 }
-function summonNegatePendingV2(reason, opts){ if(gameState.pendingSummon) act(Object.assign({type:'SUMMON_WINDOW_NEGATE_V42',reason:reason||'召喚無効'}, (opts&&opts.toHand===true)?{toHandS03:true}:{})); }   /* S03-U277: opts.toHand */
+/* S03-U511: 誰が召喚を無効にしたかを Action に載せる。実測（S03-U511）で、この時点では
+   chain はすでに空で `destroyerPlayerV30` が null を返すが、解決中のリンク（RESOLVING_LINK_S03）と
+   効果コンテキスト（P3_EFFECT_CONTEXT）はどちらも無効にした側を指している。
+   当時裁定 `WIKI-D70393946D93`（**回答日 2010-09-16**、掲載ページ《聖騎士ジャンヌ》）は
+   「《神の警告》で召喚を無効にされるなど、フィールド上以外で破壊され墓地へ送られた場合」でも
+   「**相手によって**破壊され墓地へ送られた場合」の効果を発動できると答えている。 */
+function summonNegatorPlayerS511(){
+  if(typeof RESOLVING_LINK_S03!=='undefined' && RESOLVING_LINK_S03
+     && (RESOLVING_LINK_S03.player===0 || RESOLVING_LINK_S03.player===1)) return RESOLVING_LINK_S03.player;
+  if(typeof P3_EFFECT_CONTEXT!=='undefined' && P3_EFFECT_CONTEXT
+     && (P3_EFFECT_CONTEXT.player===0 || P3_EFFECT_CONTEXT.player===1)) return P3_EFFECT_CONTEXT.player;
+  return null;
+}
+function summonNegatePendingV2(reason, opts){ if(gameState.pendingSummon){ const byS511=summonNegatorPlayerS511(); act(Object.assign({type:'SUMMON_WINDOW_NEGATE_V42',reason:reason||'召喚無効'}, (byS511===0||byS511===1)?{byPlayerS511:byS511}:{}, (opts&&opts.toHand===true)?{toHandS03:true}:{})); } }   /* S03-U277: opts.toHand / S03-U511: byPlayerS511 */
 function finishSummonNegationChainV2(){ const ps=gameState.pendingSummon; if(!ps) return; if(ps.negated) cancelPendingSummonV2(); else commitPendingSummonV2(); }
 function commitPendingSummonV2(){ const ps=gameState.pendingSummon; if(!ps) return; closeSheet(); act({type:'SUMMON_WINDOW_CLOSE_V42',result:'commit'}); if(typeof ps.commit==='string'&&typeof window[ps.commit]==='function') window[ps.commit](ps); }
 function cancelPendingSummonV2(){ const ps=gameState.pendingSummon; if(!ps) return; closeSheet(); act({type:'SUMMON_WINDOW_CLOSE_V42',result:'cancel'}); if(typeof ps.cancel==='string'&&typeof window[ps.cancel]==='function') window[ps.cancel](ps); showToast(`${ps.name} の${ps.label||'召喚'}は無効になりました`); }
@@ -20656,7 +20674,12 @@ function runSummonWindowResumeS03(ps,result){
     if(hit.zone==='hand'){ logIt(gameState, `${ps.name||cardName(hit.card)}：召喚を無効にされ、手札に戻った`); return true; }
     if(hit.zone==='mz'){ act({type:'FX_BOUNCE',player:hit.p,zone:hit.zone,index:hit.index,reason:'召喚を無効にし手札に戻す'}); return true; }
   }
-  if(ps.kind==='flip'){ act({type:'FX_TO_GRAVE',player:hit.p,zone:hit.zone,index:hit.index,reason:'反転召喚を無効',byDestroy:true}); return true; }
+  /* S03-U511: 破壊したのは無効にした側。当時裁定 `WIKI-D70393946D93`（**回答日 2010-09-16**、
+     掲載ページ《聖騎士ジャンヌ》）は「《神の警告》で召喚を無効にされるなど、フィールド上以外で
+     破壊され墓地へ送られた場合」でも「相手によって破壊され墓地へ送られた場合」の効果を発動できると
+     答えている。申告が無い場合（保存が古い等）は今までどおり byPlayer は付かない。 */
+  const byS511=(ps.negatedByS511===0||ps.negatedByS511===1)?ps.negatedByS511:null;
+  if(ps.kind==='flip'){ act(Object.assign({type:'FX_TO_GRAVE',player:hit.p,zone:hit.zone,index:hit.index,reason:'反転召喚を無効',byDestroy:true},byS511==null?{}:{byPlayer:byS511})); return true; }
   /* S03-U509: 「召喚を無効にされ、破壊され墓地へ送られた」。当時裁定 `WIKI-EFB088FAC57A`
      （**回答日 2010-05-17**、掲載ページ《アマゾネスの里》）:「《神の宣告》でアマゾネスの召喚を無効にし
      破壊され墓地へ送られた時も、効果を発動できますか？」→「はい、その場合でも発動できます。(10/05/17)」
@@ -20668,7 +20691,7 @@ function runSummonWindowResumeS03(ps,result){
      手札以外（墓地・除外・デッキからの特殊召喚手順）と、解決中の召喚（カードが場に居る。engine/1ZZY）は
      5-a #1-j に未対応として残す。 */
   if(hit.zone==='hand'){
-    act({type:'FX_TO_GRAVE',player:hit.p,zone:'hand',index:hit.index,reason:'召喚を無効',byDestroy:true});
+    act(Object.assign({type:'FX_TO_GRAVE',player:hit.p,zone:'hand',index:hit.index,reason:'召喚を無効',byDestroy:true},byS511==null?{}:{byPlayer:byS511}));   /* S03-U511 */
     return true;
   }
   if(hit.zone!=='grave') act({type:'MOVE',player:hit.p,from:hit.zone,fromIndex:hit.index,to:'grave'});
@@ -56921,13 +56944,27 @@ function d5SelfKilled(ctx){
   return null;
 }
 /* 相手によって破壊され墓地へ送られたか */
+/* この判定を使うのは《聖騎士ジャンヌ》だけ（②「このカードが**相手によって**破壊され墓地へ送られた場合」）。
+   S03-U511: フィールド上以外で破壊された場合も当たるようにした。当時裁定 `WIKI-D70393946D93`
+   （**回答日 2010-09-16**、掲載ページ《聖騎士ジャンヌ》）:「《神の警告》で召喚を無効にされるなど、
+   **フィールド上以外で破壊され墓地へ送られた**場合、効果は発動できますか？」
+   →「はい、発動できます。(10/09/16)」
+   同じ向きの二次資料（**回答日なし**）: `R1103-SCRAPDRAGON-004`「召喚を無効にされて破壊され墓地へ
+   送られた場合でも、相手によって破壊された場合の誘発効果を発動できる」。
+   場での破壊の判定（`c1DestroyRecord` は from が 'mz' の記録しか見ない）は**1 文字も変えていない**。 */
 function d5KilledByFoe(ctx){
   if(ctx.zone !== 'grave') return false;
   const g = ctx.card.graveInfo;
-  if(!(g && g.byDestroy && g.from === 'mz' && g.turn === gameState.turn)) return false;
-  const rec = c1DestroyRecord(ctx.card);
-  if(!rec) return false;
-  return rec.battle || rec.byPlayer === (ctx.player === 0 ? 1 : 0);
+  if(!(g && g.byDestroy && g.turn === gameState.turn)) return false;
+  const foe = (ctx.player === 0) ? 1 : 0;
+  if(g.from === 'mz'){
+    const rec = c1DestroyRecord(ctx.card);
+    if(!rec) return false;
+    return rec.battle || rec.byPlayer === foe;
+  }
+  /* S03-U511: フィールド上以外（召喚を無効にされて手札から破壊された等）。破壊したプレイヤーは
+     graveInfo に控えてある（engine/00 の FX_TO_GRAVE）。 */
+  return g.byPlayer === foe;
 }
 /* 破壊され墓地へ送られたか（誰が破壊したかは問わない） */
 function d5Destroyed(ctx){
