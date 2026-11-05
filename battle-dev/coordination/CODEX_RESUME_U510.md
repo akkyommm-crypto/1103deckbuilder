@@ -10,6 +10,8 @@ Claude 制限中の開発引継ぎ。Claude の記録はそのまま保存し、
 - 基点の GitHub 全体検証: run `41935133683` 成功、25454 PASS / 0 FAIL。
 - 引継ぎ時の `worktrees/claude` は clean。Claude の設定・CLAUDE.md・作業ツリーには書き込まない。
 - U510 の実装・検証は `docs/S03_U510_REPORT.md`。
+- U510 実装 commit: `5cce4ab93573e4a769bfe1bf17008bff29f7822e`、通常 push 成功。
+  その後の文書のみの補足も含め、取り込み対象は `origin/codex/battle-u510` の先端。
 - U510 の事前検証: 専用41を含む関連436 + 境界52 PASS / 0 FAIL。
   完了スクリプトの AsyncGate で commit/push 後、必ずその SHA の全体CIを確認する。
 - main 統合・サイト公開は今回の作業として実施していない。
