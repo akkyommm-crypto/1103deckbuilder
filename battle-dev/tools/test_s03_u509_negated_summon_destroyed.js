@@ -227,7 +227,7 @@ audit('C1');
 `, {expect:2});
 
 harness(COMMON + String.raw`
-/* 解決中の通常召喚（《血の代償》、engine/1ZZY）はカードが場に居るので触っていない。5-a #1-j の残り。 */
+/* U510: 解決中の通常召喚も同じ当時裁定に合わせた。旧 C2 は既知の欠陥を固定していた。 */
 fresh();
 gameState.players[0].sz=[mk('血の代償',0,'up')];
 gameState.players[1].sz=[setTrap('神の宣告',1)];
@@ -238,12 +238,12 @@ duelActivateFromZone(0,'sz',0);
 ok('C2-0 前提: 窓が開く', driveToResolvedWindow()==='window', 'x');
 const r=negateInWindow('神の宣告');
 drive();
-ok('C2 ★ 未対応のまま: 解決中の通常召喚の取り消しは MOVE で、破壊も墓地送りも積まれない'
-   +'（綿毛トークンも出ない）。5-a #1-j の残り',
+ok('C2 ★ 解決中の通常召喚も破壊・墓地送りを積み、綿毛トークン2体を出す（U510）',
    r==='done' && zu(mon.uid)==='grave' && handDestroyStep()===0
-   && actTypes().includes('MOVE')
-   && ownEvents(mon.uid).indexOf('onDestroy')<0 && ownEvents(mon.uid).indexOf('onSendToGrave')<0
-   && gameState.players[0].mz.filter(c=>c&&cardName(c)==='綿毛トークン').length===0,
+   && actTypes().includes('FX_TO_GRAVE')
+   && ownEvents(mon.uid).indexOf('onDestroy')>=0 && ownEvents(mon.uid).indexOf('onSendToGrave')>=0
+   && ownEvents(mon.uid).indexOf('onLeaveField')<0 && ownEvents(mon.uid).indexOf('onRemove')<0
+   && gameState.players[0].mz.filter(c=>c&&cardName(c)==='綿毛トークン').length===2,
    JSON.stringify({r,own:ownEvents(mon.uid),mz:gameState.players[0].mz.map(c=>c&&cardName(c))}));
 audit('C2');
 `, {expect:3});

@@ -105,12 +105,13 @@ ok('A1 ★ 解決中の通常召喚を無効にしても、そのモンスター
    r==='done' && zu(ids.mon)==='grave'
    && !QLOG.some(x=>x.name==='onLeaveField'&&x.uid===ids.mon),
    JSON.stringify({r,own:ownEvents(ids.mon),q:QLOG}));
-ok('A2 ★ 取り除きの Action は申告つきの MOVE 1 つだけ（他の Action には申告が付かない）',
+/* U510: 当時裁定の破壊・墓地送りも満たす。U502 の uid ごとの離脱除外は同じ。 */
+ok('A2 ★ 取り除きの Action は申告つきの FX_TO_GRAVE 1 つだけ（他の Action には申告が付かない）',
    STEPS.filter(x=>x.neg===true).length===1
-   && STEPS.filter(x=>x.neg===true)[0].t==='MOVE',
-   JSON.stringify(STEPS.filter(x=>x.t==='MOVE')));
-ok('A3 そのモンスターに積まれたのは召喚成功のイベントだけで、それも保留列から落ちている',
-   ownEvents(ids.mon).join('/')==='onNormalSummon'
+   && STEPS.filter(x=>x.neg===true)[0].t==='FX_TO_GRAVE',
+   JSON.stringify(STEPS.filter(x=>x.neg===true)));
+ok('A3 破壊と墓地送りは積むがフィールド離脱は積まず、召喚成功も保留列から落ちる',
+   ownEvents(ids.mon).join('/')==='onNormalSummon/onDestroy/onSendToGrave'
    && (gameState.deferredEvents||[]).every(x=>x.eventName!=='onNormalSummon'),
    JSON.stringify(ownEvents(ids.mon)));
 audit('A');

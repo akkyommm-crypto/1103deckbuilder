@@ -19,6 +19,11 @@ function v42OnActionApplied(gs,a,before){
   if(!gs||!a||!before||before.uid==null||before.zone==='banish') return;
   const after=findCardByUid(before.uid);
   if(!after||after.zone!=='banish') return;
+  /* U510: Macro Cosmos can redirect a negated Normal Summon to banishment.
+     Its temporary mz storage is not a field origin (same marker as U502). */
+  if(a.type==='FX_TO_GRAVE' && a.byDestroy===true && before.zone==='mz'
+     && a.summonNegatedS03!=null && Number(a.summonNegatedS03)===Number(before.uid))
+    before=Object.assign({},before,{zone:'summon',pos:null});
   v42MarkBanishInfo(after.card,before,a);
   if(typeof PLAY_MODE!=='undefined' && PLAY_MODE===PLAY_MODES.DUEL && typeof queueDeferredEventV2==='function'){
     queueDeferredEventV2('onRemove',{

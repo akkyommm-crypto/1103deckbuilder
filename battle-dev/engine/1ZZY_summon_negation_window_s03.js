@@ -25,12 +25,12 @@
         排出時点の番号が同じなら窓を開き、違えば開かない（＝従来挙動。タイミングを逃す）。
         R4 と同じ比較で、missedTimingDropS03（engine/1ZZX）が召喚成功の応答に使っているものと同じ。
      4. 無効になったときは、積んである召喚成功のイベントを落とし、モンスターを場から取り除く。
-        S03-U500: 取り除き方は枝で分ける。手札からの召喚は MOVE（場に届いていない）、
+        S03-U510: 手札からの通常召喚は FX_TO_GRAVE byDestroy + summonNegatedS03（場に届いていない）、
         デュアル再召喚は FX_TO_GRAVE byDestroy（召喚の前から場に居るので破壊。UI 起点の
         geminiSummonResumeS03 と同じ形）。
         **近似**である（召喚から窓までの間だけ永続効果が適用される）。設計 (D) に記録してある。
-        取り除きは MOVE（既存の kind 'normal' の取り消しと同じ作法）で、破壊でも「フィールドから墓地へ」でもない:
-        召喚は成立していないので「破壊された時」「フィールドから離れた時」は発動しない。
+        破壊・墓地送りは発生するが「フィールドから墓地へ」ではない（U509 の当時裁定）。
+        U502 の申告を引き継ぎ、graveInfo.from は保存・Replay 可能な 'summon' とする。
 
    窓を開く・閉じる Action（SUMMON_WINDOW_* と EVENT_SUMMON_NEG_WINDOW_S03）は (A) の許可リストに無いので
    処理番号を進めない。だから窓を通した後も召喚成功の応答（《奈落の落とし穴》等）は従来どおり逃さない。 */
@@ -118,7 +118,7 @@ function summonNegWindowResumeS03(ps, result){
       /* S03-U502: この取り除きは「フィールドに出なかった」扱いなので、場からの離脱にも数えさせない
          （engine/18 の v9DetectLeaveField が a.summonNegatedS03 を見る）。デュアル再召喚の枝は
          召喚の前から場に居るので申告しない（あちらの離脱は本当の離脱である）。 */
-      else act({type:'MOVE', player:hit.p, from:hit.zone, fromIndex:hit.index, to:'grave', summonNegatedS03:uid});
+      else act({type:'FX_TO_GRAVE', player:hit.p, zone:hit.zone, index:hit.index, byDestroy:true, reason:'召喚を無効', summonNegatedS03:uid});
     }
   }
   summonNegWindowProcessorResumeS03();

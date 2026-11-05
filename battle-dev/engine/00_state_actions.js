@@ -1508,10 +1508,19 @@ function applyActionBodyV31(gs, a){
     /* 指定ゾーンのカードを墓地へ（破壊・墓地送り共通）
        a:{player, zone:'mz'|'sz'|'field', index, reason} */
     case "FX_TO_GRAVE": {
+      /* S03-U510: resolution-time Normal Summons are temporarily stored in mz
+         before their negation window. The matching U502 marker means the summon
+         never reached the field (WIKI-9E991E9B14E9, 2010-04-21), although it is
+         destroyed and sent to the GY (WIKI-D70393946D93, 2010-09-16).
+         'summon' is provenance, not a physical storage zone. */
+      const pendingS510 = a.zone==='mz' ? zoneCard(P, a.zone, a.index) : null;
+      const negatedS510 = a.byDestroy===true && pendingS510 && a.summonNegatedS03!=null
+        && Number(a.summonNegatedS03)===Number(pendingS510.uid);
+      const originS510 = negatedS510 ? 'summon' : a.zone;
       if(a.zone==='deck' && typeof deckToGraveLockedS03==='function' && deckToGraveLockedS03(gs)){ logIt(gs, '次元要塞兵器：デッキからカードを墓地へ送れない'); break; }   /* S03-U404 */
       /* System v21: 効果破壊だけを防ぐ。墨地送り・除外・バウンスは防がない。
          場を離れる前に見るので、守れた場合カードは一切動かない。 */
-      if(a.byDestroy===true && ['mz','sz','field'].includes(a.zone)
+      if(a.byDestroy===true && ['mz','sz','field'].includes(originS510)
          && typeof applyDestructionProtectionV21==='function'){
         const guard = zoneCard(P, a.zone, a.index);
         if(guard){
@@ -1527,11 +1536,11 @@ function applyActionBodyV31(gs, a){
         logIt(gs, `Sin スターダスト・ドラゴン：${cardName(P.field)} は効果では破壊されない`); break;
       }
       /* S03-U183: 「装備モンスターが破壊される場合、代わりにこのカードを破壊する」 (engine/1ZZB) */
-      if(a.byDestroy===true && a.zone==='mz' && typeof equipSubstituteDestroyS03==='function' && equipSubstituteDestroyS03(gs, zoneCard(P, a.zone, a.index))) break;
+      if(a.byDestroy===true && originS510==='mz' && typeof equipSubstituteDestroyS03==='function' && equipSubstituteDestroyS03(gs, zoneCard(P, a.zone, a.index))) break;
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
-      const fromField=['mz','sz','field'].includes(a.zone);
-      const sentLv=(a.zone==='mz')?curLV(card):null, sentFace=card.face, sentAttrS03=(a.zone==='mz')?(typeof currentAttributeV17==='function'?currentAttributeV17(card):null):null;   /* S03-U293 */
+      const fromField=['mz','sz','field'].includes(originS510);
+      const sentLv=(originS510==='mz')?curLV(card):null, sentFace=card.face, sentAttrS03=(originS510==='mz')?(typeof currentAttributeV17==='function'?currentAttributeV17(card):null):null;   /* S03-U293 */
       const sentCountersV22 = (fromField && card.counters && Object.keys(card.counters).length)
         ? Object.assign({}, card.counters) : null;
       /* CODEX-C09: destruction is not limited to cards on the field.  Effects
@@ -1545,45 +1554,45 @@ function applyActionBodyV31(gs, a){
         ? (byDestroy ? destroyerPlayerV30(gs, a) : ((a.byPlayer===0||a.byPlayer===1)?a.byPlayer:null))
         : ((a.byPlayer===0||a.byPlayer===1)?a.byPlayer:null);
       /* System v30 B3: 破壊時の表示形式。face だけでは表裏しか分からない。 */
-      const sentPos = (a.zone==='mz') ? (card.pos||null) : null;
-      const spellN = byDestroy ? v350DestroyedSpellCounterCount(card) : 0;
+      const sentPos = (originS510==='mz') ? (card.pos||null) : null;
+      const spellN = byDestroy && !negatedS510 ? v350DestroyedSpellCounterCount(card) : 0;
       dropXyzMaterials(P, card, gs); dropEquips(P, card, gs);
       const ownerIdx=cardOwnerIndex(gs,card,a.player), ownerG=gs.players[ownerIdx];
-      if(v350BanishWhenLeavesField(card,a.zone,'grave',a)){
+      if(v350BanishWhenLeavesField(card,originS510,'grave',a)){
         pushZone(ownerG.banish,card);
         logIt(gs, `${a.reason||"効果"}：${nameOf(a.player)}の ${cardName(card)} は墓地へ行かず除外`);
       }else if(a.deckTopInsteadS03===true && byDestroy){
         /* S03-U256: 「破壊したモンスターを墓地へ送らず、相手のデッキの一番上に置く」 (ミスティック・ソードマン LV6) — destroyed, then placed on top of its owner's Deck */
         const retS03=returnToOwnerDeckOrExtra(gs, card, a.player, false);
         logIt(gs, `${a.reason||'効果'}：${cardName(card)} は墓地へは行かず ${nameOf(retS03.owner)} のデッキの一番上に置かれた`);
-      }else if(s03DeckTopReplaceGraveU110(gs, card, {p:a.player, zone:a.zone, index:a.index}, sentFace, a.reason)){
+      }else if(s03DeckTopReplaceGraveU110(gs, card, {p:a.player, zone:originS510, index:a.index}, sentFace, a.reason)){
         /* S03-U110: 持ち主のデッキの一番上へ（下の onSendToGrave は墓地にいる時だけ積まれる）。 */
       }else{
         pushZone(ownerG.grave, card);
         /* いつ・どこから墓地へ来たかを控える。 */
         const putG = graveLastIsS03(ownerG.grave, card);
-        if(putG) putG.graveInfo = {turn:gs.turn, from:a.zone, byDestroy, byPlayer:byPlayerV30, lv:sentLv, face:sentFace, pos:sentPos};
-        if(putG && a.zone==='mz'){ putG.graveInfo.attrS03 = sentAttrS03; putG.graveInfo.ctrlS03 = a.player; }   /* S03-U293: attribute and controller on the field */
+        if(putG) putG.graveInfo = {turn:gs.turn, from:originS510, byDestroy, byPlayer:byPlayerV30, lv:sentLv, face:sentFace, pos:sentPos};
+        if(putG && originS510==='mz'){ putG.graveInfo.attrS03 = sentAttrS03; putG.graveInfo.ctrlS03 = a.player; }   /* S03-U293: attribute and controller on the field */
         if(putG && a.srcS03 && a.srcS03.uid!=null) putG.graveInfo.srcUidS03 = a.srcS03.uid;   /* S03-U208: the effect source (「「X」と名のついたカードの効果によって」) */
          if(putG && a.selfRuleS03) putG.graveInfo.selfRuleS03 = a.selfRuleS03;   /* S03-U284: destroyed by its own 「…場合このカードを破壊する」 or a uniqueness rule (engine/1ZZF) */
         /* S03-U235: 「リリースされた場合」 — a Tribute Summon's release (p3.reason 'tribute') or a release cost (the scripts' reason convention
            「…（リリース）」 / 「生け贄」). Destruction is never a release. */
         if(putG && !byDestroy && ((a.p3 && a.p3.reason==='tribute') || /リリース|生け贄|生贄/.test(String(a.reason||'')))) putG.graveInfo.releasedS03 = true;
-        if(a.zone==='mz' && Number(sentLv)>=8 && gs.players[a.player]) gs.players[a.player].lv8ToGraveTurnS03 = gs.turn;   /* S03-U206: デーモンとの駆け引き */
+        if(originS510==='mz' && Number(sentLv)>=8 && gs.players[a.player]) gs.players[a.player].lv8ToGraveTurnS03 = gs.turn;   /* S03-U206: デーモンとの駆け引き */
         /* System v22: 場を離れる直前に乗っていたカウンターを控える。
            counters は領域ローカルで消えるので、後からは読めない。
            カウンターが乗っていた場合だけ追記する。 */
         if(putG && putG.graveInfo && byDestroy && sentCountersV22) putG.graveInfo.countersV22 = sentCountersV22;
-        applyMoveProvenanceP3(putG, a, a.zone);   /* P3 */
+        applyMoveProvenanceP3(putG, a, originS510);   /* P3 */
         /* S03-U290: a card sent from the Deck to the GY by FX_TO_GRAVE is a Deck-to-GY event too (engine/1ZZN summary) */
         if(putG && a.zone==='deck' && typeof queueDeferredEventV2==='function' && typeof PLAY_MODE!=='undefined' && PLAY_MODE===PLAY_MODES.DUEL)
           queueDeferredEventV2('onSendToGrave',Object.assign({player:a.player,card:putG,reason:a.reason||'effect',from:'deck'},eventProvS03(a)));
-        P.graveHistory.push({name:cardName(card), from:a.zone, turn:gs.turn});
+        P.graveHistory.push({name:cardName(card), from:originS510, turn:gs.turn});
         logIt(gs, `${a.reason||"効果"}：${nameOf(a.player)}の ${cardName(card)} を墓地へ`);
       }
       /* System v30 B3: 「〜を破壊したターン」用のターン単位記録。 */
       if(byDestroy && typeof recordDestroyedV30==='function'){
-        recordDestroyedV30(gs, {byPlayer:byPlayerV30, victimPlayer:a.player, from:a.zone,
+        recordDestroyedV30(gs, {byPlayer:byPlayerV30, victimPlayer:a.player, from:originS510,
                                 pos:sentPos, face:sentFace, lv:sentLv, uid:card.uid, battle:false});
       }
       if(spellN) v350TransferDestroyedSpellCounters(gs,spellN);

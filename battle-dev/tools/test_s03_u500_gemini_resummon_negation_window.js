@@ -179,11 +179,11 @@ const ids=handBoard({negators:['神の宣告']});
 duelActivateFromZone(1,'mz',0);
 ok('B5 前提: 手札からの召喚でも窓が開く', driveToWindow()==='window', 'x');
 negateInWindow('神の宣告');
-ok('B6 ★ 手札からの召喚の取り消しは MOVE で、onDestroy も onSendToGrave も積まれず graveInfo も残らない'
-   +'（デュアル再召喚との違い。そのモンスターは場に届いていない）',
-   actTypes().includes('MOVE') && !actTypes().includes('FX_TO_GRAVE')
-   && !QLOG.some(x=>x.name==='onDestroy') && !QLOG.some(x=>x.name==='onSendToGrave')
-   && !((graveCard(1,ids.mon)||{}).graveInfo),
+/* U510: 旧 pin は既知の欠陥。WIKI-D70393946D93 の場以外での破壊に合わせる。 */
+ok('B6 ★ 手札からの召喚も破壊・墓地送りになるが、デュアル再召喚と異なり場からの移動ではない',
+   actTypes().includes('FX_TO_GRAVE')
+   && QLOG.some(x=>x.name==='onDestroy'&&x.uid===ids.mon) && QLOG.some(x=>x.name==='onSendToGrave'&&x.uid===ids.mon)
+   && graveCard(1,ids.mon)?.graveInfo?.from==='summon' && graveCard(1,ids.mon)?.graveInfo?.byDestroy===true,
    JSON.stringify({types:actTypes().filter(t=>t==='MOVE'||t==='FX_TO_GRAVE'),q:QLOG.map(x=>x.name)}));
 /* B7 は S03-U502 で書き直した。S03-U500 の時点では手札の枝でも onLeaveField が積まれていた（5-a #1-i）。
    S03-U502 でそこだけ「フィールドに出なかった」扱いにしたので、枝で分かれるようになった:
@@ -278,9 +278,10 @@ audit('F3');
 /* ===== G. 文書・登録 ===== */
 harness('const SRC=' + JSON.stringify(SRC_S500) + ';' + COMMON + String.raw`
 const DOC=SRC['docs/S03_MISSED_TIMING_DESIGN.md'], ENG=SRC['engine/1ZZY_summon_negation_window_s03.js'];
-ok('G1 ★ engine は枝ごとに取り消しを分けている（デュアル再召喚だけ FX_TO_GRAVE byDestroy）',
+ok('G1 ★ engine は枝ごとに取り消しを分け、手札からの召喚だけに未到達の申告を付ける（U510）',
    /ps\.resumeS03\.geminiS03\) act\(\{type:'FX_TO_GRAVE'/.test(ENG)
-   && /else act\(\{type:'MOVE'/.test(ENG),
+   && /else act\(\{type:'FX_TO_GRAVE'[^\n]+summonNegatedS03:uid/.test(ENG)
+   && !/geminiS03\) act\([^\n]+summonNegatedS03/.test(ENG),
    'x');
 ok('G2 ★ その形が UI 起点の geminiSummonResumeS03 と同じ理由（破壊で取り消す）だと engine に書いてある',
    /geminiSummonResumeS03/.test(ENG) && /S03-U500/.test(ENG), 'x');

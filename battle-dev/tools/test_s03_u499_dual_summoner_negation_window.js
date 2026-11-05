@@ -149,11 +149,13 @@ ok('B3 ★ 召喚は無効になり、モンスターは墓地へ（《デュア
    JSON.stringify({r,mon:zu(ids.mon),src:zu(ids.src)}));
 /* S03-U502 で uid ごとに見るように直した。イベント名だけで見ると、《神の宣告》が場を離れた分の
    onLeaveField と区別できない（S03-U500 の教訓と同じで、判定は**そのカードの分**に絞る）。 */
-ok('B4 ★ 召喚成功のイベントは落ち、そのモンスターには破壊も「フィールドから離れた時」も積まれない',
+/* U510: WIKI-D70393946D93 が定める破壊・墓地送りを発生させ、離脱除外は維持する。 */
+ok('B4 ★ 召喚成功のイベントは落ち、破壊・墓地送りは積むが「フィールドから離れた時」は積まない',
    !QUEUED.some(x=>x.name==='onNormalSummon'&&x.uid===ids.mon&&x.mark!==true)
-   && !QUEUED.some(x=>x.name==='onDestroy'&&x.uid===ids.mon)
+   && QUEUED.some(x=>x.name==='onDestroy'&&x.uid===ids.mon)
+   && QUEUED.some(x=>x.name==='onSendToGrave'&&x.uid===ids.mon)
    && !QUEUED.some(x=>x.name==='onLeaveField'&&x.uid===ids.mon)
-   && actTypes().includes('MOVE'),
+   && actTypes().includes('FX_TO_GRAVE'),
    JSON.stringify({mon:ids.mon,q:QUEUED,types:actTypes()}));
 ok('B5 p0 はライフを半分払った', gameState.players[0].lp===4000, String(gameState.players[0].lp));
 audit('B');

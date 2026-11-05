@@ -234,16 +234,12 @@ ok('D3 ★ 積んであった召喚成功のイベントは落ち、召喚誘発
    !EVLOG_S498.some(e=>e.name==='onNormalSummon')
    && (gameState.deferredEvents||[]).every(x=>x.eventName!=='onNormalSummon'),
    JSON.stringify(EVLOG_S498.map(e=>e.name)));
-/* 設計 (D) の「破壊された時」の答え。S03-U500 で実測し直して書き直した:
-   「破壊された時」は発動しない（onDestroy も onSendToGrave も積まれず graveInfo も残らない）が、
-   **「フィールドから離れた時」は積まれる**。場からの離脱は v9DetectLeaveField（engine/18）が盤面の差分から
-   検出するルール処理なので、MOVE で取り除いても避けられない（5-a #1-i）。
-   S03-U498 はここを「どちらも発動しない」と書いていたが、それは emitEvent が応答者のいない場面では
-   呼ばれないことを見ていただけだった。判定は**積まれた**イベントで行う。 */
-ok('D4 ★ 取り除きは MOVE で、onDestroy も onSendToGrave も積まれず graveInfo も残らない（＝「破壊された時」は発動しない）',
-   actTypes().includes('MOVE') && !actTypes().includes('FX_TO_GRAVE')
-   && !QLOG_S498.some(e=>e.name==='onDestroy') && !QLOG_S498.some(e=>e.name==='onSendToGrave')
-   && !((gameState.players[0].grave.find(c=>c&&c.uid===ids.mon)||{}).graveInfo),
+/* U510: WIKI-D70393946D93 (2010-09-16) は場以外で破壊され墓地へ送られることを確認。
+   旧 D4 は未対応の欠陥を固定していた。場からの離脱でないことは D4b も維持する。 */
+ok('D4 ★ 取り除きは破壊・墓地送りだが、フィールドから墓地へではない',
+   actTypes().includes('FX_TO_GRAVE')
+   && QLOG_S498.some(e=>e.name==='onDestroy') && QLOG_S498.some(e=>e.name==='onSendToGrave')
+   && (gameState.players[0].grave.find(c=>c&&c.uid===ids.mon)||{}).graveInfo?.from==='summon',
    JSON.stringify({types:actTypes().filter(t=>t==='MOVE'||t==='FX_TO_GRAVE'),queued:QLOG_S498.map(e=>e.name)}));
 /* D4b は S03-U502 で書き直した。S03-U498 の時点では onLeaveField が積まれてしまっていた（5-a #1-i）。
    S03-U502 で取り除きの Action に申告（summonNegatedS03）を付け、v9DetectLeaveField が場からの離脱に
