@@ -15765,6 +15765,36 @@
         "tools/test_s03_u517_summon_counts.js"
       ],
       "evidence": "Every clause of the text is implemented and measured on a real chain. The activation condition is chain link 3 or later (the chain already holds two links) and no card name appearing twice among the links; the resolution raises this turn’s Normal Summon allowance to 3. WIKI-BD81BAFC2896 (11/04/17) says activating it together with 二重召喚, or a second copy, does not raise the number beyond 3, so the allowance is read as the maximum of the grants (normalGrantMaxS03, engine/00) rather than as an increment; the test activates both cards and measures that the engine’s own legal-action list offers a Normal Summon exactly three times. The chain is built through the real path (強欲な壺 → 強欲な瓶 → サモンチェーン) and the scene is Replay audited."
+    },
+    {
+      "name": "決戦の火蓋",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U518",
+      "tests": [
+        "tools/test_s03_u518_summon_rights.js"
+      ],
+      "evidence": "Every clause is implemented on the real path and measured. WIKI-55C383C128FC (07/12/10) says it creates a chain block just as 血の代償 does, so it uses the same shared procedure (s03BloodOfferTributeThenSummon, cards/00: NORMAL_SUMMON with prepaid, the onNormalSummon event and the summon-negation window mark), which now takes the card name for its log and prompts; WIKI-38EC2882E2E0 (08/01/18) makes the banish a cost, so it is paid in cost(); WIKI-2AB690FE02B1 (07/12/10) allows several activations in one turn, so no count limit is declared and the test activates it twice; WIKI-1330B937F075 requires tributes for a higher-Level monster, which the shared procedure pays through normalSummonMethodsFor / tributeCandidatesForV23 and the test measures with a Level 5 Normal Monster. The turn’s own Normal Summon right is untouched (measured). Three negative controls: no releasable monster for the Level 5, an empty Graveyard, and the opponent’s turn. Replay audited in three scenes."
+    },
+    {
+      "name": "デビル・フランケン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U518",
+      "tests": [
+        "tools/test_s03_u518_summon_rights.js"
+      ],
+      "evidence": "The whole text is implemented and measured: 5000 LP paid as the cost, then one Fusion Monster of the Extra Deck is Special Summoned in attack position (FX_EX_SUMMON with no materials, the same path as 簡易融合 of S03-U53) and the summon-success event is queued. The summon is not a Fusion Summon, so kind is effect and the monster does not become properly summoned (properlySummonedS03 stays unset), which the test pins. No era ruling exists for this card: both wiki-rulings.js and rulings-data.js return 0 hits for the name and for the text, so nothing beyond the card text is claimed. Whether the cost may be paid with exactly 5000 LP left is RULING_UNRESOLVED, and the implementation follows the stricter reading already used by 簡易融合 (more than the cost is required); the test measures that reading and names it as the open point rather than asserting it is correct. Two negative controls: exactly 5000 LP, and no Fusion Monster in the Extra Deck."
+    },
+    {
+      "name": "クルセイダー・オブ・エンディミオン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U518",
+      "tests": [
+        "tools/test_s03_u518_summon_rights.js"
+      ],
+      "evidence": "Both halves are implemented and measured. The Normal-Monster treatment and the second summon are the shared Gemini machinery of S03-U119 (defineGeminiS03 / geminiActiveS03 / doGeminiSummonS03), so the ignition effect is refused until the monster has been Gemini Summoned (measured, with the legal-action list offering geminiSummon). WIKI-F0C82F8C96D2 (10/12/17) classifies the Spell Counter placement as a targeting ignition effect, so the target is declared at activation and the counter is placed with API.addCounter on a card read from counterCapableCardsV22. WIKI-7924775F83D7 (10/12/17) says the ATK gain is lost when スキルドレイン is activated afterwards, so the +600 is not a one-shot mod but a continuous effect of the card itself (continuous scope self, with a zone-local turn stamp): continuousSources() drops a negated source, so the ATK returns to 1900 the moment Skill Drain applies. The test measures 1900 to 2500 to 1900 and that the counter stays, and that the once-per-turn limit refuses the second activation. Replay audited."
     }
   ],
   "restored_to_baseline": [

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 387,
+    "NOT_STARTED": 384,
     "PARTIAL": 12,
-    "TESTED": 3607
+    "TESTED": 3610
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -920,
+    "NOT_STARTED": -923,
     "PARTIAL": -170,
-    "TESTED": 1558
+    "TESTED": 1561
   },
   "status_changes": [
     {
@@ -1753,6 +1753,12 @@
       "unit": "S03-U276"
     },
     {
+      "name": "クルセイダー・オブ・エンディミオン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U518"
+    },
+    {
       "name": "クレイジー・ファイヤー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3083,6 +3089,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U343"
+    },
+    {
+      "name": "デビル・フランケン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U518"
     },
     {
       "name": "デブリ・ドラゴン",
@@ -7409,6 +7421,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U120"
+    },
+    {
+      "name": "決戦の火蓋",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U518"
     },
     {
       "name": "沈黙のサイコウィザード",

@@ -2040,7 +2040,11 @@ defineScript("血の代償", {
    pickTributes（engine/70_summon_procedures.js）と同じロジックだが、あちらは
    openPick/showToast/gameState.activePlayer に直結したUI操作前提の実装で、
    resolve() の中から安全に呼べないため、API.selectCard ベースで書き直す。 */
-function s03BloodOfferTributeThenSummon(p, targetCard, method, db, chosen){
+/* S03-U518: labelS518 はカード名（省くと従来どおり「血の代償」）。
+   《決戦の火蓋》が同じ手順を使うので、ログと選択の表題だけ差し替える。
+   手順そのもの（リリースの払い方・NORMAL_SUMMON prepaid・召喚無効の窓の印）は変えていない。 */
+function s03BloodOfferTributeThenSummon(p, targetCard, method, db, chosen, labelS518){
+  const nameS518 = labelS518 || '血の代償';
   const need = method.tributes||0;
   const spent = chosen.reduce((s,x)=>s+(x.value||1),0);
   const remaining = need-spent;
@@ -2073,7 +2077,7 @@ function s03BloodOfferTributeThenSummon(p, targetCard, method, db, chosen){
     }).filter(Boolean);
     chosen.forEach(ent=>{
       const loc=locateCardAnyV4(ent.card);
-      if(loc) API.sendToGrave(loc, "血の代償（アドバンス召喚のリリース）");
+      if(loc) API.sendToGrave(loc, `${nameS518}（アドバンス召喚のリリース）`);
     });
     const hr=locateCardAnyV4(targetCard);
     if(!hr||hr.zone!=='hand') return;
@@ -2091,12 +2095,12 @@ function s03BloodOfferTributeThenSummon(p, targetCard, method, db, chosen){
   }
   const used=new Set(chosen.map(x=>x.card));
   const left=tributeCandidatesForV23(p,db,method,'summon').filter(x=>!used.has(x.card));
-  if(!left.length){ API.log(`血の代償：リリースが足りません（あと${remaining}体分必要）`); return; }
-  API.selectCard(`血の代償：リリースするモンスター（残り${remaining}体分）`, left, x=>{
+  if(!left.length){ API.log(`${nameS518}：リリースが足りません（あと${remaining}体分必要）`); return; }
+  API.selectCard(`${nameS518}：リリースするモンスター（残り${remaining}体分）`, left, x=>{
     const vals=tributeValueOptions(x.card,db).filter(v=>v<=remaining);
     const value=vals.length?vals[vals.length-1]:1;
     chosen.push({card:x.card,value});
-    s03BloodOfferTributeThenSummon(p,targetCard,method,db,chosen);
+    s03BloodOfferTributeThenSummon(p,targetCard,method,db,chosen,nameS518);
   });
 }
 
