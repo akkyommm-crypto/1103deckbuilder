@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 397,
+    "NOT_STARTED": 394,
     "PARTIAL": 10,
-    "TESTED": 3599
+    "TESTED": 3602
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1644,
+    "legacy": 1646,
     "sin": 5,
-    "unified": 1426
+    "unified": 1427
   },
-  "static_registration_name_count": 3607,
+  "static_registration_name_count": 3610,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -38902,7 +38902,8 @@
         "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_s03_u507_vanity_emptiness_miss.js",
         "tools\\test_s03_u512_spirit_support.js",
-        "tools\\test_s03_u513_equip_substitute_optional.js"
+        "tools\\test_s03_u513_equip_substitute_optional.js",
+        "tools\\test_s03_u514_xyz_material.js"
       ]
     },
     {
@@ -49793,6 +49794,7 @@
         "tools\\test_s03_u281_gap6.js",
         "tools\\test_s03_u285_gap7.js",
         "tools\\test_s03_u293_field_to_grave.js",
+        "tools\\test_s03_u514_xyz_material.js",
         "tools\\test_s03_u83_dark_hole.js"
       ]
     },
@@ -49934,12 +49936,20 @@
       "subtype": null,
       "date": "2011-07-16",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZX_claude_s03_u514_xyz_material.js",
+          "line": 60
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u514_xyz_material.js"
+      ]
     },
     {
       "index": 2256,
@@ -58292,13 +58302,20 @@
       "subtype": null,
       "date": "2011-04-26",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 22,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZX_claude_s03_u514_xyz_material.js",
+          "line": 110
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u222_ns14.js"
+        "tools\\test_s03_u222_ns14.js",
+        "tools\\test_s03_u514_xyz_material.js"
       ]
     },
     {
@@ -62131,6 +62148,7 @@
         "tools\\test_s03_u511_negated_summon_destroyer.js",
         "tools\\test_s03_u512_spirit_support.js",
         "tools\\test_s03_u513_equip_substitute_optional.js",
+        "tools\\test_s03_u514_xyz_material.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
@@ -65459,6 +65477,7 @@
         "tools\\test_s03_u509_negated_summon_destroyed.js",
         "tools\\test_s03_u510_resolved_summon_destroyed.js",
         "tools\\test_s03_u511_negated_summon_destroyer.js",
+        "tools\\test_s03_u514_xyz_material.js",
         "tools\\test_v660_batch18.js"
       ]
     },
@@ -77065,12 +77084,20 @@
       "subtype": null,
       "date": "2011-05-21",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZX_claude_s03_u514_xyz_material.js",
+          "line": 37
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u514_xyz_material.js"
+      ]
     },
     {
       "index": 3491,

@@ -15665,6 +15665,36 @@
         "tools/test_s03_u513_equip_substitute_optional.js"
       ],
       "evidence": "The recorded engine gap - no consumer for 「このカードは通常召喚する事ができない」 - was stale: cannotNormalSummonS03 (engine/70, S03-U190) reads the script flag, and FX_SPECIAL_SUMMON stamps summonedTurn so the S03-U244 Spirit return applies as printed. All of the card effects are implemented and measured on real paths: it cannot be Normal Summoned, it is Special Summoned from the hand by banishing one Spirit from the Graveyard (refused with no Spirit there), it returns to the owner hand at the End Phase of the turn it was Special Summoned, and after destroying an opponent monster by battle it may destroy one Spell or Trap on the opponent field (negative-tested when it is the one destroyed). Replay audited."
+    },
+    {
+      "name": "巨星のミラ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U514",
+      "tests": [
+        "tools/test_s03_u514_xyz_material.js"
+      ],
+      "evidence": "Both effects implemented with existing machinery and measured on real paths: the optional replacement detaches one Xyz Material instead of the destruction (the S03-U173 detach kind), measured against ブラック・ホール with the materials going 3 to 2 and the card staying, and refused with no material so the card is destroyed; and its own face-up Level 4 or lower monsters are not destroyed by card effects (v21 protectV21 on ownMonsters), measured so that its Level 1 survives while its Level 6 and the opponent Level 1 are destroyed. Replay audited."
+    },
+    {
+      "name": "ブラック・レイ・ランサー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U514",
+      "tests": [
+        "tools/test_s03_u514_xyz_material.js"
+      ],
+      "evidence": "Implemented with the S03-U114 detach cost plus the negatedUntilTurn record used by エフェクト・ヴェーラー. Measured: one material is paid (2 to 1) and the chosen face-up monster reports effectNegated with negatedUntilTurn set to the current turn; the activation is refused with no material; and the once-per-turn limit refuses the second activation while a material is still there. The target choice is declared both as detachCostS03.targets and selectTargets so the prepared activation path asks for it. Replay audited."
+    },
+    {
+      "name": "ラヴァルバル・イグニス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U514",
+      "tests": [
+        "tools/test_s03_u514_xyz_material.js"
+      ],
+      "evidence": "Implemented as a damage-step activation (dsTiming start) with the S03-U114 detach cost and API.modAtk until the End Phase. Measured on a real attack against デーモンの召喚: the battle damage is 200 instead of 700 because the ATK went 1800 to 2300; with no material it stays 700; and within one damage step only one material is spent. The once-per-damage-step guard keys on the turn, the attacker uid and its attack count, which the report records as an approximation of the 2011 wording. Replay audited."
     }
   ],
   "restored_to_baseline": [
