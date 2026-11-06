@@ -18,6 +18,11 @@ function triggerCandidateForcedS03(c){
       const probe = Object.assign({}, base, {eventName: c.eventName || base.eventName, event: c.event || base.event, v4EffectKey: null});
       let e = null;
       try{ e = v4SelectEffectForContext(c.name, probe); }catch(err){ e = null; }
+      /* S03-U512: 状態で強制／任意が変わる effect は forcedWhenS03 で決める
+         （《八汰鏡》《伊弉凪》がある間のスピリットの手札戻り）。申告の無い effect は従来どおり。 */
+      if(e && typeof e.forcedWhenS03 === 'function'){
+        try{ return !!e.forcedWhenS03(c.ctx || {}); }catch(err){}
+      }
       if(e) return e.forced === true || !!sc.forced;
     }
   }

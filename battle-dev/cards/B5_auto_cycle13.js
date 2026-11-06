@@ -31,6 +31,8 @@ function c2SpiritReturnDue(ctx){
   const me = locateCardAnyV4(ctx.card);
   if(!me || me.zone !== 'mz') return false;
   if(gameState.phase !== 'end') return false;
+  /* S03-U512: 《霊子エネルギー固定装置》があると、この戻りそのものが起きない。 */
+  if(typeof spiritStayS03==='function' && spiritStayS03(me.card)) return false;
   if(!c2SpiritActiveTurn(me.card)) return false;
   return Number(me.card.c2SpiritReturned || -1) !== gameState.turn;
 }
@@ -76,6 +78,13 @@ function c2Spirit(name, spec){
       c2SpiritReturn(ctx, name);
     },
     afterResolve(){},
+    /* S03-U512: 《八汰鏡》《伊弉凪》がある間、エンドフェイズの戻りだけが任意になる（S03-U116 の枠組み）。
+       召喚・リバース時の効果は今までどおり強制。 */
+    forcedForEventS03(ev, ctx){
+      if(ev === 'onEndPhase' && typeof spiritReturnOptionalS03 === 'function'
+         && spiritReturnOptionalS03(ctx)) return false;
+      return true;
+    },
     passive:{
       onNormalSummon(ctx){ return c2SummonedOrFlipped(ctx); },
       onFlip(ctx){ return c2SummonedOrFlipped(ctx); },

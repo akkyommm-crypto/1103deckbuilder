@@ -879,6 +879,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u508_geartown_destroyed_trigger.
 subprocess.run(['node',str(ROOT/'tools/test_s03_u509_negated_summon_destroyed.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u510_resolved_summon_destroyed.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u511_negated_summon_destroyer.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u512_spirit_support.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

@@ -11156,7 +11156,6 @@
       "evidence": "Text (carddata). after a real Fusion Summon: 融合 and the chosen Fusion Material returned to the hand (the other material stays); not activatable when the Graveyard monster was not a Fusion Material. Test: tools/test_s03_u349_event_traps.js (Replay audit). No known deviation."
     },
     {
-
       "name": "雷魔神－サンガ",
       "from": "NOT_STARTED",
       "to": "TESTED",
@@ -13686,13 +13685,11 @@
         "tools/test_s03_u416_revivers.js"
       ],
       "evidence": "Exact script. Text (carddata). onAddToHand from the Deck whose reason names a 「ジェネクス」 card Special Summons it from the hand (not when searched by ワイト); synchroMaterialRestriction: Tuner of A・ジェネクス・アクセル, not usable for ガイアナイト. Test: tools/test_s03_u416_revivers.js (Replay audit). No known deviation."
-
     },
     {
       "name": "ミンゲイドラゴン",
       "from": "NOT_STARTED",
       "to": "TESTED",
-
       "unit": "S03-U416",
       "tests": [
         "tools/test_s03_u416_revivers.js"
@@ -14238,13 +14235,11 @@
         "tools/test_s03_u429_summon_rules.js"
       ],
       "evidence": "Exact script. Text (carddata). Special Summoned from the Graveyard → draws 2; sent to the Graveyard this turn it cannot be Special Summoned from there (new text rule); a later turn it can, but the draw works once per duel. Test: tools/test_s03_u429_summon_rules.js (Replay audit). No known deviation."
-
     },
     {
       "name": "コアキメイル・ドラゴ",
       "from": "ENGINE_GAP",
       "to": "TESTED",
-
       "unit": "S03-U429",
       "tests": [
         "tools/test_s03_u429_summon_rules.js"
@@ -14470,13 +14465,11 @@
         "tools/test_s03_u433_koaki_misc.js"
       ],
       "evidence": "Exact script. Text (carddata). Stays while a face-up コザッキー is on the field; destroyed when none is left, dealing its original ATK (2500) to its controller. Test: tools/test_s03_u433_koaki_misc.js (Replay audit). Power Hand negates the battle partner only while the battle lasts (gameState.battle), not for the rest of the Battle Phase."
-
     },
     {
       "name": "コアキメイル・デビル",
       "from": "ENGINE_GAP",
       "to": "TESTED",
-
       "unit": "S03-U433",
       "tests": [
         "tools/test_s03_u433_koaki_misc.js"
@@ -15612,6 +15605,36 @@
         "tools/test_s03_u480_variable_target_count.js"
       ],
       "evidence": "The adopted 1103 project interpretation is covered by a dedicated real-chain test: the player declares one or two targets at activation, then chooses exactly that many; one target is restricted by Metal Silver Armor, two receive the multi-target exception, unrelated immunity still applies, and the original scalar survives target loss, Save/Load, and Replay. Generic declaration and count/selection mismatch guards are negative-tested."
+    },
+    {
+      "name": "八汰鏡",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U512",
+      "tests": [
+        "tools/test_s03_u512_spirit_support.js"
+      ],
+      "evidence": "Equip Spell implemented in full: it can only be equipped to a Spirit monster (negative-tested against a non-Spirit), the equipped monster may decline its End Phase return to the hand (the trigger becomes optional - measured through a real End Phase via PROCESSOR_V27.PHASE on both Spirit templates), and when the equipped monster would be destroyed by battle this card is destroyed instead (the S03-U183 equipSubstituteS03 battle substitute, measured on a real attack through PROCESSOR_V27.ATTACK). Replay audited."
+    },
+    {
+      "name": "伊弉凪",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U512",
+      "tests": [
+        "tools/test_s03_u512_spirit_support.js"
+      ],
+      "evidence": "The recorded engine gap - no declaration point to make a Spirit return optional from outside the card - is closed: the Spirit return now reads spiritReturnOptionalS03 through the v4 effect hook forcedWhenS03 (engine/1ZB) for the S03-U244 template and through the existing forcedForEventS03 (S03-U116) for the cycle-13 template. Both of the card effects are implemented and measured on real paths: the Special Summon procedure from the hand banishing one Spirit from the hand (negative-tested with no Spirit in hand), and its own Spirits being allowed to stay on the field at the End Phase. Replay audited."
+    },
+    {
+      "name": "霊子エネルギー固定装置",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U512",
+      "tests": [
+        "tools/test_s03_u512_spirit_support.js"
+      ],
+      "evidence": "Continuous Spell implemented in full: while it is face-up, Spirit monsters of both players stay on the field (the return is not even collected as a candidate, measured on both Spirit templates); at its controller End Phase one card is discarded from the hand or the card destroys itself (both branches measured, including the empty-hand case); and when it leaves the field every face-up Spirit monster on the field returns to its owner hand. The opponent End Phase does not trigger the upkeep. Replay audited."
     }
   ],
   "restored_to_baseline": [

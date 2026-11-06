@@ -114,13 +114,15 @@ harness(COMMON + String.raw`
    足したので、配線の全件が 1 枚増えた（onSendToGrave 180 → 181、重複を除いた候補 316 → 317）。
    数を数える形は変えていない。 */
 const o=byEvent(), all=allCands();
-ok('A1 ★ イベントごとの件数（onDestroy 111 / onSendToGrave 181 / onLeaveField 57 / onFieldToGraveBatchS03 8 / onRemove 10）'
+/* S03-U512 で《霊子エネルギー固定装置》（「このカードがフィールド上から離れた時」）を実装したので、
+   onLeaveField が 57 → 58、重複を除いた候補が 317 → 318 になった。数え方は変えていない。 */
+ok('A1 ★ イベントごとの件数（onDestroy 111 / onSendToGrave 181 / onLeaveField 58 / onFieldToGraveBatchS03 8 / onRemove 10）'
    +'。onSendToGrave は S03-U508 で《歯車街》が加わって 180 → 181',
-   o.onDestroy.length===111 && o.onSendToGrave.length===181 && o.onLeaveField.length===57
+   o.onDestroy.length===111 && o.onSendToGrave.length===181 && o.onLeaveField.length===58
    && o.onFieldToGraveBatchS03.length===8 && o.onRemove.length===10,
    JSON.stringify(EVS.map(e=>e+':'+o[e].length)));
-ok('A2 ★ 重複を除いた候補カードは 317 枚（S03-U508 で《歯車街》が加わって 316 → 317）',
-   all.length===317, JSON.stringify({n:all.length}));
+ok('A2 ★ 重複を除いた候補カードは 318 枚（S03-U508 で《歯車街》が加わって 316 → 317）',
+   all.length===318, JSON.stringify({n:all.length}));
 `, {expect:2});
 
 /* ===== B. いまは 1 件も落とさない ===== */

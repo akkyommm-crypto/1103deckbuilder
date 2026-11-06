@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 346,
+    "ENGINE_GAP": 345,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 401,
+    "NOT_STARTED": 399,
     "PARTIAL": 10,
-    "TESTED": 3593
+    "TESTED": 3596
   },
   "delta": {
-    "ENGINE_GAP": -270,
+    "ENGINE_GAP": -271,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -906,
+    "NOT_STARTED": -908,
     "PARTIAL": -172,
-    "TESTED": 1544
+    "TESTED": 1547
   },
   "status_changes": [
     {
@@ -5239,6 +5239,12 @@
       "unit": "S03-U156"
     },
     {
+      "name": "伊弉凪",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U512"
+    },
+    {
       "name": "伝説の白石",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -5369,6 +5375,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U244"
+    },
+    {
+      "name": "八汰鏡",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U512"
     },
     {
       "name": "六尺瓊勾玉",
@@ -8951,6 +8963,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U454"
+    },
+    {
+      "name": "霊子エネルギー固定装置",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U512"
     },
     {
       "name": "霊滅術師 カイクウ",

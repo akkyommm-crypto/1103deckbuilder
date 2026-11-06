@@ -160,9 +160,11 @@ audit('B2');
 harness(COMMON + String.raw`
 const watchers=Object.keys(CARD_SCRIPTS).filter(n=>{
   const sc=CARD_SCRIPTS[n]; return !!(sc&&sc.passive&&typeof sc.passive.onLeaveField==='function');});
-ok('C1 ★ onLeaveField を見る passive は 57 件。S03-U501 までは、召喚を無効にされたモンスターの分でも'
+/* S03-U512 で《霊子エネルギー固定装置》（「このカードがフィールド上から離れた時」）を実装したので
+   57 → 58 になった。数え方は変えていない。 */
+ok('C1 ★ onLeaveField を見る passive は 58 件。S03-U501 までは、召喚を無効にされたモンスターの分でも'
    +'この 57 件が応答しうる状態だった',
-   watchers.length===57, JSON.stringify({n:watchers.length,sample:watchers.slice(0,12)}));
+   watchers.length===58, JSON.stringify({n:watchers.length,sample:watchers.slice(0,12)}));
 ok('C2 ★ いまは手札から出した召喚の取り消しでは onLeaveField が積まれないので、'
    +'この 57 件はその場面では呼ばれない',
    typeof v9DetectLeaveField==='function', 'x');

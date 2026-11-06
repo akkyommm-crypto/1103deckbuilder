@@ -8,11 +8,15 @@
 function spiritActiveTurnS03(card){ return !!card && (Number(card.summonedTurn)===Number(gameState.turn) || Number(card.flippedTurnS03)===Number(gameState.turn)); }
 function spiritReturnDueS03(ctx){
   if(ctx.zone!=='mz' || !ctx.card || ctx.card.face!=='up' || gameState.phase!=='end') return false;
+  /* S03-U512: 《霊子エネルギー固定装置》があると、この戻りそのものが起きない。 */
+  if(typeof spiritStayS03==='function' && spiritStayS03(ctx.card)) return false;
   if(!spiritActiveTurnS03(ctx.card)) return false;
   return Number(ctx.card.spiritReturnedS03)!==Number(gameState.turn);
 }
 function spiritReturnEffectS03(name){
   return {key:'spirit-return', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:['onEndPhase'], forced:true,
+    /* S03-U512: 《八汰鏡》《伊弉凪》がある間は「発動しなくてもよい」＝任意誘発になる（engine/1ZB）。 */
+    forcedWhenS03(ctx){ return !(typeof spiritReturnOptionalS03==='function' && spiritReturnOptionalS03(ctx)); },
     condition(ctx){ return spiritReturnDueS03(ctx); },
     operation(ctx){
       const me = locateCardAnyV4(ctx.card); if(!me || me.zone!=='mz') return;

@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 346,
+    "ENGINE_GAP": 345,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 401,
+    "NOT_STARTED": 399,
     "PARTIAL": 10,
-    "TESTED": 3593
+    "TESTED": 3596
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -80,7 +80,7 @@
     "helper:u364Combo": 2,
     "helper:u364Counter": 2,
     "helper:u388TokenMaker": 2,
-    "helper:u412Define": 4,
+    "helper:u412Define": 5,
     "helper:u446Swap": 1,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1643,
+    "legacy": 1644,
     "sin": 5,
-    "unified": 1425
+    "unified": 1426
   },
-  "static_registration_name_count": 3601,
+  "static_registration_name_count": 3604,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -568,7 +568,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 446
+          "line": 455
         }
       ],
       "auto_table": false,
@@ -9051,7 +9051,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 847
+          "line": 856
         }
       ],
       "auto_table": false,
@@ -10343,7 +10343,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 595
+          "line": 604
         }
       ],
       "auto_table": false,
@@ -10367,7 +10367,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 634
+          "line": 643
         }
       ],
       "auto_table": false,
@@ -25447,7 +25447,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 886
+          "line": 895
         }
       ],
       "auto_table": false,
@@ -31784,7 +31784,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 775
+          "line": 784
         }
       ],
       "auto_table": false,
@@ -35433,7 +35433,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 737
+          "line": 746
         }
       ],
       "auto_table": false,
@@ -38898,7 +38898,8 @@
         "tools\\test_s03_u462_invellz_gatekeeper.js",
         "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u503_face_up_defence_normal_summon.js",
-        "tools\\test_s03_u507_vanity_emptiness_miss.js"
+        "tools\\test_s03_u507_vanity_emptiness_miss.js",
+        "tools\\test_s03_u512_spirit_support.js"
       ]
     },
     {
@@ -43350,7 +43351,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 695
+          "line": 704
         }
       ],
       "auto_table": false,
@@ -50438,7 +50439,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 808
+          "line": 817
         }
       ],
       "auto_table": false,
@@ -62117,6 +62118,7 @@
         "tools\\test_s03_u509_negated_summon_destroyed.js",
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u511_negated_summon_destroyer.js",
+        "tools\\test_s03_u512_spirit_support.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
@@ -63101,7 +63103,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 390
+          "line": 399
         }
       ],
       "auto_table": false,
@@ -63241,7 +63243,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 493
+          "line": 502
         }
       ],
       "auto_table": false,
@@ -64835,7 +64837,7 @@
         {
           "kind": "helper:defineSpiritS03",
           "source": "cards\\HZZZX_claude_s03_u244_spirits.js",
-          "line": 38
+          "line": 42
         }
       ],
       "auto_table": false,
@@ -65718,12 +65720,20 @@
       "subtype": null,
       "date": "2008-04-19",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "「スピリットモンスターはエンドフェイズに手札に戻る効果を発動しなくてもよい」を表現できない。スピリットの帰還は各カードのスクリプト側（cycle 13 の c2Spirit テンプレート）が持っており、外部から任意化する宣言点が無い（cycle 27 実測）。",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZV_claude_s03_u512_spirit_support.js",
+          "line": 96
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u512_spirit_support.js"
+      ]
     },
     {
       "index": 2980,
@@ -65740,7 +65750,7 @@
         {
           "kind": "helper:c2Spirit",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 206
+          "line": 215
         }
       ],
       "auto_table": false,
@@ -66293,7 +66303,7 @@
         {
           "kind": "helper:defineSpiritS03",
           "source": "cards\\HZZZX_claude_s03_u244_spirits.js",
-          "line": 41
+          "line": 45
         }
       ],
       "auto_table": false,
@@ -67259,7 +67269,7 @@
         {
           "kind": "helper:defineSpiritS03",
           "source": "cards\\HZZZX_claude_s03_u244_spirits.js",
-          "line": 44
+          "line": 48
         }
       ],
       "auto_table": false,
@@ -67323,13 +67333,14 @@
         {
           "kind": "helper:defineSpiritS03",
           "source": "cards\\HZZZX_claude_s03_u244_spirits.js",
-          "line": 47
+          "line": 51
         }
       ],
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle13.js",
         "tools\\test_s03_u244_spirits.js",
+        "tools\\test_s03_u512_spirit_support.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -67364,12 +67375,20 @@
       "subtype": "装備",
       "date": "2008-04-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u412Define",
+          "source": "cards\\HZZZZZZZZZZZV_claude_s03_u512_spirit_support.js",
+          "line": 84
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u512_spirit_support.js"
+      ]
     },
     {
       "index": 3056,
@@ -73333,7 +73352,7 @@
         {
           "kind": "helper:c2Spirit",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 103
+          "line": 112
         }
       ],
       "auto_table": false,
@@ -76452,7 +76471,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 535
+          "line": 544
         }
       ],
       "auto_table": false,
@@ -81540,7 +81559,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 282
+          "line": 291
         }
       ],
       "auto_table": false,
@@ -82845,7 +82864,7 @@
         {
           "kind": "helper:c2Spirit",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 118
+          "line": 127
         }
       ],
       "auto_table": false,
@@ -86549,7 +86568,7 @@
         {
           "kind": "helper:c2Spirit",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 256
+          "line": 265
         }
       ],
       "auto_table": false,
@@ -88634,13 +88653,14 @@
         {
           "kind": "helper:defineSpiritS03",
           "source": "cards\\HZZZX_claude_s03_u244_spirits.js",
-          "line": 53
+          "line": 57
         }
       ],
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle13.js",
-        "tools\\test_s03_u244_spirits.js"
+        "tools\\test_s03_u244_spirits.js",
+        "tools\\test_s03_u512_spirit_support.js"
       ]
     },
     {
@@ -93023,7 +93043,7 @@
         {
           "kind": "helper:c2Spirit",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 136
+          "line": 145
         }
       ],
       "auto_table": false,
@@ -93593,7 +93613,7 @@
         {
           "kind": "helper:c2Spirit",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 198
+          "line": 207
         }
       ],
       "auto_table": false,
@@ -95011,7 +95031,7 @@
         {
           "kind": "helper:c2Spirit",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 159
+          "line": 168
         }
       ],
       "auto_table": false,
@@ -100332,7 +100352,7 @@
         {
           "kind": "helper:defineSpiritS03",
           "source": "cards\\HZZZX_claude_s03_u244_spirits.js",
-          "line": 69
+          "line": 73
         }
       ],
       "auto_table": false,
@@ -102205,7 +102225,7 @@
         {
           "kind": "helper:c2Spirit",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 228
+          "line": 237
         }
       ],
       "auto_table": false,
@@ -104584,7 +104604,7 @@
         {
           "kind": "helper:defineSpiritS03",
           "source": "cards\\HZZZX_claude_s03_u244_spirits.js",
-          "line": 82
+          "line": 86
         }
       ],
       "auto_table": false,
@@ -104920,7 +104940,7 @@
         {
           "kind": "legacy",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 341
+          "line": 350
         }
       ],
       "auto_table": false,
@@ -104981,12 +105001,21 @@
       "subtype": "永続",
       "date": "2001-11-29",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZV_claude_s03_u512_spirit_support.js",
+          "line": 170
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u505_destroy_trigger_audit.js",
+        "tools\\test_s03_u512_spirit_support.js"
+      ]
     },
     {
       "index": 4766,
@@ -108992,7 +109021,7 @@
         {
           "kind": "helper:c2Spirit",
           "source": "cards\\B5_auto_cycle13.js",
-          "line": 148
+          "line": 157
         }
       ],
       "auto_table": false,
