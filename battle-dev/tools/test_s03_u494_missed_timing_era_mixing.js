@@ -156,7 +156,9 @@ const DECL_S494=['サイコ・エンペラー','スノーマンイーター','�
 /* ===== A. テキスト層の時代混在と、召喚語の読み取り（条件1・条件4） ===== */
 harness(COMMON + String.raw`
 resetA();
-/* 候補 518 件のテキストで、時代の違う表記を数える */
+/* S03-U516 で《ジュラック・メテオ》を実装したので母集団が 1 枚増えた（518 → 519、強制 255 → 256）。
+   数え方は変えていない。このカードの召喚誘発は強制なので強制側に入る。 */
+/* 候補 519 件のテキストで、時代の違う表記を数える（S03-U516 で 1 枚増） */
 const texts=[];
 Object.keys(CARD_SCRIPTS).forEach(nm=>{
   const sc=CARD_SCRIPTS[nm]; if(!sc||!sc.passive) return;
@@ -164,8 +166,8 @@ Object.keys(CARD_SCRIPTS).forEach(nm=>{
   const i=findCardIndex(nm); if(i>=0&&CARD_DB[i]) texts.push(String(CARD_DB[i].e||''));
 });
 const count=w=>texts.reduce((a,t)=>{let n=0,k=0;for(;;){const j=t.indexOf(w,k);if(j<0)break;n++;k=j+1;}return a+n;},0);
-ok('A1 ★ 候補 518 件のテキストに、時代の違う召喚語が共存している（S召喚 17 / 生け贄召喚 6 / アドバンス召喚 32）',
-   texts.length===518 && count('S召喚')===17 && count('生け贄召喚')===6 && count('アドバンス召喚')===32,
+ok('A1 ★ 候補 519 件のテキストに、時代の違う召喚語が共存している（S召喚 17 / 生け贄召喚 6 / アドバンス召喚 32）',
+   texts.length===519 && count('S召喚')===17 && count('生け贄召喚')===6 && count('アドバンス召喚')===32,
    JSON.stringify({texts:texts.length,S:count('S召喚'),ikenie:count('生け贄召喚'),adv:count('アドバンス召喚')}));
 ok('A2 ★ 召喚語は長い語から読む — 「特殊召喚に成功した時」は通常召喚（N）として読まれない',
    missedTimingClauseKindS03('アルカナフォースEX－THE LIGHT RULER','S')==='toki'
@@ -363,7 +365,7 @@ harness('const DOC=' + JSON.stringify(DESIGN_S494) + ';const RUL=' + JSON.string
 resetA();
 const A=auditBucketsS494();
 ok('E1 ★ カード単位の静的な「強制 255」と、イベントごとの判定はずれる — 8 枚は召喚系のどのイベントでも強制ではない',
-   A.B.forced.length===255 && A.notForced.length===8
+   A.B.forced.length===256 && A.notForced.length===8
    && JSON.stringify(A.notForced)===JSON.stringify(['エア・サーキュレーター','カラクリ商人 壱七七',
       'コアキメイル・ルークロード','ドラグニティ－アキュリス','フォーチュンレディ・ウインディー',
       'ボーンクラッシャー','ワーム・ミリディス','沈黙のサイコウィザード'].sort())
@@ -426,12 +428,12 @@ resetA();
 const A=auditBucketsS494();
 const total=Object.keys(A.B).reduce((a,k)=>a+A.B[k].length,0);
 const pt=Object.keys(A.P).reduce((a,k)=>a+A.P[k],0);
-ok('F1 ★ カード単位 518 件 = 強制 255 / 宣言 7 / 逃す 207 / 場合 15 / 召喚無効 6 / 文言なし 28（S03-U495 で更新）',
-   total===518 && A.B.forced.length===255 && A.B.decl.length===7 && A.B.drop.length===207
+ok('F1 ★ カード単位 519 件 = 強制 256 / 宣言 7 / 逃す 207 / 場合 15 / 召喚無効 6 / 文言なし 28（S03-U495 で更新、S03-U516 で 1 枚増）',
+   total===519 && A.B.forced.length===256 && A.B.decl.length===7 && A.B.drop.length===207
    && A.B.baai.length===15 && A.B.summonNegate.length===6 && A.B.none.length===28,
    JSON.stringify(Object.keys(A.B).reduce((a,k)=>(a[k]=A.B[k].length,a),{})));
-ok('F2 ★ イベントごとの組単位 675 組 = 強制 316 / 宣言 8 / 逃す 290 / 場合 18 / 召喚無効 12 / 文言なし 31（S03-U495 で更新）',
-   pt===675 && A.P.forced===316 && A.P.decl===8 && A.P.drop===290
+ok('F2 ★ イベントごとの組単位 676 組 = 強制 317 / 宣言 8 / 逃す 290 / 場合 18 / 召喚無効 12 / 文言なし 31（S03-U495 で更新、S03-U516 で 1 組増）',
+   pt===676 && A.P.forced===317 && A.P.decl===8 && A.P.drop===290
    && A.P.baai===18 && A.P.negate===12 && A.P.none===31,
    JSON.stringify(A.P));
 ok('F3 ★ 「場合」15 件と「文言なし」28 件の一覧を固定する',

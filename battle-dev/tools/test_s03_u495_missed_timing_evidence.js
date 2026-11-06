@@ -301,12 +301,14 @@ Object.keys(CARD_SCRIPTS).forEach(nm=>{
 });
 const total=Object.keys(B).reduce((a,k)=>a+B[k].length,0);
 const pt=Object.keys(P).reduce((a,k)=>a+P[k],0);
-ok('E1 ★ カード単位 518 件 = 強制 255 / 宣言 7 / 逃す 207 / 場合 15 / 召喚無効 6 / 文言なし 28',
-   total===518 && B.forced.length===255 && B.decl.length===7 && B.drop.length===207
+/* S03-U516 で《ジュラック・メテオ》を実装したので母集団が 1 枚増えた（518 → 519、強制 255 → 256）。
+   数え方は変えていない。このカードの召喚誘発は強制なので強制側に入る。 */
+ok('E1 ★ カード単位 519 件 = 強制 256 / 宣言 7 / 逃す 207 / 場合 15 / 召喚無効 6 / 文言なし 28（S03-U516 で 1 枚増）',
+   total===519 && B.forced.length===256 && B.decl.length===7 && B.drop.length===207
    && B.baai.length===15 && B.summonNegate.length===6 && B.none.length===28,
    JSON.stringify(Object.keys(B).reduce((a,k)=>(a[k]=B[k].length,a),{})));
-ok('E2 ★ イベントごとの組単位 675 組 = 強制 316 / 宣言 8 / 逃す 290 / 場合 18 / 召喚無効 12 / 文言なし 31',
-   pt===675 && P.forced===316 && P.decl===8 && P.drop===290
+ok('E2 ★ イベントごとの組単位 676 組 = 強制 317 / 宣言 8 / 逃す 290 / 場合 18 / 召喚無効 12 / 文言なし 31（S03-U516 で 1 組増）',
+   pt===676 && P.forced===317 && P.decl===8 && P.drop===290
    && P.baai===18 && P.negate===12 && P.none===31,
    JSON.stringify(P));
 ok('E3 ★ (B-4) が A 軸 16 / B 軸 3 / A 文言 59 / B 文言 4 / 裏付けなし 125 に数え直され、60% と書かれている',

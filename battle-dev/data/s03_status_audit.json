@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 392,
+    "NOT_STARTED": 390,
     "PARTIAL": 10,
-    "TESTED": 3604
+    "TESTED": 3606
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -915,
+    "NOT_STARTED": -917,
     "PARTIAL": -172,
-    "TESTED": 1555
+    "TESTED": 1557
   },
   "status_changes": [
     {
@@ -2431,6 +2431,12 @@
       "unit": "S03-U210"
     },
     {
+      "name": "ジュラック・メテオ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U516"
+    },
+    {
       "name": "ジュラック・ヴェルヒプト",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3929,6 +3935,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U247"
+    },
+    {
+      "name": "フルール・ド・シュヴァリエ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U516"
     },
     {
       "name": "フレア・リゾネーター",

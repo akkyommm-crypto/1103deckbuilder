@@ -15715,6 +15715,26 @@
         "tools/test_s03_u515_piercing.js"
       ],
       "evidence": "All four effects implemented and measured on real paths: the Special Summon procedure from the hand releasing 天空騎士パーシアス (refused without one); with 天空の聖域 out and an LP lead of 2000 its ATK reads 4300 instead of 2300; piercing against a Defense Position ワイト deals 4100; and the battle damage draws one card. Without the Field Spell the ATK stays 2300 and the piercing is 2100. Replay audited."
+    },
+    {
+      "name": "ジュラック・メテオ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U516",
+      "tests": [
+        "tools/test_s03_u516_synchro.js"
+      ],
+      "evidence": "Implemented as the trigger effect the era rulings describe and measured on real paths. WIKI-1D6EA9DA49CF (2009-10-08) makes it a trigger effect; WIKI-9FD0A5460B4A and WIKI-DA5BD8451F54 (2009-10-08) make the wipe and the Tuner revival one effect resolved in that order, with the decision taken after the destruction, which the card does through API.afterDestroyS03; WIKI-0B6B75AF1BCD (2009-10-06) says the Graveyard Tuner is not targeted, so it is chosen at resolution. Measured: every card on the field including itself goes to the Graveyard and a Graveyard Tuner is then Special Summoned; a Tuner destroyed by that very wipe can be the one revived; and with no Tuner in the Graveyard nothing is summoned. Replay audited."
+    },
+    {
+      "name": "フルール・ド・シュヴァリエ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U516",
+      "tests": [
+        "tools/test_s03_u516_synchro.js"
+      ],
+      "evidence": "Implemented as a quick effect responding to a card activation, with the era rulings wired in: WIKI-F702CAEB190D makes it a quick effect, WIKI-59AEA6994319 and WIKI-2A95D67D1831 restrict it to card activations (not the effect activation of a face-up card nor a Graveyard effect), WIKI-7F34FA9E9AB1 excludes Counter Traps, WIKI-DBFFE8DBCE38 and WIKI-4341E0D0F339 allow it inside the damage step, and WIKI-EE8628654118 reads 「自分のターンに1度だけ」 as once per turn, so countLimit is 1. Measured on real paths with duelActivateResponseV2: the opponent サイクロン is negated and destroyed while its target stays; 神の宣告 is never offered; the second Spell of the turn is not offered; and my own Spell is not offered. Replay audited."
     }
   ],
   "restored_to_baseline": [

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 392,
+    "NOT_STARTED": 390,
     "PARTIAL": 10,
-    "TESTED": 3604
+    "TESTED": 3606
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1647,
+    "legacy": 1648,
     "sin": 5,
-    "unified": 1428
+    "unified": 1429
   },
-  "static_registration_name_count": 3612,
+  "static_registration_name_count": 3614,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24213,6 +24213,7 @@
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_s03_u513_equip_substitute_optional.js",
+        "tools\\test_s03_u516_synchro.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -29390,6 +29391,7 @@
         "tools\\test_s03_u231_ns23.js",
         "tools\\test_s03_u285_gap7.js",
         "tools\\test_s03_u497_summon_negation_window_order.js",
+        "tools\\test_s03_u516_synchro.js",
         "tools\\test_v380.js",
         "tools\\test_v420_ex_removed.js"
       ]
@@ -29897,12 +29899,20 @@
       "subtype": null,
       "date": "2009-10-01",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 19,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZ_claude_s03_u516_synchro.js",
+          "line": 73
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u516_synchro.js"
+      ]
     },
     {
       "index": 1330,
@@ -38903,7 +38913,8 @@
         "tools\\test_s03_u507_vanity_emptiness_miss.js",
         "tools\\test_s03_u512_spirit_support.js",
         "tools\\test_s03_u513_equip_substitute_optional.js",
-        "tools\\test_s03_u514_xyz_material.js"
+        "tools\\test_s03_u514_xyz_material.js",
+        "tools\\test_s03_u516_synchro.js"
       ]
     },
     {
@@ -48930,12 +48941,20 @@
       "subtype": null,
       "date": "2010-09-16",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZZ_claude_s03_u516_synchro.js",
+          "line": 109
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u516_synchro.js"
+      ]
     },
     {
       "index": 2212,
@@ -62150,6 +62169,7 @@
         "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u514_xyz_material.js",
         "tools\\test_s03_u515_piercing.js",
+        "tools\\test_s03_u516_synchro.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
@@ -93761,6 +93781,7 @@
         "tools\\test_s03_u509_negated_summon_destroyed.js",
         "tools\\test_s03_u510_resolved_summon_destroyed.js",
         "tools\\test_s03_u511_negated_summon_destroyer.js",
+        "tools\\test_s03_u516_synchro.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js"
       ]
     },
@@ -97211,7 +97232,8 @@
         "tools\\test_s03_u40_attack_declaration_window.js",
         "tools\\test_s03_u489_resume_summon_timing_window.js",
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
-        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js",
+        "tools\\test_s03_u516_synchro.js"
       ]
     },
     {
@@ -98892,7 +98914,8 @@
         "tools\\test_s03_u502_negated_summon_not_on_field.js",
         "tools\\test_s03_u509_negated_summon_destroyed.js",
         "tools\\test_s03_u510_resolved_summon_destroyed.js",
-        "tools\\test_s03_u511_negated_summon_destroyer.js"
+        "tools\\test_s03_u511_negated_summon_destroyer.js",
+        "tools\\test_s03_u516_synchro.js"
       ]
     },
     {

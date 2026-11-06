@@ -75,8 +75,10 @@ globalThis.__SAVES={};
   const EV=['onNormalSummon','onSpecialSummon','onFlip'];const all=[],p11=[];
   Object.keys(CARD_SCRIPTS).forEach(n=>{const sc=CARD_SCRIPTS[n];if(!sc||!sc.passive)return;
     if(!EV.some(e=>typeof sc.passive[e]==='function'))return;all.push(n);if(sc.activationV11)p11.push(n);});
-  ok('母集団: 召喚・反転誘発の passive を持つスクリプトは 518 本、うち P1.1 宣言ありが 22 本、非 P1.1 の 496 本がこの修正の対象',
-     all.length===518&&p11.length===22,JSON.stringify({all:all.length,p11:p11.length,non:all.length-p11.length}));
+  /* S03-U516 で《ジュラック・メテオ》を実装したので母集団が 1 枚増えた（518 → 519、強制 255 → 256）。
+     数え方は変えていない。このカードの召喚誘発は強制なので強制側に入る。 */
+  ok('母集団: 召喚・反転誘発の passive を持つスクリプトは 519 本、うち P1.1 宣言ありが 22 本、非 P1.1 の 497 本がこの修正の対象',
+     all.length===519&&p11.length===22,JSON.stringify({all:all.length,p11:p11.length,non:all.length-p11.length}));
 }
 /* ---- 配線の固定: 継続のデータ版はクロージャを作る場所でしか作らない ---- */
 {
