@@ -35,6 +35,11 @@ function destroySubDeclS03(card){
   /* S03-U268: 「モンスターカードゾーン上で破壊された場合、墓地へ送らずに装備カード扱いとして自分フィールド上の…モンスター1体に装備できる」
      (ドラグニティ－ジャベリン) — script equipInsteadS03:{hostFilter(host)} */
   if(sc && sc.equipInsteadS03) return {kind:'equipInstead', causes:['battle','effect'], hostFilter:sc.equipInsteadS03.hostFilter};
+  /* S03-U513: 「装備モンスターが（戦闘／カードの効果によって）破壊される場合、代わりにこのカードを破壊する事ができる」
+     （《ファイティング・スピリッツ》《白銀の翼》）。申告するのは装備カードの側（equipSubstituteOptionalS03）で、
+     守られるのは装備モンスターなので、モンスター自身のスクリプトではなく装備カードを見る。
+     強制版は S03-U183 の equipSubstituteS03（破壊の reducer 側）で、そちらは触らない。 */
+  if(typeof equipSubOptionalDeclsS03==='function' && equipSubOptionalDeclsS03(card).length) return {kind:'equipSub'};
   return null;
 }
 
@@ -76,6 +81,14 @@ function destroySubOptionsS03(gs, card, p, cause, excl){
   const loc = (card.uid!=null && typeof findCardByUidInState==='function') ? findCardByUidInState(gs, card.uid) : null;
   if(!loc || loc.zone!=='mz') return [];
   if(typeof effectNegated==='function' && effectNegated(card)) return [];
+  /* S03-U513: 装備カード 1 枚ごとに 1 つの候補。表側表示で、効果が無効でなく、原因（戦闘／効果）が合うものだけ。 */
+  if(decl.kind==='equipSub'){
+    const locQ = (card.uid!=null && typeof findCardByUidInState==='function') ? findCardByUidInState(gs, card.uid) : null;
+    if(!locQ || locQ.zone!=='mz') return [];
+    return equipSubOptionalDeclsS03(card, cause, gs)
+      .filter(e=>excl.indexOf(e.uid)<0)
+      .map(e=>({kind:'equipSub', uid:e.uid, name:e.name}));
+  }
   if(decl.kind==='detach'){
     return (card.xyz||[]).map(m=>{ ensureCardUid(gs, m); return {kind:'detach', uid:m.uid, name:cardName(m)}; });
   }
@@ -269,6 +282,7 @@ function destroySubBattleS03(b){
 }
 
 function destroySubKeyS03(o){ if(o.kind==='equipInstead') return 'eq:' + o.hostUid;   /* S03-U268 */
+  if(o.kind==='equipSub') return 'eqs:' + o.uid;   /* S03-U513 */
   if(o.kind==='release') return 'rel:' + o.uid;   /* S03-U286 */
   if(o.kind==='banish') return 'ban:' + o.uid;   /* S03-U325 */
   if(o.kind==='discard') return 'dis:' + o.uid;   /* S03-U337 */
@@ -294,6 +308,7 @@ function destroySubNextS03(job){
       if(o.kind==='banish') return {key:destroySubKeyS03(o), label:`代わりに墓地の「${o.name}」を除外する`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U325 */
       if(o.kind==='discard') return {key:destroySubKeyS03(o), label:`代わりに手札の「${o.name}」を捨てる`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U337 */
       if(o.kind==='counter') return {key:destroySubKeyS03(o), label:`代わりに「${o.name}」のカウンターを1つ取り除く`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U364 */
+      if(o.kind==='equipSub') return {key:destroySubKeyS03(o), label:`代わりに装備カード「${o.name}」を破壊する`, sub:`${item.name} は破壊されない`, uid:o.uid};   /* S03-U513 */
       if(o.kind==='equipInstead') return {key:destroySubKeyS03(o), label:`墓地へ送らずに「${o.name}」に装備する`, sub:`${item.name}（破壊されたまま装備カード扱いになる）`, uid:o.hostUid};
       if(o.kind==='placeSpell') return {key:destroySubKeyS03(o), label:'墓地へ送らずに、永続魔法カード扱いとして魔法＆罠ゾーンに置く', sub:`${item.name}（破壊されたまま行き先だけが変わります）`};   /* S03-U240 */
       const h = findCardByUidInState(gs, o.uid);
@@ -355,6 +370,13 @@ function destroySubApplyS03(job){
         p3:{reason:'tribute', actingPlayer:x.p}, srcS03:{uid:x.uid, k:'m'}});
       const decl = prot ? destroySubDeclS03(prot.card) : null;
       if(decl && typeof decl.after==='function' && prot) decl.after(x.p, prot.card);
+      return;
+    }
+    if(x.kind==='equipSub'){   /* S03-U513: 代わりに装備カードを破壊する（守られたモンスターは破壊されない） */
+      const eq = findCardByUidInState(gs, x.subUid);
+      if(eq && eq.zone==='sz') act({type:'FX_TO_GRAVE', player:eq.p, zone:'sz', index:eq.index,
+        reason:`${protName}の身代わり`, byDestroy:true, byPlayer:x.p,
+        p3:{reason:'effect', actingPlayer:x.p}, srcS03:{uid:x.uid, k:'m'}, destroySubS03:true});
       return;
     }
     const s = findCardByUidInState(gs, x.subUid);

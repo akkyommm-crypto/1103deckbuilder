@@ -15635,6 +15635,36 @@
         "tools/test_s03_u512_spirit_support.js"
       ],
       "evidence": "Continuous Spell implemented in full: while it is face-up, Spirit monsters of both players stay on the field (the return is not even collected as a candidate, measured on both Spirit templates); at its controller End Phase one card is discarded from the hand or the card destroys itself (both branches measured, including the empty-hand case); and when it leaves the field every face-up Spirit monster on the field returns to its owner hand. The opponent End Phase does not trigger the upkeep. Replay audited."
+    },
+    {
+      "name": "ファイティング・スピリッツ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U513",
+      "tests": [
+        "tools/test_s03_u513_equip_substitute_optional.js"
+      ],
+      "evidence": "Equip Spell implemented in full: the continuous bonus is +300 per monster on the opponent field (measured as +600 with two), and when the equipped monster would be destroyed by battle its controller may destroy this card instead. The optional substitute goes through the S03-U173 machinery with the new equipSub kind; both answers are measured on a real attack (using it leaves the monster on the field, declining destroys the monster), and an effect destruction offers no substitute at all because the declaration names battle only. Replay audited."
+    },
+    {
+      "name": "白銀の翼",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U513",
+      "tests": [
+        "tools/test_s03_u513_equip_substitute_optional.js"
+      ],
+      "evidence": "Equip Spell implemented in full: it can only be equipped to a Level 8 or higher Dragon Synchro Monster (negative-tested against ワイト), the equipped monster is not destroyed by battle up to twice per turn (measured over three attacks by 青眼の白龍: it survives two and is destroyed by the third, taking 500 damage each time), and when it would be destroyed by a card effect its controller may destroy this card instead (measured with 地砕き). Replay audited."
+    },
+    {
+      "name": "大和神",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U513",
+      "tests": [
+        "tools/test_s03_u513_equip_substitute_optional.js"
+      ],
+      "evidence": "The recorded engine gap - no consumer for 「このカードは通常召喚する事ができない」 - was stale: cannotNormalSummonS03 (engine/70, S03-U190) reads the script flag, and FX_SPECIAL_SUMMON stamps summonedTurn so the S03-U244 Spirit return applies as printed. All of the card effects are implemented and measured on real paths: it cannot be Normal Summoned, it is Special Summoned from the hand by banishing one Spirit from the Graveyard (refused with no Spirit there), it returns to the owner hand at the End Phase of the turn it was Special Summoned, and after destroying an opponent monster by battle it may destroy one Spell or Trap on the opponent field (negative-tested when it is the one destroyed). Replay audited."
     }
   ],
   "restored_to_baseline": [

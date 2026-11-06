@@ -1405,10 +1405,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs the identity of the monster this Equip Card was attached to, after both have left the field. dropEquips() detaches equips before the card leaves, and graveInfo records no equip host, so 'when the equipped monster is destroyed by battle and this card is sent to the Graveyard' cannot be distinguished from any other trip to the Graveyard. Same missing provenance as ヴァイロン・ヴァンガード."
     },
-    "大和神": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a 'cannot be Normal Summoned' restriction (no consumer exists; cannotSpecialSummon covers only the opposite case) plus the flipped/summoned-this-turn provenance for its End Phase return."
-    },
     "リチュア・エミリア": {
       "status": "ENGINE_GAP",
       "reason": "AUTHORITY_MISSING in practice: the 'リチュア' archetype is not among the 34 predicates in data/setcode_overlay_v4.json, and card-name substring matching is forbidden."

@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 345,
+    "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 399,
+    "NOT_STARTED": 397,
     "PARTIAL": 10,
-    "TESTED": 3596
+    "TESTED": 3599
   },
   "delta": {
-    "ENGINE_GAP": -271,
+    "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -908,
+    "NOT_STARTED": -910,
     "PARTIAL": -172,
-    "TESTED": 1547
+    "TESTED": 1550
   },
   "status_changes": [
     {
@@ -3817,6 +3817,12 @@
       "unit": "S03-U64"
     },
     {
+      "name": "ファイティング・スピリッツ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U513"
+    },
+    {
       "name": "ファイヤー・ウォール",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6121,6 +6127,12 @@
       "unit": "S03-U227"
     },
     {
+      "name": "大和神",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U513"
+    },
+    {
       "name": "大天使クリスティア",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -7805,6 +7817,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U267"
+    },
+    {
+      "name": "白銀の翼",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U513"
     },
     {
       "name": "百機夜工",

@@ -58,8 +58,14 @@ ok('cycle13 枚数は23',ALL.length===23);
 /* S03-U266: a one-sided turn Set ban now exists (temporaryFlags.noSetS03 in SET_MONSTER / SET_ST); TESTED in tools/test_s03_u266_unlocks2.js */
 ok('cycle13 SKIP lifted (S03-U266): サーチライトメン is scripted',!!CARD_SCRIPTS['サーチライトメン']);
 /* リバース記録が無いため落とした残りのスピリット */
+/* S03-U513 で《大和神》を実装した（通常召喚不可＋墓地のスピリット除外で特殊召喚＋特殊召喚した
+   ターンのエンドフェイズに手札へ戻る＋戦闘破壊時に相手の魔法・罠1枚を破壊）。
+   SKIP の理由（リバースしたターンの記録が engine に無い）は S03-U244 で解消しており、
+   このカードは特殊召喚の記録（summonedTurn）だけで足りる。主張は「未実装」から
+   「実装され、通常召喚できない」に書き直した（数え方・件数は同じ）。 */
 ['大和神']
-  .forEach(n=>ok('cycle13 SKIP: '+n+' は未実装（リバースしたターンの記録が engine に無い）',!CARD_SCRIPTS[n]));
+  .forEach(n=>ok('cycle13 SKIP lifted (S03-U513): '+n+' は実装済みで、通常召喚はできない',
+    !!CARD_SCRIPTS[n] && CARD_SCRIPTS[n].cannotNormalSummon===true));
 /* S03-U266: 因幡之白兎 / 阿修羅 implemented on the S03-U244 record (and engine/1ZU / 1ZQ); the old SKIP checks become these (count unchanged). */
 ['因幡之白兎','阿修羅']
   .forEach(n=>ok('cycle13 S03-U266 implemented: '+n,!!CARD_SCRIPTS[n]&&CARD_SCRIPTS[n].cannotSpecialSummon===true));

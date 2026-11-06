@@ -1847,6 +1847,9 @@
   "path": "cards/HZZZZZZZZZZZV_claude_s03_u512_spirit_support.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZW_claude_s03_u513_equip_substitute_optional.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

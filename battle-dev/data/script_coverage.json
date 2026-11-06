@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 345,
+    "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 399,
+    "NOT_STARTED": 397,
     "PARTIAL": 10,
-    "TESTED": 3596
+    "TESTED": 3599
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -54,7 +54,7 @@
     "helper:defineGeminiS03": 20,
     "helper:definePeaceGolemS03": 2,
     "helper:defineReleaseRecruitS03": 5,
-    "helper:defineSpiritS03": 7,
+    "helper:defineSpiritS03": 8,
     "helper:defineSummonRecruitS03": 4,
     "helper:defineSummonSearchS03": 8,
     "helper:defineSynchroMaterialSearchS03": 2,
@@ -80,7 +80,7 @@
     "helper:u364Combo": 2,
     "helper:u364Counter": 2,
     "helper:u388TokenMaker": 2,
-    "helper:u412Define": 5,
+    "helper:u412Define": 7,
     "helper:u446Swap": 1,
     "helper:u52BattleRecruitScript": 2,
     "helper:v14DefineEnergySpell": 2,
@@ -121,7 +121,7 @@
     "sin": 5,
     "unified": 1426
   },
-  "static_registration_name_count": 3604,
+  "static_registration_name_count": 3607,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24212,6 +24212,7 @@
         "tools\\test_s03_u464_cocoon.js",
         "tools\\test_s03_u46_royal_oppression.js",
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
+        "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -31098,6 +31099,7 @@
         "tools\\test_s03_u191_nordic.js",
         "tools\\test_s03_u224_ns16.js",
         "tools\\test_s03_u47_special_summon_effect_decl.js",
+        "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_v380.js",
         "tools\\test_v420_ex_removed.js",
         "tools\\test_v460_native_cards.js",
@@ -38899,7 +38901,8 @@
         "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u503_face_up_defence_normal_summon.js",
         "tools\\test_s03_u507_vanity_emptiness_miss.js",
-        "tools\\test_s03_u512_spirit_support.js"
+        "tools\\test_s03_u512_spirit_support.js",
+        "tools\\test_s03_u513_equip_substitute_optional.js"
       ]
     },
     {
@@ -47239,12 +47242,20 @@
       "subtype": "装備",
       "date": "2008-04-19",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u412Define",
+          "source": "cards\\HZZZZZZZZZZZW_claude_s03_u513_equip_substitute_optional.js",
+          "line": 59
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u513_equip_substitute_optional.js"
+      ]
     },
     {
       "index": 2133,
@@ -62119,6 +62130,7 @@
         "tools\\test_s03_u50_gorz.js",
         "tools\\test_s03_u511_negated_summon_destroyer.js",
         "tools\\test_s03_u512_spirit_support.js",
+        "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
@@ -67341,6 +67353,7 @@
         "tools\\test_auto_cycle13.js",
         "tools\\test_s03_u244_spirits.js",
         "tools\\test_s03_u512_spirit_support.js",
+        "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_v690_batch21.js"
       ]
     },
@@ -67387,7 +67400,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u512_spirit_support.js"
+        "tools\\test_s03_u512_spirit_support.js",
+        "tools\\test_s03_u513_equip_substitute_optional.js"
       ]
     },
     {
@@ -71948,7 +71962,8 @@
         "tools\\test_s03_u192_staples2.js",
         "tools\\test_s03_u506_destroyed_class.js",
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
-        "tools\\test_s03_u511_negated_summon_destroyer.js"
+        "tools\\test_s03_u511_negated_summon_destroyer.js",
+        "tools\\test_s03_u513_equip_substitute_optional.js"
       ]
     },
     {
@@ -73450,13 +73465,20 @@
       "subtype": null,
       "date": "2008-04-19",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs a 'cannot be Normal Summoned' restriction (no consumer exists; cannotSpecialSummon covers only the opposite case) plus the flipped/summoned-this-turn provenance for its End Phase return.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 25,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:defineSpiritS03",
+          "source": "cards\\HZZZZZZZZZZZW_claude_s03_u513_equip_substitute_optional.js",
+          "line": 108
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle13.js"
+        "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u513_equip_substitute_optional.js"
       ]
     },
     {
@@ -92250,12 +92272,20 @@
       "subtype": "装備",
       "date": "2009-04-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 17,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u412Define",
+          "source": "cards\\HZZZZZZZZZZZW_claude_s03_u513_equip_substitute_optional.js",
+          "line": 77
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u513_equip_substitute_optional.js"
+      ]
     },
     {
       "index": 4184,
@@ -105580,6 +105610,7 @@
         "tools\\test_s03_u30_ui_activation_paths.js",
         "tools\\test_s03_u31_manual_card_activation.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
+        "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u59_future_fusion.js",
         "tools\\test_s03_u60_field_reactivation_guard.js",
         "tools\\test_s03_u66_dark_general_freed_protection.js",
