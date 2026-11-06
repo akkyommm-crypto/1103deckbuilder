@@ -884,6 +884,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u513_equip_substitute_optional.j
 subprocess.run(['node',str(ROOT/'tools/test_s03_u514_xyz_material.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u515_piercing.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u516_synchro.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u517_summon_counts.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

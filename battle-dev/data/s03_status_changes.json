@@ -15735,6 +15735,36 @@
         "tools/test_s03_u516_synchro.js"
       ],
       "evidence": "Implemented as a quick effect responding to a card activation, with the era rulings wired in: WIKI-F702CAEB190D makes it a quick effect, WIKI-59AEA6994319 and WIKI-2A95D67D1831 restrict it to card activations (not the effect activation of a face-up card nor a Graveyard effect), WIKI-7F34FA9E9AB1 excludes Counter Traps, WIKI-DBFFE8DBCE38 and WIKI-4341E0D0F339 allow it inside the damage step, and WIKI-EE8628654118 reads 「自分のターンに1度だけ」 as once per turn, so countLimit is 1. Measured on real paths with duelActivateResponseV2: the opponent サイクロン is negated and destroyed while its target stays; 神の宣告 is never offered; the second Spell of the turn is not offered; and my own Spell is not offered. Replay audited."
+    },
+    {
+      "name": "カイザーコロシアム",
+      "from": "NOT_STARTED",
+      "to": "PARTIAL",
+      "unit": "S03-U517",
+      "tests": [
+        "tools/test_s03_u517_summon_counts.js"
+      ],
+      "evidence": "Implemented the continuous restriction on every summoning path and measured it on real paths. WIKI-69B7A89DCDA8 says a monster summoned before the card applied is unaffected and that the opponent may summon up to the controller’s count again once their own count drops, so the check counts the board at the moment of the summon rather than keeping state; WIKI-902B1F48CA44 (09/08/16) allows releasing the controller’s monster to Special Summon, which that same per-summon count reproduces (the release happens first, so the controller is at 0); WIKI-E315E720E7DE (09/05/01) allows an Advance Summon that does not exceed; WIKI-CEDCCC9F400F keeps control-taking out of it; WIKI-ABD803D48412 (11/04/11) says the card negates nothing, so the summon is only refused. WIKI-05D8FDD9315F (07/03/04) and WIKI-3E01B205FCEA (09/05/28) make an effect whose purpose is a Special Summon unactivatable, which the new globalSummonLockS03 hook (engine/1ZZS, read by v46GlobalSpecialSummonRestrictionReason) does. PARTIAL, not TESTED, for two gaps measured in this unit: Token Special Summons are not blocked because TOKEN_CREATE consults no summon restriction (WIKI-CA7FC24FF02B 11/08/22 says the Kaien Token cannot be Special Summoned), and the activation of an effect that summons several monsters at once is not refused because no script metadata says how many monsters an effect summons. docs/S03_U517_REPORT.md section 4."
+    },
+    {
+      "name": "サモンリミッター",
+      "from": "NOT_STARTED",
+      "to": "PARTIAL",
+      "unit": "S03-U517",
+      "tests": [
+        "tools/test_s03_u517_summon_counts.js"
+      ],
+      "evidence": "Implemented the per-turn count of summon acts and the restriction, measured on real paths. WIKI-FA2EC0926915 (08/03/06) counts the acts made before the card was activated, so the count is kept unconditionally (engine/1ZZS) and the card only reads it; WIKI-7E37568B7AAA (08/07/22) counts one act per player for a card that makes both players Special Summon, so the count is per player; WIKI-4FD72A35ED9E (08/08/20) does not count a negated summon, which holds because the count is taken when the summon-success event is queued; WIKI-3E01B205FCEA and WIKI-83BAECDD9B3A (09/05/28) make the third act unactivatable for an effect whose purpose is a Special Summon (globalSummonLockS03), while WIKI-1305B3CE1B4E (09/08/30) keeps a forced one activating and fizzling, which is why the summon itself is what is refused; WIKI-D8FEA13745E1 and WIKI-942ECAD162E6 (11/05/30) apply nothing while the Trap is negated, added to summonLockReasonS03 / globalSummonLockReasonS03 as trapNegated / trapStunned. WIKI-3990B9280CC0 (11/06/11) leaves the simultaneous Special Summon 「調整中」, so one event counts as one act and that is recorded as the era’s open question. PARTIAL, not TESTED, for one gap measured in this unit: Token Special Summons are not blocked because TOKEN_CREATE consults no summon restriction (WIKI-04F14179580E 09/10/30 says the Rose Token is not Special Summoned for a player who already made two acts). docs/S03_U517_REPORT.md section 4."
+    },
+    {
+      "name": "サモンチェーン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U517",
+      "tests": [
+        "tools/test_s03_u517_summon_counts.js"
+      ],
+      "evidence": "Every clause of the text is implemented and measured on a real chain. The activation condition is chain link 3 or later (the chain already holds two links) and no card name appearing twice among the links; the resolution raises this turn’s Normal Summon allowance to 3. WIKI-BD81BAFC2896 (11/04/17) says activating it together with 二重召喚, or a second copy, does not raise the number beyond 3, so the allowance is read as the maximum of the grants (normalGrantMaxS03, engine/00) rather than as an increment; the test activates both cards and measures that the engine’s own legal-action list offers a Normal Summon exactly three times. The chain is built through the real path (強欲な壺 → 強欲な瓶 → サモンチェーン) and the scene is Replay audited."
     }
   ],
   "restored_to_baseline": [

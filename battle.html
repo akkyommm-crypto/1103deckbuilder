@@ -1135,11 +1135,28 @@ function battleDamageCauseS03(gs, card, owner, dest){
   return 'effect';
 }
 /* S03-U274: 「このターン自分は通常召喚を2回まで行う事ができる」 (二重召喚) — temporaryFlags.doubleSummonS03: 1 = the second Normal Summon / Set is
-   available, 2 = used (a later 二重召喚 does not grant a third). Without the flag this is exactly the old normalSummonUsed check. */
-function normalRightFreeS03(P){ return !P.normalSummonUsed || Number((P.temporaryFlags||{}).doubleSummonS03)===1; }
+   available, 2 = used (a later 二重召喚 does not grant a third). Without the flag this is exactly the old normalSummonUsed check.
+   S03-U517: 「このターン自分は通常召喚を3回まで行う事ができる」 (サモンチェーン) を同じ仕組みで扱うため、
+   与えられた回数を上限として読む。temporaryFlags.normalGrantS03 = このターンに許された通常召喚の回数、
+   normalGrantUsedS03 = 基本の召喚権の後に使った回数。複数枚発動しても回数は増えないので上限は最大値を取る
+   （WIKI-BD81BAFC2896 11/04/17：サモンチェーンと二重召喚の両方を発動しても通常召喚は最大3回）。 */
+function normalGrantMaxS03(P){
+  const tf = (P && P.temporaryFlags) || {};
+  let m = 1;
+  if(tf.doubleSummonS03 != null) m = Math.max(m, 2);                              /* S03-U274: 二重召喚 */
+  if(Number(tf.normalGrantS03) > 0) m = Math.max(m, Number(tf.normalGrantS03));   /* S03-U517: サモンチェーン = 3 */
+  return m;
+}
+function normalRightFreeS03(P){ return !P.normalSummonUsed || (Number((P.temporaryFlags||{}).normalGrantUsedS03)||0) < normalGrantMaxS03(P)-1; }
 function consumeNormalRightS03(P){
   if(!P.normalSummonUsed){ P.normalSummonUsed = true; return true; }
-  if(P.temporaryFlags && Number(P.temporaryFlags.doubleSummonS03)===1){ P.temporaryFlags.doubleSummonS03 = 2; return true; }
+  const tf = P.temporaryFlags || (P.temporaryFlags = {});
+  const used = Number(tf.normalGrantUsedS03)||0;
+  if(used < normalGrantMaxS03(P)-1){
+    tf.normalGrantUsedS03 = used + 1;
+    if(Number(tf.doubleSummonS03)===1) tf.doubleSummonS03 = 2;                    /* S03-U274 の観測値をそのまま残す（2 = used） */
+    return true;
+  }
   return false;
 }
 function emitBattleDamageV6(gs, o){
@@ -1209,7 +1226,7 @@ function applyActionBodyV31(gs, a){
   const P = gs.players[a.player ?? gs.activePlayer];
   switch(a.type){
     case 'EVENT_QUEUE_V31':
-      (gs.deferredEvents||(gs.deferredEvents=[])).push(JSON.parse(JSON.stringify(a.item)));/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,a.item);break;
+      (gs.deferredEvents||(gs.deferredEvents=[])).push(JSON.parse(JSON.stringify(a.item)));/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,a.item);/* S03-U517 */if(typeof noteSummonActS03==='function')noteSummonActS03(gs,a.item);break;
     case 'EVENT_DEQUEUE_V31':
       if(gs.deferredEvents&&gs.deferredEvents.length)gs.deferredEvents.shift();break;
     /* S03-U156: take the queued events of one kind for the given cards out of the queue, so that the caller dispatches them in
@@ -2932,6 +2949,8 @@ function applyActionBodyV31(gs, a){
       }
       if(prevFace==='down' && a.face==='up') activatePendingProcedureBaseStats(card, gs);
       if(a.flipSummon===true && P.temporaryFlags) P.temporaryFlags.summonedThisTurnS03 = true;   /* S03-U129: 反転召喚 */
+      /* S03-U517: 反転召喚も「召喚行為」なので数える（サモンリミッター）。成功したこの reducer で数える。 */
+      if(a.flipSummon===true && typeof bumpSummonActS03==='function') bumpSummonActS03(gs, a.player);
       if(a.flipSummon===true) card.flipSummonedTurnS03 = gs.turn;   /* S03-U260: 「反転召喚されたモンスターは、そのターン」 (怨霊の湿地帯) — zone-local */
       /* S03-U119: 裏側表示になったデュアルモンスターは、もう1度召喚された状態ではなくなる。 */
       if(a.face==='down' && card.dualUp) delete card.dualUp;
@@ -3026,7 +3045,7 @@ function applyActionBodyV31(gs, a){
       Q.ssHistory.push({name:cardName(ex),from:'ex',turn:gs.turn,lv:curLV(ex),kind:ex.specialSummonKind});
       gs.pendingExV2=null;
       gs.timingWindow={kind:'summon',turn:gs.turn,action:'EX_SUMMON_COMMIT_V42'};
-      {const itemU14={eventName:'onSpecialSummon',evt:{player:q.player,name:cardName(ex),uid:ex.uid,kind:q.kind}};(gs.deferredEvents||(gs.deferredEvents=[])).push(itemU14);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,itemU14);}
+      {const itemU14={eventName:'onSpecialSummon',evt:{player:q.player,name:cardName(ex),uid:ex.uid,kind:q.kind}};(gs.deferredEvents||(gs.deferredEvents=[])).push(itemU14);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,itemU14);/* S03-U517 */if(typeof noteSummonActS03==='function')noteSummonActS03(gs,itemU14);}
       logIt(gs,`<b>${q.kind==='synchro'?'シンクロ召喚':'エクシーズ召喚'}成功</b>：${cardName(ex)}`);
       break;
     }
@@ -15367,6 +15386,12 @@ function summonLockReasonS03(p, db, kind){
       const sc = CARD_SCRIPTS[cardName(c)], f = sc && sc.summonLockS03;
       if(typeof f !== 'function') continue;
       if(typeof effectNegated === 'function' && effectNegated(c)) continue;
+      /* S03-U517: 罠カードは、その効果が無効にされている間は何も適用しない
+         （サモンリミッターと人造人間－サイコ・ショッカーが共に表側の場合、WIKI-D8FEA13745E1 / WIKI-942ECAD162E6 11/05/30）。 */
+      if(dbOf(c).k==='t'){
+        if(typeof trapNegated==='function' && trapNegated(c)) continue;
+        if(typeof trapStunned==='function' && trapStunned(q, c)) continue;
+      }
       let hit = false; try{ hit = !!f({p, db, kind, src:c, srcPlayer:q}); }catch(e){ hit = false; }
       if(hit) return `${cardName(c)}の効果により${kind === 'special' ? '特殊召喚' : kind === 'flip' ? '反転召喚' : '召喚'}できません`;
     }
@@ -15377,6 +15402,67 @@ function summonLockReasonS03(p, db, kind){
     const t = Number(gameState.turn);
     const hit = bans.find(b=>b && t >= Number(b.from) && t <= Number(b.to) && Array.isArray(b.kinds) && b.kinds.indexOf(kind) >= 0 && summonBanMatchS03(b.match, db));
     if(hit) return `${hit.label || '効果'}により${kind === 'special' ? '特殊召喚' : kind === 'flip' ? '反転召喚' : '召喚'}できません`;
+  }
+  return '';
+}
+/* =========================================================================
+   S03-U517 — 1ターンの「召喚行為」の回数（サモンリミッター）
+   -------------------------------------------------------------------------
+   「お互いのプレイヤーは1ターンに合計2回までしかモンスターを召喚・反転召喚・特殊召喚できない」は、
+   そのカードが出る前に行った召喚行為も数える（WIKI-FA2EC0926915 08/03/06）。だから数える側は条件を見ずに
+   常に数え、上限を決めるのは読む側（カードの summonLockS03）にする。
+     ・無効にされた召喚は成功していないので数えない（WIKI-4FD72A35ED9E 08/08/20）。
+       召喚成功イベントを予約した時点で数えるので、これはそのまま満たされる。
+     ・お互いが特殊召喚するカードは、それぞれのプレイヤーが1回ずつ（WIKI-7E37568B7AAA 08/07/22）。
+       プレイヤーごとに数えるので満たされる。
+     ・同時に複数体を特殊召喚した場合に1回と数えるかは当時「調整中」（WIKI-3990B9280CC0 11/06/11）。
+       ここでは出来事1回につき1回として数える（flushResolutionSummonBatchV2 がまとめた1イベント = 1回）。
+   置き場は temporaryFlags.summonActsS03 なので、ターンの切り替えで消え（engine/00 の TURN）、
+   Journal / 保存 / Replay の digest にも入る（engine/06 は temporaryFlags をそのまま digest に入れる）。
+   数えるのは DUEL だけ（他のモードは召喚制限を適用しない）。
+   ========================================================================= */
+function bumpSummonActS03(gs, p){
+  if(typeof PLAY_MODE==='undefined' || typeof PLAY_MODES==='undefined' || PLAY_MODE!==PLAY_MODES.DUEL) return 0;
+  if(p!==0 && p!==1) return 0;
+  const P = (gs || gameState).players[p]; if(!P) return 0;
+  const tf = P.temporaryFlags || (P.temporaryFlags = {});
+  tf.summonActsS03 = (Number(tf.summonActsS03)||0) + 1;
+  return tf.summonActsS03;
+}
+function noteSummonActS03(gs, item){
+  if(!item || (item.eventName!=='onNormalSummon' && item.eventName!=='onSpecialSummon')) return 0;
+  const e = item.evt || {};
+  return bumpSummonActS03(gs || gameState, e.player);
+}
+function summonActsThisTurnS03(p, gs){
+  const P = ((gs || (typeof gameState!=='undefined' ? gameState : null)) || {players:[]}).players[p];
+  return Number((P && P.temporaryFlags || {}).summonActsS03) || 0;
+}
+/* S03-U517 — 特殊召喚そのものを目的とする効果の「発動」を止める側の判定。
+   モンスターを問わずその時点でその player の特殊召喚が全てできない状態（カイザーコロシアム／サモンリミッター）は、
+   モンスターの種類で決まる summonLockS03 とは別に、カードの発動の可否にも効く:
+     《スケープ・ゴート》は発動自体ができない（WIKI-05D8FDD9315F 07/03/04）、
+     3回目の召喚行為としての《死者蘇生》は発動できない（WIKI-3E01B205FCEA 09/05/28、WIKI-83BAECDD9B3A 09/05/28）。
+   カード側は globalSummonLockS03({p, src, srcPlayer}) → true を宣言する。engine/40 の
+   v46GlobalSpecialSummonRestrictionReason がこれを読み、strictScriptLegalityV2（engine/30）の
+   blocksIfNoSpecialSummon の判定に乗る。強制効果はそこを通らないので発動して不発になる
+   （WIKI-1305B3CE1B4E 09/08/30「発動しますが、不発になります」）。 */
+function globalSummonLockReasonS03(p){
+  if(typeof CARD_SCRIPTS === 'undefined' || !gameState || !gameState.players) return '';
+  for(let q = 0; q < 2; q++){
+    const Pq = gameState.players[q], srcs = [].concat(Pq.mz || [], Pq.sz || [], Pq.field ? [Pq.field] : []);
+    for(const c of srcs){
+      if(!c || c.face !== 'up' || c.activationPending || c.activationNegated) continue;
+      const sc = CARD_SCRIPTS[cardName(c)], f = sc && sc.globalSummonLockS03;
+      if(typeof f !== 'function') continue;
+      if(typeof effectNegated === 'function' && effectNegated(c)) continue;
+      if(dbOf(c).k === 't'){
+        if(typeof trapNegated === 'function' && trapNegated(c)) continue;
+        if(typeof trapStunned === 'function' && trapStunned(q, c)) continue;
+      }
+      let hit = false; try{ hit = !!f({p, src:c, srcPlayer:q}); }catch(e){ hit = false; }
+      if(hit) return `${cardName(c)}の効果により特殊召喚できません`;
+    }
   }
   return '';
 }
@@ -20107,7 +20193,7 @@ function queueDeferredEventV2(eventName,evt){
     if(typeof noteMissedTimingQueueS03==='function') noteMissedTimingQueueS03();
   }
   const item={eventName,evt:safe};
-  if(typeof APPLY_ACTION_DEPTH_V31!=='undefined'&&APPLY_ACTION_DEPTH_V31>0){gameState.deferredEvents.push(item);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gameState,item);}
+  if(typeof APPLY_ACTION_DEPTH_V31!=='undefined'&&APPLY_ACTION_DEPTH_V31>0){gameState.deferredEvents.push(item);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gameState,item);/* S03-U517 */if(typeof noteSummonActS03==='function')noteSummonActS03(gameState,item);}
   else commitAutomaticActionV44({type:'EVENT_QUEUE_V31',item});
 }
 function queueSpecialSummonSuccessV2(p,card,kind){
@@ -20508,6 +20594,8 @@ function v46GlobalSpecialSummonRestrictionReason(p){
       return '虚無空間の効果により特殊召喚できません';
     }
   }
+  /* S03-U517: モンスターを問わない特殊召喚の封じ（カイザーコロシアム / サモンリミッター、engine/1ZZS の globalSummonLockS03） */
+  { const gS03=(typeof globalSummonLockReasonS03==='function')?globalSummonLockReasonS03(p):''; if(gS03) return gS03; }
   return '';
 }
 function v46SpecialSummonRestrictionReason(p,db){
@@ -98562,6 +98650,105 @@ defineScript('フルール・ド・シュヴァリエ', {
   passive:{ onActivateSuccess(ctx){ return ctx.zone === 'mz' && !!u516ChevalierLinkS03(ctx); } }
 });
 declareActivationResponseS03(['フルール・ド・シュヴァリエ']);   /* engine/1P: 発動への応答 */
+/* S03-U517: カイザーコロシアム, サモンリミッター, サモンチェーン（1103対象の未実装カード。carddata のテキスト）。
+
+   カイザーコロシアム（永続魔法）①:自分フィールドにモンスターが存在する限り、相手はその数より多くなるように自身のフィールドにモンスターを出す事ができない。
+   サモンリミッター（永続罠）    このカードがフィールド上に存在する限り、お互いのプレイヤーは1ターンに合計2回までしかモンスターを召喚・反転召喚・特殊召喚できない。
+   サモンチェーン（速攻魔法）    ①:同一チェーン上で複数回同名カードの効果が発動していない場合、そのチェーン3以降に発動できる。このターン自分は通常召喚を3回まで行う事ができる。
+
+   当時の裁定（この実装の根拠。推測ではない）
+   - カイザーコロシアム
+     WIKI-69B7A89DCDA8  効果適用前に召喚されたモンスターは影響を受けない。自分のモンスターの数が増えるか相手が0になるまで
+                        相手はそれ以上召喚できない（相手の数が減った場合は自分の数までは召喚できる）→ 判定は「召喚しようとした時点の盤面」。
+     WIKI-902B1F48CA44  （09/08/16）自分のモンスターをリリースして《ヴォルカニック・クイーン》を特殊召喚するのは可能
+                        → リリースは召喚より前なので、召喚時点で自分の数が0になり制限が外れる。盤面を都度数えればそのまま一致する。
+     WIKI-CEDCCC9F400F  コントロール奪取は「モンスターをフィールド上に出す」ではないので可能 → 召喚の判定だけに入れる。
+     WIKI-E315E720E7DE  （09/05/01）数を超えないアドバンス召喚は可能。
+     WIKI-A2F5B2F95F39  （10/08/12）《クロス・ソウル》で相手のモンスターだけをリリースしてアドバンス召喚はできない。
+     WIKI-ABD803D48412  （11/04/11）このカードに召喚・特殊召喚を無効にする効果はない（止めるだけで、無効化ではない）。
+     WIKI-05D8FDD9315F  （07/03/04）自分のモンスターが1体の時、相手は《スケープ・ゴート》を発動できない
+     WIKI-3E01B205FCEA / WIKI-83BAECDD9B3A（09/05/28）3回目の召喚行為としての《死者蘇生》/《次元融合》は発動できない
+                        → 「特殊召喚そのものを目的とする効果」の発動も止まる（globalSummonLockS03、engine/1ZZS）。
+   - サモンリミッター
+     WIKI-FA2EC0926915  （08/03/06）このカードの発動前に行った召喚・反転召喚・特殊召喚も数える → 数えるのは常に行う（engine/1ZZS）。
+     WIKI-7E37568B7AAA  （08/07/22）お互いが特殊召喚するカードは、それぞれ1回ずつ → プレイヤーごとに数える。
+     WIKI-4FD72A35ED9E  （08/08/20）2回目の特殊召喚が無効になった場合はもう一度特殊召喚できる → 成功した時だけ数える。
+     WIKI-3E01B205FCEA  （09/05/28）2回終えた相手の3回目の《死者蘇生》は、チェーンして発動した場合も効果が適用されない。
+     WIKI-1305B3CE1B4E  （09/08/30）強制の特殊召喚効果は「発動しますが、不発になります」→ 発動の可否ではなく召喚だけを止める側で処理する。
+     WIKI-D8FEA13745E1 / WIKI-942ECAD162E6（11/05/30）《人造人間－サイコ・ショッカー》と共にある間はアドバンス召喚でき、
+                        ショッカーがリリースされた後は同じターンもう召喚できない → 罠の効果が無効の間は適用しない（engine/1ZZS）。
+     WIKI-3990B9280CC0  （11/06/11）同時に特殊召喚された2体を1回と数えるかは「調整中」→ 出来事1回につき1回として数える（その旨を記録する）。
+   - サモンチェーン
+     WIKI-BD81BAFC2896  （11/04/17）《サモンチェーン》と《二重召喚》の両方を発動しても通常召喚は最大3回。複数枚発動しても増えない
+                        → 通常召喚の回数は「与えられた上限の最大値」（engine/00 normalGrantMaxS03）。
+
+   未対応（この単位では直していない。測って確認した残り）
+   - トークンの特殊召喚は TOKEN_CREATE が召喚制限を一切見ない（S03-U429 の設計）ので、どちらの制限もトークンを止めない。
+     カイザーコロシアム: WIKI-CA7FC24FF02B（11/08/22）「冥府の使者カイエントークンは特殊召喚できません」、
+     サモンリミッター: WIKI-04F14179580E（09/10/30）ローズ・トークンは特殊召喚されない。
+   - 複数体を出す効果の「発動」の可否は、効果が何体出すかを知らないと決まらない（《スケープ・ゴート》4体、《異次元からの帰還》、
+     《レスキューキャット》2体、剣闘獣の特殊召喚）。1体分の判定しか持たないので、カイザーコロシアムはこれらの発動を止めない。
+   どちらも「カードの効果が何体出すか」というスクリプト側の情報が無いと直せないので、後続課題として docs に記録する。 */
+
+/* 永続カードの「カードの発動」だけを持つ効果（発動時の効果は無い）。u422Act と同じ形で、罠は speed 2。 */
+function u517Act(speed){
+  return { key:'activate', type:EFFECT_TYPE.ACTIVATE, range:LOCATION.SZONE, speed:speed, events:['activate'],
+    condition(ctx){ return u422Fresh(ctx); }, operation(){}, afterResolve(){} };
+}
+
+/* ---- カイザーコロシアム ---- */
+/* 「自分フィールドにモンスターが存在する限り」「その数より多くなるように」なので、表裏を問わず
+   モンスターゾーンの数を都度数える。相手の数が自分の数と同じなら、1体出すと超えるので出せない。 */
+function u517ColosseumBlocksS03(i){
+  if(i.p === i.srcPlayer) return false;
+  const mine = (gameState.players[i.srcPlayer].mz || []).filter(c=>!!c).length;
+  if(mine <= 0) return false;
+  return (gameState.players[i.p].mz || []).filter(c=>!!c).length >= mine;
+}
+defineUnifiedCardV4('カイザーコロシアム', [u517Act(1)], {
+  type:'spell', priority:1,
+  summonLockS03:(i)=> u517ColosseumBlocksS03(i),
+  globalSummonLockS03:(i)=> u517ColosseumBlocksS03({p:i.p, srcPlayer:i.srcPlayer})
+});
+
+/* ---- サモンリミッター ---- */
+function u517LimiterBlocksS03(p){ return summonActsThisTurnS03(p) >= 2; }
+defineUnifiedCardV4('サモンリミッター', [u517Act(2)], {
+  type:'trap', priority:2,
+  summonLockS03:(i)=> u517LimiterBlocksS03(i.p),
+  globalSummonLockS03:(i)=> u517LimiterBlocksS03(i.p)
+});
+
+/* ---- サモンチェーン ---- */
+/* 「そのチェーン3以降に発動できる」= このカードがチェーン3以降になる（既にチェーンが2つ以上ある）。
+   「同一チェーン上で複数回同名カードの効果が発動していない場合」= チェーン上に同じ名前が2つ以上並んでいない。 */
+function u517ChainHasDupNameS03(){
+  const seen = Object.create(null);
+  return (gameState.chain || []).some(l=>{
+    const n = l && l.name; if(!n) return false;
+    if(seen[n]) return true;
+    seen[n] = 1; return false;
+  });
+}
+defineScript('サモンチェーン', {
+  /* 速攻魔法なので手札からもセットしたゾーンからも発動する。チェーン応答の候補に出すには
+     activateFrom の宣言が必要（canActivateFromZone、engine/20）。 */
+  type:'quick-play', priority:2, activateFrom:['hand','sz'],
+  condition(ctx){
+    if((gameState.chain || []).length < 2){ ctx.reason = 'チェーン3以降に発動します'; return false; }
+    if(u517ChainHasDupNameS03()){ ctx.reason = '同一チェーン上で同名カードの効果が複数回発動しています'; return false; }
+    return true;
+  },
+  resolve(ctx){
+    /* 複数枚発動しても増えない（WIKI-BD81BAFC2896）。上限は最大値を取るので、同じ3を入れ直すだけ。 */
+    API.setFlag(ctx.player, 'normalGrantS03', 3, true);
+    API.log('サモンチェーン：このターン、通常召喚を3回まで行える');
+  },
+  afterResolve(){}
+});
+
+/* カイザーコロシアム / サモンリミッターは「カードの発動」に要求が無く、発動時の効果も無い（S03-U10 の分類と同じ扱い）。 */
+declareCardActivationFreeV32(['カイザーコロシアム','サモンリミッター']);
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

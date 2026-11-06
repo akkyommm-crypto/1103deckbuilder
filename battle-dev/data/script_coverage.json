@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 390,
-    "PARTIAL": 10,
-    "TESTED": 3606
+    "NOT_STARTED": 387,
+    "PARTIAL": 12,
+    "TESTED": 3607
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1648,
+    "legacy": 1649,
     "sin": 5,
-    "unified": 1429
+    "unified": 1431
   },
-  "static_registration_name_count": 3614,
+  "static_registration_name_count": 3617,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -16325,12 +16325,20 @@
       "subtype": "永続",
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
-      "reason": "",
+      "status": "PARTIAL",
+      "reason": "S03-U517 implemented its continuous restriction on the summoning paths: a summon of any kind (Normal / Flip / Special) by the opponent is refused while their monster count has caught up with the controller’s (summonLockS03), and an effect whose purpose is a Special Summon cannot even be activated (globalSummonLockS03, WIKI-05D8FDD9315F 07/03/04). PARTIAL for two measured gaps: (1) Token Special Summons are not blocked because TOKEN_CREATE (engine/00) consults no summon restriction at all — the era answer WIKI-CA7FC24FF02B (11/08/22) says the Kaien Token cannot be Special Summoned; (2) the activation of an effect that summons several monsters at once (スケープ・ゴート 4, 異次元からの帰還, レスキューキャット 2, 剣闘獣) is not refused, because no script metadata says how many monsters an effect summons. See docs/S03_U517_REPORT.md section 4.",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZA_claude_s03_u517_summon_counts.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u517_summon_counts.js"
+      ]
     },
     {
       "index": 717,
@@ -25667,7 +25675,9 @@
       "complexity_score": 34,
       "registrations": [],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u517_summon_counts.js"
+      ]
     },
     {
       "index": 1140,
@@ -26063,12 +26073,20 @@
       "subtype": "速攻",
       "date": "2007-11-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZZA_claude_s03_u517_summon_counts.js",
+          "line": 81
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u517_summon_counts.js"
+      ]
     },
     {
       "index": 1159,
@@ -26078,13 +26096,20 @@
       "subtype": "永続",
       "date": "2008-02-23",
       "extra": false,
-      "status": "NOT_STARTED",
-      "reason": "",
+      "status": "PARTIAL",
+      "reason": "S03-U517 implemented its continuous restriction: the turn’s summon acts are counted per player (summonActsThisTurnS03, engine/1ZZS — always counted, so acts made before the card was activated count, WIKI-FA2EC0926915 08/03/06; only successful summons count, WIKI-4FD72A35ED9E 08/08/20; one act per event, and the simultaneous case is 「調整中」 WIKI-3990B9280CC0 11/06/11), the third act of either player is refused (summonLockS03), an effect whose purpose is a Special Summon cannot be activated (globalSummonLockS03, WIKI-3E01B205FCEA 09/05/28) while a forced one still activates and fizzles (WIKI-1305B3CE1B4E 09/08/30), and nothing applies while the Trap is negated (WIKI-D8FEA13745E1 / WIKI-942ECAD162E6 11/05/30). PARTIAL for one measured gap: Token Special Summons are not blocked because TOKEN_CREATE (engine/00) consults no summon restriction — the era answer WIKI-04F14179580E (09/10/30) says the Rose Token is not Special Summoned for a player who already made two acts. See docs/S03_U517_REPORT.md section 4.",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZA_claude_s03_u517_summon_counts.js",
+          "line": 64
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle21.js"
+        "tools\\test_auto_cycle21.js",
+        "tools\\test_s03_u517_summon_counts.js"
       ]
     },
     {
@@ -38914,7 +38939,8 @@
         "tools\\test_s03_u512_spirit_support.js",
         "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u514_xyz_material.js",
-        "tools\\test_s03_u516_synchro.js"
+        "tools\\test_s03_u516_synchro.js",
+        "tools\\test_s03_u517_summon_counts.js"
       ]
     },
     {
@@ -62170,6 +62196,7 @@
         "tools\\test_s03_u514_xyz_material.js",
         "tools\\test_s03_u515_piercing.js",
         "tools\\test_s03_u516_synchro.js",
+        "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
@@ -65258,6 +65285,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u274_extra_normal.js",
+        "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_v490_batch01.js"
       ]
     },
@@ -65499,6 +65527,7 @@
         "tools\\test_s03_u510_resolved_summon_destroyed.js",
         "tools\\test_s03_u511_negated_summon_destroyer.js",
         "tools\\test_s03_u514_xyz_material.js",
+        "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_v660_batch18.js"
       ]
     },
@@ -78340,6 +78369,7 @@
         "tools\\test_s03_u276_gap4.js",
         "tools\\test_s03_u290_event_summary.js",
         "tools\\test_s03_u292_gap9.js",
+        "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_v490_batch01.js",
         "tools\\test_v590_batch11.js",
         "tools\\test_v600_batch12.js",
@@ -78390,6 +78420,7 @@
         "tools\\test_s03_u254_ns34.js",
         "tools\\test_s03_u259_locks.js",
         "tools\\test_s03_u260_unlocks.js",
+        "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_v490_batch01.js"
       ]
     },
@@ -95517,6 +95548,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_s03_u53_instant_fusion.js"
       ]
     },

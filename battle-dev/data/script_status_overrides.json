@@ -1,6 +1,14 @@
 {
   "schema_version": 1,
   "cards": {
+    "カイザーコロシアム": {
+      "status": "PARTIAL",
+      "reason": "S03-U517 implemented its continuous restriction on the summoning paths: a summon of any kind (Normal / Flip / Special) by the opponent is refused while their monster count has caught up with the controller’s (summonLockS03), and an effect whose purpose is a Special Summon cannot even be activated (globalSummonLockS03, WIKI-05D8FDD9315F 07/03/04). PARTIAL for two measured gaps: (1) Token Special Summons are not blocked because TOKEN_CREATE (engine/00) consults no summon restriction at all — the era answer WIKI-CA7FC24FF02B (11/08/22) says the Kaien Token cannot be Special Summoned; (2) the activation of an effect that summons several monsters at once (スケープ・ゴート 4, 異次元からの帰還, レスキューキャット 2, 剣闘獣) is not refused, because no script metadata says how many monsters an effect summons. See docs/S03_U517_REPORT.md section 4."
+    },
+    "サモンリミッター": {
+      "status": "PARTIAL",
+      "reason": "S03-U517 implemented its continuous restriction: the turn’s summon acts are counted per player (summonActsThisTurnS03, engine/1ZZS — always counted, so acts made before the card was activated count, WIKI-FA2EC0926915 08/03/06; only successful summons count, WIKI-4FD72A35ED9E 08/08/20; one act per event, and the simultaneous case is 「調整中」 WIKI-3990B9280CC0 11/06/11), the third act of either player is refused (summonLockS03), an effect whose purpose is a Special Summon cannot be activated (globalSummonLockS03, WIKI-3E01B205FCEA 09/05/28) while a forced one still activates and fizzles (WIKI-1305B3CE1B4E 09/08/30), and nothing applies while the Trap is negated (WIKI-D8FEA13745E1 / WIKI-942ECAD162E6 11/05/30). PARTIAL for one measured gap: Token Special Summons are not blocked because TOKEN_CREATE (engine/00) consults no summon restriction — the era answer WIKI-04F14179580E (09/10/30) says the Rose Token is not Special Summoned for a player who already made two acts. See docs/S03_U517_REPORT.md section 4."
+    },
     "デルタ・アタッカー": {
       "status": "PARTIAL",
       "reason": "S03-U276 implemented it for exactly 3 face-up same-name Normal Monsters (not Tokens): this turn those 3 may attack directly (lingering grant on the recorded uids). PARTIAL because the case of 4 or more same-name Normal Monsters (activatable or not, and which 3) is an open ruling under the 2026-10-03 TESTED rule."

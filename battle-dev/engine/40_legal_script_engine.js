@@ -156,6 +156,8 @@ function v46GlobalSpecialSummonRestrictionReason(p){
       return '虚無空間の効果により特殊召喚できません';
     }
   }
+  /* S03-U517: モンスターを問わない特殊召喚の封じ（カイザーコロシアム / サモンリミッター、engine/1ZZS の globalSummonLockS03） */
+  { const gS03=(typeof globalSummonLockReasonS03==='function')?globalSummonLockReasonS03(p):''; if(gS03) return gS03; }
   return '';
 }
 function v46SpecialSummonRestrictionReason(p,db){

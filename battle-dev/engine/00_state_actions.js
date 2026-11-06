@@ -179,11 +179,28 @@ function battleDamageCauseS03(gs, card, owner, dest){
   return 'effect';
 }
 /* S03-U274: 「このターン自分は通常召喚を2回まで行う事ができる」 (二重召喚) — temporaryFlags.doubleSummonS03: 1 = the second Normal Summon / Set is
-   available, 2 = used (a later 二重召喚 does not grant a third). Without the flag this is exactly the old normalSummonUsed check. */
-function normalRightFreeS03(P){ return !P.normalSummonUsed || Number((P.temporaryFlags||{}).doubleSummonS03)===1; }
+   available, 2 = used (a later 二重召喚 does not grant a third). Without the flag this is exactly the old normalSummonUsed check.
+   S03-U517: 「このターン自分は通常召喚を3回まで行う事ができる」 (サモンチェーン) を同じ仕組みで扱うため、
+   与えられた回数を上限として読む。temporaryFlags.normalGrantS03 = このターンに許された通常召喚の回数、
+   normalGrantUsedS03 = 基本の召喚権の後に使った回数。複数枚発動しても回数は増えないので上限は最大値を取る
+   （WIKI-BD81BAFC2896 11/04/17：サモンチェーンと二重召喚の両方を発動しても通常召喚は最大3回）。 */
+function normalGrantMaxS03(P){
+  const tf = (P && P.temporaryFlags) || {};
+  let m = 1;
+  if(tf.doubleSummonS03 != null) m = Math.max(m, 2);                              /* S03-U274: 二重召喚 */
+  if(Number(tf.normalGrantS03) > 0) m = Math.max(m, Number(tf.normalGrantS03));   /* S03-U517: サモンチェーン = 3 */
+  return m;
+}
+function normalRightFreeS03(P){ return !P.normalSummonUsed || (Number((P.temporaryFlags||{}).normalGrantUsedS03)||0) < normalGrantMaxS03(P)-1; }
 function consumeNormalRightS03(P){
   if(!P.normalSummonUsed){ P.normalSummonUsed = true; return true; }
-  if(P.temporaryFlags && Number(P.temporaryFlags.doubleSummonS03)===1){ P.temporaryFlags.doubleSummonS03 = 2; return true; }
+  const tf = P.temporaryFlags || (P.temporaryFlags = {});
+  const used = Number(tf.normalGrantUsedS03)||0;
+  if(used < normalGrantMaxS03(P)-1){
+    tf.normalGrantUsedS03 = used + 1;
+    if(Number(tf.doubleSummonS03)===1) tf.doubleSummonS03 = 2;                    /* S03-U274 の観測値をそのまま残す（2 = used） */
+    return true;
+  }
   return false;
 }
 function emitBattleDamageV6(gs, o){
@@ -253,7 +270,7 @@ function applyActionBodyV31(gs, a){
   const P = gs.players[a.player ?? gs.activePlayer];
   switch(a.type){
     case 'EVENT_QUEUE_V31':
-      (gs.deferredEvents||(gs.deferredEvents=[])).push(JSON.parse(JSON.stringify(a.item)));/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,a.item);break;
+      (gs.deferredEvents||(gs.deferredEvents=[])).push(JSON.parse(JSON.stringify(a.item)));/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,a.item);/* S03-U517 */if(typeof noteSummonActS03==='function')noteSummonActS03(gs,a.item);break;
     case 'EVENT_DEQUEUE_V31':
       if(gs.deferredEvents&&gs.deferredEvents.length)gs.deferredEvents.shift();break;
     /* S03-U156: take the queued events of one kind for the given cards out of the queue, so that the caller dispatches them in
@@ -1976,6 +1993,8 @@ function applyActionBodyV31(gs, a){
       }
       if(prevFace==='down' && a.face==='up') activatePendingProcedureBaseStats(card, gs);
       if(a.flipSummon===true && P.temporaryFlags) P.temporaryFlags.summonedThisTurnS03 = true;   /* S03-U129: 反転召喚 */
+      /* S03-U517: 反転召喚も「召喚行為」なので数える（サモンリミッター）。成功したこの reducer で数える。 */
+      if(a.flipSummon===true && typeof bumpSummonActS03==='function') bumpSummonActS03(gs, a.player);
       if(a.flipSummon===true) card.flipSummonedTurnS03 = gs.turn;   /* S03-U260: 「反転召喚されたモンスターは、そのターン」 (怨霊の湿地帯) — zone-local */
       /* S03-U119: 裏側表示になったデュアルモンスターは、もう1度召喚された状態ではなくなる。 */
       if(a.face==='down' && card.dualUp) delete card.dualUp;
@@ -2070,7 +2089,7 @@ function applyActionBodyV31(gs, a){
       Q.ssHistory.push({name:cardName(ex),from:'ex',turn:gs.turn,lv:curLV(ex),kind:ex.specialSummonKind});
       gs.pendingExV2=null;
       gs.timingWindow={kind:'summon',turn:gs.turn,action:'EX_SUMMON_COMMIT_V42'};
-      {const itemU14={eventName:'onSpecialSummon',evt:{player:q.player,name:cardName(ex),uid:ex.uid,kind:q.kind}};(gs.deferredEvents||(gs.deferredEvents=[])).push(itemU14);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,itemU14);}
+      {const itemU14={eventName:'onSpecialSummon',evt:{player:q.player,name:cardName(ex),uid:ex.uid,kind:q.kind}};(gs.deferredEvents||(gs.deferredEvents=[])).push(itemU14);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gs,itemU14);/* S03-U517 */if(typeof noteSummonActS03==='function')noteSummonActS03(gs,itemU14);}
       logIt(gs,`<b>${q.kind==='synchro'?'シンクロ召喚':'エクシーズ召喚'}成功</b>：${cardName(ex)}`);
       break;
     }

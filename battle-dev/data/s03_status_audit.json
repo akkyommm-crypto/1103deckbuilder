@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 390,
-    "PARTIAL": 10,
-    "TESTED": 3606
+    "NOT_STARTED": 387,
+    "PARTIAL": 12,
+    "TESTED": 3607
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -917,
-    "PARTIAL": -172,
-    "TESTED": 1557
+    "NOT_STARTED": -920,
+    "PARTIAL": -170,
+    "TESTED": 1558
   },
   "status_changes": [
     {
@@ -1447,6 +1447,12 @@
       "unit": "S03-U224"
     },
     {
+      "name": "カイザーコロシアム",
+      "before": "NOT_STARTED",
+      "after": "PARTIAL",
+      "unit": "S03-U517"
+    },
+    {
       "name": "カイザー・シーホース",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -2123,6 +2129,18 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U224"
+    },
+    {
+      "name": "サモンチェーン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U517"
+    },
+    {
+      "name": "サモンリミッター",
+      "before": "NOT_STARTED",
+      "after": "PARTIAL",
+      "unit": "S03-U517"
     },
     {
       "name": "サモン・リアクター・AI",

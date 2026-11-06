@@ -1897,7 +1897,7 @@ function queueDeferredEventV2(eventName,evt){
     if(typeof noteMissedTimingQueueS03==='function') noteMissedTimingQueueS03();
   }
   const item={eventName,evt:safe};
-  if(typeof APPLY_ACTION_DEPTH_V31!=='undefined'&&APPLY_ACTION_DEPTH_V31>0){gameState.deferredEvents.push(item);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gameState,item);}
+  if(typeof APPLY_ACTION_DEPTH_V31!=='undefined'&&APPLY_ACTION_DEPTH_V31>0){gameState.deferredEvents.push(item);/* S03-U14 */if(typeof applySummonCountersS03==='function')applySummonCountersS03(gameState,item);/* S03-U517 */if(typeof noteSummonActS03==='function')noteSummonActS03(gameState,item);}
   else commitAutomaticActionV44({type:'EVENT_QUEUE_V31',item});
 }
 function queueSpecialSummonSuccessV2(p,card,kind){

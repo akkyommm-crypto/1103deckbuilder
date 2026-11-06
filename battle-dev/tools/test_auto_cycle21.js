@@ -31,7 +31,11 @@ const ALL=['昇天の角笛','方舟の選別','アーマーブレイク','オ�
 ALL.forEach(n=>ok('cycle21 registration '+n,!!CARD_SCRIPTS[n]));
 ok('cycle21 枚数は11',ALL.length===11);
 /* 召喚回数の制限や「デッキに戻せない」等は consumer が無いので実装しない */
-['サモンリミッター','ヘル・ブランブル']
+/* S03-U517: 《サモンリミッター》は consumer（1 ターンの召喚行為の数 summonActsThisTurnS03 と summonLockReasonS03、engine/1ZZS）ができたので
+   実装した。tools/test_s03_u517_summon_counts.js で検証。以前の SKIP の主張は当時のビルドを表していたもので、カードテキストの話ではない。
+   主張の数は変えていない（下の SKIP を 1 件に減らし、ここで 1 件主張する）。 */
+ok('cycle21: サモンリミッター は consumer つきで実装された（S03-U517）',!!CARD_SCRIPTS['サモンリミッター']&&typeof summonActsThisTurnS03==='function'&&typeof CARD_SCRIPTS['サモンリミッター'].summonLockS03==='function');
+['ヘル・ブランブル']
   .forEach(n=>ok('cycle21 SKIP: '+n+' は未実装（対応する consumer が engine に無い）',!CARD_SCRIPTS[n]));
 /* S03-U384: 《大熱波》 now has its consumer (the turn-ranged summon bans banSummonS03 / summonLockReasonS03, engine/1ZZS), tested in tools/test_s03_u384_summon_locks.js —
    the former SKIP assertion (no script) described the old build, not the card text; the count of assertions is unchanged. */

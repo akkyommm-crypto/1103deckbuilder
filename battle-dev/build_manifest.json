@@ -1859,6 +1859,9 @@
   "path": "cards/HZZZZZZZZZZZZ_claude_s03_u516_synchro.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZZA_claude_s03_u517_summon_counts.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
