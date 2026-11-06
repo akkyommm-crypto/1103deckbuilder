@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 384,
+    "NOT_STARTED": 382,
     "PARTIAL": 12,
-    "TESTED": 3610
+    "TESTED": 3612
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1650,
+    "legacy": 1652,
     "sin": 5,
     "unified": 1432
   },
-  "static_registration_name_count": 3620,
+  "static_registration_name_count": 3622,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -11063,7 +11063,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 177
+          "line": 193
         }
       ],
       "auto_table": false,
@@ -15845,7 +15845,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 207
+          "line": 223
         }
       ],
       "auto_table": false,
@@ -22731,7 +22731,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 128
+          "line": 144
         }
       ],
       "auto_table": false,
@@ -24232,6 +24232,7 @@
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u516_synchro.js",
+        "tools\\test_s03_u519_attack_target.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -33993,7 +33994,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 167
+          "line": 183
         }
       ],
       "auto_table": false,
@@ -38032,7 +38033,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_class_a_recruit_bulk.js",
-        "tools\\test_s03_u314_union2.js"
+        "tools\\test_s03_u314_union2.js",
+        "tools\\test_s03_u519_attack_target.js"
       ]
     },
     {
@@ -38959,7 +38961,8 @@
         "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u514_xyz_material.js",
         "tools\\test_s03_u516_synchro.js",
-        "tools\\test_s03_u517_summon_counts.js"
+        "tools\\test_s03_u517_summon_counts.js",
+        "tools\\test_s03_u519_attack_target.js"
       ]
     },
     {
@@ -39614,7 +39617,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 192
+          "line": 208
         }
       ],
       "auto_table": false,
@@ -40365,7 +40368,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 125
+          "line": 141
         }
       ],
       "auto_table": false,
@@ -44807,7 +44810,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u314_union2.js"
+        "tools\\test_s03_u314_union2.js",
+        "tools\\test_s03_u519_attack_target.js"
       ]
     },
     {
@@ -46162,12 +46166,20 @@
       "subtype": "",
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZZC_claude_s03_u519_attack_target.js",
+          "line": 56
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u519_attack_target.js"
+      ]
     },
     {
       "index": 2080,
@@ -48624,12 +48636,20 @@
       "subtype": "",
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZZC_claude_s03_u519_attack_target.js",
+          "line": 128
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u519_attack_target.js"
+      ]
     },
     {
       "index": 2194,
@@ -62217,6 +62237,7 @@
         "tools\\test_s03_u516_synchro.js",
         "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_s03_u518_summon_rights.js",
+        "tools\\test_s03_u519_attack_target.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
@@ -67728,7 +67749,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 217
+          "line": 233
         }
       ],
       "auto_table": false,
@@ -86222,7 +86243,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u314_union2.js"
+        "tools\\test_s03_u314_union2.js",
+        "tools\\test_s03_u519_attack_target.js"
       ]
     },
     {
@@ -88527,7 +88549,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 136
+          "line": 152
         }
       ],
       "auto_table": false,
@@ -89065,7 +89087,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u314_union2.js"
+        "tools\\test_s03_u314_union2.js",
+        "tools\\test_s03_u519_attack_target.js"
       ]
     },
     {
@@ -94932,7 +94955,8 @@
       "tests": [
         "tools\\test_s03_u188_staples.js",
         "tools\\test_s03_u288_gap8.js",
-        "tools\\test_s03_u493_missed_timing_state_and_audit.js"
+        "tools\\test_s03_u493_missed_timing_state_and_audit.js",
+        "tools\\test_s03_u519_attack_target.js"
       ]
     },
     {
@@ -106505,7 +106529,7 @@
         {
           "kind": "helper:declareUnionS03",
           "source": "cards\\HZZZZZZ_claude_s03_u313_union.js",
-          "line": 144
+          "line": 160
         }
       ],
       "auto_table": false,

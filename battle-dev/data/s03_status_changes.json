@@ -15795,6 +15795,26 @@
         "tools/test_s03_u518_summon_rights.js"
       ],
       "evidence": "Both halves are implemented and measured. The Normal-Monster treatment and the second summon are the shared Gemini machinery of S03-U119 (defineGeminiS03 / geminiActiveS03 / doGeminiSummonS03), so the ignition effect is refused until the monster has been Gemini Summoned (measured, with the legal-action list offering geminiSummon). WIKI-F0C82F8C96D2 (10/12/17) classifies the Spell Counter placement as a targeting ignition effect, so the target is declared at activation and the counter is placed with API.addCounter on a card read from counterCapableCardsV22. WIKI-7924775F83D7 (10/12/17) says the ATK gain is lost when スキルドレイン is activated afterwards, so the +600 is not a one-shot mod but a continuous effect of the card itself (continuous scope self, with a zone-local turn stamp): continuousSources() drops a negated source, so the ATK returns to 1900 the moment Skill Drain applies. The test measures 1900 to 2500 to 1900 and that the counter stays, and that the once-per-turn limit refuses the second activation. Replay audited."
+    },
+    {
+      "name": "パワー・フレーム",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U519",
+      "tests": [
+        "tools/test_s03_u519_attack_target.js"
+      ],
+      "evidence": "Every clause is implemented on the real attack-declaration path and measured. It is activated from a set position when a face-up monster of mine is selected as the attack target of a monster with higher ATK (passive.onAttackDeclare supplies the timing, as 次元幽閉 and 聖なるバリア do), the attack is negated and the card equips itself to the attacked monster through API.equipSpell, whose FX_EQUIP works for any card in the Spell & Trap Zone. WIKI-518D4C8C4B50 (10/02/21) says only the attacked monster is targeted, so the target is declared at activation and the attacker is never a target; WIKI-3AA3F72AEC8B (10/02/21) computes the bonus from the ATK difference at RESOLUTION, which the test measures by chaining a set 突進 to it (300 becomes 1000, the difference becomes 1500 and the equipped monster reads 2500, the same arithmetic as the ruling’s 1600+600=2200); WIKI-2916A8C2E7B4 (10/03/24) keeps the attack negated when the card is destroyed by a chained サイクロン, so the negation happens first and the equip only when the card is still in the Spell & Trap Zone (measured: the card is in the Graveyard, the monster survives and no battle damage is dealt). The bonus is a continuous effect of the equip (scope equippedMonster) with the amount on a zone-local stamp, and the negative control is an attacker that is not stronger, where the card is not offered at all."
+    },
+    {
+      "name": "フォーメーション・ユニオン",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U519",
+      "tests": [
+        "tools/test_s03_u519_attack_target.js"
+      ],
+      "evidence": "Both modes are implemented and measured. The mode is declared when the card is activated (the text says one of the two effects is chosen on activation) through the P1.1 activation declaration, and the cards are chosen on resolution. Equipping uses the Union machinery of S03-U313: each Union monster’s own host rule is now readable from outside (UNION_HOST_S03 / unionCanEquipS03), so 「装備可能なモンスター」 means exactly what that card declares, and the equip is done with API.equipMonster. WIKI-B49FAB74603A and WIKI-D657D4542632 (09/03/05) allow it while the Union monster’s own effects are negated or cannot be activated, so the Trap does not consult the monster’s effect legality and does not spend its once-per-turn use; the test measures the equip succeeding with スキルドレイン face-up. WIKI-8294B5F99F4B (09/01/20) allows equipping and then releasing in the same turn, which the test does with two copies, and the released Union is Special Summoned in face-up attack position. The negative control is a field with no Union monster and no equipped Union, where the card cannot be activated. RULING_UNRESOLVED: no era answer says whether the era wording 「選択」 targets here, so the cards are chosen on resolution and that reading is recorded in docs/S03_U519_REPORT.md rather than asserted as correct."
     }
   ],
   "restored_to_baseline": [

@@ -16,6 +16,21 @@
    - Battle triggers of the equipped monster use the Damage Step 'leave' record (the destroyed monster of this battle) and the battle damage event; they are forced triggers of the Union card in
      the Spell & Trap Zone. 「装備モンスターが戦闘によって相手モンスターを破壊した場合／度に」 = every time. */
 
+/* S03-U519: name -> the card's own host rule. declareUnionS03 が宣言したものをそのまま保持する。
+   《フォーメーション・ユニオン》（罠）が「装備可能なモンスター」を同じ規則で選ぶために読む。 */
+const UNION_HOST_S03 = {};
+/* ユニオン unionCard を hostHandle に装備できるか。ユニオン自身の効果の発動可否は見ない
+   （WIKI-B49FAB74603A / WIKI-D657D4542632 09/03/05: スキルドレイン等でユニオンの効果が無効でも
+     《フォーメーション・ユニオン》で装備できる）。 */
+function unionCanEquipS03(unionCard, hostHandle){
+  if(!unionCard || !hostHandle) return false;
+  const f = UNION_HOST_S03[cardName(unionCard)];
+  if(typeof f !== 'function') return false;
+  if(hostHandle.zone!=='mz' || !hostHandle.card || hostHandle.card.face!=='up' || hostHandle.card===unionCard) return false;
+  if(dbOf(hostHandle.card).k!=='m') return false;
+  if(unionCarriedS03(hostHandle.card, unionCard)) return false;
+  try{ return !!f(Object.assign({db:dbOf(hostHandle.card)}, hostHandle)); }catch(e){ return false; }
+}
 function unionHostS03(self){
   const to = self && self.equipTo; if(!to) return null;
   const h = findCardByUid(to.uid);
@@ -51,6 +66,7 @@ const UNION_PASSIVE_DAMAGE = ctx=>unionDamageS03(ctx);
    so a response that removes the host does not give a second use. The default (false) keeps the host choice on resolution of the classic wording (S03-U313). */
 function declareUnionS03(name, spec){
   const S = Object.assign({atk:0, def:0, substitute:'battle', targeted:false, effects:[], continuous:{}, passive:{}, script:{}}, spec||{});
+  if(typeof S.host === 'function') UNION_HOST_S03[name] = S.host;   /* S03-U519 */
   const pool = ctx=>API.fieldCards({player:ctx.player, zone:'mz', filter:x=>x.card!==ctx.card && x.card.face==='up' && x.db.k==='m' && !unionCarriedS03(x.card, ctx.card) && S.host(x)});
   const mainPhase = ()=>gameState.phase==='main1' || gameState.phase==='main2';
   const stampCost = (ctx, done)=>{ const h = locateCardAnyV4(ctx.card); if(h) API.setCardFlag(h, 'unionTurnS03', gameState.turn, name, {silent:true}); done(true); };

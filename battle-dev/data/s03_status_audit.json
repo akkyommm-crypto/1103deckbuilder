@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 384,
+    "NOT_STARTED": 382,
     "PARTIAL": 12,
-    "TESTED": 3610
+    "TESTED": 3612
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -923,
+    "NOT_STARTED": -925,
     "PARTIAL": -170,
-    "TESTED": 1561
+    "TESTED": 1563
   },
   "status_changes": [
     {
@@ -3769,6 +3769,12 @@
       "unit": "S03-U258"
     },
     {
+      "name": "パワー・フレーム",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U519"
+    },
+    {
       "name": "パワー・ボンド",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3953,6 +3959,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U121"
+    },
+    {
+      "name": "フォーメーション・ユニオン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U519"
     },
     {
       "name": "フュージョニストキラー",
