@@ -1868,6 +1868,9 @@
   "path": "cards/HZZZZZZZZZZZZC_claude_s03_u519_attack_target.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZZD_claude_s03_u520_declare_flip.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

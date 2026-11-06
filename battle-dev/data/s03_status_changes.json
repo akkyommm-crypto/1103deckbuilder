@@ -15815,6 +15815,26 @@
         "tools/test_s03_u519_attack_target.js"
       ],
       "evidence": "Both modes are implemented and measured. The mode is declared when the card is activated (the text says one of the two effects is chosen on activation) through the P1.1 activation declaration, and the cards are chosen on resolution. Equipping uses the Union machinery of S03-U313: each Union monster’s own host rule is now readable from outside (UNION_HOST_S03 / unionCanEquipS03), so 「装備可能なモンスター」 means exactly what that card declares, and the equip is done with API.equipMonster. WIKI-B49FAB74603A and WIKI-D657D4542632 (09/03/05) allow it while the Union monster’s own effects are negated or cannot be activated, so the Trap does not consult the monster’s effect legality and does not spend its once-per-turn use; the test measures the equip succeeding with スキルドレイン face-up. WIKI-8294B5F99F4B (09/01/20) allows equipping and then releasing in the same turn, which the test does with two copies, and the released Union is Special Summoned in face-up attack position. The negative control is a field with no Union monster and no equipped Union, where the card cannot be activated. RULING_UNRESOLVED: no era answer says whether the era wording 「選択」 targets here, so the cards are chosen on resolution and that reading is recorded in docs/S03_U519_REPORT.md rather than asserted as correct."
+    },
+    {
+      "name": "世紀の大泥棒",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U520",
+      "tests": [
+        "tools/test_s03_u520_declare_flip.js"
+      ],
+      "evidence": "The whole text is implemented and measured on a real battle. A forced trigger on the battle damage this card deals to the opponent declares one card name at resolution (the journaled declare choice over the card list, as マインドクラッシュ does at activation) and then discards every copy of that name from the opponent’s hand, matched with sameCanonicalCardV4. WIKI-6FD2C17EEAE9 (10/07/04) says the name is declared even when the opponent’s hand is empty, so the trigger does not test the hand size and the test measures the declaration happening with an empty hand. 「度に」 means no count limit and a mandatory effect, so no countLimit is declared and forced is set. The negative control is battle damage dealt by another monster, where nothing is declared. Replay audited in three scenes."
+    },
+    {
+      "name": "天狗のうちわ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U520",
+      "tests": [
+        "tools/test_s03_u520_declare_flip.js"
+      ],
+      "evidence": "Both halves are implemented and measured. WIKI-F921368DD337 (10/09/17) says the destruction creates a chain block, so it is a forced trigger of the face-up Continuous Trap on the Flip Summon of a Level 2 or lower monster (onOtherFlipS03, S03-U225, is declared because it reacts to another card being flipped), not a continuous effect; the card activation itself has no effect and is declared in CARD_ACTIVATION_FREE_V32 as in S03-U10. WIKI-FD3CC99C4815 (09/01/03) says the activation lock is not limited to Flip effects, so it is the S03-U217 activationLockS03 over every monster-effect activation on the field by a monster whose S03-U260 Flip Summon stamp (flipSummonedTurnS03) is this turn and whose Level is 2 or lower; because the lock bites when the trigger candidates are collected, it stops the same Flip Summon’s own effect, which is what 「この時」 requires. Measured with スケルエンジェル: its reverse effect draws nothing while the fan is face-up and draws one card when the fan is absent, and a Level 3 monster is not destroyed. Replay audited in four scenes."
     }
   ],
   "restored_to_baseline": [

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 382,
+    "NOT_STARTED": 380,
     "PARTIAL": 12,
-    "TESTED": 3612
+    "TESTED": 3614
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1652,
+    "legacy": 1653,
     "sin": 5,
-    "unified": 1432
+    "unified": 1433
   },
-  "static_registration_name_count": 3622,
+  "static_registration_name_count": 3624,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -17822,7 +17822,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u113_debris_pair.js"
+        "tools\\test_s03_u113_debris_pair.js",
+        "tools\\test_s03_u520_declare_flip.js"
       ]
     },
     {
@@ -24233,6 +24234,7 @@
         "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u516_synchro.js",
         "tools\\test_s03_u519_attack_target.js",
+        "tools\\test_s03_u520_declare_flip.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -30978,6 +30980,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle13.js",
+        "tools\\test_s03_u520_declare_flip.js",
         "tools\\test_v570_batch09.js"
       ]
     },
@@ -38962,7 +38965,8 @@
         "tools\\test_s03_u514_xyz_material.js",
         "tools\\test_s03_u516_synchro.js",
         "tools\\test_s03_u517_summon_counts.js",
-        "tools\\test_s03_u519_attack_target.js"
+        "tools\\test_s03_u519_attack_target.js",
+        "tools\\test_s03_u520_declare_flip.js"
       ]
     },
     {
@@ -62239,6 +62243,7 @@
         "tools\\test_s03_u518_summon_rights.js",
         "tools\\test_s03_u519_attack_target.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
+        "tools\\test_s03_u520_declare_flip.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
@@ -65152,12 +65157,20 @@
       "subtype": null,
       "date": "2002-07-18",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZD_claude_s03_u520_declare_flip.js",
+          "line": 46
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u520_declare_flip.js"
+      ]
     },
     {
       "index": 2946,
@@ -74448,12 +74461,20 @@
       "subtype": "永続",
       "date": "2000-07-13",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZZD_claude_s03_u520_declare_flip.js",
+          "line": 79
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u520_declare_flip.js"
+      ]
     },
     {
       "index": 3367,

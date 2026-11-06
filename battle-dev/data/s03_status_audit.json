@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 382,
+    "NOT_STARTED": 380,
     "PARTIAL": 12,
-    "TESTED": 3612
+    "TESTED": 3614
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -925,
+    "NOT_STARTED": -927,
     "PARTIAL": -170,
-    "TESTED": 1563
+    "TESTED": 1565
   },
   "status_changes": [
     {
@@ -5263,6 +5263,12 @@
       "unit": "S03-U380"
     },
     {
+      "name": "世紀の大泥棒",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U520"
+    },
+    {
       "name": "中央突破",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -6257,6 +6263,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U139"
+    },
+    {
+      "name": "天狗のうちわ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U520"
     },
     {
       "name": "天界王 シナト",
