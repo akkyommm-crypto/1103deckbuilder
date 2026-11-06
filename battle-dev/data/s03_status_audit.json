@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 380,
+    "NOT_STARTED": 379,
     "PARTIAL": 12,
-    "TESTED": 3614
+    "TESTED": 3615
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -927,
+    "NOT_STARTED": -928,
     "PARTIAL": -170,
-    "TESTED": 1565
+    "TESTED": 1566
   },
   "status_changes": [
     {
@@ -8921,6 +8921,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U129"
+    },
+    {
+      "name": "闇よりの罠",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U521"
     },
     {
       "name": "闇・道化師のペーテン",

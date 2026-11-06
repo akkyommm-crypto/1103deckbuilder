@@ -888,6 +888,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u517_summon_counts.js')],check=T
 subprocess.run(['node',str(ROOT/'tools/test_s03_u518_summon_rights.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u519_attack_target.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u520_declare_flip.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u521_copied_trap.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

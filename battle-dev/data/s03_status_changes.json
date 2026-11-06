@@ -15835,6 +15835,16 @@
         "tools/test_s03_u520_declare_flip.js"
       ],
       "evidence": "Both halves are implemented and measured. WIKI-F921368DD337 (10/09/17) says the destruction creates a chain block, so it is a forced trigger of the face-up Continuous Trap on the Flip Summon of a Level 2 or lower monster (onOtherFlipS03, S03-U225, is declared because it reacts to another card being flipped), not a continuous effect; the card activation itself has no effect and is declared in CARD_ACTIVATION_FREE_V32 as in S03-U10. WIKI-FD3CC99C4815 (09/01/03) says the activation lock is not limited to Flip effects, so it is the S03-U217 activationLockS03 over every monster-effect activation on the field by a monster whose S03-U260 Flip Summon stamp (flipSummonedTurnS03) is this turn and whose Level is 2 or lower; because the lock bites when the trigger candidates are collected, it stops the same Flip Summon’s own effect, which is what 「この時」 requires. Measured with スケルエンジェル: its reverse effect draws nothing while the fan is face-up and draws one card when the fan is absent, and a Level 3 monster is not destroyed. Replay audited in four scenes."
+    },
+    {
+      "name": "闇よりの罠",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U521",
+      "tests": [
+        "tools/test_s03_u521_copied_trap.js"
+      ],
+      "evidence": "The whole text is implemented on real paths and measured. WIKI-0503968039BC (08/08/25) and WIKI-9AE0A5CB7D81 make the Graveyard Trap a target chosen when the card is activated, and WIKI-94EA0CA95399 (10/04/13) says the copied Trap’s own targets are chosen at that same moment, so the activation declares both and the copied script’s resolve runs during this card’s resolution with those targets; 「このカード」 inside the copied text therefore means this card, which is what WIKI-BB9A0BE15C4B (08/08/25) describes for くず鉄のかかし (the only card whose activation-time effect lives in afterResolve, declared in a table with that ruling). WIKI-2CF8CB52445A says the copied Trap’s cost is not paid, so only the 1000 LP is paid. WIKI-B458649D4609 (10/08/01) excludes a Trap whose effect varies with its cost, declared in a table naming 生存本能 and nothing else. WIKI-DA2CD0377F38 (10/04/13) makes the whole effect not apply when the targeted Trap is no longer in the Graveyard at resolution, measured by chaining 転生の予言 to return it to the Deck. WIKI-AF3464450C52 (10/08/01) is reproduced without any declaration because the referenced Trap’s own condition is checked at activation: 自爆スイッチ needs a 7000 LP gap, so a 6000 gap refuses the activation and a 7000 gap allows it (measured through the engine’s own legality). Replay audited in four scenes. Not implemented and recorded: the equip part of 鎖付き爆弾 / 鎖付きブーメラン (WIKI-D40DED072699), which cannot be reached today because those cards have no script (ENGINE_GAP)."
     }
   ],
   "restored_to_baseline": [

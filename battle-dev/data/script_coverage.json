@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 380,
+    "NOT_STARTED": 379,
     "PARTIAL": 12,
-    "TESTED": 3614
+    "TESTED": 3615
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1653,
+    "legacy": 1654,
     "sin": 5,
     "unified": 1433
   },
-  "static_registration_name_count": 3624,
+  "static_registration_name_count": 3625,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -38966,7 +38966,8 @@
         "tools\\test_s03_u516_synchro.js",
         "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_s03_u519_attack_target.js",
-        "tools\\test_s03_u520_declare_flip.js"
+        "tools\\test_s03_u520_declare_flip.js",
+        "tools\\test_s03_u521_copied_trap.js"
       ]
     },
     {
@@ -62244,6 +62245,7 @@
         "tools\\test_s03_u519_attack_target.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u520_declare_flip.js",
+        "tools\\test_s03_u521_copied_trap.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
@@ -78113,6 +78115,7 @@
         "tools\\test_s03_u43_dragunity_aklys.js",
         "tools\\test_s03_u470_condition_targetable.js",
         "tools\\test_s03_u485_grapha_peek_after_destroy.js",
+        "tools\\test_s03_u521_copied_trap.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
         "tools\\test_s03_vs3_six_samurai_gate_slice.js",
@@ -78483,6 +78486,7 @@
         "tools\\test_s03_u259_locks.js",
         "tools\\test_s03_u260_unlocks.js",
         "tools\\test_s03_u517_summon_counts.js",
+        "tools\\test_s03_u521_copied_trap.js",
         "tools\\test_v490_batch01.js"
       ]
     },
@@ -91235,7 +91239,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle04.js"
+        "tools\\test_auto_cycle04.js",
+        "tools\\test_s03_u521_copied_trap.js"
       ]
     },
     {
@@ -97771,6 +97776,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u521_copied_trap.js",
         "tools\\test_v550_batch07.js"
       ]
     },
@@ -100636,6 +100642,7 @@
       "tests": [
         "tools\\test_s03_u475_v70_select_exactly.js",
         "tools\\test_s03_u48_vayu_resolution.js",
+        "tools\\test_s03_u521_copied_trap.js",
         "tools\\test_v740_batch26.js"
       ]
     },
@@ -103705,12 +103712,20 @@
       "subtype": "",
       "date": "2005-05-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZZE_claude_s03_u521_copied_trap.js",
+          "line": 73
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u521_copied_trap.js"
+      ]
     },
     {
       "index": 4698,
