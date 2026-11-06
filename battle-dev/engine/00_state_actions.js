@@ -2987,6 +2987,7 @@ const ZONE_LOCAL_KEYS = [
   'summonSrcS03',   // S03-U238: the card whose effect special summoned it
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
+  'u524ShadowStatS03',   // S03-U524: サイバー・シャドー・ガードナーの攻守はこの滞在に属する
   'u523TempleUidsS03',   // S03-U523: 忘却の海底神殿が除外したモンスターの記録はこの滞在に属する
   'u519FrameAtkS03',   // S03-U519: パワー・フレームの上昇値はこの装備に属する
   'u518CrusaderBoostS03',   // S03-U518: クルセイダー・オブ・エンディミオンの攻撃力アップはこの滞在に属する

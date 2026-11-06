@@ -2365,7 +2365,12 @@ defineScript("収縮", {
   },
   resolve(ctx){
     const t=ctx.selectedTargets[0]; if(!t) return;
-    const base = dbOf(t.card).atk||0;
+    /* S03-U524: 半分にするのは「元々の攻撃力」。印刷された数値ではなく、
+       召喚手順や「元々の数値を変える」継続効果まで含めた現在の元々の攻撃力を見る
+       （p3OriginalStatV3、engine/12）。《サイバー・シャドー・ガードナー》のように
+       元々の数値が変わるカードで差が出る（WIKI-3B285A5D988E 10/08/31）。 */
+    const base = (typeof p3OriginalStatV3==='function')
+      ? (Number(p3OriginalStatV3(t.card,'atk'))||0) : (dbOf(t.card).atk||0);
     API.modAtk(t, -Math.floor(base/2), 0, 'endTurn', '収縮');
   }
 });

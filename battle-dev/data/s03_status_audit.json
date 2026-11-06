@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 377,
+    "NOT_STARTED": 376,
     "PARTIAL": 12,
-    "TESTED": 3617
+    "TESTED": 3618
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -930,
+    "NOT_STARTED": -931,
     "PARTIAL": -170,
-    "TESTED": 1568
+    "TESTED": 1569
   },
   "status_changes": [
     {
@@ -2057,6 +2057,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U360"
+    },
+    {
+      "name": "サイバー・シャドー・ガードナー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U524"
     },
     {
       "name": "サイバー・ダーク・エッジ",

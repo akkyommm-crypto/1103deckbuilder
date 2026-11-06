@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 377,
+    "NOT_STARTED": 376,
     "PARTIAL": 12,
-    "TESTED": 3617
+    "TESTED": 3618
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1654,
     "sin": 5,
-    "unified": 1435
+    "unified": 1436
   },
-  "static_registration_name_count": 3627,
+  "static_registration_name_count": 3628,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -8344,6 +8344,7 @@
         "tools\\test_p3_provenance_cards.js",
         "tools\\test_s03_u07_spell_to_grave.js",
         "tools\\test_s03_u39_attack_state_journal.js",
+        "tools\\test_s03_u524_shadow_gardna.js",
         "tools\\test_v380.js"
       ]
     },
@@ -13879,7 +13880,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2443
+          "line": 2448
         }
       ],
       "auto_table": false,
@@ -24954,12 +24955,20 @@
       "subtype": "永続",
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZH_claude_s03_u524_shadow_gardna.js",
+          "line": 57
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u524_shadow_gardna.js"
+      ]
     },
     {
       "index": 1108,
@@ -38977,7 +38986,8 @@
         "tools\\test_s03_u520_declare_flip.js",
         "tools\\test_s03_u521_copied_trap.js",
         "tools\\test_s03_u522_diamond_dude.js",
-        "tools\\test_s03_u523_forgotten_temple.js"
+        "tools\\test_s03_u523_forgotten_temple.js",
+        "tools\\test_s03_u524_shadow_gardna.js"
       ]
     },
     {
@@ -62260,6 +62270,7 @@
         "tools\\test_s03_u521_copied_trap.js",
         "tools\\test_s03_u522_diamond_dude.js",
         "tools\\test_s03_u523_forgotten_temple.js",
+        "tools\\test_s03_u524_shadow_gardna.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
@@ -70266,6 +70277,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u524_shadow_gardna.js",
         "tools\\test_v460_native_cards.js",
         "tools\\test_v630_batch15.js"
       ]
@@ -71687,7 +71699,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2423
+          "line": 2428
         }
       ],
       "auto_table": false,
@@ -72093,7 +72105,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2403
+          "line": 2408
         }
       ],
       "auto_table": false,
@@ -72102,7 +72114,8 @@
         "tools\\test_s03_u506_destroyed_class.js",
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_s03_u511_negated_summon_destroyer.js",
-        "tools\\test_s03_u513_equip_substitute_optional.js"
+        "tools\\test_s03_u513_equip_substitute_optional.js",
+        "tools\\test_s03_u524_shadow_gardna.js"
       ]
     },
     {
@@ -80472,7 +80485,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2490
+          "line": 2495
         }
       ],
       "auto_table": false,
@@ -94999,7 +95012,7 @@
         {
           "kind": "legacy",
           "source": "cards\\00_generic_core.js",
-          "line": 2374
+          "line": 2379
         }
       ],
       "auto_table": false,
