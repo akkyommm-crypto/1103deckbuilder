@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 378,
+    "NOT_STARTED": 377,
     "PARTIAL": 12,
-    "TESTED": 3616
+    "TESTED": 3617
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1654,
     "sin": 5,
-    "unified": 1434
+    "unified": 1435
   },
-  "static_registration_name_count": 3626,
+  "static_registration_name_count": 3627,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -6037,7 +6037,7 @@
         {
           "kind": "unified",
           "source": "cards\\HZZZZZZZZZZU_claude_s03_u437_misc_more.js",
-          "line": 54
+          "line": 55
         }
       ],
       "auto_table": false,
@@ -19399,7 +19399,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZH_claude_s03_u280_gap5.js",
-          "line": 41
+          "line": 45
         }
       ],
       "auto_table": false,
@@ -22951,7 +22951,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZQ_claude_s03_u292_gap9.js",
-          "line": 129
+          "line": 131
         }
       ],
       "auto_table": false,
@@ -24242,6 +24242,7 @@
         "tools\\test_s03_u516_synchro.js",
         "tools\\test_s03_u519_attack_target.js",
         "tools\\test_s03_u520_declare_flip.js",
+        "tools\\test_s03_u523_forgotten_temple.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -38975,7 +38976,8 @@
         "tools\\test_s03_u519_attack_target.js",
         "tools\\test_s03_u520_declare_flip.js",
         "tools\\test_s03_u521_copied_trap.js",
-        "tools\\test_s03_u522_diamond_dude.js"
+        "tools\\test_s03_u522_diamond_dude.js",
+        "tools\\test_s03_u523_forgotten_temple.js"
       ]
     },
     {
@@ -54697,11 +54699,12 @@
         {
           "kind": "legacy",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 4
+          "line": 5
         }
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u523_forgotten_temple.js",
         "tools\\test_v590_batch11.js"
       ]
     },
@@ -55479,7 +55482,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 5
+          "line": 6
         }
       ],
       "auto_table": false,
@@ -55663,7 +55666,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 6
+          "line": 7
         }
       ],
       "auto_table": false,
@@ -57902,7 +57905,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZH_claude_s03_u280_gap5.js",
-          "line": 91
+          "line": 95
         }
       ],
       "auto_table": false,
@@ -58073,7 +58076,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 7
+          "line": 8
         }
       ],
       "auto_table": false,
@@ -61490,7 +61493,7 @@
         {
           "kind": "legacy",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 8
+          "line": 9
         }
       ],
       "auto_table": false,
@@ -61764,7 +61767,7 @@
         {
           "kind": "legacy",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 9
+          "line": 10
         }
       ],
       "auto_table": false,
@@ -62256,6 +62259,7 @@
         "tools\\test_s03_u520_declare_flip.js",
         "tools\\test_s03_u521_copied_trap.js",
         "tools\\test_s03_u522_diamond_dude.js",
+        "tools\\test_s03_u523_forgotten_temple.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
@@ -62723,7 +62727,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 10
+          "line": 11
         }
       ],
       "auto_table": false,
@@ -62980,7 +62984,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 11
+          "line": 12
         }
       ],
       "auto_table": false,
@@ -63028,7 +63032,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 12
+          "line": 13
         }
       ],
       "auto_table": false,
@@ -63051,7 +63055,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 13
+          "line": 14
         }
       ],
       "auto_table": false,
@@ -64112,7 +64116,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 14
+          "line": 15
         }
       ],
       "auto_table": false,
@@ -66221,7 +66225,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 15
+          "line": 16
         }
       ],
       "auto_table": false,
@@ -67347,7 +67351,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 16
+          "line": 17
         }
       ],
       "auto_table": false,
@@ -68297,7 +68301,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZQ_claude_s03_u292_gap9.js",
-          "line": 234
+          "line": 236
         }
       ],
       "auto_table": false,
@@ -68751,7 +68755,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 17
+          "line": 18
         }
       ],
       "auto_table": false,
@@ -69886,7 +69890,7 @@
         {
           "kind": "unified",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 18
+          "line": 19
         }
       ],
       "auto_table": false,
@@ -70728,7 +70732,7 @@
         {
           "kind": "legacy",
           "source": "cards\\59_v59_autobuild_batch11.js",
-          "line": 19
+          "line": 20
         }
       ],
       "auto_table": false,
@@ -72377,7 +72381,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZQ_claude_s03_u292_gap9.js",
-          "line": 193
+          "line": 195
         }
       ],
       "auto_table": false,
@@ -78990,12 +78994,20 @@
       "subtype": "永続",
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 10,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZG_claude_s03_u523_forgotten_temple.js",
+          "line": 60
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u523_forgotten_temple.js"
+      ]
     },
     {
       "index": 3568,
@@ -86085,7 +86097,7 @@
         {
           "kind": "legacy",
           "source": "cards\\60_v60_autobuild_batch12.js",
-          "line": 17
+          "line": 18
         }
       ],
       "auto_table": false,
@@ -87846,7 +87858,7 @@
         {
           "kind": "unified",
           "source": "cards\\HZZZZZZZZZZU_claude_s03_u437_misc_more.js",
-          "line": 21
+          "line": 22
         }
       ],
       "auto_table": false,
@@ -87874,6 +87886,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u523_forgotten_temple.js",
         "tools\\test_v800_batch31.js"
       ]
     },
@@ -88014,7 +88027,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZH_claude_s03_u280_gap5.js",
-          "line": 26
+          "line": 30
         }
       ],
       "auto_table": false,
@@ -88683,7 +88696,7 @@
         {
           "kind": "unified",
           "source": "cards\\60_v60_autobuild_batch12.js",
-          "line": 18
+          "line": 19
         }
       ],
       "auto_table": false,
@@ -88753,7 +88766,7 @@
         {
           "kind": "unified",
           "source": "cards\\60_v60_autobuild_batch12.js",
-          "line": 19
+          "line": 20
         }
       ],
       "auto_table": false,
@@ -89468,7 +89481,7 @@
         {
           "kind": "legacy",
           "source": "cards\\60_v60_autobuild_batch12.js",
-          "line": 20
+          "line": 21
         }
       ],
       "auto_table": false,
@@ -90733,7 +90746,8 @@
       "tests": [
         "tools\\test_s03_u118_trap_negation.js",
         "tools\\test_s03_u176_contact2.js",
-        "tools\\test_s03_u182_glow_chaos_neos.js"
+        "tools\\test_s03_u182_glow_chaos_neos.js",
+        "tools\\test_s03_u523_forgotten_temple.js"
       ]
     },
     {
@@ -92081,7 +92095,7 @@
         {
           "kind": "legacy",
           "source": "cards\\60_v60_autobuild_batch12.js",
-          "line": 21
+          "line": 22
         }
       ],
       "auto_table": false,
@@ -93369,7 +93383,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZH_claude_s03_u280_gap5.js",
-          "line": 27
+          "line": 31
         }
       ],
       "auto_table": false,
@@ -106821,7 +106835,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZH_claude_s03_u280_gap5.js",
-          "line": 124
+          "line": 128
         }
       ],
       "auto_table": false,
@@ -109230,7 +109244,7 @@
         {
           "kind": "legacy",
           "source": "cards\\HZZZZZH_claude_s03_u280_gap5.js",
-          "line": 28
+          "line": 32
         }
       ],
       "auto_table": false,

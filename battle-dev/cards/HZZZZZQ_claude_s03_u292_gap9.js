@@ -120,10 +120,12 @@ defineScript('モロコシーナ', {
 /* ---- コダロス: 自分フィールド上に表側表示で存在する「海」を墓地へ送って発動できる。相手フィールド上のカードを2枚まで選択して墓地へ送る。 ----
    Ignition, its controller's Main Phase; cost: send the face-up 「海」 in its controller's Field Zone to the GY (paid at activation). The targets (1 or 2 cards on the opponent's field:
    Monster, Spell & Trap or Field Zone, face-up or face-down) are chosen at activation. Resolution: those still on the opponent's field are sent to the GY. */
+/* S03-U523: 自分フィールドの「海」を共通の探索で見る
+   （WIKI-ECF09EA16413 09/12/11: セット状態はコストにできない→表側表示だけ。
+     WIKI-D46C2788D09D 09/12/16: 両方ある場合はどちらか 1 枚）。 */
 function kodarosSeaS292(p){
-  const ref = dbOf({id:findCardIndex('海')});
-  const f = gameState.players[p].field;
-  return (f && f.face==='up' && sameCanonicalCardV4(f, ref)) ? f : null;
+  const list = (typeof seaCardsOnFieldS03 === 'function') ? seaCardsOnFieldS03(p) : [];
+  return list.length ? list[0].card : null;
 }
 function kodarosPoolS292(ctx){ return API.fieldCards({player:ctx.opponent, filter:x=>!!x.card}); }
 defineScript('コダロス', {

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 378,
+    "NOT_STARTED": 377,
     "PARTIAL": 12,
-    "TESTED": 3616
+    "TESTED": 3617
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -929,
+    "NOT_STARTED": -930,
     "PARTIAL": -170,
-    "TESTED": 1567
+    "TESTED": 1568
   },
   "status_changes": [
     {
@@ -6683,6 +6683,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U367"
+    },
+    {
+      "name": "忘却の海底神殿",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U523"
     },
     {
       "name": "念導力",

@@ -17,7 +17,8 @@ defineUnifiedCardV4('エレメント・マジシャン', [u432AgainEffect('エ�
 /* ---- 海竜神－ネオダイダロス ---- */
 const U437_DAIDALOS = '海竜－ダイダロス';
 function u437Daidalos(p){ return API.fieldCards({player:p, zone:'mz', filter:x=>x.card.face==='up' && x.db.n===U437_DAIDALOS}); }
-function u437Sea(p){ return API.fieldCards({player:p, zone:'field', filter:x=>x.card.face==='up' && x.db.n==='海'}); }
+/* S03-U523: 自分フィールドの「海」を共通の探索で見る（WIKI-CAD8E3C2E5FD 09/11/14）。 */
+function u437Sea(p){ return (typeof seaCardsOnFieldS03==='function') ? seaCardsOnFieldS03(p) : []; }
 defineUnifiedCardV4('海竜神－ネオダイダロス', [{
   key:'wipe', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, speed:1,
   condition(ctx){ if(ctx.zone!=='mz' || ctx.card.face!=='up') return false; if(!u437Sea(ctx.player).length){ ctx.reason = '自分フィールドに「海」がありません'; return false; } return true; },

@@ -7,7 +7,11 @@
    (Ruling (Opus): while a face-up 「海」 (or a card treated as 「海」) is in either Field Zone, the face-up monster is unaffected by Spell card effects — chain-link effects and
    continuous Spell effects alike, so 魚雷魚 / 砲弾ヤリ貝 do not receive 「海」's own +200 / +200. Trap and monster effects still apply. Not a target restriction: a Spell may still
    select it, the effect just does nothing to it.) ---- */
+/* S03-U523: 「海」の探索は共通の seaCardsOnFieldS03（engine/1ZZZB）にまとめた。
+   フィールドゾーンだけでなく、魔法＆罠ゾーンのカードが
+   「海」として扱われる場合も見る。判定の意味（どちらかの側にあればよい）は変えていない。 */
 function seaOnFieldS280(gs){
+  if(typeof seaOnFieldS03 === 'function') return seaOnFieldS03();
   const st = gs || gameState;
   if(!st || !st.players || typeof findCardIndex !== 'function') return false;
   const sea = dbOf({id:findCardIndex('海')});

@@ -3946,6 +3946,7 @@ const ZONE_LOCAL_KEYS = [
   'summonSrcS03',   // S03-U238: the card whose effect special summoned it
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
+  'u523TempleUidsS03',   // S03-U523: 忘却の海底神殿が除外したモンスターの記録はこの滞在に属する
   'u519FrameAtkS03',   // S03-U519: パワー・フレームの上昇値はこの装備に属する
   'u518CrusaderBoostS03',   // S03-U518: クルセイダー・オブ・エンディミオンの攻撃力アップはこの滞在に属する
   'pierceBattleS03',   // S03-U233: 機皇兵ワイゼル・アイン's one-battle piercing grant
@@ -15525,6 +15526,45 @@ function consumeGraveActivationGrantS03(gs, p, uid){
     .filter(g=>!(g && g.uid === uid && Number(g.turn) === Number((gs || gameState).turn)));
   return P.effectFlags.graveActGrantS03.length !== before;
 }
+/* =========================================================================
+   S03-U523 — 「海」として扱われるカードを、現在の名前でフィールド全体から探す
+   -------------------------------------------------------------------------
+   《忘却の海底神殿》（永続罠）は「このカードがフィールド上に存在する限り、このカードのカード名は『海』として扱う」。
+   当時の裁定は、この扱いが「海」を要求する側・コストにする側から**実際に見える**事を示している:
+     WIKI-CAD8E3C2E5FD（09/11/14）《海竜－ダイダロス》などの「《海》をコストにする効果」のコストに使用できる。
+     WIKI-C8A821DF0FA0（09/11/14）《王宮のお触れ》発動中は「『海』として扱う効果」が無効になり、コストにできない。
+     WIKI-ECF09EA16413（09/12/11）セットされた状態の《忘却の海底神殿》は《コダロス》のコストにできない。
+     WIKI-B75520DE02A7（10/01/15）表側表示で存在する時、《竜巻海流壁》を発動できる。
+     WIKI-D46C2788D09D（09/12/16）《伝説の都 アトランティス》と両方ある場合、《コダロス》はどちらか1枚だけ送ればよい。
+   以前はどの参照も「フィールドゾーンにある、カードデータが《海》のカード」しか探しておらず、
+   魔法＆罠ゾーンのカードが「海」として扱われる事を見られなかった。ここに 1 つにまとめる。
+
+   ・名前は currentNameV17（System v17）で見る。continuousSources() は無効化された罠を外すので
+     （S03-U118 の trapSourcesFilterS03）、《王宮のお触れ》《トラップ・スタン》《人造人間－サイコ・ショッカー》の
+     下では「海」として扱われない（上の 09/11/14 の答えがそのまま出る）。
+   ・表側表示だけ（セットは不可）。発動がまだ解決していないカード（activationPending）も含めない。
+   ・ゾーンはモンスターゾーン・魔法＆罠ゾーン・フィールドゾーンのすべて。player を渡すとその側だけ。
+   ========================================================================= */
+function seaCardsOnFieldS03(player){
+  if(typeof gameState === 'undefined' || !gameState || !gameState.players) return [];
+  const out = [];
+  const ps = (player === 0 || player === 1) ? [player] : [0, 1];
+  ps.forEach(p=>{
+    const P = gameState.players[p]; if(!P) return;
+    const groups = [['mz', P.mz || []], ['sz', P.sz || []], ['field', P.field ? [P.field] : []]];
+    groups.forEach(g=>{
+      const zone = g[0];
+      g[1].forEach((c, i)=>{
+        if(!c || c.face !== 'up' || c.activationPending || c.activationNegated) return;
+        const nm = (typeof currentNameV17 === 'function') ? currentNameV17(c) : cardName(c);
+        if(nm !== '海') return;
+        out.push({p:p, zone:zone, index:(zone === 'field' ? 0 : i), card:c, db:dbOf(c)});
+      });
+    });
+  });
+  return out;
+}
+function seaOnFieldS03(player){ return seaCardsOnFieldS03(player).length > 0; }
 /* =========================================================================
    S03-U392 — Spell / Trap Set ban for a turn range (大寒波)
    effectFlags.setBanS03 = [{from, to, label}] on a player (written with API.setFlag(p, 'setBanS03', list, false));
@@ -33097,7 +33137,8 @@ defineUnifiedCardV4('プリーステス・オーム',[{key:'tribute-burn',type:E
 /* Autobuild batch 11 — conditional attack limits, tribute values, Worm Flip effects and exact-identity spells. */
 defineScript('ホーリーフレーム',{type:'monster',priority:1,tributeValue:{value:2,condition(targetDb){return targetDb.at==='光'&&(targetDb.st||[]).includes('通常');}}});
 defineUnifiedCardV4('ポケ・ドラ',[{key:'summon-search',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onNormalSummon'],condition(ctx){const ref=dbOf(ctx.card);return ctx.event&&ctx.event.card===ctx.card&&API.pileCards(ctx.player,'deck',x=>sameCanonicalCardV4(x.db,ref)).length>0;},operation(ctx){const ref=dbOf(ctx.card),list=API.pileCards(ctx.player,'deck',x=>sameCanonicalCardV4(x.db,ref));if(list.length){API.deckToHand(ctx.player,list[0].index,'ポケ・ドラ');API.shuffle(ctx.player);}},afterResolve(){}}],{type:'monster',priority:1,blocksIfNoDeckToHand:true,passive:{onNormalSummon:ctx=>ctx.event&&ctx.event.card===ctx.card}});
-defineScript('マーメイド・ナイト',{type:'monster',priority:1,attackLimit(){const sea=dbOf({id:findCardIndex('海')});return API.fieldCards({filter:x=>x.zone==='field'&&x.card.face==='up'&&sameCanonicalCardV4(x.db,sea)}).length>0?2:1;}});
+/* S03-U523: 「海」の探索は共通の seaOnFieldS03（engine/1ZZZB）。魔法＆罠ゾーンのカードが「海」として扱われる場合も見える（WIKI-CAD8E3C2E5FD 09/11/14）。 */
+defineScript('マーメイド・ナイト',{type:'monster',priority:1,attackLimit(){return seaOnFieldS03()?2:1;}});
 defineUnifiedCardV4('ムカムカ',[{key:'continuous',type:EFFECT_TYPE.CONTINUOUS,range:LOCATION.MZONE,operation(){},afterResolve(){}}],{type:'monster',priority:1,continuous:{scope:'self',from:['mz'],apply(card,self,info){if(card!==self||card.face!=='up')return null;const n=gameState.players[info.p].hand.length*300;return {atk:n,def:n};}}});
 defineUnifiedCardV4('メガキャノン・ソルジャー',[{key:'tribute-burn',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],condition(ctx){return API.fieldCards({player:ctx.player,zone:'mz'}).length>=2;},cost(ctx,done){const picked=[];const next=()=>API.selectCard('メガキャノン・ソルジャー：リリース '+(picked.length+1)+'/2',API.fieldCards({player:ctx.player,zone:'mz'}).filter(x=>!picked.includes(x.card)),t=>{picked.push(t.card);if(picked.length<2)return next();picked.forEach(c=>{const r=locateCardAnyV4(c);if(r)API.sendToGrave(r,'メガキャノン・ソルジャー（リリース）');});done(true);});next();},operation(ctx){API.damageLP(ctx.opponent,1500);},afterResolve(){}}],{type:'monster',priority:1,timing:['mainPhase']});
 defineUnifiedCardV4('ラス・オブ・ネオス',[{key:'return-wipe',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.MZONE,targetSide:'self',speed:1,events:['activate'],condition(ctx){const ref=dbOf({id:findCardIndex('E・HERO ネオス')});return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>sameCanonicalCardV4(x.db,ref)}).length>0;},target(ctx,done){const ref=dbOf({id:findCardIndex('E・HERO ネオス')});API.selectCard('ラス・オブ・ネオス：デッキへ戻すネオス',API.fieldCards({player:ctx.player,zone:'mz',filter:x=>sameCanonicalCardV4(x.db,ref)}),t=>done([t]));},operation(ctx){const t=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(!t)return;API.returnToDeck(t,false,'ラス・オブ・ネオス');API.fieldCards().slice().forEach(x=>API.destroy(x,'ラス・オブ・ネオス'));},afterResolve(){}}],{type:'spell',priority:1,targets:true,destroysFieldV46:true});
@@ -33129,7 +33170,8 @@ defineUnifiedCardV4('機械王－プロトタイプ',[{key:'continuous',type:EFF
 defineUnifiedCardV4('正義の味方 カイバーマン',[{key:'tribute-blueeyes',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],condition(ctx){const ref=dbOf({id:findCardIndex('青眼の白龍')});return API.pileCards(ctx.player,'hand',x=>sameCanonicalCardV4(x.db,ref)).length>0;},cost(ctx,done){const h=locateCardAnyV4(ctx.card);if(!h){done(false);return;}API.sendToGrave(h,'正義の味方 カイバーマン（リリース）');done(true);},operation(ctx){const ref=dbOf({id:findCardIndex('青眼の白龍')}),list=API.pileCards(ctx.player,'hand',x=>sameCanonicalCardV4(x.db,ref));if(list.length)API.specialSummon(ctx.player,'hand',list[0].index,'atk','正義の味方 カイバーマン');},afterResolve(){}}],{type:'monster',priority:1,timing:['mainPhase'],includesSpecialSummon:true,blocksIfNoSpecialSummon:true});
 defineUnifiedCardV4('死の4つ星てんとう虫',[{key:'flip-level4-wipe',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onFlip'],operation(ctx){API.fieldCards({player:ctx.opponent,zone:'mz',filter:x=>x.card.face==='up'&&(x.db.lv||0)===4}).slice().forEach(t=>API.destroy(t,'死の4つ星てんとう虫'));},afterResolve(){}}],{type:'monster',priority:1,forced:true,destroysFieldV46:true,passive:{onFlip:()=>true}});
 defineUnifiedCardV4('死の合唱',[{key:'frog-wipe',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,speed:1,events:['activate'],condition(ctx){const ref=dbOf({id:findCardIndex('デスガエル')});return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'&&sameCanonicalCardV4(x.db,ref)}).length===3;},operation(ctx){API.fieldCards({player:ctx.opponent}).slice().forEach(t=>API.destroy(t,'死の合唱'));},afterResolve(){}}],{type:'spell',priority:1,destroysFieldV46:true});
-defineScript('水陸両用バグロス Mk－3',{type:'monster',priority:1,canDirectAttack(){const sea=dbOf({id:findCardIndex('海')});return API.fieldCards({filter:x=>x.zone==='field'&&x.card.face==='up'&&sameCanonicalCardV4(x.db,sea)}).length>0;}});
+/* S03-U523: 「海」の探索は共通の seaOnFieldS03（engine/1ZZZB）。 */
+defineScript('水陸両用バグロス Mk－3',{type:'monster',priority:1,canDirectAttack(){return seaOnFieldS03();}});
 defineUnifiedCardV4('漏電',[{key:'batteryman-wipe',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,speed:1,events:['activate'],condition(ctx){return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'&&isSetCardV4(x.db,SETCODE.BATTERYMAN)}).length>=3;},operation(ctx){API.fieldCards({player:ctx.opponent}).slice().forEach(t=>API.destroy(t,'漏電'));},afterResolve(){}}],{type:'spell',priority:1,destroysFieldV46:true});
 defineUnifiedCardV4('激昂のムカムカ',[{key:'continuous',type:EFFECT_TYPE.CONTINUOUS,range:LOCATION.MZONE,operation(){},afterResolve(){}}],{type:'monster',priority:1,continuous:{scope:'self',from:['mz'],apply(card,self,info){if(card!==self||card.face!=='up')return null;const n=gameState.players[info.p].hand.length*400;return {atk:n,def:n};}}});
 defineScript('炎を支配する者',{type:'monster',priority:1,tributeValue:{value:2,condition(targetDb){return targetDb.at==='炎';}}});
@@ -33672,7 +33714,7 @@ v80DarkWorldTarget('暗黒界の策士 グリン','spelltrap');
 defineUnifiedCardV4('未知ガエル',[],{type:'monster',priority:1,continuous:{scope:'self',from:['mz'],apply(){return null;},piercingDamage(info){if(info.atkCard!==info.self||!info.defCard||info.defCard.pos!=='def')return 0;return Math.max(0,curATK(info.atkCard)-curDEF(info.defCard));}}});
 defineUnifiedCardV4('氷結界の軍師',[{key:'send-draw',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],condition(ctx){return API.me(ctx).deck.length>0&&API.pileCards(ctx.player,'hand',x=>isSetCardV4(x.db,SETCODE.ICE_BARRIER)).length>0;},operation(ctx){v49P1Open(ctx,{kind:'card',title:'氷結界の軍師：墓地へ送る氷結界',candidates:API.pileCards(ctx.player,'hand',x=>isSetCardV4(x.db,SETCODE.ICE_BARRIER)),min:1,max:1},'p1cards.hand-send-draw',{reason:'氷結界の軍師'},false);},afterResolve(){}}],{type:'monster',priority:1,countLimit:1,timing:['mainPhase']});
 defineUnifiedCardV4('浮上',[{key:'revive-low-water-races',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,targetRange:LOCATION.GRAVE,targetSide:'self',speed:1,events:['activate'],condition(ctx){return hasMonsterZoneSpace(ctx.player)&&API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&(x.db.lv||99)<=3&&['魚','海竜','水'].includes(x.db.ra)).length>0;},target(ctx,done){API.selectCard('浮上：特殊召喚するモンスター',API.pileCards(ctx.player,'grave',x=>x.db.k==='m'&&(x.db.lv||99)<=3&&['魚','海竜','水'].includes(x.db.ra)),t=>done([t]));},operation(ctx){const t=ctx.selectedTargets&&resolveTarget(ctx.selectedTargets[0]);if(t&&hasMonsterZoneSpace(ctx.player))API.specialSummon(ctx.player,'grave',t.index,'def','浮上');},afterResolve(){}}],{type:'spell',priority:1,targets:true,includesSpecialSummon:true,blocksIfNoSpecialSummon:true});
-defineUnifiedCardV4('海竜－ダイダロス',[{key:'send-umi-wipe',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],condition(){const sea=v80SeaRef();return API.fieldCards({zone:'field',filter:x=>x.card.face==='up'&&sameCanonicalCardV4(x.db,sea)}).length>0;},cost(ctx,done){const sea=v80SeaRef();API.selectCard('海竜－ダイダロス：墓地へ送る「海」',API.fieldCards({zone:'field',filter:x=>x.card.face==='up'&&sameCanonicalCardV4(x.db,sea)}),t=>{const r=resolveTarget(t);if(!r){done(false);return;}API.sendToGrave(r,'海竜－ダイダロス（コスト）');done(true);});},operation(ctx){API.fieldCards({filter:x=>x.card!==ctx.card}).slice().forEach(t=>API.destroy(t,'海竜－ダイダロス'));},afterResolve(){}}],{type:'monster',priority:1,timing:['mainPhase'],destroysFieldV46:true});
+defineUnifiedCardV4('海竜－ダイダロス',[{key:'send-umi-wipe',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],condition(){return seaOnFieldS03();},cost(ctx,done){API.selectCard('海竜－ダイダロス：墓地へ送る「海」',seaCardsOnFieldS03(),t=>{   /* S03-U523 */const r=resolveTarget(t);if(!r){done(false);return;}API.sendToGrave(r,'海竜－ダイダロス（コスト）');done(true);});},operation(ctx){API.fieldCards({filter:x=>x.card!==ctx.card}).slice().forEach(t=>API.destroy(t,'海竜－ダイダロス'));},afterResolve(){}}],{type:'monster',priority:1,timing:['mainPhase'],destroysFieldV46:true});
 defineUnifiedCardV4('深海の怒り',[],{type:'monster',priority:1,continuous:{scope:'self',from:['mz'],apply(card,self){const h=locateCardAnyV4(self);if(!h)return null;const n=gameState.players[h.p].grave.filter(c=>['魚','海竜','水'].includes(dbOf(c).ra)).length;return{atk:n*500,def:n*500};}}});
 defineUnifiedCardV4('火口に潜む者',[{key:'destroyed-summon-pyro',type:EFFECT_TYPE.TRIGGER,range:LOCATION.GRAVE,speed:1,events:['onDestroy'],condition(ctx){const g=ctx.card&&ctx.card.graveInfo;return ctx.zone==='grave'&&ctx.event&&ctx.event.card===ctx.card&&g&&g.from==='mz'&&hasMonsterZoneSpace(ctx.player)&&API.pileCards(ctx.player,'hand',x=>x.db.k==='m'&&x.db.ra==='炎').length>0;},operation(ctx){v49P1Open(ctx,{kind:'card',title:'火口に潜む者：特殊召喚する炎族',candidates:API.pileCards(ctx.player,'hand',x=>x.db.k==='m'&&x.db.ra==='炎'),min:1,max:1},'p1cards.special-summon',{from:'hand',pos:'atk'},false);},afterResolve(){}}],{type:'monster',priority:1,activateFrom:['grave'],includesSpecialSummon:true,blocksIfNoSpecialSummon:true,passive:{onDestroy:ctx=>ctx.zone==='grave'&&ctx.event&&ctx.event.card===ctx.card}});
 defineUnifiedCardV4('灰塵王 アッシュ・ガッシュ',[{key:'battle-level-up',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onDamageStep'],condition(ctx){return v80BattleDamageBySelf(ctx)&&curLV(ctx.card)<12;},operation(ctx){const h=locateCardAnyV4(ctx.card);if(h)act({type:'FX_SET_STATE',player:h.p,zone:h.zone,index:h.index,lvDelta:1,reason:'灰塵王 アッシュ・ガッシュ'});},afterResolve(){}}],{type:'monster',priority:1,forced:true,dsTiming:'after',passive:{onDamageStep:ctx=>v80BattleDamageBySelf(ctx)&&curLV(ctx.card)<12}});
@@ -78876,7 +78918,11 @@ defineScript('封印されしエクゾディア', {
    (Ruling (Opus): while a face-up 「海」 (or a card treated as 「海」) is in either Field Zone, the face-up monster is unaffected by Spell card effects — chain-link effects and
    continuous Spell effects alike, so 魚雷魚 / 砲弾ヤリ貝 do not receive 「海」's own +200 / +200. Trap and monster effects still apply. Not a target restriction: a Spell may still
    select it, the effect just does nothing to it.) ---- */
+/* S03-U523: 「海」の探索は共通の seaCardsOnFieldS03（engine/1ZZZB）にまとめた。
+   フィールドゾーンだけでなく、魔法＆罠ゾーンのカードが
+   「海」として扱われる場合も見る。判定の意味（どちらかの側にあればよい）は変えていない。 */
 function seaOnFieldS280(gs){
+  if(typeof seaOnFieldS03 === 'function') return seaOnFieldS03();
   const st = gs || gameState;
   if(!st || !st.players || typeof findCardIndex !== 'function') return false;
   const sea = dbOf({id:findCardIndex('海')});
@@ -80715,10 +80761,12 @@ defineScript('モロコシーナ', {
 /* ---- コダロス: 自分フィールド上に表側表示で存在する「海」を墓地へ送って発動できる。相手フィールド上のカードを2枚まで選択して墓地へ送る。 ----
    Ignition, its controller's Main Phase; cost: send the face-up 「海」 in its controller's Field Zone to the GY (paid at activation). The targets (1 or 2 cards on the opponent's field:
    Monster, Spell & Trap or Field Zone, face-up or face-down) are chosen at activation. Resolution: those still on the opponent's field are sent to the GY. */
+/* S03-U523: 自分フィールドの「海」を共通の探索で見る
+   （WIKI-ECF09EA16413 09/12/11: セット状態はコストにできない→表側表示だけ。
+     WIKI-D46C2788D09D 09/12/16: 両方ある場合はどちらか 1 枚）。 */
 function kodarosSeaS292(p){
-  const ref = dbOf({id:findCardIndex('海')});
-  const f = gameState.players[p].field;
-  return (f && f.face==='up' && sameCanonicalCardV4(f, ref)) ? f : null;
+  const list = (typeof seaCardsOnFieldS03 === 'function') ? seaCardsOnFieldS03(p) : [];
+  return list.length ? list[0].card : null;
 }
 function kodarosPoolS292(ctx){ return API.fieldCards({player:ctx.opponent, filter:x=>!!x.card}); }
 defineScript('コダロス', {
@@ -95739,7 +95787,8 @@ defineUnifiedCardV4('エレメント・マジシャン', [u432AgainEffect('エ�
 /* ---- 海竜神－ネオダイダロス ---- */
 const U437_DAIDALOS = '海竜－ダイダロス';
 function u437Daidalos(p){ return API.fieldCards({player:p, zone:'mz', filter:x=>x.card.face==='up' && x.db.n===U437_DAIDALOS}); }
-function u437Sea(p){ return API.fieldCards({player:p, zone:'field', filter:x=>x.card.face==='up' && x.db.n==='海'}); }
+/* S03-U523: 自分フィールドの「海」を共通の探索で見る（WIKI-CAD8E3C2E5FD 09/11/14）。 */
+function u437Sea(p){ return (typeof seaCardsOnFieldS03==='function') ? seaCardsOnFieldS03(p) : []; }
 defineUnifiedCardV4('海竜神－ネオダイダロス', [{
   key:'wipe', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, speed:1,
   condition(ctx){ if(ctx.zone!=='mz' || ctx.card.face!=='up') return false; if(!u437Sea(ctx.player).length){ ctx.reason = '自分フィールドに「海」がありません'; return false; } return true; },
@@ -99455,6 +99504,116 @@ defineUnifiedCardV4('D－HERO ダイヤモンドガイ', [{
   },
   afterResolve(){}
 }], {type:'monster', priority:1, countLimit:1, timing:['mainPhase']});
+/* S03-U523: 忘却の海底神殿（1103対象の未実装カード。carddata のテキスト）。
+
+   忘却の海底神殿（永続罠）
+     このカードがフィールド上に存在する限り、このカードのカード名は「海」として扱う。
+     1ターンに1度、自分フィールド上のレベル4以下の魚族・海竜族・水族モンスター1体を選択してゲームから除外できる。
+     自分のエンドフェイズ時、この効果で除外したモンスターを特殊召喚する。
+
+   当時の裁定（この実装の根拠。推測ではない）
+     WIKI-CAD8E3C2E5FD（09/11/14）《海竜－ダイダロス》などの「《海》をコストにする効果」のコストに使用できる。
+     WIKI-C8A821DF0FA0（09/11/14）《王宮のお触れ》発動中は「『海』として扱う効果」が無効になりコストにできない。
+     WIKI-ECF09EA16413（09/12/11）セットされた状態では《コダロス》のコストにできない。
+       → 名前の扱いは継続効果（continuous.nameOverride, System v17）。表側表示でだけ働き、
+         無効化されている間は働かない（continuousSources が無効の罠を外す。S03-U118）。
+         参照する側は共通の探索 seaCardsOnFieldS03（engine/1ZZZB、S03-U523）で見る。
+     WIKI-17D54319001D（09/11/14）除外する効果は**相手ターンにも発動でき、スペルスピードは2**。
+       除外時と特殊召喚時の**両方でチェーンブロックを作る**。
+     WIKI-C1C1FCE76FDE（09/11/14）除外する効果はダメージステップ中には発動できない
+       → ダメージステップで発動できる宣言（damageStepLegal / damageStepOnly）をしない
+         （engine/30 の damageStepResponseLegalV28 が既定で断る）。
+     WIKI-9579091639BA（09/11/14）このカードがフィールドを離れていた場合は特殊召喚できない
+       → 除外した uid はこのカードのゾーン限定の印に持つ（場を離れると消える。ZONE_LOCAL_KEYS）。
+     WIKI-B0409A61B7FF（09/11/21）エンドフェイズに相手フィールドへ特殊召喚する事はできない。
+     WIKI-2326439618A8（10/08/08）コントロールを得ていた相手モンスターを除外した場合も、自分フィールドに特殊召喚する
+       → 特殊召喚先は常に自分フィールド。
+     WIKI-F21786650DE6（10/08/05）相手ターンと自分ターンに 1 体ずつ除外した場合、エンドフェイズに**同時に**特殊召喚する
+       → 1 回の解決で記録した全てを出す（表示形式は 1 枚ずつ選ぶが、召喚はまとめて行う。engine/1ZZK の
+         specialSummonPositionsS03、S03-U271）。
+     WIKI-D46C2788D09D（09/12/16）《伝説の都 アトランティス》と両方ある場合、《コダロス》はどちらか 1 枚だけ送ればよい
+       → 共通の探索が候補を 2 枚返し、送る側が 1 枚選ぶ。
+
+   未対応（この単位では直していない）
+     WIKI-6CC4BF7CF2FB（10/08/01）《大寒波》にチェーンして除外した場合、エンドフェイズに特殊召喚されない。
+     《大寒波》の封じ（S03-U229 の activationBanS03）は「カードの発動」だけを止める形になっており、
+     表側の永続カードの「効果の発動」は止めない。この裁定を満たすには《大寒波》側の封じの範囲を直す必要がある。
+     F45BBE1F8F90 / CC3E04BCABFA（10/10/22）の「特殊召喚後にコントロールを戻すか」は当時「調整中」。 */
+
+function u523TempleTargetsS03(ctx){
+  return API.fieldCards({player:ctx.player, zone:'mz', filter:x=>{
+    if(!x.card || x.card.face !== 'up') return false;
+    const lv = (typeof curLV === 'function') ? Number(curLV(x.card)) : Number(x.db.lv || 0);
+    if(!(lv <= 4)) return false;
+    const ra = (typeof currentRaceV17 === 'function') ? currentRaceV17(x.card) : x.db.ra;
+    return ra === '魚' || ra === '海竜' || ra === '水';
+  }});
+}
+function u523TempleBanishedS03(card){
+  const list = card && card.u523TempleUidsS03;
+  return Array.isArray(list) ? list.slice() : [];
+}
+/* エンドフェイズの誘発: 自分のエンドフェイズに、記録した除外モンスターが除外のままある時だけ。 */
+function u523TempleDueS03(ctx){
+  if(ctx.zone !== 'sz' || !ctx.card || ctx.card.face !== 'up' || ctx.card.activationPending) return [];
+  if(gameState.phase !== 'end' || ctx.player !== gameState.activePlayer) return [];
+  return u523TempleBanishedS03(ctx.card).filter(u=>{
+    const h = (u != null) ? findCardByUid(u) : null;
+    return !!h && h.zone === 'banish';
+  });
+}
+
+defineUnifiedCardV4('忘却の海底神殿', [{
+  key:'banish', type:EFFECT_TYPE.QUICK, range:LOCATION.SZONE, speed:2, events:['activate'],
+  targetRange:LOCATION.MZONE, targetSide:'self',
+  condition(ctx){
+    if(ctx.zone !== 'sz' || !ctx.card || ctx.card.face !== 'up' || ctx.card.activationPending){
+      ctx.reason = '表側表示で存在する時に効果を発動します'; return false;
+    }
+    if(!u523TempleTargetsS03(ctx).length){
+      ctx.reason = '自分フィールドにレベル4以下の魚族・海竜族・水族モンスターがいません'; return false;
+    }
+    return true;
+  },
+  target(ctx, done){
+    API.selectCard('忘却の海底神殿：ゲームから除外するモンスター', u523TempleTargetsS03(ctx), t=>done([t]));
+  },
+  operation(ctx){
+    const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t);
+    if(!r || r.zone !== 'mz') return;
+    const uid = ensureCardUid(gameState, r.card);
+    API.banish(r, '忘却の海底神殿');
+    const me = locateCardAnyV4(ctx.card);
+    const now = (uid != null) ? findCardByUid(uid) : null;
+    if(!me || me.zone !== 'sz' || !now || now.zone !== 'banish') return;
+    /* WIKI-9579091639BA: 場を離れたら特殊召喚できない → 記録はこのカードのゾーン限定の印に持つ。 */
+    const list = u523TempleBanishedS03(ctx.card).concat([uid]);
+    API.setCardFlag(me, 'u523TempleUidsS03', list, '忘却の海底神殿（除外したモンスター）', {silent:true});
+  },
+  afterResolve(){}
+}, {
+  key:'return', type:EFFECT_TYPE.TRIGGER, range:LOCATION.SZONE, speed:1, events:['onEndPhase'], forced:true,
+  condition(ctx){ return u523TempleDueS03(ctx).length > 0; },
+  operation(ctx){
+    const uids = u523TempleDueS03(ctx);
+    if(!uids.length) return;
+    /* WIKI-F21786650DE6: まとめて特殊召喚する。WIKI-B0409A61B7FF / WIKI-2326439618A8: 出す先は常に自分フィールド。 */
+    const items = uids.map(u=>({uid:u, from:'banish'}));
+    const me = locateCardAnyV4(ctx.card);
+    if(me && me.zone === 'sz') API.setCardFlag(me, 'u523TempleUidsS03', [], '忘却の海底神殿（記録を消す）', {silent:true});
+    if(typeof specialSummonPositionsS03 === 'function') specialSummonPositionsS03(ctx.player, items, '忘却の海底神殿');
+  },
+  afterResolve(){}
+}], {type:'trap', priority:2, targets:true, quickEffect:true, forced:false,
+  countLimit:{n:1, effects:['banish']},
+  includesSpecialSummon:true,
+  /* 「このカードのカード名は『海』として扱う」 */
+  continuous:{ scope:'self', from:['sz'], apply(){ return null; },
+    nameOverride(card, self){ return (card === self && self.face === 'up' && !self.activationPending) ? '海' : null; } },
+  passive:{ onEndPhase(ctx){ return u523TempleDueS03(ctx).length > 0; } }});
+
+/* カードの発動そのものに要求は無く、発動時の効果も無い（S03-U10 の分類と同じ扱い）。 */
+declareCardActivationFreeV32(['忘却の海底神殿']);
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

@@ -281,6 +281,9 @@
   "path": "engine/1ZZZA_grave_activation_grant_s03.js"
  },
  {
+  "path": "engine/1ZZZB_sea_name_s03.js"
+ },
+ {
   "path": "engine/1ZZT_set_ban_s03.js"
  },
  {
@@ -1878,6 +1881,9 @@
  },
  {
   "path": "cards/HZZZZZZZZZZZZF_claude_s03_u522_diamond_dude.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZZG_claude_s03_u523_forgotten_temple.js"
  },
  {
   "path": "cards/40_auto_interpreter.js",
