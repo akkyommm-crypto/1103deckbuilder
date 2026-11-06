@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 394,
+    "NOT_STARTED": 392,
     "PARTIAL": 10,
-    "TESTED": 3602
+    "TESTED": 3604
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1646,
+    "legacy": 1647,
     "sin": 5,
-    "unified": 1427
+    "unified": 1428
   },
-  "static_registration_name_count": 3610,
+  "static_registration_name_count": 3612,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -62149,6 +62149,7 @@
         "tools\\test_s03_u512_spirit_support.js",
         "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u514_xyz_material.js",
+        "tools\\test_s03_u515_piercing.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
@@ -74486,6 +74487,7 @@
         "tools\\test_s03_u224_ns16.js",
         "tools\\test_s03_u230_ns22.js",
         "tools\\test_s03_u252_ns33.js",
+        "tools\\test_s03_u515_piercing.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_v470_native_cards.js"
       ]
@@ -74498,12 +74500,20 @@
       "subtype": null,
       "date": "2006-11-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZY_claude_s03_u515_piercing.js",
+          "line": 103
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u515_piercing.js"
+      ]
     },
     {
       "index": 3373,
@@ -74565,6 +74575,7 @@
       "auto_table": false,
       "tests": [
         "tools\\test_class_a_pierce_bulk.js",
+        "tools\\test_s03_u515_piercing.js",
         "tools\\test_v920_batch43.js"
       ]
     },
@@ -82438,6 +82449,7 @@
       "registrations": [],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u515_piercing.js",
         "tools\\test_v600_batch12.js"
       ]
     },
@@ -95264,7 +95276,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle51.js"
+        "tools\\test_auto_cycle51.js",
+        "tools\\test_s03_u515_piercing.js"
       ]
     },
     {
@@ -98831,12 +98844,20 @@
       "subtype": "永続",
       "date": "2004-11-25",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZY_claude_s03_u515_piercing.js",
+          "line": 53
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u515_piercing.js"
+      ]
     },
     {
       "index": 4479,

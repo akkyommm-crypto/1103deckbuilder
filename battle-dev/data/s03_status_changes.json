@@ -15695,6 +15695,26 @@
         "tools/test_s03_u514_xyz_material.js"
       ],
       "evidence": "Implemented as a damage-step activation (dsTiming start) with the S03-U114 detach cost and API.modAtk until the End Phase. Measured on a real attack against デーモンの召喚: the battle damage is 200 instead of 700 because the ATK went 1800 to 2300; with no material it stays 700; and within one damage step only one material is spent. The once-per-damage-step guard keys on the turn, the attacker uid and its attack count, which the report records as an approximation of the 2011 wording. Replay audited."
+    },
+    {
+      "name": "螺旋槍殺",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U515",
+      "tests": [
+        "tools/test_s03_u515_piercing.js"
+      ],
+      "evidence": "Both effects implemented with the existing continuous.piercingDamage and an onBattleDamage trigger, measured on real attacks: 竜騎士ガイア at 2600 against a Defense Position ワイト at 200 deals 2400, and that piercing damage then draws two cards and discards one (hand plus one, Graveyard plus one). Negative controls: 暗黒騎士ガイア pierces but does not draw, no piercing at all without this card, and the opponent 竜騎士ガイア is not covered because the text says 自分の. The second effect reads the piercing through the Defense Position battle that damaged the opponent, which the report records as an approximation. Replay audited."
+    },
+    {
+      "name": "天空勇士ネオパーシアス",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U515",
+      "tests": [
+        "tools/test_s03_u515_piercing.js"
+      ],
+      "evidence": "All four effects implemented and measured on real paths: the Special Summon procedure from the hand releasing 天空騎士パーシアス (refused without one); with 天空の聖域 out and an LP lead of 2000 its ATK reads 4300 instead of 2300; piercing against a Defense Position ワイト deals 4100; and the battle damage draws one card. Without the Field Spell the ATK stays 2300 and the piercing is 2100. Replay audited."
     }
   ],
   "restored_to_baseline": [

@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 394,
+    "NOT_STARTED": 392,
     "PARTIAL": 10,
-    "TESTED": 3602
+    "TESTED": 3604
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -913,
+    "NOT_STARTED": -915,
     "PARTIAL": -172,
-    "TESTED": 1553
+    "TESTED": 1555
   },
   "status_changes": [
     {
@@ -6217,6 +6217,12 @@
       "unit": "S03-U196"
     },
     {
+      "name": "天空勇士ネオパーシアス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U515"
+    },
+    {
       "name": "天魔神 エンライズ",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -8453,6 +8459,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U202"
+    },
+    {
+      "name": "螺旋槍殺",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U515"
     },
     {
       "name": "血の代償",
