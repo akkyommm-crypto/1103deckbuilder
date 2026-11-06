@@ -2213,6 +2213,9 @@ function applyActionBodyV31(gs, a){
       break;
     }
     case "CHAIN_ADD": {
+      /* S03-U522: 墓地からの発動の許可は 1 回だけ（engine/1ZZZA）。発動が確定するこの Action で消す。 */
+      if(a.from==='grave' && typeof consumeGraveActivationGrantS03==='function')
+        consumeGraveActivationGrantS03(gs, a.player, a.uid);
       if(a.eventResumeV11)gs.eventChainResumeV11=JSON.parse(JSON.stringify(a.eventResumeV11));
       // System v4.4: 発動のコミット時に回数制限と activationPending も同じ Action で確定する。
       // Replay/Undo で「回数だけ消費済み」「pending だけ欠落」の中間状態を作らない。
@@ -15469,6 +15472,57 @@ function globalSummonLockReasonS03(p){
   return '';
 }
 /* =========================================================================
+   S03-U522 — 墓地からの発動を 1 回だけ許可する（《D－HERO ダイヤモンドガイ》）
+   -------------------------------------------------------------------------
+   「この効果で通常魔法カードを墓地へ送った場合、次の自分ターンのメインフェイズに
+     墓地のその通常魔法カードの発動時の効果を発動できる」
+
+   当時の裁定から、許可は「カード 1 枚・ターン 1 つ・1 回だけ」の形になる:
+     WIKI-EF0F11F0F5B7（06/02/16）次の自分のターンにこのカードが場に無くても処理する
+       → 許可はカードではなくプレイヤーに持たせる（effectFlags）。
+     WIKI-7C1EE634F520（06/02/16）発動しない事もでき、それ以降のターンには使えない
+       → ターンを刻んで、そのターンだけ有効にする。
+     WIKI-0855121F0A77（06/02/16）次の自分のメインフェイズならいつでもよい。
+     WIKI-4FC1C763D881（06/02/16）複数枚めくった場合は複数枚発動できる → 一覧で持つ。
+     WIKI-62E4A0F1CA35 / WIKI-79BFDC6BED27 その魔法が墓地を離れたら発動できない
+       → uid で引くので、墓地に無ければ許可は働かない。
+     WIKI-F23294BA0134（06/02/16）その効果は**魔法効果**。相手は応答できる
+       （WIKI-3FFD3A9DA6A1 11/06/09 / WIKI-2704AA2D7864 09/12/02）
+       → 墓地のそのカードを本当に発動させる（prepareDuelActivation は墓地のカードを動かさず、
+         from:'grave' のチェーンリンクを作る）。コスト・条件・対象はその魔法自身のものが働く。
+
+   許可は effectFlags.graveActGrantS03 = [{uid, turn}]（デュエル中ずっと残る側）に置く。
+   使ったら CHAIN_ADD（engine/00）が消すので、同じターンに同じカードを 2 回発動できない。
+   ターンが過ぎた許可は書き込み時にまとめて捨てる（state を増やさない）。
+   ========================================================================= */
+function graveActGrantsS03(gs, p){
+  const P = ((gs || gameState).players || [])[p];
+  const list = P && P.effectFlags && P.effectFlags.graveActGrantS03;
+  return Array.isArray(list) ? list : [];
+}
+function grantGraveActivationS03(p, uid, turn){
+  if(uid == null) return false;
+  const keep = graveActGrantsS03(gameState, p).filter(g=>g && Number(g.turn) >= Number(gameState.turn));
+  keep.push({uid:uid, turn:Number(turn)});
+  API.setFlag(p, 'graveActGrantS03', keep, false);
+  return true;
+}
+/* このカードを今、墓地から発動できるか（engine/20 の canActivateFromZone が読む） */
+function graveActivationGrantedS03(p, card, zone){
+  if(zone !== 'grave' || !card || card.uid == null) return false;
+  return graveActGrantsS03(gameState, p).some(g=>g && g.uid === card.uid && Number(g.turn) === Number(gameState.turn));
+}
+/* 使った許可を消す（CHAIN_ADD の reducer から呼ばれる。Journal / Replay に乗る） */
+function consumeGraveActivationGrantS03(gs, p, uid){
+  if(uid == null) return false;
+  const P = ((gs || gameState).players || [])[p];
+  if(!P || !P.effectFlags || !Array.isArray(P.effectFlags.graveActGrantS03)) return false;
+  const before = P.effectFlags.graveActGrantS03.length;
+  P.effectFlags.graveActGrantS03 = P.effectFlags.graveActGrantS03
+    .filter(g=>!(g && g.uid === uid && Number(g.turn) === Number((gs || gameState).turn)));
+  return P.effectFlags.graveActGrantS03.length !== before;
+}
+/* =========================================================================
    S03-U392 — Spell / Trap Set ban for a turn range (大寒波)
    effectFlags.setBanS03 = [{from, to, label}] on a player (written with API.setFlag(p, 'setBanS03', list, false));
    SET_ST refuses while gs.turn is inside a range of the player. Pure function of the state (Replay-safe).
@@ -18036,7 +18090,13 @@ function hasFieldActivatableEffect(card){
   return v;
 }
 
-function canActivateFromZone(db, zone){
+/* S03-U522: card を渡すと、墓地からの発動の動的な許可（engine/1ZZZA）も見る。
+   渡さない呼び出しは従来どおりスクリプトの activateFrom / テキスト推定だけで判定する。 */
+function canActivateFromZone(db, zone, card){
+  if(card && zone === 'grave' && typeof graveActivationGrantedS03 === 'function'){
+    const ownerS522 = (card.controller != null) ? card.controller : card.owner;
+    if((ownerS522 === 0 || ownerS522 === 1) && graveActivationGrantedS03(ownerS522, card, zone)) return true;
+  }
   const sc = CARD_SCRIPTS[db.n];
   if(sc){
     if(!sc.activateFrom) return false;
@@ -18115,7 +18175,7 @@ function reactableCards(p){
     (arr||[]).forEach((c,i)=>{
       if(!c) return;
       const db = dbOf(c);
-      if(!canActivateFromZone(db, zone)) return;
+      if(!canActivateFromZone(db, zone, c)) return;   /* S03-U522 */
       if(!isQuickFromZone(db)) return;          // 相手ターンに撃てないものは除く
       const sc = CARD_SCRIPTS[db.n];
       if(sc && sc.countLimit && countLeft(p, db.n, sc, c) <= 0) return;   // 使用済みは出さない
@@ -20043,7 +20103,7 @@ function getChainResponsesV2(p){
        表側の永続・フィールド魔法の効果（SS1）は開いたゲーム状態（自分のメインフェイズの操作）でのみ発動する。 */
     if(ss<2) return;
     if(db.k==='m' && sc.quickEffect!==true && ss<2) return;
-    if((zone==='grave'||zone==='banish'||zone==='hand')&&!canActivateFromZone(db,zone)) return;
+    if((zone==='grave'||zone==='banish'||zone==='hand')&&!canActivateFromZone(db,zone,c)) return;   /* S03-U522 */
     /* S03-U18: 発動への応答（宣言したスクリプト）は、一番上のリンクの発動イベントを ctx.event にして判定する。 */
     let L=strictScriptLegalityV2(nm,p,zone,index,(typeof activationResponseOptsS03==='function')?activationResponseOptsS03(nm,{}):{});
     /* S03-U40 (C-S03-31): 攻撃宣言時の窓では、攻撃宣言イベントで判定し直す */
@@ -20073,7 +20133,7 @@ function getChainResponsesV2(p){
        場合でも応答候補として offer しない — 砂塵の大竜巻が自分自身へのチェーン応答を無限に繰り返す
        実戦R1のハングを発見した（gameState.chain が無限に伸び続けた）。 */
     if(z==='mz'&&db.k!=='m') return;
-    if(!canActivateFromZone(db,z)&&z!=='mz') return;
+    if(!canActivateFromZone(db,z,c)&&z!=='mz') return;   /* S03-U522 */
     push(z,i,c);
   }));
   /* S03-U46 (C-S03-37): 相手フィールドの表側の「相手プレイヤーも使用できる」効果（王宮の弾圧） */
@@ -22655,6 +22715,12 @@ function v4EffectEventOk(e,ctx){
 function v4EffectRangeOk(e,ctx){
   if(!e.range || e.range===LOCATION.ALL) return true;
   const zone=(ctx&&ctx.logicalZone)||ctx.zone;
+  /* S03-U522: 墓地からの発動の許可（engine/1ZZZA）があるカードは、
+     その「発動時の効果」を墓地から発動できる（《D－HERO ダイヤモンドガイ》）。
+     効果自身の範囲宣言（魔法＆罠ゾーン）はそのままにして、許可がある時だけ通す。 */
+  if(zone==='grave' && ctx && ctx.card && typeof graveActivationGrantedS03==='function'
+     && graveActivationGrantedS03(ctx.player, ctx.card, 'grave')
+     && locationMatchesV4('sz', e.range)) return true;
   return locationMatchesV4(zone,e.range);
 }
 function v4EffectConditionOk(e,ctx){
@@ -99317,6 +99383,75 @@ defineScript('闇よりの罠', {
   },
   afterResolve(){}
 });
+/* S03-U522: D－HERO ダイヤモンドガイ（1103対象の未実装カード。carddata のテキスト）。
+
+   D－HERO ダイヤモンドガイ（闇・戦士・星4・攻1400/守1600）
+     ①:1ターンに1度、自分メインフェイズに発動できる。自分のデッキの一番上のカードをめくり、
+     それが通常魔法カードだった場合、そのカードを墓地へ送る。違った場合、そのカードをデッキの一番下に戻す。
+     この効果で通常魔法カードを墓地へ送った場合、次の自分ターンのメインフェイズに
+     墓地のその通常魔法カードの発動時の効果を発動できる。
+
+   当時の裁定（この実装の根拠。推測ではない）
+     WIKI-D82AA70AF049（回答日なし）この効果は**起動効果**なので自分のターンにしか使えない。
+     WIKI-EF0F11F0F5B7（06/02/16）次の自分のターンにこのカードが場に無くても処理する
+       → 許可はプレイヤーに持たせる（engine/1ZZZA の effectFlags.graveActGrantS03）。
+     WIKI-7C1EE634F520（06/02/16）その通常魔法の効果を発動しない事もでき、それ以降のターンには使えない
+       → 許可にターンを刻み、そのターンだけ有効にする。
+     WIKI-0855121F0A77（06/02/16）次の自分のメインフェイズならいつでもよい。
+     WIKI-4FC1C763D881（06/02/16）複数枚めくった場合は複数枚発動できる → 許可は一覧で持つ。
+     WIKI-F23294BA0134（06/02/16）その効果は**魔法効果**（効果モンスターの効果ではない）。
+     WIKI-3FFD3A9DA6A1（11/06/09）/ WIKI-2704AA2D7864（09/12/02）相手はその発動に対して
+       《偽物のわな》《スターライト・ロード》を発動できる
+       → 墓地のそのカードを**本当に発動させる**（from:'grave' のチェーンリンク）。
+         コスト・条件・対象・発動後の処理はその魔法自身のスクリプトがそのまま行うので、
+         WIKI-86EA1BB93851（《突然変異》《孵化》はコストのモンスターがいないので発動できない）、
+         WIKI-BFCE21FB743B（09/05/21 《おジャマジック》《コアキメイルの鋼核》は発動できない）、
+         WIKI-9D5E2C663C65 / WIKI-60F096512877（07/06/23 《大寒波》は自分のメインフェイズ1開始時だけ）、
+         WIKI-F0019AA85753（《名推理》では相手がレベルを宣言する）、
+         WIKI-2B997EAF1558（08/05/17 《簡易融合》で出したモンスターは通常どおり自壊する）も
+         その魔法自身の実装がそのまま決める。
+     WIKI-62E4A0F1CA35（06/02/16）/ WIKI-79BFDC6BED27 その通常魔法が墓地を離れていると発動できない
+       → 許可は uid で引くので、墓地に無ければ働かない。
+     WIKI-A38C1B14F167（10/02/15）発動にチェーンして墓地のその魔法が除外されても効果は適用される
+       → チェーンリンクは独立して解決する（墓地のカードを動かさない発動なので、そのまま適用される）。
+
+   未対応（この単位では直していない）
+     めくったカードを相手にも見せる処理は、ログに名前を出すだけにしている（公開情報の持ち方は engine 側の課題）。 */
+
+function u522DiamondMainS03(ctx){
+  if(ctx.zone !== 'mz' || !ctx.card || ctx.card.face !== 'up') return false;
+  if(ctx.player !== gameState.activePlayer) return false;
+  return gameState.phase === 'main1' || gameState.phase === 'main2';
+}
+function u522IsNormalSpellDbS03(db){ return !!db && db.k === 's' && !db.sub; }
+
+defineUnifiedCardV4('D－HERO ダイヤモンドガイ', [{
+  key:'excavate', type:EFFECT_TYPE.IGNITION, range:LOCATION.MZONE, speed:1, events:['activate'],
+  /* WIKI-D82AA70AF049: 起動効果なので自分のターンだけ。1ターンに1度は countLimit。 */
+  condition(ctx){
+    if(!u522DiamondMainS03(ctx)){ ctx.reason = '自分のメインフェイズに発動できます'; return false; }
+    if(!API.me(ctx).deck.length){ ctx.reason = 'デッキが残っていません'; return false; }
+    return true;
+  },
+  operation(ctx){
+    const P = API.me(ctx), top = P.deck[0];
+    if(!top) return;
+    const db = dbOf(top), nm = cardName(top);
+    ensureCardUid(gameState, top);
+    if(u522IsNormalSpellDbS03(db)){
+      const uid = top.uid;
+      act({type:'MOVE', player:ctx.player, from:'deck', fromIndex:0, to:'grave', reason:'D－HERO ダイヤモンドガイ'});
+      API.log(`D－HERO ダイヤモンドガイ：デッキの一番上「${nm}」は通常魔法 → 墓地へ送る`);
+      /* 「次の自分ターンのメインフェイズ」= このターンの 2 つ後（自分の次の手番）。 */
+      grantGraveActivationS03(ctx.player, uid, Number(gameState.turn) + 2);
+      API.log(`D－HERO ダイヤモンドガイ：次の自分のメインフェイズに「${nm}」の発動時の効果を発動できる`);
+      return;
+    }
+    act({type:'MOVE', player:ctx.player, from:'deck', fromIndex:0, to:'deck', deckPos:'bottom', reason:'D－HERO ダイヤモンドガイ'});
+    API.log(`D－HERO ダイヤモンドガイ：デッキの一番上「${nm}」は通常魔法ではない → デッキの一番下へ`);
+  },
+  afterResolve(){}
+}], {type:'monster', priority:1, countLimit:1, timing:['mainPhase']});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、
@@ -102968,7 +103103,7 @@ function pileDuelActionsV370(p,zone,i){
     const L=strictSummonProcedureLegality(nm,p,zone,i);
     if(L.ok) out.push({id:'specialSummonProcedure',label:'特殊召喚',cls:'gold',run:`closeSheet();runSummonProcedure(${jsStr(nm)},${p},'${zone}',${i})`});
   }
-  if(sc&&typeof sc.resolve==='function'&&canActivateFromZone(db,zone)){
+  if(sc&&typeof sc.resolve==='function'&&canActivateFromZone(db,zone,c)){   /* S03-U522 */
     const L=strictScriptLegalityV2(nm,p,zone,i,{});
     if(L.ok) out.unshift({id:'effect',label:`⚡ ${zoneJp(zone)}で効果を発動`,cls:'fx',run:`closeSheet();duelActivateFromZone(${p},'${zone}',${i})`});
   }

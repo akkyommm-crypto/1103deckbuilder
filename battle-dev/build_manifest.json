@@ -278,6 +278,9 @@
   "path": "engine/1ZZS_summon_lock_s03.js"
  },
  {
+  "path": "engine/1ZZZA_grave_activation_grant_s03.js"
+ },
+ {
   "path": "engine/1ZZT_set_ban_s03.js"
  },
  {
@@ -1872,6 +1875,9 @@
  },
  {
   "path": "cards/HZZZZZZZZZZZZE_claude_s03_u521_copied_trap.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZZF_claude_s03_u522_diamond_dude.js"
  },
  {
   "path": "cards/40_auto_interpreter.js",

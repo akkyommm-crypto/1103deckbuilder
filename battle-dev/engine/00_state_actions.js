@@ -1257,6 +1257,9 @@ function applyActionBodyV31(gs, a){
       break;
     }
     case "CHAIN_ADD": {
+      /* S03-U522: 墓地からの発動の許可は 1 回だけ（engine/1ZZZA）。発動が確定するこの Action で消す。 */
+      if(a.from==='grave' && typeof consumeGraveActivationGrantS03==='function')
+        consumeGraveActivationGrantS03(gs, a.player, a.uid);
       if(a.eventResumeV11)gs.eventChainResumeV11=JSON.parse(JSON.stringify(a.eventResumeV11));
       // System v4.4: 発動のコミット時に回数制限と activationPending も同じ Action で確定する。
       // Replay/Undo で「回数だけ消費済み」「pending だけ欠落」の中間状態を作らない。

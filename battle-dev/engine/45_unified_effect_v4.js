@@ -55,6 +55,12 @@ function v4EffectEventOk(e,ctx){
 function v4EffectRangeOk(e,ctx){
   if(!e.range || e.range===LOCATION.ALL) return true;
   const zone=(ctx&&ctx.logicalZone)||ctx.zone;
+  /* S03-U522: 墓地からの発動の許可（engine/1ZZZA）があるカードは、
+     その「発動時の効果」を墓地から発動できる（《D－HERO ダイヤモンドガイ》）。
+     効果自身の範囲宣言（魔法＆罠ゾーン）はそのままにして、許可がある時だけ通す。 */
+  if(zone==='grave' && ctx && ctx.card && typeof graveActivationGrantedS03==='function'
+     && graveActivationGrantedS03(ctx.player, ctx.card, 'grave')
+     && locationMatchesV4('sz', e.range)) return true;
   return locationMatchesV4(zone,e.range);
 }
 function v4EffectConditionOk(e,ctx){

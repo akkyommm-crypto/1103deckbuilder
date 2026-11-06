@@ -950,7 +950,13 @@ function hasFieldActivatableEffect(card){
   return v;
 }
 
-function canActivateFromZone(db, zone){
+/* S03-U522: card を渡すと、墓地からの発動の動的な許可（engine/1ZZZA）も見る。
+   渡さない呼び出しは従来どおりスクリプトの activateFrom / テキスト推定だけで判定する。 */
+function canActivateFromZone(db, zone, card){
+  if(card && zone === 'grave' && typeof graveActivationGrantedS03 === 'function'){
+    const ownerS522 = (card.controller != null) ? card.controller : card.owner;
+    if((ownerS522 === 0 || ownerS522 === 1) && graveActivationGrantedS03(ownerS522, card, zone)) return true;
+  }
   const sc = CARD_SCRIPTS[db.n];
   if(sc){
     if(!sc.activateFrom) return false;
@@ -1029,7 +1035,7 @@ function reactableCards(p){
     (arr||[]).forEach((c,i)=>{
       if(!c) return;
       const db = dbOf(c);
-      if(!canActivateFromZone(db, zone)) return;
+      if(!canActivateFromZone(db, zone, c)) return;   /* S03-U522 */
       if(!isQuickFromZone(db)) return;          // 相手ターンに撃てないものは除く
       const sc = CARD_SCRIPTS[db.n];
       if(sc && sc.countLimit && countLeft(p, db.n, sc, c) <= 0) return;   // 使用済みは出さない

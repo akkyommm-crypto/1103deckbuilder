@@ -1745,7 +1745,7 @@ function getChainResponsesV2(p){
        表側の永続・フィールド魔法の効果（SS1）は開いたゲーム状態（自分のメインフェイズの操作）でのみ発動する。 */
     if(ss<2) return;
     if(db.k==='m' && sc.quickEffect!==true && ss<2) return;
-    if((zone==='grave'||zone==='banish'||zone==='hand')&&!canActivateFromZone(db,zone)) return;
+    if((zone==='grave'||zone==='banish'||zone==='hand')&&!canActivateFromZone(db,zone,c)) return;   /* S03-U522 */
     /* S03-U18: 発動への応答（宣言したスクリプト）は、一番上のリンクの発動イベントを ctx.event にして判定する。 */
     let L=strictScriptLegalityV2(nm,p,zone,index,(typeof activationResponseOptsS03==='function')?activationResponseOptsS03(nm,{}):{});
     /* S03-U40 (C-S03-31): 攻撃宣言時の窓では、攻撃宣言イベントで判定し直す */
@@ -1775,7 +1775,7 @@ function getChainResponsesV2(p){
        場合でも応答候補として offer しない — 砂塵の大竜巻が自分自身へのチェーン応答を無限に繰り返す
        実戦R1のハングを発見した（gameState.chain が無限に伸び続けた）。 */
     if(z==='mz'&&db.k!=='m') return;
-    if(!canActivateFromZone(db,z)&&z!=='mz') return;
+    if(!canActivateFromZone(db,z,c)&&z!=='mz') return;   /* S03-U522 */
     push(z,i,c);
   }));
   /* S03-U46 (C-S03-37): 相手フィールドの表側の「相手プレイヤーも使用できる」効果（王宮の弾圧） */

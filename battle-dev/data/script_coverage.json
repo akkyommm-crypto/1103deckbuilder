@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 379,
+    "NOT_STARTED": 378,
     "PARTIAL": 12,
-    "TESTED": 3615
+    "TESTED": 3616
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1654,
     "sin": 5,
-    "unified": 1433
+    "unified": 1434
   },
-  "static_registration_name_count": 3625,
+  "static_registration_name_count": 3626,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -3339,15 +3339,22 @@
       "subtype": null,
       "date": "2006-02-16",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZF_claude_s03_u522_diamond_dude.js",
+          "line": 43
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_p4_setcode_recovery.js",
         "tools\\test_s03_u203_loss_traps.js",
-        "tools\\test_s03_u283_ss_position2.js"
+        "tools\\test_s03_u283_ss_position2.js",
+        "tools\\test_s03_u522_diamond_dude.js"
       ]
     },
     {
@@ -38967,7 +38974,8 @@
         "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_s03_u519_attack_target.js",
         "tools\\test_s03_u520_declare_flip.js",
-        "tools\\test_s03_u521_copied_trap.js"
+        "tools\\test_s03_u521_copied_trap.js",
+        "tools\\test_s03_u522_diamond_dude.js"
       ]
     },
     {
@@ -49884,6 +49892,7 @@
         "tools\\test_s03_u285_gap7.js",
         "tools\\test_s03_u293_field_to_grave.js",
         "tools\\test_s03_u514_xyz_material.js",
+        "tools\\test_s03_u522_diamond_dude.js",
         "tools\\test_s03_u83_dark_hole.js"
       ]
     },
@@ -62246,6 +62255,7 @@
         "tools\\test_s03_u51_shock_ruler_lock.js",
         "tools\\test_s03_u520_declare_flip.js",
         "tools\\test_s03_u521_copied_trap.js",
+        "tools\\test_s03_u522_diamond_dude.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
@@ -78435,6 +78445,7 @@
         "tools\\test_s03_u290_event_summary.js",
         "tools\\test_s03_u292_gap9.js",
         "tools\\test_s03_u517_summon_counts.js",
+        "tools\\test_s03_u522_diamond_dude.js",
         "tools\\test_v490_batch01.js",
         "tools\\test_v590_batch11.js",
         "tools\\test_v600_batch12.js",

@@ -1027,7 +1027,7 @@ function pileDuelActionsV370(p,zone,i){
     const L=strictSummonProcedureLegality(nm,p,zone,i);
     if(L.ok) out.push({id:'specialSummonProcedure',label:'特殊召喚',cls:'gold',run:`closeSheet();runSummonProcedure(${jsStr(nm)},${p},'${zone}',${i})`});
   }
-  if(sc&&typeof sc.resolve==='function'&&canActivateFromZone(db,zone)){
+  if(sc&&typeof sc.resolve==='function'&&canActivateFromZone(db,zone,c)){   /* S03-U522 */
     const L=strictScriptLegalityV2(nm,p,zone,i,{});
     if(L.ok) out.unshift({id:'effect',label:`⚡ ${zoneJp(zone)}で効果を発動`,cls:'fx',run:`closeSheet();duelActivateFromZone(${p},'${zone}',${i})`});
   }
