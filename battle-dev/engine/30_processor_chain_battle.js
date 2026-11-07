@@ -1080,6 +1080,9 @@ function resolveOnePreparedLinkV27(link){
 function processChainEndV30(){
   gameState.chainWindow=null;
   if(typeof endLinkResolutionS03==='function') endLinkResolutionS03();   /* S03-U22 */
+  /* S03-U526: カウンター穩を含む一連のチェーン処理が終わった後に 1 回だけ積む
+     （WIKI-9220FED3DC74 / WIKI-ECEE2A503FDB 09/05/15。DRAIN_EVENTS の前なのでタイミングを逃さない）。 */
+  if(typeof counterNegateFlushS03==='function') counterNegateFlushS03(gameState);
   // 最終リンク解決後のAdjustを済ませてから、召喚無効窓や元処理へ戻る。
   if(gameState.pendingSummon){ finishSummonNegationChainV2(); return PROC_V27_DONE; }
   if(gameState.eventChainResumeV11){
@@ -1813,7 +1816,9 @@ function openChainPriorityV2(){
 function negatePreviousChainLinkV2(reason,destroySource,mode){
   if(!gameState.chain.length) return false;
   const i=gameState.chain.length-1, link=gameState.chain[i];
-  act({type:'CHAIN_NEGATE_LINK',index:i,reason:reason||'無効',mode:mode||'activation'});
+  /* S03-U526: 「無効にした側がカウンター穩か」を Action に載せる（engine/1ZZZC）。 */
+  act({type:'CHAIN_NEGATE_LINK',index:i,reason:reason||'無効',mode:mode||'activation',
+       byCounterS03:(typeof counterNegateSourceS03==='function')?counterNegateSourceS03():null});
   if(destroySource!==false){
     const h=findCardByUid(link.uid);
     if(h && (h.zone==='sz'||h.zone==='field'||h.zone==='mz'))

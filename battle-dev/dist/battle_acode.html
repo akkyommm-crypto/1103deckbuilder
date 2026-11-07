@@ -2345,6 +2345,21 @@ function applyActionBodyV31(gs, a){
       link.effectNegated = link.negateMode === 'effect';
       link.negateReason = a.reason || (link.activationNegated ? '発動を無効' : '効果を無効');
       logIt(gs, `チェーン${li+1}：${link.name} の${link.activationNegated?'発動':'効果'}を無効（${link.negateReason}）`);
+      /* S03-U526: カウンター穩で「カードの発動」を無効にした事を記録する（engine/1ZZZC）。
+         種類（m / s / t）と持ち主は無効にされたリンクと状態から読むので Replay でも同じ値になる。 */
+      if(a.byCounterS03 && link.activationNegated && typeof counterNegateNoteS03 === 'function'){
+        const srcS526 = (link.uid != null) ? findCardByUidInState(gs, link.uid) : null;
+        const kindS526 = srcS526 ? dbOf(srcS526.card).k : null;
+        const ofPS526 = (link.player === 0 || link.player === 1) ? link.player : (srcS526 ? srcS526.p : null);
+        if((kindS526 === 'm' || kindS526 === 's' || kindS526 === 't') && (ofPS526 === 0 || ofPS526 === 1))
+          counterNegateNoteS03(gs, {byPlayer:a.byCounterS03.player, byName:a.byCounterS03.name || null,
+                                    ofPlayer:ofPS526, kind:kindS526, name:link.name || null});
+      }
+      break;
+    }
+    /* S03-U526: 記録を消す（チェーン終了時に窓を開いた後）。 */
+    case "COUNTER_NEGATE_CLEAR_S03": {
+      delete gs.counterNegateS03;
       break;
     }
     /* System v18: LP変化の置換規則。 */
@@ -3950,6 +3965,7 @@ const ZONE_LOCAL_KEYS = [
   'summonSrcS03',   // S03-U238: the card whose effect special summoned it
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
+  'u526KindsS03',   // S03-U526: 冥王竜ヴァンダルギオンが「この方法で」出た印はこの滞在に属する
   'u525BurnTurnS03','u525SendTurnS03','u525DestroyGrpS03',   // S03-U525: セブン・ソード・ウォリアーの1ターンに1度と同時処理の印
   'u524ShadowStatS03',   // S03-U524: サイバー・シャドー・ガードナーの攻守はこの滞在に属する
   'u523TempleUidsS03',   // S03-U523: 忘却の海底神殿が除外したモンスターの記録はこの滞在に属する
@@ -8570,7 +8586,10 @@ function negateChainLinkV13(evtOrId, mode, reason, destroySource){
   const i = chainIndexOfV13(gameState, chainId);
   if(i < 0) return false;
   const link = gameState.chain[i];
+  /* S03-U526: 「無効にした側がカウンター穩か」を Action に載せる（engine/1ZZZC）。
+     解決中のリンクは Action の外の変数なので、ここで payload に焼き付ける。 */
   act({type:'CHAIN_NEGATE_LINK', index:i, chainId,
+       byCounterS03: (typeof counterNegateSourceS03 === 'function') ? counterNegateSourceS03() : null,
        reason: reason || '無効', mode: (mode === 'effect') ? 'effect' : 'activation'});
   if(destroySource === true && link && link.uid != null){
     const h = findCardByUid(link.uid);
@@ -15603,6 +15622,79 @@ function seaCardsOnFieldS03(player){
 }
 function seaOnFieldS03(player){ return seaCardsOnFieldS03(player).length > 0; }
 /* =========================================================================
+   S03-U526 — 「カウンター罠で相手のカードの発動を無効にした」事の記録と、その後の窓
+   -------------------------------------------------------------------------
+   《冥王竜ヴァンダルギオン》《裁きを下す者－ボルテニス》は「カウンター罠で無効にした／
+   カウンター罠の発動に成功した」事を条件に手札から出る。これまで engine はチェーンリンクに
+   「無効にされた」印（negated / activationNegated、engine/00 の CHAIN_NEGATE_LINK）だけを置き、
+   **誰が何を無効にしたか**を残していなかったので、この条件を読めなかった
+   （《裁きを下す者－ボルテニス》の ENGINE_GAP 記載「Counter Trap success provenance」）。
+
+   ■ 記録（gs.counterNegateS03）
+     CHAIN_NEGATE_LINK の Action が「無効にした側はカウンター罠か」（byCounterS03）を持ち、
+     発動無効（activationNegated）の時だけ 1 件積む:
+       {byPlayer, byName, ofPlayer, kind:'m'|'s'|'t', name}
+     kind と ofPlayer は無効にされたリンクと状態から読む。Action の payload と状態だけで決まるので
+     Replay・保存・再開でも同じ値になる。
+   ■ 窓（onCounterNegateS03）
+     WIKI-9220FED3DC74 / WIKI-ECEE2A503FDB（09/05/15）「カウンター罠を含む一連のチェーン処理が
+     終了した後」に発動でき、いかなる場合でもタイミングを逃さない。
+     そのため processChainEndV30（チェーンが空になった後・DRAIN_EVENTS の前）で 1 回だけ積む。
+     記録を消すのも Action（COUNTER_NEGATE_CLEAR_S03）なので Replay で同じ順になる。
+   ■ 数えないもの
+     WIKI-19F58D392DF1（05/03/04）《神の宣告》で召喚・反転召喚・特殊召喚を無効にした場合は条件を
+     満たさない → 召喚無効の経路は CHAIN_NEGATE_LINK を通らないので、ここには入らない。
+   ========================================================================= */
+/* 解決中のカードがカウンター罠なら、その出所を返す（engine/1C の negateChainLinkV13 から呼ぶ）。 */
+function counterNegateSourceS03(){
+  const r = (typeof RESOLVING_LINK_S03 !== 'undefined') ? RESOLVING_LINK_S03 : null;
+  if(!r || r.uid == null) return null;
+  const h = (typeof findCardByUid === 'function') ? findCardByUid(r.uid) : null;
+  const db = h ? dbOf(h.card) : null;
+  if(!db || db.k !== 't' || db.sub !== 'カウンター') return null;
+  const p = (r.player === 0 || r.player === 1) ? r.player : (h ? h.p : null);
+  if(p !== 0 && p !== 1) return null;
+  return {name:r.name || null, uid:r.uid, player:p};
+}
+function counterNegateNoteS03(gs, rec){
+  if(!gs || !rec) return;
+  const st = gs.counterNegateS03 || (gs.counterNegateS03 = {items:[]});
+  if(!Array.isArray(st.items)) st.items = [];
+  st.items.push(rec);
+}
+function counterNegatePendingS03(gs){
+  const st = (gs || gameState || {}).counterNegateS03;
+  return (st && Array.isArray(st.items)) ? st.items : [];
+}
+/* チェーン処理の終了時に 1 回だけ積む。 */
+function counterNegateFlushS03(gs){
+  gs = gs || ((typeof gameState !== 'undefined') ? gameState : null);
+  if(!gs) return false;
+  const items = counterNegatePendingS03(gs);
+  if(!items.length) return false;
+  const copy = items.map(x=>Object.assign({}, x));
+  if(typeof commitAutomaticActionV44 === 'function') commitAutomaticActionV44({type:'COUNTER_NEGATE_CLEAR_S03'});
+  else delete gs.counterNegateS03;
+  if(typeof queueDeferredEventV2 === 'function'
+     && typeof PLAY_MODE !== 'undefined' && PLAY_MODE === PLAY_MODES.DUEL){
+    queueDeferredEventV2('onCounterNegateS03', {itemsS03:copy});
+    return true;
+  }
+  return false;
+}
+/* その player が「自分のカウンター罠で、相手がコントロールするカードの発動を無効にした」種類。 */
+function counterNegateKindsForS03(evt, player){
+  const items = (evt && Array.isArray(evt.itemsS03)) ? evt.itemsS03 : [];
+  const out = [];
+  items.forEach(it=>{
+    if(!it || it.byPlayer !== player) return;
+    if(it.ofPlayer === player) return;   /* 自分のカードも同時に無効にした場合は調整中（WIKI-35B05E7A1570） */
+    if(it.kind !== 'm' && it.kind !== 's' && it.kind !== 't') return;
+    if(out.indexOf(it.kind) < 0) out.push(it.kind);
+  });
+  return out;
+}
+/* =========================================================================
    S03-U392 — Spell / Trap Set ban for a turn range (大寒波)
    effectFlags.setBanS03 = [{from, to, label}] on a player (written with API.setFlag(p, 'setBanS03', list, false));
    SET_ST refuses while gs.turn is inside a range of the player. Pure function of the state (Replay-safe).
@@ -19518,6 +19610,9 @@ function resolveOnePreparedLinkV27(link){
 function processChainEndV30(){
   gameState.chainWindow=null;
   if(typeof endLinkResolutionS03==='function') endLinkResolutionS03();   /* S03-U22 */
+  /* S03-U526: カウンター穩を含む一連のチェーン処理が終わった後に 1 回だけ積む
+     （WIKI-9220FED3DC74 / WIKI-ECEE2A503FDB 09/05/15。DRAIN_EVENTS の前なのでタイミングを逃さない）。 */
+  if(typeof counterNegateFlushS03==='function') counterNegateFlushS03(gameState);
   // 最終リンク解決後のAdjustを済ませてから、召喚無効窓や元処理へ戻る。
   if(gameState.pendingSummon){ finishSummonNegationChainV2(); return PROC_V27_DONE; }
   if(gameState.eventChainResumeV11){
@@ -20251,7 +20346,9 @@ function openChainPriorityV2(){
 function negatePreviousChainLinkV2(reason,destroySource,mode){
   if(!gameState.chain.length) return false;
   const i=gameState.chain.length-1, link=gameState.chain[i];
-  act({type:'CHAIN_NEGATE_LINK',index:i,reason:reason||'無効',mode:mode||'activation'});
+  /* S03-U526: 「無効にした側がカウンター穩か」を Action に載せる（engine/1ZZZC）。 */
+  act({type:'CHAIN_NEGATE_LINK',index:i,reason:reason||'無効',mode:mode||'activation',
+       byCounterS03:(typeof counterNegateSourceS03==='function')?counterNegateSourceS03():null});
   if(destroySource!==false){
     const h=findCardByUid(link.uid);
     if(h && (h.zone==='sz'||h.zone==='field'||h.zone==='mz'))
@@ -99922,6 +100019,163 @@ defineUnifiedCardV4('セブン・ソード・ウォリアー', [{
     onEquipAttached(ctx){ return !!u525EquipAttachedToMeS03(ctx) && !u525TurnUsedS03(ctx.card, 'u525BurnTurnS03'); },
     onEquipDetached(ctx){ return !!u525SentEquipS03(ctx) && u525FoeMonstersS03(ctx).length > 0; }
   }});
+/* S03-U526: 冥王竜ヴァンダルギオン（1103対象の未実装カード。carddata のテキスト）。
+
+   冥王竜ヴァンダルギオン（効果・星8・ドラゴン・闇・攻2800/守2500）
+     相手がコントロールするカードの発動をカウンター罠で無効にした場合、このカードを手札から特殊召喚する事ができる。
+     この方法で特殊召喚に成功した時、無効にしたカードの種類により以下の効果を発動する。
+     ●魔法:相手ライフに1500ポイントダメージを与える。
+     ●罠:相手フィールド上のカード1枚を選択して破壊する。
+     ●効果モンスター:自分の墓地からモンスター1体を選択して自分フィールド上に特殊召喚する。
+
+   当時の裁定（この実装の根拠。推測ではない）
+     WIKI-9220FED3DC74 発動タイミングは「カウンター罠の含まれる一連のチェーン処理が終了した後」。
+       したがって**いかなる場合でもタイミングを逃さない**。
+     WIKI-ECEE2A503FDB（09/05/15）カウンター罠がチェーン2で発動した場合もタイミングを逃さない
+       → チェーンが空になった後に 1 回だけ積む窓（engine/1ZZZC の onCounterNegateS03）で見る。
+     WIKI-EF5C7C459933（05/03/04）特殊召喚する効果は**任意効果**。
+     WIKI-066CCCFCEEDF（05/03/14）/ WIKI-0838EAF7312A（05/03/04）どちらの効果もチェーンに乗る
+       → 手札の誘発効果（1 つのチェーンブロック）＋特殊召喚成功時の誘発効果。
+     WIKI-AB7CE119106E（06/08/01）特殊召喚する効果に《天罰》をチェーンできる
+       → 効果モンスターの効果としてチェーンに乗る（既存の仕組みのまま）。
+     WIKI-DEB7C9EE867E（05/03/04）相手ターンでも発動できる → 窓をターンで制限しない。
+     WIKI-6C057DCC8B74（05/03/14）成功時の効果は対象が存在しなくても**発動して不発**になる
+       → 強制の誘発効果にして、対象が無ければ何も行わない（発動自体は行う）。
+     WIKI-19F58D392DF1（05/03/04）《神の宣告》で召喚・反転召喚・特殊召喚を無効にした場合は特殊召喚できない
+       → 「カードの発動」の無効だけを数える（engine/1ZZZC は CHAIN_NEGATE_LINK だけを記録する）。
+     WIKI-D06A75D8766F（07/01/04）手札に 2 枚あっても特殊召喚できるのは 1 枚だけ /
+     WIKI-EEACBF2AFE00（07/01/04）《裁きを下す者－ボルテニス》と 1 枚ずつでもどちらか 1 枚だけ
+       → 1 回の出来事（窓のイベントの処理番号）を player ごとに 1 回だけ使える。
+     WIKI-6215605D7356（08/01/08）お互いの手札にある場合は双方が発動できる → 印は player ごと。
+     WIKI-822781A9E595（09/01/03）《執念の剣》を《マジック・ジャマー》で無効にした場合もこの方法で特殊召喚する
+       → 種類は「無効にされたカードの種別」で見る（装備魔法なら●魔法）。
+     WIKI-A07AFFA1C527 / WIKI-BF2D2AB1783D（11/06/04）《虚無を呼ぶ呪文》で複数種類を同時に無効にした場合、
+       種類ごとの効果をそれぞれ任意の順番でチェーンを組んで発動する
+       → 種類ごとに別の効果（別のチェーンブロック）として持つ。
+
+   「無効にした種類」は窓のイベントが運ぶので、このカードは記録を持たない。
+   特殊召喚に成功した後、その種類だけをゾーン限定の印（u526KindsS03）に置く（場を離れると消える）。 */
+
+/* 窓のイベントから「自分のカウンター罠で、相手がコントロールするカードの発動を無効にした種類」 */
+function u526KindsFromEventS03(ctx){
+  if(ctx.zone !== 'hand') return [];
+  return (typeof counterNegateKindsForS03 === 'function') ? counterNegateKindsForS03(ctx.event, ctx.player) : [];
+}
+/* 1 回の出来事の番号（遅延イベントの処理番号。Replay でも同じ値） */
+function u526StampS03(ctx){
+  const e = ctx.event || {};
+  return (e.stepS03 != null) ? Number(e.stepS03) : null;
+}
+function u526UsedS03(player, stamp){
+  const P = gameState.players[player], f = (P && P.temporaryFlags) || {};
+  return stamp != null && Number(f.u526UsedS03) === Number(stamp);
+}
+/* この方法で特殊召喚されたか（自身の効果で出た＝印がある） */
+function u526SummonedByOwnEffectS03(ctx){
+  const e = ctx.event || {};
+  const self = e.card === ctx.card || (Array.isArray(e.cards) && e.cards.indexOf(ctx.card) >= 0)
+               || (e.uid != null && ctx.card && e.uid === ctx.card.uid);
+  if(!self || ctx.zone !== 'mz' || !ctx.card) return null;
+  const kinds = ctx.card.u526KindsS03;
+  return Array.isArray(kinds) && kinds.length ? kinds : null;
+}
+function u526HasKindS03(ctx, kind){
+  const kinds = u526SummonedByOwnEffectS03(ctx);
+  return !!kinds && kinds.indexOf(kind) >= 0;
+}
+/* 相手フィールド上のカード（モンスター・魔法＆罠・フィールド。裏側も含む） */
+function u526FoeFieldCardsS03(ctx){
+  const p = ctx.opponent, P = gameState.players[p], out = [];
+  (P.mz || []).forEach((c, i)=>{ if(c) out.push({p:p, zone:'mz', index:i, card:c, db:dbOf(c)}); });
+  (P.sz || []).forEach((c, i)=>{ if(c) out.push({p:p, zone:'sz', index:i, card:c, db:dbOf(c)}); });
+  if(P.field) out.push({p:p, zone:'field', index:0, card:P.field, db:dbOf(P.field)});
+  return out;
+}
+function u526GraveMonstersS03(ctx){
+  return API.pileCards(ctx.player, 'grave',
+    x=>x.db.k === 'm' && canEffectSpecialSummonS03(x.card, 'grave', '冥王竜ヴァンダルギオン'));
+}
+/* 表示形式の指定が無いので、特殊召喚は表側攻撃／守備のどちらかを選ぶ（engine/1ZZK） */
+registerSsPositionAfterS03('s03u526.summon-after', (p, uids)=>{
+  const uid = uids[0], now = (uid != null) ? findCardByUid(uid) : null;
+  if(!now || now.zone !== 'mz' || now.p !== p) return;
+  const kinds = (gameState.players[p].temporaryFlags || {}).u526KindsPendingS03;
+  if(Array.isArray(kinds) && kinds.length)
+    API.setCardFlag(now, 'u526KindsS03', kinds.slice(), '冥王竜ヴァンダルギオン', {silent:true});
+});
+
+defineUnifiedCardV4('冥王竜ヴァンダルギオン', [{
+  /* 相手がコントロールするカードの発動をカウンター罠で無効にした場合、手札から特殊召喚する（任意） */
+  key:'hand-special', type:EFFECT_TYPE.TRIGGER, range:LOCATION.HAND, speed:1, events:['onCounterNegateS03'],
+  condition(ctx){
+    const kinds = u526KindsFromEventS03(ctx);
+    if(!kinds.length){ ctx.reason = '自分のカウンター罠で相手のカードの発動を無効にしていません'; return false; }
+    if(u526UsedS03(ctx.player, u526StampS03(ctx))){ ctx.reason = 'この無効化では既に特殊召喚しています'; return false; }
+    if(!hasMonsterZoneSpace(ctx.player)){ ctx.reason = 'モンスターゾーンに空きがありません'; return false; }
+    return true;
+  },
+  operation(ctx){
+    const h = locateCardAnyV4(ctx.card);
+    if(!h || h.zone !== 'hand' || h.p !== ctx.player) return;
+    const kinds = u526KindsFromEventS03(ctx), stamp = u526StampS03(ctx);
+    /* WIKI-D06A75D8766F / WIKI-EEACBF2AFE00: 同じ無効化で 2 枚目は出せない（先に出た 1 枚で使い切る） */
+    if(!kinds.length || u526UsedS03(ctx.player, stamp) || !hasMonsterZoneSpace(ctx.player)) return;
+    API.setFlag(ctx.player, 'u526UsedS03', stamp, true);
+    API.setFlag(ctx.player, 'u526KindsPendingS03', kinds.slice(), true);
+    specialSummonPositionsS03(ctx.player, [{uid:ctx.card.uid, from:'hand'}],
+                              '冥王竜ヴァンダルギオン', 's03u526.summon-after');
+  },
+  afterResolve(){}
+}, {
+  /* ●魔法: 相手ライフに1500ポイントダメージを与える */
+  key:'kind-spell', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:['onSpecialSummon'], forced:true,
+  condition(ctx){ return u526HasKindS03(ctx, 's'); },
+  operation(ctx){ API.damageLP(ctx.opponent, 1500, '冥王竜ヴァンダルギオン'); },
+  afterResolve(){}
+}, {
+  /* ●罠: 相手フィールド上のカード1枚を選択して破壊する */
+  key:'kind-trap', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:['onSpecialSummon'], forced:true,
+  targetRange:LOCATION.ONFIELD, targetSide:'opponent',
+  condition(ctx){ return u526HasKindS03(ctx, 't'); },
+  /* WIKI-6C057DCC8B74: 対象が無くても発動して不発になる（選択が開かず何も行わない） */
+  target(ctx, done){
+    const cands = u526FoeFieldCardsS03(ctx);
+    if(!cands.length){ done([]); return; }
+    API.selectCard('冥王竜ヴァンダルギオン：破壊する相手のカード', cands, t=>done([t]));
+  },
+  operation(ctx){
+    const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t);
+    if(r && (r.zone === 'mz' || r.zone === 'sz' || r.zone === 'field')) API.destroy(r, '冥王竜ヴァンダルギオン');
+  },
+  afterResolve(){}
+}, {
+  /* ●効果モンスター: 自分の墓地からモンスター1体を選択して自分フィールド上に特殊召喚する */
+  key:'kind-monster', type:EFFECT_TYPE.TRIGGER, range:LOCATION.MZONE, speed:1, events:['onSpecialSummon'], forced:true,
+  targetRange:LOCATION.GRAVE, targetSide:'self',
+  condition(ctx){ return u526HasKindS03(ctx, 'm'); },
+  target(ctx, done){
+    const cands = u526GraveMonstersS03(ctx);
+    if(!cands.length){ done([]); return; }
+    API.selectCard('冥王竜ヴァンダルギオン：特殊召喚するモンスター', cands, t=>done([t]));
+  },
+  operation(ctx){
+    const t = ctx.selectedTargets && ctx.selectedTargets[0], r = t && resolveTarget(t);
+    if(!r || r.zone !== 'grave' || r.p !== ctx.player) return;
+    if(!hasMonsterZoneSpace(ctx.player)) return;
+    specialSummonPositionsS03(ctx.player, [{uid:r.card.uid, from:'grave'}], '冥王竜ヴァンダルギオン');
+  },
+  afterResolve(){}
+}], {
+  type:'monster', priority:1, targets:true, timing:['free'],
+  activateFrom:['hand'], includesSpecialSummon:true,
+  blocksIfNoSpecialSummon(ctx){ return !!ctx && ctx.zone === 'hand'; },
+  passive:{
+    onCounterNegateS03(ctx){
+      return u526KindsFromEventS03(ctx).length > 0 && !u526UsedS03(ctx.player, u526StampS03(ctx));
+    },
+    onSpecialSummon(ctx){ return !!u526SummonedByOwnEffectS03(ctx); }
+  }
+});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

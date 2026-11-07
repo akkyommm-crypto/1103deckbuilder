@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 375,
+    "NOT_STARTED": 374,
     "PARTIAL": 12,
-    "TESTED": 3619
+    "TESTED": 3620
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -932,
+    "NOT_STARTED": -933,
     "PARTIAL": -170,
-    "TESTED": 1570
+    "TESTED": 1571
   },
   "status_changes": [
     {
@@ -5597,6 +5597,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U50"
+    },
+    {
+      "name": "冥王竜ヴァンダルギオン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U526"
     },
     {
       "name": "冥界の使者",

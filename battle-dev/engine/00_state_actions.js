@@ -1386,6 +1386,21 @@ function applyActionBodyV31(gs, a){
       link.effectNegated = link.negateMode === 'effect';
       link.negateReason = a.reason || (link.activationNegated ? '発動を無効' : '効果を無効');
       logIt(gs, `チェーン${li+1}：${link.name} の${link.activationNegated?'発動':'効果'}を無効（${link.negateReason}）`);
+      /* S03-U526: カウンター穩で「カードの発動」を無効にした事を記録する（engine/1ZZZC）。
+         種類（m / s / t）と持ち主は無効にされたリンクと状態から読むので Replay でも同じ値になる。 */
+      if(a.byCounterS03 && link.activationNegated && typeof counterNegateNoteS03 === 'function'){
+        const srcS526 = (link.uid != null) ? findCardByUidInState(gs, link.uid) : null;
+        const kindS526 = srcS526 ? dbOf(srcS526.card).k : null;
+        const ofPS526 = (link.player === 0 || link.player === 1) ? link.player : (srcS526 ? srcS526.p : null);
+        if((kindS526 === 'm' || kindS526 === 's' || kindS526 === 't') && (ofPS526 === 0 || ofPS526 === 1))
+          counterNegateNoteS03(gs, {byPlayer:a.byCounterS03.player, byName:a.byCounterS03.name || null,
+                                    ofPlayer:ofPS526, kind:kindS526, name:link.name || null});
+      }
+      break;
+    }
+    /* S03-U526: 記録を消す（チェーン終了時に窓を開いた後）。 */
+    case "COUNTER_NEGATE_CLEAR_S03": {
+      delete gs.counterNegateS03;
       break;
     }
     /* System v18: LP変化の置換規則。 */
@@ -2991,6 +3006,7 @@ const ZONE_LOCAL_KEYS = [
   'summonSrcS03',   // S03-U238: the card whose effect special summoned it
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
+  'u526KindsS03',   // S03-U526: 冥王竜ヴァンダルギオンが「この方法で」出た印はこの滞在に属する
   'u525BurnTurnS03','u525SendTurnS03','u525DestroyGrpS03',   // S03-U525: セブン・ソード・ウォリアーの1ターンに1度と同時処理の印
   'u524ShadowStatS03',   // S03-U524: サイバー・シャドー・ガードナーの攻守はこの滞在に属する
   'u523TempleUidsS03',   // S03-U523: 忘却の海底神殿が除外したモンスターの記録はこの滞在に属する

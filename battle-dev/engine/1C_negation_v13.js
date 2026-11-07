@@ -83,7 +83,10 @@ function negateChainLinkV13(evtOrId, mode, reason, destroySource){
   const i = chainIndexOfV13(gameState, chainId);
   if(i < 0) return false;
   const link = gameState.chain[i];
+  /* S03-U526: 「無効にした側がカウンター穩か」を Action に載せる（engine/1ZZZC）。
+     解決中のリンクは Action の外の変数なので、ここで payload に焼き付ける。 */
   act({type:'CHAIN_NEGATE_LINK', index:i, chainId,
+       byCounterS03: (typeof counterNegateSourceS03 === 'function') ? counterNegateSourceS03() : null,
        reason: reason || '無効', mode: (mode === 'effect') ? 'effect' : 'activation'});
   if(destroySource === true && link && link.uid != null){
     const h = findCardByUid(link.uid);

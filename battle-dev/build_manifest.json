@@ -284,6 +284,9 @@
   "path": "engine/1ZZZB_sea_name_s03.js"
  },
  {
+  "path": "engine/1ZZZC_counter_negate_s03.js"
+ },
+ {
   "path": "engine/1ZZT_set_ban_s03.js"
  },
  {
@@ -1890,6 +1893,9 @@
  },
  {
   "path": "cards/HZZZZZZZZZZZZI_claude_s03_u525_seven_swords.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZZJ_claude_s03_u526_vandalgyon.js"
  },
  {
   "path": "cards/40_auto_interpreter.js",
