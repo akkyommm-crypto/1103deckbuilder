@@ -904,6 +904,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u533_blood_ogre.js')],check=True
 subprocess.run(['node',str(ROOT/'tools/test_s03_u534_nitro_warrior.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u535_drill_warrior.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u536_chaos_pod.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u537_unions.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

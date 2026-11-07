@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 364,
+    "NOT_STARTED": 361,
     "PARTIAL": 12,
-    "TESTED": 3630
+    "TESTED": 3633
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -943,
+    "NOT_STARTED": -946,
     "PARTIAL": -170,
-    "TESTED": 1581
+    "TESTED": 1584
   },
   "status_changes": [
     {
@@ -2743,6 +2743,12 @@
       "unit": "S03-U465"
     },
     {
+      "name": "セコンド・ゴブリン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U537"
+    },
+    {
       "name": "セブン・ソード・ウォリアー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4529,6 +4535,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U248"
+    },
+    {
+      "name": "メタル化寄生生物－ルナタイト",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U537"
     },
     {
       "name": "メテオ・プロミネンス",
@@ -6431,6 +6443,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U230"
+    },
+    {
+      "name": "守護霊アイリン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U537"
     },
     {
       "name": "安全地帯",
