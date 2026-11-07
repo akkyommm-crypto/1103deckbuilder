@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 370,
+    "NOT_STARTED": 369,
     "PARTIAL": 12,
-    "TESTED": 3624
+    "TESTED": 3625
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1655,
     "sin": 5,
-    "unified": 1441
+    "unified": 1442
   },
-  "static_registration_name_count": 3634,
+  "static_registration_name_count": 3635,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -4724,7 +4724,8 @@
         "tools\\test_auto_cycle61.js",
         "tools\\test_auto_cycle62.js",
         "tools\\test_auto_cycle63.js",
-        "tools\\test_s03_u264_hooks.js"
+        "tools\\test_s03_u264_hooks.js",
+        "tools\\test_s03_u531_defusion.js"
       ]
     },
     {
@@ -4744,7 +4745,8 @@
         "tools\\test_auto_cycle27.js",
         "tools\\test_s03_u194_spells_traps.js",
         "tools\\test_s03_u224_ns16.js",
-        "tools\\test_s03_u241_ns29.js"
+        "tools\\test_s03_u241_ns29.js",
+        "tools\\test_s03_u531_defusion.js"
       ]
     },
     {
@@ -4860,7 +4862,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle64.js"
+        "tools\\test_auto_cycle64.js",
+        "tools\\test_s03_u531_defusion.js"
       ]
     },
     {
@@ -17867,7 +17870,7 @@
         {
           "kind": "legacy",
           "source": "cards\\A8_auto_cycle06.js",
-          "line": 812
+          "line": 813
         }
       ],
       "auto_table": false,
@@ -24562,7 +24565,7 @@
         {
           "kind": "legacy",
           "source": "cards\\A8_auto_cycle06.js",
-          "line": 735
+          "line": 736
         }
       ],
       "auto_table": false,
@@ -35331,7 +35334,7 @@
         {
           "kind": "legacy",
           "source": "cards\\A8_auto_cycle06.js",
-          "line": 765
+          "line": 766
         }
       ],
       "auto_table": false,
@@ -49950,6 +49953,7 @@
         "tools\\test_s03_u514_xyz_material.js",
         "tools\\test_s03_u522_diamond_dude.js",
         "tools\\test_s03_u525_seven_swords.js",
+        "tools\\test_s03_u531_defusion.js",
         "tools\\test_s03_u83_dark_hole.js"
       ]
     },
@@ -54314,7 +54318,7 @@
         {
           "kind": "legacy",
           "source": "cards\\A8_auto_cycle06.js",
-          "line": 797
+          "line": 798
         }
       ],
       "auto_table": false,
@@ -58995,7 +58999,7 @@
         {
           "kind": "legacy",
           "source": "cards\\A8_auto_cycle06.js",
-          "line": 839
+          "line": 840
         }
       ],
       "auto_table": false,
@@ -65510,12 +65514,13 @@
         {
           "kind": "legacy",
           "source": "cards\\A8_auto_cycle06.js",
-          "line": 709
+          "line": 710
         }
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle06.js"
+        "tools\\test_auto_cycle06.js",
+        "tools\\test_s03_u531_defusion.js"
       ]
     },
     {
@@ -85736,6 +85741,7 @@
         "tools\\test_s03_u497_summon_negation_window_order.js",
         "tools\\test_s03_u498_summon_negation_window.js",
         "tools\\test_s03_u51_shock_ruler_lock.js",
+        "tools\\test_s03_u531_defusion.js",
         "tools\\test_s03_u68_activation_negated_release_secondary.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -98872,6 +98878,7 @@
         "tools\\test_s03_u174_contact_fusion.js",
         "tools\\test_s03_u202_partial6.js",
         "tools\\test_s03_u212_ns5.js",
+        "tools\\test_s03_u531_defusion.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u59_future_fusion.js",
         "tools\\test_s03_u60_field_reactivation_guard.js",
@@ -99065,12 +99072,20 @@
       "subtype": "速攻",
       "date": "2002-03-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 23,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZO_claude_s03_u531_defusion.js",
+          "line": 47
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u531_defusion.js"
+      ]
     },
     {
       "index": 4477,

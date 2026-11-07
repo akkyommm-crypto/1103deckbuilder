@@ -1800,6 +1800,9 @@ function applyActionBodyV31(gs, a){
       if(a.gladiatorS03) card.gladiatorSummonedS03=true;   /* S03-U180: 「剣闘獣」モンスターの効果によって特殊召喚 (engine/1ZZ) */
       /* S03-U238: 「「X」と名のついたカードの効果によって特殊召喚」 — the summoning card's name, given by that card's script (opts.summonSrcS03) */
       if(a.summonSrcS03) card.summonSrcS03 = {name:String(a.summonSrcS03), turn:gs.turn};
+      /* S03-U531: 融合召喚以外の方法で特殊召喚されたら、融合素材の記録を消す
+         （WIKI-5772E54131CD 10/11/04。戻すだけの処理（returnS03）は消さない—— WIKI-6F274903FD7E 10/11/04）。 */
+      if(card.fusionMatUidsS03 && a.summonKind !== 'fusion' && a.returnS03 !== true) delete card.fusionMatUidsS03;
       /* S03-U184: 「効果を無効にして特殊召喚する」 — the negation is part of the summon, so its summon triggers do not activate */
       if(a.negateOnSummonS03) card.negV13 = {until:'permanent', turn:gs.turn, label:String(a.reason||'効果'), sourceUid:(a.negateSourceUidS03!=null?Number(a.negateSourceUidS03):null)};
       /* S03-U127: 正規の方法（summonKind が一致）で特殊召喚された記録。手札・デッキ・EXへ戻ると消える。 */

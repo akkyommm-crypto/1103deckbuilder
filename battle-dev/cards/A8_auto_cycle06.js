@@ -704,7 +704,8 @@ API.registerScheduleHandler('a8.subspaceReturn', (entry) => {
   const h = findCardByUid(uid);
   const p = (entry.player === 0 || entry.player === 1) ? entry.player : 0;
   if(h && h.zone === 'banish' && (gameState.players[p].mz || []).length < ZONE_LIMITS.mz)
-    API.specialSummon(p, 'banish', h.index, entry.pos || 'atk', '亜空間物質転送装置', h.p);
+    /* S03-U531: これは「戻す」処理なので、融合素材の記録を消さない（WIKI-6F274903FD7E 10/11/04）。 */
+    API.specialSummon(p, 'banish', h.index, entry.pos || 'atk', '亜空間物質転送装置', h.p, {returnS03:true});
 });
 defineScript('亜空間物質転送装置', {
   type:'trap', priority:2, targets:true,

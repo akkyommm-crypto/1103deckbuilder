@@ -210,6 +210,9 @@ function fusionSpellCommitS03(args, pos){
   const put = findCardByUid(args.exUid);
   if(put && put.zone==='mz'){
     API.setCardFlag(put, 'fusionMaterialCount', uids.length, spell, {silent:true});
+    /* S03-U531: この融合召喚に使った素材の uid（《融合解除》が読む）。
+       ゾーン限定にしないので、一時的に除外されて戻っても残る。 */
+    API.setCardFlag(put, 'fusionMatUidsS03', uids.slice(), spell, {silent:true});
     const after = prof.after && FUSION_SPELL_AFTER_S03[prof.after];
     if(after) after(put, spell, p);
   }

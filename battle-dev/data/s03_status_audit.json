@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 370,
+    "NOT_STARTED": 369,
     "PARTIAL": 12,
-    "TESTED": 3624
+    "TESTED": 3625
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -937,
+    "NOT_STARTED": -938,
     "PARTIAL": -170,
-    "TESTED": 1575
+    "TESTED": 1576
   },
   "status_changes": [
     {
@@ -8579,6 +8579,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U413"
+    },
+    {
+      "name": "融合解除",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U531"
     },
     {
       "name": "融合賢者",
