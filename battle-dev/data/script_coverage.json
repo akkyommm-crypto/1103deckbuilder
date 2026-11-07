@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 357,
+    "NOT_STARTED": 354,
     "PARTIAL": 12,
-    "TESTED": 3637
+    "TESTED": 3640
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -84,6 +84,7 @@
     "helper:u446Swap": 1,
     "helper:u52BattleRecruitScript": 2,
     "helper:u539SacrificeS03": 2,
+    "helper:u540DefineS03": 3,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
     "helper:v20DefineNinjaReveal": 2,
@@ -122,7 +123,7 @@
     "sin": 5,
     "unified": 1447
   },
-  "static_registration_name_count": 3647,
+  "static_registration_name_count": 3650,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -39078,7 +39079,8 @@
         "tools\\test_s03_u536_chaos_pod.js",
         "tools\\test_s03_u537_unions.js",
         "tools\\test_s03_u538_cyberdark.js",
-        "tools\\test_s03_u539_sacrifice.js"
+        "tools\\test_s03_u539_sacrifice.js",
+        "tools\\test_s03_u540_queen_lv.js"
       ]
     },
     {
@@ -52271,6 +52273,7 @@
       "registrations": [],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u540_queen_lv.js",
         "tools\\test_v540_batch06.js"
       ]
     },
@@ -62428,6 +62431,7 @@
         "tools\\test_s03_u538_cyberdark.js",
         "tools\\test_s03_u539_sacrifice.js",
         "tools\\test_s03_u53_instant_fusion.js",
+        "tools\\test_s03_u540_queen_lv.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_u59_future_fusion.js",
@@ -83219,6 +83223,7 @@
         "tools\\test_s03_u528_transform_sphere.js",
         "tools\\test_s03_u529_dark_simorgh.js",
         "tools\\test_s03_u533_blood_ogre.js",
+        "tools\\test_s03_u540_queen_lv.js",
         "tools\\test_s03_u85_book_of_moon.js"
       ]
     },
@@ -107339,13 +107344,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 26,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u540DefineS03",
+          "source": "cards\\HZZZZZZZZZZZZX_claude_s03_u540_queen_lv.js",
+          "line": 110
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u224_ns16.js"
+        "tools\\test_s03_u224_ns16.js",
+        "tools\\test_s03_u540_queen_lv.js"
       ]
     },
     {
@@ -107356,12 +107368,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 27,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u540DefineS03",
+          "source": "cards\\HZZZZZZZZZZZZX_claude_s03_u540_queen_lv.js",
+          "line": 111
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u540_queen_lv.js"
+      ]
     },
     {
       "index": 4849,
@@ -107371,12 +107391,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 18,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u540DefineS03",
+          "source": "cards\\HZZZZZZZZZZZZX_claude_s03_u540_queen_lv.js",
+          "line": 112
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u540_queen_lv.js"
+      ]
     },
     {
       "index": 4850,

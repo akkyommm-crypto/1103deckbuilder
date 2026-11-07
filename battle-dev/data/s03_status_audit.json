@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 357,
+    "NOT_STARTED": 354,
     "PARTIAL": 12,
-    "TESTED": 3637
+    "TESTED": 3640
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -950,
+    "NOT_STARTED": -953,
     "PARTIAL": -170,
-    "TESTED": 1588
+    "TESTED": 1591
   },
   "status_changes": [
     {
@@ -9353,6 +9353,24 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U380"
+    },
+    {
+      "name": "魅惑の女王 LV3",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U540"
+    },
+    {
+      "name": "魅惑の女王 LV5",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U540"
+    },
+    {
+      "name": "魅惑の女王 LV7",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U540"
     },
     {
       "name": "魔の取引",
