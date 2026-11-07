@@ -3030,6 +3030,8 @@ const ZONE_LOCAL_KEYS = [
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
   'revealedTurnS527',   // S03-U527: 《偽物のわな》でめくって確認された印はこの滞在に属する
+  'u528FaceDownS03',   // S03-U528: 裏側のまま装備された印
+  'u528EquipTurnS03',   // S03-U528: トランスフォーム・スフィアの 1 ターンに 1 度はこの滞在に属する
   'u526KindsS03',   // S03-U526: 冥王竜ヴァンダルギオンが「この方法で」出た印はこの滞在に属する
   'u525BurnTurnS03','u525SendTurnS03','u525DestroyGrpS03',   // S03-U525: セブン・ソード・ウォリアーの1ターンに1度と同時処理の印
   'u524ShadowStatS03',   // S03-U524: サイバー・シャドー・ガードナーの攻守はこの滞在に属する

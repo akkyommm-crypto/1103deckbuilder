@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 373,
+    "NOT_STARTED": 372,
     "PARTIAL": 12,
-    "TESTED": 3621
+    "TESTED": 3622
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -934,
+    "NOT_STARTED": -935,
     "PARTIAL": -170,
-    "TESTED": 1572
+    "TESTED": 1573
   },
   "status_changes": [
     {
@@ -3311,6 +3311,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U249"
+    },
+    {
+      "name": "トランスフォーム・スフィア",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U528"
     },
     {
       "name": "トロイホース",

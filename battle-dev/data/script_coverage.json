@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 373,
+    "NOT_STARTED": 372,
     "PARTIAL": 12,
-    "TESTED": 3621
+    "TESTED": 3622
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1655,
     "sin": 5,
-    "unified": 1438
+    "unified": 1439
   },
-  "static_registration_name_count": 3631,
+  "static_registration_name_count": 3632,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -39000,7 +39000,8 @@
         "tools\\test_s03_u524_shadow_gardna.js",
         "tools\\test_s03_u525_seven_swords.js",
         "tools\\test_s03_u526_vandalgyon.js",
-        "tools\\test_s03_u527_fake_trap.js"
+        "tools\\test_s03_u527_fake_trap.js",
+        "tools\\test_s03_u528_transform_sphere.js"
       ]
     },
     {
@@ -40087,12 +40088,20 @@
       "subtype": null,
       "date": "2009-10-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 12,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZL_claude_s03_u528_transform_sphere.js",
+          "line": 67
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u528_transform_sphere.js"
+      ]
     },
     {
       "index": 1800,
@@ -52870,7 +52879,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_codex_c01_special_win.js",
-        "tools\\test_s03_u154_reminders_prompts.js"
+        "tools\\test_s03_u154_reminders_prompts.js",
+        "tools\\test_s03_u528_transform_sphere.js"
       ]
     },
     {
@@ -62290,6 +62300,7 @@
         "tools\\test_s03_u525_seven_swords.js",
         "tools\\test_s03_u526_vandalgyon.js",
         "tools\\test_s03_u527_fake_trap.js",
+        "tools\\test_s03_u528_transform_sphere.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
@@ -83063,6 +83074,7 @@
         "tools\\test_s03_u471_prep_tx.js",
         "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_u486_summon_timing_window_close.js",
+        "tools\\test_s03_u528_transform_sphere.js",
         "tools\\test_s03_u85_book_of_moon.js"
       ]
     },
@@ -88485,7 +88497,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u420_foe_field.js"
+        "tools\\test_s03_u420_foe_field.js",
+        "tools\\test_s03_u528_transform_sphere.js"
       ]
     },
     {
