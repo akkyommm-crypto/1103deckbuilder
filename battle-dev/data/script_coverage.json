@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 367,
+    "NOT_STARTED": 366,
     "PARTIAL": 12,
-    "TESTED": 3627
+    "TESTED": 3628
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1655,
+    "legacy": 1656,
     "sin": 5,
     "unified": 1444
   },
-  "static_registration_name_count": 3637,
+  "static_registration_name_count": 3638,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -39028,7 +39028,8 @@
         "tools\\test_s03_u528_transform_sphere.js",
         "tools\\test_s03_u529_dark_simorgh.js",
         "tools\\test_s03_u530_tualatin.js",
-        "tools\\test_s03_u533_blood_ogre.js"
+        "tools\\test_s03_u533_blood_ogre.js",
+        "tools\\test_s03_u534_nitro_warrior.js"
       ]
     },
     {
@@ -42814,13 +42815,20 @@
       "subtype": null,
       "date": "2008-04-19",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZZR_claude_s03_u534_nitro_warrior.js",
+          "line": 45
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u254_ns34.js"
+        "tools\\test_s03_u254_ns34.js",
+        "tools\\test_s03_u534_nitro_warrior.js"
       ]
     },
     {
@@ -62344,6 +62352,7 @@
         "tools\\test_s03_u530_tualatin.js",
         "tools\\test_s03_u532_winged_kuriboh_lv9.js",
         "tools\\test_s03_u533_blood_ogre.js",
+        "tools\\test_s03_u534_nitro_warrior.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
@@ -78563,6 +78572,7 @@
         "tools\\test_s03_u526_vandalgyon.js",
         "tools\\test_s03_u527_fake_trap.js",
         "tools\\test_s03_u532_winged_kuriboh_lv9.js",
+        "tools\\test_s03_u534_nitro_warrior.js",
         "tools\\test_v490_batch01.js",
         "tools\\test_v590_batch11.js",
         "tools\\test_v600_batch12.js",
@@ -78865,7 +78875,8 @@
         "tools\\test_s03_u251_lv.js",
         "tools\\test_s03_u252_ns33.js",
         "tools\\test_s03_u260_unlocks.js",
-        "tools\\test_s03_u264_hooks.js"
+        "tools\\test_s03_u264_hooks.js",
+        "tools\\test_s03_u534_nitro_warrior.js"
       ]
     },
     {
@@ -105969,6 +105980,7 @@
         "tools\\test_s03_u31_manual_card_activation.js",
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u513_equip_substitute_optional.js",
+        "tools\\test_s03_u534_nitro_warrior.js",
         "tools\\test_s03_u59_future_fusion.js",
         "tools\\test_s03_u60_field_reactivation_guard.js",
         "tools\\test_s03_u66_dark_general_freed_protection.js",

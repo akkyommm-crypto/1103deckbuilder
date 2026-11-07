@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 367,
+    "NOT_STARTED": 366,
     "PARTIAL": 12,
-    "TESTED": 3627
+    "TESTED": 3628
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -940,
+    "NOT_STARTED": -941,
     "PARTIAL": -170,
-    "TESTED": 1578
+    "TESTED": 1579
   },
   "status_changes": [
     {
@@ -3557,6 +3557,12 @@
       "before": "PARTIAL",
       "after": "TESTED",
       "unit": "S03-U199"
+    },
+    {
+      "name": "ニトロ・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U534"
     },
     {
       "name": "ニトロ・シンクロン",

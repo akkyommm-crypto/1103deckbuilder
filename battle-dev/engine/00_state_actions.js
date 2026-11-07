@@ -1293,6 +1293,23 @@ function applyActionBodyV31(gs, a){
       }
       /* S03-U471: チェーンリンクができた時点が発動準備トランザクションの境界。以後の不発・無効ではコストを返さない。 */
       if(gs.prepTxS03 && (gs.prepTxS03.uid===(a.uid!=null?a.uid:null) || gs.prepTxS03.uid==null)) delete gs.prepTxS03;
+      /* S03-U534: 魔法カードの発動の瞬間に、発動したプレイヤーの場で表側表示だった
+         （WIKI-78D6ED4FE2E7 08/05/23「発動時に表側表示で存在していなければ適用しない」、
+         WIKI-5FF944747E56 08/10/07「発動時に自分フィールドに存在していなければ適用しない」）
+         モンスター（spellActWatchS03 を申告したカードだけ）に印を置く。そのターン最初の 1 回だけ。
+         永続効果で読むための記録なので、チェーンブロックは作らない（engine/1ZZ の誘発とは別）。 */
+      if(typeof CARD_SCRIPTS !== "undefined" && (a.player === 0 || a.player === 1)){
+        const dbS534 = (a.cardId != null && typeof CARD_DB !== "undefined") ? CARD_DB[a.cardId] : null;
+        if(dbS534 && dbS534.k === "s"){
+          (gs.players[a.player].mz || []).forEach(c=>{
+            if(!c || c.face !== "up") return;
+            const scS534 = CARD_SCRIPTS[cardName(c)];
+            if(!scS534 || scS534.spellActWatchS03 !== true) return;
+            if(c.spellActS03 && Number(c.spellActS03.turn) === Number(gs.turn)) return;
+            c.spellActS03 = {turn:gs.turn, atk:Number(c.attackCount) || 0, player:a.player};
+          });
+        }
+      }
       gs.chainSeq = (gs.chainSeq||0) + 1;
       gs.chain.push({
         chainId:gs.chainSeq,
@@ -3074,6 +3091,7 @@ const ZONE_LOCAL_KEYS = [
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
   'revealedTurnS527',   // S03-U527: 《偽物のわな》でめくって確認された印はこの滞在に属する
+  'spellActS03','u534ExtraS03','u534PinS03',   // S03-U534: 魔法の発動時の印と、もう 1 度の攻撃の印
   'u533PendingS03','u533StatS03',   // S03-U533: 血涙のオーガの「この効果で」の印と数値
   'u530LockAttrS03','u530PendingS03',   // S03-U530: テュアラティンの宣言した属性と「この効果で」の印
   'u528FaceDownS03',   // S03-U528: 裏側のまま装備された印
