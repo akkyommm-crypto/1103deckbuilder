@@ -2756,6 +2756,10 @@ function applyActionBodyV31(gs, a){
       eq.controller=a.player; eq.face='up'; eq.pos='atk';
       eq.v46MonsterEquip=true; eq.equipUid=eq.equipUid||eq.uid;
       eq.equipTo={p:(a.targetPlayer==null?a.player:a.targetPlayer),uid:mon.uid};
+      /* S03-U539: 「このカードの効果で装備した」の記録。墓地からの装備（FX_EQUIP_FROM_GRAVE_V31 / engine/1N）と
+         同じ形で持つ。engine/1ZZB の equipHostSubstituteS03（装備モンスターを代わりに破壊する）と
+         攻守の置き換えが、この印でしか自分の効果で装備したものを見分けられない。 */
+      if(a.sourceUidS03!=null) eq.equipTo.sourceUid=a.sourceUidS03;
       mon.equippedBy=mon.equippedBy||[];
       if(!mon.equippedBy.includes(eq.equipUid)) mon.equippedBy.push(eq.equipUid);
       P.sz.push(eq);

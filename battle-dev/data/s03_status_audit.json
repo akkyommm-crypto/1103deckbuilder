@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 359,
+    "NOT_STARTED": 357,
     "PARTIAL": 12,
-    "TESTED": 3635
+    "TESTED": 3637
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -948,
+    "NOT_STARTED": -950,
     "PARTIAL": -170,
-    "TESTED": 1586
+    "TESTED": 1588
   },
   "status_changes": [
     {
@@ -2147,6 +2147,18 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U252"
+    },
+    {
+      "name": "サウザンド・アイズ・サクリファイス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U539"
+    },
+    {
+      "name": "サクリファイス",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U539"
     },
     {
       "name": "サシカエル",

@@ -938,12 +938,14 @@ const API = {
       sourceUid:sourceUid==null?null:sourceUid,chainId:chainId==null?null:chainId});
     return !!(eq.card.equipTo&&eq.card.equipTo.uid===host.card.uid);
   },
-  equipMonster(p,t,target,reason){
+  equipMonster(p,t,target,reason,opts){
     const r=resolveTarget(t), h=resolveTarget(target);
     if(!r||!h||r.zone!=='mz'||h.zone!=='mz') return false;
     if(gameState.players[p].sz.length>=ZONE_LIMITS.sz) return false;
     trace(`equipMonster: ${labelOf(r.card)} → ${labelOf(h.card)}`);
-    act({type:'FX_MONSTER_EQUIP_V46',player:p,fromPlayer:r.p,fromIndex:r.index,targetPlayer:h.p,targetMz:h.index,reason});
+    /* S03-U539: opts.sourceUidS03 — the record of 'equipped by THIS card's effect' (same shape as the Graveyard equip) */
+    act({type:'FX_MONSTER_EQUIP_V46',player:p,fromPlayer:r.p,fromIndex:r.index,targetPlayer:h.p,targetMz:h.index,reason,
+      sourceUidS03:(opts&&opts.sourceUidS03!=null)?opts.sourceUidS03:null});
     return !!(gameState.players[p].sz||[]).find(c=>c===r.card&&c.v46MonsterEquip);
   },
   /* S03-U402: a monster of the hand equipped directly (竜操術), without being Special Summoned */

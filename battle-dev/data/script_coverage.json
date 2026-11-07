@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 359,
+    "NOT_STARTED": 357,
     "PARTIAL": 12,
-    "TESTED": 3635
+    "TESTED": 3637
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -83,6 +83,7 @@
     "helper:u412Define": 7,
     "helper:u446Swap": 1,
     "helper:u52BattleRecruitScript": 2,
+    "helper:u539SacrificeS03": 2,
     "helper:v14DefineEnergySpell": 2,
     "helper:v17DefineTuneSpell": 2,
     "helper:v20DefineNinjaReveal": 2,
@@ -121,7 +122,7 @@
     "sin": 5,
     "unified": 1447
   },
-  "static_registration_name_count": 3645,
+  "static_registration_name_count": 3647,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -11605,6 +11606,7 @@
         "tools\\test_class_a_recruit_bulk.js",
         "tools\\test_p1_choice_recovery_minibatch.js",
         "tools\\test_p24_unlocked_cards.js",
+        "tools\\test_s03_u539_sacrifice.js",
         "tools\\test_v560_batch08.js"
       ]
     },
@@ -25729,14 +25731,21 @@
       "subtype": null,
       "date": "2000-12-14",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 34,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u539SacrificeS03",
+          "source": "cards\\HZZZZZZZZZZZZW_claude_s03_u539_sacrifice.js",
+          "line": 144
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u517_summon_counts.js",
-        "tools\\test_s03_u518_summon_rights.js"
+        "tools\\test_s03_u518_summon_rights.js",
+        "tools\\test_s03_u539_sacrifice.js"
       ]
     },
     {
@@ -25781,10 +25790,16 @@
       "subtype": null,
       "date": "2002-03-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 21,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:u539SacrificeS03",
+          "source": "cards\\HZZZZZZZZZZZZW_claude_s03_u539_sacrifice.js",
+          "line": 129
+        }
+      ],
       "auto_table": false,
       "tests": [
         "tools\\test_auto_cycle25.js",
@@ -25794,6 +25809,7 @@
         "tools\\test_p24_unlocked_cards.js",
         "tools\\test_p3_provenance_cards.js",
         "tools\\test_ready25_b2.js",
+        "tools\\test_s03_u539_sacrifice.js",
         "tools\\test_v560_batch08.js",
         "tools\\test_v820_batch33.js",
         "tools\\test_v850_batch36.js"
@@ -39061,7 +39077,8 @@
         "tools\\test_s03_u535_drill_warrior.js",
         "tools\\test_s03_u536_chaos_pod.js",
         "tools\\test_s03_u537_unions.js",
-        "tools\\test_s03_u538_cyberdark.js"
+        "tools\\test_s03_u538_cyberdark.js",
+        "tools\\test_s03_u539_sacrifice.js"
       ]
     },
     {
@@ -62409,6 +62426,7 @@
         "tools\\test_s03_u536_chaos_pod.js",
         "tools\\test_s03_u537_unions.js",
         "tools\\test_s03_u538_cyberdark.js",
+        "tools\\test_s03_u539_sacrifice.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
