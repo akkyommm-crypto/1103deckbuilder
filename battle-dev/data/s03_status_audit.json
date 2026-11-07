@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 365,
+    "NOT_STARTED": 364,
     "PARTIAL": 12,
-    "TESTED": 3629
+    "TESTED": 3630
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -942,
+    "NOT_STARTED": -943,
     "PARTIAL": -170,
-    "TESTED": 1580
+    "TESTED": 1581
   },
   "status_changes": [
     {
@@ -1469,6 +1469,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U209"
+    },
+    {
+      "name": "カオスポッド",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U536"
     },
     {
       "name": "カオス・ゴッデス－混沌の女神－",

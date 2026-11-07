@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 365,
+    "NOT_STARTED": 364,
     "PARTIAL": 12,
-    "TESTED": 3629
+    "TESTED": 3630
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1656,
     "sin": 5,
-    "unified": 1445
+    "unified": 1446
   },
-  "static_registration_name_count": 3639,
+  "static_registration_name_count": 3640,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -16617,12 +16617,20 @@
       "subtype": null,
       "date": "2002-01-24",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 7,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZT_claude_s03_u536_chaos_pod.js",
+          "line": 136
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u536_chaos_pod.js"
+      ]
     },
     {
       "index": 730,
@@ -39030,7 +39038,8 @@
         "tools\\test_s03_u530_tualatin.js",
         "tools\\test_s03_u533_blood_ogre.js",
         "tools\\test_s03_u534_nitro_warrior.js",
-        "tools\\test_s03_u535_drill_warrior.js"
+        "tools\\test_s03_u535_drill_warrior.js",
+        "tools\\test_s03_u536_chaos_pod.js"
       ]
     },
     {
@@ -62365,6 +62374,7 @@
         "tools\\test_s03_u533_blood_ogre.js",
         "tools\\test_s03_u534_nitro_warrior.js",
         "tools\\test_s03_u535_drill_warrior.js",
+        "tools\\test_s03_u536_chaos_pod.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
@@ -96218,7 +96228,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle51.js"
+        "tools\\test_auto_cycle51.js",
+        "tools\\test_s03_u536_chaos_pod.js"
       ]
     },
     {
