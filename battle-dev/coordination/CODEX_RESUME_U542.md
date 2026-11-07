@@ -5,7 +5,8 @@ Claude の記録は消さずにこの記録を追加する。Claude の worktree
 
 ## 1. 引継ぎ基点
 
-- 引継ぎ基点: **`099cbb8af88316122fc205206fb6c78dcdf573f8`**（S03-U541）= `origin/claude/work` の先端。
+- 引継ぎ基点: **`c35725af8aae6cc40f10a6b6f9973789304b753d`**（= `origin/claude/work` の先端。
+  中身は S03-U541 の `099cbb8af88316122fc205206fb6c78dcdf573f8` と同じで、この引継ぎ記録を追加しただけのコミット）。
 - 作業ブランチ: この SHA から `codex/battle-u542`（または `codex/*`）を切って作業する。
   `claude/work` には書き込まない。`main` へ直接 push しない。
 - 引継ぎ時の `worktrees/claude` は clean（未コミットの変更なし）。
