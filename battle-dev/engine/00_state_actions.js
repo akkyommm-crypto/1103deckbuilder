@@ -2099,6 +2099,12 @@ function applyActionBodyV31(gs, a){
     case "FX_SELF_TO_GRAVE": {
       const card = removeFrom(P, a.zone, a.index);
       if(!card) break;
+      /* S03-U532: 「発動した魔法カードは墓地へ送られず除外する」の置換（解決後のルール処理も対象）。 */
+      if(typeof activatedSpellBanishS03 === 'function' && activatedSpellBanishS03(card, a.zone, 'grave', a)){
+        pushZone(P.banish, card);
+        logIt(gs, `${cardName(card)} は墓地へ送られず除外される`);
+        break;
+      }
       pushZone(P.grave, card);
       logIt(gs, `${cardName(card)} は墓地へ`);
       break;
@@ -3126,9 +3132,41 @@ function noteLeftFieldByEffectS03(card,fromZone,toZone,a){
   if(!['mz','sz','field'].includes(fromZone) || ['mz','sz','field'].includes(toZone)) return;
   card.leftFieldByEffectS03 = {turn:(typeof gameState!=='undefined' && gameState) ? gameState.turn : null, face:card.face||null, from:fromZone};
 }
+/* S03-U532: 「お互いに発動した魔法カードは墓地へ送られずゲームから除外する」（ハネクリボー LV9）。
+   表側表示で場にあるカードが spellToBanishS03 を申告していれば、発動された（＝表側表示の）
+   魔法カードが墓地へ行く代わりに除外される。コストで墓地へ送る場合は対象外
+   （WIKI-190811E08EFD 11/01/08）。申告の無い盤面では何も変わらない。 */
+function activatedSpellBanishS03(card, fromZone, toZone, a){
+  if(!card || toZone !== 'grave') return false;
+  if(fromZone !== 'sz' && fromZone !== 'field') return false;
+  if(card.face !== 'up') return false;                    /* セットされたままのカードは「発動した」ではない */
+  const db = (typeof dbOf === 'function') ? dbOf(card) : null;
+  if(!db || db.k !== 's') return false;
+  if(a && a.p3 && a.p3.reason === 'cost') return false;   /* WIKI-190811E08EFD: コストは除外しない */
+  if(typeof CARD_SCRIPTS === 'undefined' || typeof gameState === 'undefined' || !gameState) return false;
+  for(let q = 0; q < 2; q++){
+    const Q = gameState.players[q]; if(!Q) continue;
+    const srcs = [].concat((Q.mz || []).map(x=>({c:x, z:'mz'})), (Q.sz || []).map(x=>({c:x, z:'sz'})),
+                           Q.field ? [{c:Q.field, z:'field'}] : []);
+    for(const it of srcs){
+      const c = it.c;
+      if(!c || c === card || c.face !== 'up') continue;
+      /* モンスターカードはモンスターゾーンにいる時だけ効果を出す
+         （装備カード扱いのモンスターは効果を適用しない）。 */
+      const dbS532 = (typeof dbOf === 'function') ? dbOf(c) : null;
+      if(dbS532 && dbS532.k === 'm' && it.z !== 'mz') continue;
+      const sc = CARD_SCRIPTS[cardName(c)];
+      if(!sc || sc.spellToBanishS03 !== true) continue;
+      if(typeof effectNegated === 'function' && effectNegated(c)) continue;
+      return true;
+    }
+  }
+  return false;
+}
 function v350BanishWhenLeavesField(card,fromZone,toZone,a){
   noteLeftFieldByEffectS03(card,fromZone,toZone,a);
   if(banishWhenLeavesByOpponentEffectS03(card,fromZone,toZone,a)) return true;
+  if(activatedSpellBanishS03(card,fromZone,toZone,a)) return true;   /* S03-U532 */
   return !!(card && card.banishWhenLeavesField && ['mz','sz','field'].includes(fromZone) && !['mz','sz','field'].includes(toZone));
 }
 /* S03-U110: 「フィールドの表側表示のこのカードが墓地へ送られる場合、墓地へは行かず持ち主のデッキの一番上に戻る」

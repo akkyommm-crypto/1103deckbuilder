@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 369,
+    "NOT_STARTED": 368,
     "PARTIAL": 12,
-    "TESTED": 3625
+    "TESTED": 3626
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -938,
+    "NOT_STARTED": -939,
     "PARTIAL": -170,
-    "TESTED": 1576
+    "TESTED": 1577
   },
   "status_changes": [
     {
@@ -3635,6 +3635,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U256"
+    },
+    {
+      "name": "ハネクリボー LV9",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U532"
     },
     {
       "name": "ハンター・アウル",

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 369,
+    "NOT_STARTED": 368,
     "PARTIAL": 12,
-    "TESTED": 3625
+    "TESTED": 3626
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1655,
     "sin": 5,
-    "unified": 1442
+    "unified": 1443
   },
-  "static_registration_name_count": 3635,
+  "static_registration_name_count": 3636,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24253,6 +24253,7 @@
         "tools\\test_s03_u523_forgotten_temple.js",
         "tools\\test_s03_u525_seven_swords.js",
         "tools\\test_s03_u527_fake_trap.js",
+        "tools\\test_s03_u532_winged_kuriboh_lv9.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -43857,13 +43858,20 @@
       "subtype": null,
       "date": "2008-05-02",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 27,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZP_claude_s03_u532_winged_kuriboh_lv9.js",
+          "line": 55
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u276_gap4.js"
+        "tools\\test_s03_u276_gap4.js",
+        "tools\\test_s03_u532_winged_kuriboh_lv9.js"
       ]
     },
     {
@@ -53943,6 +53951,7 @@
         "tools\\test_s03_u36_manual_interrupted_activation.js",
         "tools\\test_s03_u37_manual_prompt_interrupted_activation.js",
         "tools\\test_s03_u526_vandalgyon.js",
+        "tools\\test_s03_u532_winged_kuriboh_lv9.js",
         "tools\\test_s03_u59_future_fusion.js",
         "tools\\test_s03_vs4_activation_negation_slice.js",
         "tools\\test_s03_vs5_battle_trigger_slice.js",
@@ -62330,6 +62339,7 @@
         "tools\\test_s03_u529_dark_simorgh.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u530_tualatin.js",
+        "tools\\test_s03_u532_winged_kuriboh_lv9.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
@@ -67134,6 +67144,7 @@
       "tests": [
         "tools\\test_s03_u07_spell_to_grave.js",
         "tools\\test_s03_u154_reminders_prompts.js",
+        "tools\\test_s03_u532_winged_kuriboh_lv9.js",
         "tools\\test_v450_native_cards.js"
       ]
     },
@@ -73897,7 +73908,8 @@
         "tools\\test_s03_u233_ns25.js",
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_s03_u525_seven_swords.js",
-        "tools\\test_s03_u527_fake_trap.js"
+        "tools\\test_s03_u527_fake_trap.js",
+        "tools\\test_s03_u532_winged_kuriboh_lv9.js"
       ]
     },
     {
@@ -78546,6 +78558,7 @@
         "tools\\test_s03_u522_diamond_dude.js",
         "tools\\test_s03_u526_vandalgyon.js",
         "tools\\test_s03_u527_fake_trap.js",
+        "tools\\test_s03_u532_winged_kuriboh_lv9.js",
         "tools\\test_v490_batch01.js",
         "tools\\test_v590_batch11.js",
         "tools\\test_v600_batch12.js",

@@ -899,6 +899,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u528_transform_sphere.js')],chec
 subprocess.run(['node',str(ROOT/'tools/test_s03_u529_dark_simorgh.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u530_tualatin.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u531_defusion.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u532_winged_kuriboh_lv9.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)
