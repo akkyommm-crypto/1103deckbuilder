@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 376,
+    "NOT_STARTED": 375,
     "PARTIAL": 12,
-    "TESTED": 3618
+    "TESTED": 3619
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1654,
     "sin": 5,
-    "unified": 1436
+    "unified": 1437
   },
-  "static_registration_name_count": 3628,
+  "static_registration_name_count": 3629,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24244,6 +24244,7 @@
         "tools\\test_s03_u519_attack_target.js",
         "tools\\test_s03_u520_declare_flip.js",
         "tools\\test_s03_u523_forgotten_temple.js",
+        "tools\\test_s03_u525_seven_swords.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -33134,13 +33135,20 @@
       "subtype": null,
       "date": "2010-05-21",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 16,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZI_claude_s03_u525_seven_swords.js",
+          "line": 83
+        }
+      ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u505_destroy_trigger_audit.js"
+        "tools\\test_s03_u505_destroy_trigger_audit.js",
+        "tools\\test_s03_u525_seven_swords.js"
       ]
     },
     {
@@ -38987,7 +38995,8 @@
         "tools\\test_s03_u521_copied_trap.js",
         "tools\\test_s03_u522_diamond_dude.js",
         "tools\\test_s03_u523_forgotten_temple.js",
-        "tools\\test_s03_u524_shadow_gardna.js"
+        "tools\\test_s03_u524_shadow_gardna.js",
+        "tools\\test_s03_u525_seven_swords.js"
       ]
     },
     {
@@ -49905,6 +49914,7 @@
         "tools\\test_s03_u293_field_to_grave.js",
         "tools\\test_s03_u514_xyz_material.js",
         "tools\\test_s03_u522_diamond_dude.js",
+        "tools\\test_s03_u525_seven_swords.js",
         "tools\\test_s03_u83_dark_hole.js"
       ]
     },
@@ -62271,6 +62281,7 @@
         "tools\\test_s03_u522_diamond_dude.js",
         "tools\\test_s03_u523_forgotten_temple.js",
         "tools\\test_s03_u524_shadow_gardna.js",
+        "tools\\test_s03_u525_seven_swords.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
@@ -66004,6 +66015,7 @@
       ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u525_seven_swords.js",
         "tools\\test_v710_batch23.js"
       ]
     },
@@ -73817,7 +73829,8 @@
         "tools\\test_s03_u188_staples.js",
         "tools\\test_s03_u192_staples2.js",
         "tools\\test_s03_u233_ns25.js",
-        "tools\\test_s03_u508_geartown_destroyed_trigger.js"
+        "tools\\test_s03_u508_geartown_destroyed_trigger.js",
+        "tools\\test_s03_u525_seven_swords.js"
       ]
     },
     {

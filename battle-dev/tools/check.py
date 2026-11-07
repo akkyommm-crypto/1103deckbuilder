@@ -892,6 +892,7 @@ subprocess.run(['node',str(ROOT/'tools/test_s03_u521_copied_trap.js')],check=Tru
 subprocess.run(['node',str(ROOT/'tools/test_s03_u522_diamond_dude.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u523_forgotten_temple.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_s03_u524_shadow_gardna.js')],check=True)
+subprocess.run(['node',str(ROOT/'tools/test_s03_u525_seven_swords.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle42.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle43.js')],check=True)
 subprocess.run(['node',str(ROOT/'tools/test_auto_cycle44.js')],check=True)

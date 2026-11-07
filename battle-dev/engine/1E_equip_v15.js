@@ -87,9 +87,23 @@ function equippedMonsterOfV15(eqCard, gs){
 }
 
 /* ---- 装備イベント（FX_EQUIP / FX_UNEQUIP の中から呼ぶ） ------------------ */
+/* S03-U525: 同時に場を離れた装備カードをまとめる印。
+   「同時に 2 枚墓地へ送られても効果は 1 回だけ」（WIKI-3BCFDB9634BD 10/08/05）を読むため。
+   procStepS03（engine/1ZZX）は破壊 1 枚ごとに増えるので「同時」にならない。
+   解決の通し番号（gs.resolveSeqS03、CHAIN_RESOLVE_TOP で 1 進む）を使うので、
+   同じ効果の解決の中で外れた装備は同じ印になる。
+   RESOLVING_LINK_S03 は Action の外の変数で Replay では null なので使わない。 */
+function equipDetachGroupS03(gs){
+  gs = gs || ((typeof gameState !== 'undefined') ? gameState : null);
+  return 'r' + (((gs && gs.resolveSeqS03) | 0));
+}
 function makeEquipEventV15(o){
+  /* S03-U525: cardUid は装備カード自身の uid（equipUid は装備ごとの番号で別物）。
+     装備が外れた後は equipCardOfEventV15 で引けないので、行き先を読むために持つ。 */
   return {equipUid:(o.equipUid != null) ? o.equipUid : null,
           uid:(o.uid != null) ? o.uid : null,
+          cardUid:(o.cardUid != null) ? o.cardUid : null,
+          grpS03:(o.grpS03 != null) ? o.grpS03 : null,
           player:o.player, targetPlayer:o.targetPlayer};
 }
 function v15EmitEquipEvent(gs, name, o){

@@ -1496,6 +1496,10 @@ function applyActionBodyV31(gs, a){
     case "CHAIN_RESOLVE_TOP": {
       // 逆順解決：末尾（最後に積んだ＝一番上）から1つ処理して取り除く
       if(!gs.chain.length) break;
+      /* S03-U525: 解決の通し番号。「同じ効果の解決の中で起きた」を状態で読むために持つ
+         （engine/1E の equipDetachGroupS03、装備が同時に外れたかの判定）。
+         Action の中で進めるので Replay・保存・再開でも同じ値になる。 */
+      gs.resolveSeqS03 = (gs.resolveSeqS03 | 0) + 1;
       const link = gs.chain.pop();
       // System v4.4: 永続/フィールド/装備カードの発動待ち状態も解決Actionに含める。
       // 発動無効なら activationNegated を残し、通常解決なら pending/negated を解除する。
@@ -2987,6 +2991,7 @@ const ZONE_LOCAL_KEYS = [
   'summonSrcS03',   // S03-U238: the card whose effect special summoned it
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
+  'u525BurnTurnS03','u525SendTurnS03','u525DestroyGrpS03',   // S03-U525: セブン・ソード・ウォリアーの1ターンに1度と同時処理の印
   'u524ShadowStatS03',   // S03-U524: サイバー・シャドー・ガードナーの攻守はこの滞在に属する
   'u523TempleUidsS03',   // S03-U523: 忘却の海底神殿が除外したモンスターの記録はこの滞在に属する
   'u519FrameAtkS03',   // S03-U519: パワー・フレームの上昇値はこの装備に属する
@@ -3107,6 +3112,23 @@ function reset(card){
   if(!card) return null;
   /* S03-U248: a Trap Monster leaving the field (「このカードの効果で特殊召喚したこのカードが…破壊された場合」, read after the zone-local keys are gone) */
   if(card.asMonsterDbS03) card.leftAsTrapMonsterS03 = {turn:(typeof gameState!=='undefined' && gameState) ? gameState.turn : null, self:!!card.trapMonsterS03};
+  /* S03-U525: 装備カード自身が場を離れた時に「装備が外れた」を知らせる（装備モンスターの uid を載せる）。
+     「装備された装備カードが墓地へ送られた時」を読むため。装備モンスターが場を離れた経路（engine/1N）は
+     ここを通る前に自分で出しているので二重にはならない。装備モンスター側に残る uid も掃除する。 */
+  if(card.equipTo && card.equipUid != null && typeof gameState !== 'undefined' && gameState){
+    const hostUidS525 = card.equipTo.uid, hostPS525 = card.equipTo.p, eqUidS525 = card.equipUid;
+    const eqCardUidS525 = (card.uid != null) ? card.uid : null;
+    const ctrlS525 = (card.controller != null) ? card.controller : card.owner;
+    if(typeof v15EmitEquipEvent === 'function')
+      v15EmitEquipEvent(gameState, 'onEquipDetached',
+        {equipUid:eqUidS525, uid:hostUidS525, cardUid:eqCardUidS525,
+         grpS03:(typeof equipDetachGroupS03==='function') ? equipDetachGroupS03(gameState) : null,
+         player:ctrlS525, targetPlayer:hostPS525});
+    const hostS525 = (hostUidS525 != null && typeof findCardByUidInState === 'function')
+      ? findCardByUidInState(gameState, hostUidS525) : null;
+    if(hostS525 && hostS525.card && Array.isArray(hostS525.card.equippedBy))
+      hostS525.card.equippedBy = hostS525.card.equippedBy.filter(u=>u !== eqUidS525);
+  }
   ZONE_LOCAL_KEYS.forEach(k=>{ delete card[k]; });
   card.face = 'up'; card.pos = 'atk';
   return card;                         // 同じオブジェクトを返して同一性を保つ

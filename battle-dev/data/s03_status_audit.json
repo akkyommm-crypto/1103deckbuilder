@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 376,
+    "NOT_STARTED": 375,
     "PARTIAL": 12,
-    "TESTED": 3618
+    "TESTED": 3619
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -931,
+    "NOT_STARTED": -932,
     "PARTIAL": -170,
-    "TESTED": 1569
+    "TESTED": 1570
   },
   "status_changes": [
     {
@@ -2735,6 +2735,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U465"
+    },
+    {
+      "name": "セブン・ソード・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U525"
     },
     {
       "name": "ゼロ・ガードナー",
