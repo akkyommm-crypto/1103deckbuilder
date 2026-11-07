@@ -39,6 +39,12 @@ function destroySubDeclS03(card){
      （《ファイティング・スピリッツ》《白銀の翼》）。申告するのは装備カードの側（equipSubstituteOptionalS03）で、
      守られるのは装備モンスターなので、モンスター自身のスクリプトではなく装備カードを見る。
      強制版は S03-U183 の equipSubstituteS03（破壊の reducer 側）で、そちらは触らない。 */
+  /* S03-U541: 装備モンスター側（ホスト）が申告する任意の身代わり
+     （equipHostSubstituteOptionalS03:{causes:[...]}）— 「このカードが破壊される場合、代わりに
+     この効果で装備したモンスターを破壊できる」（《地底のアラクネー》《シー・アーチャー》）。
+     破壊されるのは装備カードなので適用は equipSub と同じ。強制版は equipHostSubstituteS03（engine/1ZZB）。 */
+  if(sc && sc.equipHostSubstituteOptionalS03)
+    return {kind:'equipSub', hostOwnS03:true, causes:(sc.equipHostSubstituteOptionalS03.causes || ['battle','effect'])};
   if(typeof equipSubOptionalDeclsS03==='function' && equipSubOptionalDeclsS03(card).length) return {kind:'equipSub'};
   return null;
 }
@@ -85,6 +91,19 @@ function destroySubOptionsS03(gs, card, p, cause, excl){
   if(decl.kind==='equipSub'){
     const locQ = (card.uid!=null && typeof findCardByUidInState==='function') ? findCardByUidInState(gs, card.uid) : null;
     if(!locQ || locQ.zone!=='mz') return [];
+    /* S03-U541: ホストが申告した場合は、このカード自身の効果で装備したモンスター（equipTo.sourceUid が自分）が候補になる。
+       同時に破壊される装備カードは excl に入っているので候補から外れる（WIKI-E678659CBF07）。 */
+    if(decl.hostOwnS03){
+      const outH = [];
+      for(let q = 0; q < (gs.players||[]).length; q++) (gs.players[q].sz||[]).forEach(eq=>{
+        if(!eq || eq.face!=='up' || eq.v46MonsterEquip!==true) return;
+        if(!eq.equipTo || eq.equipTo.sourceUid == null || eq.equipTo.sourceUid !== card.uid) return;
+        ensureCardUid(gs, eq);
+        if(excl.indexOf(eq.uid) >= 0) return;
+        outH.push({kind:'equipSub', uid:eq.uid, name:cardName(eq)});
+      });
+      return outH;
+    }
     return equipSubOptionalDeclsS03(card, cause, gs)
       .filter(e=>excl.indexOf(e.uid)<0)
       .map(e=>({kind:'equipSub', uid:e.uid, name:e.name}));

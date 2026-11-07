@@ -1943,6 +1943,9 @@
   "path": "cards/HZZZZZZZZZZZZX_claude_s03_u540_queen_lv.js"
  },
  {
+  "path": "cards/HZZZZZZZZZZZZY_claude_s03_u541_equip_self.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
