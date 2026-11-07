@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 361,
+    "NOT_STARTED": 359,
     "PARTIAL": 12,
-    "TESTED": 3633
+    "TESTED": 3635
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -946,
+    "NOT_STARTED": -948,
     "PARTIAL": -170,
-    "TESTED": 1584
+    "TESTED": 1586
   },
   "status_changes": [
     {
@@ -2051,6 +2051,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U445"
+    },
+    {
+      "name": "サイバーダーク・インパクト!",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U538"
     },
     {
       "name": "サイバー・エルタニン",
@@ -8981,6 +8987,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U288"
+    },
+    {
+      "name": "鎧黒竜－サイバー・ダーク・ドラゴン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U538"
     },
     {
       "name": "閃光のイリュージョン",

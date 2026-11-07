@@ -31,7 +31,11 @@ const FUSION_SPELL_PROFILES_S03 = {
   'オーバーロード・フュージョン': {zones:['mz','grave'], dispose:'banish', race:'機械', attr:'闇'},
   /* S03-U133 */
   'パワー・ボンド':           {zones:['hand','mz'], dispose:'grave', race:'機械', after:'powerBond'},
-  'ジェムナイト・フュージョン': {zones:['hand','mz'], dispose:'grave', exNameIncludes:'ジェムナイト'}
+  'ジェムナイト・フュージョン': {zones:['hand','mz'], dispose:'grave', exNameIncludes:'ジェムナイト'},
+  /* S03-U538: 「サイバーダーク・インパクト!」— the materials are returned to their owner's Deck (dispose 'deck') instead of
+     being sent to the GY or banished; the Fusion Monster is 「鎧黒竜－サイバー・ダーク・ドラゴン」, whose own material line names the three
+     「サイバーダーク」 monsters (so WIKI-C6723DC2A561 — no Fusion Material substitutes — holds: this procedure never offers substitutes). */
+  'サイバーダーク・インパクト!': {zones:['hand','mz','grave'], dispose:'deck', exNameIncludes:'鎧黒竜', noSubstitute:true}
 };
 function fusionSpellProfileS03(spell){ return FUSION_SPELL_PROFILES_S03[spell] || {zones:['hand','mz'], dispose:'grave'}; }
 const FUSION_SPELL_AFTER_S03 = {
@@ -107,10 +111,12 @@ function fusionNoSubstituteS03(db){
   return /融合召喚は上記のカードでしか行えない|上記の?カードを融合素材にした融合召喚でのみ/.test(String((db||{}).e||''));
 }
 /* the material combinations for this Fusion Monster, including those with one substitute (each entry keeps its pool object) */
-function fusionCombosS03(pool, spec, fusionDb, limit){
+function fusionCombosS03(pool, spec, fusionDb, limit, noSubS538){
   const LIM = limit || 60;
   const base = findMaterialCombos(pool, spec, null, LIM);
-  if(!spec || !spec.slots || fusionNoSubstituteS03(fusionDb)) return base;
+  /* S03-U538: noSubS538 — the Fusion Spell itself names the materials (「サイバーダーク・インパクト!」 names the three
+     「サイバー・ダーク」 cards), so a Fusion Material substitute cannot stand in for one of them (WIKI-C6723DC2A561). */
+  if(!spec || !spec.slots || noSubS538 || fusionNoSubstituteS03(fusionDb)) return base;
   const names = [];
   spec.slots.forEach(q=>{ if(q.nameExact && names.indexOf(q.nameExact)<0) names.push(q.nameExact); });
   if(!names.length) return base;
@@ -140,7 +146,7 @@ function fusionSpellOptionsS03(p, spell){
     if(!c || fusionSpellMonsterBlockS03(p, c, spell, prof)) return;
     const spec = parseMaterialSpec(dbOf(c));
     if(!spec || !spec.slots) return;
-    const combos = fusionCombosS03(pool, spec, dbOf(c), 60)   /* S03-U134: with Fusion Material substitutes */
+    const combos = fusionCombosS03(pool, spec, dbOf(c), 60, prof.noSubstitute===true)   /* S03-U134: with Fusion Material substitutes; S03-U538: unless the spell names them */
       .filter(cb=>(P.mz||[]).length - cb.filter(m=>m.zone==='mz').length < ZONE_LIMITS.mz);
     if(combos.length) out.push({ex:{p, zone:'ex', index:ei, card:c, db:dbOf(c)}, combos});
   });
@@ -166,7 +172,8 @@ registerChoiceHandlerV49('s03u130.fusion-ex', (answer, args)=>{
   const opt = fusionSpellOptionsS03(args.player, args.spell).find(o=>ensureCardUid(gameState, o.ex.card)===exUid);
   if(!opt){ API.log(`${args.spell}：融合召喚できなくなった`); return; }
   const next = Object.assign({}, args, {exUid});
-  const verb = fusionSpellProfileS03(args.spell).dispose==='banish' ? '除外する' : '墓地へ送る';
+  const disposeS538 = fusionSpellProfileS03(args.spell).dispose;
+  const verb = disposeS538==='banish' ? '除外する' : (disposeS538==='deck' ? '持ち主のデッキに戻す' : '墓地へ送る');
   if(opt.combos.length===1){ fusionSpellAskPosS03(Object.assign(next, {mats:fusionSpellComboUidsS03(opt.combos[0])})); return; }
   API.requestChoice({player:args.player, kind:'declare', title:`${args.spell}：${cardName(picked.card)} の融合素材（${verb}）`,
     candidates:opt.combos.map((cb,k)=>({key:'m'+k, label:fusionSpellComboLabelS03(cb), value:fusionSpellComboUidsS03(cb).join(',')})),
@@ -199,10 +206,17 @@ function fusionSpellCommitS03(args, pos){
   uids.forEach(u=>{
     const h = findCardByUid(u); if(!h) return;
     if(prof.dispose==='banish') API.banish(h, `${spell}（融合素材）`);
+    else if(prof.dispose==='deck'){
+      /* S03-U538 / WIKI-FED15B34D67A: 手札やフィールドで裏側表示の融合素材は、デッキに戻す前に相手に確認させる
+         （戻った後は非公開情報になるため）。 */
+      if(h.zone==='hand' || (h.zone==='mz' && h.card && h.card.face==='down'))
+        API.reveal({player:h.p, audience:'both', cards:[h], label:`${spell}（融合素材の確認）`, until:'resolution'});
+      API.returnToDeck(h, false, `${spell}（融合素材）`);
+    }
     else if(h.zone==='hand') API.sendHandToGrave(h.p, h.index, `${spell}（融合素材）`);
     else API.sendToGrave(h, `${spell}（融合素材）`);
   });
-  if(prof.dispose!=='banish')
+  if(prof.dispose==='grave' || !prof.dispose)
     uids.forEach(u=>{ const h = findCardByUid(u); if(h && h.zone==='grave') API.setCardFlag(h, 'fusionMaterialS03', spell, spell, {silent:true}); });
   const now = findCardByUid(args.exUid);
   if(!now || now.zone!=='ex') return;

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 361,
+    "NOT_STARTED": 359,
     "PARTIAL": 12,
-    "TESTED": 3633
+    "TESTED": 3635
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -50,7 +50,7 @@
     "helper:defineFlipSearchS03": 2,
     "helper:defineForcedFlipSearchS03": 2,
     "helper:defineFortuneLadyS03": 6,
-    "helper:defineFusionSpellS03": 5,
+    "helper:defineFusionSpellS03": 6,
     "helper:defineGeminiS03": 21,
     "helper:definePeaceGolemS03": 2,
     "helper:defineReleaseRecruitS03": 5,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1656,
     "sin": 5,
-    "unified": 1446
+    "unified": 1447
   },
-  "static_registration_name_count": 3643,
+  "static_registration_name_count": 3645,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24775,12 +24775,20 @@
       "subtype": "",
       "date": "2007-05-12",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "helper:defineFusionSpellS03",
+          "source": "cards\\HZZZZZZZZZZZZV_claude_s03_u538_cyberdark.js",
+          "line": 97
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u538_cyberdark.js"
+      ]
     },
     {
       "index": 1098,
@@ -25101,7 +25109,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u323_cyberdark.js"
+        "tools\\test_s03_u323_cyberdark.js",
+        "tools\\test_s03_u538_cyberdark.js"
       ]
     },
     {
@@ -25124,7 +25133,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u323_cyberdark.js"
+        "tools\\test_s03_u323_cyberdark.js",
+        "tools\\test_s03_u538_cyberdark.js"
       ]
     },
     {
@@ -25147,7 +25157,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u323_cyberdark.js"
+        "tools\\test_s03_u323_cyberdark.js",
+        "tools\\test_s03_u538_cyberdark.js"
       ]
     },
     {
@@ -39049,7 +39060,8 @@
         "tools\\test_s03_u534_nitro_warrior.js",
         "tools\\test_s03_u535_drill_warrior.js",
         "tools\\test_s03_u536_chaos_pod.js",
-        "tools\\test_s03_u537_unions.js"
+        "tools\\test_s03_u537_unions.js",
+        "tools\\test_s03_u538_cyberdark.js"
       ]
     },
     {
@@ -51037,7 +51049,8 @@
       "registrations": [],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u288_gap8.js"
+        "tools\\test_s03_u288_gap8.js",
+        "tools\\test_s03_u538_cyberdark.js"
       ]
     },
     {
@@ -62395,6 +62408,7 @@
         "tools\\test_s03_u535_drill_warrior.js",
         "tools\\test_s03_u536_chaos_pod.js",
         "tools\\test_s03_u537_unions.js",
+        "tools\\test_s03_u538_cyberdark.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
@@ -87441,7 +87455,8 @@
       ],
       "auto_table": true,
       "tests": [
-        "tools\\test_s03_u134_fusion_substitute.js"
+        "tools\\test_s03_u134_fusion_substitute.js",
+        "tools\\test_s03_u538_cyberdark.js"
       ]
     },
     {
@@ -103183,12 +103198,20 @@
       "subtype": null,
       "date": "2006-08-10",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 46,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZV_claude_s03_u538_cyberdark.js",
+          "line": 64
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u538_cyberdark.js"
+      ]
     },
     {
       "index": 4666,
@@ -106034,6 +106057,7 @@
         "tools\\test_s03_u495_missed_timing_evidence.js",
         "tools\\test_s03_u513_equip_substitute_optional.js",
         "tools\\test_s03_u534_nitro_warrior.js",
+        "tools\\test_s03_u538_cyberdark.js",
         "tools\\test_s03_u59_future_fusion.js",
         "tools\\test_s03_u60_field_reactivation_guard.js",
         "tools\\test_s03_u66_dark_general_freed_protection.js",
