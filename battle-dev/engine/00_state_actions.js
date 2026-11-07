@@ -338,6 +338,16 @@ function applyActionBodyV31(gs, a){
     }
 
     case "SET_PHASE":
+      /* S03-U530: バトルフェイズ開始時の記録（「開始時に存在したモンスター」と「開始時の手札」。
+         《テュアラティン》が読む。Action の中で取るので Replay・保存・再開でも同じ値になる）。 */
+      if(a.phase === 'battle'){
+        gs.bpStartS03 = {turn:gs.turn, player:gs.activePlayer, mz:[[], []], hand:[[], []]};
+        for(let pS530 = 0; pS530 < 2; pS530++){
+          const PS530 = gs.players[pS530]; if(!PS530) continue;
+          (PS530.mz || []).forEach(c=>{ if(c){ ensureCardUid(gs, c); gs.bpStartS03.mz[pS530].push(c.uid); } });
+          (PS530.hand || []).forEach(c=>{ if(c){ ensureCardUid(gs, c); gs.bpStartS03.hand[pS530].push(c.uid); } });
+        }
+      }
       gs.phase = a.phase;
       logIt(gs, `${nameOf(gs.activePlayer)}：${phaseJp(a.phase)}へ`);
       break;
@@ -3042,6 +3052,7 @@ const ZONE_LOCAL_KEYS = [
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
   'revealedTurnS527',   // S03-U527: 《偽物のわな》でめくって確認された印はこの滞在に属する
+  'u530LockAttrS03','u530PendingS03',   // S03-U530: テュアラティンの宣言した属性と「この効果で」の印
   'u528FaceDownS03',   // S03-U528: 裏側のまま装備された印
   'u528EquipTurnS03',   // S03-U528: トランスフォーム・スフィアの 1 ターンに 1 度はこの滞在に属する
   'u526KindsS03',   // S03-U526: 冥王竜ヴァンダルギオンが「この方法で」出た印はこの滞在に属する

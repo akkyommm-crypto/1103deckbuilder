@@ -320,8 +320,8 @@ const total=Object.keys(B).reduce((a,k)=>a+B[k].length,0);
    数え方は変えていない。このカードの召喚誘発は強制なので強制側に入る。 */
 /* S03-U520 で《天狗のうちわ》を実装したので候補が 1 枚増えた（519 → 520、強制 256 → 257）。数え方は変えていない。 */
 /* S03-U526 で《冥王竜ヴァンダルギオン》を実装したので 1 本増えた（強制の召喚誘発）。数え方は変えていない。 */
-ok('D1 ★ 候補は 521 件。内訳は 強制 258 / 宣言 7 / 逃す 207 / 場合 15 / 召喚無効 6 / 文言なし 28（S03-U495 で更新、S03-U516/U520/U526 で各 1 枚増）',
-   total===521 && B.forced.length===258 && B.decl.length===7 && B.drop.length===207
+ok('D1 ★ 候補は 522 件。内訳は 強制 259 / 宣言 7 / 逃す 207 / 場合 15 / 召喚無効 6 / 文言なし 28（S03-U495 で更新、S03-U516/U520/U526/U530 で各 1 枚増）',
+   total===522 && B.forced.length===259 && B.decl.length===7 && B.drop.length===207
    && B.baai.length===15 && B.summonNegate.length===6 && B.none.length===28,
    JSON.stringify(Object.keys(B).reduce((a,k)=>(a[k]=B[k].length,a),{})));
 ok('D2 ★ 「場合」と読める 15 件は落とさない（R7）— 一覧を固定する（S03-U494 で当時の根拠と照合）',

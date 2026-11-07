@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 371,
+    "NOT_STARTED": 370,
     "PARTIAL": 12,
-    "TESTED": 3623
+    "TESTED": 3624
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -936,
+    "NOT_STARTED": -937,
     "PARTIAL": -170,
-    "TESTED": 1574
+    "TESTED": 1575
   },
   "status_changes": [
     {
@@ -2999,6 +2999,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U447"
+    },
+    {
+      "name": "テュアラティン",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U530"
     },
     {
       "name": "テラ・フォーミング",
