@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 366,
+    "NOT_STARTED": 365,
     "PARTIAL": 12,
-    "TESTED": 3628
+    "TESTED": 3629
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -941,
+    "NOT_STARTED": -942,
     "PARTIAL": -170,
-    "TESTED": 1579
+    "TESTED": 1580
   },
   "status_changes": [
     {
@@ -3443,6 +3443,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U288"
+    },
+    {
+      "name": "ドリル・ウォリアー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U535"
     },
     {
       "name": "ドリル・シンクロン",

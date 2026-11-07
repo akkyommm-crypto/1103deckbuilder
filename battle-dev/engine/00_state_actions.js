@@ -3091,6 +3091,7 @@ const ZONE_LOCAL_KEYS = [
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
   'revealedTurnS527',   // S03-U527: 《偽物のわな》でめくって確認された印はこの滞在に属する
+  'u535HalfTurnS03','u535BanishTurnS03',   // S03-U535: ドリル・ウォリアーの 1 ターンに 1 度
   'spellActS03','u534ExtraS03','u534PinS03',   // S03-U534: 魔法の発動時の印と、もう 1 度の攻撃の印
   'u533PendingS03','u533StatS03',   // S03-U533: 血涙のオーガの「この効果で」の印と数値
   'u530LockAttrS03','u530PendingS03',   // S03-U530: テュアラティンの宣言した属性と「この効果で」の印
