@@ -1403,6 +1403,19 @@ function applyActionBodyV31(gs, a){
       delete gs.counterNegateS03;
       break;
     }
+    /* S03-U527: 《偽物のわな》の記録を消す（一連のチェーン処理の終了時）。 */
+    /* S03-U527: 《偽物のわな》の印を置く（守る uid と、破壊する効果のカードの uid）。 */
+    case "FAKE_TRAP_NOTE_S03": {
+      const recS527 = a.rec || {};
+      if(Array.isArray(recS527.uids) && recS527.uids.length)
+        gs.fakeTrapS03 = {player:recS527.player, srcUid:(recS527.srcUid != null) ? recS527.srcUid : null,
+                          uids:recS527.uids.slice(), turn:gs.turn};
+      break;
+    }
+    case "FAKE_TRAP_CLEAR_S03": {
+      delete gs.fakeTrapS03;
+      break;
+    }
     /* System v18: LP変化の置換規則。 */
     case "LP_RULE_V18": {
       if(!Array.isArray(gs.lpRulesV18)) gs.lpRulesV18 = [];
@@ -1573,6 +1586,13 @@ function applyActionBodyV31(gs, a){
           }
         }
       }
+      /* S03-U527: 《偽物のわな》が代わりに破壊された効果の破壊から、記録された罠カードを守る（engine/1ZZZD）。 */
+      if(a.byDestroy===true && (originS510==='sz' || originS510==='field') && typeof fakeTrapSpareS03==='function'){
+        const ftS527 = zoneCard(P, a.zone, a.index);
+        if(ftS527 && fakeTrapSpareS03(gs, a, ftS527)){
+          logIt(gs, `偽物のわな：${cardName(ftS527)} は破壊されない`); break;
+        }
+      }
       /* S03-U187: Sin スターダスト・ドラゴン ② 「フィールドゾーンの表側表示のカードは効果では破壊されない」 (engine/1ZZD) */
       if(a.byDestroy===true && a.zone==='field' && typeof sinFieldProtectedS03==='function' && P.field && P.field.face==='up' && sinFieldProtectedS03(gs, P.field)){
         logIt(gs, `Sin スターダスト・ドラゴン：${cardName(P.field)} は効果では破壊されない`); break;
@@ -1678,6 +1698,9 @@ function applyActionBodyV31(gs, a){
           const g=wipeGuardV21(c);
           if(g){ sparedV21.push(c); logIt(gs, `${g.label||'効果'}：${cardName(c)} はカードの効果では破壊されない`); }
           /* S03-U115: 発生源の効果を受けないカードは残る */
+          /* S03-U527: 《偽物のわな》の記録にある罠カードは全体破壊でも残る（engine/1ZZZD） */
+          else if(typeof fakeTrapSpareS03==='function' && fakeTrapSpareS03(gs, Object.assign({byDestroy:true}, a), c)){
+            sparedV21.push(c); logIt(gs, `偽物のわな：${cardName(c)} は破壊されない`); }
           else if(a.srcS03 && typeof s03UnaffectedByU115==='function' && s03UnaffectedByU115(gs,c,a.srcS03)){ sparedV21.push(c); logIt(gs, `${cardName(c)} は${a.srcS03.k==='t'?'罠':'魔法'}カードの効果を受けない`); }
         });
         for(let i=arr.length-1;i>=0;i--){
@@ -3006,6 +3029,7 @@ const ZONE_LOCAL_KEYS = [
   'summonSrcS03',   // S03-U238: the card whose effect special summoned it
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
+  'revealedTurnS527',   // S03-U527: 《偽物のわな》でめくって確認された印はこの滞在に属する
   'u526KindsS03',   // S03-U526: 冥王竜ヴァンダルギオンが「この方法で」出た印はこの滞在に属する
   'u525BurnTurnS03','u525SendTurnS03','u525DestroyGrpS03',   // S03-U525: セブン・ソード・ウォリアーの1ターンに1度と同時処理の印
   'u524ShadowStatS03',   // S03-U524: サイバー・シャドー・ガードナーの攻守はこの滞在に属する

@@ -2362,6 +2362,19 @@ function applyActionBodyV31(gs, a){
       delete gs.counterNegateS03;
       break;
     }
+    /* S03-U527: 《偽物のわな》の記録を消す（一連のチェーン処理の終了時）。 */
+    /* S03-U527: 《偽物のわな》の印を置く（守る uid と、破壊する効果のカードの uid）。 */
+    case "FAKE_TRAP_NOTE_S03": {
+      const recS527 = a.rec || {};
+      if(Array.isArray(recS527.uids) && recS527.uids.length)
+        gs.fakeTrapS03 = {player:recS527.player, srcUid:(recS527.srcUid != null) ? recS527.srcUid : null,
+                          uids:recS527.uids.slice(), turn:gs.turn};
+      break;
+    }
+    case "FAKE_TRAP_CLEAR_S03": {
+      delete gs.fakeTrapS03;
+      break;
+    }
     /* System v18: LP変化の置換規則。 */
     case "LP_RULE_V18": {
       if(!Array.isArray(gs.lpRulesV18)) gs.lpRulesV18 = [];
@@ -2532,6 +2545,13 @@ function applyActionBodyV31(gs, a){
           }
         }
       }
+      /* S03-U527: 《偽物のわな》が代わりに破壊された効果の破壊から、記録された罠カードを守る（engine/1ZZZD）。 */
+      if(a.byDestroy===true && (originS510==='sz' || originS510==='field') && typeof fakeTrapSpareS03==='function'){
+        const ftS527 = zoneCard(P, a.zone, a.index);
+        if(ftS527 && fakeTrapSpareS03(gs, a, ftS527)){
+          logIt(gs, `偽物のわな：${cardName(ftS527)} は破壊されない`); break;
+        }
+      }
       /* S03-U187: Sin スターダスト・ドラゴン ② 「フィールドゾーンの表側表示のカードは効果では破壊されない」 (engine/1ZZD) */
       if(a.byDestroy===true && a.zone==='field' && typeof sinFieldProtectedS03==='function' && P.field && P.field.face==='up' && sinFieldProtectedS03(gs, P.field)){
         logIt(gs, `Sin スターダスト・ドラゴン：${cardName(P.field)} は効果では破壊されない`); break;
@@ -2637,6 +2657,9 @@ function applyActionBodyV31(gs, a){
           const g=wipeGuardV21(c);
           if(g){ sparedV21.push(c); logIt(gs, `${g.label||'効果'}：${cardName(c)} はカードの効果では破壊されない`); }
           /* S03-U115: 発生源の効果を受けないカードは残る */
+          /* S03-U527: 《偽物のわな》の記録にある罠カードは全体破壊でも残る（engine/1ZZZD） */
+          else if(typeof fakeTrapSpareS03==='function' && fakeTrapSpareS03(gs, Object.assign({byDestroy:true}, a), c)){
+            sparedV21.push(c); logIt(gs, `偽物のわな：${cardName(c)} は破壊されない`); }
           else if(a.srcS03 && typeof s03UnaffectedByU115==='function' && s03UnaffectedByU115(gs,c,a.srcS03)){ sparedV21.push(c); logIt(gs, `${cardName(c)} は${a.srcS03.k==='t'?'罠':'魔法'}カードの効果を受けない`); }
         });
         for(let i=arr.length-1;i>=0;i--){
@@ -3965,6 +3988,7 @@ const ZONE_LOCAL_KEYS = [
   'summonSrcS03',   // S03-U238: the card whose effect special summoned it
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
+  'revealedTurnS527',   // S03-U527: 《偽物のわな》でめくって確認された印はこの滞在に属する
   'u526KindsS03',   // S03-U526: 冥王竜ヴァンダルギオンが「この方法で」出た印はこの滞在に属する
   'u525BurnTurnS03','u525SendTurnS03','u525DestroyGrpS03',   // S03-U525: セブン・ソード・ウォリアーの1ターンに1度と同時処理の印
   'u524ShadowStatS03',   // S03-U524: サイバー・シャドー・ガードナーの攻守はこの滞在に属する
@@ -15695,6 +15719,113 @@ function counterNegateKindsForS03(evt, player){
   return out;
 }
 /* =========================================================================
+   S03-U527 — 「自分フィールド上に存在する罠カードを破壊する効果」への応答と、その破壊を止める印
+   -------------------------------------------------------------------------
+   《偽物のわな》は「自分フィールド上に存在する罠カードを破壊する魔法・罠・効果モンスターの効果を
+   相手が発動した時」に発動し、「このカードを代わりに破壊し、他の自分の罠カードは破壊されない」。
+   engine には「この効果の破壊からこのカードだけを守る」仕組みが無かった（engine/1K の V21 の耐性は
+   カードごとの継続的な耐性、engine/1ZV の身代わりは破壊時に選ぶ別の仕組み）。ここでは:
+
+   ■ 破壊が確定しているかの判定（fakeTrapCertainS03）
+     発動されたチェーンリンクから、守られる自分の罠カードの uid を数える。
+       (A) そのリンクが対象を取っている場合 … 対象の中に自分フィールドの罠カードがあればその uid。
+           WIKI-5439C489E102（10/09/13）《Ｅ・ＨＥＲＯ エアーマン》のように破壊が不確定な効果には
+           発動できない、という裁定に合わせて「対象がある効果は対象だけを見る」。
+       (B) 対象を取っていない場合 … そのカードが「フィールド（または相手フィールド）の魔法・罠カードを
+           全て破壊する」と申告している（または、申告が無い場合はテキストがその言い回しを含む）時だけ、
+           自分フィールドの罠カード全部。
+     どちらでも 0 枚なら発動できない（＝判定の漏れは「発動できない」側に落ちる）。
+     スクリプトは wipesFieldSpellTrapS03:'both'|'opponent' で申告できる。テキストの読み取りは
+     申告が無いカードのための控えで、言い回しは下の WIPE_TEXTS_S527 に限る。
+   ■ 破壊を止める印（gs.fakeTrapS03）
+     {player, srcUid, uids, turn}。srcUid は破壊する効果のカードの uid。破壊の Action には解決中の
+     カードの印（a.srcS03、engine/1ZG）が載るので、その uid が一致する破壊だけを止める。
+     止めるのは罠カードの**破壊**だけで、無効化や墓地送りは止めない
+     （WIKI-F7E74B443EB4 09/01/16: 《炸裂装甲》は破壊されないが効果は無効になる）。
+     記録は一連のチェーン処理の終了時に Action で消すので、Replay・保存・再開でも同じになる。
+   ========================================================================= */
+const WIPE_TEXTS_S527 = Object.freeze({
+  both:['フィールド上の魔法・罠カードを全て破壊', 'フィールドの魔法・罠カードを全て破壊',
+        'フィールド上のカードを全て破壊', 'フィールドのカードを全て破壊'],
+  opponent:['相手フィールド上の魔法・罠カードを全て破壊', '相手フィールドの魔法・罠カードを全て破壊',
+            '相手の魔法・罠カードを全て破壊', '相手フィールド上のカードを全て破壊',
+            '相手フィールドのカードを全て破壊']
+});
+/* そのカードが「魔法・罠を全て破壊する」効果を持つか。'both' / 'opponent' / null */
+function fakeTrapWipesS527(name){
+  if(!name) return null;
+  const sc = (typeof CARD_SCRIPTS !== 'undefined') ? CARD_SCRIPTS[name] : null;
+  if(sc && sc.wipesFieldSpellTrapS03 === 'both') return 'both';
+  if(sc && sc.wipesFieldSpellTrapS03 === 'opponent') return 'opponent';
+  if(sc && sc.wipesFieldSpellTrapS03 === false) return null;   /* 明示的に対象外と申告できる */
+  const i = (typeof findCardIndex === 'function') ? findCardIndex(name) : -1;
+  const db = (i >= 0 && typeof CARD_DB !== 'undefined') ? CARD_DB[i] : null;
+  const txt = (db && db.e) ? String(db.e).replace(/\n/g, '') : '';
+  if(!txt) return null;
+  if(WIPE_TEXTS_S527.both.some(p=>txt.indexOf(p) >= 0)) return 'both';
+  if(WIPE_TEXTS_S527.opponent.some(p=>txt.indexOf(p) >= 0)) return 'opponent';
+  return null;
+}
+/* 自分フィールド（魔法＆罠ゾーン）の罠カードの uid。selfUid（偽物のわな自身）は除く */
+function fakeTrapOwnTrapsS527(gs, p, selfUid){
+  gs = gs || gameState;
+  const P = gs.players[p], out = [];
+  (P.sz || []).forEach(c=>{
+    if(!c || c.uid == null || c.uid === selfUid) return;
+    const db = dbOf(c);
+    if(db && db.k === 't') out.push(c.uid);
+  });
+  return out;
+}
+/* 発動されたリンクが「自分フィールドの罠カードを破壊する事が確定している」なら、守る uid の一覧 */
+function fakeTrapCertainS03(gs, link, p, selfUid){
+  gs = gs || gameState;
+  if(!link || (link.player !== 0 && link.player !== 1)) return [];
+  if(link.player === p) return [];                       /* 「相手が発動した時」 */
+  const mine = fakeTrapOwnTrapsS527(gs, p, selfUid);
+  if(!mine.length) return [];
+  /* (A) 対象を取る効果は、対象になっているカードだけを見る */
+  const tg = (typeof linkTargetUidsS03 === 'function') ? linkTargetUidsS03(link) : [];
+  if(tg.length){
+    const hit = tg.filter(u=>mine.indexOf(u) >= 0);
+    return hit;
+  }
+  /* (B) 対象を取らない「全て破壊」 */
+  const w = fakeTrapWipesS527(link.name);
+  if(!w) return [];
+  return mine.slice();
+}
+/* ---- 破壊を止める印 ------------------------------------------------------ */
+function fakeTrapNoteS03(gs, rec){
+  if(!gs || !rec || !Array.isArray(rec.uids) || !rec.uids.length) return false;
+  /* Action で置く（journal に残るので Replay・保存・再開でも同じ値になる）。 */
+  const payload = {player:rec.player, srcUid:(rec.srcUid != null) ? rec.srcUid : null, uids:rec.uids.slice()};
+  if(typeof commitAutomaticActionV44 === 'function'){
+    commitAutomaticActionV44({type:'FAKE_TRAP_NOTE_S03', rec:payload});
+  }else{
+    gs.fakeTrapS03 = Object.assign({turn:gs.turn}, payload);
+  }
+  return true;
+}
+function fakeTrapClearS03(gs){
+  gs = gs || ((typeof gameState !== 'undefined') ? gameState : null);
+  if(!gs || !gs.fakeTrapS03) return false;
+  if(typeof commitAutomaticActionV44 === 'function') commitAutomaticActionV44({type:'FAKE_TRAP_CLEAR_S03'});
+  else delete gs.fakeTrapS03;
+  return true;
+}
+/* その破壊（Action a）から card を守るか。罠カードの破壊だけを止める。 */
+function fakeTrapSpareS03(gs, a, card){
+  gs = gs || gameState;
+  const rec = gs && gs.fakeTrapS03;
+  if(!rec || !a || !card || card.uid == null) return false;
+  if(rec.uids.indexOf(card.uid) < 0) return false;
+  if(!a.srcS03 || a.srcS03.uid == null || rec.srcUid == null || a.srcS03.uid !== rec.srcUid) return false;
+  const db = dbOf(card);
+  if(!db || db.k !== 't') return false;
+  return true;
+}
+/* =========================================================================
    S03-U392 — Spell / Trap Set ban for a turn range (大寒波)
    effectFlags.setBanS03 = [{from, to, label}] on a player (written with API.setFlag(p, 'setBanS03', list, false));
    SET_ST refuses while gs.turn is inside a range of the player. Pure function of the state (Replay-safe).
@@ -19613,6 +19744,8 @@ function processChainEndV30(){
   /* S03-U526: カウンター穩を含む一連のチェーン処理が終わった後に 1 回だけ積む
      （WIKI-9220FED3DC74 / WIKI-ECEE2A503FDB 09/05/15。DRAIN_EVENTS の前なのでタイミングを逃さない）。 */
   if(typeof counterNegateFlushS03==='function') counterNegateFlushS03(gameState);
+  /* S03-U527: 《偽物のわな》の印はその効果の間だけなので、チェーンが終わったら消す（engine/1ZZZD）。 */
+  if(typeof fakeTrapClearS03==='function') fakeTrapClearS03(gameState);
   // 最終リンク解決後のAdjustを済ませてから、召喚無効窓や元処理へ戻る。
   if(gameState.pendingSummon){ finishSummonNegationChainV2(); return PROC_V27_DONE; }
   if(gameState.eventChainResumeV11){
@@ -100174,6 +100307,114 @@ defineUnifiedCardV4('冥王竜ヴァンダルギオン', [{
       return u526KindsFromEventS03(ctx).length > 0 && !u526UsedS03(ctx.player, u526StampS03(ctx));
     },
     onSpecialSummon(ctx){ return !!u526SummonedByOwnEffectS03(ctx); }
+  }
+});
+/* S03-U527: 偽物のわな（1103対象の未実装カード。carddata のテキスト）。
+
+   偽物のわな（通常罠）
+     自分フィールド上に存在する罠カードを破壊する魔法・罠・効果モンスターの効果を相手が発動した時に
+     発動する事ができる。このカードを代わりに破壊し、他の自分の罠カードは破壊されない。
+     セットされたカードが破壊される場合、そのカードを全てめくって確認する。
+
+   当時の裁定（この実装の根拠。推測ではない）
+     WIKI-D4E66D1A9A3F（09/03/11）《大嵐》にチェーンした場合、発動したプレイヤーのセットされたカードを
+       全て相手に確認させ、このカード以外の自分フィールド上の罠カードは全て破壊されない。
+       相手の罠カードは《大嵐》の効果で破壊される → 守るのは自分フィールドの罠カードだけ。
+     WIKI-A45948320C8C（09/03/12）《ブラック・ローズ・ドラゴン》の全体破壊にもチェーンできる（自分の罠だけ守る）。
+     WIKI-F00EA2A4035E（07/06/18）《闇のデッキ破壊ウイルス》にもチェーンできるが、守られるのは
+       フィールドの罠カードだけで手札の罠カードは破壊される → 守る範囲はフィールド（魔法＆罠ゾーン）。
+     WIKI-5439C489E102（10/09/13）《Ｅ・ＨＥＲＯ エアーマン》のように破壊が不確定な効果には発動できない
+       → 「破壊が確定している」判定（engine/1ZZZD の fakeTrapCertainS03）。対象を取る効果は対象だけを見る。
+     WIKI-D5F300A58DC3（09/03/11）セットされたカードを確認するタイミングは「この効果の発動時」/
+     WIKI-861BDA6FCE50（10/09/13）発動より後にセットされたカードは確認できず、破壊からも守れない
+       → 発動時（コストの処理）に、確認するカードと守る罠カードの uid をチェーンリンクに控える。
+     WIKI-DA0C326CE2A9（11/03/11）魔法＆罠ゾーンにセットされたカードは全て確認させる（モンスターは不要）。
+     WIKI-4E31065236CC（09/03/12）《王宮のお触れ》が存在する時も確認はさせる。
+     WIKI-C705DA31850D（09/04/11）このカードの発動にチェーンして発動した《サイクロン》等でこのカード自身が
+       破壊された場合、「このカードを代わりに破壊する」効果は適用されない
+       → 解決時にこのカードがフィールドに残っている事を条件にする。
+     WIKI-F7E74B443EB4（09/01/16）《スターダスト・ドラゴン》で《炸裂装甲》の発動を無効にして破壊する場合、
+       炸裂装甲は破壊されないが効果は無効になる → 止めるのは破壊だけ（無効化は止めない）。
+     WIKI-3FFD3A9DA6A1（11/06/09）/ WIKI-708A2880BB28（10/09/13）《Ｄ－ＨＥＲＯ ダイヤモンドガイ》で
+       墓地へ送った《大嵐》の発動にも発動できる → 発動元のゾーンは見ない。
+
+   「破壊が確定している」かの判定と、破壊を止める印は共通側（engine/1ZZZD）に置いた。
+   《サイクロン》のように対象を取る効果は対象だけを見るので、対象が自分の罠でなければ発動できない。 */
+
+declareActivationResponseS03(['偽物のわな']);   /* 発動への応答（engine/1P、S03-U18） */
+
+/* 今チェーンの一番上にあるリンク（応答先） */
+function u527TopLinkS03(){
+  const ch = (typeof gameState !== 'undefined' && gameState && Array.isArray(gameState.chain)) ? gameState.chain : [];
+  return ch.length ? ch[ch.length - 1] : null;
+}
+/* 自分の魔法＆罠ゾーンのセットカードの uid（WIKI-DA0C326CE2A9: モンスターは含めない） */
+function u527SetCardUidsS03(p){
+  return (gameState.players[p].sz || [])
+    .filter(c=>c && c.uid != null && c.face === 'down')
+    .map(c=>c.uid);
+}
+/* セットされたカードをめくって確認させた印（公開情報の仕組みが engine に無いので、
+   カードの印とログで表す。報告書の未対応に書いた）。 */
+function u527RevealS03(p, uids){
+  let shown = 0;
+  (uids || []).forEach(uid=>{
+    const r = findCardByUid(uid);
+    if(!r || r.zone !== 'sz' || r.p !== p) return;
+    API.setCardFlag(r, 'revealedTurnS527', gameState.turn, '偽物のわな（確認）', {silent:true});
+    shown++;
+  });
+  API.log(`偽物のわな：セットされたカード ${shown} 枚をめくって確認させる`);
+  return shown;
+}
+function u527PlanS03(ctx){
+  const link = u527TopLinkS03();
+  if(!link) return null;
+  const uids = fakeTrapCertainS03(gameState, link, ctx.player, ctx.card ? ctx.card.uid : null);
+  if(!uids.length) return null;
+  return {srcUid:(link.uid != null) ? link.uid : null, uids:uids, reveal:u527SetCardUidsS03(ctx.player)};
+}
+
+defineScript('偽物のわな', {
+  type:'trap', priority:2,
+  condition(ctx){
+    if(ctx.zone !== 'sz'){ ctx.reason = '魔法＆罠ゾーンから発動します'; return false; }
+    const link = u527TopLinkS03();
+    if(!link){ ctx.reason = '相手の効果の発動にチェーンして発動します'; return false; }
+    const plan = u527PlanS03(ctx);
+    if(!plan){
+      ctx.reason = '自分フィールドの罠カードを破壊する事が確定している相手の効果の発動にチェーンして発動します';
+      return false;
+    }
+    if(plan.srcUid == null){ ctx.reason = '発動したカードを特定できません'; return false; }
+    return true;
+  },
+  /* WIKI-D5F300A58DC3 / WIKI-861BDA6FCE50: 確認するカードと守る罠カードは「発動時」に決まる。
+     コストの処理でチェーンリンクに控える（engine/00 の costCtxS03。Replay でも同じ値になる）。 */
+  cost(ctx, done){
+    const plan = u527PlanS03(ctx);
+    if(plan){
+      ctx.costCtxS03 = Object.assign({}, ctx.costCtxS03 || {}, {fakeTrapS527:plan});
+      /* WIKI-D5F300A58DC3（09/03/11）: 確認は「この効果発動時」に行う。
+         WIKI-4E31065236CC（09/03/12）: 《王宮のお触れ》で効果が無効になっていても確認はさせるので、
+         解決ではなく発動の処理で行う。 */
+      u527RevealS03(ctx.player, plan.reveal);
+    }
+    done(true);
+  },
+  resolve(ctx){
+    const plan = ctx.fakeTrapS527;
+    if(!plan){ API.log('偽物のわな：守る罠カードがありません'); return; }
+    const h = (ctx.card && ctx.card.uid != null) ? findCardByUid(ctx.card.uid) : null;
+    /* WIKI-C705DA31850D: このカード自身が既に破壊されていたら適用されない */
+    if(!h || h.zone !== 'sz'){
+      API.log('偽物のわな：このカードがフィールドに存在しないため、代わりに破壊する効果は適用されない');
+      return;
+    }
+    /* このカードを代わりに破壊し、他の自分の罠カードは破壊されない */
+    fakeTrapNoteS03(gameState, {player:ctx.player, srcUid:plan.srcUid, uids:plan.uids});
+    API.log(`偽物のわな：自分フィールドの罠カード ${plan.uids.length} 枚は破壊されない`);
+    API.destroy(h, '偽物のわな');
   }
 });
 /* =========================================================================

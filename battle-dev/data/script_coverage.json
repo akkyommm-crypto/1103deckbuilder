@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 374,
+    "NOT_STARTED": 373,
     "PARTIAL": 12,
-    "TESTED": 3620
+    "TESTED": 3621
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -117,11 +117,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1654,
+    "legacy": 1655,
     "sin": 5,
     "unified": 1438
   },
-  "static_registration_name_count": 3630,
+  "static_registration_name_count": 3631,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -24246,6 +24246,7 @@
         "tools\\test_s03_u520_declare_flip.js",
         "tools\\test_s03_u523_forgotten_temple.js",
         "tools\\test_s03_u525_seven_swords.js",
+        "tools\\test_s03_u527_fake_trap.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
         "tools\\test_s03_vs1_dragunity_slice.js",
         "tools\\test_s03_vs2_six_samurai_slice.js",
@@ -38998,7 +38999,8 @@
         "tools\\test_s03_u523_forgotten_temple.js",
         "tools\\test_s03_u524_shadow_gardna.js",
         "tools\\test_s03_u525_seven_swords.js",
-        "tools\\test_s03_u526_vandalgyon.js"
+        "tools\\test_s03_u526_vandalgyon.js",
+        "tools\\test_s03_u527_fake_trap.js"
       ]
     },
     {
@@ -62287,6 +62289,7 @@
         "tools\\test_s03_u524_shadow_gardna.js",
         "tools\\test_s03_u525_seven_swords.js",
         "tools\\test_s03_u526_vandalgyon.js",
+        "tools\\test_s03_u527_fake_trap.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
@@ -66569,12 +66572,20 @@
       "subtype": "",
       "date": "1999-09-23",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 11,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\HZZZZZZZZZZZZK_claude_s03_u527_fake_trap.js",
+          "line": 67
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u527_fake_trap.js"
+      ]
     },
     {
       "index": 3010,
@@ -72140,7 +72151,8 @@
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
         "tools\\test_s03_u511_negated_summon_destroyer.js",
         "tools\\test_s03_u513_equip_substitute_optional.js",
-        "tools\\test_s03_u524_shadow_gardna.js"
+        "tools\\test_s03_u524_shadow_gardna.js",
+        "tools\\test_s03_u527_fake_trap.js"
       ]
     },
     {
@@ -73843,7 +73855,8 @@
         "tools\\test_s03_u192_staples2.js",
         "tools\\test_s03_u233_ns25.js",
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
-        "tools\\test_s03_u525_seven_swords.js"
+        "tools\\test_s03_u525_seven_swords.js",
+        "tools\\test_s03_u527_fake_trap.js"
       ]
     },
     {
@@ -78491,6 +78504,7 @@
         "tools\\test_s03_u517_summon_counts.js",
         "tools\\test_s03_u522_diamond_dude.js",
         "tools\\test_s03_u526_vandalgyon.js",
+        "tools\\test_s03_u527_fake_trap.js",
         "tools\\test_v490_batch01.js",
         "tools\\test_v590_batch11.js",
         "tools\\test_v600_batch12.js",
@@ -88840,6 +88854,7 @@
         "tools\\test_s03_u216_ns8.js",
         "tools\\test_s03_u298_flip_trigger_left_field.js",
         "tools\\test_s03_u492_missed_timing_summon_success.js",
+        "tools\\test_s03_u527_fake_trap.js",
         "tools\\test_s03_u84_torrential_tribute.js"
       ]
     },
@@ -90788,7 +90803,8 @@
         "tools\\test_s03_u118_trap_negation.js",
         "tools\\test_s03_u176_contact2.js",
         "tools\\test_s03_u182_glow_chaos_neos.js",
-        "tools\\test_s03_u523_forgotten_temple.js"
+        "tools\\test_s03_u523_forgotten_temple.js",
+        "tools\\test_s03_u527_fake_trap.js"
       ]
     },
     {
@@ -97411,7 +97427,8 @@
         "tools\\test_s03_u489_resume_summon_timing_window.js",
         "tools\\test_s03_u494_missed_timing_era_mixing.js",
         "tools\\test_s03_u508_geartown_destroyed_trigger.js",
-        "tools\\test_s03_u516_synchro.js"
+        "tools\\test_s03_u516_synchro.js",
+        "tools\\test_s03_u527_fake_trap.js"
       ]
     },
     {

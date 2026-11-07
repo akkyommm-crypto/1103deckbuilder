@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 374,
+    "NOT_STARTED": 373,
     "PARTIAL": 12,
-    "TESTED": 3620
+    "TESTED": 3621
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -933,
+    "NOT_STARTED": -934,
     "PARTIAL": -170,
-    "TESTED": 1571
+    "TESTED": 1572
   },
   "status_changes": [
     {
@@ -5387,6 +5387,12 @@
       "before": "IMPLEMENTED",
       "after": "TESTED",
       "unit": "S03-U194"
+    },
+    {
+      "name": "偽物のわな",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U527"
     },
     {
       "name": "傀儡虫",

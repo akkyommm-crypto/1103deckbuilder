@@ -287,6 +287,9 @@
   "path": "engine/1ZZZC_counter_negate_s03.js"
  },
  {
+  "path": "engine/1ZZZD_fake_trap_s03.js"
+ },
+ {
   "path": "engine/1ZZT_set_ban_s03.js"
  },
  {
@@ -1896,6 +1899,9 @@
  },
  {
   "path": "cards/HZZZZZZZZZZZZJ_claude_s03_u526_vandalgyon.js"
+ },
+ {
+  "path": "cards/HZZZZZZZZZZZZK_claude_s03_u527_fake_trap.js"
  },
  {
   "path": "cards/40_auto_interpreter.js",

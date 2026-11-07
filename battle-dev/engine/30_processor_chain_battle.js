@@ -1083,6 +1083,8 @@ function processChainEndV30(){
   /* S03-U526: カウンター穩を含む一連のチェーン処理が終わった後に 1 回だけ積む
      （WIKI-9220FED3DC74 / WIKI-ECEE2A503FDB 09/05/15。DRAIN_EVENTS の前なのでタイミングを逃さない）。 */
   if(typeof counterNegateFlushS03==='function') counterNegateFlushS03(gameState);
+  /* S03-U527: 《偽物のわな》の印はその効果の間だけなので、チェーンが終わったら消す（engine/1ZZZD）。 */
+  if(typeof fakeTrapClearS03==='function') fakeTrapClearS03(gameState);
   // 最終リンク解決後のAdjustを済ませてから、召喚無効窓や元処理へ戻る。
   if(gameState.pendingSummon){ finishSummonNegationChainV2(); return PROC_V27_DONE; }
   if(gameState.eventChainResumeV11){
