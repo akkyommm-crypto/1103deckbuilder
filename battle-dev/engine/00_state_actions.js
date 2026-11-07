@@ -342,6 +342,7 @@ function applyActionBodyV31(gs, a){
          《テュアラティン》が読む。Action の中で取るので Replay・保存・再開でも同じ値になる）。 */
       if(a.phase === 'battle'){
         gs.bpStartS03 = {turn:gs.turn, player:gs.activePlayer, mz:[[], []], hand:[[], []]};
+        gs.directAttacksS03 = {turn:gs.turn, list:[]};   /* S03-U533 */
         for(let pS530 = 0; pS530 < 2; pS530++){
           const PS530 = gs.players[pS530]; if(!PS530) continue;
           (PS530.mz || []).forEach(c=>{ if(c){ ensureCardUid(gs, c); gs.bpStartS03.mz[pS530].push(c.uid); } });
@@ -684,11 +685,23 @@ function applyActionBodyV31(gs, a){
          以前は processor が直後に gameState.pendingAttack を直接書き、攻撃宣言時の罠などで Replay が一致しなかった。
          pending を持たない既存の記録は従来どおり（digest 不変）。 */
       if(a.pending){ gs.pendingAttack=JSON.parse(JSON.stringify(a.pending)); gs.attackNegated=false; }
+      /* S03-U533: 直接攻撃の宣言順を記録する（「2回目の直接攻撃が宣言された時」を読むため。
+         無効にされた攻撃は ATTACK_PENDING_CLEAR_S03（reason:negated）で取り除く。 */
+      if(a.pending && a.pending.targetUid == null){
+        if(!gs.directAttacksS03 || gs.directAttacksS03.turn !== gs.turn) gs.directAttacksS03 = {turn:gs.turn, list:[]};
+        gs.directAttacksS03.list.push({uid:(card.uid != null) ? card.uid : null, player:a.player});
+      }
       break;
     }
 
     case "ATTACK_PENDING_CLEAR_S03": {
       /* S03-U39 (C-S03-30): 攻撃の終了（無効・続行不可・ダメージステップへ移行・リプレイで中止）で攻撃中の状態を消す */
+      /* S03-U533: 無効にされた直接攻撃は数えない（WIKI-282E13E4E6E2 09/11/14）。 */
+      if(a.reason === 'negated' && gs.pendingAttack && gs.pendingAttack.targetUid == null
+         && gs.directAttacksS03 && gs.directAttacksS03.turn === gs.turn && gs.directAttacksS03.list.length){
+        const lastS533 = gs.directAttacksS03.list[gs.directAttacksS03.list.length - 1];
+        if(lastS533 && lastS533.uid === gs.pendingAttack.attackerUid) gs.directAttacksS03.list.pop();
+      }
       gs.pendingAttack=null; gs.attackNegated=false;
       break;
     }
@@ -3061,6 +3074,7 @@ const ZONE_LOCAL_KEYS = [
   'asSpellS03',   // S03-U240: a monster card placed as a Continuous Spell (engine/1ZZH)
   'asMonsterDbS03','trapMonsterS03',   // S03-U248: a Trap Monster's monster data / summoned by its own activation (engine/1ZZI)
   'revealedTurnS527',   // S03-U527: 《偽物のわな》でめくって確認された印はこの滞在に属する
+  'u533PendingS03','u533StatS03',   // S03-U533: 血涙のオーガの「この効果で」の印と数値
   'u530LockAttrS03','u530PendingS03',   // S03-U530: テュアラティンの宣言した属性と「この効果で」の印
   'u528FaceDownS03',   // S03-U528: 裏側のまま装備された印
   'u528EquipTurnS03',   // S03-U528: トランスフォーム・スフィアの 1 ターンに 1 度はこの滞在に属する

@@ -177,8 +177,8 @@ ok('A4 ★ 許可リストに無いものは落とさない（従来挙動の維
    && ENG.indexOf('S03-U491 以前の挙動を維持する')>=0,'');
 const cen=dropCensusS496();
 /* A5 は S03-U506 で比較の相手を「召喚成功の家族の許可リスト」に限った（census はこの 3 イベントしか見ない）。 */
-ok('A5 ★ 候補 679 組のうち落とすのは 65 組だけで、召喚成功の家族の許可リストの組数と一致する（S03-U516/U520/U526/U530 で各 1 組増）',
-   cen.drop===65 && (cen.drop+cen.keep+cen.forced+cen.negate+cen.decl)===679
+ok('A5 ★ 候補 680 組のうち落とすのは 65 組だけで、召喚成功の家族の許可リストの組数と一致する（S03-U516/U520/U526/U530/U533 で各 1 組増）',
+   cen.drop===65 && (cen.drop+cen.keep+cen.forced+cen.negate+cen.decl)===680
    && JSON.stringify(cen.dropPairs.map(x=>x.split('@')[0]).filter((v,i,a)=>a.indexOf(v)===i).sort())
       ===JSON.stringify(C.names),
    JSON.stringify({drop:cen.drop,keep:cen.keep,forced:cen.forced,negate:cen.negate,decl:cen.decl}));

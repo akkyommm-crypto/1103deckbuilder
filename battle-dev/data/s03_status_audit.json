@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 368,
+    "NOT_STARTED": 367,
     "PARTIAL": 12,
-    "TESTED": 3626
+    "TESTED": 3627
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -939,
+    "NOT_STARTED": -940,
     "PARTIAL": -170,
-    "TESTED": 1577
+    "TESTED": 1578
   },
   "status_changes": [
     {
@@ -8615,6 +8615,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U422"
+    },
+    {
+      "name": "血涙のオーガ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U533"
     },
     {
       "name": "衰弱の霧",

@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 368,
+    "NOT_STARTED": 367,
     "PARTIAL": 12,
-    "TESTED": 3626
+    "TESTED": 3627
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1655,
     "sin": 5,
-    "unified": 1443
+    "unified": 1444
   },
-  "static_registration_name_count": 3636,
+  "static_registration_name_count": 3637,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -39027,7 +39027,8 @@
         "tools\\test_s03_u527_fake_trap.js",
         "tools\\test_s03_u528_transform_sphere.js",
         "tools\\test_s03_u529_dark_simorgh.js",
-        "tools\\test_s03_u530_tualatin.js"
+        "tools\\test_s03_u530_tualatin.js",
+        "tools\\test_s03_u533_blood_ogre.js"
       ]
     },
     {
@@ -45173,6 +45174,7 @@
         "tools\\test_expansion_v350.js",
         "tools\\test_s03_u152_end_battle_phase.js",
         "tools\\test_s03_u49_battle_fader_once_per_chain.js",
+        "tools\\test_s03_u533_blood_ogre.js",
         "tools\\test_smoke_v351.js"
       ]
     },
@@ -59676,6 +59678,7 @@
         "tools\\test_s03_u470_condition_targetable.js",
         "tools\\test_s03_u471_prep_tx.js",
         "tools\\test_s03_u526_vandalgyon.js",
+        "tools\\test_s03_u533_blood_ogre.js",
         "tools\\test_s03_u89_call_of_the_haunted.js"
       ]
     },
@@ -62340,6 +62343,7 @@
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u530_tualatin.js",
         "tools\\test_s03_u532_winged_kuriboh_lv9.js",
+        "tools\\test_s03_u533_blood_ogre.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
         "tools\\test_s03_u58_resolution_deck_choice.js",
@@ -83120,6 +83124,7 @@
         "tools\\test_s03_u486_summon_timing_window_close.js",
         "tools\\test_s03_u528_transform_sphere.js",
         "tools\\test_s03_u529_dark_simorgh.js",
+        "tools\\test_s03_u533_blood_ogre.js",
         "tools\\test_s03_u85_book_of_moon.js"
       ]
     },
@@ -99229,12 +99234,20 @@
       "subtype": null,
       "date": "2009-11-14",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZQ_claude_s03_u533_blood_ogre.js",
+          "line": 68
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u533_blood_ogre.js"
+      ]
     },
     {
       "index": 4483,
@@ -108131,7 +108144,8 @@
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_s03_u188_staples.js"
+        "tools\\test_s03_u188_staples.js",
+        "tools\\test_s03_u533_blood_ogre.js"
       ]
     },
     {
