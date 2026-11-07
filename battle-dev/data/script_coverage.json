@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 372,
+    "NOT_STARTED": 371,
     "PARTIAL": 12,
-    "TESTED": 3622
+    "TESTED": 3623
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,9 +119,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1655,
     "sin": 5,
-    "unified": 1439
+    "unified": 1440
   },
-  "static_registration_name_count": 3632,
+  "static_registration_name_count": 3633,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -8345,6 +8345,7 @@
         "tools\\test_s03_u07_spell_to_grave.js",
         "tools\\test_s03_u39_attack_state_journal.js",
         "tools\\test_s03_u524_shadow_gardna.js",
+        "tools\\test_s03_u529_dark_simorgh.js",
         "tools\\test_v380.js"
       ]
     },
@@ -19593,7 +19594,8 @@
       "auto_table": false,
       "tests": [
         "tools\\test_s03_u246_possessed.js",
-        "tools\\test_s03_u269_gap1.js"
+        "tools\\test_s03_u269_gap1.js",
+        "tools\\test_s03_u529_dark_simorgh.js"
       ]
     },
     {
@@ -35816,12 +35818,20 @@
       "subtype": null,
       "date": "2008-01-21",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 20,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\HZZZZZZZZZZZZM_claude_s03_u529_dark_simorgh.js",
+          "line": 65
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u529_dark_simorgh.js"
+      ]
     },
     {
       "index": 1603,
@@ -39001,7 +39011,8 @@
         "tools\\test_s03_u525_seven_swords.js",
         "tools\\test_s03_u526_vandalgyon.js",
         "tools\\test_s03_u527_fake_trap.js",
-        "tools\\test_s03_u528_transform_sphere.js"
+        "tools\\test_s03_u528_transform_sphere.js",
+        "tools\\test_s03_u529_dark_simorgh.js"
       ]
     },
     {
@@ -62301,6 +62312,7 @@
         "tools\\test_s03_u526_vandalgyon.js",
         "tools\\test_s03_u527_fake_trap.js",
         "tools\\test_s03_u528_transform_sphere.js",
+        "tools\\test_s03_u529_dark_simorgh.js",
         "tools\\test_s03_u52_auto_table_triggers.js",
         "tools\\test_s03_u53_instant_fusion.js",
         "tools\\test_s03_u54_dark_world_discard_event.js",
@@ -83075,6 +83087,7 @@
         "tools\\test_s03_u484_summon_trigger_resume.js",
         "tools\\test_s03_u486_summon_timing_window_close.js",
         "tools\\test_s03_u528_transform_sphere.js",
+        "tools\\test_s03_u529_dark_simorgh.js",
         "tools\\test_s03_u85_book_of_moon.js"
       ]
     },
@@ -88868,6 +88881,7 @@
         "tools\\test_s03_u298_flip_trigger_left_field.js",
         "tools\\test_s03_u492_missed_timing_summon_success.js",
         "tools\\test_s03_u527_fake_trap.js",
+        "tools\\test_s03_u529_dark_simorgh.js",
         "tools\\test_s03_u84_torrential_tribute.js"
       ]
     },
@@ -106978,7 +106992,7 @@
         {
           "kind": "legacy",
           "source": "cards\\38_1103_expansion_v380.js",
-          "line": 387
+          "line": 393
         }
       ],
       "auto_table": false,

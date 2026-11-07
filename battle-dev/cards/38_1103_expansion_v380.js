@@ -380,7 +380,13 @@ defineScript("くず鉄のかかし", {
   condition(ctx){const a=gameState.pendingAttack;if(ctx.eventName!=='onAttackDeclare'&&!a){ctx.reason='相手モンスターの攻撃宣言時に発動します';return false;}if(!a||a.player!==ctx.opponent){ctx.reason='相手の攻撃宣言ではありません';return false;}return true;},
   selectTargets(ctx,done){const a=gameState.pendingAttack,h=a&&findCardByUid(a.attackerUid);if(!h){done([]);return;}done([h]);},
   resolve(ctx){API.negateAttack('くず鉄のかかし');},   /* S03-U39: 攻撃無効は Action（NEGATE_ATTACK_V45）で記録する */
-  afterResolve(ctx){const h=locateCard(ctx.card);if(h&&(h.zone==='sz'||h.zone==='field'))act({type:'FX_SET_STATE',player:h.p,zone:h.zone,index:h.index,face:'down',reason:'くず鉄のかかし'});}
+  /* S03-U529 / WIKI-A6BBE85B1591（08/03/15）: 《ダーク・シムルグ》などでセットできない場合、
+     攻撃無効の効果は有効だがこのカードは墓地へ送られる。 */
+  afterResolve(ctx){const h=locateCard(ctx.card);if(!h||!(h.zone==='sz'||h.zone==='field'))return;
+    if(typeof setBannedS03==='function'&&setBannedS03(gameState,gameState.players[h.p])){
+      API.log('くず鉄のかかし：セットできないため墓地へ送られる');
+      API.sendToGrave(h,'くず鉄のかかし');return;}
+    act({type:'FX_SET_STATE',player:h.p,zone:h.zone,index:h.index,face:'down',reason:'くず鉄のかかし'});}
   ,passive:{onAttackDeclare(ctx){const a=gameState.pendingAttack;return ctx.zone==='sz'&&!!a&&a.player===ctx.opponent;}}
 });
 

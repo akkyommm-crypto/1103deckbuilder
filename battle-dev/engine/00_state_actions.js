@@ -2028,6 +2028,16 @@ function applyActionBodyV31(gs, a){
     case "FX_SET_STATE": {
       const card = zoneCard(P, a.zone, a.index);
       if(!card) break;
+      /* S03-U529: 効果で裏側守備表示にするのも「セット」なので、発動した側が禁止されていれば行わない
+         （WIKI-B5978DD4B6F1 08/10/03 《皆既日蝕の書》、WIKI-1120DC4371F9 10/07/05 《フォース・リリース》。
+         発動者は解決中のカードの印（a.srcS03、engine/1ZG）から引くので Replay でも同じ値になる）。 */
+      if(a.face==='down' && a.srcS03 && a.srcS03.uid!=null && typeof setBannedS03==='function'){
+        const srcS529 = findCardByUidInState(gs, a.srcS03.uid);
+        const actS529 = srcS529 ? ((srcS529.card && srcS529.card.controller!=null) ? srcS529.card.controller : srcS529.p) : null;
+        if((actS529===0||actS529===1) && setBannedS03(gs, gs.players[actS529])){
+          logIt(gs, `${cardName(card)}：セットできないため裏側守備表示にならない`); break;
+        }
+      }
       const prevFace = card.face;
       if(a.face) card.face = a.face;
       if(a.pos)  card.pos  = a.pos;
@@ -2319,6 +2329,8 @@ function applyActionBodyV31(gs, a){
 
     /* セット（モンスター）。召喚権を消費。a:{player, handIndex} */
     case "SET_MONSTER": {
+      /* S03-U529: 「相手はカードをセットできない」（engine/1ZZT）はモンスターのセットも止める。 */
+      if(typeof setBannedS03==='function' && setBannedS03(gs, P)){ logIt(gs, `セット：カードをセットできません`); break; }
       /* S03-U266: 「このターン相手プレイヤーはフィールド上にカードをセットする事ができない」 (サーチライトメン) — a turn stamp on the banned player */
       if(P.temporaryFlags && Number(P.temporaryFlags.noSetS03)===Number(gs.turn)){ logIt(gs, `このターンはカードをセットできません`); break; }
       if(a.extraNormalKey){

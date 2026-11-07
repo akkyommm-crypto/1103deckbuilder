@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 372,
+    "NOT_STARTED": 371,
     "PARTIAL": 12,
-    "TESTED": 3622
+    "TESTED": 3623
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -935,
+    "NOT_STARTED": -936,
     "PARTIAL": -170,
-    "TESTED": 1573
+    "TESTED": 1574
   },
   "status_changes": [
     {
@@ -2915,6 +2915,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U362"
+    },
+    {
+      "name": "ダーク・シムルグ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U529"
     },
     {
       "name": "ダーク・ジェネラル フリード",
