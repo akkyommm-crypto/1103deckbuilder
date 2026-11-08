@@ -12,16 +12,16 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 351,
+    "NOT_STARTED": 348,
     "PARTIAL": 12,
-    "TESTED": 3643
+    "TESTED": 3646
   },
   "delta": {
     "ENGINE_GAP": -272,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -956,
+    "NOT_STARTED": -959,
     "PARTIAL": -170,
-    "TESTED": 1594
+    "TESTED": 1597
   },
   "status_changes": [
     {
@@ -3487,6 +3487,12 @@
       "unit": "S03-U288"
     },
     {
+      "name": "ドラゴンレーザー",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U543"
+    },
+    {
       "name": "ドリル・ウォリアー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -3869,6 +3875,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U519"
+    },
+    {
+      "name": "パワー・ブレイク",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U542"
     },
     {
       "name": "パワー・ボンド",
@@ -5183,6 +5195,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U314"
+    },
+    {
+      "name": "ヴァイロン・ポリトープ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U544"
     },
     {
       "name": "ヴァイロン・マター",

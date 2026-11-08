@@ -16125,6 +16125,36 @@
         "tools/test_s03_u541_equip_self.js"
       ],
       "evidence": "Three cards that share 'equip one monster to this card as an Equip Card', implemented together on existing machinery: the equip with its source record (API.equipMonster {sourceUidS03} and u539EquippedS03, S03-U539/U540), the optional destruction substitute of S03-U173/U513, the attack-time Spell/Trap lock declareAttackLockS03 of S03-U144 and the Special Summon procedure of S03-U342. The one engine addition is in engine/1ZV: a HOST-declared optional equip substitute (equipHostSubstituteOptionalS03:{causes}), which two of these cards need - until now only the equip card could declare an optional substitute (equipSubstituteOptionalS03, S03-U513) while the host side had only the mandatory equipHostSubstituteS03 (S03-U323). The candidates are the monsters this card equipped with its own effect, the application reuses the existing equipSub path, and a substitute destroyed simultaneously is excluded by the existing excl (WIKI-E678659CBF07 10/09/16). Every other substitute path still passes: test_s03_u173_destroy_substitute (37 PASS), test_s03_u513_equip_substitute_optional (29 PASS), test_s03_u240_crystal_beast, test_s03_u268_equip_instead, test_s03_u286_earthbound3, test_s03_u325_laval, test_s03_u337_graveworld, test_s03_u364_counters3, plus test_s03_u144_attack_lock (24 PASS), test_s03_u342_procs (33 PASS), test_s03_u539_sacrifice and test_s03_u540_queen_lv. Measured in 16 assertions with Replay audited in six scenes. WIKI-8F834E1A7A8D (09/08/26) fixes the classification: the Spell/Trap interference is continuous (the shared declareAttackLockS03, S03-U144), the equip is an Ignition effect and the substitute is continuous; WIKI-9E07F8028E49 makes the equip target (targets:true with a target step); WIKI-4F18E5430766 (09/08/29) refuses the activation while it already holds an equip from this effect. Measured: while it attacks, the opponent's set 聖なるバリア －ミラーフォース－ is refused with the card's name in the reason and stays set, and when it would be destroyed by battle the equipped monster is destroyed instead to its owner's Graveyard; and WIKI-CFB024C0A1AF (09/08/26) on a real path - 強制脱出装置 chained to the activation removes the card, so the selected opponent monster is not equipped and is sent to the Graveyard (the Synchro monster itself returns to the Extra Deck). docs/S03_U541_REPORT.md section 4. docs/S03_U541_REPORT.md section 4."
+    },
+    {
+      "name": "パワー・ブレイク",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U542",
+      "tests": [
+        "tools/test_s03_u542_power_break.js"
+      ],
+      "evidence": "real trap activation; multiple Equip types; partial target loss; Extra Deck and owner routing; damage by actual returns; Replay"
+    },
+    {
+      "name": "ドラゴンレーザー",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U543",
+      "tests": [
+        "tools/test_s03_u543_dragon_laser.js"
+      ],
+      "evidence": "equipped Trigon targeted at activation, sent by effect not cost; opponent wipe; target loss; real chain Replay"
+    },
+    {
+      "name": "ヴァイロン・ポリトープ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U544",
+      "tests": [
+        "tools/test_s03_u544_vylon_polytope.js"
+      ],
+      "evidence": "activation-time multiple monster-Equip targets; defense SS; field-leave banish; chain capacity loss sends failed target GY; exclusions; Replay"
     }
   ],
   "restored_to_baseline": [

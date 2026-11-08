@@ -155,6 +155,9 @@ NON_CARD_TEST_FILES = {
 }
 
 CARD_TEST_FOCUS = {
+    "test_s03_u544_vylon_polytope.js": {"ヴァイロン・ポリトープ"},
+    "test_s03_u543_dragon_laser.js": {"ドラゴンレーザー"},
+    "test_s03_u542_power_break.js": {"パワー・ブレイク"},
     # U56 uses real low-ATK monsters as fixtures to validate Limit Reverse
     # target filtering and link cleanup; only the trap is under card-specific test.
     "test_s03_u56_limit_reverse.js": {"リミット・リバース"},

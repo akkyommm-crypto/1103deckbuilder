@@ -6,9 +6,9 @@
     "ENGINE_GAP": 344,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 351,
+    "NOT_STARTED": 348,
     "PARTIAL": 12,
-    "TESTED": 3643
+    "TESTED": 3646
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -121,9 +121,9 @@
     "helper:v9DefineReviveLink": 7,
     "legacy": 1656,
     "sin": 5,
-    "unified": 1450
+    "unified": 1453
   },
-  "static_registration_name_count": 3653,
+  "static_registration_name_count": 3656,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -41308,12 +41308,20 @@
       "subtype": "速攻",
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 8,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\codex_s03_u543_dragon_laser.js",
+          "line": 11
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u543_dragon_laser.js"
+      ]
     },
     {
       "index": 1849,
@@ -46379,12 +46387,20 @@
       "subtype": "",
       "date": "2010-02-20",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\codex_s03_u542_power_break.js",
+          "line": 45
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u542_power_break.js"
+      ]
     },
     {
       "index": 2082,
@@ -63961,12 +63977,20 @@
       "subtype": "速攻",
       "date": "2011-04-26",
       "extra": false,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 9,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\codex_s03_u544_vylon_polytope.js",
+          "line": 11
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u544_vylon_polytope.js"
+      ]
     },
     {
       "index": 2881,

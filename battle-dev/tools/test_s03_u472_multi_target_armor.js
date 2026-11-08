@@ -98,9 +98,10 @@ globalThis.__SAVES={};
   ok('declaration: exactly these eight scripts declare targetCount — the five of S03-U472 plus 墓守の石版 / 無欲な壺 / ガスタのつむじ風 (user-authorised scope expansion, S03-U478) — and each with its exact count; no other script does',
     declKeys.length===8&&JSON.stringify(declKeys)===JSON.stringify(expKeys)&&expKeys.every(n=>decl[n]===EXPECT_DECL[n]),JSON.stringify(decl));
   const variable={};Object.keys(CARD_SCRIPTS).forEach(n=>{const r=CARD_SCRIPTS[n]&&CARD_SCRIPTS[n].targetCountRange;if(r!=null)variable[n]=r;});
-  const EXPECT_VARIABLE={'霊滅術師 カイクウ':[1,2],'暗黒界の武神 ゴルド':[0,2]};
-  ok('declaration (S03-U480): exactly カイクウ and ゴルド declare variable target-count ranges, with their exact lower/upper bounds; neither fakes targetCount:2',
-    JSON.stringify(Object.keys(variable).sort())===JSON.stringify(Object.keys(EXPECT_VARIABLE).sort())&&Object.keys(EXPECT_VARIABLE).every(n=>JSON.stringify(variable[n])===JSON.stringify(EXPECT_VARIABLE[n]))&&CARD_SCRIPTS['霊滅術師 カイクウ'].targetCount==null&&CARD_SCRIPTS['暗黒界の武神 ゴルド'].targetCount==null,JSON.stringify(variable));
+  /* S03-U542/U544: existing counting method retained; two implemented variable-count Equip effects extend the exact name/range population. */
+  const EXPECT_VARIABLE={'霊滅術師 カイクウ':[1,2],'暗黒界の武神 ゴルド':[0,2],'パワー・ブレイク':[1,3],'ヴァイロン・ポリトープ':[1,5]};
+  ok('declaration (S03-U480/U542/U544): exactly four scripts declare variable target-count ranges, with their exact names and lower/upper bounds; none fakes static targetCount',
+    JSON.stringify(Object.keys(variable).sort())===JSON.stringify(Object.keys(EXPECT_VARIABLE).sort())&&Object.keys(EXPECT_VARIABLE).every(n=>JSON.stringify(variable[n])===JSON.stringify(EXPECT_VARIABLE[n]))&&Object.keys(EXPECT_VARIABLE).every(n=>CARD_SCRIPTS[n].targetCount==null),JSON.stringify(variable));
   /* 唯一の消費者はアーマー: 対象耐性フックの本文が宣言を読むのはメタルシルバー・アーマーだけ */
   const readers=Object.keys(CARD_SCRIPTS).filter(n=>{const c=CARD_SCRIPTS[n]&&CARD_SCRIPTS[n].continuous;if(!c)return false;
     return [c.immuneToTarget,c.immuneToTargetOffField].some(f=>typeof f==='function'&&/targetCount|targetsMultiple|d2ArmorExemptMultiTarget/.test(String(f)));});

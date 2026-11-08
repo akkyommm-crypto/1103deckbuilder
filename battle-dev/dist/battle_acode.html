@@ -102399,6 +102399,125 @@ defineUnifiedCardV4('地底のアラクネー', [{
   equipHostSubstituteOptionalS03:{causes:['battle']},
   continuous:{ scope:'self', from:['mz'], apply(){ return null; } }
 });
+/* S03-U542 パワー・ブレイク (2011 text).
+ WIKI-BFF7F463EBE8 (2010-02-21): targets 1-3 Equip Cards at activation.
+ WIKI-304D13AAB7FB (2010-02-21): a lost target does not stop the others.
+ WIKI-190C96FCEA8A (2010-02-21): monster/Trap Equip Cards count too.
+ WIKI-336B19523906 (2010-02-21): Extra Deck returns count for damage.
+ Existing P1 choice, returnToDeck and owner/Extra routing only; no Power Tool effect is assumed. */
+/* S03-U480 existing dynamic target-count protocol: choose the count first,
+   filter with explicit effectInfo, then commit exactly that many targets (P1.1).
+   The pool registry is static card code; only the pool key/count enter saved choices. */
+const EQUIP_TARGET_POOLS_U542 = {};
+function u542TargetCountsS03(ctx,pool,max){
+  const name=cardName(ctx.card),out=[];
+  for(let n=1;n<=Math.min(max,pool.length);n++){
+    const info=targetEffectSourceS03(ctx.player,{name:name,uid:ctx.card.uid,targetCount:n});
+    if(filterTargetable(pool,ctx.player,info).length>=n)out.push(n);
+  }
+  return out;
+}
+function u542EquipActivationS03(ctx,d,poolKey,max){
+  const counts=u542TargetCountsS03(ctx,EQUIP_TARGET_POOLS_U542[poolKey](ctx),max);
+  if(!counts.length){p11cAbort(d);return;}
+  p11cOpen(d,{kind:'option',title:d.name+'：対象にする枚数',
+    candidates:counts.map(n=>({key:'count-'+n,label:n+'枚',value:n})),
+    min:1,max:1,targeting:false,cancelable:false},'codex.u542.equip-count',{poolKey:poolKey});
+}
+API.registerChoiceHandler('codex.u542.equip-count',(a,x)=>{
+  const d=x.activation,n=Number(a.cards&&a.cards[0]&&a.cards[0].value);
+  if(a.cancelled || !targetCountAllowedS03(d.name,n)){p11cAbort(d);return;}
+  const pool=EQUIP_TARGET_POOLS_U542[x.poolKey](p11cCtx(d.player));
+  const opened=p11cOpen(d,{title:d.name+'：対象の装備カード（'+n+'枚）',candidates:pool,
+    min:n,max:n,targeting:true,cancelable:false,
+    effectInfo:targetEffectSourceS03(d.player,{name:d.name,uid:d.uid,targetCount:n})},
+    'p11cards.commit-targets',{targetCount:n});
+  if(!opened)p11cAbort(d);
+});
+function u542PowerToolS03(ctx){
+  return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>x.card.face==='up'
+    && currentNameV17(x.card)==='パワー・ツール・ドラゴン'}).length>0;
+}
+function u542EquipsS03(ctx){
+  return API.fieldCards({player:ctx.player,zone:'sz',filter:x=>x.card.face==='up' && !!x.card.equipTo})
+    .concat(API.pileCards(ctx.player,'grave',x=>x.db.k==='s' && x.db.sub==='装備'));
+}
+EQUIP_TARGET_POOLS_U542.power=u542EquipsS03;
+defineUnifiedCardV4('パワー・ブレイク',[{
+  key:'return-equips',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.SZONE,speed:2,events:['activate'],
+  targetRange:LOCATION.SZONE|LOCATION.GRAVE,targetSide:'self',
+  condition(ctx){ return u542PowerToolS03(ctx) && u542TargetCountsS03(ctx,u542EquipsS03(ctx),3).length>0; },
+  operation(ctx){
+    let count=0; const shuffle=new Set();
+    (ctx.selectedTargets||[]).forEach(t=>{
+      const h=t && resolveTarget(t);
+      if(!h || h.p!==ctx.player || (h.zone!=='sz' && h.zone!=='grave')) return;
+      const uid=h.card.uid;
+      API.returnToDeck(h,false,'パワー・ブレイク');
+      const now=findCardByUid(uid);
+      if(now && (now.zone==='deck'||now.zone==='ex')){ count++; if(now.zone==='deck')shuffle.add(now.p); }
+    });
+    shuffle.forEach(p=>API.shuffle(p));
+    if(count) API.damageLP(ctx.opponent,count*500,'パワー・ブレイク');
+  },afterResolve(){}
+}],{type:'trap',priority:2,targets:true,targetCountRange:[1,3],
+  activationV11(ctx,d){u542EquipActivationS03(ctx,d,'power',3);}});
+/* S03-U543 ドラゴンレーザー.
+ WIKI-C489CBC48C1D (2010-02-22): target an equipped Trigon at activation;
+ sending it to the Graveyard is the EFFECT, never a cost. */
+function u543TrigonS03(ctx){
+  return API.fieldCards({player:ctx.player,zone:'sz',filter:x=>{
+    if(x.card.face!=='up' || currentNameV17(x.card)!=='トライゴン') return false;
+    const host=API.equippedMonster(x);
+    return !!host && host.p===ctx.player && host.card.face==='up' && currentNameV17(host.card)==='デルタトライ';
+  }});
+}
+defineUnifiedCardV4('ドラゴンレーザー',[{
+  key:'send-equipped-wipe',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.HAND|LOCATION.SZONE,speed:2,events:['activate'],
+  targetRange:LOCATION.SZONE,targetSide:'self',
+  condition(ctx){ return u543TrigonS03(ctx).length>0 && API.fieldCards({player:ctx.opponent,zone:'mz'}).length>0; },
+  target(ctx,done){ API.selectCard('ドラゴンレーザー：デルタトライに装備されたトライゴン',u543TrigonS03(ctx),t=>done([t])); },
+  operation(ctx){
+    const t=ctx.selectedTargets && ctx.selectedTargets[0], eq=t && resolveTarget(t);
+    if(!eq || !u543TrigonS03(ctx).some(x=>x.card===eq.card)) return;
+    const uid=eq.card.uid;
+    API.sendToGrave(eq,'ドラゴンレーザー');
+    const sent=findCardByUid(uid);
+    if(sent && sent.zone==='grave') API.destroyAll('mz',ctx.opponent,'ドラゴンレーザー');
+  },afterResolve(){}
+}],{type:'spell',priority:2,targets:true,destroysFieldV46:true});
+
+/* S03-U544 ヴァイロン・ポリトープ.
+ WIKI-C30715479B04 (2011-04-29): face-down monster-Equips cannot be selected.
+ WIKI-6B66E303623E (2011-05-12): a target that cannot be summoned at resolution goes to the GY.
+ Existing P4 group, multi-target P1 choice, v46 unequip/SS and banishWhenLeavesField only. */
+function u544VylonEquipsS03(ctx){
+  return API.fieldCards({player:ctx.player,zone:'sz',filter:x=>x.card.face==='up'
+    && x.db.k==='m' && x.card.v46MonsterEquip===true && !!x.card.equipTo
+    && isCardInGroupV4(x.card,GROUP.VYLON)});
+}
+EQUIP_TARGET_POOLS_U542.vylon=u544VylonEquipsS03;
+defineUnifiedCardV4('ヴァイロン・ポリトープ',[{
+  key:'summon-equips',type:EFFECT_TYPE.ACTIVATE,range:LOCATION.HAND|LOCATION.SZONE,speed:2,events:['activate'],
+  targetRange:LOCATION.SZONE,targetSide:'self',
+  condition(ctx){ return hasMonsterZoneSpace(ctx.player) && !v46GlobalSpecialSummonRestrictionReason(ctx.player) && u542TargetCountsS03(ctx,u544VylonEquipsS03(ctx),ZONE_LIMITS.mz-gameState.players[ctx.player].mz.length).length>0; },
+  operation(ctx){
+    (ctx.selectedTargets||[]).forEach(t=>{
+      const eq=t && resolveTarget(t);
+      if(!eq || !u544VylonEquipsS03(ctx).some(x=>x.card===eq.card)) return;
+      const uid=eq.card.uid;
+      if(hasMonsterZoneSpace(ctx.player)){
+        API.unequip(eq,'ヴァイロン・ポリトープ');
+        const now=findCardByUid(uid);
+        if(now && now.zone==='sz') API.specialSummon(ctx.player,'sz',now.index,'def','ヴァイロン・ポリトープ');
+      }
+      const summoned=findCardByUid(uid);
+      if(summoned && summoned.zone==='mz') API.setCardFlag(summoned,'banishWhenLeavesField',true,'ヴァイロン・ポリトープ',{silent:true});
+      else if(summoned && summoned.zone==='sz') API.sendToGrave(summoned,'ヴァイロン・ポリトープ（特殊召喚できない）');
+    });
+  },afterResolve(){}
+}],{type:'spell',priority:2,targets:true,includesSpecialSummon:true,targetCountRange:[1,5],
+  activationV11(ctx,d){u542EquipActivationS03(ctx,d,'vylon',ZONE_LIMITS.mz-gameState.players[ctx.player].mz.length);}});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

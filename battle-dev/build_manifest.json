@@ -1946,6 +1946,15 @@
   "path": "cards/HZZZZZZZZZZZZY_claude_s03_u541_equip_self.js"
  },
  {
+  "path": "cards/codex_s03_u542_power_break.js"
+ },
+ {
+  "path": "cards/codex_s03_u543_dragon_laser.js"
+ },
+ {
+  "path": "cards/codex_s03_u544_vylon_polytope.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,
