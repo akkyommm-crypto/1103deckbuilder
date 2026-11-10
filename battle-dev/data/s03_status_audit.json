@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 344,
+    "ENGINE_GAP": 340,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 348,
+    "NOT_STARTED": 347,
     "PARTIAL": 12,
-    "TESTED": 3646
+    "TESTED": 3651
   },
   "delta": {
-    "ENGINE_GAP": -272,
+    "ENGINE_GAP": -276,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -959,
+    "NOT_STARTED": -960,
     "PARTIAL": -170,
-    "TESTED": 1597
+    "TESTED": 1602
   },
   "status_changes": [
     {
@@ -2683,6 +2683,12 @@
       "unit": "S03-U340"
     },
     {
+      "name": "スネーク・チョーク",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U547"
+    },
+    {
       "name": "スネーク・ホイッスル",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -4085,6 +4091,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U247"
+    },
+    {
+      "name": "フルール・シンクロン",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U545"
     },
     {
       "name": "フルール・ド・シュヴァリエ",
@@ -6149,6 +6161,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U376"
+    },
+    {
+      "name": "地獄の番熊",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U547"
     },
     {
       "name": "地獄の門番イル・ブラッド",
@@ -8329,6 +8347,12 @@
       "unit": "S03-U212"
     },
     {
+      "name": "竜宮の白タウナギ",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U546"
+    },
+    {
       "name": "竜影魚レイ・ブロント",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -9593,6 +9617,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U287"
+    },
+    {
+      "name": "魔轟神獣クダベ",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U547"
     },
     {
       "name": "魔轟神獣ケルベラル",

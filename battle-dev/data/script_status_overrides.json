@@ -229,10 +229,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs cost-time released-monster Level provenance and a restricted non-Fusion-Summon Extra Deck procedure for a Fusion Monster of exactly that Level."
     },
-    "竜宮の白タウナギ": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs declarative source-specific Synchro material companion restrictions integrated with material enumeration, UI, legality and replay."
-    },
     "端末世界": {
       "status": "ENGINE_GAP",
       "reason": "Needs a continuous both-player Main Phase 2 skip rule integrated with phase transition, manual controls, AI, save and replay."
@@ -731,10 +727,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs same-turn opponent-caused Spell Graveyard provenance, self-tribute cost and eligible Deck-bottom recovery selection."
     },
-    "フルール・シンクロン": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs Synchro-material send provenance and replay-safe optional Level-2-or-lower hand Special Summon."
-    },
     "ブランチ": {
       "status": "ENGINE_GAP",
       "reason": "Needs Fusion destruction provenance and retained exact Fusion-material identities for optional Graveyard revival."
@@ -826,10 +818,6 @@
     "グリード": {
       "status": "ENGINE_GAP",
       "reason": "Needs effect-draw provenance and per-player draw counts accumulated only while this Continuous Trap remains face-up, followed by correctly scheduled End Phase damage and serializable counter reset."
-    },
-    "スネーク・チョーク": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs central source-specific conditional battle-destruction immunity for opponent face-up Attack Position monsters whose current ATK is zero only while they battle a canonical Reptilianne monster."
     },
     "フェイク・フェザー": {
       "status": "ENGINE_GAP",
@@ -1046,10 +1034,6 @@
     "創世の預言者": {
       "status": "TESTED",
       "reason": "activation-time Choice / target selection / declaration / activation cost: exact 1103 processing for \"①:1ターンに1度、手札を1枚捨て、自分の墓地のレベル7以上のモンスター1体を対象として発動できる。 そのモンスターを手札に加える。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
-    },
-    "地獄の番熊": {
-      "status": "ENGINE_GAP",
-      "reason": "provenance / continuous rule: exact 1103 processing for \"このカードが表側表示で自分フィールド上に存在する限り、自分フィールド上の「万魔殿－悪魔の巣窟－」は、相手がコントロールするカードの効果では破壊されない。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation."
     },
     "堕天使スペルビア": {
       "status": "TESTED",

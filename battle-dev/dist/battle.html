@@ -102514,6 +102514,91 @@ defineUnifiedCardV4('ヴァイロン・ポリトープ',[{
   },afterResolve(){}
 }],{type:'spell',priority:2,targets:true,includesSpecialSummon:true,targetCountRange:[1,5],
   activationV11(ctx,d){u542EquipActivationS03(ctx,d,'vylon',ZONE_LIMITS.mz-gameState.players[ctx.player].mz.length);}});
+/* S03-U545: フルール・シンクロン / ヴァイロン・キューブ.
+ Existing c8AsSynchroMaterial provenance, non-targeting resolution choices,
+ specialSummonPositionsS03 and API.searchDeck; no engine additions.
+ Cube: WIKI-A21BBF75DDF4 (2010-06-20): normal/chain-2 Synchro material does not miss timing.
+ Fleur: historical archive search including question text has 0 matches (era-specific evidence absent). */
+function u545HandSmallS03(ctx){
+  return API.pileCards(ctx.player,'hand',x=>x.db.k==='m' && Number(curLV(x.card))<=2
+    && canEffectSpecialSummonS03(x.card,'hand','フルール・シンクロン')
+    && !v46SpecialSummonRestrictionReason(ctx.player,x.db));
+}
+function u545CubeMaterialS03(ctx){
+  const material=c8AsSynchroMaterial(ctx);
+  return !!material && !!material.synchro && hasAttributeV17(material.synchro.card,'光');
+}
+function u545EquipDeckS03(ctx){ return API.pileCards(ctx.player,'deck',x=>x.db.k==='s' && x.db.sub==='装備'); }
+defineUnifiedCardV4('フルール・シンクロン',[{
+  key:'material-summon',type:EFFECT_TYPE.TRIGGER,range:LOCATION.GRAVE,speed:1,events:['onSendToGrave'],
+  condition(ctx){ return !!c8AsSynchroMaterial(ctx) && hasMonsterZoneSpace(ctx.player) && u545HandSmallS03(ctx).length>0; },
+  operation(ctx){
+    const pool=u545HandSmallS03(ctx);if(!pool.length || !hasMonsterZoneSpace(ctx.player))return;
+    API.selectCard('フルール・シンクロン：手札から特殊召喚するレベル2以下',pool,t=>{
+      const h=t && resolveTarget(t);
+      if(h && h.zone==='hand' && h.p===ctx.player && u545HandSmallS03(ctx).some(x=>x.card===h.card))
+        specialSummonPositionsS03(ctx.player,[{uid:h.card.uid,from:'hand'}],'フルール・シンクロン');
+    });
+  },afterResolve(){}
+}],{type:'monster',priority:1,timing:['free'],activateFrom:['grave'],includesSpecialSummon:true});
+defineUnifiedCardV4('ヴァイロン・キューブ',[{
+  key:'material-search',type:EFFECT_TYPE.TRIGGER,range:LOCATION.GRAVE,speed:1,events:['onSendToGrave'],
+  condition(ctx){ return u545CubeMaterialS03(ctx) && !deckToHandLockReasonV32(ctx.player) && u545EquipDeckS03(ctx).length>0; },
+  operation(ctx){
+    if(deckToHandLockReasonV32(ctx.player))return;
+    const pool=u545EquipDeckS03(ctx);if(!pool.length)return;
+    API.selectCard('ヴァイロン・キューブ：手札に加える装備魔法',pool,t=>{
+      const h=t && resolveTarget(t);
+      if(h && h.p===ctx.player && h.zone==='deck' && !deckToHandLockReasonV32(ctx.player)) API.searchDeck(ctx.player,h.index,'ヴァイロン・キューブ');
+    });
+  },afterResolve(){}
+}],{type:'monster',priority:1,timing:['free'],activateFrom:['grave']});
+/* S03-U546 竜宮の白タウナギ.
+ WIKI-F7EA5A07CF4B / WIKI-CCF9A02413F8 (2009-09-19): this is a rule,
+ not a monster effect, and Skill Drain does not negate it.
+ Existing synchroMaterialRestriction is evaluated for every candidate set,
+ including the beginExSummonV2 legality guard; no parallel summon path. */
+defineScript('竜宮の白タウナギ',u426Passive({
+  synchroMaterialRestriction(info){
+    return !!info && Array.isArray(info.set) && info.set.every(x=>{
+      const card=x.card || x.c;
+      return card===info.source || (card && info.source && card.uid===info.source.uid)
+        || (card ? currentRaceV17(card) : x.db && x.db.ra)==='魚';
+    });
+  }
+}));
+/* S03-U547: three conditional protections through existing protectV21.
+ Archive (including questions): 地獄の番熊 / スネーク・チョーク 0 entries;
+ era-specific additional evidence absent, special rulings remain unconfirmed.
+ クダベ: WIKI-91EB7B5E8EC1 (2010-01-22) 0 cards = continuous protection,
+ 3+ cards = End Phase trigger; WIKI-12C64889B7C3 (same date) reducing the hand
+ after activation does NOT stop its destruction. */
+defineScript('地獄の番熊',u426Passive({
+  continuous:{scope:'ownCards',from:['mz'],apply(){return null;},
+    protectV21:{key:'u547.pandemonium',label:'地獄の番熊',opponentOnly:true,
+      effect(target){return currentNameV17(target)==='万魔殿－悪魔の巣窟－';}}}
+}));
+defineScript('スネーク・チョーク',{
+  type:'trap',priority:2,condition(ctx){return ctx.zone==='sz';},resolve(){},afterResolve(){},
+  continuous:{scope:'oppMonsters',from:['sz'],apply(){return null;},
+    protectV21:{key:'u547.snake',label:'スネーク・チョーク',
+      battle(target,self,ctx){return target.face==='up' && target.pos==='atk' && curATK(target)===0
+        && !!ctx.opponentCard && isCardInGroupV4(ctx.opponentCard,GROUP.REPTILIANNE);}}}
+});
+function u547KudabbiHandS03(card){
+  const h=locateCardAnyV4(card);return h && h.zone==='mz' ? gameState.players[h.p].hand.length : -1;
+}
+defineUnifiedCardV4('魔轟神獣クダベ',[{
+  key:'end-destroy',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onEndPhase'],forced:true,
+  condition(ctx){return ctx.zone==='mz' && ctx.card.face==='up' && u547KudabbiHandS03(ctx.card)>=3;},
+  operation(ctx){const h=locateCardAnyV4(ctx.card);if(h && h.zone==='mz')API.destroy(h,'魔轟神獣クダベ');},
+  afterResolve(){}
+}],{type:'monster',priority:1,timing:['free'],
+  continuous:{scope:'self',from:['mz'],apply(){return null;},
+    protectV21:{key:'u547.kudabbi',label:'魔轟神獣クダベ',
+      battle(target,self){return target===self && u547KudabbiHandS03(self)===0;},
+      effect(target,self){return target===self && u547KudabbiHandS03(self)===0;}}}
+});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、

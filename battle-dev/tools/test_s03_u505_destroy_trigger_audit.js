@@ -116,13 +116,14 @@ harness(COMMON + String.raw`
 const o=byEvent(), all=allCands();
 /* S03-U512 で《霊子エネルギー固定装置》（「このカードがフィールド上から離れた時」）を実装したので、
    onLeaveField が 57 → 58、重複を除いた候補が 317 → 318 になった。数え方は変えていない。 */
-ok('A1 ★ イベントごとの件数（onDestroy 111 / onSendToGrave 181 / onLeaveField 58 / onFieldToGraveBatchS03 8 / onRemove 10）'
+/* S03-U545: Fleur adds one onSendToGrave card, one unique candidate, one parsed clause and one G-baai. Population filters/parsers remain unchanged; older document counts stay historical. */
+ok('A1 ★ イベントごとの件数（onDestroy 111 / onSendToGrave 182 / onLeaveField 58 / onFieldToGraveBatchS03 8 / onRemove 10）'
    +'。onSendToGrave は S03-U508 で《歯車街》が加わって 180 → 181',
-   o.onDestroy.length===111 && o.onSendToGrave.length===181 && o.onLeaveField.length===58
+   o.onDestroy.length===111 && o.onSendToGrave.length===182 && o.onLeaveField.length===58
    && o.onFieldToGraveBatchS03.length===8 && o.onRemove.length===10,
    JSON.stringify(EVS.map(e=>e+':'+o[e].length)));
-ok('A2 ★ 重複を除いた候補カードは 318 枚（S03-U508 で《歯車街》が加わって 316 → 317）',
-   all.length===318, JSON.stringify({n:all.length}));
+ok('A2 ★ 重複を除いた候補カードは 319 枚（S03-U508 で《歯車街》が加わって 316 → 317）',
+   all.length===319, JSON.stringify({n:all.length}));
 `, {expect:2});
 
 /* ===== B. いまは 1 件も落とさない ===== */
@@ -169,9 +170,9 @@ const nowAny=all.filter(n=>missedTimingTextClausesS03(n).length>0);
 /* C1 は S03-U506 で書き直した。あの時点では召喚語の句しか読めず 19 枚だった。
    S03-U506 で破壊・墓地送りの語と「られた」を足したので 255 枚で句が読める。
    読めることと落とすことは別で、落ちるのは (B-5) に入った組だけである。 */
-ok('C1 ★ 句が読めるのは 317 枚中 256 枚になった（S03-U506 で語と「られた」を足した。'
+ok('C1 ★ 句が読めるのは 319 枚中 257 枚になった（S03-U506 で語と「られた」を足した。'
    +'S03-U508 で《歯車街》が配線に加わって 255 → 256）',
-   nowAny.length===256, JSON.stringify({n:nowAny.length}));
+   nowAny.length===257, JSON.stringify({n:nowAny.length}));
 ok('C2 ★ いまの正規表現は「墓地へ送られた時」に当たらない（次の単位で足す対象）',
    /\(\?:に成功した\|された\|した\)\(時\|場合\)/.test(
      String(MISSED_TIMING_TERM_S03).replace(/^\//,'').replace(/\/g$/,'')) === false
@@ -209,8 +210,8 @@ const D=tally('D'), G=tally('G'), GF=tally('GF'), X=tally('X'), T=tally('T'), B=
 ok('D1 ★ 破壊（D）の内訳: 時 31 / 場合 24 / 混在 0',
    D.toki===31 && D.baai===24 && D.mixed===0, JSON.stringify(D));
 /* S03-U508 で《歯車街》が配線に加わり、その句は「破壊され墓地へ送られた**時**」なので 時 が 1 増えた。 */
-ok('D2 ★ 墓地へ送られた（G）の内訳: 時 113 / 場合 62 / 混在 1（時は S03-U508 の《歯車街》で 112 → 113）',
-   G.toki===113 && G.baai===62 && G.mixed===1, JSON.stringify(G));
+ok('D2 ★ 墓地へ送られた（G）の内訳: 時 113 / 場合 63 / 混在 1（時は S03-U508 の《歯車街》で 112 → 113）',
+   G.toki===113 && G.baai===63 && G.mixed===1, JSON.stringify(G));
 ok('D3 ★ その他の内訳（フィールドから墓地へ送 / 除外 / リリース / 戦闘で破壊）',
    GF.toki===5 && GF.baai===9 && X.toki===6 && X.baai===3 && T.toki===0 && T.baai===5
    && B.toki===1 && B.baai===2,

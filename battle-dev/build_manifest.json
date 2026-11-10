@@ -1955,6 +1955,15 @@
   "path": "cards/codex_s03_u544_vylon_polytope.js"
  },
  {
+  "path": "cards/codex_s03_u545_synchro_material_triggers.js"
+ },
+ {
+  "path": "cards/codex_s03_u546_royal_swamp_eel.js"
+ },
+ {
+  "path": "cards/codex_s03_u547_conditional_protection.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

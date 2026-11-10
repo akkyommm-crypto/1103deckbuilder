@@ -155,6 +155,9 @@ NON_CARD_TEST_FILES = {
 }
 
 CARD_TEST_FOCUS = {
+    "test_s03_u547_conditional_protection.js": {"地獄の番熊", "スネーク・チョーク", "魔轟神獣クダベ"},
+    "test_s03_u546_royal_swamp_eel.js": {"竜宮の白タウナギ"},
+    "test_s03_u545_synchro_material_triggers.js": {"フルール・シンクロン", "ヴァイロン・キューブ"},
     "test_s03_u544_vylon_polytope.js": {"ヴァイロン・ポリトープ"},
     "test_s03_u543_dragon_laser.js": {"ドラゴンレーザー"},
     "test_s03_u542_power_break.js": {"パワー・ブレイク"},

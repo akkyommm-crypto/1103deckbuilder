@@ -228,13 +228,14 @@ const normalSummonable=all.filter(n=>{
 /* S03-U508 で onSendToGrave が 180 → 181 になった。《歯車街》②を
    「破壊され墓地へ送られた時」の誘発に直して passive.onSendToGrave を足したため。
    《歯車街》はフィールド魔法なので、下の C2（通常召喚できるモンスター 176 枚）は変わっていない。 */
-ok('C1 ★ 自分の破壊／墓地送りを見る passive の件数（onDestroy 111 / onSendToGrave 181）'
+/* S03-U545: Fleur's onSendToGrave raises the same population by one (181→182 / 176→177). Counting/filtering and the historical document's 176-card record stay unchanged. */
+ok('C1 ★ 自分の破壊／墓地送りを見る passive の件数（onDestroy 111 / onSendToGrave 182）'
    +'。onSendToGrave は S03-U508 で《歯車街》が加わって 180 → 181',
-   byEv['onDestroy'].length===111 && byEv['onSendToGrave'].length===181,
+   byEv['onDestroy'].length===111 && byEv['onSendToGrave'].length===182,
    JSON.stringify(EVS.map(e=>e+':'+byEv[e].length)));
-ok('C2 ★ そのうち通常召喚できるモンスターは 176 枚。'
-   +'いまは召喚を無効にされてもこの 176 枚のイベントが 1 つも出ない（手札から出した場合）',
-   normalSummonable.length===176,
+ok('C2 ★ そのうち通常召喚できるモンスターは 177 枚。'
+   +'いまは召喚を無効にされてもこの 177 枚のイベントが 1 つも出ない（手札から出した場合）',
+   normalSummonable.length===177,
    JSON.stringify({n:normalSummonable.length}));
 ok('C3 ★ 「フィールドで破壊された」ことを条件にするものは当時裁定では働かない側である'
    +'（WIKI-643A78AB3480 08/03/19・WIKI-9E991E9B14E9 10/04/21）。'

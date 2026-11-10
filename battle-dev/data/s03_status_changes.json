@@ -16155,6 +16155,56 @@
         "tools/test_s03_u544_vylon_polytope.js"
       ],
       "evidence": "activation-time multiple monster-Equip targets; defense SS; field-leave banish; chain capacity loss sends failed target GY; exclusions; Replay"
+    },
+    {
+      "name": "フルール・シンクロン",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U545",
+      "tests": [
+        "tools/test_s03_u545_synchro_material_triggers.js"
+      ],
+      "evidence": "legal real Synchro-material triggers; non-targeting hand SS with position choice / LIGHT-only Equip Spell search; negative conditions and Replay"
+    },
+    {
+      "name": "竜宮の白タウナギ",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U546",
+      "tests": [
+        "tools/test_s03_u546_royal_swamp_eel.js"
+      ],
+      "evidence": "actual exCombos and beginExSummonV2 permit Fish-only companions and refuse non-Fish; both cases checked under Skill Drain; legal summons Replay audited"
+    },
+    {
+      "name": "地獄の番熊",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U547",
+      "tests": [
+        "tools/test_s03_u547_conditional_protection.js"
+      ],
+      "evidence": "real opponent-only field protection / 0-ATK battle protection / hand-count battle-effect protection and forced End trigger; exclusions; chain hand reduction; Replay"
+    },
+    {
+      "name": "スネーク・チョーク",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U547",
+      "tests": [
+        "tools/test_s03_u547_conditional_protection.js"
+      ],
+      "evidence": "real opponent-only field protection / 0-ATK battle protection / hand-count battle-effect protection and forced End trigger; exclusions; chain hand reduction; Replay"
+    },
+    {
+      "name": "魔轟神獣クダベ",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U547",
+      "tests": [
+        "tools/test_s03_u547_conditional_protection.js"
+      ],
+      "evidence": "real opponent-only field protection / 0-ATK battle protection / hand-count battle-effect protection and forced End trigger; exclusions; chain hand reduction; Replay"
     }
   ],
   "restored_to_baseline": [

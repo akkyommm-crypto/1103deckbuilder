@@ -3,12 +3,12 @@
   "cutoff": "2011-08-31",
   "total_db_cards": 4996,
   "counts": {
-    "ENGINE_GAP": 344,
+    "ENGINE_GAP": 340,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 348,
+    "NOT_STARTED": 347,
     "PARTIAL": 12,
-    "TESTED": 3646
+    "TESTED": 3651
   },
   "registration_kind_counts": {
     "deckTrigger": 44,
@@ -119,11 +119,11 @@
     "helper:v85ReviveOnSummon": 2,
     "helper:v8DefineDrawPhaseReveal": 3,
     "helper:v9DefineReviveLink": 7,
-    "legacy": 1656,
+    "legacy": 1659,
     "sin": 5,
-    "unified": 1453
+    "unified": 1456
   },
-  "static_registration_name_count": 3656,
+  "static_registration_name_count": 3661,
   "auto_table_name_count": 201,
   "duplicate_db_names": [],
   "registration_names_missing_from_db": [],
@@ -550,6 +550,7 @@
         "tools\\test_v840_batch35.js",
         "tools\\test_v850_batch36.js",
         "tools\\test_v860_batch37.js",
+        "tools\\test_v870_batch38.js",
         "tools\\test_v880_batch39.js",
         "tools\\test_v900_batch41.js",
         "tools\\test_v910_batch42.js"
@@ -31718,12 +31719,19 @@
       "subtype": "永続",
       "date": "2009-11-14",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs central source-specific conditional battle-destruction immunity for opponent face-up Attack Position monsters whose current ATK is zero only while they battle a canonical Reptilianne monster.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\codex_s03_u547_conditional_protection.js",
+          "line": 12
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u547_conditional_protection.js",
         "tools\\test_v820_batch33.js"
       ]
     },
@@ -49171,12 +49179,19 @@
       "subtype": null,
       "date": "2010-09-16",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs Synchro-material send provenance and replay-safe optional Level-2-or-lower hand Special Summon.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 4,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\codex_s03_u545_synchro_material_triggers.js",
+          "line": 16
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u545_synchro_material_triggers.js",
         "tools\\test_v770_batch29.js"
       ]
     },
@@ -63613,11 +63628,17 @@
           "kind": "legacy",
           "source": "cards\\C1_auto_cycle19.js",
           "line": 214
+        },
+        {
+          "kind": "unified",
+          "source": "cards\\codex_s03_u545_synchro_material_triggers.js",
+          "line": 28
         }
       ],
       "auto_table": false,
       "tests": [
-        "tools\\test_auto_cycle19.js"
+        "tools\\test_auto_cycle19.js",
+        "tools\\test_s03_u545_synchro_material_triggers.js"
       ]
     },
     {
@@ -72150,12 +72171,19 @@
       "subtype": null,
       "date": "2003-02-20",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "provenance / continuous rule: exact 1103 processing for \"このカードが表側表示で自分フィールド上に存在する限り、自分フィールド上の「万魔殿－悪魔の巣窟－」は、相手がコントロールするカードの効果では破壊されない。\" needs chain-retained choices/costs, provenance-bearing events, central rule hooks or serializable scheduled state indicated by these categories; current primitives cannot preserve the required timing without approximation.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 5,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\codex_s03_u547_conditional_protection.js",
+          "line": 7
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u547_conditional_protection.js",
         "tools\\test_v870_batch38.js"
       ]
     },
@@ -95508,12 +95536,19 @@
       "subtype": null,
       "date": "2008-11-15",
       "extra": false,
-      "status": "ENGINE_GAP",
-      "reason": "Needs declarative source-specific Synchro material companion restrictions integrated with material enumeration, UI, legality and replay.",
+      "status": "TESTED",
+      "reason": "",
       "complexity_score": 1,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "legacy",
+          "source": "cards\\codex_s03_u546_royal_swamp_eel.js",
+          "line": 6
+        }
+      ],
       "auto_table": false,
       "tests": [
+        "tools\\test_s03_u546_royal_swamp_eel.js",
         "tools\\test_v610_batch13.js"
       ]
     },
@@ -109328,12 +109363,20 @@
       "subtype": null,
       "date": "2010-01-21",
       "extra": true,
-      "status": "NOT_STARTED",
+      "status": "TESTED",
       "reason": "",
       "complexity_score": 14,
-      "registrations": [],
+      "registrations": [
+        {
+          "kind": "unified",
+          "source": "cards\\codex_s03_u547_conditional_protection.js",
+          "line": 22
+        }
+      ],
       "auto_table": false,
-      "tests": []
+      "tests": [
+        "tools\\test_s03_u547_conditional_protection.js"
+      ]
     },
     {
       "index": 4937,
