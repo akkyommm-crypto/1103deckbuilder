@@ -1964,6 +1964,15 @@
   "path": "cards/codex_s03_u547_conditional_protection.js"
  },
  {
+  "path": "cards/codex_s03_u548_grave_trap_spell.js"
+ },
+ {
+  "path": "cards/codex_s03_u549_doriado.js"
+ },
+ {
+  "path": "cards/codex_s03_u550_battle_field_modifiers.js"
+ },
+ {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,
   "end_line": 16474,

@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 340,
+    "ENGINE_GAP": 335,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
     "NOT_STARTED": 347,
     "PARTIAL": 12,
-    "TESTED": 3651
+    "TESTED": 3656
   },
   "delta": {
-    "ENGINE_GAP": -276,
+    "ENGINE_GAP": -281,
     "IMPLEMENTED": -196,
     "NOT_STARTED": -960,
     "PARTIAL": -170,
-    "TESTED": 1602
+    "TESTED": 1607
   },
   "status_changes": [
     {
@@ -791,6 +791,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U358"
+    },
+    {
+      "name": "Z－ONE",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U548"
     },
     {
       "name": "Z－メタル・キャタピラー",
@@ -4903,6 +4909,12 @@
       "unit": "S03-U271"
     },
     {
+      "name": "リミッター・ブレイク",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U548"
+    },
+    {
       "name": "リミッター解除",
       "before": "IMPLEMENTED",
       "after": "TESTED",
@@ -7039,6 +7051,12 @@
       "unit": "S03-U269"
     },
     {
+      "name": "断層地帯",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U550"
+    },
+    {
       "name": "旋風剣",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -8419,6 +8437,12 @@
       "unit": "S03-U200"
     },
     {
+      "name": "精霊術師 ドリアード",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U549"
+    },
+    {
       "name": "紅蓮の炎壁",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -8489,6 +8513,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U14"
+    },
+    {
+      "name": "紫炎の霞城",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U550"
     },
     {
       "name": "終末の騎士",

@@ -229,9 +229,10 @@ const normalSummonable=all.filter(n=>{
    「破壊され墓地へ送られた時」の誘発に直して passive.onSendToGrave を足したため。
    《歯車街》はフィールド魔法なので、下の C2（通常召喚できるモンスター 176 枚）は変わっていない。 */
 /* S03-U545: Fleur's onSendToGrave raises the same population by one (181→182 / 176→177). Counting/filtering and the historical document's 176-card record stay unchanged. */
-ok('C1 ★ 自分の破壊／墓地送りを見る passive の件数（onDestroy 111 / onSendToGrave 182）'
+/* U548: Limiter Break and Z-ONE add two non-monster GY passives (182→184); the original population/filter logic and normal-summonable count are unchanged. */
+ok('C1 ★ 自分の破壊／墓地送りを見る passive の件数（onDestroy 111 / onSendToGrave 184）'
    +'。onSendToGrave は S03-U508 で《歯車街》が加わって 180 → 181',
-   byEv['onDestroy'].length===111 && byEv['onSendToGrave'].length===182,
+   byEv['onDestroy'].length===111 && byEv['onSendToGrave'].length===184,
    JSON.stringify(EVS.map(e=>e+':'+byEv[e].length)));
 ok('C2 ★ そのうち通常召喚できるモンスターは 177 枚。'
    +'いまは召喚を無効にされてもこの 177 枚のイベントが 1 つも出ない（手札から出した場合）',

@@ -16205,6 +16205,56 @@
         "tools/test_s03_u547_conditional_protection.js"
       ],
       "evidence": "real opponent-only field protection / 0-ATK battle protection / hand-count battle-effect protection and forced End trigger; exclusions; chain hand reduction; Replay"
+    },
+    {
+      "name": "リミッター・ブレイク",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U548",
+      "tests": [
+        "tools/test_s03_u548_grave_trap_spell.js"
+      ],
+      "evidence": "self grave-arrival real chains; own exact SS from hand/Deck/GY under Decree; set-destruction target recovery; negative controls and Replay"
+    },
+    {
+      "name": "Z－ONE",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U548",
+      "tests": [
+        "tools/test_s03_u548_grave_trap_spell.js"
+      ],
+      "evidence": "self grave-arrival real chains; own exact SS from hand/Deck/GY under Decree; set-destruction target recovery; negative controls and Replay"
+    },
+    {
+      "name": "精霊術師 ドリアード",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U549",
+      "tests": [
+        "tools/test_s03_u549_doriado.js"
+      ],
+      "evidence": "real Ritual and five simultaneous Attributes; face-down/GY/Skill Drain controls; actual DNA attribute declaration replaces all Attributes; overwrite/removal Replay"
+    },
+    {
+      "name": "紫炎の霞城",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U550",
+      "tests": [
+        "tools/test_s03_u550_battle_field_modifiers.js"
+      ],
+      "evidence": "real attacks for both Field controllers; battle-only ATK reduction / reflected defense damage doubling; nonmatching race, position, direct attack, negation controls and Replay"
+    },
+    {
+      "name": "断層地帯",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U550",
+      "tests": [
+        "tools/test_s03_u550_battle_field_modifiers.js"
+      ],
+      "evidence": "real attacks for both Field controllers; battle-only ATK reduction / reflected defense damage doubling; nonmatching race, position, direct attack, negation controls and Replay"
     }
   ],
   "restored_to_baseline": [

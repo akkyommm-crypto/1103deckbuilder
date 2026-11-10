@@ -77,10 +77,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a player Deck face-orientation model integrated with rendering, draws, searches, shuffles, serialization and replay digest."
     },
-    "紫炎の霞城": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a generic battle-scoped continuous modifier that relates the current attacker to a canonical setcode-qualified attack target."
-    },
     "終焉のカウントダウン": {
       "status": "ENGINE_GAP",
       "reason": "Needs a serializable scheduled alternate-win condition counted by turn boundaries and enforced through replay/Undo/Redo."
@@ -232,10 +228,6 @@
     "端末世界": {
       "status": "ENGINE_GAP",
       "reason": "Needs a continuous both-player Main Phase 2 skip rule integrated with phase transition, manual controls, AI, save and replay."
-    },
-    "精霊術師 ドリアード": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a first-class Ritual Summon pipeline plus a multi-Attribute identity model shared by effect filters, legality, rendering and replay."
     },
     "要塞クジラ": {
       "status": "GENERIC_OK",
@@ -545,10 +537,6 @@
       "status": "ENGINE_GAP",
       "reason": "Needs a turn-duration central negation rule for all effects activated in Graveyards, enforced at Chain activation and resolution without blocking non-activated continuous state."
     },
-    "断層地帯": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a central pre-damage battle modifier detecting an attacked Defense Position Rock and doubling only reflected battle damage to the attacking monster's controller."
-    },
     "暴れ牛鬼": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe coin-face declaration before deterministic coin resolution and once-per-turn damage routing based on declaration correctness."
@@ -612,10 +600,6 @@
     "コピー・ナイト": {
       "status": "ENGINE_GAP",
       "reason": "Needs a replay-safe Trap-Monster primitive occupying both Trap and Monster state with copied canonical name and Level while retaining printed Race, Attribute and zero stats."
-    },
-    "リミッター・ブレイク": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a zone-agnostic sent-to-Grave event plus replay-safe exact canonical Speed Warrior selection across hand, Deck and Graveyard for Special Summon."
     },
     "レアメタル化・魔法反射装甲": {
       "status": "ENGINE_GAP",
@@ -683,10 +667,6 @@
     "N・アクア・ドルフィン": {
       "status": "ENGINE_GAP",
       "reason": "Needs private opponent-hand inspection and selection, current field ATK comparison and conditional discard/damage."
-    },
-    "Z－ONE": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs set-card destruction and Graveyard-arrival provenance plus replay-safe Continuous or Field Spell recovery."
     },
     "アイス・ブリザード・マスター": {
       "status": "ENGINE_GAP",
