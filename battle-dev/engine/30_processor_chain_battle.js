@@ -1938,7 +1938,7 @@ function flushDeferredEventsV2(){
 
 function summonNegatorsV2(pending){
   const rp=pending.player===0?1:0, P=gameState.players[rp], out=[];
-  const add=(zone,index,c)=>{
+  const add=(p,zone,index,c)=>{
     if(!c) return; const db=dbOf(c), sc=CARD_SCRIPTS[db.n]; if(!sc||!sc.summonNegate) return;
     const sn=sc.summonNegate; if(sn.specialOnly&&pending.kind==='normal') return;
     if(sn.kinds&&!sn.kinds.includes(pending.kind)) return;
@@ -1947,10 +1947,17 @@ function summonNegatorsV2(pending){
       if(!ok) return;
     }
     if(c.face==='down'&&c.setTurn===gameState.turn) return;
-    const L=strictScriptLegalityV2(db.n,rp,zone,index,{ignoreTiming:true}); if(L.ok) out.push({p:rp,zone,index,card:c,db,ss:scriptSpellSpeed(sc,db)});
+    const L=strictScriptLegalityV2(db.n,p,zone,index,{ignoreTiming:true}); if(L.ok) out.push({p,zone,index,card:c,db,ss:scriptSpellSpeed(sc,db)});
   };
-  P.sz.forEach((c,i)=>add('sz',i,c));
-  P.mz.forEach((c,i)=>{ const sc=CARD_SCRIPTS[dbOf(c).n]; if(sc&&sc.summonNegate&&sc.quickEffect===true) add('mz',i,c); });
+  P.sz.forEach((c,i)=>add(rp,'sz',i,c));
+  P.mz.forEach((c,i)=>{ const sc=CARD_SCRIPTS[dbOf(c).n]; if(sc&&sc.summonNegate&&sc.quickEffect===true) add(rp,'mz',i,c); });
+  /* Codex S03-U551: an explicit opt-in also offers the summoning player's own negators.
+     The ordinary opponent enumeration and shared-use path stay unchanged. */
+  const ownP=gameState.players[pending.player];
+  const own=(zone,i,c)=>{ const sc=c&&CARD_SCRIPTS[dbOf(c).n];
+    if(sc&&sc.summonNegate&&sc.summonNegate.ownSummonS03===true&&(zone==='sz'||sc.quickEffect===true)) add(pending.player,zone,i,c); };
+  (ownP.sz||[]).forEach((c,i)=>own('sz',i,c));
+  (ownP.mz||[]).forEach((c,i)=>own('mz',i,c));
   if(typeof sharedUseSummonNegatorsS03==='function') sharedUseSummonNegatorsS03(pending).forEach(x=>out.push(x));   /* S03-U46 */
   return out;
 }

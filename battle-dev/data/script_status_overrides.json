@@ -233,25 +233,13 @@
       "status": "GENERIC_OK",
       "reason": "Effectless Ritual Monster; card-specific behavior is fully described by the future generic Ritual Summon recipe/pipeline."
     },
-    "セイバー・ホール": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a generic summon-negation Counter Trap interface integrated with the summon window, batch summons, Chain legality and replay."
-    },
     "トロイの剣闘獣": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe hand selection and owner-to-opponent-field Special Summon routing for a canonical Gladiator Beast before drawing."
     },
-    "ブローニング・パワー": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs one generic Counter Trap interface spanning Spell/Trap activation negation and Normal/Special Summon negation after a Psychic tribute cost."
-    },
     "ホワイト・ホール": {
       "status": "ENGINE_GAP",
       "reason": "Needs exact source-aware Chain response timing and a one-resolving-effect destruction replacement protecting only the controller's monsters from Dark Hole."
-    },
-    "ポリノシス": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs one generic Counter Trap interface spanning Spell/Trap activation negation and Normal/Special Summon negation after a Plant tribute cost."
     },
     "マジシャンズ・サークル": {
       "status": "ENGINE_GAP",
@@ -345,17 +333,9 @@
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe selection between two deterministic die results before targeting a face-up monster of exactly the selected Level."
     },
-    "人投げトロール": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs a central tribute event distinguishing non-token Normal Monster tributes and retaining this face-up source for each mandatory 800-damage trigger."
-    },
     "半蛇人サクズィー": {
       "status": "ENGINE_GAP",
       "reason": "Needs replay-safe private inspection of every opponent set Spell/Trap followed by restoration without leaking hidden identities into public state or logs."
-    },
-    "地雷蜘蛛": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe coin-result declaration at attack declaration and an attack-cost hook that halves LP on a miss while allowing the same attack to continue."
     },
     "強欲な壺の精霊": {
       "status": "ENGINE_GAP",
@@ -536,10 +516,6 @@
     "墓地封印": {
       "status": "ENGINE_GAP",
       "reason": "Needs a turn-duration central negation rule for all effects activated in Graveyards, enforced at Chain activation and resolution without blocking non-activated continuous state."
-    },
-    "暴れ牛鬼": {
-      "status": "ENGINE_GAP",
-      "reason": "Needs replay-safe coin-face declaration before deterministic coin resolution and once-per-turn damage routing based on declaration correctness."
     },
     "検閲": {
       "status": "ENGINE_GAP",

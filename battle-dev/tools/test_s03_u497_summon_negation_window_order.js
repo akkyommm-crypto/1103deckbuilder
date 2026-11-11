@@ -32,9 +32,10 @@ const SRC_S497 = {
 };
 
 /* 設計書 1-c に書いた候補の全件。ここを増減させるときは設計書も直す。 */
+/* S03-U551: 数え方は維持し、新しい召喚無効4枚を期待集合へ追加。当時の14枚は設計書に保持。 */
 const CANDIDATES_S497 = ['インヴェルズ・ローチ','エレキャンセル','エヴォルカイザー・ラギア','キックバック',
   'ライオウ','ライト・バニッシュ','方舟の選別','昇天の角笛','昇天の黒角笛','混沌の落とし穴',
-  '王宮の弾圧','神の宣告','神の警告','重力崩壊'];
+  '王宮の弾圧','神の宣告','神の警告','重力崩壊','セイバー・ホール','ブローニング・パワー','ポリノシス','王者の看破'];
 /* WIKI-2CF23AA42E79 が名前を挙げている 3 枚 */
 const NAMED_S497 = ['神の宣告','キックバック','昇天の角笛'];
 
@@ -115,8 +116,8 @@ function bloodRun(o){
 harness('const WANT=' + JSON.stringify(CANDIDATES_S497) + ';'
       + 'const NAMED=' + JSON.stringify(NAMED_S497) + ';' + COMMON + String.raw`
 const got=Object.keys(CARD_SCRIPTS).filter(n=>CARD_SCRIPTS[n]&&CARD_SCRIPTS[n].summonNegate).sort();
-ok('A1 ★ sc.summonNegate を持つカードは実測 14 枚で、設計書 1-c に書いた全件と一致する',
-   got.length===14 && JSON.stringify(got)===JSON.stringify(WANT.slice().sort()),
+ok('A1 ★ sc.summonNegate を持つカードは実測 18 枚（U497当時14＋U551追加4）で、設計書 1-c に書いた全件と一致する',
+   got.length===18 && JSON.stringify(got)===JSON.stringify(WANT.slice().sort()),
    JSON.stringify(got));
 function accepts(nm,kind){
   const sn=CARD_SCRIPTS[nm].summonNegate;
@@ -128,10 +129,10 @@ ok('A2 ★ WIKI-2CF23AA42E79 が名前を挙げている 3 枚はすべて実装
    NAMED.every(n=>got.indexOf(n)>=0 && accepts(n,'normal')),
    JSON.stringify(NAMED.map(n=>[n,got.indexOf(n)>=0,accepts(n,'normal')])));
 const normals=got.filter(n=>accepts(n,'normal'));
-ok('A3 通常召喚（kind normal）に応答できるのは 10 枚',
-   normals.length===10, JSON.stringify(normals));
+ok('A3 通常召喚（kind normal）に応答できるのは 14 枚（U551で4枚追加）',
+   normals.length===14, JSON.stringify(normals));
 /* R6 と同じ扱い: 召喚無効のカードは (B-2) の種別には入らない（S03-U492 以降の約束） */
-ok('A4 ★ 候補 14 枚はすべて missedTimingSummonNegatorS03 で真になり、召喚成功後の落とし方には入らない',
+ok('A4 ★ 候補 18 枚はすべて missedTimingSummonNegatorS03 で真になり、召喚成功後の落とし方には入らない',
    got.every(n=>missedTimingSummonNegatorS03(n)===true),
    JSON.stringify(got.filter(n=>missedTimingSummonNegatorS03(n)!==true)));
 `, {expect:4});

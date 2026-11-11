@@ -1972,6 +1972,9 @@
  {
   "path": "cards/codex_s03_u550_battle_field_modifiers.js"
  },
+ {"path":"cards/codex_s03_u551_summon_counter_traps.js"},
+ {"path":"cards/codex_s03_u552_called_coin_monsters.js"},
+ {"path":"cards/codex_s03_u553_man_thro_tro.js"},
  {
   "path": "cards/40_auto_interpreter.js",
   "start_line": 15738,

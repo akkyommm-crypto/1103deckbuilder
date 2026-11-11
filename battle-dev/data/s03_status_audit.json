@@ -9,19 +9,19 @@
     "TESTED": 2049
   },
   "current_counts": {
-    "ENGINE_GAP": 335,
+    "ENGINE_GAP": 329,
     "GENERIC_OK": 644,
     "IMPLEMENTED": 2,
-    "NOT_STARTED": 347,
+    "NOT_STARTED": 346,
     "PARTIAL": 12,
-    "TESTED": 3656
+    "TESTED": 3663
   },
   "delta": {
-    "ENGINE_GAP": -281,
+    "ENGINE_GAP": -287,
     "IMPLEMENTED": -196,
-    "NOT_STARTED": -960,
+    "NOT_STARTED": -961,
     "PARTIAL": -170,
-    "TESTED": 1607
+    "TESTED": 1614
   },
   "status_changes": [
     {
@@ -2785,6 +2785,12 @@
       "unit": "S03-U465"
     },
     {
+      "name": "セイバー・ホール",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U551"
+    },
+    {
       "name": "セコンド・ゴブリン",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4213,6 +4219,12 @@
       "unit": "S03-U444"
     },
     {
+      "name": "ブローニング・パワー",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U551"
+    },
+    {
       "name": "プチトマボー",
       "before": "NOT_STARTED",
       "after": "TESTED",
@@ -4343,6 +4355,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U397"
+    },
+    {
+      "name": "ポリノシス",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U551"
     },
     {
       "name": "マインドクラッシュ",
@@ -5437,6 +5455,12 @@
       "unit": "S03-U274"
     },
     {
+      "name": "人投げトロール",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U553"
+    },
+    {
       "name": "人海戦術",
       "before": "PARTIAL",
       "after": "TESTED",
@@ -6263,6 +6287,12 @@
       "before": "ENGINE_GAP",
       "after": "TESTED",
       "unit": "S03-U292"
+    },
+    {
+      "name": "地雷蜘蛛",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U552"
     },
     {
       "name": "城壁壊しの大槍",
@@ -7195,6 +7225,12 @@
       "unit": "S03-U54"
     },
     {
+      "name": "暴れ牛鬼",
+      "before": "ENGINE_GAP",
+      "after": "TESTED",
+      "unit": "S03-U552"
+    },
+    {
       "name": "暴君の威圧",
       "before": "ENGINE_GAP",
       "after": "TESTED",
@@ -7973,6 +8009,12 @@
       "before": "NOT_STARTED",
       "after": "TESTED",
       "unit": "S03-U355"
+    },
+    {
+      "name": "王者の看破",
+      "before": "NOT_STARTED",
+      "after": "TESTED",
+      "unit": "S03-U551"
     },
     {
       "name": "王虎ワンフー",

@@ -16255,6 +16255,76 @@
         "tools/test_s03_u550_battle_field_modifiers.js"
       ],
       "evidence": "real attacks for both Field controllers; battle-only ATK reduction / reflected defense damage doubling; nonmatching race, position, direct attack, negation controls and Replay"
+    },
+    {
+      "name": "セイバー・ホール",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U551",
+      "tests": [
+        "tools/test_s03_u551_summon_counter_traps.js"
+      ],
+      "evidence": "actual own/opponent summon windows, card activation vs effect activation and chain SS boundaries; release cost, JSON restore, Replay and previous-build controls"
+    },
+    {
+      "name": "ブローニング・パワー",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U551",
+      "tests": [
+        "tools/test_s03_u551_summon_counter_traps.js"
+      ],
+      "evidence": "actual own/opponent summon windows, card activation vs effect activation and chain SS boundaries; release cost, JSON restore, Replay and previous-build controls"
+    },
+    {
+      "name": "ポリノシス",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U551",
+      "tests": [
+        "tools/test_s03_u551_summon_counter_traps.js"
+      ],
+      "evidence": "actual own/opponent summon windows, card activation vs effect activation and chain SS boundaries; release cost, JSON restore, Replay and previous-build controls"
+    },
+    {
+      "name": "王者の看破",
+      "from": "NOT_STARTED",
+      "to": "TESTED",
+      "unit": "S03-U551",
+      "tests": [
+        "tools/test_s03_u551_summon_counter_traps.js"
+      ],
+      "evidence": "actual own/opponent summon windows, card activation vs effect activation and chain SS boundaries; release cost, JSON restore, Replay and previous-build controls"
+    },
+    {
+      "name": "暴れ牛鬼",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U552",
+      "tests": [
+        "tools/test_s03_u552_called_coin_monsters.js"
+      ],
+      "evidence": "registered declared coin calls and deterministic RNG, both outcomes, attack continuation, LP-loss vs damage, once-per-turn, Replay and controls"
+    },
+    {
+      "name": "地雷蜘蛛",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U552",
+      "tests": [
+        "tools/test_s03_u552_called_coin_monsters.js"
+      ],
+      "evidence": "registered declared coin calls and deterministic RNG, both outcomes, attack continuation, LP-loss vs damage, once-per-turn, Replay and controls"
+    },
+    {
+      "name": "人投げトロール",
+      "from": "ENGINE_GAP",
+      "to": "TESTED",
+      "unit": "S03-U553",
+      "tests": [
+        "tools/test_s03_u553_man_thro_tro.js"
+      ],
+      "evidence": "real ignition cost, face-up/down non-token Normal Monsters, repeated use, Gemini, owner routing, Drain and Macro, Replay and controls; historical FAQ absent and later supplement separated"
     }
   ],
   "restored_to_baseline": [

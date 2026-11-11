@@ -156,6 +156,9 @@ NON_CARD_TEST_FILES = {
 
 CARD_TEST_FOCUS = {
     "test_s03_u550_battle_field_modifiers.js": {"紫炎の霞城", "断層地帯"},
+    "test_s03_u551_summon_counter_traps.js": {"セイバー・ホール", "ブローニング・パワー", "ポリノシス", "王者の看破"},
+    "test_s03_u552_called_coin_monsters.js": {"暴れ牛鬼", "地雷蜘蛛"},
+    "test_s03_u553_man_thro_tro.js": {"人投げトロール"},
     "test_s03_u549_doriado.js": {"精霊術師 ドリアード"},
     "test_s03_u548_grave_trap_spell.js": {"リミッター・ブレイク", "Z－ONE"},
     "test_s03_u547_conditional_protection.js": {"地獄の番熊", "スネーク・チョーク", "魔轟神獣クダベ"},

@@ -20768,7 +20768,7 @@ function flushDeferredEventsV2(){
 
 function summonNegatorsV2(pending){
   const rp=pending.player===0?1:0, P=gameState.players[rp], out=[];
-  const add=(zone,index,c)=>{
+  const add=(p,zone,index,c)=>{
     if(!c) return; const db=dbOf(c), sc=CARD_SCRIPTS[db.n]; if(!sc||!sc.summonNegate) return;
     const sn=sc.summonNegate; if(sn.specialOnly&&pending.kind==='normal') return;
     if(sn.kinds&&!sn.kinds.includes(pending.kind)) return;
@@ -20777,10 +20777,17 @@ function summonNegatorsV2(pending){
       if(!ok) return;
     }
     if(c.face==='down'&&c.setTurn===gameState.turn) return;
-    const L=strictScriptLegalityV2(db.n,rp,zone,index,{ignoreTiming:true}); if(L.ok) out.push({p:rp,zone,index,card:c,db,ss:scriptSpellSpeed(sc,db)});
+    const L=strictScriptLegalityV2(db.n,p,zone,index,{ignoreTiming:true}); if(L.ok) out.push({p,zone,index,card:c,db,ss:scriptSpellSpeed(sc,db)});
   };
-  P.sz.forEach((c,i)=>add('sz',i,c));
-  P.mz.forEach((c,i)=>{ const sc=CARD_SCRIPTS[dbOf(c).n]; if(sc&&sc.summonNegate&&sc.quickEffect===true) add('mz',i,c); });
+  P.sz.forEach((c,i)=>add(rp,'sz',i,c));
+  P.mz.forEach((c,i)=>{ const sc=CARD_SCRIPTS[dbOf(c).n]; if(sc&&sc.summonNegate&&sc.quickEffect===true) add(rp,'mz',i,c); });
+  /* Codex S03-U551: an explicit opt-in also offers the summoning player's own negators.
+     The ordinary opponent enumeration and shared-use path stay unchanged. */
+  const ownP=gameState.players[pending.player];
+  const own=(zone,i,c)=>{ const sc=c&&CARD_SCRIPTS[dbOf(c).n];
+    if(sc&&sc.summonNegate&&sc.summonNegate.ownSummonS03===true&&(zone==='sz'||sc.quickEffect===true)) add(pending.player,zone,i,c); };
+  (ownP.sz||[]).forEach((c,i)=>own('sz',i,c));
+  (ownP.mz||[]).forEach((c,i)=>own('mz',i,c));
   if(typeof sharedUseSummonNegatorsS03==='function') sharedUseSummonNegatorsS03(pending).forEach(x=>out.push(x));   /* S03-U46 */
   return out;
 }
@@ -102670,6 +102677,121 @@ defineScript('断層地帯',{
     battleDamage(info){return !info.direct && info.defCard && info.defCard.pos==='def'
       && currentRaceV17(info.defCard)==='岩石' && info.to===info.atkOwner ? info.amount*2 : info.amount;}}
 });
+/* Codex S03-U551: four Counter Traps on the existing summon-negation window.
+   1103 carddata text. WIKI-BE54F41A867F (2008-04-25) / WIKI-B48061A5FA11
+   (2008-07-25): one's own face-down Psychic / Plant may pay the release cost.
+   WIKI-BB0B6F6D3ED2 (2008-09-23): Polinosis cannot negate a chain-starting
+   Special Summon effect. A Spell/Trap CARD activation remains a separate legal case.
+   Saber Hole / Champion's Vigilance: historical DB has no additional FAQ evidence.
+   Tokens are Normal Monsters although the legacy treatedAsNormal helper omits them;
+   include them explicitly for Champion while Troll separately excludes tokens.
+   No onNormalSummon passive: this responds BEFORE success, via summonNegate. */
+function u551SupportS03(ctx, kind){
+  return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>{
+    const ps=gameState.pendingSummon;
+    const gemini=ps && (ps.geminiS03===true || (ps.resumeS03&&ps.resumeS03.geminiS03===true));
+    if(ps && !gemini && x.card.uid===ps.uid) return false;
+    if(kind==='saber') return x.card.face==='up' && isCardInGroupV4(x.card,GROUP.XSABER);
+    if(kind==='normal7') return x.card.face==='up' && (!!x.card.token || treatedAsNormal(x.card)) && !geminiActiveS03(x.card) && curLV(x.card)>=7;
+    return !x.card.cannotTribute && (x.card.face==='up'?currentRaceV17(x.card):x.db.ra)===kind;
+  }});
+}
+function u551CardActivationS03(){
+  const top=(gameState.chain||[]).slice(-1)[0];
+  const db=top && dbOfByChainV350(top);
+  return !!(top && top.cardActivationS03===true && db && (db.k==='s'||db.k==='t'));
+}
+function u551CounterSpecS03(name,kind,spellTrap,release){
+  const kinds=kind==='saber'||kind==='normal7'?['normal','flip','procedure','synchro','xyz']:['normal','procedure','synchro','xyz'];
+  return {type:'counter',priority:3,onOtherSummon:true,
+    summonNegate:{ownSummonS03:true,kinds},
+    condition(ctx){
+      if(!u551SupportS03(ctx,kind).length){ctx.reason='発動条件を満たす自分のモンスターがいません';return false;}
+      if(gameState.pendingSummon && !(gameState.chain||[]).length) return kinds.includes(gameState.pendingSummon.kind);
+      if(spellTrap && u551CardActivationS03()) return true;
+      ctx.reason='召喚そのもの、または対応する魔法・罠カードの発動時に発動します';return false;
+    },
+    cost(ctx,done){
+      const top=(gameState.chain||[]).slice(-1)[0];
+      const response=!top && gameState.pendingSummon ? {kind:'summon',uid:gameState.pendingSummon.uid}
+        : top ? {kind:'chain',chainId:top.chainId} : null;
+      if(!response){done(false);return;}
+      ctx.costCtxS03=Object.assign({},ctx.costCtxS03||{},{u551ResponseS03:response});
+      if(!release){done(true);return;}
+      const pool=u551SupportS03(ctx,kind);
+      if(!pool.length){done(false);return;}
+      API.selectCard(name+'：リリースするモンスター',pool,t=>{
+        const h=t&&resolveTarget(t);if(!h||h.zone!=='mz'||h.p!==ctx.player){done(false);return;}
+        API.sendToGrave(h,name+'（リリース）');done(true);
+      });
+    },
+    resolve(ctx){
+      const r=ctx.u551ResponseS03;
+      if(r && r.kind==='summon'){if(gameState.pendingSummon && gameState.pendingSummon.uid===r.uid)summonNegatePendingV2(name);}
+      else if(r && r.kind==='chain') API.negateChainLink(r.chainId,'activation',name,true);
+    },
+    afterResolve(){}
+  };
+}
+defineScript('セイバー・ホール',u551CounterSpecS03('セイバー・ホール','saber',false,false));
+defineScript('ブローニング・パワー',u551CounterSpecS03('ブローニング・パワー','サイキック',true,true));
+defineScript('ポリノシス',u551CounterSpecS03('ポリノシス','植物',true,true));
+defineScript('王者の看破',u551CounterSpecS03('王者の看破','normal7',true,false));
+/* Codex S03-U552: replay-safe called coins with the existing registered choices.
+   暴れ牛鬼: WIKI-F83252A31EDB (2005-03-18), damage is uncertain until the toss;
+   a damage-redirection counter cannot respond merely to its activation.
+   地雷蜘蛛: historical DB has 0 additional entries. The 1103 text loses LP,
+   not damage and not activation cost; the existing LP Action's unspecified
+   cause bypasses damage replacement. Current official FAQ cid4373 (2020-04-01)
+   confirms mandatory attack-declaration trigger and normal battle continuation;
+   this later supplement does not establish a dated 2011 ruling. */
+function u552SpiderAttackS03(ctx){
+  const a=gameState.pendingAttack;
+  return !!(ctx.zone==='mz' && ctx.card.face==='up' && a && a.attackerUid===ctx.card.uid);
+}
+function u552CallS03(ctx,kind){
+  const name=cardName(ctx.card);
+  API.requestChoice({player:ctx.player,kind:'option',title:name+'：コイントスの裏表を宣言',
+    candidates:[{key:'heads',value:'heads',label:'表'},{key:'tails',value:'tails',label:'裏'}],
+    min:1,max:1,cancelable:false,resume:{handler:'u552.called-coin',args:{player:ctx.player,kind}},meta:{scriptName:name}});
+}
+API.registerChoiceHandler('u552.called-coin',(answer,args)=>{
+  const c=(answer&&answer.cards||[])[0],call=c&&c.value==='tails'?'tails':'heads';
+  const face=duelRandomInt(2,gameState)===0?'heads':'tails',hit=call===face;
+  API.log((args.kind==='burn'?'暴れ牛鬼':'地雷蜘蛛')+'：'+(face==='heads'?'表':'裏')+'・'+(hit?'当たり':'ハズレ'));
+  if(args.kind==='burn') API.damageLP(hit?1-args.player:args.player,1000,'暴れ牛鬼');
+  else if(!hit) act({type:'LP',player:args.player,delta:-Math.floor(gameState.players[args.player].lp/2),cause:'unspecified',reason:'地雷蜘蛛：LPを半分失う'});
+});
+defineUnifiedCardV4('暴れ牛鬼',[{key:'called-burn',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],
+  operation(ctx){u552CallS03(ctx,'burn');},afterResolve(){}
+}],{type:'monster',priority:1,countLimit:1,timing:['mainPhase']});
+defineUnifiedCardV4('地雷蜘蛛',[{key:'attack-coin',type:EFFECT_TYPE.TRIGGER,range:LOCATION.MZONE,speed:1,events:['onAttackDeclare'],forced:true,
+  condition:u552SpiderAttackS03,operation(ctx){u552CallS03(ctx,'attack');},afterResolve(){}
+}],{type:'monster',priority:1,forced:true,passive:{onAttackDeclare:u552SpiderAttackS03}});
+/* Codex S03-U553: 人投げトロール on existing cost / LP Actions.
+   1103 text: 自分フィールド上に存在する通常モンスター(トークンを除く)1体を
+   生け贄に捧げる度に、相手ライフに800ポイントダメージを与える。
+   Historical wiki DB: 0 additional entries; the era FAQ is unconfirmed.
+   Current official supplement cid6043 (2017-07-27) identifies an ignition effect,
+   a non-token Normal Monster release COST (face-down allowed), and no target.
+   This later evidence is recorded separately, not presented as a 2011 ruling.
+   The old ENGINE_GAP's proposed central mandatory tribute observer is unnecessary. */
+function u553NormalCostsS03(ctx){
+  return API.fieldCards({player:ctx.player,zone:'mz',filter:x=>!x.card.token && !x.card.cannotTribute
+    && treatedAsNormal(x.card) && !geminiActiveS03(x.card)});
+}
+defineUnifiedCardV4('人投げトロール',[{key:'release-normal-burn',type:EFFECT_TYPE.IGNITION,range:LOCATION.MZONE,speed:1,events:['activate'],
+  condition(ctx){return ctx.zone==='mz' && ctx.card.face==='up' && gameState.activePlayer===ctx.player
+    && (gameState.phase==='main1'||gameState.phase==='main2') && u553NormalCostsS03(ctx).length>0;},
+  cost(ctx,done){
+    const pool=u553NormalCostsS03(ctx);if(!pool.length){done(false);return;}
+    API.selectCard('人投げトロール：リリースする通常モンスター',pool,t=>{
+      const h=t&&resolveTarget(t);if(!h||h.zone!=='mz'||h.p!==ctx.player){done(false);return;}
+      API.sendToGrave(h,'人投げトロール（リリース）');done(true);
+    });
+  },
+  operation(ctx){API.damageLP(ctx.opponent,800,'人投げトロール');},afterResolve(){}
+}],{type:'monster',priority:1,timing:['mainPhase']});
 /* =========================================================================
    デッキ操作カードの一括定義
    index.html のソロモードで使っている宣言テーブルをそのまま取り込み、
